@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: CIDE Language Plugin for ECMAScript
+Bundle-SymbolicName: de.ovgu.cide.language.ecmascript;singleton:=true
+Bundle-Version: 1.0.0
+Require-Bundle: de.ovgu.cide.core,
+ de.ovgu.cide.ast
+Eclipse-LazyStart: false
+Bundle-Vendor: Christian Kaestner, University of Magdeburg

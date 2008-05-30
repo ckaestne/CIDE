@@ -1,0 +1,17 @@
+class Main {
+	void foo() {
+		if (true) {
+			a(1);
+		} else hook();
+	}
+
+	void a(int x) {
+
+	}
+	
+	protected void hook(){
+		if (true) {
+			a(3);
+		}
+	}
+}

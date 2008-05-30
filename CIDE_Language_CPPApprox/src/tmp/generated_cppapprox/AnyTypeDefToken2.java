@@ -1,0 +1,19 @@
+package tmp.generated_cppapprox;
+
+import cide.gast.*;
+import cide.gparser.*;
+import cide.greferences.*;
+import java.util.*;
+
+public class AnyTypeDefToken2 extends AnyTypeDefToken {
+  public AnyTypeDefToken2(Token firstToken, Token lastToken) {
+    super(new Property[] {
+    }, firstToken, lastToken);
+  }
+  public AnyTypeDefToken2(Property[] properties, IToken firstToken, IToken lastToken) {
+    super(properties,firstToken,lastToken);
+  }
+  public ASTNode deepCopy() {
+    return new AnyTypeDefToken2(cloneProperties(),firstToken,lastToken);
+  }
+}

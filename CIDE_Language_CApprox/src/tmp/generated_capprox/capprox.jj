@@ -1,0 +1,1018 @@
+options {
+  STATIC = false;
+}
+
+PARSER_BEGIN(CApproxParser)
+
+package tmp.generated_capprox;
+
+import java.io.*;
+import java.util.*;
+import cide.gast.*;
+import cide.gparser.*;
+
+  public class CApproxParser{
+
+    // Run the parser
+    public static void main ( String args [ ] ) {
+      CApproxParser parser ;
+
+  	
+      if(args.length == 0){
+        System.out.println("C (approx) Parser Version 0.1Alpha:  Reading from standard input . . .");
+        parser = new CApproxParser(new OffsetCharStream(System.in));
+      }
+      else if(args.length == 1){
+        System.out.println("C (approx) Parser Version 0.1Alpha:  Reading from file " + args[0] + " . . ." );
+      try {
+        parser = new CApproxParser(new OffsetCharStream(new java.io.FileInputStream(args[0])));
+      }
+      catch(java.io.FileNotFoundException e){
+        System.out.println("C (approx) Parser Version 0.1:  File " + args[0] + " not found.");
+        return ;
+        }
+      }
+      else {
+        System.out.println("C (approx) Parser Version 0.1Alpha:  Usage is one of:");
+        System.out.println("         java CParser < inputfile");
+        System.out.println("OR");
+        System.out.println("         java CParser inputfile");
+        return ;
+      }
+      try {
+        parser.TranslationUnit();
+        System.out.println("C (approx) Parser Version 0.1Alpha:  Java program parsed successfully.");
+      }
+      catch(ParseException e){
+        System.out.println("C (approx) Parser Version 0.1Alpha:  Encountered errors during parse.");
+        e.printStackTrace();
+      }
+    }
+    
+       public ISourceFile getRoot() throws ParseException {
+                return TranslationUnit();
+        }
+        
+        
+         /**
+     * Append the given {@link Token} and any preceding special tokens to a
+     * given {@link StringBuffer}.
+     *
+     * @param token the given JavaCC {@link Token} object
+     * @param buffer the buffer to which to append <code>token</code>
+     **/
+    final private static void accumulate (Token token, StringBuffer buffer) {
+
+	// Append preceding special tokens to <code>buffer</code>:
+	//
+	Token special = firstSpecial (token) ;
+	if (special != token)
+	    while (special != null) {
+		buffer.append (special.toString ()) ;
+		special = special.next ;
+	    }
+
+	// Finally, append the token itself:
+	//
+	buffer.append (token.toString ()) ;
+    }
+      
+    /**
+     * Accumulate {@list Token} objects from the token stream, respecting
+     * nested code inside <code>open</code> and <code>close</code> pairs,
+     * until an unmatched <code>close</code> is the next token in the stream.
+     * This method assumes that an <code>open</code> token has just been read
+     * from the stream so the initial nesting level is 1.  The method returns
+     * when a matching <code>close</code> token is the next token in the token
+     * stream.  <em>The <code>close</code> token is left in the stream!</em>
+     *
+     * @return the accumulated tokens as a {@link String}.
+     *
+     * @throws ParseException
+     * if an end-of-file is found before an unmatched <code>close</code> token.
+     **/
+    final private Token accumulateNestedRegion (int open, int close)
+    throws ParseException {
+
+	StringBuffer buffer = new StringBuffer () ;
+
+	// Initialize result with known information (starting position, etc.):
+	//
+	Token result = Token.newToken (OTHER) ;
+	result.specialToken = null ;
+
+	Token startToken = firstSpecial (getToken (1)) ;
+	result.beginColumn = startToken.beginColumn ;
+	result.beginLine = startToken.beginLine ;
+
+	// Accumulate tokens until a <code>close</code> token is found:
+	//
+	for (int nesting = 1 ; nesting > 0 ; ) {
+
+	    getNextToken () ;
+
+	    // Update information in result:
+	    //
+	    result.endColumn = token.endColumn ;
+	    result.endLine = token.endLine ;
+	    result.next = token.next ;
+
+	    if (token.kind == EOF)
+		throw new ParseException (
+		    "accumulating from line "
+		    + result.beginLine
+		    + " at column "
+		    + result.beginColumn
+		    + ": EOF reached before ending "
+		    + tokenImage [close]
+		    + " found"
+		) ;
+
+		accumulate (token, buffer) ;
+	    if (token.kind == open)
+			++ nesting ;
+	    else if (token.kind == close) {
+			if (nesting == 1)
+		    	break ;
+			-- nesting ;
+	    }
+
+	    
+	    
+	}
+
+	result.image = buffer.toString () ;
+	return result ;
+    }
+
+    /**
+     * Accumulate {@link Token} objects from the token stream until a token
+     * matching <code>tokenKind</code> is consumed from the stream.  The
+     * tokens are accumulated in <code>buffer</code>, including the terminating
+     * token.
+     *
+     * @return a {@link Token}
+     * formed by concatenating all intervening tokens and special tokens.
+     **/
+    final private Token accumulateUntilToken (int tokenKind)
+    throws ParseException {
+
+	StringBuffer buffer = new StringBuffer () ;
+	Token token = getNextToken () ;
+
+	// Initialize result with known information (starting position, etc.):
+	//
+	Token result = Token.newToken (OTHER) ;
+	result.specialToken = null ;
+
+	Token startToken = firstSpecial (token) ;
+	result.beginColumn = startToken.beginColumn ;
+	result.beginLine = startToken.beginLine ;
+
+	// Accumulate tokens until a <code>tokenKind</code> token is found:
+	//
+	while (token.kind != tokenKind) {
+
+	    // Update information in result:
+	    //
+	    result.endColumn = token.endColumn ;
+	    result.endLine = token.endLine ;
+	    result.next = token.next ;
+
+	    if (token.kind == EOF)
+		throw new ParseException (
+		    "from line "
+		    + result.beginLine
+		    + " at column "
+		    + result.beginColumn
+		    + ": EOF reached before "
+		    + tokenImage [tokenKind]
+		    + " found"
+		) ;
+
+	    accumulate (token, buffer) ;
+	    token = getNextToken () ;
+	}
+
+	accumulate (token, buffer) ;
+
+	result.image = buffer.toString () ;
+	return result ;
+    }
+	/**
+	 * finds the end of the current line for preprocessor instructions. handles
+	 * also multiline makros ending with \
+	 * 
+	 * @return
+	 * @throws ParseException
+	 */
+	final private Token accumulateUntilLineEnd() throws ParseException {
+		StringBuffer buffer = new StringBuffer();
+		Token nextToken = peekNext();
+
+		// Initialize result with known information (starting position, etc.):
+		//
+		Token result = Token.newToken(OTHER);
+		result.specialToken = null;
+
+		Token startToken = firstSpecial(nextToken);
+		result.beginColumn = startToken.beginColumn;
+		result.beginLine = startToken.beginLine;
+
+		// Accumulate tokens until a <code>tokenKind</code> token is found:
+		//
+		while (!preceededByLinebreak(nextToken) || token.image.equals("\\")) {
+			getNextToken();
+
+			// Update information in result:
+			//
+			result.endColumn = token.endColumn;
+			result.endLine = token.endLine;
+			result.next = token.next;
+
+			if (token.kind == EOF)
+				throw new ParseException("from line " + result.beginLine
+						+ " at column " + result.beginColumn
+						+ ": EOF reached before special token" + " found");
+
+			accumulate(token, buffer);
+			nextToken = peekNext();
+		}
+
+		result.image = buffer.toString();
+		return result;
+	}
+
+	private boolean preceededByLinebreak(Token t) {
+		assert t != null;
+		Token specialToken = t.specialToken;
+		while (specialToken != null) {
+			if (specialToken.image.indexOf('\n')>=0)
+				return true;
+			specialToken = specialToken.specialToken;
+		}
+		return false;
+	}
+	private Token peekNext() {
+		if (token.next == null)
+			token.next = token_source.getNextToken();
+		return token.next;
+	}	
+    /**
+     * Finds the first token, special or otherwise, in the list of special
+     * tokens preceding this {@link Token}.  If this list is non-empty, the
+     * result will be a special token.  Otherwise, it will be the starting
+     * token.
+     *
+     * @param token the given {@link Token}.
+     * @return the first special token preceding <code>token</code>.
+     **/
+    final private static Token firstSpecial (Token token) {
+
+	while (token.specialToken != null)
+	    token = token.specialToken ;
+
+	return token ;
+    }
+  }
+
+PARSER_END(CApproxParser)
+
+SPECIAL_TOKEN :
+{
+  "\n"
+}
+
+SKIP : {
+ " "
+|  "\t"
+|  "\r"
+//|  "\n"
+|  <"//" (~["\n","\r"])* ("\n" | "\r" | "\r\n")>
+|  <"/*" (~["*"])* "*" ("*" | ~["*","/"] (~["*"])* "*")* "/">
+| <"__attribute__((" (~[")"])* "))">
+| <"__attribute__((format(" (~[")"])* ")))">
+}
+
+
+TOKEN : {
+	<LITERAL: <INTEGER_LITERAL> | <FLOATING_POINT_LITERAL> | <STRING_LITERAL>|<CHARACTER_LITERAL>>
+|  <#INTEGER_LITERAL: <DECIMAL_LITERAL> (["l","L"])? | <HEX_LITERAL> (["l","L"])? | <OCTAL_LITERAL> (["l","L"])?>
+|  <#DECIMAL_LITERAL: ["1"-"9"] (["0"-"9"])*>
+|  <#HEX_LITERAL: "0" ["x","X"] (["0"-"9","a"-"f","A"-"F"])+>
+|  <#OCTAL_LITERAL: "0" (["0"-"7"])*>
+|  <#FLOATING_POINT_LITERAL: (["0"-"9"])+ "." (["0"-"9"])* (<EXPONENT>)? (["f","F","d","D"])? | "." (["0"-"9"])+ (<EXPONENT>)? (["f","F","d","D"])? | (["0"-"9"])+ <EXPONENT> (["f","F","d","D"])? | (["0"-"9"])+ (<EXPONENT>)? ["f","F","d","D"]>
+|  <#EXPONENT: ["e","E"] (["+","-"])? (["0"-"9"])+>
+|  <#CHARACTER_LITERAL: "\'" (~["\'","\\","\n","\r"] | "\\" (["n","t","b","r","f","\\","\'","\""] | ["0"-"7"] (["0"-"7"])? | ["0"-"3"] ["0"-"7"] ["0"-"7"])) "\'">
+|  <#STRING_LITERAL: "\"" ( ~["\"","\\","\n","\r"] | "\\" ( ["n","t","b","r","f","\\","\'","\""] | ["0"-"7"] (["0"-"7"])?  | ["0"-"3"] ["0"-"7"] ["0"-"7"] | ( ["\n","\r"] | "\r\n")))* "\"">
+}
+
+TOKEN : {
+	<INCLUDE: "include"> 
+|	<DEFINE: "define"> 
+|	<IFDEF: "ifdef"> 
+|	<IFNDEF: "ifndef"> 
+|	<ENDIF: "endif"> 
+|	<ELIF: "elif"> 
+|	<ELSIF: "elsif"> 
+|	<PPLINE: "line"> 
+|	<PPUNDEF: "undef"> 
+|	<PPPRAGMA: "pragma"> 
+|	<PPERROR: "error"> 
+|	<TYPEDEF: "typedef"> 
+//|	<LONG: "long"> 
+//|	<STRUCT: "struct"> 
+|	<ENUM: "enum"> 
+|	<EXTERN: "extern"> 
+|	<UNSIGNED: "unsigned"> 
+|	<CONST: "const"> 
+|	<STATIC: "static"> 
+|	<STRUCT: "struct"> 
+|	<INLINE: "inline"> 
+|	<INLINE2: "__inline__">
+|	<INLINE3: "__inline">
+|	<WEIREDSTUFF1: "__regbank">
+|	<WEIREDSTUFF2: "__TIPOFUNC__">
+|	<IF: "if"> 
+|	<ELSE: "else"> 
+|	<FOR: "for"> 
+|	<WHILE: "while"> 
+|	<DO: "do"> 
+|	<SWITCH: "switch"> 
+|	<CASE: "case"> 
+|	<SWDEFAULT: "default"> 
+|	<SEMI: ";"> 
+|	<COLON: ":"> 
+|	<COMMA: ","> 
+|	<LT: "<"> 
+|	<GT: ">"> 
+|	<OB: "("> 
+|	<CB: ")"> 
+|	<OCB: "{"> 
+|	<CCB: "}"> 
+|	<STAR: "*"> 
+|	<EQ: "="> 
+|	<HASH: "#"> 
+| 	<PIPE: "|">
+}
+
+TOKEN : {
+ <IDENTIFIER: <LETTER> (<LETTER> | <DIGIT>)* | "long long">
+|  <#LETTER: ["$","A"-"Z","_","a"-"z"]>
+|  <#DIGIT: ["0"-"9"]>
+| <OTHER: ~[]>
+}
+
+JAVACODE
+Token findEndGT () {
+    return accumulateNestedRegion (LT, GT) ;
+}
+JAVACODE
+Token findLineEnd () {
+    return accumulateUntilLineEnd() ;
+}
+JAVACODE
+Token findEndCB () {
+    return accumulateNestedRegion(OB, CB) ;
+}
+JAVACODE
+Token findEndCCB () {
+    return accumulateNestedRegion(OCB, CCB) ;
+}
+TranslationUnit TranslationUnit() : { 
+	Sequence_CodeUnit_TopLevel sequence_CodeUnit_TopLevel;
+	Token t;
+	ASTStringNode eof;
+	Token firstToken=token;
+} { (
+	sequence_CodeUnit_TopLevel=Sequence_CodeUnit_TopLevel() t=<EOF>{eof=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new TranslationUnit(sequence_CodeUnit_TopLevel, eof, firstToken.next,token);}
+ ) }
+
+Sequence_CodeUnit_TopLevel Sequence_CodeUnit_TopLevel() : { 
+	CodeUnit_TopLevel codeUnit_TopLevel;
+	ArrayList<CodeUnit_TopLevel> codeUnit_TopLevelList = new ArrayList<CodeUnit_TopLevel>();
+	Token firstToken=token;
+} { (
+	(LOOKAHEAD(2) codeUnit_TopLevel=CodeUnit_TopLevel(){codeUnit_TopLevelList.add(codeUnit_TopLevel);})* 
+	{return new Sequence_CodeUnit_TopLevel(codeUnit_TopLevelList, firstToken.next,token);}
+ ) }
+
+CodeUnit_TopLevel CodeUnit_TopLevel() : { 
+	PPIncludeStatement pPIncludeStatement;
+	PPDefineStatement pPDefineStatement;
+	PPIfDef_TopLevel pPIfDef_TopLevel;
+	PPOtherIgnore pPOtherIgnore;
+	Token t;
+	ASTStringNode findlineend;
+	Function function;
+	TypeDef typeDef;
+	ExternDecl externDecl;
+	Statement statement;
+	Token firstToken=token;
+} { (
+	LOOKAHEAD(2) pPIncludeStatement=PPIncludeStatement() 
+	{return new Include(pPIncludeStatement, firstToken.next,token);} |
+	LOOKAHEAD(2) pPDefineStatement=PPDefineStatement() 
+	{return new Define(pPDefineStatement, firstToken.next,token);} |
+	LOOKAHEAD(2) pPIfDef_TopLevel=PPIfDef_TopLevel() 
+	{return new IfDefTL(pPIfDef_TopLevel, firstToken.next,token);} |
+	LOOKAHEAD(2) "#" pPOtherIgnore=PPOtherIgnore() t=findLineEnd(){findlineend=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new Preprocessor(pPOtherIgnore, findlineend, firstToken.next,token);} |
+	LOOKAHEAD(FunctionHeader()) function=Function() 
+	{return new Func(function, firstToken.next,token);} |
+	typeDef=TypeDef() 
+	{return new TypeDef_(typeDef, firstToken.next,token);} |
+	LOOKAHEAD(3) externDecl=ExternDecl() 
+	{return new ExternDec(externDecl, firstToken.next,token);} |
+	statement=Statement() 
+	{return new StmtTL(statement, firstToken.next,token);}
+ ) }
+
+CodeUnit_InBlock CodeUnit_InBlock() : { 
+	PPIfDef_BlockLevel pPIfDef_BlockLevel;
+	PPIncludeStatement pPIncludeStatement;
+	PPDefineStatement pPDefineStatement;
+	PPOtherIgnore pPOtherIgnore;
+	Token t;
+	ASTStringNode findlineend;
+	IfStatement ifStatement;
+	ForStatement forStatement;
+	WhileStatement whileStatement;
+	DoStatement doStatement;
+	SwitchStatement switchStatement;
+	GotoLabel gotoLabel;
+	Block block;
+	Statement statement;
+	Token firstToken=token;
+} { (
+	LOOKAHEAD(2) pPIfDef_BlockLevel=PPIfDef_BlockLevel() 
+	{return new IfDefBL(pPIfDef_BlockLevel, firstToken.next,token);} |
+	LOOKAHEAD(2) pPIncludeStatement=PPIncludeStatement() 
+	{return new IncludeBL(pPIncludeStatement, firstToken.next,token);} |
+	LOOKAHEAD(2) pPDefineStatement=PPDefineStatement() 
+	{return new DefineBL(pPDefineStatement, firstToken.next,token);} |
+	LOOKAHEAD(2) "#" pPOtherIgnore=PPOtherIgnore() t=findLineEnd(){findlineend=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new PreprocessorBL(pPOtherIgnore, findlineend, firstToken.next,token);} |
+	LOOKAHEAD(1) ifStatement=IfStatement() 
+	{return new If(ifStatement, firstToken.next,token);} |
+	LOOKAHEAD(1) forStatement=ForStatement() 
+	{return new For(forStatement, firstToken.next,token);} |
+	LOOKAHEAD(1) whileStatement=WhileStatement() 
+	{return new While(whileStatement, firstToken.next,token);} |
+	LOOKAHEAD(1) doStatement=DoStatement() 
+	{return new Do(doStatement, firstToken.next,token);} |
+	LOOKAHEAD(1) switchStatement=SwitchStatement() 
+	{return new Switch(switchStatement, firstToken.next,token);} |
+	LOOKAHEAD(2) gotoLabel=GotoLabel() 
+	{return new CodeUnit_InBlock10(gotoLabel, firstToken.next,token);} |
+	LOOKAHEAD(1) block=Block() 
+	{return new Blck(block, firstToken.next,token);} |
+	statement=Statement() 
+	{return new Stmt(statement, firstToken.next,token);}
+ ) }
+
+Statement Statement() : { 
+	AnyStmtToken anyStmtToken;
+	ArrayList<AnyStmtToken> anyStmtTokenList = new ArrayList<AnyStmtToken>();
+	Token firstToken=token;
+} { (
+	(anyStmtToken=AnyStmtToken(){anyStmtTokenList.add(anyStmtToken);})* ";" 
+	{return new Statement(anyStmtTokenList, firstToken.next,token);}
+ ) }
+
+IfStatement IfStatement() : { 
+	Token t;
+	ASTStringNode findendcb;
+	BlockOrSingleStatement blockOrSingleStatement;
+	ElseBlock elseBlock = null;
+	Token firstToken=token;
+} { (
+	"if" "(" t=findEndCB(){findendcb=new ASTStringNode(t.toString(),new WToken(t));} blockOrSingleStatement=BlockOrSingleStatement() [LOOKAHEAD(1) elseBlock=ElseBlock()] 
+	{return new IfStatement(findendcb, blockOrSingleStatement, elseBlock, firstToken.next,token);}
+ ) }
+
+ElseBlock ElseBlock() : { 
+	Token firstToken=token;
+} { (
+	"else"  
+	{return new ElseBlock(firstToken.next,token);}
+ ) }
+
+ForStatement ForStatement() : { 
+	Token t;
+	ASTStringNode findendcb;
+	BlockOrSingleStatement blockOrSingleStatement;
+	Token firstToken=token;
+} { (
+	"for" "(" t=findEndCB(){findendcb=new ASTStringNode(t.toString(),new WToken(t));} blockOrSingleStatement=BlockOrSingleStatement() 
+	{return new ForStatement(findendcb, blockOrSingleStatement, firstToken.next,token);}
+ ) }
+
+WhileStatement WhileStatement() : { 
+	Token t;
+	ASTStringNode findendcb;
+	BlockOrSingleStatement blockOrSingleStatement;
+	Token firstToken=token;
+} { (
+	"while" "(" t=findEndCB(){findendcb=new ASTStringNode(t.toString(),new WToken(t));} blockOrSingleStatement=BlockOrSingleStatement() 
+	{return new WhileStatement(findendcb, blockOrSingleStatement, firstToken.next,token);}
+ ) }
+
+DoStatement DoStatement() : { 
+	BlockOrSingleStatement blockOrSingleStatement;
+	Token t;
+	ASTStringNode findendcb;
+	Token firstToken=token;
+} { (
+	"do" blockOrSingleStatement=BlockOrSingleStatement() "while" "(" t=findEndCB(){findendcb=new ASTStringNode(t.toString(),new WToken(t));} ";" 
+	{return new DoStatement(blockOrSingleStatement, findendcb, firstToken.next,token);}
+ ) }
+
+SwitchStatement SwitchStatement() : { 
+	Token t;
+	ASTStringNode findendcb;
+	SwCase swCase;
+	ArrayList<SwCase> swCaseList = new ArrayList<SwCase>();
+	Token firstToken=token;
+} { (
+	"switch" "(" t=findEndCB(){findendcb=new ASTStringNode(t.toString(),new WToken(t));} "{" (swCase=SwCase(){swCaseList.add(swCase);})* "}" 
+	{return new SwitchStatement(findendcb, swCaseList, firstToken.next,token);}
+ ) }
+
+SwCase SwCase() : { 
+	Sequence_CodeUnit_InBlock sequence_CodeUnit_InBlock;
+	Token t;
+	ASTStringNode identifier = null;
+	SwCaseLabel swCaseLabel;
+	MoreSwCaseLabel moreSwCaseLabel;
+	ArrayList<MoreSwCaseLabel> moreSwCaseLabelList = new ArrayList<MoreSwCaseLabel>();
+	Sequence_CodeUnit_InBlock sequence_CodeUnit_InBlock1;
+	Token firstToken=token;
+} { (
+	"default" ":" sequence_CodeUnit_InBlock=Sequence_CodeUnit_InBlock() 
+	{return new SwCase1(sequence_CodeUnit_InBlock, firstToken.next,token);} |
+	"case" [LOOKAHEAD(1) "(" t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} ")"] swCaseLabel=SwCaseLabel() (moreSwCaseLabel=MoreSwCaseLabel(){moreSwCaseLabelList.add(moreSwCaseLabel);})* ":" sequence_CodeUnit_InBlock1=Sequence_CodeUnit_InBlock() 
+	{return new SwCase2(identifier, swCaseLabel, moreSwCaseLabelList, sequence_CodeUnit_InBlock1, firstToken.next,token);}
+ ) }
+
+SwCaseLabel SwCaseLabel() : { 
+	Token t;
+	ASTStringNode identifier;
+	ASTStringNode other = null;
+	ASTStringNode literal;
+	Token firstToken=token;
+} { (
+	t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new SwCaseLabel1(identifier, firstToken.next,token);} |
+	[t=<OTHER>{other=new ASTStringNode(t.toString(),new WToken(t));}] t=<LITERAL>{literal=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new SwCaseLabel2(other, literal, firstToken.next,token);}
+ ) }
+
+MoreSwCaseLabel MoreSwCaseLabel() : { 
+	SwCaseLabel swCaseLabel;
+	Token firstToken=token;
+} { (
+	"|" swCaseLabel=SwCaseLabel() 
+	{return new MoreSwCaseLabel(swCaseLabel, firstToken.next,token);}
+ ) }
+
+ExternDecl ExternDecl() : { 
+	Token t;
+	ASTStringNode literal;
+	Block block;
+	Token firstToken=token;
+} { (
+	"extern" t=<LITERAL>{literal=new ASTStringNode(t.toString(),new WToken(t));} block=Block() 
+	{return new ExternDecl(literal, block, firstToken.next,token);}
+ ) }
+
+PPIncludeStatement PPIncludeStatement() : { 
+	Token t;
+	ASTStringNode findlineend;
+	Token firstToken=token;
+} { (
+	"#" "include" t=findLineEnd(){findlineend=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new PPIncludeStatement(findlineend, firstToken.next,token);}
+ ) }
+
+PPDefineStatement PPDefineStatement() : { 
+	Token t;
+	ASTStringNode findlineend;
+	ASTStringNode findlineend1;
+	Token firstToken=token;
+} { (
+	LOOKAHEAD(2) "#" "define" t=findLineEnd(){findlineend=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new PPDefineStatement1(findlineend, firstToken.next,token);} |
+	LOOKAHEAD(2) "#" "undef" t=findLineEnd(){findlineend1=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new PPDefineStatement2(findlineend1, firstToken.next,token);}
+ ) }
+
+PPIfDef_TopLevel PPIfDef_TopLevel() : { 
+	IfDefLine ifDefLine;
+	Sequence_CodeUnit_TopLevel sequence_CodeUnit_TopLevel;
+	IfElseIf_TopLevel ifElseIf_TopLevel;
+	ArrayList<IfElseIf_TopLevel> ifElseIf_TopLevelList = new ArrayList<IfElseIf_TopLevel>();
+	Sequence_CodeUnit_TopLevel sequence_CodeUnit_TopLevel1 = null;
+	Token firstToken=token;
+} { (
+	ifDefLine=IfDefLine() sequence_CodeUnit_TopLevel=Sequence_CodeUnit_TopLevel() (LOOKAHEAD(2) ifElseIf_TopLevel=IfElseIf_TopLevel(){ifElseIf_TopLevelList.add(ifElseIf_TopLevel);})* [LOOKAHEAD(2) "#" "else" sequence_CodeUnit_TopLevel1=Sequence_CodeUnit_TopLevel()] "#" "endif" 
+	{return new PPIfDef_TopLevel(ifDefLine, sequence_CodeUnit_TopLevel, ifElseIf_TopLevelList, sequence_CodeUnit_TopLevel1, firstToken.next,token);}
+ ) }
+
+PPIfDef_BlockLevel PPIfDef_BlockLevel() : { 
+	IfDefLine ifDefLine;
+	Sequence_CodeUnit_InBlock sequence_CodeUnit_InBlock;
+	IfElseIf_BlockLevel ifElseIf_BlockLevel;
+	ArrayList<IfElseIf_BlockLevel> ifElseIf_BlockLevelList = new ArrayList<IfElseIf_BlockLevel>();
+	Sequence_CodeUnit_InBlock sequence_CodeUnit_InBlock1 = null;
+	Token firstToken=token;
+} { (
+	ifDefLine=IfDefLine() sequence_CodeUnit_InBlock=Sequence_CodeUnit_InBlock() (LOOKAHEAD(2) ifElseIf_BlockLevel=IfElseIf_BlockLevel(){ifElseIf_BlockLevelList.add(ifElseIf_BlockLevel);})* [LOOKAHEAD(2) "#" "else" sequence_CodeUnit_InBlock1=Sequence_CodeUnit_InBlock()] "#" "endif" 
+	{return new PPIfDef_BlockLevel(ifDefLine, sequence_CodeUnit_InBlock, ifElseIf_BlockLevelList, sequence_CodeUnit_InBlock1, firstToken.next,token);}
+ ) }
+
+PPOtherIgnore PPOtherIgnore() : { 
+	Token firstToken=token;
+} { (
+	"line"  
+	{return new PPOtherIgnore1(firstToken.next,token);} |
+	"pragma"  
+	{return new PPOtherIgnore2(firstToken.next,token);} |
+	"error"  
+	{return new PPOtherIgnore3(firstToken.next,token);}
+ ) }
+
+IfDefLine IfDefLine() : { 
+	Token t;
+	ASTStringNode identifier;
+	ASTStringNode identifier1;
+	ASTStringNode findlineend;
+	Token firstToken=token;
+} { (
+	LOOKAHEAD(2) "#" "ifdef" t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new IfDefLine1(identifier, firstToken.next,token);} |
+	LOOKAHEAD(2) "#" "ifndef" t=<IDENTIFIER>{identifier1=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new IfDefLine2(identifier1, firstToken.next,token);} |
+	"#" "if" t=findLineEnd(){findlineend=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new IfDefLine3(findlineend, firstToken.next,token);}
+ ) }
+
+IfElseIf IfElseIf() : { 
+	Token firstToken=token;
+} { (
+	LOOKAHEAD(2) "#" "elif"  
+	{return new IfElseIf1(firstToken.next,token);} |
+	"#" "elsif"  
+	{return new IfElseIf2(firstToken.next,token);}
+ ) }
+
+IfElseIf_BlockLevel IfElseIf_BlockLevel() : { 
+	IfElseIf ifElseIf;
+	Token t;
+	ASTStringNode findlineend;
+	Sequence_CodeUnit_InBlock sequence_CodeUnit_InBlock;
+	Token firstToken=token;
+} { (
+	ifElseIf=IfElseIf() t=findLineEnd(){findlineend=new ASTStringNode(t.toString(),new WToken(t));} sequence_CodeUnit_InBlock=Sequence_CodeUnit_InBlock() 
+	{return new IfElseIf_BlockLevel(ifElseIf, findlineend, sequence_CodeUnit_InBlock, firstToken.next,token);}
+ ) }
+
+IfElseIf_TopLevel IfElseIf_TopLevel() : { 
+	IfElseIf ifElseIf;
+	Token t;
+	ASTStringNode findlineend;
+	Sequence_CodeUnit_TopLevel sequence_CodeUnit_TopLevel;
+	Token firstToken=token;
+} { (
+	ifElseIf=IfElseIf() t=findLineEnd(){findlineend=new ASTStringNode(t.toString(),new WToken(t));} sequence_CodeUnit_TopLevel=Sequence_CodeUnit_TopLevel() 
+	{return new IfElseIf_TopLevel(ifElseIf, findlineend, sequence_CodeUnit_TopLevel, firstToken.next,token);}
+ ) }
+
+Function Function() : { 
+	FunctionHeader functionHeader;
+	FunctionParameterList functionParameterList = null;
+	BlockOrSemi blockOrSemi;
+	Token firstToken=token;
+} { (
+	functionHeader=FunctionHeader() [functionParameterList=FunctionParameterList()] ")" blockOrSemi=BlockOrSemi() 
+	{return new Function(functionHeader, functionParameterList, blockOrSemi, firstToken.next,token);}
+ ) }
+
+FunctionHeader FunctionHeader() : { 
+	Modifier modifier;
+	ArrayList<Modifier> modifierList = new ArrayList<Modifier>();
+	FunctionReturnType functionReturnType;
+	ASTTextNode text25 = null;
+	FunctionExoticStuff functionExoticStuff = null;
+	Token t;
+	ASTStringNode identifier;
+	Token firstToken=token;
+} { (
+	(modifier=Modifier(){modifierList.add(modifier);})* functionReturnType=FunctionReturnType() ["*" {text25=new ASTTextNode("*",new WToken(token));}] [LOOKAHEAD(1) functionExoticStuff=FunctionExoticStuff()] t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} "(" 
+	{return new FunctionHeader(modifierList, functionReturnType, text25, functionExoticStuff, identifier, firstToken.next,token);}
+ ) }
+
+FunctionReturnType FunctionReturnType() : { 
+	ASTTextNode text26 = null;
+	ASTTextNode text27 = null;
+	ASTTextNode text28 = null;
+	Token t;
+	ASTStringNode identifier;
+	Token firstToken=token;
+} { (
+	["const" {text26=new ASTTextNode("const",new WToken(token));}] ["struct" {text27=new ASTTextNode("struct",new WToken(token));}] ["unsigned" {text28=new ASTTextNode("unsigned",new WToken(token));}] t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new FunctionReturnType(text26, text27, text28, identifier, firstToken.next,token);}
+ ) }
+
+Modifier Modifier() : { 
+	Token firstToken=token;
+} { (
+	"static"  
+	{return new Modifier1(firstToken.next,token);} |
+	"inline"  
+	{return new Modifier2(firstToken.next,token);} |
+	"__inline__"  
+	{return new Modifier3(firstToken.next,token);} |
+	"__inline"  
+	{return new Modifier4(firstToken.next,token);} |
+	"extern"  
+	{return new Modifier5(firstToken.next,token);} |
+	"__TIPOFUNC__"  
+	{return new Modifier6(firstToken.next,token);}
+ ) }
+
+FunctionExoticStuff FunctionExoticStuff() : { 
+	Token t;
+	ASTStringNode literal;
+	Token firstToken=token;
+} { (
+	"__regbank" "(" t=<LITERAL>{literal=new ASTStringNode(t.toString(),new WToken(t));} ")" 
+	{return new FunctionExoticStuff(literal, firstToken.next,token);}
+ ) }
+
+FunctionParameterList FunctionParameterList() : { 
+	FunctionParameter functionParameter;
+	ArrayList<FunctionParameter> list0=new ArrayList<FunctionParameter>();
+	FunctionParameter functionParameter1;
+	ArrayList<FunctionParameter> functionParameter1List = new ArrayList<FunctionParameter>();
+	Token firstToken=token;
+} { (
+	functionParameter=FunctionParameter(){list0.add(functionParameter);} ("," functionParameter1=FunctionParameter(){list0.add(functionParameter1);})* 
+	{return new FunctionParameterList(list0, firstToken.next,token);}
+ ) }
+
+FunctionParameter FunctionParameter() : { 
+	VarDeclToken varDeclToken;
+	ArrayList<VarDeclToken> varDeclTokenList = new ArrayList<VarDeclToken>();
+	Token firstToken=token;
+} { (
+	(varDeclToken=VarDeclToken(){varDeclTokenList.add(varDeclToken);})+ 
+	{return new FunctionParameter(varDeclTokenList, firstToken.next,token);}
+ ) }
+
+Block Block() : { 
+	Sequence_CodeUnit_InBlock sequence_CodeUnit_InBlock;
+	Token firstToken=token;
+} { (
+	"{" sequence_CodeUnit_InBlock=Sequence_CodeUnit_InBlock() "}" 
+	{return new Block(sequence_CodeUnit_InBlock, firstToken.next,token);}
+ ) }
+
+GotoLabel GotoLabel() : { 
+	Token t;
+	ASTStringNode identifier;
+	Token firstToken=token;
+} { (
+	t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} ":" 
+	{return new GotoLabel(identifier, firstToken.next,token);}
+ ) }
+
+Sequence_CodeUnit_InBlock Sequence_CodeUnit_InBlock() : { 
+	CodeUnit_InBlock codeUnit_InBlock;
+	ArrayList<CodeUnit_InBlock> codeUnit_InBlockList = new ArrayList<CodeUnit_InBlock>();
+	Token firstToken=token;
+} { (
+	(LOOKAHEAD(2) codeUnit_InBlock=CodeUnit_InBlock(){codeUnit_InBlockList.add(codeUnit_InBlock);})* 
+	{return new Sequence_CodeUnit_InBlock(codeUnit_InBlockList, firstToken.next,token);}
+ ) }
+
+BlockOrSemi BlockOrSemi() : { 
+	Block block;
+	VarDecl varDecl;
+	ArrayList<VarDecl> varDeclList = new ArrayList<VarDecl>();
+	Block block1;
+	Token firstToken=token;
+} { (
+	LOOKAHEAD(1) ";"  
+	{return new BlockOrSemi1(firstToken.next,token);} |
+	LOOKAHEAD(1) block=Block() 
+	{return new BlockOrSemi2(block, firstToken.next,token);} |
+	(varDecl=VarDecl(){varDeclList.add(varDecl);})+ block1=Block() 
+	{return new BlockOrSemi3(varDeclList, block1, firstToken.next,token);}
+ ) }
+
+BlockOrSingleStatement BlockOrSingleStatement() : { 
+	Block block;
+	CodeUnit_InBlock codeUnit_InBlock;
+	Token firstToken=token;
+} { (
+	LOOKAHEAD(1) block=Block() 
+	{return new BlockOrSingleStatement1(block, firstToken.next,token);} |
+	codeUnit_InBlock=CodeUnit_InBlock() 
+	{return new BlockOrSingleStatement2(codeUnit_InBlock, firstToken.next,token);}
+ ) }
+
+TypeDef TypeDef() : { 
+	AnyTypeDefToken anyTypeDefToken;
+	ArrayList<AnyTypeDefToken> anyTypeDefTokenList = new ArrayList<AnyTypeDefToken>();
+	AnyStmtToken anyStmtToken;
+	ArrayList<AnyStmtToken> anyStmtTokenList = new ArrayList<AnyStmtToken>();
+	Token firstToken=token;
+} { (
+	LOOKAHEAD(2) "typedef" "enum" (anyTypeDefToken=AnyTypeDefToken(){anyTypeDefTokenList.add(anyTypeDefToken);})* ";" 
+	{return new TypeDef1(anyTypeDefTokenList, firstToken.next,token);} |
+	"typedef" (anyStmtToken=AnyStmtToken(){anyStmtTokenList.add(anyStmtToken);})* ";" 
+	{return new TypeDef2(anyStmtTokenList, firstToken.next,token);}
+ ) }
+
+BlockAssignment BlockAssignment() : { 
+	Cast cast = null;
+	Token t;
+	ASTStringNode findendccb;
+	Token firstToken=token;
+} { (
+	"=" [cast=Cast()] "{" t=findEndCCB(){findendccb=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new BlockAssignment(cast, findendccb, firstToken.next,token);}
+ ) }
+
+EnumBlock EnumBlock() : { 
+	Token t;
+	ASTStringNode identifier = null;
+	ASTStringNode findendccb;
+	Token firstToken=token;
+} { (
+	"enum" [t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));}] "{" t=findEndCCB(){findendccb=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new EnumBlock(identifier, findendccb, firstToken.next,token);}
+ ) }
+
+Cast Cast() : { 
+	FunctionReturnType functionReturnType;
+	Token firstToken=token;
+} { (
+	"(" functionReturnType=FunctionReturnType() ")" 
+	{return new Cast(functionReturnType, firstToken.next,token);}
+ ) }
+
+AnyTypeDefToken AnyTypeDefToken() : { 
+	AnyStmtToken anyStmtToken;
+	Token firstToken=token;
+} { (
+	LOOKAHEAD(1) "{"  
+	{return new AnyTypeDefToken1(firstToken.next,token);} |
+	"}"  
+	{return new AnyTypeDefToken2(firstToken.next,token);} |
+	anyStmtToken=AnyStmtToken() 
+	{return new AnyTypeDefToken3(anyStmtToken, firstToken.next,token);}
+ ) }
+
+AnyStmtToken AnyStmtToken() : { 
+	Token t;
+	ASTStringNode identifier;
+	ASTStringNode literal;
+	ASTStringNode other;
+	Block block;
+	EnumBlock enumBlock;
+	BlockAssignment blockAssignment;
+	Modifier modifier;
+	PPOtherIgnore pPOtherIgnore;
+	Token firstToken=token;
+} { (
+	t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new AnyStmtToken1(identifier, firstToken.next,token);} |
+	t=<LITERAL>{literal=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new AnyStmtToken2(literal, firstToken.next,token);} |
+	t=<OTHER>{other=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new AnyStmtToken3(other, firstToken.next,token);} |
+	","  
+	{return new AnyStmtToken4(firstToken.next,token);} |
+	"|"  
+	{return new AnyStmtToken5(firstToken.next,token);} |
+	"<"  
+	{return new AnyStmtToken6(firstToken.next,token);} |
+	">"  
+	{return new AnyStmtToken7(firstToken.next,token);} |
+	"("  
+	{return new AnyStmtToken8(firstToken.next,token);} |
+	")"  
+	{return new AnyStmtToken9(firstToken.next,token);} |
+	block=Block() 
+	{return new AnyStmtToken10(block, firstToken.next,token);} |
+	"if"  
+	{return new AnyStmtToken11(firstToken.next,token);} |
+	"else"  
+	{return new AnyStmtToken12(firstToken.next,token);} |
+	"for"  
+	{return new AnyStmtToken13(firstToken.next,token);} |
+	"while"  
+	{return new AnyStmtToken14(firstToken.next,token);} |
+	LOOKAHEAD(3) enumBlock=EnumBlock() 
+	{return new AnyStmtToken15(enumBlock, firstToken.next,token);} |
+	"enum"  
+	{return new AnyStmtToken16(firstToken.next,token);} |
+	"*"  
+	{return new AnyStmtToken17(firstToken.next,token);} |
+	LOOKAHEAD("=" [Cast()]"{") blockAssignment=BlockAssignment() 
+	{return new AnyStmtToken18(blockAssignment, firstToken.next,token);} |
+	"="  
+	{return new AnyStmtToken19(firstToken.next,token);} |
+	":"  
+	{return new AnyStmtToken20(firstToken.next,token);} |
+	modifier=Modifier() 
+	{return new AnyStmtToken21(modifier, firstToken.next,token);} |
+	"ifdef"  
+	{return new AnyStmtToken22(firstToken.next,token);} |
+	"ifndef"  
+	{return new AnyStmtToken23(firstToken.next,token);} |
+	"define"  
+	{return new AnyStmtToken24(firstToken.next,token);} |
+	"include"  
+	{return new AnyStmtToken25(firstToken.next,token);} |
+	"elif"  
+	{return new AnyStmtToken26(firstToken.next,token);} |
+	"elsif"  
+	{return new AnyStmtToken27(firstToken.next,token);} |
+	pPOtherIgnore=PPOtherIgnore() 
+	{return new AnyStmtToken28(pPOtherIgnore, firstToken.next,token);} |
+	"const"  
+	{return new AnyStmtToken29(firstToken.next,token);} |
+	"struct"  
+	{return new AnyStmtToken30(firstToken.next,token);} |
+	"unsigned"  
+	{return new AnyStmtToken31(firstToken.next,token);}
+ ) }
+
+VarDecl VarDecl() : { 
+	VarDeclTokenOrComma varDeclTokenOrComma;
+	ArrayList<VarDeclTokenOrComma> varDeclTokenOrCommaList = new ArrayList<VarDeclTokenOrComma>();
+	Token firstToken=token;
+} { (
+	(varDeclTokenOrComma=VarDeclTokenOrComma(){varDeclTokenOrCommaList.add(varDeclTokenOrComma);})* ";" 
+	{return new VarDecl(varDeclTokenOrCommaList, firstToken.next,token);}
+ ) }
+
+VarDeclTokenOrComma VarDeclTokenOrComma() : { 
+	VarDeclToken varDeclToken;
+	Token firstToken=token;
+} { (
+	varDeclToken=VarDeclToken() 
+	{return new VarDeclTokenOrComma1(varDeclToken, firstToken.next,token);} |
+	","  
+	{return new VarDeclTokenOrComma2(firstToken.next,token);}
+ ) }
+
+VarDeclToken VarDeclToken() : { 
+	Token t;
+	ASTStringNode identifier;
+	ASTStringNode literal;
+	ASTStringNode other;
+	PPOtherIgnore pPOtherIgnore;
+	Modifier modifier;
+	ASTStringNode findendcb;
+	Token firstToken=token;
+} { (
+	t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new VarDeclToken1(identifier, firstToken.next,token);} |
+	t=<LITERAL>{literal=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new VarDeclToken2(literal, firstToken.next,token);} |
+	"*"  
+	{return new VarDeclToken3(firstToken.next,token);} |
+	t=<OTHER>{other=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new VarDeclToken4(other, firstToken.next,token);} |
+	"|"  
+	{return new VarDeclToken5(firstToken.next,token);} |
+	"const"  
+	{return new VarDeclToken6(firstToken.next,token);} |
+	"struct"  
+	{return new VarDeclToken7(firstToken.next,token);} |
+	"unsigned"  
+	{return new VarDeclToken8(firstToken.next,token);} |
+	"enum"  
+	{return new VarDeclToken9(firstToken.next,token);} |
+	pPOtherIgnore=PPOtherIgnore() 
+	{return new VarDeclToken10(pPOtherIgnore, firstToken.next,token);} |
+	modifier=Modifier() 
+	{return new VarDeclToken11(modifier, firstToken.next,token);} |
+	"(" t=findEndCB(){findendcb=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new VarDeclToken12(findendcb, firstToken.next,token);}
+ ) }
+
+Literal Literal() : { 
+	Token t;
+	ASTStringNode literal;
+	Token firstToken=token;
+} { (
+	t=<LITERAL>{literal=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new Literal(literal, firstToken.next,token);}
+ ) }
+

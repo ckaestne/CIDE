@@ -1,0 +1,19 @@
+class Main {
+	int foo() {
+		try {
+			a();
+			hook();
+			throw ReturnHack.returnInt;
+		} catch (ReturnInt r) {
+		 	return r.value;
+		 }
+	}
+
+	void a() {
+	}
+	
+	protected void hook(){
+		a();
+		throw new ReturnInt(1);
+	}
+}

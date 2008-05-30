@@ -1,0 +1,10 @@
+class Main {
+	void foo() {
+		b();
+	}
+
+	void a() {}
+	void b() {}
+	void c() {}
+	void d() {}
+}

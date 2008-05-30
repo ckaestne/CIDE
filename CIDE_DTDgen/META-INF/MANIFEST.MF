@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: CIDE_Language_XML Plug-in
+Bundle-SymbolicName: de.ovgu.cide.language.xml;singleton:=true
+Bundle-Version: 1.0.0
+Require-Bundle: de.ovgu.cide.core,
+ org.eclipse.core.runtime,
+ de.ovgu.cide.ast

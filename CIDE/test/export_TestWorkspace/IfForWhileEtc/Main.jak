@@ -1,0 +1,41 @@
+class Main {
+	void foo() {
+		int i;
+		i=hook(i);
+		hook(i);
+		hook();
+		hook();
+		hook();
+		hook();
+		hook();
+		hook();
+	}
+
+	void a() {}
+	void b() {}
+	protected void hook(){
+		a();
+	}
+	protected void hook(){
+		a();
+	}
+	protected void hook(){
+		a();
+	}
+	protected void hook(){
+		a();
+	}
+	protected void hook(){
+		a();
+	}
+	protected void hook(){
+		a();
+	}
+	protected void hook(int i){
+		a();
+	}
+	protected int hook(int i){
+		a();
+		return i;
+	}
+}

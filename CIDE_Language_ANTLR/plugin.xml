@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension
+         point="de.ovgu.cide.core.language">
+      <language
+            class="de.ovgu.cide.language.antlr.AntLRLanguageExtension"
+            fileExtensions=".g"
+            id="de.ovgu.cide.language.antlr"
+            name="ANTLR Language Extension">
+      </language>
+   </extension>
+
+</plugin>

@@ -1,0 +1,8 @@
+refines class Main {
+	void foo() {
+		a();
+		Super.foo();
+		c();
+		d();
+	}
+}

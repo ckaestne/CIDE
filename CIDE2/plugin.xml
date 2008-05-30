@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+   <extension-point id="language" name="CIDE Language Extension" schema="schema/language.exsd"/>
+
+     <extension
+         point="org.eclipse.ui.views">
+      <view
+            name="ASTView"
+            icon="icons/view.gif"
+            category="coloride"
+            class="coloredide.astview.ASTView"
+            id="coloredide.ASTView">
+      </view>
+      <category
+            id="coloride"
+            name="CIDE"/>
+      <view
+            category="coloride"
+            class="coloredide.tools.interactionanalyzer.InteractionsView"
+            icon="icons/interaction.GIF"
+            id="de.ovgu.cide.core.view.interactions"
+            name="Feature Interactions">
+      </view>
+      <view
+            allowMultiple="true"
+            category="coloride"
+            class="coloredide.tools.featureview.FeatureView"
+            id="de.ovgu.cide.core.view.features"
+            name="Feature List">
+      </view>
+   </extension>
+   
+ 
+  
+  <extension
+        point="org.eclipse.ui.perspectiveExtensions">
+     <perspectiveExtension
+           targetID="org.eclipse.jdt.ui.JavaPerspective">
+        <viewShortcut
+              id="org.eclipse.jdt.astview.views.ASTView">
+        </viewShortcut>
+     </perspectiveExtension>
+  </extension>
+  <extension
+        point="org.eclipse.ui.actionSets">
+     <actionSet
+           id="coloride.actionSet"
+           label="CIDE"
+           visible="true">
+        <menu
+              id="colorMenu"
+              label="Colors">
+           <separator name="colorGroup"/>
+        </menu>
+        <action
+              class="coloredide.validator.ForceValidationAction"
+              id="coloride.validator.ForceValidationAction"
+              label="Force Full Validation"
+              menubarPath="colorMenu/colorGroup"
+              style="push"
+              tooltip="Force color validation for full project "/>
+        <action
+              class="coloredide.tools.interactionanalyzer.CollectInteractionsAction"
+              id="menu_AstView.action4"
+              label="Collect Interactions"
+              menubarPath="colorMenu/colorGroup">
+        </action>
+
+     </actionSet>
+  </extension>
+  <extension
+        point="org.eclipse.ui.popupMenus">
+     <objectContribution
+           adaptable="false"
+           id="coloredide.projectContributions"
+           objectClass="org.eclipse.core.resources.IProject">
+        <menu
+              id="coloride.menu1"
+              label="CIDE"
+              path="additions">
+           <separator name="cideGroup"/>
+        </menu>
+        <menu
+              id="ColoredIDE.menu2"
+              label="Analysis"
+              path="coloride.menu1/cideGroup">
+           <separator name="group2"/>
+        </menu>
+        <action
+              class="coloredide.configuration.CreateConfigurationAction"
+              enablesFor="1"
+              id="coloride.newAction"
+              label="Generate Variant..."
+              menubarPath="coloride.menu1/cideGroup"/>
+       <action
+              class="coloredide.tools.featurenamedialog.EditFeatureNamesAction"
+              enablesFor="1"
+              id="coloride.editFeatureNames"
+              label="Edit Features..."
+              menubarPath="coloride.menu1/cideGroup"/>
+               <action
+              class="coloredide.validator.ForceValidationAction"
+              id="AstView.action1"
+              label="Force Full Validation"
+              menubarPath="coloride.menu1/cideGroup"/>
+               <action
+                     class="coloredide.tools.interactionanalyzer.CollectInteractionsAction"
+                     id="AstView.action4"
+                     label="Collect Interactions"
+                     menubarPath="coloride.menu1/gcideGroup">
+               </action>
+     </objectContribution>
+     <objectContribution
+           adaptable="true"
+           id="coloredide.resourceContributions"
+           objectClass="org.eclipse.core.resources.IResource">
+        <action
+              class="coloredide.navigator.SetColorPopup"
+              enablesFor="+"
+              id="ColoredIDE.SetResourceColor"
+              label="Set File/Directory Color"
+              menubarPath="group.open"/>
+     </objectContribution>
+ 
+  </extension>
+
+   <extension
+         id="javaeditor"
+         point="org.eclipse.ui.editors">
+      <editor
+            name="Colored Source Editor"
+            default="true"
+            icon="icons/coloredj.gif"
+            class="coloredide.editor.ColoredTextEditor"
+            id="coloredIDE.ColoredCompilationUnitEditor">
+         <contentTypeBinding contentTypeId="de.ovgu.cide.coloredFile"/>
+      </editor>
+     
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            class="coloredide.PerspectiveFactory"
+            icon="icons/interaction.GIF"
+            id="ColoredIDE.perspective"
+            name="CIDE"/>
+   </extension>
+   <extension
+         point="org.eclipse.core.contenttype.contentTypes">
+      <content-type
+            file-extensions="*.lang"
+            id="CIDE2.coloredFile"
+            name="Colored Source File"
+            priority="normal">
+      </content-type>
+   </extension>
+   
+    <extension
+        id="problem"
+        name="Color Problem"
+        point="org.eclipse.core.resources.markers">
+      <super type="org.eclipse.core.resources.problemmarker"/> 
+      <super type="org.eclipse.core.resources.textmarker"/> 
+     <persistent value="true"/>
+     <attribute name="coloride.problemtype"/>
+     <attribute name="coloride.problemdata"/>
+  </extension>
+    <extension
+          point="org.eclipse.ui.navigator.navigatorContent">
+       <navigatorContent
+             activeByDefault="true"
+             contentProvider="coloredide.navigator.ContentProvider"
+             id="coloredide.navigatorContentColorProvider"
+             labelProvider="coloredide.navigator.ColoringProvider"
+             name="CIDE Color Provider"
+             priority="high">
+             <triggerPoints>
+           <or>         
+              <instanceof 
+                    value="org.eclipse.core.resources.IWorkspaceRoot" /> 
+              <instanceof
+                    value="org.eclipse.core.resources.IProject" />  
+              <instanceof  
+                     value="org.eclipse.core.resources.IFolder" /> 
+           </or>
+  </triggerPoints>
+        <possibleChildren>
+           <or>         
+              <instanceof 
+                    value="org.eclipse.core.resources.IWorkspaceRoot" /> 
+              <instanceof
+                    value="org.eclipse.core.resources.IProject" /> 
+              <instanceof 
+                     value="org.eclipse.core.resources.IResource" /> 
+              <instanceof  
+                     value="org.eclipse.core.resources.IFolder" />
+              <instanceof 
+                     value="org.eclipse.core.resources.IFile" /> 
+         </or>
+     </possibleChildren>
+        <enablement>
+           <or>
+              <instanceof
+                    value="org.eclipse.core.resources.IProject">
+              </instanceof>
+              <instanceof
+                    value="org.eclipse.core.resources.IResource">
+              </instanceof>
+           </or>
+        </enablement>
+       </navigatorContent>
+    </extension>
+    <extension
+          point="org.eclipse.ui.navigator.viewer">
+       <viewerContentBinding
+             viewerId="org.eclipse.ui.navigator.ProjectExplorer">
+          <includes>
+             <contentExtension
+                   pattern="coloredide.navigatorContentColorProvider">
+             </contentExtension>
+          </includes>
+       </viewerContentBinding>
+       <viewer
+             popupMenuId="coloredide.navigatorpopup"
+             viewerId="org.eclipse.ui.navigator.ProjectExplorer">
+          <popupMenu
+                id="group.goto">
+             <insertionPoint
+                   name="group.features"
+                   separator="true">
+             </insertionPoint>
+          </popupMenu>
+       </viewer>
+       <viewerContentBinding
+             viewerId="org.eclipse.ui.views.ResourceNavigator">
+          <includes>
+             <contentExtension
+                   pattern="coloredide.navigatorContentColorProvider">
+             </contentExtension>
+          </includes>
+       </viewerContentBinding>
+    </extension>
+    <extension
+          point="org.eclipse.ui.popupMenus">
+       <viewerContribution
+             id="CIDE2.viewerContribution1"
+             targetID="coloredide.navigatorpopup">
+          <action
+                class="coloredide.navigator.SetColorPopup"
+                id="CIDE2.action1"
+                label="label">
+          </action>
+       </viewerContribution>
+    </extension>
+    <extension
+          point="org.eclipse.ant.core.antTasks">
+       <antTask
+             class="coloredide.configuration.ConfGenTask"
+             eclipseRuntime="true"
+             headless="false"
+             library="lib/antSupport.jar"
+             name="cide.confGen">
+       </antTask>
+    </extension>
+    <extension
+          point="org.eclipse.ant.core.extraClasspathEntries">
+       <extraClasspathEntry
+             library="ant_tasks/resources-ant.jar">
+       </extraClasspathEntry>
+    </extension>
+    <extension
+          point="org.eclipse.ui.viewActions">
+       <viewContribution
+             id="de.ovgu.cide.ColorFilter"
+             targetID="org.eclipse.ui.navigator.ProjectExplorer">
+          <action
+                class="coloredide.colorfilter.EnableColorFilterAction"
+                enablesFor="*"
+                icon="icons/interaction.GIF"
+                id="de.ovgu.cide.ColorFilter.Button"
+                label="Focus on selected features"
+                menubarPath="cide"
+                state="false"
+                style="toggle"
+                toolbarPath="cide"
+                tooltip="Focus on selected features">
+          </action>
+       </viewContribution>
+    </extension>
+    <extension
+          point="org.eclipse.ui.ide.resourceFilters">
+       <filter
+             pattern="*.color"
+             selected="true">
+       </filter>
+    </extension>
+</plugin>

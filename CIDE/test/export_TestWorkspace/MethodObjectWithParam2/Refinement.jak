@@ -1,0 +1,13 @@
+refines class Main {
+	refines class Main_Foo {
+		protected int i;
+		protected void hook() throws Exception {
+			i=1;
+			Super.hook();
+		}
+		protected void hook() throws Exception {
+			i++;
+			Super.hook();
+		}
+	}
+}

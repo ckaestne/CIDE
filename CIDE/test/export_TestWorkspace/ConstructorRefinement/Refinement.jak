@@ -1,0 +1,9 @@
+refines class Main {
+
+	public Main() {
+		super(100);
+	}
+
+	void foo() {
+	}
+}

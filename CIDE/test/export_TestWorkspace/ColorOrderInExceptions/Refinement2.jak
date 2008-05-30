@@ -1,0 +1,12 @@
+refines class Main {
+	protected void hook(){
+		a(2);
+		Super.hook();
+	}
+	void bar() {
+		try{ 
+		Super.bar();
+		}finally{}
+	}
+
+}

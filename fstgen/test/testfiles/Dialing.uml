@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Package xmi:version="2.1" xmlns:xmi="http://schema.omg.org/spec/XMI/2.1" xmlns:uml="http://www.eclipse.org/uml2/2.1.0/UML" xmi:id="_2h1BcCgJEd2tJpR67Im3fA" name="Package">
+  <packagedElement xmi:type="uml:Class" xmi:id="_8fvxYCgJEd2tJpR67Im3fA" name="Phone">
+    <ownedAttribute xmi:id="_aT1sQCgKEd2tJpR67Im3fA" name="number"/>
+    <ownedAttribute xmi:id="_p6hGMCgKEd2tJpR67Im3fA" name="owner" aggregation="composite"/>
+    <ownedAttribute xmi:id="_-o3kkCgKEd2tJpR67Im3fA" name="state"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_FInPMCgLEd2tJpR67Im3fA" name="OutCall">
+    <ownedAttribute xmi:id="_IL9rcCgLEd2tJpR67Im3fA" name="date" aggregation="composite"/>
+    <ownedAttribute xmi:id="_JL43YCgLEd2tJpR67Im3fA" name="time" aggregation="composite"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Association" xmi:id="_jz_XYCgLEd2tJpR67Im3fA" name="makes" memberEnd="_j0IhUCgLEd2tJpR67Im3fA _j0IhUygLEd2tJpR67Im3fA">
+    <ownedEnd xmi:id="_j0IhUCgLEd2tJpR67Im3fA" name="src" type="_8fvxYCgJEd2tJpR67Im3fA" association="_jz_XYCgLEd2tJpR67Im3fA">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_j0IhUigLEd2tJpR67Im3fA" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_j0IhUSgLEd2tJpR67Im3fA" value="1"/>
+    </ownedEnd>
+    <ownedEnd xmi:id="_j0IhUygLEd2tJpR67Im3fA" name="dst" type="_FInPMCgLEd2tJpR67Im3fA" association="_jz_XYCgLEd2tJpR67Im3fA">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_j0IhVSgLEd2tJpR67Im3fA" value="*"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_j0IhVCgLEd2tJpR67Im3fA"/>
+    </ownedEnd>
+  </packagedElement>
+</uml:Package>

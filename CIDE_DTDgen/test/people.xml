@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--DOCTYPE people_list SYSTEM "example.dtd"-->
+<people_list>
+  <person>
+   <name>Fred Bloggs</name>
+    <birthdate>27/11/2008</birthdate>
+    <gender>Male</gender>
+  </person>
+</people_list>

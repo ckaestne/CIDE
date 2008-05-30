@@ -1,0 +1,22 @@
+class Main {
+	void foo() {
+		a(1);
+		hook();
+		a(5);
+	}
+
+	void bar() {
+		a(1);
+		hook();
+		a(5);
+	}
+
+	void a(int x) {
+	}
+	
+	protected void hook(){
+	}
+	protected void hook(){
+	}
+
+}

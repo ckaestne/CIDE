@@ -1,0 +1,17 @@
+class Main {
+	void foo() {
+		int i=a();
+		int j=a();
+		i=hook(i, j);
+		b(i);
+	}
+
+	
+
+	int a() {
+		return 1;
+	}
+	void b(int x){}
+	
+	protected int hook(int i, int j){return i;}
+}

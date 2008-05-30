@@ -1,0 +1,7 @@
+import java.util.*;
+import java.awt.*;
+
+refines class Main {
+	int foo=1;
+	void foo(){}
+}

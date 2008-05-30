@@ -1,0 +1,10 @@
+refines class Main {
+	void foo() {
+		a();
+		b();
+		if (false)
+			return;
+		c();
+		d();
+	}
+}

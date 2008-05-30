@@ -1,0 +1,2537 @@
+
+options {
+  OUTPUT_DIRECTORY="generated_cs";
+  STATIC = false;
+}
+
+PARSER_BEGIN(CSParser)
+
+package tmp.generated_cs;
+
+import java.io.*;
+import java.util.*;
+import cide.gast.*;
+import cide.gparser.*;
+
+  public class CSParser{
+
+   
+  }
+
+PARSER_END(CSParser)
+
+SKIP : {
+ " "
+|  "\t"
+|  "\n"
+|  "\r"
+|  <"//" (~["\n","\r"])* ("\n" | "\r" | "\r\n")>
+|  <"/*" (~["*"])* "*" ("*" | ~["*","/"] (~["*"])* "*")* "/">
+}
+
+
+TOKEN : {
+	<ABSTRACT	:	"abstract">|			<LONG		:	"long">|
+	<AS			:	"as"> |			<NAMESPACE	:	"namespace"> |
+	<BASE		:	"base"> |		<NEW			:	"new"> |
+	<BOOL		:	"bool"> |		<NULL		:	"null"> |
+	<BREAK		:	"break"> |		<OBJECT		:	"object"> |
+	<BYTE		:	"byte"> |		<OPERATOR	:	"operator"> |
+	<CASE		:	"case"> |		<OUT			:	"out"> |
+	<CATCH		:	"catch"> |		<OVERRIDE	:	"override"> |
+	<CHAR		:	"char"> |		<PARAMS		:	"params"> |
+	<CHECKED		:	"checked"> |	<PRIVATE		:	"private"> |
+	<CLASS		:	"class"> |			<PROTECTED	:	"protected"> |
+	<CONST		:	"const"> |			<PUBLIC		:	"public"> |
+	<CONTINUE	:	"continue"> |		<READONLY	:	"readonly"> |
+	<DECIMAL		:	"decimal"> |	<REF			:	"ref"> |
+	<DEFAULTTOKEN		:	"default"> |	<RETURN		:	"return"> |
+	<DELEGATE	:	"delegate"> |		<SBYTE		:	"sbyte"> |
+	<DO			:	"do"> |				<SEALED		:	"sealed"> |
+	<DOUBLE		:	"double"> |			<SHORT		:	"short"> |
+	<ELSE		:	"else"> |			<SIZEOF		:	"sizeof"> |
+	<ENUM		:	"enum"> |			<STACKALLOC	:	"stackalloc"> |
+	<EVENT		:	"event"> |			<STATIC		:	"static"> |
+	<EXPLICIT	:	"explicit"> |		<STRING		:	"string"> |
+	<EXTERN		:	"extern"> |			<STRUCT		:	"struct"> |
+	<FALSE		:	"false"> |			<SWITCH		:	"switch"> |
+	<FINALLY		:	"finally"> |	<THIS		:	"this"> |
+	<FIXED		:	"fixed"> |			<THROW		:	"throw"> |
+	<FLOAT		:	"float"> |			<TRUE		:	"true"> |
+	<FOR			:	"for"> |		<TRY			:	"try"> |
+	<FOREACH		:	"foreach"> |	<TYPEOF		:	"typeof"> |
+	<GOTO		:	"goto"> |			<UINT		:	"uint"> |
+	<IF			:	"if"> |				<ULONG		:	"ulong"> |
+	<IMPLICIT	:	"implicit"> |		<UNCHECKED	:	"unchecked"> |
+	<IN			:	"in"> |				<UNSAFE		:	"unsafe"> |
+	<INT			:	"int"> |		<USHORT		:	"ushort"> |
+	<INTERFACE	:	"interface"> |		<USING		:	"using"> |
+	<INTERNAL	:	"internal"> |		<VIRTUAL		:	"virtual"> |
+	<IS			:	"is"> |				<VOID		:	"void"> |
+	<LOCK		:	"lock"> |				<WHILE		:	"while"> |
+	<VOLATILE : "volatile"> |	<MODULE : "module"> |
+	<ASSEMBLY : "assembly">
+}
+
+TOKEN : {
+	<DOT		:	"."		>| 
+<LBRACE		:	"{"		> |	<RBRACE		:	"}"		> |
+<LBRACK		:	"["		> |	<RBRACK		:	"]"		> |
+<LPAREN		:	"("		> |	<RPAREN		:	")"		> |
+
+<PLUS		:	"+"		> |		<PLUS_ASN	:	"+="	> |	
+<MINUS		:	"-"		> |		<MINUS_ASN	:	"-="	> |	
+<STAR		:	"*"		> |		<STAR_ASN	:	"*="	> |
+<DIV			:	"/"		> |		<DIV_ASN		:	"/="	> |
+<MOD			:	"%"		> |		<MOD_ASN		:	"%="	> |
+<INC			:	"++"	> |		<DEC			:	"--"	> |
+
+<SL			:	"<<"	> |		<SL_ASN		:	"<<="	> |
+<SR			:	">>"	> |		<SR_ASN		:	">>="	> |
+<BSR			:	">>>"	> |		<BSR_ASN		:	">>>="	> |
+
+<AMPER		:	"&"		> |		<BAND_ASN	:	"&="	> |	
+<BOR			:	"|"		> |	<BOR_ASN		:	"|="	> |	
+<CARET		:	"^"		> |		<BXOR_ASN	:	"^="	> |
+<TILDE		:	"~"		> |
+
+<ASSIGN	:	"="		> |		<EQUAL			:	"=="	> |
+<LTHAN		:	"<"		> |		<LE				:	"<="	> |
+<GTHAN		:	">"		> |		<GE				:	">="	> |
+<BANG		:	"!"		> |		<NOT_EQUAL	:	"!="	> |
+<LOR			:	"||"	> |		<LAND			:	"&&"	> |
+
+<COMMA		:	","		> |		<COLON		:	":"		> |	
+<SEMI		:	";"		> |		<HASH		:	"#"     > |
+<QUOTE		:	"\""  > |		<QMARK		:	"?"		> |
+
+<ARROW		:	"->"	> 
+}
+
+
+
+TOKEN:{
+		<#UNICODE_ESCAPE_SEQUENCE
+	:	("\\" "u"   <HEX_DIGIT>   <HEX_DIGIT>   <HEX_DIGIT>  <HEX_DIGIT>
+	|	"\\" "U"   <HEX_DIGIT>   <HEX_DIGIT>   <HEX_DIGIT>  <HEX_DIGIT>  
+					<HEX_DIGIT>   <HEX_DIGIT>   <HEX_DIGIT>  <HEX_DIGIT>)
+	>
+
+|	<IDENTIFIER: <IDENTIFIER_START_CHARACTER> (<IDENTIFIER_PART_CHARACTER>)*>
+|	<#IDENTIFIER_START_CHARACTER:	["a"-"z","A"-"Z","_","$","@"]>	
+|	<#IDENTIFIER_PART_CHARACTER:	["a"-"z","A"-"Z","0"-"9","_","$"]>	
+|	<NUMERIC_LITERAL
+	:	"." (<DECIMAL_DIGIT>)+ (<EXPONENT_PART>)? (<REAL_TYPE_SUFFIX>)?
+	|	(<DECIMAL_DIGIT>)+ 
+			("." (<DECIMAL_DIGIT>)+ (<EXPONENT_PART>)? (<REAL_TYPE_SUFFIX>)?
+		|	(<EXPONENT_PART>) (<REAL_TYPE_SUFFIX>)?
+		|	(<REAL_TYPE_SUFFIX>)
+		| 	(<INTEGER_TYPE_SUFFIX>)?
+		)		
+	>
+|	<HEXADECIMAL_INTEGER_LITERAL:	("0x"|"0X")   (<HEX_DIGIT>)+   (<INTEGER_TYPE_SUFFIX>)?	>
+|	<CHARACTER_LITERAL	:	"'"   <CHARACTER>   "'">
+|	<REGULAR_STRING_LITERAL	:	"\""  (<REGULAR_STRING_LITERAL_CHARACTER>)* "\"">
+|	<VERBATIM_STRING_LITERAL:	 "@" "\""  	
+		(	"\"\""		
+		|	"\\"		
+		| "\r"
+		| "\n"
+		| "\u2028"
+		| "\u2029"
+		|  ~["\"","\\","\r","\n","\u2028","\u2029"]	
+		)* 
+		"\"">
+|	<#DECIMAL_DIGIT
+	: 	["0"	,	"1"	,	"2"	,	"3"	,	"4"	,	"5"	,	"6"	,	"7"	,	"8"	,	"9"]>
+| 	<#INTEGER_TYPE_SUFFIX: 	(	"UL"	| "LU" 	| "ul"	| "lu"
+		|	"UL"	| "LU" 	| "uL"	| "lU"
+		|	"U"		| "L"	| "u"	| "l")>
+|	<#HEX_DIGIT	:	["0" , "1" , "2" , "3" , "4" , "5" , "6" , "7" , "8" , "9" , 
+		"A" , "B" , "C" , "D" , "E" , "F"  ,
+		"a" , "b" , "c" , "d" , "e" , "f"]>	
+|	<#EXPONENT_PART:	("e"  (<SIGN>)*  (<DECIMAL_DIGIT>)+ 	|	"E"  (<SIGN>)*  (<DECIMAL_DIGIT>)+)>
+|	<#SIGN	: ["+" , "-" ]>
+|	<#REAL_TYPE_SUFFIX	: ["F" , "f" , "D" , "d" , "M" , "m"]>
+|	<#CHARACTER:	(<SINGLE_CHARACTER>	|	<SIMPLE_ESCAPE_SEQUENCE>
+	|	<HEXADECIMAL_ESCAPE_SEQUENCE>
+	|	<UNICODE_ESCAPE_SEQUENCE>	)>
+|	<#SINGLE_CHARACTER:~["\\","\'","\r", "\n", "\u2028", "\u2029"]>
+|	<#SIMPLE_ESCAPE_SEQUENCE: (
+		"\\'" | "\\\"" | "\\\\" | "\\0" | "\\a"  
+	|	"\\b" | "\\f"  | "\\n"  | "\\r" | "\\t" | "\\v")>
+|	<#HEXADECIMAL_ESCAPE_SEQUENCE: "\\" "x" <HEX_DIGIT> (<HEX_DIGIT>(<HEX_DIGIT>(<HEX_DIGIT>)?)?)?>
+|	<REGULAR_STRING_LITERAL_CHARACTER :	<SINGLE_REGULAR_STRING_LITERAL_CHARACTER>
+	|	<SIMPLE_ESCAPE_SEQUENCE>
+	|	<HEXADECIMAL_ESCAPE_SEQUENCE>
+	|	<UNICODE_ESCAPE_SEQUENCE>>
+|	<#SINGLE_REGULAR_STRING_LITERAL_CHARACTER: ~[ "\"" , "\\" , "\r" , "\n" , "\u2028" , "\u2029"]>
+
+		
+}
+compilation_unit compilation_unit() : { 
+	using_directive using_directive;
+	ArrayList<using_directive> using_directiveList = new ArrayList<using_directive>();
+	attributes_either attributes_either = null;
+	compilation_unitEnd compilation_unitEnd = null;
+	Token t;
+	ASTStringNode eof;
+	Token firstToken=token;
+} { (
+	(using_directive=using_directive(){using_directiveList.add(using_directive);})* [attributes_either=attributes_either()] [compilation_unitEnd=compilation_unitEnd()] t=<EOF>{eof=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new compilation_unit(using_directiveList, attributes_either, compilation_unitEnd, eof, firstToken.next,token);}
+ ) }
+
+identifier identifier() : { 
+	Token t;
+	ASTStringNode identifier;
+	Token firstToken=token;
+} { (
+	t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new identifier1(identifier, firstToken.next,token);} |
+	"module"  
+	{return new identifier2(firstToken.next,token);} |
+	"assembly"  
+	{return new identifier3(firstToken.next,token);}
+ ) }
+
+literal literal() : { 
+	boolean_literal boolean_literal;
+	Token t;
+	ASTStringNode numeric_literal;
+	ASTStringNode hexadecimal_integer_literal;
+	ASTStringNode character_literal;
+	ASTStringNode regular_string_literal;
+	ASTStringNode verbatim_string_literal;
+	Token firstToken=token;
+} { (
+	boolean_literal=boolean_literal() 
+	{return new literal1(boolean_literal, firstToken.next,token);} |
+	t=<NUMERIC_LITERAL>{numeric_literal=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new literal2(numeric_literal, firstToken.next,token);} |
+	t=<HEXADECIMAL_INTEGER_LITERAL>{hexadecimal_integer_literal=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new literal3(hexadecimal_integer_literal, firstToken.next,token);} |
+	t=<CHARACTER_LITERAL>{character_literal=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new literal4(character_literal, firstToken.next,token);} |
+	t=<REGULAR_STRING_LITERAL>{regular_string_literal=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new literal5(regular_string_literal, firstToken.next,token);} |
+	t=<VERBATIM_STRING_LITERAL>{verbatim_string_literal=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new literal6(verbatim_string_literal, firstToken.next,token);} |
+	"null"  
+	{return new literal7(firstToken.next,token);}
+ ) }
+
+boolean_literal boolean_literal() : { 
+	Token firstToken=token;
+} { (
+	"true"  
+	{return new boolean_literal1(firstToken.next,token);} |
+	"false"  
+	{return new boolean_literal2(firstToken.next,token);}
+ ) }
+
+type_name type_name() : { 
+	identifier identifier;
+	identifier identifier1;
+	ArrayList<identifier> identifier1List = new ArrayList<identifier>();
+	Token firstToken=token;
+} { (
+	identifier=identifier() ("." identifier1=identifier(){identifier1List.add(identifier1);})* 
+	{return new type_name(identifier, identifier1List, firstToken.next,token);}
+ ) }
+
+type type() : { 
+	non_array_type non_array_type;
+	rank_specifiers rank_specifiers = null;
+	ASTTextNode text146 = null;
+	Token firstToken=token;
+} { (
+	non_array_type=non_array_type() [rank_specifiers=rank_specifiers()] ["*" {text146=new ASTTextNode("*",new WToken(token));}] 
+	{return new type(non_array_type, rank_specifiers, text146, firstToken.next,token);}
+ ) }
+
+rank_specifiers rank_specifiers() : { 
+	rank_specifier rank_specifier;
+	ArrayList<rank_specifier> rank_specifierList = new ArrayList<rank_specifier>();
+	Token firstToken=token;
+} { (
+	(rank_specifier=rank_specifier(){rank_specifierList.add(rank_specifier);})+ 
+	{return new rank_specifiers(rank_specifierList, firstToken.next,token);}
+ ) }
+
+rank_specifier rank_specifier() : { 
+	ASTTextNode text147;
+	ArrayList<ASTTextNode> text147List = new ArrayList<ASTTextNode>();
+	Token firstToken=token;
+} { (
+	"[" ("," {text147=new ASTTextNode(",",new WToken(token));}{text147List.add(text147);})* "]" 
+	{return new rank_specifier(text147List, firstToken.next,token);}
+ ) }
+
+non_array_type non_array_type() : { 
+	predefined_type predefined_type;
+	type_name type_name;
+	Token firstToken=token;
+} { (
+	predefined_type=predefined_type() 
+	{return new non_array_type1(predefined_type, firstToken.next,token);} |
+	type_name=type_name() 
+	{return new non_array_type2(type_name, firstToken.next,token);}
+ ) }
+
+predefined_type predefined_type() : { 
+	simple_type simple_type;
+	Token firstToken=token;
+} { (
+	simple_type=simple_type() 
+	{return new predefined_type1(simple_type, firstToken.next,token);} |
+	"object"  
+	{return new predefined_type2(firstToken.next,token);} |
+	"string"  
+	{return new predefined_type3(firstToken.next,token);} |
+	"void"  
+	{return new predefined_type4(firstToken.next,token);}
+ ) }
+
+simple_type simple_type() : { 
+	numeric_type numeric_type;
+	Token firstToken=token;
+} { (
+	numeric_type=numeric_type() 
+	{return new simple_type1(numeric_type, firstToken.next,token);} |
+	"bool"  
+	{return new simple_type2(firstToken.next,token);}
+ ) }
+
+numeric_type numeric_type() : { 
+	integral_type integral_type;
+	floating_point_type floating_point_type;
+	Token firstToken=token;
+} { (
+	integral_type=integral_type() 
+	{return new numeric_type1(integral_type, firstToken.next,token);} |
+	floating_point_type=floating_point_type() 
+	{return new numeric_type2(floating_point_type, firstToken.next,token);} |
+	"decimal"  
+	{return new numeric_type3(firstToken.next,token);}
+ ) }
+
+integral_type integral_type() : { 
+	Token firstToken=token;
+} { (
+	"sbyte"  
+	{return new integral_type1(firstToken.next,token);} |
+	"byte"  
+	{return new integral_type2(firstToken.next,token);} |
+	"short"  
+	{return new integral_type3(firstToken.next,token);} |
+	"ushort"  
+	{return new integral_type4(firstToken.next,token);} |
+	"int"  
+	{return new integral_type5(firstToken.next,token);} |
+	"uint"  
+	{return new integral_type6(firstToken.next,token);} |
+	"long"  
+	{return new integral_type7(firstToken.next,token);} |
+	"ulong"  
+	{return new integral_type8(firstToken.next,token);} |
+	"char"  
+	{return new integral_type9(firstToken.next,token);}
+ ) }
+
+class_type class_type() : { 
+	type_name type_name;
+	Token firstToken=token;
+} { (
+	type_name=type_name() 
+	{return new class_type1(type_name, firstToken.next,token);} |
+	"object"  
+	{return new class_type2(firstToken.next,token);} |
+	"string"  
+	{return new class_type3(firstToken.next,token);}
+ ) }
+
+floating_point_type floating_point_type() : { 
+	Token firstToken=token;
+} { (
+	"float"  
+	{return new floating_point_type1(firstToken.next,token);} |
+	"double"  
+	{return new floating_point_type2(firstToken.next,token);}
+ ) }
+
+expression expression() : { 
+	conditional_expression conditional_expression;
+	expressionInternal expressionInternal = null;
+	Token firstToken=token;
+} { (
+	conditional_expression=conditional_expression() [expressionInternal=expressionInternal()] 
+	{return new expression(conditional_expression, expressionInternal, firstToken.next,token);}
+ ) }
+
+expressionInternal expressionInternal() : { 
+	assignment_operator assignment_operator;
+	expression expression;
+	Token firstToken=token;
+} { (
+	assignment_operator=assignment_operator() expression=expression() 
+	{return new expressionInternal(assignment_operator, expression, firstToken.next,token);}
+ ) }
+
+assignment assignment() : { 
+	conditional_expression conditional_expression;
+	assignment_operator assignment_operator;
+	expression expression;
+	Token firstToken=token;
+} { (
+	conditional_expression=conditional_expression() assignment_operator=assignment_operator() expression=expression() 
+	{return new assignment(conditional_expression, assignment_operator, expression, firstToken.next,token);}
+ ) }
+
+assignment_operator assignment_operator() : { 
+	Token firstToken=token;
+} { (
+	"="  
+	{return new assignment_operator1(firstToken.next,token);} |
+	"+="  
+	{return new assignment_operator2(firstToken.next,token);} |
+	"-="  
+	{return new assignment_operator3(firstToken.next,token);} |
+	"*="  
+	{return new assignment_operator4(firstToken.next,token);} |
+	"/="  
+	{return new assignment_operator5(firstToken.next,token);} |
+	"%="  
+	{return new assignment_operator6(firstToken.next,token);} |
+	"&="  
+	{return new assignment_operator7(firstToken.next,token);} |
+	"|="  
+	{return new assignment_operator8(firstToken.next,token);} |
+	"^="  
+	{return new assignment_operator9(firstToken.next,token);} |
+	"<<="  
+	{return new assignment_operator10(firstToken.next,token);} |
+	">>="  
+	{return new assignment_operator11(firstToken.next,token);} |
+	">>>="  
+	{return new assignment_operator12(firstToken.next,token);}
+ ) }
+
+conditional_expression conditional_expression() : { 
+	conditional_or_expression conditional_or_expression;
+	conditional_expressionInternal conditional_expressionInternal = null;
+	Token firstToken=token;
+} { (
+	conditional_or_expression=conditional_or_expression() [conditional_expressionInternal=conditional_expressionInternal()] 
+	{return new conditional_expression(conditional_or_expression, conditional_expressionInternal, firstToken.next,token);}
+ ) }
+
+conditional_expressionInternal conditional_expressionInternal() : { 
+	expression expression;
+	conditional_expression conditional_expression;
+	Token firstToken=token;
+} { (
+	"?" expression=expression() ":" conditional_expression=conditional_expression() 
+	{return new conditional_expressionInternal(expression, conditional_expression, firstToken.next,token);}
+ ) }
+
+conditional_or_expression conditional_or_expression() : { 
+	conditional_and_expression conditional_and_expression;
+	conditional_or_expression conditional_or_expression = null;
+	Token firstToken=token;
+} { (
+	conditional_and_expression=conditional_and_expression() ["||" conditional_or_expression=conditional_or_expression()] 
+	{return new conditional_or_expression(conditional_and_expression, conditional_or_expression, firstToken.next,token);}
+ ) }
+
+conditional_and_expression conditional_and_expression() : { 
+	inclusive_or_expression inclusive_or_expression;
+	conditional_and_expression conditional_and_expression = null;
+	Token firstToken=token;
+} { (
+	inclusive_or_expression=inclusive_or_expression() ["&&" conditional_and_expression=conditional_and_expression()] 
+	{return new conditional_and_expression(inclusive_or_expression, conditional_and_expression, firstToken.next,token);}
+ ) }
+
+inclusive_or_expression inclusive_or_expression() : { 
+	exclusive_or_expression exclusive_or_expression;
+	inclusive_or_expression inclusive_or_expression = null;
+	Token firstToken=token;
+} { (
+	exclusive_or_expression=exclusive_or_expression() ["|" inclusive_or_expression=inclusive_or_expression()] 
+	{return new inclusive_or_expression(exclusive_or_expression, inclusive_or_expression, firstToken.next,token);}
+ ) }
+
+exclusive_or_expression exclusive_or_expression() : { 
+	and_expression and_expression;
+	exclusive_or_expression exclusive_or_expression = null;
+	Token firstToken=token;
+} { (
+	and_expression=and_expression() ["^" exclusive_or_expression=exclusive_or_expression()] 
+	{return new exclusive_or_expression(and_expression, exclusive_or_expression, firstToken.next,token);}
+ ) }
+
+and_expression and_expression() : { 
+	equality_expression equality_expression;
+	and_expression and_expression = null;
+	Token firstToken=token;
+} { (
+	equality_expression=equality_expression() ["&" and_expression=and_expression()] 
+	{return new and_expression(equality_expression, and_expression, firstToken.next,token);}
+ ) }
+
+equality_expression equality_expression() : { 
+	relational_expression relational_expression;
+	equality_expressionInternal equality_expressionInternal = null;
+	Token firstToken=token;
+} { (
+	relational_expression=relational_expression() [equality_expressionInternal=equality_expressionInternal()] 
+	{return new equality_expression(relational_expression, equality_expressionInternal, firstToken.next,token);}
+ ) }
+
+equality_expressionInternal equality_expressionInternal() : { 
+	equality_operator equality_operator;
+	equality_expression equality_expression;
+	Token firstToken=token;
+} { (
+	equality_operator=equality_operator() equality_expression=equality_expression() 
+	{return new equality_expressionInternal(equality_operator, equality_expression, firstToken.next,token);}
+ ) }
+
+equality_operator equality_operator() : { 
+	Token firstToken=token;
+} { (
+	"=="  
+	{return new equality_operator1(firstToken.next,token);} |
+	"!="  
+	{return new equality_operator2(firstToken.next,token);}
+ ) }
+
+relational_expression relational_expression() : { 
+	shift_expression shift_expression;
+	relational_expressionInternal relational_expressionInternal = null;
+	Token firstToken=token;
+} { (
+	shift_expression=shift_expression() [relational_expressionInternal=relational_expressionInternal()] 
+	{return new relational_expression(shift_expression, relational_expressionInternal, firstToken.next,token);}
+ ) }
+
+relational_expressionInternal relational_expressionInternal() : { 
+	relational_operator relational_operator;
+	relational_expression relational_expression;
+	relational_operator2I relational_operator2I;
+	type type;
+	Token firstToken=token;
+} { (
+	relational_operator=relational_operator() relational_expression=relational_expression() 
+	{return new relational_expressionInternal1(relational_operator, relational_expression, firstToken.next,token);} |
+	relational_operator2I=relational_operator2I() type=type() 
+	{return new relational_expressionInternal2(relational_operator2I, type, firstToken.next,token);}
+ ) }
+
+relational_operator relational_operator() : { 
+	Token firstToken=token;
+} { (
+	"<"  
+	{return new relational_operator1(firstToken.next,token);} |
+	">"  
+	{return new relational_operator2(firstToken.next,token);} |
+	"<="  
+	{return new relational_operator3(firstToken.next,token);} |
+	">="  
+	{return new relational_operator4(firstToken.next,token);}
+ ) }
+
+relational_operator2I relational_operator2I() : { 
+	Token firstToken=token;
+} { (
+	"is"  
+	{return new relational_operator2I1(firstToken.next,token);} |
+	"as"  
+	{return new relational_operator2I2(firstToken.next,token);}
+ ) }
+
+shift_expression shift_expression() : { 
+	additive_expression additive_expression;
+	shift_expressionInternal shift_expressionInternal = null;
+	Token firstToken=token;
+} { (
+	additive_expression=additive_expression() [shift_expressionInternal=shift_expressionInternal()] 
+	{return new shift_expression(additive_expression, shift_expressionInternal, firstToken.next,token);}
+ ) }
+
+shift_expressionInternal shift_expressionInternal() : { 
+	shift_operator shift_operator;
+	shift_expression shift_expression;
+	Token firstToken=token;
+} { (
+	shift_operator=shift_operator() shift_expression=shift_expression() 
+	{return new shift_expressionInternal(shift_operator, shift_expression, firstToken.next,token);}
+ ) }
+
+shift_operator shift_operator() : { 
+	Token firstToken=token;
+} { (
+	"<<"  
+	{return new shift_operator1(firstToken.next,token);} |
+	">>"  
+	{return new shift_operator2(firstToken.next,token);}
+ ) }
+
+additive_expression additive_expression() : { 
+	multiplicative_expression multiplicative_expression;
+	additive_expressionInternal additive_expressionInternal = null;
+	Token firstToken=token;
+} { (
+	multiplicative_expression=multiplicative_expression() [additive_expressionInternal=additive_expressionInternal()] 
+	{return new additive_expression(multiplicative_expression, additive_expressionInternal, firstToken.next,token);}
+ ) }
+
+additive_expressionInternal additive_expressionInternal() : { 
+	additive_operator additive_operator;
+	additive_expression additive_expression;
+	Token firstToken=token;
+} { (
+	additive_operator=additive_operator() additive_expression=additive_expression() 
+	{return new additive_expressionInternal(additive_operator, additive_expression, firstToken.next,token);}
+ ) }
+
+additive_operator additive_operator() : { 
+	Token firstToken=token;
+} { (
+	"+"  
+	{return new additive_operator1(firstToken.next,token);} |
+	"-"  
+	{return new additive_operator2(firstToken.next,token);}
+ ) }
+
+multiplicative_expression multiplicative_expression() : { 
+	unary_expression unary_expression;
+	multiplicative_expressionInternal multiplicative_expressionInternal = null;
+	Token firstToken=token;
+} { (
+	unary_expression=unary_expression() [multiplicative_expressionInternal=multiplicative_expressionInternal()] 
+	{return new multiplicative_expression(unary_expression, multiplicative_expressionInternal, firstToken.next,token);}
+ ) }
+
+multiplicative_expressionInternal multiplicative_expressionInternal() : { 
+	multiplicative_operator multiplicative_operator;
+	multiplicative_expression multiplicative_expression;
+	Token firstToken=token;
+} { (
+	multiplicative_operator=multiplicative_operator() multiplicative_expression=multiplicative_expression() 
+	{return new multiplicative_expressionInternal(multiplicative_operator, multiplicative_expression, firstToken.next,token);}
+ ) }
+
+multiplicative_operator multiplicative_operator() : { 
+	Token firstToken=token;
+} { (
+	"*"  
+	{return new multiplicative_operator1(firstToken.next,token);} |
+	"/"  
+	{return new multiplicative_operator2(firstToken.next,token);} |
+	"%"  
+	{return new multiplicative_operator3(firstToken.next,token);}
+ ) }
+
+unary_expression unary_expression() : { 
+	unary_operator unary_operator;
+	unary_expression unary_expression;
+	cast_expression cast_expression;
+	primary_expression primary_expression;
+	Token firstToken=token;
+} { (
+	unary_operator=unary_operator() unary_expression=unary_expression() 
+	{return new unary_expression1(unary_operator, unary_expression, firstToken.next,token);} |
+	LOOKAHEAD(cast_expression()) cast_expression=cast_expression() 
+	{return new unary_expression2(cast_expression, firstToken.next,token);} |
+	primary_expression=primary_expression() 
+	{return new unary_expression3(primary_expression, firstToken.next,token);}
+ ) }
+
+unary_operator unary_operator() : { 
+	Token firstToken=token;
+} { (
+	"+"  
+	{return new unary_operator1(firstToken.next,token);} |
+	"-"  
+	{return new unary_operator2(firstToken.next,token);} |
+	"!"  
+	{return new unary_operator3(firstToken.next,token);} |
+	"~"  
+	{return new unary_operator4(firstToken.next,token);} |
+	"*"  
+	{return new unary_operator5(firstToken.next,token);} |
+	"++"  
+	{return new unary_operator6(firstToken.next,token);} |
+	"--"  
+	{return new unary_operator7(firstToken.next,token);}
+ ) }
+
+cast_expression cast_expression() : { 
+	type type;
+	unary_expression unary_expression;
+	Token firstToken=token;
+} { (
+	"(" type=type() ")" unary_expression=unary_expression() 
+	{return new cast_expression(type, unary_expression, firstToken.next,token);}
+ ) }
+
+primary_expression primary_expression() : { 
+	primary_expression_start primary_expression_start;
+	primary_expression_postfix primary_expression_postfix = null;
+	creation_expression creation_expression;
+	Token firstToken=token;
+} { (
+	primary_expression_start=primary_expression_start() [primary_expression_postfix=primary_expression_postfix()] 
+	{return new primary_expression1(primary_expression_start, primary_expression_postfix, firstToken.next,token);} |
+	creation_expression=creation_expression() 
+	{return new primary_expression2(creation_expression, firstToken.next,token);}
+ ) }
+
+primary_expression_start primary_expression_start() : { 
+	literal literal;
+	identifier identifier;
+	parenthesized_expression parenthesized_expression;
+	predefined_type predefined_type;
+	member_access member_access;
+	this_access this_access;
+	base_access base_access;
+	typeof_expression typeof_expression;
+	sizeof_expression sizeof_expression;
+	checked_expression checked_expression;
+	unchecked_expression unchecked_expression;
+	Token firstToken=token;
+} { (
+	literal=literal() 
+	{return new primary_expression_start1(literal, firstToken.next,token);} |
+	identifier=identifier() 
+	{return new primary_expression_start2(identifier, firstToken.next,token);} |
+	parenthesized_expression=parenthesized_expression() 
+	{return new primary_expression_start3(parenthesized_expression, firstToken.next,token);} |
+	predefined_type=predefined_type() member_access=member_access() 
+	{return new primary_expression_start4(predefined_type, member_access, firstToken.next,token);} |
+	this_access=this_access() 
+	{return new primary_expression_start5(this_access, firstToken.next,token);} |
+	base_access=base_access() 
+	{return new primary_expression_start6(base_access, firstToken.next,token);} |
+	typeof_expression=typeof_expression() 
+	{return new primary_expression_start7(typeof_expression, firstToken.next,token);} |
+	sizeof_expression=sizeof_expression() 
+	{return new primary_expression_start8(sizeof_expression, firstToken.next,token);} |
+	checked_expression=checked_expression() 
+	{return new primary_expression_start9(checked_expression, firstToken.next,token);} |
+	unchecked_expression=unchecked_expression() 
+	{return new primary_expression_start10(unchecked_expression, firstToken.next,token);}
+ ) }
+
+primary_expression_postfix primary_expression_postfix() : { 
+	primary_expression_postfixInternal primary_expression_postfixInternal;
+	ArrayList<primary_expression_postfixInternal> primary_expression_postfixInternalList = new ArrayList<primary_expression_postfixInternal>();
+	Token firstToken=token;
+} { (
+	(primary_expression_postfixInternal=primary_expression_postfixInternal(){primary_expression_postfixInternalList.add(primary_expression_postfixInternal);})+ 
+	{return new primary_expression_postfix(primary_expression_postfixInternalList, firstToken.next,token);}
+ ) }
+
+primary_expression_postfixInternal primary_expression_postfixInternal() : { 
+	member_access member_access;
+	invocation_expression invocation_expression;
+	element_access element_access;
+	post_increment_expression post_increment_expression;
+	post_decrement_expression post_decrement_expression;
+	pointer_member_access pointer_member_access;
+	Token firstToken=token;
+} { (
+	member_access=member_access() 
+	{return new primary_expression_postfixInternal1(member_access, firstToken.next,token);} |
+	invocation_expression=invocation_expression() 
+	{return new primary_expression_postfixInternal2(invocation_expression, firstToken.next,token);} |
+	element_access=element_access() 
+	{return new primary_expression_postfixInternal3(element_access, firstToken.next,token);} |
+	post_increment_expression=post_increment_expression() 
+	{return new primary_expression_postfixInternal4(post_increment_expression, firstToken.next,token);} |
+	post_decrement_expression=post_decrement_expression() 
+	{return new primary_expression_postfixInternal5(post_decrement_expression, firstToken.next,token);} |
+	pointer_member_access=pointer_member_access() 
+	{return new primary_expression_postfixInternal6(pointer_member_access, firstToken.next,token);}
+ ) }
+
+array_creation_postfix_expression array_creation_postfix_expression() : { 
+	array_creation_postfix_expressionInternal array_creation_postfix_expressionInternal;
+	ArrayList<array_creation_postfix_expressionInternal> array_creation_postfix_expressionInternalList = new ArrayList<array_creation_postfix_expressionInternal>();
+	Token firstToken=token;
+} { (
+	(array_creation_postfix_expressionInternal=array_creation_postfix_expressionInternal(){array_creation_postfix_expressionInternalList.add(array_creation_postfix_expressionInternal);})+ 
+	{return new array_creation_postfix_expression(array_creation_postfix_expressionInternalList, firstToken.next,token);}
+ ) }
+
+array_creation_postfix_expressionInternal array_creation_postfix_expressionInternal() : { 
+	member_access member_access;
+	invocation_expression invocation_expression;
+	post_increment_expression post_increment_expression;
+	post_decrement_expression post_decrement_expression;
+	pointer_member_access pointer_member_access;
+	Token firstToken=token;
+} { (
+	member_access=member_access() 
+	{return new array_creation_postfix_expressionInternal1(member_access, firstToken.next,token);} |
+	invocation_expression=invocation_expression() 
+	{return new array_creation_postfix_expressionInternal2(invocation_expression, firstToken.next,token);} |
+	post_increment_expression=post_increment_expression() 
+	{return new array_creation_postfix_expressionInternal3(post_increment_expression, firstToken.next,token);} |
+	post_decrement_expression=post_decrement_expression() 
+	{return new array_creation_postfix_expressionInternal4(post_decrement_expression, firstToken.next,token);} |
+	pointer_member_access=pointer_member_access() 
+	{return new array_creation_postfix_expressionInternal5(pointer_member_access, firstToken.next,token);}
+ ) }
+
+creation_expression creation_expression() : { 
+	non_array_type non_array_type;
+	creation_expressionPostFix creation_expressionPostFix;
+	Token firstToken=token;
+} { (
+	"new" non_array_type=non_array_type() creation_expressionPostFix=creation_expressionPostFix() 
+	{return new creation_expression(non_array_type, creation_expressionPostFix, firstToken.next,token);}
+ ) }
+
+creation_expressionPostFix creation_expressionPostFix() : { 
+	argument_list argument_list = null;
+	primary_expression_postfix primary_expression_postfix = null;
+	expression_list expression_list;
+	rank_specifiers rank_specifiers = null;
+	array_initializer array_initializer = null;
+	array_creation_postfix_expression array_creation_postfix_expression = null;
+	rank_specifiers rank_specifiers1;
+	array_initializer array_initializer1;
+	array_creation_postfix_expression array_creation_postfix_expression1 = null;
+	Token firstToken=token;
+} { (
+	"(" [argument_list=argument_list()] ")" [primary_expression_postfix=primary_expression_postfix()] 
+	{return new creation_expressionPostFix1(argument_list, primary_expression_postfix, firstToken.next,token);} |
+	LOOKAHEAD(2) "[" expression_list=expression_list() "]" [rank_specifiers=rank_specifiers()] [array_initializer=array_initializer()] [array_creation_postfix_expression=array_creation_postfix_expression()] 
+	{return new creation_expressionPostFix2(expression_list, rank_specifiers, array_initializer, array_creation_postfix_expression, firstToken.next,token);} |
+	rank_specifiers1=rank_specifiers() array_initializer1=array_initializer() [array_creation_postfix_expression1=array_creation_postfix_expression()] 
+	{return new creation_expressionPostFix3(rank_specifiers1, array_initializer1, array_creation_postfix_expression1, firstToken.next,token);}
+ ) }
+
+parenthesized_expression parenthesized_expression() : { 
+	expression expression;
+	Token firstToken=token;
+} { (
+	"(" expression=expression() ")" 
+	{return new parenthesized_expression(expression, firstToken.next,token);}
+ ) }
+
+member_access member_access() : { 
+	identifier identifier;
+	Token firstToken=token;
+} { (
+	"." identifier=identifier() 
+	{return new member_access(identifier, firstToken.next,token);}
+ ) }
+
+invocation_expression invocation_expression() : { 
+	argument_list argument_list = null;
+	Token firstToken=token;
+} { (
+	"(" [argument_list=argument_list()] ")" 
+	{return new invocation_expression(argument_list, firstToken.next,token);}
+ ) }
+
+argument_list argument_list() : { 
+	argument argument;
+	argument argument1;
+	ArrayList<argument> argument1List = new ArrayList<argument>();
+	Token firstToken=token;
+} { (
+	argument=argument() ("," argument1=argument(){argument1List.add(argument1);})* 
+	{return new argument_list(argument, argument1List, firstToken.next,token);}
+ ) }
+
+argument argument() : { 
+	argumentPrefix argumentPrefix = null;
+	expression expression;
+	Token firstToken=token;
+} { (
+	[argumentPrefix=argumentPrefix()] expression=expression() 
+	{return new argument(argumentPrefix, expression, firstToken.next,token);}
+ ) }
+
+argumentPrefix argumentPrefix() : { 
+	Token firstToken=token;
+} { (
+	"ref"  
+	{return new argumentPrefix1(firstToken.next,token);} |
+	"out"  
+	{return new argumentPrefix2(firstToken.next,token);}
+ ) }
+
+element_access element_access() : { 
+	argument_list argument_list;
+	Token firstToken=token;
+} { (
+	"[" argument_list=argument_list() "]" 
+	{return new element_access(argument_list, firstToken.next,token);}
+ ) }
+
+expression_list expression_list() : { 
+	expression expression;
+	expression_listList expression_listList;
+	ArrayList<expression_listList> expression_listListList = new ArrayList<expression_listList>();
+	Token firstToken=token;
+} { (
+	expression=expression() (expression_listList=expression_listList(){expression_listListList.add(expression_listList);})* 
+	{return new expression_list(expression, expression_listListList, firstToken.next,token);}
+ ) }
+
+expression_listList expression_listList() : { 
+	expression expression;
+	Token firstToken=token;
+} { (
+	"," expression=expression() 
+	{return new expression_listList(expression, firstToken.next,token);}
+ ) }
+
+this_access this_access() : { 
+	Token firstToken=token;
+} { (
+	"this"  
+	{return new this_access(firstToken.next,token);}
+ ) }
+
+base_access base_access() : { 
+	member_access member_access;
+	element_access element_access;
+	Token firstToken=token;
+} { (
+	LOOKAHEAD(2) "base" member_access=member_access() 
+	{return new base_access1(member_access, firstToken.next,token);} |
+	"base" element_access=element_access() 
+	{return new base_access2(element_access, firstToken.next,token);}
+ ) }
+
+post_increment_expression post_increment_expression() : { 
+	Token firstToken=token;
+} { (
+	"++"  
+	{return new post_increment_expression(firstToken.next,token);}
+ ) }
+
+post_decrement_expression post_decrement_expression() : { 
+	Token firstToken=token;
+} { (
+	"--"  
+	{return new post_decrement_expression(firstToken.next,token);}
+ ) }
+
+typeof_expression typeof_expression() : { 
+	type type;
+	Token firstToken=token;
+} { (
+	"typeof" "(" type=type() ")" 
+	{return new typeof_expression(type, firstToken.next,token);}
+ ) }
+
+checked_expression checked_expression() : { 
+	expression expression;
+	Token firstToken=token;
+} { (
+	"checked" "(" expression=expression() ")" 
+	{return new checked_expression(expression, firstToken.next,token);}
+ ) }
+
+unchecked_expression unchecked_expression() : { 
+	expression expression;
+	Token firstToken=token;
+} { (
+	"unchecked" "(" expression=expression() ")" 
+	{return new unchecked_expression(expression, firstToken.next,token);}
+ ) }
+
+statement statement() : { 
+	identifier identifier;
+	statement statement;
+	local_variable_declaration local_variable_declaration;
+	local_constant_declaration local_constant_declaration;
+	embedded_statement embedded_statement;
+	Token firstToken=token;
+} { (
+	LOOKAHEAD(2) identifier=identifier() ":" statement=statement() 
+	{return new statement1(identifier, statement, firstToken.next,token);} |
+	LOOKAHEAD(type() identifier()) local_variable_declaration=local_variable_declaration() ";" 
+	{return new statement2(local_variable_declaration, firstToken.next,token);} |
+	local_constant_declaration=local_constant_declaration() ";" 
+	{return new statement3(local_constant_declaration, firstToken.next,token);} |
+	embedded_statement=embedded_statement() 
+	{return new statement4(embedded_statement, firstToken.next,token);}
+ ) }
+
+local_variable_declaration local_variable_declaration() : { 
+	type type;
+	local_variable_declarators local_variable_declarators;
+	Token firstToken=token;
+} { (
+	type=type() local_variable_declarators=local_variable_declarators() 
+	{return new local_variable_declaration(type, local_variable_declarators, firstToken.next,token);}
+ ) }
+
+local_variable_declarators local_variable_declarators() : { 
+	local_variable_declarator local_variable_declarator;
+	local_variable_declarators local_variable_declarators = null;
+	Token firstToken=token;
+} { (
+	local_variable_declarator=local_variable_declarator() ["," local_variable_declarators=local_variable_declarators()] 
+	{return new local_variable_declarators(local_variable_declarator, local_variable_declarators, firstToken.next,token);}
+ ) }
+
+local_variable_declarator local_variable_declarator() : { 
+	identifier identifier;
+	local_variable_assignment local_variable_assignment = null;
+	Token firstToken=token;
+} { (
+	identifier=identifier() [local_variable_assignment=local_variable_assignment()] 
+	{return new local_variable_declarator(identifier, local_variable_assignment, firstToken.next,token);}
+ ) }
+
+local_variable_assignment local_variable_assignment() : { 
+	local_variable_initializer local_variable_initializer;
+	Token firstToken=token;
+} { (
+	"=" local_variable_initializer=local_variable_initializer() 
+	{return new local_variable_assignment(local_variable_initializer, firstToken.next,token);}
+ ) }
+
+local_variable_initializer local_variable_initializer() : { 
+	array_initializer array_initializer;
+	expression expression;
+	Token firstToken=token;
+} { (
+	array_initializer=array_initializer() 
+	{return new local_variable_initializer1(array_initializer, firstToken.next,token);} |
+	expression=expression() 
+	{return new local_variable_initializer2(expression, firstToken.next,token);}
+ ) }
+
+local_constant_declaration local_constant_declaration() : { 
+	type type;
+	local_constant_declarators local_constant_declarators;
+	Token firstToken=token;
+} { (
+	"const" type=type() local_constant_declarators=local_constant_declarators() 
+	{return new local_constant_declaration(type, local_constant_declarators, firstToken.next,token);}
+ ) }
+
+local_constant_declarators local_constant_declarators() : { 
+	local_constant_declarator local_constant_declarator;
+	local_constant_declarators local_constant_declarators = null;
+	Token firstToken=token;
+} { (
+	local_constant_declarator=local_constant_declarator() ["," local_constant_declarators=local_constant_declarators()] 
+	{return new local_constant_declarators(local_constant_declarator, local_constant_declarators, firstToken.next,token);}
+ ) }
+
+local_constant_declarator local_constant_declarator() : { 
+	identifier identifier;
+	local_variable_initializer local_variable_initializer;
+	Token firstToken=token;
+} { (
+	identifier=identifier() "=" local_variable_initializer=local_variable_initializer() 
+	{return new local_constant_declarator(identifier, local_variable_initializer, firstToken.next,token);}
+ ) }
+
+embedded_statement embedded_statement() : { 
+	block block;
+	selection_statement selection_statement;
+	iteration_statement iteration_statement;
+	jump_statement jump_statement;
+	try_statement try_statement;
+	checked_statement checked_statement;
+	unchecked_statement unchecked_statement;
+	lock_statement lock_statement;
+	using_statement using_statement;
+	unsafe_statement unsafe_statement;
+	fixed_statement fixed_statement;
+	expression_statement expression_statement;
+	Token firstToken=token;
+} { (
+	block=block() 
+	{return new embedded_statement1(block, firstToken.next,token);} |
+	";"  
+	{return new embedded_statement2(firstToken.next,token);} |
+	selection_statement=selection_statement() 
+	{return new embedded_statement3(selection_statement, firstToken.next,token);} |
+	iteration_statement=iteration_statement() 
+	{return new embedded_statement4(iteration_statement, firstToken.next,token);} |
+	jump_statement=jump_statement() 
+	{return new embedded_statement5(jump_statement, firstToken.next,token);} |
+	try_statement=try_statement() 
+	{return new embedded_statement6(try_statement, firstToken.next,token);} |
+	checked_statement=checked_statement() 
+	{return new embedded_statement7(checked_statement, firstToken.next,token);} |
+	unchecked_statement=unchecked_statement() 
+	{return new embedded_statement8(unchecked_statement, firstToken.next,token);} |
+	lock_statement=lock_statement() 
+	{return new embedded_statement9(lock_statement, firstToken.next,token);} |
+	using_statement=using_statement() 
+	{return new embedded_statement10(using_statement, firstToken.next,token);} |
+	unsafe_statement=unsafe_statement() 
+	{return new embedded_statement11(unsafe_statement, firstToken.next,token);} |
+	fixed_statement=fixed_statement() 
+	{return new embedded_statement12(fixed_statement, firstToken.next,token);} |
+	expression_statement=expression_statement() 
+	{return new embedded_statement13(expression_statement, firstToken.next,token);}
+ ) }
+
+block block() : { 
+	statement statement;
+	ArrayList<statement> statementList = new ArrayList<statement>();
+	Token firstToken=token;
+} { (
+	"{" (statement=statement(){statementList.add(statement);})* "}" 
+	{return new block(statementList, firstToken.next,token);}
+ ) }
+
+statement_list statement_list() : { 
+	statement statement;
+	ArrayList<statement> statementList = new ArrayList<statement>();
+	Token firstToken=token;
+} { (
+	(statement=statement(){statementList.add(statement);})+ 
+	{return new statement_list(statementList, firstToken.next,token);}
+ ) }
+
+expression_statement expression_statement() : { 
+	expression expression;
+	Token firstToken=token;
+} { (
+	expression=expression() ";" 
+	{return new expression_statement(expression, firstToken.next,token);}
+ ) }
+
+selection_statement selection_statement() : { 
+	if_statement if_statement;
+	switch_statement switch_statement;
+	Token firstToken=token;
+} { (
+	if_statement=if_statement() 
+	{return new selection_statement1(if_statement, firstToken.next,token);} |
+	switch_statement=switch_statement() 
+	{return new selection_statement2(switch_statement, firstToken.next,token);}
+ ) }
+
+if_statement if_statement() : { 
+	expression expression;
+	embedded_statement embedded_statement;
+	embedded_statement embedded_statement1 = null;
+	Token firstToken=token;
+} { (
+	"if" "(" expression=expression() ")" embedded_statement=embedded_statement() ["else" embedded_statement1=embedded_statement()] 
+	{return new if_statement(expression, embedded_statement, embedded_statement1, firstToken.next,token);}
+ ) }
+
+switch_statement switch_statement() : { 
+	expression expression;
+	switch_block switch_block;
+	Token firstToken=token;
+} { (
+	"switch" "(" expression=expression() ")" switch_block=switch_block() 
+	{return new switch_statement(expression, switch_block, firstToken.next,token);}
+ ) }
+
+switch_block switch_block() : { 
+	switch_section switch_section;
+	ArrayList<switch_section> switch_sectionList = new ArrayList<switch_section>();
+	Token firstToken=token;
+} { (
+	"{" (switch_section=switch_section(){switch_sectionList.add(switch_section);})+ "}" 
+	{return new switch_block(switch_sectionList, firstToken.next,token);}
+ ) }
+
+switch_section switch_section() : { 
+	switch_label switch_label;
+	ArrayList<switch_label> switch_labelList = new ArrayList<switch_label>();
+	statement_list statement_list;
+	Token firstToken=token;
+} { (
+	(switch_label=switch_label(){switch_labelList.add(switch_label);})+ statement_list=statement_list() 
+	{return new switch_section(switch_labelList, statement_list, firstToken.next,token);}
+ ) }
+
+switch_label switch_label() : { 
+	expression expression;
+	Token firstToken=token;
+} { (
+	"case" expression=expression() ":" 
+	{return new switch_label1(expression, firstToken.next,token);} |
+	"default" ":"  
+	{return new switch_label2(firstToken.next,token);}
+ ) }
+
+iteration_statement iteration_statement() : { 
+	while_statement while_statement;
+	do_statement do_statement;
+	for_statement for_statement;
+	foreach_statement foreach_statement;
+	Token firstToken=token;
+} { (
+	while_statement=while_statement() 
+	{return new iteration_statement1(while_statement, firstToken.next,token);} |
+	do_statement=do_statement() 
+	{return new iteration_statement2(do_statement, firstToken.next,token);} |
+	for_statement=for_statement() 
+	{return new iteration_statement3(for_statement, firstToken.next,token);} |
+	foreach_statement=foreach_statement() 
+	{return new iteration_statement4(foreach_statement, firstToken.next,token);}
+ ) }
+
+while_statement while_statement() : { 
+	expression expression;
+	embedded_statement embedded_statement;
+	Token firstToken=token;
+} { (
+	"while" "(" expression=expression() ")" embedded_statement=embedded_statement() 
+	{return new while_statement(expression, embedded_statement, firstToken.next,token);}
+ ) }
+
+do_statement do_statement() : { 
+	embedded_statement embedded_statement;
+	expression expression;
+	Token firstToken=token;
+} { (
+	"do" embedded_statement=embedded_statement() "while" "(" expression=expression() ")" 
+	{return new do_statement(embedded_statement, expression, firstToken.next,token);}
+ ) }
+
+for_statement for_statement() : { 
+	for_initializer for_initializer = null;
+	expression expression = null;
+	expression_list expression_list = null;
+	embedded_statement embedded_statement;
+	Token firstToken=token;
+} { (
+	"for" "(" [for_initializer=for_initializer()] ";" [expression=expression()] ";" [expression_list=expression_list()] ")" embedded_statement=embedded_statement() 
+	{return new for_statement(for_initializer, expression, expression_list, embedded_statement, firstToken.next,token);}
+ ) }
+
+for_initializer for_initializer() : { 
+	local_variable_declaration local_variable_declaration;
+	expression_list expression_list;
+	Token firstToken=token;
+} { (
+	LOOKAHEAD(type() identifier()) local_variable_declaration=local_variable_declaration() 
+	{return new for_initializer1(local_variable_declaration, firstToken.next,token);} |
+	expression_list=expression_list() 
+	{return new for_initializer2(expression_list, firstToken.next,token);}
+ ) }
+
+foreach_statement foreach_statement() : { 
+	type type;
+	identifier identifier;
+	expression expression;
+	embedded_statement embedded_statement;
+	Token firstToken=token;
+} { (
+	"foreach" "(" type=type() identifier=identifier() "in" expression=expression() ")" embedded_statement=embedded_statement() 
+	{return new foreach_statement(type, identifier, expression, embedded_statement, firstToken.next,token);}
+ ) }
+
+jump_statement jump_statement() : { 
+	goto_statement goto_statement;
+	return_statement return_statement;
+	throw_statement throw_statement;
+	Token firstToken=token;
+} { (
+	"break" ";"  
+	{return new jump_statement1(firstToken.next,token);} |
+	"continue" ";"  
+	{return new jump_statement2(firstToken.next,token);} |
+	goto_statement=goto_statement() 
+	{return new jump_statement3(goto_statement, firstToken.next,token);} |
+	return_statement=return_statement() 
+	{return new jump_statement4(return_statement, firstToken.next,token);} |
+	throw_statement=throw_statement() 
+	{return new jump_statement5(throw_statement, firstToken.next,token);}
+ ) }
+
+goto_statement goto_statement() : { 
+	goto_statementEnd goto_statementEnd;
+	Token firstToken=token;
+} { (
+	"goto" goto_statementEnd=goto_statementEnd() 
+	{return new goto_statement(goto_statementEnd, firstToken.next,token);}
+ ) }
+
+goto_statementEnd goto_statementEnd() : { 
+	identifier identifier;
+	expression expression;
+	Token firstToken=token;
+} { (
+	identifier=identifier() ";" 
+	{return new goto_statementEnd1(identifier, firstToken.next,token);} |
+	"case" expression=expression() ";" 
+	{return new goto_statementEnd2(expression, firstToken.next,token);} |
+	"default" ";"  
+	{return new goto_statementEnd3(firstToken.next,token);}
+ ) }
+
+return_statement return_statement() : { 
+	expression expression = null;
+	Token firstToken=token;
+} { (
+	"return" [expression=expression()] ";" 
+	{return new return_statement(expression, firstToken.next,token);}
+ ) }
+
+throw_statement throw_statement() : { 
+	expression expression = null;
+	Token firstToken=token;
+} { (
+	"throw" [expression=expression()] ";" 
+	{return new throw_statement(expression, firstToken.next,token);}
+ ) }
+
+try_statement try_statement() : { 
+	block block;
+	try_statement_clauses try_statement_clauses;
+	Token firstToken=token;
+} { (
+	"try" block=block() try_statement_clauses=try_statement_clauses() 
+	{return new try_statement(block, try_statement_clauses, firstToken.next,token);}
+ ) }
+
+try_statement_clauses try_statement_clauses() : { 
+	catch_clauses catch_clauses;
+	finally_clause finally_clause = null;
+	finally_clause finally_clause1;
+	Token firstToken=token;
+} { (
+	catch_clauses=catch_clauses() [finally_clause=finally_clause()] 
+	{return new try_statement_clauses1(catch_clauses, finally_clause, firstToken.next,token);} |
+	finally_clause1=finally_clause() 
+	{return new try_statement_clauses2(finally_clause1, firstToken.next,token);}
+ ) }
+
+catch_clauses catch_clauses() : { 
+	catch_clause catch_clause;
+	ArrayList<catch_clause> catch_clauseList = new ArrayList<catch_clause>();
+	Token firstToken=token;
+} { (
+	(catch_clause=catch_clause(){catch_clauseList.add(catch_clause);})+ 
+	{return new catch_clauses(catch_clauseList, firstToken.next,token);}
+ ) }
+
+catch_clause catch_clause() : { 
+	catch_clauseEnd catch_clauseEnd;
+	Token firstToken=token;
+} { (
+	"catch" catch_clauseEnd=catch_clauseEnd() 
+	{return new catch_clause(catch_clauseEnd, firstToken.next,token);}
+ ) }
+
+catch_clauseEnd catch_clauseEnd() : { 
+	type type;
+	identifier identifier = null;
+	block block;
+	block block1;
+	Token firstToken=token;
+} { (
+	"(" type=type() [identifier=identifier()] ")" block=block() 
+	{return new catch_clauseEnd1(type, identifier, block, firstToken.next,token);} |
+	block1=block() 
+	{return new catch_clauseEnd2(block1, firstToken.next,token);}
+ ) }
+
+finally_clause finally_clause() : { 
+	block block;
+	Token firstToken=token;
+} { (
+	"finally" block=block() 
+	{return new finally_clause(block, firstToken.next,token);}
+ ) }
+
+checked_statement checked_statement() : { 
+	block block;
+	Token firstToken=token;
+} { (
+	"checked" block=block() 
+	{return new checked_statement(block, firstToken.next,token);}
+ ) }
+
+unchecked_statement unchecked_statement() : { 
+	block block;
+	Token firstToken=token;
+} { (
+	"unchecked" block=block() 
+	{return new unchecked_statement(block, firstToken.next,token);}
+ ) }
+
+lock_statement lock_statement() : { 
+	expression expression;
+	embedded_statement embedded_statement;
+	Token firstToken=token;
+} { (
+	"lock" "(" expression=expression() ")" embedded_statement=embedded_statement() 
+	{return new lock_statement(expression, embedded_statement, firstToken.next,token);}
+ ) }
+
+using_statement using_statement() : { 
+	resource_acquisition resource_acquisition;
+	embedded_statement embedded_statement;
+	Token firstToken=token;
+} { (
+	"using" "(" resource_acquisition=resource_acquisition() ")" embedded_statement=embedded_statement() 
+	{return new using_statement(resource_acquisition, embedded_statement, firstToken.next,token);}
+ ) }
+
+resource_acquisition resource_acquisition() : { 
+	local_variable_declaration local_variable_declaration;
+	expression expression;
+	Token firstToken=token;
+} { (
+	LOOKAHEAD(type() identifier() (","|";"|"=")) local_variable_declaration=local_variable_declaration() 
+	{return new resource_acquisition1(local_variable_declaration, firstToken.next,token);} |
+	expression=expression() 
+	{return new resource_acquisition2(expression, firstToken.next,token);}
+ ) }
+
+compilation_unitEnd compilation_unitEnd() : { 
+	namespace_member_declaration_no_attr namespace_member_declaration_no_attr;
+	namespace_member_declaration namespace_member_declaration;
+	ArrayList<namespace_member_declaration> namespace_member_declarationList = new ArrayList<namespace_member_declaration>();
+	Token firstToken=token;
+} { (
+	namespace_member_declaration_no_attr=namespace_member_declaration_no_attr() (namespace_member_declaration=namespace_member_declaration(){namespace_member_declarationList.add(namespace_member_declaration);})* 
+	{return new compilation_unitEnd(namespace_member_declaration_no_attr, namespace_member_declarationList, firstToken.next,token);}
+ ) }
+
+namespace_declaration namespace_declaration() : { 
+	type_name type_name;
+	namespace_body namespace_body;
+	Token firstToken=token;
+} { (
+	"namespace" type_name=type_name() namespace_body=namespace_body() 
+	{return new namespace_declaration(type_name, namespace_body, firstToken.next,token);}
+ ) }
+
+namespace_body namespace_body() : { 
+	using_directive using_directive;
+	ArrayList<using_directive> using_directiveList = new ArrayList<using_directive>();
+	namespace_member_declaration namespace_member_declaration;
+	ArrayList<namespace_member_declaration> namespace_member_declarationList = new ArrayList<namespace_member_declaration>();
+	ASTTextNode text210 = null;
+	Token firstToken=token;
+} { (
+	"{" (using_directive=using_directive(){using_directiveList.add(using_directive);})* (namespace_member_declaration=namespace_member_declaration(){namespace_member_declarationList.add(namespace_member_declaration);})* "}" [";" {text210=new ASTTextNode(";",new WToken(token));}] 
+	{return new namespace_body(using_directiveList, namespace_member_declarationList, text210, firstToken.next,token);}
+ ) }
+
+using_directive using_directive() : { 
+	type_name type_name;
+	using_directiveEnd using_directiveEnd;
+	Token firstToken=token;
+} { (
+	"using" type_name=type_name() using_directiveEnd=using_directiveEnd() 
+	{return new using_directive(type_name, using_directiveEnd, firstToken.next,token);}
+ ) }
+
+using_directiveEnd using_directiveEnd() : { 
+	type_name type_name;
+	Token firstToken=token;
+} { (
+	"=" type_name=type_name() ";" 
+	{return new using_directiveEnd1(type_name, firstToken.next,token);} |
+	";"  
+	{return new using_directiveEnd2(firstToken.next,token);}
+ ) }
+
+namespace_member_declaration_no_attr namespace_member_declaration_no_attr() : { 
+	namespace_declaration namespace_declaration;
+	type_modifiers type_modifiers = null;
+	type_declaration type_declaration;
+	Token firstToken=token;
+} { (
+	namespace_declaration=namespace_declaration() 
+	{return new namespace_member_declaration_no_attr1(namespace_declaration, firstToken.next,token);} |
+	[type_modifiers=type_modifiers()] type_declaration=type_declaration() 
+	{return new namespace_member_declaration_no_attr2(type_modifiers, type_declaration, firstToken.next,token);}
+ ) }
+
+namespace_member_declaration namespace_member_declaration() : { 
+	namespace_declaration namespace_declaration;
+	attributes attributes = null;
+	type_modifiers type_modifiers = null;
+	type_declaration type_declaration;
+	Token firstToken=token;
+} { (
+	namespace_declaration=namespace_declaration() 
+	{return new namespace_member_declaration1(namespace_declaration, firstToken.next,token);} |
+	[attributes=attributes()] [type_modifiers=type_modifiers()] type_declaration=type_declaration() 
+	{return new namespace_member_declaration2(attributes, type_modifiers, type_declaration, firstToken.next,token);}
+ ) }
+
+type_declaration type_declaration() : { 
+	class_declaration class_declaration;
+	struct_declaration struct_declaration;
+	interface_declaration interface_declaration;
+	enum_declaration enum_declaration;
+	delegate_declaration delegate_declaration;
+	Token firstToken=token;
+} { (
+	class_declaration=class_declaration() 
+	{return new type_declaration1(class_declaration, firstToken.next,token);} |
+	struct_declaration=struct_declaration() 
+	{return new type_declaration2(struct_declaration, firstToken.next,token);} |
+	interface_declaration=interface_declaration() 
+	{return new type_declaration3(interface_declaration, firstToken.next,token);} |
+	enum_declaration=enum_declaration() 
+	{return new type_declaration4(enum_declaration, firstToken.next,token);} |
+	delegate_declaration=delegate_declaration() 
+	{return new type_declaration5(delegate_declaration, firstToken.next,token);}
+ ) }
+
+type_modifiers type_modifiers() : { 
+	type_modifier type_modifier;
+	ArrayList<type_modifier> type_modifierList = new ArrayList<type_modifier>();
+	Token firstToken=token;
+} { (
+	(type_modifier=type_modifier(){type_modifierList.add(type_modifier);})+ 
+	{return new type_modifiers(type_modifierList, firstToken.next,token);}
+ ) }
+
+type_modifier type_modifier() : { 
+	Token firstToken=token;
+} { (
+	"new"  
+	{return new type_modifier1(firstToken.next,token);} |
+	"public"  
+	{return new type_modifier2(firstToken.next,token);} |
+	"protected"  
+	{return new type_modifier3(firstToken.next,token);} |
+	"internal"  
+	{return new type_modifier4(firstToken.next,token);} |
+	"private"  
+	{return new type_modifier5(firstToken.next,token);} |
+	"abstract"  
+	{return new type_modifier6(firstToken.next,token);} |
+	"sealed"  
+	{return new type_modifier7(firstToken.next,token);} |
+	"unsafe"  
+	{return new type_modifier8(firstToken.next,token);}
+ ) }
+
+class_declaration class_declaration() : { 
+	identifier identifier;
+	class_base class_base = null;
+	class_body class_body;
+	ASTTextNode text220 = null;
+	Token firstToken=token;
+} { (
+	"class" identifier=identifier() [class_base=class_base()] class_body=class_body() [";" {text220=new ASTTextNode(";",new WToken(token));}] 
+	{return new class_declaration(identifier, class_base, class_body, text220, firstToken.next,token);}
+ ) }
+
+class_base class_base() : { 
+	class_type class_type;
+	type_name type_name;
+	ArrayList<type_name> type_nameList = new ArrayList<type_name>();
+	Token firstToken=token;
+} { (
+	":" class_type=class_type() ("," type_name=type_name(){type_nameList.add(type_name);})* 
+	{return new class_base(class_type, type_nameList, firstToken.next,token);}
+ ) }
+
+interface_type_list interface_type_list() : { 
+	type_name type_name;
+	type_name type_name1;
+	ArrayList<type_name> type_name1List = new ArrayList<type_name>();
+	Token firstToken=token;
+} { (
+	type_name=type_name() ("," type_name1=type_name(){type_name1List.add(type_name1);})* 
+	{return new interface_type_list(type_name, type_name1List, firstToken.next,token);}
+ ) }
+
+class_body class_body() : { 
+	class_member_declaration class_member_declaration;
+	ArrayList<class_member_declaration> class_member_declarationList = new ArrayList<class_member_declaration>();
+	Token firstToken=token;
+} { (
+	"{" (class_member_declaration=class_member_declaration(){class_member_declarationList.add(class_member_declaration);})* "}" 
+	{return new class_body(class_member_declarationList, firstToken.next,token);}
+ ) }
+
+class_member_declaration class_member_declaration() : { 
+	attributes attributes = null;
+	member_modifiers member_modifiers = null;
+	class_member_declarationEnd class_member_declarationEnd;
+	Token firstToken=token;
+} { (
+	[attributes=attributes()] [member_modifiers=member_modifiers()] class_member_declarationEnd=class_member_declarationEnd() 
+	{return new class_member_declaration(attributes, member_modifiers, class_member_declarationEnd, firstToken.next,token);}
+ ) }
+
+class_member_declarationEnd class_member_declarationEnd() : { 
+	constant_declaration constant_declaration;
+	event_declaration event_declaration;
+	destructor_declaration destructor_declaration;
+	conversion_operator_declaration conversion_operator_declaration;
+	type_declaration type_declaration;
+	type type;
+	typeEnd typeEnd;
+	Token firstToken=token;
+} { (
+	constant_declaration=constant_declaration() 
+	{return new class_member_declarationEnd1(constant_declaration, firstToken.next,token);} |
+	event_declaration=event_declaration() 
+	{return new class_member_declarationEnd2(event_declaration, firstToken.next,token);} |
+	destructor_declaration=destructor_declaration() 
+	{return new class_member_declarationEnd3(destructor_declaration, firstToken.next,token);} |
+	conversion_operator_declaration=conversion_operator_declaration() 
+	{return new class_member_declarationEnd4(conversion_operator_declaration, firstToken.next,token);} |
+	type_declaration=type_declaration() 
+	{return new class_member_declarationEnd5(type_declaration, firstToken.next,token);} |
+	type=type() typeEnd=typeEnd() 
+	{return new class_member_declarationEnd6(type, typeEnd, firstToken.next,token);}
+ ) }
+
+typeEnd typeEnd() : { 
+	constructor_declaration constructor_declaration;
+	indexer_declaration_no_interface indexer_declaration_no_interface;
+	operator_declaration operator_declaration;
+	indexer_declaration_interface indexer_declaration_interface;
+	type_name type_name;
+	type_nameEnd type_nameEnd;
+	Token firstToken=token;
+} { (
+	constructor_declaration=constructor_declaration() 
+	{return new typeEnd1(constructor_declaration, firstToken.next,token);} |
+	indexer_declaration_no_interface=indexer_declaration_no_interface() 
+	{return new typeEnd2(indexer_declaration_no_interface, firstToken.next,token);} |
+	operator_declaration=operator_declaration() 
+	{return new typeEnd3(operator_declaration, firstToken.next,token);} |
+	LOOKAHEAD(indexer_base() "[") indexer_declaration_interface=indexer_declaration_interface() 
+	{return new typeEnd4(indexer_declaration_interface, firstToken.next,token);} |
+	type_name=type_name() type_nameEnd=type_nameEnd() 
+	{return new typeEnd5(type_name, type_nameEnd, firstToken.next,token);}
+ ) }
+
+type_nameEnd type_nameEnd() : { 
+	method_declaration method_declaration;
+	property_declaration property_declaration;
+	field_declaration field_declaration;
+	Token firstToken=token;
+} { (
+	method_declaration=method_declaration() 
+	{return new type_nameEnd1(method_declaration, firstToken.next,token);} |
+	property_declaration=property_declaration() 
+	{return new type_nameEnd2(property_declaration, firstToken.next,token);} |
+	field_declaration=field_declaration() 
+	{return new type_nameEnd3(field_declaration, firstToken.next,token);}
+ ) }
+
+member_modifiers member_modifiers() : { 
+	member_modifier member_modifier;
+	ArrayList<member_modifier> member_modifierList = new ArrayList<member_modifier>();
+	Token firstToken=token;
+} { (
+	(member_modifier=member_modifier(){member_modifierList.add(member_modifier);})+ 
+	{return new member_modifiers(member_modifierList, firstToken.next,token);}
+ ) }
+
+member_modifier member_modifier() : { 
+	Token firstToken=token;
+} { (
+	"new"  
+	{return new member_modifier1(firstToken.next,token);} |
+	"public"  
+	{return new member_modifier2(firstToken.next,token);} |
+	"protected"  
+	{return new member_modifier3(firstToken.next,token);} |
+	"internal"  
+	{return new member_modifier4(firstToken.next,token);} |
+	"private"  
+	{return new member_modifier5(firstToken.next,token);} |
+	"static"  
+	{return new member_modifier6(firstToken.next,token);} |
+	"virtual"  
+	{return new member_modifier7(firstToken.next,token);} |
+	"sealed"  
+	{return new member_modifier8(firstToken.next,token);} |
+	"override"  
+	{return new member_modifier9(firstToken.next,token);} |
+	"abstract"  
+	{return new member_modifier10(firstToken.next,token);} |
+	"extern"  
+	{return new member_modifier11(firstToken.next,token);} |
+	"readonly"  
+	{return new member_modifier12(firstToken.next,token);} |
+	"unsafe"  
+	{return new member_modifier13(firstToken.next,token);}
+ ) }
+
+constant_declaration constant_declaration() : { 
+	type type;
+	constant_declarators constant_declarators;
+	Token firstToken=token;
+} { (
+	"const" type=type() constant_declarators=constant_declarators() ";" 
+	{return new constant_declaration(type, constant_declarators, firstToken.next,token);}
+ ) }
+
+constant_declarators constant_declarators() : { 
+	constant_declarator constant_declarator;
+	constant_declarator constant_declarator1;
+	ArrayList<constant_declarator> constant_declarator1List = new ArrayList<constant_declarator>();
+	Token firstToken=token;
+} { (
+	constant_declarator=constant_declarator() ("," constant_declarator1=constant_declarator(){constant_declarator1List.add(constant_declarator1);})* 
+	{return new constant_declarators(constant_declarator, constant_declarator1List, firstToken.next,token);}
+ ) }
+
+constant_declarator constant_declarator() : { 
+	identifier identifier;
+	expression expression;
+	Token firstToken=token;
+} { (
+	identifier=identifier() "=" expression=expression() 
+	{return new constant_declarator(identifier, expression, firstToken.next,token);}
+ ) }
+
+field_declaration field_declaration() : { 
+	field_declaration_start field_declaration_start;
+	field_declarators field_declarators = null;
+	Token firstToken=token;
+} { (
+	field_declaration_start=field_declaration_start() ["," field_declarators=field_declarators()] ";" 
+	{return new field_declaration(field_declaration_start, field_declarators, firstToken.next,token);}
+ ) }
+
+field_declaration_start field_declaration_start() : { 
+	variable_initializer variable_initializer = null;
+	Token firstToken=token;
+} { (
+	["=" variable_initializer=variable_initializer()] 
+	{return new field_declaration_start(variable_initializer, firstToken.next,token);}
+ ) }
+
+field_declarators field_declarators() : { 
+	field_declarator field_declarator;
+	field_declarator field_declarator1;
+	ArrayList<field_declarator> field_declarator1List = new ArrayList<field_declarator>();
+	Token firstToken=token;
+} { (
+	field_declarator=field_declarator() ("," field_declarator1=field_declarator(){field_declarator1List.add(field_declarator1);})* 
+	{return new field_declarators(field_declarator, field_declarator1List, firstToken.next,token);}
+ ) }
+
+field_declarator field_declarator() : { 
+	identifier identifier;
+	variable_initializer variable_initializer = null;
+	Token firstToken=token;
+} { (
+	identifier=identifier() ["=" variable_initializer=variable_initializer()] 
+	{return new field_declarator(identifier, variable_initializer, firstToken.next,token);}
+ ) }
+
+variable_initializer variable_initializer() : { 
+	array_initializer array_initializer;
+	expression expression;
+	stackalloc_initializer stackalloc_initializer;
+	Token firstToken=token;
+} { (
+	array_initializer=array_initializer() 
+	{return new variable_initializer1(array_initializer, firstToken.next,token);} |
+	expression=expression() 
+	{return new variable_initializer2(expression, firstToken.next,token);} |
+	stackalloc_initializer=stackalloc_initializer() 
+	{return new variable_initializer3(stackalloc_initializer, firstToken.next,token);}
+ ) }
+
+method_declaration method_declaration() : { 
+	formal_parameter_list formal_parameter_list = null;
+	body body;
+	Token firstToken=token;
+} { (
+	"(" [formal_parameter_list=formal_parameter_list()] ")" body=body() 
+	{return new method_declaration(formal_parameter_list, body, firstToken.next,token);}
+ ) }
+
+body body() : { 
+	block block;
+	Token firstToken=token;
+} { (
+	block=block() 
+	{return new body1(block, firstToken.next,token);} |
+	";"  
+	{return new body2(firstToken.next,token);}
+ ) }
+
+formal_parameter_list formal_parameter_list() : { 
+	attributes attributes = null;
+	formal_parameter_listEnd formal_parameter_listEnd;
+	Token firstToken=token;
+} { (
+	[attributes=attributes()] formal_parameter_listEnd=formal_parameter_listEnd() 
+	{return new formal_parameter_list(attributes, formal_parameter_listEnd, firstToken.next,token);}
+ ) }
+
+formal_parameter_listEnd formal_parameter_listEnd() : { 
+	fixed_parameter fixed_parameter;
+	fixed_parameterEnd fixed_parameterEnd;
+	ArrayList<fixed_parameterEnd> fixed_parameterEndList = new ArrayList<fixed_parameterEnd>();
+	parameter_array parameter_array;
+	Token firstToken=token;
+} { (
+	fixed_parameter=fixed_parameter() (fixed_parameterEnd=fixed_parameterEnd(){fixed_parameterEndList.add(fixed_parameterEnd);})* 
+	{return new formal_parameter_listEnd1(fixed_parameter, fixed_parameterEndList, firstToken.next,token);} |
+	parameter_array=parameter_array() 
+	{return new formal_parameter_listEnd2(parameter_array, firstToken.next,token);}
+ ) }
+
+formal_parameter_listEndInt formal_parameter_listEndInt() : { 
+	fixed_parameter fixed_parameter;
+	parameter_array parameter_array;
+	Token firstToken=token;
+} { (
+	fixed_parameter=fixed_parameter() 
+	{return new formal_parameter_listEndInt1(fixed_parameter, firstToken.next,token);} |
+	parameter_array=parameter_array() 
+	{return new formal_parameter_listEndInt2(parameter_array, firstToken.next,token);}
+ ) }
+
+fixed_parameterEnd fixed_parameterEnd() : { 
+	attributes attributes = null;
+	formal_parameter_listEndInt formal_parameter_listEndInt;
+	Token firstToken=token;
+} { (
+	"," [attributes=attributes()] formal_parameter_listEndInt=formal_parameter_listEndInt() 
+	{return new fixed_parameterEnd(attributes, formal_parameter_listEndInt, firstToken.next,token);}
+ ) }
+
+fixed_parameter fixed_parameter() : { 
+	parameter_modifier parameter_modifier = null;
+	type type;
+	identifier identifier;
+	Token firstToken=token;
+} { (
+	[parameter_modifier=parameter_modifier()] type=type() identifier=identifier() 
+	{return new fixed_parameter(parameter_modifier, type, identifier, firstToken.next,token);}
+ ) }
+
+parameter_modifier parameter_modifier() : { 
+	Token firstToken=token;
+} { (
+	"ref"  
+	{return new parameter_modifier1(firstToken.next,token);} |
+	"out"  
+	{return new parameter_modifier2(firstToken.next,token);}
+ ) }
+
+parameter_array parameter_array() : { 
+	type type;
+	identifier identifier;
+	Token firstToken=token;
+} { (
+	"params" type=type() identifier=identifier() 
+	{return new parameter_array(type, identifier, firstToken.next,token);}
+ ) }
+
+property_declaration property_declaration() : { 
+	accessor_declarations accessor_declarations;
+	Token firstToken=token;
+} { (
+	"{" accessor_declarations=accessor_declarations() "}" 
+	{return new property_declaration(accessor_declarations, firstToken.next,token);}
+ ) }
+
+accessor_declarations accessor_declarations() : { 
+	accessor_declaration accessor_declaration;
+	accessor_declaration accessor_declaration1 = null;
+	Token firstToken=token;
+} { (
+	accessor_declaration=accessor_declaration() [accessor_declaration1=accessor_declaration()] 
+	{return new accessor_declarations(accessor_declaration, accessor_declaration1, firstToken.next,token);}
+ ) }
+
+accessor_declaration accessor_declaration() : { 
+	attributes attributes = null;
+	Token t;
+	ASTStringNode identifier;
+	body body;
+	Token firstToken=token;
+} { (
+	[attributes=attributes()] t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} body=body() 
+	{return new accessor_declaration(attributes, identifier, body, firstToken.next,token);}
+ ) }
+
+event_declaration event_declaration() : { 
+	type type;
+	event_declarationInt event_declarationInt;
+	Token firstToken=token;
+} { (
+	"event" type=type() event_declarationInt=event_declarationInt() 
+	{return new event_declaration(type, event_declarationInt, firstToken.next,token);}
+ ) }
+
+event_declarationInt event_declarationInt() : { 
+	type_name type_name;
+	event_accessor_declarations event_accessor_declarations;
+	event_variable_declarator event_variable_declarator;
+	event_variable_declarator event_variable_declarator1;
+	ArrayList<event_variable_declarator> event_variable_declarator1List = new ArrayList<event_variable_declarator>();
+	Token firstToken=token;
+} { (
+	LOOKAHEAD(2) type_name=type_name() "{" event_accessor_declarations=event_accessor_declarations() "}" 
+	{return new event_declarationInt1(type_name, event_accessor_declarations, firstToken.next,token);} |
+	event_variable_declarator=event_variable_declarator() ("," event_variable_declarator1=event_variable_declarator(){event_variable_declarator1List.add(event_variable_declarator1);})* ";" 
+	{return new event_declarationInt2(event_variable_declarator, event_variable_declarator1List, firstToken.next,token);}
+ ) }
+
+event_variable_declarator event_variable_declarator() : { 
+	identifier identifier;
+	variable_initializer variable_initializer = null;
+	Token firstToken=token;
+} { (
+	identifier=identifier() ["=" variable_initializer=variable_initializer()] 
+	{return new event_variable_declarator(identifier, variable_initializer, firstToken.next,token);}
+ ) }
+
+event_accessor_declarations event_accessor_declarations() : { 
+	accessor_declaration accessor_declaration;
+	accessor_declaration accessor_declaration1;
+	Token firstToken=token;
+} { (
+	accessor_declaration=accessor_declaration() accessor_declaration1=accessor_declaration() 
+	{return new event_accessor_declarations(accessor_declaration, accessor_declaration1, firstToken.next,token);}
+ ) }
+
+indexer_declaration_no_interface indexer_declaration_no_interface() : { 
+	formal_parameter_list formal_parameter_list;
+	accessor_declarations accessor_declarations;
+	Token firstToken=token;
+} { (
+	"this" "[" formal_parameter_list=formal_parameter_list() "]" "{" accessor_declarations=accessor_declarations() "}" 
+	{return new indexer_declaration_no_interface(formal_parameter_list, accessor_declarations, firstToken.next,token);}
+ ) }
+
+indexer_declaration_interface indexer_declaration_interface() : { 
+	indexer_base indexer_base;
+	formal_parameter_list formal_parameter_list;
+	accessor_declarations accessor_declarations;
+	Token firstToken=token;
+} { (
+	indexer_base=indexer_base() "[" formal_parameter_list=formal_parameter_list() "]" "{" accessor_declarations=accessor_declarations() "}" 
+	{return new indexer_declaration_interface(indexer_base, formal_parameter_list, accessor_declarations, firstToken.next,token);}
+ ) }
+
+indexer_base indexer_base() : { 
+	identifier identifier;
+	indexer_baseInt indexer_baseInt;
+	ArrayList<indexer_baseInt> indexer_baseIntList = new ArrayList<indexer_baseInt>();
+	Token firstToken=token;
+} { (
+	identifier=identifier() ("." indexer_baseInt=indexer_baseInt(){indexer_baseIntList.add(indexer_baseInt);})* 
+	{return new indexer_base(identifier, indexer_baseIntList, firstToken.next,token);}
+ ) }
+
+indexer_baseInt indexer_baseInt() : { 
+	identifier identifier;
+	Token firstToken=token;
+} { (
+	identifier=identifier() 
+	{return new indexer_baseInt1(identifier, firstToken.next,token);} |
+	"this"  
+	{return new indexer_baseInt2(firstToken.next,token);}
+ ) }
+
+operator_declaration operator_declaration() : { 
+	unary_operator_declaration unary_operator_declaration;
+	binary_operator_declaration binary_operator_declaration;
+	Token firstToken=token;
+} { (
+	LOOKAHEAD("operator" overloadable_unary_operator()	"("	type()	identifier()	")") "operator" unary_operator_declaration=unary_operator_declaration() 
+	{return new operator_declaration1(unary_operator_declaration, firstToken.next,token);} |
+	"operator" binary_operator_declaration=binary_operator_declaration() 
+	{return new operator_declaration2(binary_operator_declaration, firstToken.next,token);}
+ ) }
+
+unary_operator_declaration unary_operator_declaration() : { 
+	overloadable_unary_operator overloadable_unary_operator;
+	type type;
+	identifier identifier;
+	body body;
+	Token firstToken=token;
+} { (
+	overloadable_unary_operator=overloadable_unary_operator() "(" type=type() identifier=identifier() ")" body=body() 
+	{return new unary_operator_declaration(overloadable_unary_operator, type, identifier, body, firstToken.next,token);}
+ ) }
+
+overloadable_unary_operator overloadable_unary_operator() : { 
+	Token firstToken=token;
+} { (
+	"+"  
+	{return new overloadable_unary_operator1(firstToken.next,token);} |
+	"-"  
+	{return new overloadable_unary_operator2(firstToken.next,token);} |
+	"!"  
+	{return new overloadable_unary_operator3(firstToken.next,token);} |
+	"~"  
+	{return new overloadable_unary_operator4(firstToken.next,token);} |
+	"++"  
+	{return new overloadable_unary_operator5(firstToken.next,token);} |
+	"--"  
+	{return new overloadable_unary_operator6(firstToken.next,token);} |
+	"true"  
+	{return new overloadable_unary_operator7(firstToken.next,token);} |
+	"false"  
+	{return new overloadable_unary_operator8(firstToken.next,token);}
+ ) }
+
+binary_operator_declaration binary_operator_declaration() : { 
+	overloadable_binary_operator overloadable_binary_operator;
+	type type;
+	identifier identifier;
+	type type1;
+	identifier identifier1;
+	body body;
+	Token firstToken=token;
+} { (
+	overloadable_binary_operator=overloadable_binary_operator() "(" type=type() identifier=identifier() "," type1=type() identifier1=identifier() ")" body=body() 
+	{return new binary_operator_declaration(overloadable_binary_operator, type, identifier, type1, identifier1, body, firstToken.next,token);}
+ ) }
+
+overloadable_binary_operator overloadable_binary_operator() : { 
+	Token firstToken=token;
+} { (
+	"+"  
+	{return new overloadable_binary_operator1(firstToken.next,token);} |
+	"-"  
+	{return new overloadable_binary_operator2(firstToken.next,token);} |
+	"*"  
+	{return new overloadable_binary_operator3(firstToken.next,token);} |
+	"/"  
+	{return new overloadable_binary_operator4(firstToken.next,token);} |
+	"%"  
+	{return new overloadable_binary_operator5(firstToken.next,token);} |
+	"&"  
+	{return new overloadable_binary_operator6(firstToken.next,token);} |
+	"|"  
+	{return new overloadable_binary_operator7(firstToken.next,token);} |
+	"^"  
+	{return new overloadable_binary_operator8(firstToken.next,token);} |
+	"<<"  
+	{return new overloadable_binary_operator9(firstToken.next,token);} |
+	">>"  
+	{return new overloadable_binary_operator10(firstToken.next,token);} |
+	"=="  
+	{return new overloadable_binary_operator11(firstToken.next,token);} |
+	"!="  
+	{return new overloadable_binary_operator12(firstToken.next,token);} |
+	">"  
+	{return new overloadable_binary_operator13(firstToken.next,token);} |
+	"<"  
+	{return new overloadable_binary_operator14(firstToken.next,token);} |
+	">="  
+	{return new overloadable_binary_operator15(firstToken.next,token);} |
+	"<="  
+	{return new overloadable_binary_operator16(firstToken.next,token);}
+ ) }
+
+conversion_operator_declaration conversion_operator_declaration() : { 
+	conversion_operator conversion_operator;
+	type type;
+	type type1;
+	identifier identifier;
+	body body;
+	Token firstToken=token;
+} { (
+	conversion_operator=conversion_operator() "operator" type=type() "(" type1=type() identifier=identifier() ")" body=body() 
+	{return new conversion_operator_declaration(conversion_operator, type, type1, identifier, body, firstToken.next,token);}
+ ) }
+
+conversion_operator conversion_operator() : { 
+	Token firstToken=token;
+} { (
+	"implicit"  
+	{return new conversion_operator1(firstToken.next,token);} |
+	"explicit"  
+	{return new conversion_operator2(firstToken.next,token);}
+ ) }
+
+constructor_declaration constructor_declaration() : { 
+	formal_parameter_list formal_parameter_list = null;
+	constructor_initializer constructor_initializer = null;
+	body body;
+	Token firstToken=token;
+} { (
+	"(" [formal_parameter_list=formal_parameter_list()] ")" [constructor_initializer=constructor_initializer()] body=body() 
+	{return new constructor_declaration(formal_parameter_list, constructor_initializer, body, firstToken.next,token);}
+ ) }
+
+constructor_initializer constructor_initializer() : { 
+	constructor_initializerInt constructor_initializerInt;
+	argument_list argument_list = null;
+	Token firstToken=token;
+} { (
+	":" constructor_initializerInt=constructor_initializerInt() "(" [argument_list=argument_list()] ")" 
+	{return new constructor_initializer(constructor_initializerInt, argument_list, firstToken.next,token);}
+ ) }
+
+constructor_initializerInt constructor_initializerInt() : { 
+	Token firstToken=token;
+} { (
+	"base"  
+	{return new constructor_initializerInt1(firstToken.next,token);} |
+	"this"  
+	{return new constructor_initializerInt2(firstToken.next,token);}
+ ) }
+
+destructor_declaration destructor_declaration() : { 
+	identifier identifier;
+	body body;
+	Token firstToken=token;
+} { (
+	"~" identifier=identifier() "(" ")" body=body() 
+	{return new destructor_declaration(identifier, body, firstToken.next,token);}
+ ) }
+
+struct_declaration struct_declaration() : { 
+	identifier identifier;
+	base_interfaces base_interfaces = null;
+	class_body class_body;
+	ASTTextNode text266 = null;
+	Token firstToken=token;
+} { (
+	"struct" identifier=identifier() [base_interfaces=base_interfaces()] class_body=class_body() [";" {text266=new ASTTextNode(";",new WToken(token));}] 
+	{return new struct_declaration(identifier, base_interfaces, class_body, text266, firstToken.next,token);}
+ ) }
+
+base_interfaces base_interfaces() : { 
+	interface_type_list interface_type_list;
+	Token firstToken=token;
+} { (
+	":" interface_type_list=interface_type_list() 
+	{return new base_interfaces(interface_type_list, firstToken.next,token);}
+ ) }
+
+array_initializer array_initializer() : { 
+	rest_of_array_initializer rest_of_array_initializer;
+	Token firstToken=token;
+} { (
+	"{" rest_of_array_initializer=rest_of_array_initializer() 
+	{return new array_initializer(rest_of_array_initializer, firstToken.next,token);}
+ ) }
+
+rest_of_array_initializer rest_of_array_initializer() : { 
+	variable_initializer variable_initializer;
+	rest_of_array_initializerEnd rest_of_array_initializerEnd;
+	Token firstToken=token;
+} { (
+	"}"  
+	{return new rest_of_array_initializer1(firstToken.next,token);} |
+	variable_initializer=variable_initializer() rest_of_array_initializerEnd=rest_of_array_initializerEnd() 
+	{return new rest_of_array_initializer2(variable_initializer, rest_of_array_initializerEnd, firstToken.next,token);}
+ ) }
+
+rest_of_array_initializerEnd rest_of_array_initializerEnd() : { 
+	rest_of_array_initializer rest_of_array_initializer;
+	Token firstToken=token;
+} { (
+	"}"  
+	{return new rest_of_array_initializerEnd1(firstToken.next,token);} |
+	"," rest_of_array_initializer=rest_of_array_initializer() 
+	{return new rest_of_array_initializerEnd2(rest_of_array_initializer, firstToken.next,token);}
+ ) }
+
+interface_declaration interface_declaration() : { 
+	identifier identifier;
+	base_interfaces base_interfaces = null;
+	interface_body interface_body;
+	ASTTextNode text269 = null;
+	Token firstToken=token;
+} { (
+	"interface" identifier=identifier() [base_interfaces=base_interfaces()] interface_body=interface_body() [";" {text269=new ASTTextNode(";",new WToken(token));}] 
+	{return new interface_declaration(identifier, base_interfaces, interface_body, text269, firstToken.next,token);}
+ ) }
+
+interface_body interface_body() : { 
+	interface_member_declaration interface_member_declaration;
+	ArrayList<interface_member_declaration> interface_member_declarationList = new ArrayList<interface_member_declaration>();
+	Token firstToken=token;
+} { (
+	"{" (interface_member_declaration=interface_member_declaration(){interface_member_declarationList.add(interface_member_declaration);})* "}" 
+	{return new interface_body(interface_member_declarationList, firstToken.next,token);}
+ ) }
+
+interface_member_declaration interface_member_declaration() : { 
+	attributes attributes = null;
+	interface_member_modifier interface_member_modifier;
+	ArrayList<interface_member_modifier> interface_member_modifierList = new ArrayList<interface_member_modifier>();
+	interface_member_declarationEnd interface_member_declarationEnd;
+	Token firstToken=token;
+} { (
+	[attributes=attributes()] (interface_member_modifier=interface_member_modifier(){interface_member_modifierList.add(interface_member_modifier);})* interface_member_declarationEnd=interface_member_declarationEnd() 
+	{return new interface_member_declaration(attributes, interface_member_modifierList, interface_member_declarationEnd, firstToken.next,token);}
+ ) }
+
+interface_member_declarationEnd interface_member_declarationEnd() : { 
+	interface_event_declaration interface_event_declaration;
+	type type;
+	interface_member_declarationEndType interface_member_declarationEndType;
+	Token firstToken=token;
+} { (
+	interface_event_declaration=interface_event_declaration() 
+	{return new interface_member_declarationEnd1(interface_event_declaration, firstToken.next,token);} |
+	type=type() interface_member_declarationEndType=interface_member_declarationEndType() 
+	{return new interface_member_declarationEnd2(type, interface_member_declarationEndType, firstToken.next,token);}
+ ) }
+
+interface_member_declarationEndType interface_member_declarationEndType() : { 
+	interface_indexer_declaration interface_indexer_declaration;
+	identifier identifier;
+	interface_member_declarationEndTypeIdentifier interface_member_declarationEndTypeIdentifier;
+	Token firstToken=token;
+} { (
+	interface_indexer_declaration=interface_indexer_declaration() 
+	{return new interface_member_declarationEndType1(interface_indexer_declaration, firstToken.next,token);} |
+	identifier=identifier() interface_member_declarationEndTypeIdentifier=interface_member_declarationEndTypeIdentifier() 
+	{return new interface_member_declarationEndType2(identifier, interface_member_declarationEndTypeIdentifier, firstToken.next,token);}
+ ) }
+
+interface_member_declarationEndTypeIdentifier interface_member_declarationEndTypeIdentifier() : { 
+	interface_method_declaration interface_method_declaration;
+	interface_property_declaration interface_property_declaration;
+	Token firstToken=token;
+} { (
+	interface_method_declaration=interface_method_declaration() 
+	{return new interface_member_declarationEndTypeIdentifier1(interface_method_declaration, firstToken.next,token);} |
+	interface_property_declaration=interface_property_declaration() 
+	{return new interface_member_declarationEndTypeIdentifier2(interface_property_declaration, firstToken.next,token);}
+ ) }
+
+interface_member_modifier interface_member_modifier() : { 
+	Token firstToken=token;
+} { (
+	"new"  
+	{return new interface_member_modifier1(firstToken.next,token);} |
+	"unsafe"  
+	{return new interface_member_modifier2(firstToken.next,token);}
+ ) }
+
+interface_event_declaration interface_event_declaration() : { 
+	type type;
+	identifier identifier;
+	Token firstToken=token;
+} { (
+	"event" type=type() identifier=identifier() ";" 
+	{return new interface_event_declaration(type, identifier, firstToken.next,token);}
+ ) }
+
+interface_indexer_declaration interface_indexer_declaration() : { 
+	formal_parameter_list formal_parameter_list;
+	interface_accessors interface_accessors;
+	Token firstToken=token;
+} { (
+	"this" "[" formal_parameter_list=formal_parameter_list() "]" "{" interface_accessors=interface_accessors() "}" 
+	{return new interface_indexer_declaration(formal_parameter_list, interface_accessors, firstToken.next,token);}
+ ) }
+
+interface_method_declaration interface_method_declaration() : { 
+	formal_parameter_list formal_parameter_list = null;
+	Token firstToken=token;
+} { (
+	"(" [formal_parameter_list=formal_parameter_list()] ")" ";" 
+	{return new interface_method_declaration(formal_parameter_list, firstToken.next,token);}
+ ) }
+
+interface_property_declaration interface_property_declaration() : { 
+	interface_accessors interface_accessors;
+	Token firstToken=token;
+} { (
+	"{" interface_accessors=interface_accessors() "}" 
+	{return new interface_property_declaration(interface_accessors, firstToken.next,token);}
+ ) }
+
+interface_accessors interface_accessors() : { 
+	interface_accessor interface_accessor;
+	interface_accessor interface_accessor1 = null;
+	Token firstToken=token;
+} { (
+	interface_accessor=interface_accessor() [interface_accessor1=interface_accessor()] 
+	{return new interface_accessors(interface_accessor, interface_accessor1, firstToken.next,token);}
+ ) }
+
+interface_accessor interface_accessor() : { 
+	attributes attributes = null;
+	Token t;
+	ASTStringNode identifier;
+	Token firstToken=token;
+} { (
+	[attributes=attributes()] t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} ";" 
+	{return new interface_accessor(attributes, identifier, firstToken.next,token);}
+ ) }
+
+enum_declaration enum_declaration() : { 
+	identifier identifier;
+	enum_base enum_base = null;
+	enum_body enum_body;
+	ASTTextNode text272 = null;
+	Token firstToken=token;
+} { (
+	"enum" identifier=identifier() [enum_base=enum_base()] enum_body=enum_body() [";" {text272=new ASTTextNode(";",new WToken(token));}] 
+	{return new enum_declaration(identifier, enum_base, enum_body, text272, firstToken.next,token);}
+ ) }
+
+enum_base enum_base() : { 
+	integral_type integral_type;
+	Token firstToken=token;
+} { (
+	":" integral_type=integral_type() 
+	{return new enum_base(integral_type, firstToken.next,token);}
+ ) }
+
+enum_body enum_body() : { 
+	rest_of_enum_body rest_of_enum_body;
+	Token firstToken=token;
+} { (
+	"{" rest_of_enum_body=rest_of_enum_body() 
+	{return new enum_body(rest_of_enum_body, firstToken.next,token);}
+ ) }
+
+rest_of_enum_body rest_of_enum_body() : { 
+	enum_member_declaration enum_member_declaration;
+	rest_of_enum_bodyEnd rest_of_enum_bodyEnd;
+	Token firstToken=token;
+} { (
+	"}"  
+	{return new rest_of_enum_body1(firstToken.next,token);} |
+	enum_member_declaration=enum_member_declaration() rest_of_enum_bodyEnd=rest_of_enum_bodyEnd() 
+	{return new rest_of_enum_body2(enum_member_declaration, rest_of_enum_bodyEnd, firstToken.next,token);}
+ ) }
+
+rest_of_enum_bodyEnd rest_of_enum_bodyEnd() : { 
+	rest_of_enum_body rest_of_enum_body;
+	Token firstToken=token;
+} { (
+	"}"  
+	{return new rest_of_enum_bodyEnd1(firstToken.next,token);} |
+	"," rest_of_enum_body=rest_of_enum_body() 
+	{return new rest_of_enum_bodyEnd2(rest_of_enum_body, firstToken.next,token);}
+ ) }
+
+enum_member_declaration enum_member_declaration() : { 
+	attributes attributes = null;
+	identifier identifier;
+	enum_member_assignment enum_member_assignment = null;
+	Token firstToken=token;
+} { (
+	[attributes=attributes()] identifier=identifier() [enum_member_assignment=enum_member_assignment()] 
+	{return new enum_member_declaration(attributes, identifier, enum_member_assignment, firstToken.next,token);}
+ ) }
+
+enum_member_assignment enum_member_assignment() : { 
+	expression expression;
+	Token firstToken=token;
+} { (
+	"=" expression=expression() 
+	{return new enum_member_assignment(expression, firstToken.next,token);}
+ ) }
+
+delegate_declaration delegate_declaration() : { 
+	type type;
+	identifier identifier;
+	formal_parameter_list formal_parameter_list = null;
+	Token firstToken=token;
+} { (
+	"delegate" type=type() identifier=identifier() "(" [formal_parameter_list=formal_parameter_list()] ")" ";" 
+	{return new delegate_declaration(type, identifier, formal_parameter_list, firstToken.next,token);}
+ ) }
+
+attributes_either attributes_either() : { 
+	attribute_section_start attribute_section_start;
+	ArrayList<attribute_section_start> attribute_section_startList = new ArrayList<attribute_section_start>();
+	Token firstToken=token;
+} { (
+	(attribute_section_start=attribute_section_start(){attribute_section_startList.add(attribute_section_start);})+ 
+	{return new attributes_either(attribute_section_startList, firstToken.next,token);}
+ ) }
+
+attribute_section_start attribute_section_start() : { 
+	global_attribute_target_specifier global_attribute_target_specifier;
+	attribute_section attribute_section;
+	attribute_target_specifier attribute_target_specifier = null;
+	attribute_section attribute_section1;
+	Token firstToken=token;
+} { (
+	LOOKAHEAD("[" ("assembly" |"module") ":") "[" global_attribute_target_specifier=global_attribute_target_specifier() attribute_section=attribute_section() 
+	{return new attribute_section_start1(global_attribute_target_specifier, attribute_section, firstToken.next,token);} |
+	"[" [attribute_target_specifier=attribute_target_specifier()] attribute_section1=attribute_section() 
+	{return new attribute_section_start2(attribute_target_specifier, attribute_section1, firstToken.next,token);}
+ ) }
+
+global_attribute_target_specifier global_attribute_target_specifier() : { 
+	global_attribute_target global_attribute_target;
+	Token firstToken=token;
+} { (
+	global_attribute_target=global_attribute_target() ":" 
+	{return new global_attribute_target_specifier(global_attribute_target, firstToken.next,token);}
+ ) }
+
+global_attribute_target global_attribute_target() : { 
+	Token firstToken=token;
+} { (
+	"assembly"  
+	{return new global_attribute_target1(firstToken.next,token);} |
+	"module"  
+	{return new global_attribute_target2(firstToken.next,token);}
+ ) }
+
+attributes attributes() : { 
+	local_attribute local_attribute;
+	ArrayList<local_attribute> local_attributeList = new ArrayList<local_attribute>();
+	Token firstToken=token;
+} { (
+	(local_attribute=local_attribute(){local_attributeList.add(local_attribute);})+ 
+	{return new attributes(local_attributeList, firstToken.next,token);}
+ ) }
+
+local_attribute local_attribute() : { 
+	attribute_target_specifier attribute_target_specifier = null;
+	attribute_section attribute_section;
+	Token firstToken=token;
+} { (
+	"[" [attribute_target_specifier=attribute_target_specifier()] attribute_section=attribute_section() 
+	{return new local_attribute(attribute_target_specifier, attribute_section, firstToken.next,token);}
+ ) }
+
+attribute_section attribute_section() : { 
+	attribute attribute;
+	attribute_sectionEnd attribute_sectionEnd;
+	Token firstToken=token;
+} { (
+	attribute=attribute() attribute_sectionEnd=attribute_sectionEnd() 
+	{return new attribute_section(attribute, attribute_sectionEnd, firstToken.next,token);}
+ ) }
+
+attribute_sectionEnd attribute_sectionEnd() : { 
+	attribute_section attribute_section;
+	Token firstToken=token;
+} { (
+	"]"  
+	{return new attribute_sectionEnd1(firstToken.next,token);} |
+	LOOKAHEAD(2) "," "]"  
+	{return new attribute_sectionEnd2(firstToken.next,token);} |
+	"," attribute_section=attribute_section() 
+	{return new attribute_sectionEnd3(attribute_section, firstToken.next,token);}
+ ) }
+
+attribute_target_specifier attribute_target_specifier() : { 
+	attribute_target attribute_target;
+	Token firstToken=token;
+} { (
+	attribute_target=attribute_target() ":" 
+	{return new attribute_target_specifier(attribute_target, firstToken.next,token);}
+ ) }
+
+attribute_target attribute_target() : { 
+	Token t;
+	ASTStringNode identifier;
+	Token firstToken=token;
+} { (
+	"event"  
+	{return new attribute_target1(firstToken.next,token);} |
+	"return"  
+	{return new attribute_target2(firstToken.next,token);} |
+	t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new attribute_target3(identifier, firstToken.next,token);}
+ ) }
+
+attribute attribute() : { 
+	type_name type_name;
+	attribute_arguments attribute_arguments = null;
+	Token firstToken=token;
+} { (
+	type_name=type_name() [attribute_arguments=attribute_arguments()] 
+	{return new attribute(type_name, attribute_arguments, firstToken.next,token);}
+ ) }
+
+attribute_arguments attribute_arguments() : { 
+	expression_list expression_list = null;
+	Token firstToken=token;
+} { (
+	"(" [expression_list=expression_list()] ")" 
+	{return new attribute_arguments(expression_list, firstToken.next,token);}
+ ) }
+
+sizeof_expression sizeof_expression() : { 
+	type type;
+	Token firstToken=token;
+} { (
+	"sizeof" "(" type=type() ")" 
+	{return new sizeof_expression(type, firstToken.next,token);}
+ ) }
+
+unsafe_statement unsafe_statement() : { 
+	block block;
+	Token firstToken=token;
+} { (
+	"unsafe" block=block() 
+	{return new unsafe_statement(block, firstToken.next,token);}
+ ) }
+
+pointer_member_access pointer_member_access() : { 
+	Token t;
+	ASTStringNode identifier;
+	Token firstToken=token;
+} { (
+	"->" t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new pointer_member_access(identifier, firstToken.next,token);}
+ ) }
+
+fixed_statement fixed_statement() : { 
+	type type;
+	fixed_pointer_declarators fixed_pointer_declarators;
+	embedded_statement embedded_statement;
+	Token firstToken=token;
+} { (
+	"fixed" "(" type=type() fixed_pointer_declarators=fixed_pointer_declarators() ")" embedded_statement=embedded_statement() 
+	{return new fixed_statement(type, fixed_pointer_declarators, embedded_statement, firstToken.next,token);}
+ ) }
+
+fixed_pointer_declarators fixed_pointer_declarators() : { 
+	fixed_pointer_declarator fixed_pointer_declarator;
+	fixed_pointer_declarator fixed_pointer_declarator1;
+	ArrayList<fixed_pointer_declarator> fixed_pointer_declarator1List = new ArrayList<fixed_pointer_declarator>();
+	Token firstToken=token;
+} { (
+	fixed_pointer_declarator=fixed_pointer_declarator() ("," fixed_pointer_declarator1=fixed_pointer_declarator(){fixed_pointer_declarator1List.add(fixed_pointer_declarator1);})* 
+	{return new fixed_pointer_declarators(fixed_pointer_declarator, fixed_pointer_declarator1List, firstToken.next,token);}
+ ) }
+
+fixed_pointer_declarator fixed_pointer_declarator() : { 
+	identifier identifier;
+	fixed_pointer_initializer fixed_pointer_initializer;
+	Token firstToken=token;
+} { (
+	identifier=identifier() "=" fixed_pointer_initializer=fixed_pointer_initializer() 
+	{return new fixed_pointer_declarator(identifier, fixed_pointer_initializer, firstToken.next,token);}
+ ) }
+
+fixed_pointer_initializer fixed_pointer_initializer() : { 
+	ASTTextNode text281 = null;
+	expression expression;
+	Token firstToken=token;
+} { (
+	["&" {text281=new ASTTextNode("&",new WToken(token));}] expression=expression() 
+	{return new fixed_pointer_initializer(text281, expression, firstToken.next,token);}
+ ) }
+
+stackalloc_initializer stackalloc_initializer() : { 
+	non_array_type non_array_type;
+	expression expression;
+	Token firstToken=token;
+} { (
+	"stackalloc" non_array_type=non_array_type() "[" expression=expression() "]" 
+	{return new stackalloc_initializer(non_array_type, expression, firstToken.next,token);}
+ ) }
+

@@ -1,0 +1,1072 @@
+
+options {
+  STATIC = false;
+}
+
+PARSER_BEGIN(HaskellParser)
+
+package tmp.generated_haskell;
+
+import java.io.*;
+import java.util.*;
+import cide.gast.*;
+import cide.gparser.*;
+
+  public class HaskellParser{
+
+	/**
+	 * Append the given {@link Token} and any preceding special tokens to a
+	 * given {@link StringBuffer}.
+	 * 
+	 * @param token
+	 *            the given JavaCC {@link Token} object
+	 * @param buffer
+	 *            the buffer to which to append <code>token</code>
+	 */
+	final private static void accumulate(Token token, StringBuffer buffer) {
+
+		// Append preceding special tokens to <code>buffer</code>:
+		//
+		Token special = firstSpecial(token);
+		if (special != token)
+			while (special != null) {
+				buffer.append(special.toString());
+				special = special.next;
+			}
+
+		// Finally, append the token itself:
+		//
+		buffer.append(token.toString());
+	}
+
+	/**
+	 * Accumulate {@list Token} objects from the token stream, respecting nested
+	 * code inside <code>open</code> and <code>close</code> pairs, until an
+	 * unmatched <code>close</code> is the next token in the stream. This
+	 * method assumes that an <code>open</code> token has just been read from
+	 * the stream so the initial nesting level is 1. The method returns when a
+	 * matching <code>close</code> token is the next token in the token
+	 * stream. <em>The <code>close</code> token is left in the stream!</em>
+	 * 
+	 * @return the accumulated tokens as a {@link String}.
+	 * 
+	 * @throws ParseException
+	 *             if an end-of-file is found before an unmatched
+	 *             <code>close</code> token.
+	 */
+	final private Token accumulateNestedRegion(int open, int close)
+			throws ParseException {
+
+		StringBuffer buffer = new StringBuffer();
+		Token token = getToken(1);
+
+		// Initialize result with known information (starting position, etc.):
+		//
+		Token result = Token.newToken(UNANTICIPATED_SYMBOL);
+		result.specialToken = null;
+
+		Token startToken = firstSpecial(token);
+		result.beginColumn = startToken.beginColumn;
+		result.beginLine = startToken.beginLine;
+		result.offset=startToken.offset;
+
+		// Accumulate tokens until a <code>close</code> token is found:
+		//
+		for (int nesting = 1; nesting > 0;) {
+
+
+			if (token.kind == EOF)
+				throw new ParseException("accumulating from line "
+						+ result.beginLine + " at column " + result.beginColumn
+						+ ": EOF reached before ending " + tokenImage[close]
+						+ " found");
+
+			if (token.kind == open)
+				++nesting;
+			else if (token.kind == close) {
+				if (nesting == 1)
+					break;
+				--nesting;
+			}
+
+			// Update information in result:
+			//
+			result.endColumn = token.endColumn;
+			result.endLine = token.endLine;
+			result.length=(token.offset-result.offset)+token.length;
+			result.next = token.next;
+
+			accumulate(token, buffer);
+			getNextToken();
+			token = getToken(1);
+		}
+
+		result.image = buffer.toString();
+		return result;
+	}
+
+
+	final private Token accumulateUntil(boolean considerInnerBlocks,
+			int endTokenKind) throws ParseException {
+		return accumulateUntil(considerInnerBlocks, new int[] { endTokenKind });
+	}
+
+	final private Token accumulateUntil(boolean considerInnerBlocks,
+			int endTokenKind1, int endTokenKind2) throws ParseException {
+		return accumulateUntil(considerInnerBlocks, new int[] { endTokenKind1,
+				endTokenKind2 });
+	}
+
+	final private Token accumulateUntil(boolean considerInnerBlocks,
+			int endTokenKind1, int endTokenKind2, int endTokenKind3)
+			throws ParseException {
+		return accumulateUntil(considerInnerBlocks, new int[] { endTokenKind1,
+				endTokenKind2, endTokenKind3 });
+	}
+	final private Token accumulateUntil(boolean considerInnerBlocks,
+			int endTokenKind1, int endTokenKind2, int endTokenKind3, int endTokenKind4)
+			throws ParseException {
+		return accumulateUntil(considerInnerBlocks, new int[] { endTokenKind1,
+				endTokenKind2, endTokenKind3, endTokenKind4 });
+	}
+
+	final private boolean isNot(int kind) {
+		return getToken(1).kind != kind;
+	}
+
+	final private boolean isNot(int k1, int k2) {
+		return isNot(k1) && isNot(k2);
+	}
+
+	final private boolean isNot(int k1, int k2, int k3) {
+		return isNot(k1, k2) && isNot(k3);
+	}
+	final private boolean isNot(int k1, int k2, int k3, int k4) {
+		return isNot(k1, k2, k3) && isNot(k4);
+	}
+	
+	/** returns true if the CONTEXT_ARROW is found before the SEMICOLON **/
+	final private boolean isContext() throws ParseException {
+		int lookahead=1;
+		while (true) {
+			Token t = getToken(lookahead);
+			if (t.kind==EOF) throw new ParseException("EOF found before ; or =>  (line " + token.beginLine
+                                                + ", column " + token.beginColumn
+                                                + ")");
+			if (t.kind==SEMICOLON) return false;
+			if (t.kind==CONTEXT_ARROW) return true;	
+			lookahead++;
+		}
+	}
+
+	/**
+	 * Accumulate {@link Token} objects from the token stream until a token
+	 * matching <code>tokenKind</code> is consumed from the stream. The tokens
+	 * are accumulated in <code>buffer</code>, NOT including the terminating
+	 * token.
+	 * 
+	 * @return a {@link Token} formed by concatenating all intervening tokens
+	 *         and special tokens.
+	 */
+	final private Token accumulateUntil(boolean considerInnerBlocks,
+			int[] endTokenKinds) throws ParseException {
+
+		StringBuffer buffer = new StringBuffer();
+		Token token = getToken(1);
+
+		// Initialize result with known information (starting position, etc.):
+		//
+		Token result = Token.newToken(UNANTICIPATED_SYMBOL);
+		result.specialToken = null;
+
+		Token startToken = firstSpecial(token);
+		result.beginColumn = startToken.beginColumn;
+		result.beginLine = startToken.beginLine;
+		result.offset=startToken.offset;
+
+		// Accumulate tokens until a <code>tokenKind</code> token is found:
+		//
+		int nesting=0;
+		while (!contains(endTokenKinds, token.kind) || nesting >0) {
+			// Update information in result:
+			//
+			result.endColumn = token.endColumn;
+			result.endLine = token.endLine;
+			result.next = token.next;
+			result.length=(token.offset-result.offset)+token.length;
+
+			if (token.kind == EOF)
+				throw new ParseException("from line " + result.beginLine
+						+ " at column " + result.beginColumn
+						+ ": EOF reached before " + images(endTokenKinds)
+						+ " found");
+			
+			if (considerInnerBlocks && token.kind == LEFT_CURLY)
+				++nesting;
+			else if (considerInnerBlocks && token.kind == RIGHT_CURLY) {
+				--nesting;
+			}
+
+			accumulate(token, buffer);
+			getNextToken();
+			token = getToken(1);
+		}
+
+		if (buffer.length() == 0)
+			throw new ParseException("syntax error - empty pseudo-match (line " + result.beginLine
+                                                + ", column " + result.beginColumn
+                                                + ")");
+
+		result.image = buffer.toString();
+		return result;
+	}
+
+	private String images(int[] endTokenKinds) {
+		String result = "";
+		for (int i : endTokenKinds)
+			result += tokenImage[i] + " ";
+		return result;
+	}
+
+	private boolean contains(int[] endTokenKinds, int kind) {
+		for (int i : endTokenKinds)
+			if (i == kind)
+				return true;
+		return false;
+	}
+
+    /**
+     * Finds the first token, special or otherwise, in the list of special
+     * tokens preceding this {@link Token}.  If this list is non-empty, the
+     * result will be a special token.  Otherwise, it will be the starting
+     * token.
+     *
+     * @param token the given {@link Token}.
+     * @return the first special token preceding <code>token</code>.
+     **/
+    final private static Token firstSpecial (Token token) {
+
+	while (token.specialToken != null)
+	    token = token.specialToken ;
+
+	return token ;
+    }
+  }
+
+PARSER_END(HaskellParser)
+
+
+JAVACODE
+Token findListContent () {
+    return accumulateNestedRegion(LEFT_PAREN, RIGHT_PAREN) ;
+}
+
+JAVACODE
+Token findBlockContent () {
+    return accumulateNestedRegion (LEFT_CURLY, RIGHT_CURLY) ;
+}
+
+JAVACODE
+Token findConRest () {
+	//(block | ~(SEMICOLON|ALT|RIGHT_CURLY))*
+    return accumulateUntil(true,SEMICOLON,ALT,RIGHT_CURLY,DERIVING) ;
+}
+
+JAVACODE
+Token findNonstddeclRest () {
+	//(block | ~(SEMICOLON|RIGHT_CURLY))+
+    return accumulateUntil(true,SEMICOLON,RIGHT_CURLY) ;
+}
+
+JAVACODE
+Token findUntilSemiOrCCB () {
+	//~(SEMICOLON | RIGHT_CURLY)*
+    return accumulateUntil(false,SEMICOLON,RIGHT_CURLY) ;
+}
+JAVACODE
+Token findUntilSemiOrContextArrow () {
+	//(~(CONTEXT_ARROW|SEMICOLON))*;
+    return accumulateUntil(false,CONTEXT_ARROW,SEMICOLON) ;
+}
+JAVACODE
+Token findUntilSemiOrEquals () {
+	//~(EQUALS|SEMICOLON))*
+    return accumulateUntil(false,SEMICOLON,EQUALS) ;
+}
+JAVACODE
+Token findUntilEquals () {
+	//~(EQUALS))*
+    return accumulateUntil(false,EQUALS) ;
+}
+
+
+
+
+
+//options	{
+//    k = 9;
+//    // Allow any char but \uFFFF (16 bit -1)
+//    charVocabulary='\u0000'..'\uFFFE';
+//}
+
+TOKEN : {
+	<MODULE : "module">
+|	<WHERE : "where" >
+|	<IMPORT : "import" >
+|	<QUALIFIED : "qualified" >
+|	<DERIVING : "deriving" >
+|	<AS : "as" >
+|	<HIDING : "hiding" >
+|	<TYPE : "type" >
+|	<DATA : "data" >
+|	<NEWTYPE : "newtype" >
+|	<CLASS : "class" >
+|	<INSTANCE : "instance" >
+|	<DEFAULTTOKEN : "default" >
+|	<LET : "let" >
+|	<DO : "do" >
+|	<OF : "of" >
+|	<INFIXL : "infixl" >
+|	<INFIXR : "infixr" >
+|	<INFIX : "infix" >
+|	<CONTEXT_ARROW : "=>" >
+|	<EQUALS : "=" >
+|	<ALT : "|" >
+|	<OFTYPE : "::" >
+//|	<QVARID>//|	<QCONID>//|	<QVARSYM>
+}
+
+SPECIAL_TOKEN : {
+ " "
+|  "\t"
+|  "\n"
+|  "\r"
+|  <"--" (~["\n","\r"])* ("\n" | "\r" | "\r\n")>
+| <"{-"(~["-"])*"-"("-" | ~["-", "}"](~["-"])*"-")*"}">
+}
+
+    
+//PPDIRECTIVE
+//	:	'#' (~('\n'))* NEWLINE { $setType(Token.SKIP); }
+//	;
+
+
+TOKEN : {
+	<CONSTRUCTOR_ID : <UPPER_CASE>	( <LETTER>
+							| <DIGIT>
+							| "'" )* >
+|	<VARIABLE_ID : <LOWER_CASE>	( <LETTER>
+							| <DIGIT>
+							| "'" )*>
+
+|	<INTEGER:	(<DECIMAL>	|	"0o" <OCTAL> | "0O" <OCTAL>
+		|	"0x" <HEXADECIMAL> | "0X" <HEXADECIMAL>)>
+		
+
+|	<#DECIMAL : (<DIGIT>)+ >
+
+|	<#HEXADECIMAL : (<HEXIT>)+>
+
+|	<#OCTAL : (<OCTIT>)+ >
+
+//|	<CHARACTER_LITERAL : "'" (~["'","\\"]|<CHARACTER_ESCAPE>) "'" >////|	<STRING_LITERAL : "\"" (~["\"","\\"]|<STRING_ESCAPE>|<GAP>)* "\"" >
+|  < CHARACTER_LITERAL:
+      "'"
+      (   (~["'","\\","\n","\r"])
+        | ("\\"
+            ( ["n","t","b","r","f","\\","'","\""]
+            | ["0"-"7"] ( ["0"-"7"] )?
+            | ["0"-"3"] ["0"-"7"] ["0"-"7"]
+            )
+          )
+      )
+      "'"
+  >
+|
+  < STRING_LITERAL:
+      "\""
+      (   (~["\"","\\","\n","\r"])
+        | ("\\"
+            ( ["n","t","b","r","f","\\","'","\""]
+            | ["0"-"7"] ( ["0"-"7"] )?
+            | ["0"-"3"] ["0"-"7"] ["0"-"7"]
+            )
+          )
+      )*
+      "\""
+  >
+|	<#CHARACTER_ESCAPE	:	"\\"
+		( <CHAR_ESC>
+		| <ASCII>
+		| <DECIMAL>
+		| "x" <HEXADECIMAL>
+		| "o" <OCTAL>
+		)
+	>
+	
+|	<CHAR_ESC
+	:
+    	( "a"
+    	| "b"  
+    	| "f"  
+    	| "n"  
+    	| "r" 
+    	| "t" 
+    	| "v"
+    	| "\\" 
+    	| "\""
+    	| "\'" )
+	>
+
+|	<#STRING_ESCAPE	: ("\\&" | <CHARACTER_ESCAPE>)>
+    
+    
+|	<#ASCII : "NUL" >
+    
+//|	<NEWLINE : "\n">
+
+//|	<#GAP : "\\" (<WS> | <NEWLINE>)+ "\\" >
+
+|	<#LOWER_CASE:	["a"-"z","_"]>	
+|	<#UPPER_CASE:	["A"-"Z"]>	
+|	<#LETTER : <UPPER_CASE> | <LOWER_CASE>>
+
+|	<#DIGIT:	["0"-"9"]>	
+
+|	<#HEXIT:	(<DIGIT> | ["A"-"F"] | ["a"-"f"] )>	
+
+|	<#OCTIT:	["0"-"7"]>	
+
+|	<LEFT_CURLY : "{" >
+
+|	<RIGHT_CURLY : "}" >
+
+|	<SEMICOLON : ";" >
+
+|	<LEFT_PAREN : "(" >
+
+|	<RIGHT_PAREN : ")" >
+
+|	<LEFT_BRACKET : "[" >
+
+|	<RIGHT_BRACKET : "]" >
+
+|	<COMMA : "," >
+
+|	<INFIX_QUOTE : "`" >
+
+|	<VARSYM : <SYMBOL> (<SYMBOL> | ":" )* >
+
+|	<CONSYM : ":" (<SYMBOL> | ":" )* >
+
+|	<SYMBOL : "!" | "#" | "$" | "%" | "&" | "*" | "+" | "." | "/" | "<" | "="
+       | ">" | "?" | "@" | "\\" | "^" | "-" | "~" | "|"
+       >
+       
+|	<UNANTICIPATED_SYMBOL : ~["a"-"z","A"-"Z","0"-"9"] >
+}
+
+
+<PAREN> TOKEN :{
+ 	<ANYTHINGP: ~["(",")"]>
+}
+module module() : { 
+	modid modid;
+	exports exports = null;
+	body body;
+	Token t;
+	ASTStringNode eof;
+	Token firstToken=token;
+} { (
+	"module" modid=modid() [exports=exports()] "where" body=body() t=<EOF>{eof=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new module(modid, exports, body, eof, firstToken.next,token);}
+ ) }
+
+qconid qconid() : { 
+	Token t;
+	ASTStringNode constructor_id;
+	Token firstToken=token;
+} { (
+	t=<CONSTRUCTOR_ID>{constructor_id=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new qconid(constructor_id, firstToken.next,token);}
+ ) }
+
+exports exports() : { 
+	exportsList exportsList = null;
+	ASTTextNode text1 = null;
+	Token firstToken=token;
+} { (
+	"(" [exportsList=exportsList()] ["," {text1=new ASTTextNode(",",new WToken(token));}] ")" 
+	{return new exports(exportsList, text1, firstToken.next,token);}
+ ) }
+
+exportsList exportsList() : { 
+	export export;
+	ArrayList<export> list0=new ArrayList<export>();
+	export export1;
+	ArrayList<export> export1List = new ArrayList<export>();
+	Token firstToken=token;
+} { (
+	export=export(){list0.add(export);} (LOOKAHEAD(2) "," export1=export(){list0.add(export1);})* 
+	{return new exportsList(list0, firstToken.next,token);}
+ ) }
+
+export export() : { 
+	qvar qvar;
+	qtyconorcls qtyconorcls;
+	details details = null;
+	modid modid;
+	Token firstToken=token;
+} { (
+	qvar=qvar() 
+	{return new export1(qvar, firstToken.next,token);} |
+	qtyconorcls=qtyconorcls() [details=details()] 
+	{return new export2(qtyconorcls, details, firstToken.next,token);} |
+	"module" modid=modid() 
+	{return new export3(modid, firstToken.next,token);}
+ ) }
+
+details details() : { 
+	Token t;
+	ASTStringNode varsym;
+	cnamelist cnamelist = null;
+	Token firstToken=token;
+} { (
+	LOOKAHEAD(2) "(" t=<VARSYM>{varsym=new ASTStringNode(t.toString(),new WToken(t));} ")"  
+	{return new details1(varsym, firstToken.next,token);} |
+	"(" [cnamelist=cnamelist()] ")" 
+	{return new details2(cnamelist, firstToken.next,token);}
+ ) }
+
+cnamelist cnamelist() : { 
+	cname cname;
+	ArrayList<cname> list0=new ArrayList<cname>();
+	cname cname1;
+	ArrayList<cname> cname1List = new ArrayList<cname>();
+	Token firstToken=token;
+} { (
+	cname=cname(){list0.add(cname);} ("," cname1=cname(){list0.add(cname1);})* 
+	{return new cnamelist(list0, firstToken.next,token);}
+ ) }
+
+qtyconorcls qtyconorcls() : { 
+	qconid qconid;
+	Token firstToken=token;
+} { (
+	qconid=qconid() 
+	{return new qtyconorcls(qconid, firstToken.next,token);}
+ ) }
+
+cname cname() : { 
+	Token t;
+	ASTStringNode variable_id;
+	ASTStringNode constructor_id;
+	Token firstToken=token;
+} { (
+	t=<VARIABLE_ID>{variable_id=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new cname1(variable_id, firstToken.next,token);} |
+	t=<CONSTRUCTOR_ID>{constructor_id=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new cname2(constructor_id, firstToken.next,token);}
+ ) }
+
+qvar qvar() : { 
+	qvarid qvarid;
+	qvarsym qvarsym;
+	Token firstToken=token;
+} { (
+	qvarid=qvarid() 
+	{return new qvar1(qvarid, firstToken.next,token);} |
+	"(" qvarsym=qvarsym() ")" 
+	{return new qvar2(qvarsym, firstToken.next,token);}
+ ) }
+
+qvarid qvarid() : { 
+	Token t;
+	ASTStringNode variable_id;
+	Token firstToken=token;
+} { (
+	t=<VARIABLE_ID>{variable_id=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new qvarid(variable_id, firstToken.next,token);}
+ ) }
+
+qvarsym qvarsym() : { 
+	Token t;
+	ASTStringNode varsym;
+	Token firstToken=token;
+} { (
+	t=<VARSYM>{varsym=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new qvarsym(varsym, firstToken.next,token);}
+ ) }
+
+modid modid() : { 
+	qconid qconid;
+	Token firstToken=token;
+} { (
+	qconid=qconid() 
+	{return new modid(qconid, firstToken.next,token);}
+ ) }
+
+conid conid() : { 
+	Token t;
+	ASTStringNode constructor_id;
+	Token firstToken=token;
+} { (
+	t=<CONSTRUCTOR_ID>{constructor_id=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new conid(constructor_id, firstToken.next,token);}
+ ) }
+
+body body() : { 
+	impdecls impdecls;
+	topdecls topdecls = null;
+	topdecls topdecls1;
+	Token firstToken=token;
+} { (
+	LOOKAHEAD(2) "{" impdecls=impdecls() [";" topdecls=topdecls()] "}" 
+	{return new body1(impdecls, topdecls, firstToken.next,token);} |
+	"{" topdecls1=topdecls() "}" 
+	{return new body2(topdecls1, firstToken.next,token);}
+ ) }
+
+impdecls impdecls() : { 
+	impdecl impdecl;
+	ArrayList<impdecl> list0=new ArrayList<impdecl>();
+	impdecl impdecl1;
+	ArrayList<impdecl> impdecl1List = new ArrayList<impdecl>();
+	Token firstToken=token;
+} { (
+	impdecl=impdecl(){list0.add(impdecl);} (LOOKAHEAD(2) ";" impdecl1=impdecl(){list0.add(impdecl1);})* 
+	{return new impdecls(list0, firstToken.next,token);}
+ ) }
+
+impdecl impdecl() : { 
+	ASTTextNode text3 = null;
+	modid modid;
+	modid modid1 = null;
+	impspec impspec = null;
+	Token firstToken=token;
+} { (
+	"import" ["qualified" {text3=new ASTTextNode("qualified",new WToken(token));}] modid=modid() ["as" modid1=modid()] [impspec=impspec()] 
+	{return new impdecl1(text3, modid, modid1, impspec, firstToken.next,token);} |
+	 
+	{return new impdecl2(firstToken.next,token);}
+ ) }
+
+impspec impspec() : { 
+	ASTTextNode text5 = null;
+	imports imports = null;
+	Token firstToken=token;
+} { (
+	["hiding" {text5=new ASTTextNode("hiding",new WToken(token));}] "(" [imports=imports()] ")" 
+	{return new impspec(text5, imports, firstToken.next,token);}
+ ) }
+
+imports imports() : { 
+	imp imp;
+	imp imp1;
+	ArrayList<imp> imp1List = new ArrayList<imp>();
+	Token firstToken=token;
+} { (
+	imp=imp() (LOOKAHEAD("," imp()) "," imp1=imp(){imp1List.add(imp1);})* 
+	{return new imports(imp, imp1List, firstToken.next,token);}
+ ) }
+
+imp imp() : { 
+	var var;
+	tyconorcls tyconorcls;
+	list list = null;
+	Token firstToken=token;
+} { (
+	var=var() 
+	{return new imp1(var, firstToken.next,token);} |
+	tyconorcls=tyconorcls() [list=list()] 
+	{return new imp2(tyconorcls, list, firstToken.next,token);}
+ ) }
+
+tyconorcls tyconorcls() : { 
+	conid conid;
+	Token firstToken=token;
+} { (
+	conid=conid() 
+	{return new tyconorcls(conid, firstToken.next,token);}
+ ) }
+
+topdecls topdecls() : { 
+	topdecl topdecl;
+	ArrayList<topdecl> list0=new ArrayList<topdecl>();
+	topdecl topdecl1;
+	ArrayList<topdecl> topdecl1List = new ArrayList<topdecl>();
+	Token firstToken=token;
+} { (
+	topdecl=topdecl(){list0.add(topdecl);} (";" topdecl1=topdecl(){list0.add(topdecl1);})* 
+	{return new topdecls(list0, firstToken.next,token);}
+ ) }
+
+topdecl topdecl() : { 
+	simpletype simpletype;
+	declrhs declrhs;
+	optContext optContext;
+	simpletype simpletype1;
+	constrs constrs;
+	deriving deriving = null;
+	optContext optContext1;
+	simpletype simpletype2;
+	declrhs declrhs1;
+	optContext optContext2;
+	conid conid;
+	tyvar tyvar;
+	cdecls cdecls = null;
+	optContext optContext3;
+	qconid qconid;
+	inst inst;
+	block block = null;
+	list list;
+	decl decl;
+	Token firstToken=token;
+} { (
+	"type" simpletype=simpletype() declrhs=declrhs() 
+	{return new typedecl(simpletype, declrhs, firstToken.next,token);} |
+	"data" optContext=optContext() simpletype1=simpletype() "=" constrs=constrs() [deriving=deriving()] 
+	{return new datadecl(optContext, simpletype1, constrs, deriving, firstToken.next,token);} |
+	"newtype" optContext1=optContext() simpletype2=simpletype() declrhs1=declrhs() 
+	{return new newtypedecl(optContext1, simpletype2, declrhs1, firstToken.next,token);} |
+	"class" optContext2=optContext() conid=conid() tyvar=tyvar() ["where" cdecls=cdecls()] 
+	{return new classdecl(optContext2, conid, tyvar, cdecls, firstToken.next,token);} |
+	"instance" optContext3=optContext() qconid=qconid() inst=inst() ["where" block=block()] 
+	{return new instancedecl(optContext3, qconid, inst, block, firstToken.next,token);} |
+	"default" list=list() 
+	{return new defaultdecl(list, firstToken.next,token);} |
+	decl=decl() 
+	{return new declaration(decl, firstToken.next,token);}
+ ) }
+
+decl decl() : { 
+	signdecl signdecl;
+	fixdecl fixdecl;
+	valdef valdef;
+	nonstddecl nonstddecl;
+	Token firstToken=token;
+} { (
+	LOOKAHEAD(vars() "::") signdecl=signdecl() 
+	{return new typeSignature(signdecl, firstToken.next,token);} |
+	fixdecl=fixdecl() 
+	{return new fixityDeclaration(fixdecl, firstToken.next,token);} |
+	LOOKAHEAD(funlhs() "=") valdef=valdef() 
+	{return new valueDeclaration(valdef, firstToken.next,token);} |
+	nonstddecl=nonstddecl() 
+	{return new nonStandardDeclaration(nonstddecl, firstToken.next,token);} |
+	 
+	{return new decl5(firstToken.next,token);}
+ ) }
+
+declrhs declrhs() : { 
+	Token t;
+	ASTStringNode findnonstddeclrest = null;
+	Token firstToken=token;
+} { (
+	"=" [LOOKAHEAD({isNot(SEMICOLON,RIGHT_CURLY)}) t=findNonstddeclRest(){findnonstddeclrest=new ASTStringNode(t.toString(),new WToken(t));}] 
+	{return new declrhs(findnonstddeclrest, firstToken.next,token);}
+ ) }
+
+optContext optContext() : { 
+	context context = null;
+	Token firstToken=token;
+} { (
+	[LOOKAHEAD({isContext()}) context=context() "=>"] 
+	{return new optContext(context, firstToken.next,token);}
+ ) }
+
+deriving deriving() : { 
+	Token t;
+	ASTStringNode findnonstddeclrest;
+	Token firstToken=token;
+} { (
+	"deriving" t=findNonstddeclRest(){findnonstddeclrest=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new deriving(findnonstddeclrest, firstToken.next,token);}
+ ) }
+
+constrs constrs() : { 
+	constr constr;
+	ArrayList<constr> list0=new ArrayList<constr>();
+	constr constr1;
+	ArrayList<constr> constr1List = new ArrayList<constr>();
+	Token firstToken=token;
+} { (
+	constr=constr(){list0.add(constr);} ("|" constr1=constr(){list0.add(constr1);})* 
+	{return new constrs(list0, firstToken.next,token);}
+ ) }
+
+constr constr() : { 
+	conP conP;
+	Token t;
+	ASTStringNode findconrest = null;
+	Token firstToken=token;
+} { (
+	conP=conP() [LOOKAHEAD({isNot(SEMICOLON,ALT,RIGHT_CURLY,DERIVING)}) t=findConRest(){findconrest=new ASTStringNode(t.toString(),new WToken(t));}] 
+	{return new constr(conP, findconrest, firstToken.next,token);}
+ ) }
+
+inst inst() : { 
+	gtycon gtycon;
+	gtycon gtycon1;
+	tyvar tyvar;
+	ArrayList<tyvar> tyvarList = new ArrayList<tyvar>();
+	conid conid;
+	Token firstToken=token;
+} { (
+	gtycon=gtycon() 
+	{return new inst1(gtycon, firstToken.next,token);} |
+	"(" gtycon1=gtycon() (tyvar=tyvar(){tyvarList.add(tyvar);})* ")" 
+	{return new inst2(gtycon1, tyvarList, firstToken.next,token);} |
+	"[" conid=conid() "]" 
+	{return new inst3(conid, firstToken.next,token);}
+ ) }
+
+gtycon gtycon() : { 
+	qtyconorcls qtyconorcls;
+	Token firstToken=token;
+} { (
+	qtyconorcls=qtyconorcls() 
+	{return new gtycon(qtyconorcls, firstToken.next,token);}
+ ) }
+
+cdecls cdecls() : { 
+	cdeclsI cdeclsI = null;
+	Token firstToken=token;
+} { (
+	"{" [cdeclsI=cdeclsI()] "}" 
+	{return new cdecls(cdeclsI, firstToken.next,token);}
+ ) }
+
+cdeclsI cdeclsI() : { 
+	cdecl cdecl;
+	ArrayList<cdecl> list0=new ArrayList<cdecl>();
+	cdecl cdecl1;
+	ArrayList<cdecl> cdecl1List = new ArrayList<cdecl>();
+	Token firstToken=token;
+} { (
+	cdecl=cdecl(){list0.add(cdecl);} (";" cdecl1=cdecl(){list0.add(cdecl1);})* 
+	{return new cdeclsI(list0, firstToken.next,token);}
+ ) }
+
+cdecl cdecl() : { 
+	signdecl signdecl;
+	nonstddecl nonstddecl;
+	Token firstToken=token;
+} { (
+	LOOKAHEAD(vars() "::") signdecl=signdecl() 
+	{return new cdecl1(signdecl, firstToken.next,token);} |
+	nonstddecl=nonstddecl() 
+	{return new cdecl2(nonstddecl, firstToken.next,token);}
+ ) }
+
+context context() : { 
+	Token t;
+	ASTStringNode finduntilsemiorcontextarrow = null;
+	Token firstToken=token;
+} { (
+	[LOOKAHEAD({isNot(SEMICOLON,CONTEXT_ARROW)}) t=findUntilSemiOrContextArrow(){finduntilsemiorcontextarrow=new ASTStringNode(t.toString(),new WToken(t));}] 
+	{return new context(finduntilsemiorcontextarrow, firstToken.next,token);}
+ ) }
+
+simpletype simpletype() : { 
+	Token t;
+	ASTStringNode constructor_id;
+	ASTStringNode finduntilequals = null;
+	Token firstToken=token;
+} { (
+	t=<CONSTRUCTOR_ID>{constructor_id=new ASTStringNode(t.toString(),new WToken(t));} [LOOKAHEAD({isNot(EQUALS)}) t=findUntilEquals(){finduntilequals=new ASTStringNode(t.toString(),new WToken(t));}] 
+	{return new simpletype(constructor_id, finduntilequals, firstToken.next,token);}
+ ) }
+
+nonstddecl nonstddecl() : { 
+	Token t;
+	ASTStringNode findnonstddeclrest;
+	Token firstToken=token;
+} { (
+	t=findNonstddeclRest(){findnonstddeclrest=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new nonstddecl(findnonstddeclrest, firstToken.next,token);}
+ ) }
+
+valdef valdef() : { 
+	funlhs funlhs;
+	declrhs declrhs;
+	Token firstToken=token;
+} { (
+	funlhs=funlhs() declrhs=declrhs() 
+	{return new valdef(funlhs, declrhs, firstToken.next,token);}
+ ) }
+
+fixdecl fixdecl() : { 
+	fixity fixity;
+	Token t;
+	ASTStringNode integer = null;
+	ops ops;
+	Token firstToken=token;
+} { (
+	fixity=fixity() [t=<INTEGER>{integer=new ASTStringNode(t.toString(),new WToken(t));}] ops=ops() 
+	{return new fixdecl(fixity, integer, ops, firstToken.next,token);}
+ ) }
+
+fixity fixity() : { 
+	Token firstToken=token;
+} { (
+	"infixl"  
+	{return new fixity1(firstToken.next,token);} |
+	"infixr"  
+	{return new fixity2(firstToken.next,token);} |
+	"infix"  
+	{return new fixity3(firstToken.next,token);}
+ ) }
+
+ops ops() : { 
+	op op;
+	ArrayList<op> list0=new ArrayList<op>();
+	op op1;
+	ArrayList<op> op1List = new ArrayList<op>();
+	Token firstToken=token;
+} { (
+	op=op(){list0.add(op);} ("," op1=op(){list0.add(op1);})* 
+	{return new ops(list0, firstToken.next,token);}
+ ) }
+
+signdecl signdecl() : { 
+	vars vars;
+	Token t;
+	ASTStringNode finduntilsemiorccb = null;
+	Token firstToken=token;
+} { (
+	vars=vars() "::" [LOOKAHEAD({isNot(SEMICOLON,RIGHT_CURLY)}) t=findUntilSemiOrCCB(){finduntilsemiorccb=new ASTStringNode(t.toString(),new WToken(t));}] 
+	{return new signdecl(vars, finduntilsemiorccb, firstToken.next,token);}
+ ) }
+
+vars vars() : { 
+	var var;
+	ArrayList<var> list0=new ArrayList<var>();
+	var var1;
+	ArrayList<var> var1List = new ArrayList<var>();
+	Token firstToken=token;
+} { (
+	var=var(){list0.add(var);} ("," var1=var(){list0.add(var1);})* 
+	{return new vars(list0, firstToken.next,token);}
+ ) }
+
+var var() : { 
+	Token t;
+	ASTStringNode variable_id;
+	ASTStringNode varsym;
+	Token firstToken=token;
+} { (
+	t=<VARIABLE_ID>{variable_id=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new var1(variable_id, firstToken.next,token);} |
+	"(" t=<VARSYM>{varsym=new ASTStringNode(t.toString(),new WToken(t));} ")" 
+	{return new var2(varsym, firstToken.next,token);}
+ ) }
+
+conP conP() : { 
+	Token t;
+	ASTStringNode constructor_id;
+	ASTStringNode consym;
+	Token firstToken=token;
+} { (
+	t=<CONSTRUCTOR_ID>{constructor_id=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new conP1(constructor_id, firstToken.next,token);} |
+	"(" t=<CONSYM>{consym=new ASTStringNode(t.toString(),new WToken(t));} ")" 
+	{return new conP2(consym, firstToken.next,token);}
+ ) }
+
+tyvar tyvar() : { 
+	Token t;
+	ASTStringNode variable_id;
+	Token firstToken=token;
+} { (
+	t=<VARIABLE_ID>{variable_id=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new tyvar(variable_id, firstToken.next,token);}
+ ) }
+
+funlhs funlhs() : { 
+	funlhsL funlhsL;
+	funlhsR funlhsR = null;
+	Token firstToken=token;
+} { (
+	funlhsL=funlhsL() [LOOKAHEAD({isNot(SEMICOLON,EQUALS,LEFT_CURLY)}) funlhsR=funlhsR()] 
+	{return new funlhs(funlhsL, funlhsR, firstToken.next,token);}
+ ) }
+
+funlhsL funlhsL() : { 
+	Token t;
+	ASTStringNode variable_id;
+	varop varop;
+	var var;
+	Token firstToken=token;
+} { (
+	LOOKAHEAD(<VARIABLE_ID> varop()) t=<VARIABLE_ID>{variable_id=new ASTStringNode(t.toString(),new WToken(t));} varop=varop() 
+	{return new funlhsL1(variable_id, varop, firstToken.next,token);} |
+	var=var() 
+	{return new funlhsL2(var, firstToken.next,token);}
+ ) }
+
+funlhsR funlhsR() : { 
+	block block;
+	Token t;
+	ASTStringNode finduntilsemiorequals;
+	Token firstToken=token;
+} { (
+	block=block() 
+	{return new funlhsR1(block, firstToken.next,token);} |
+	LOOKAHEAD({isNot(SEMICOLON,EQUALS)}) t=findUntilSemiOrEquals(){finduntilsemiorequals=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new funlhsR2(finduntilsemiorequals, firstToken.next,token);}
+ ) }
+
+varop varop() : { 
+	Token t;
+	ASTStringNode varsym;
+	ASTStringNode variable_id;
+	Token firstToken=token;
+} { (
+	t=<VARSYM>{varsym=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new varop1(varsym, firstToken.next,token);} |
+	"`" t=<VARIABLE_ID>{variable_id=new ASTStringNode(t.toString(),new WToken(t));} "`" 
+	{return new varop2(variable_id, firstToken.next,token);}
+ ) }
+
+conop conop() : { 
+	Token t;
+	ASTStringNode consym;
+	ASTStringNode constructor_id;
+	Token firstToken=token;
+} { (
+	t=<CONSYM>{consym=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new conop1(consym, firstToken.next,token);} |
+	"`" t=<CONSTRUCTOR_ID>{constructor_id=new ASTStringNode(t.toString(),new WToken(t));} "`" 
+	{return new conop2(constructor_id, firstToken.next,token);}
+ ) }
+
+op op() : { 
+	varop varop;
+	conop conop;
+	Token firstToken=token;
+} { (
+	LOOKAHEAD(2) varop=varop() 
+	{return new op1(varop, firstToken.next,token);} |
+	conop=conop() 
+	{return new op2(conop, firstToken.next,token);}
+ ) }
+
+block block() : { 
+	Token t;
+	ASTStringNode findblockcontent = null;
+	Token firstToken=token;
+} { (
+	"{" [LOOKAHEAD({isNot(RIGHT_CURLY)}) t=findBlockContent(){findblockcontent=new ASTStringNode(t.toString(),new WToken(t));}] "}" 
+	{return new block(findblockcontent, firstToken.next,token);}
+ ) }
+
+list list() : { 
+	Token t;
+	ASTStringNode findlistcontent = null;
+	Token firstToken=token;
+} { (
+	"(" [LOOKAHEAD({isNot(RIGHT_PAREN)}) t=findListContent(){findlistcontent=new ASTStringNode(t.toString(),new WToken(t));}] ")" 
+	{return new list(findlistcontent, firstToken.next,token);}
+ ) }
+

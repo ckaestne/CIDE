@@ -1,0 +1,237 @@
+/*
+ *	JavaCC Parser for the RTF (Rich Text Format) document format
+ *
+ *	Version 1.0
+ *
+ *	By David Rosenstrauch (darose@dti.net)
+ *	Oct. 11, 2001
+ *
+ *	Note:
+ *		This is NOT a full implementation of the RTF grammar
+ *		(which can be found at http://www.wotsit.org/download.asp?f=rtf15).
+ *
+ *		i.e., it does not parse out every individual control word & symbol
+ *
+ *		Rather, it just parses out the general structure of the RTF file (control words, text, etc.)
+ *
+ *		Users who wish to parse for specific control words will need to implement that functionality themselves.
+ *
+ *	Note:
+ *		This grammar has been "lightly" tested.  It was able to successfully parse 3 medium-sized, fairly representative
+ *		RTF documents (which were converted from MS Word97 format using MS Word97).
+ *
+ *		If you find a bug, let me know and I'll try to fix it.
+ *		(Or if you'd like you can fix it yourself - please e-mail me and let me know if you do.)
+ */
+
+options {
+  JAVA_UNICODE_ESCAPE=false;
+  STATIC=false;
+//  DEBUG_PARSER=true;
+//  DEBUG_TOKEN_MANAGER=true;
+}
+
+PARSER_BEGIN(RTFParser)
+
+public class RTFParser
+{
+
+    public static void main (String [] args) {
+        RTFParser parser;
+        String filename = null;
+        long initTime = 0;
+        long parseTime = 0;
+        long startTime = 0;
+        long stopTime = 0;
+        if (args.length == 0)
+        {
+            System.out.println("RTF Parser Version 1.1 (for Java1.2 code):  Reading from standard input . . .");
+            parser = new RTFParser(System.in);
+        } else if (args.length == 1)
+        {
+            filename = args[0];
+            System.out.println("RTF Parser Version 1.1 (for Java1.2 code):  Reading from file " + filename + " . . .");
+            try
+            {
+                startTime = System.currentTimeMillis();
+                parser = new RTFParser(new java.io.FileInputStream(filename));
+                stopTime = System.currentTimeMillis();
+                initTime = stopTime - startTime;
+            } catch (java.io.FileNotFoundException e)
+            {
+                System.out.println("RTF Parser Version 1.1 (for Java1.2 code):  File " + filename + " not found.");
+                return;
+            }
+        } else
+        {
+            System.out.println("RTF Parser Version 1.1 (for Java1.2 code):  Usage is one of:");
+            System.out.println("         java RTFParser < inputfile");
+            System.out.println("OR");
+            System.out.println("         java RTFParser inputfile");
+            return;
+        }
+        try
+        {
+            startTime = System.currentTimeMillis();
+
+			parser.RTF();
+
+            stopTime = System.currentTimeMillis();
+            parseTime = stopTime - startTime;
+            System.out.println("RTF Parser Version 1.1 (for Java1.2 code): ");
+            System.out.println("   RTF Parser parsed " + filename + " successfully in " + (initTime + parseTime) + " ms.");
+            System.out.println("      parser initialization time was " + initTime + " ms.");
+            System.out.println("      parser parse time was " + parseTime + " ms.");
+        } catch (ParseException e)
+        {
+            e.printStackTrace(System.out);
+            System.out.println("RTF Parser Version 1.1 (for Java1.2 code):  Encountered errors during parse.");
+        }
+    }
+}
+
+PARSER_END(RTFParser)
+
+
+
+// TOKENS are defined here
+
+TOKEN :
+{
+	< LBRACE: "{" >	|
+	< RBRACE: "}" >	|
+	< SLASH: "\\" >
+}
+
+SPECIAL_TOKEN :
+{
+	< CR_LF: "\r\n" >	|
+	< LF: "\n" >		|
+	< CR: "\r" >
+}
+
+TOKEN :
+{
+	< CONTROL_SYMBOL: <SLASH> ["|", "~", "-", "_", ":", "*"] >		|
+
+	< HEX_VALUE: <SLASH> "'" <HEX_DIGIT> <HEX_DIGIT> >				|
+
+	< #DIGIT: ["0"-"9"] >											|
+	< #HEX_DIGIT: <DIGIT> | ["a"-"f"] >								|
+
+	< ESCAPED_SLASH: <SLASH> <SLASH> >								|
+	< ESCAPED_LBRACE: <SLASH> <LBRACE> >							|
+	< ESCAPED_RBRACE: <SLASH> <RBRACE> >
+}
+
+<DEFAULT, IN_TEXT>
+MORE:
+{
+	<~["\\", "{", "}", "\r", "\n"]>: IN_TEXT
+}
+
+<IN_TEXT>
+TOKEN:
+{
+	< TEXT: ["\\", "{", "}", "\r", "\n"]>
+	{
+		// remove the control char from the text ...
+		matchedToken.image = image.substring(0, image.length() - 1);
+		// ... and put it back into the input stream
+		input_stream.backup(1);
+ 
+		// this is kinda kludgy, but I couldn't think of a better way to handle it
+		// since there is no official "end of text" char (just the start of the next token)
+	}
+	: DEFAULT
+}
+
+MORE:
+{
+	< <SLASH> <CTRL_WORD_LETTER> >: IN_CTRL_WORD
+}
+
+<IN_CTRL_WORD>
+TOKEN:
+{
+	< #SPACE_DELIMITER: " ">														|
+	< #CTRL_WORD_LETTER: ["a"-"z"] >												|
+	< #CTRL_DIGIT_SEQ: (<HYPHEN>)? (<DIGIT>)+ >										|
+	< #HYPHEN: "-" >																|
+
+	< CONTROL_WORD_SPACE_DELIMITED: (<CTRL_WORD_LETTER>)* (<CTRL_DIGIT_SEQ>)? <SPACE_DELIMITER> >: DEFAULT
+|
+	< CONTROL_WORD: (<CTRL_WORD_LETTER>)* (<CTRL_DIGIT_SEQ>)? <DELIMITER> >
+	{
+		// remove the delimiter char from the text ...
+		matchedToken.image = image.substring(0, image.length() - 1);
+		// ... and put it back into the input stream
+		input_stream.backup(1);
+
+		// this is kinda kludgy, but I couldn't think of a better way to handle it
+		// since there is no official "end of control word" char (just the start of the next token)
+	}
+	: DEFAULT
+|
+	< DELIMITER: (~["a"-"z", "0"-"9", " "]) >
+}
+
+
+
+
+// The RTF grammar productions start here
+
+void
+RTF() :
+{}
+{
+	run()
+
+	<EOF>
+}
+
+
+void
+run() :
+{}
+{
+	(
+			<CONTROL_SYMBOL>
+		|
+			<CONTROL_WORD>
+		|
+			<CONTROL_WORD_SPACE_DELIMITED>
+		|
+			text()
+		|
+			group()
+	)+
+}
+
+
+void
+group() :
+{}
+{
+	<LBRACE>
+
+	run()
+
+	<RBRACE>
+}
+
+
+void
+text() :
+{}
+{
+	<TEXT>
+|
+	<HEX_VALUE>
+|
+	<ESCAPED_SLASH>
+|
+	<ESCAPED_LBRACE>
+|
+	<ESCAPED_RBRACE>
+}

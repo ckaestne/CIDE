@@ -1,0 +1,13 @@
+class Main {
+	void foo() {
+		b(0);
+		hook();
+		b(2);
+	}
+
+	int a() {
+		return 1;
+	}
+	void b(int x){}
+	
+}

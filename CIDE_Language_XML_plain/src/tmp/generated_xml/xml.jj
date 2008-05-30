@@ -1,0 +1,230 @@
+options{
+  STATIC = false;
+}
+PARSER_BEGIN(XMLParser)
+package tmp.generated_xml;
+
+import java.io.*;
+import java.util.*;
+import cide.gast.*;
+import cide.gparser.*;
+
+public class XMLParser{
+}
+PARSER_END(XMLParser)
+
+
+
+
+<*> TOKEN :
+{
+  <#ALPHA_CHAR: ["a"-"z", "A"-"Z"] >
+| <#NUM_CHAR:   ["0"-"9"] >
+| <#ALPHANUM_CHAR: [ "a"-"z", "A"-"Z", "0"-"9" ] >
+| <#IDENTIFIER_CHAR: [ "a"-"z", "A"-"Z", "0"-"9", "_", "-", "." ] >
+| <#IDENTIFIER_PART: <ALPHA_CHAR> (<IDENTIFIER_CHAR>)* >
+| <#IDENTIFIER: <IDENTIFIER_PART> (":" <IDENTIFIER_PART>)? >
+| <#QUOTED_STRING_NB: ( "'" ( ~["'", "\r", "\n"] )* "'" ) 
+                    | ( "\"" ( ~["\"", "\r", "\n"] )* "\"" ) >
+| <#QUOTED_STRING: ( "'" ( ~["'"] )* "'" ) | ( "\"" ( ~["\""] )* "\"" ) >
+| <#WHITESPACE: ( " " | "\t" | "\n" | "\r" ) >
+| <#NEWLINE:    ( "\r\n" | "\r" | "\n" ) >
+| <#QUOTE:      ( "'" | "\"" )>
+| <#CPB:		">">
+}
+
+<DEFAULT> TOKEN : 
+{
+  <XMLOPEN:"<?xml">				: LexElement_Inside
+| <SELEMENT_START:      "<"       > : LexElement_Start
+| <EELEMENT_START:      "</"       > : LexElement_Start
+| <PI_START:      "<?"       > : LexPI
+| <COMMENT_START:  "<!--"    > : LexComment
+| <CDSTART: 		"<![CDATA["> : LexCDATA
+//| <DECL_START:     "<!DOCTYPE"      > : LexDecl
+| <PCDATA:         ( ~["<"] )+ >
+}
+
+<LexElement_Start> TOKEN :
+{
+  <ELEMENT_ID: <IDENTIFIER> > : LexElement_Inside
+}
+
+<LexElement_Inside> SPECIAL_TOKEN :
+{
+  < (<WHITESPACE>)+ >
+}
+
+<LexElement_Inside> TOKEN :
+{
+  <ATTR_NAME: <IDENTIFIER> >		
+| <ELEMENT_END: <CPB> >                       : DEFAULT
+| <QEND: "?>" >                     		: DEFAULT
+| <SLASHEND: "/>" >                       : DEFAULT
+| <ATTR_EQ: "=" >                       
+| <ATTR_VAL: <QUOTED_STRING>>			
+}
+
+
+<LexComment> MORE : { <~[] > } 
+<LexComment> TOKEN : 
+{
+  < COMMENT_END:  "-->" > : DEFAULT 
+}
+
+<LexPI> MORE : { <~[] > } 
+<LexPI> TOKEN : 
+{
+  < PI_END:  "?>" > : DEFAULT 
+}
+
+<LexCDATA> MORE : { <~[] > } 
+<LexCDATA> TOKEN : 
+{
+  < CDEND:  "]]>" > : DEFAULT 
+}
+Document Document() : { 
+	Prolog prolog;
+	Element element;
+	Misc misc;
+	ArrayList<Misc> miscList = new ArrayList<Misc>();
+	Token firstToken=token;
+} { (
+	prolog=Prolog() element=Element() (misc=Misc(){miscList.add(misc);})* 
+	{return new Document(prolog, element, miscList, firstToken.next,token);}
+ ) }
+
+Misc Misc() : { 
+	Comment comment;
+	Token t;
+	ASTStringNode pcdata;
+	PI pI;
+	Token firstToken=token;
+} { (
+	comment=Comment() 
+	{return new Misc1(comment, firstToken.next,token);} |
+	LOOKAHEAD({getToken(1).image.trim().equals("")}) t=<PCDATA>{pcdata=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new Misc2(pcdata, firstToken.next,token);} |
+	pI=PI() 
+	{return new Misc3(pI, firstToken.next,token);}
+ ) }
+
+PI PI() : { 
+	Token t;
+	ASTStringNode pi_end;
+	Token firstToken=token;
+} { (
+	"<?" t=<PI_END>{pi_end=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new PI(pi_end, firstToken.next,token);}
+ ) }
+
+Prolog Prolog() : { 
+	XMLDecl xMLDecl;
+	Misc misc;
+	ArrayList<Misc> miscList = new ArrayList<Misc>();
+	Token firstToken=token;
+} { (
+	xMLDecl=XMLDecl() (misc=Misc(){miscList.add(misc);})* 
+	{return new Prolog(xMLDecl, miscList, firstToken.next,token);}
+ ) }
+
+XMLDecl XMLDecl() : { 
+	Attribute attribute;
+	ArrayList<Attribute> attributeList = new ArrayList<Attribute>();
+	Token firstToken=token;
+} { (
+	"<?xml" (attribute=Attribute(){attributeList.add(attribute);})+ <QEND> 
+	{return new XMLDecl(attributeList, firstToken.next,token);}
+ ) }
+
+CDSect CDSect() : { 
+	Token t;
+	ASTStringNode cdend;
+	Token firstToken=token;
+} { (
+	"<![CDATA[" t=<CDEND>{cdend=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new CDSect(cdend, firstToken.next,token);}
+ ) }
+
+Comment Comment() : { 
+	Token t;
+	ASTStringNode comment_end;
+	Token firstToken=token;
+} { (
+	"<!--" t=<COMMENT_END>{comment_end=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new Comment(comment_end, firstToken.next,token);}
+ ) }
+
+Element Element() : { 
+	EmptyElemTag emptyElemTag;
+	STag sTag;
+	Content content;
+	ArrayList<Content> contentList = new ArrayList<Content>();
+	ETag eTag;
+	Token firstToken=token;
+} { (
+	LOOKAHEAD(EmptyElemTag()) emptyElemTag=EmptyElemTag() 
+	{return new Element1(emptyElemTag, firstToken.next,token);} |
+	sTag=STag() (content=Content(){contentList.add(content);})* eTag=ETag() 
+	{return new Element2(sTag, contentList, eTag, firstToken.next,token);}
+ ) }
+
+EmptyElemTag EmptyElemTag() : { 
+	Token t;
+	ASTStringNode element_id;
+	Attribute attribute;
+	ArrayList<Attribute> attributeList = new ArrayList<Attribute>();
+	Token firstToken=token;
+} { (
+	"<" t=<ELEMENT_ID>{element_id=new ASTStringNode(t.toString(),new WToken(t));} (attribute=Attribute(){attributeList.add(attribute);})* <SLASHEND> 
+	{return new EmptyElemTag(element_id, attributeList, firstToken.next,token);}
+ ) }
+
+STag STag() : { 
+	Token t;
+	ASTStringNode element_id;
+	Attribute attribute;
+	ArrayList<Attribute> attributeList = new ArrayList<Attribute>();
+	Token firstToken=token;
+} { (
+	"<" t=<ELEMENT_ID>{element_id=new ASTStringNode(t.toString(),new WToken(t));} (attribute=Attribute(){attributeList.add(attribute);})* <ELEMENT_END> 
+	{return new STag(element_id, attributeList, firstToken.next,token);}
+ ) }
+
+Attribute Attribute() : { 
+	Token t;
+	ASTStringNode attr_name;
+	ASTStringNode attr_val;
+	Token firstToken=token;
+} { (
+	t=<ATTR_NAME>{attr_name=new ASTStringNode(t.toString(),new WToken(t));} <ATTR_EQ> t=<ATTR_VAL>{attr_val=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new Attribute(attr_name, attr_val, firstToken.next,token);}
+ ) }
+
+ETag ETag() : { 
+	Token t;
+	ASTStringNode element_id;
+	Token firstToken=token;
+} { (
+	"</" t=<ELEMENT_ID>{element_id=new ASTStringNode(t.toString(),new WToken(t));} <ELEMENT_END> 
+	{return new ETag(element_id, firstToken.next,token);}
+ ) }
+
+Content Content() : { 
+	Element element;
+	Comment comment;
+	CDSect cDSect;
+	Token t;
+	ASTStringNode pcdata;
+	Token firstToken=token;
+} { (
+	element=Element() 
+	{return new Content1(element, firstToken.next,token);} |
+	comment=Comment() 
+	{return new Content2(comment, firstToken.next,token);} |
+	cDSect=CDSect() 
+	{return new Content3(cDSect, firstToken.next,token);} |
+	t=<PCDATA>{pcdata=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new Content4(pcdata, firstToken.next,token);}
+ ) }
+

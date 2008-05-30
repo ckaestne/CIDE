@@ -1,0 +1,19 @@
+package tmp.generated_javacc;
+
+import cide.gast.*;
+import cide.gparser.*;
+import cide.greferences.*;
+import java.util.*;
+
+public class AssignmentOperator7 extends AssignmentOperator {
+  public AssignmentOperator7(Token firstToken, Token lastToken) {
+    super(new Property[] {
+    }, firstToken, lastToken);
+  }
+  public AssignmentOperator7(Property[] properties, IToken firstToken, IToken lastToken) {
+    super(properties,firstToken,lastToken);
+  }
+  public ASTNode deepCopy() {
+    return new AssignmentOperator7(cloneProperties(),firstToken,lastToken);
+  }
+}

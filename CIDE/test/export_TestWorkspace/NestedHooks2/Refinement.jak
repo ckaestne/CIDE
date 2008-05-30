@@ -1,0 +1,15 @@
+
+refines class Main {
+
+	protected void hook(int i){
+			try {
+				Super(int).hook(i);
+				}finally{}
+	}
+
+
+	protected void hook2(int i){
+		a(i);
+		Super(int).hook2(i);
+	}
+}

@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: CIDE Language Plugin for C (approx)
+Bundle-SymbolicName: de.ovgu.cide.language.capprox;singleton:=true
+Bundle-Version: 1.0.0
+Export-Package: tmp.generated_capprox
+Require-Bundle: de.ovgu.cide.ast,
+ de.ovgu.cide.core
+Eclipse-LazyStart: true
+Bundle-Vendor: Christian Kaestner, University of Magdeburg

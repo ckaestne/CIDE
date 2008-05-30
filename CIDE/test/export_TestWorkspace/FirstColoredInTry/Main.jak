@@ -1,0 +1,17 @@
+class Main {
+	void foo() {
+		a();
+		hook();
+		a();
+	}
+
+	void a() {}
+	void b() {}
+	protected void hook() {
+		hook();
+		a();
+	}
+	protected void hook() {
+		
+	}
+}

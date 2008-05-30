@@ -1,0 +1,7 @@
+class A {
+    void foo() {}
+    int_a;
+}
+class B extends A {
+    void bar() {}
+}

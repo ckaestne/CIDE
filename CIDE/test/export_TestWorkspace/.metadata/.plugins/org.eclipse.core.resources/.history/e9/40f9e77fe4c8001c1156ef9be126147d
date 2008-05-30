@@ -1,0 +1,11 @@
+import java.util.ArrayList;
+
+class Main extends ArrayList {
+
+	public Object get(int index) {
+		return super.get(index);
+	}
+
+	void foo() {
+	}
+}

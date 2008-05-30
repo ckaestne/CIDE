@@ -1,0 +1,17 @@
+class Main {
+	int foo() {
+		try {
+			a();
+			return 1;
+		} finally {
+			b();
+		}
+	}
+
+	void a() {
+	}
+
+	void b() {
+	}
+
+}

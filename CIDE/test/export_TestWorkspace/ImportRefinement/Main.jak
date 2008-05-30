@@ -1,0 +1,3 @@
+import javax.annotation.*;
+
+class Main {}

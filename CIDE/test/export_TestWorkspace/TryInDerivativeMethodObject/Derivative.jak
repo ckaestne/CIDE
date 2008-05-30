@@ -1,0 +1,20 @@
+refines class Main {
+	@MethodObject  refines static class Main_bar {
+	    overrides protected void hook1(){
+	      try {
+	        Super().hook1();
+	      }
+	  finally {
+	      }
+	    }
+	  }
+	@MethodObject  refines static class Main_foo {
+	    overrides protected void hook0(){
+	      try {
+	        Super().hook0();
+	      }
+	  finally {
+	      }
+	    }
+  	}
+}

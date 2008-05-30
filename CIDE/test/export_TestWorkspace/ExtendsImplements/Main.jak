@@ -1,0 +1,9 @@
+import java.io.Serializable;
+import java.util.LinkedList;
+
+class Main implements Comparable {
+
+	public int compareTo(Object o) {
+		return 0;
+	}
+}

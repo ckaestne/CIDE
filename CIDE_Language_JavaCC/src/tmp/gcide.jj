@@ -1,0 +1,251 @@
+options{STATIC=false;JAVA_UNICODE_ESCAPE=false;OUTPUT_DIRECTORY="generated_gcide";}PARSER_BEGIN(SlimJJParser)package tmp.generated_gcide;import java.io.*;import java.util.*;import cide.gast.*;import cide.gparser.*;public class SlimJJParser{/**
+	 * Accumulate {@link Token} objects from the token stream until a token
+	 * matching <code>tokenKind</code> is consumed from the stream. The tokens
+	 * are accumulated in <code>buffer</code>, including the terminating
+	 * token.
+	 * 
+	 * @return a {@link Token} formed by concatenating all intervening tokens
+	 *         and special tokens.
+	 */final private Token accumulateUntilToken(int tokenKind)throws ParseException{StringBuffer buffer=new StringBuffer();Token token=getNextToken();// Initialize result with known information (starting position, etc.):
+//
+Token result=Token.newToken(OTHER);result.specialToken=null;Token startToken=firstSpecial(token);result.beginColumn=startToken.beginColumn;result.beginLine=startToken.beginLine;// Accumulate tokens until a <code>tokenKind</code> token is found:
+//
+while(token.kind!=tokenKind){// Update information in result:
+//
+result.endColumn=token.endColumn;result.endLine=token.endLine;result.next=token.next;if(token.kind==EOF)throw new ParseException("from line "+result.beginLine+" at column "+result.beginColumn+": EOF reached before "+tokenImage[tokenKind]+" found");accumulate(token,buffer);token=getNextToken();}accumulate(token,buffer);result.image=buffer.toString();return result;}/**
+	 * Append the given {@link Token} and any preceding special tokens to a
+	 * given {@link StringBuffer}.
+	 * 
+	 * @param token
+	 *            the given JavaCC {@link Token} object
+	 * @param buffer
+	 *            the buffer to which to append <code>token</code>
+	 */final private static void accumulate(Token token,StringBuffer buffer){// Append preceding special tokens to <code>buffer</code>:
+//
+Token special=firstSpecial(token);if(special!=token)while(special!=null){buffer.append(" "+special.toString());special=special.next;}// Finally, append the token itself:
+//
+buffer.append(" "+token.toString());}/**
+	 * Finds the first token, special or otherwise, in the list of special
+	 * tokens preceding this {@link Token}. If this list is non-empty, the
+	 * result will be a special token. Otherwise, it will be the starting token.
+	 * 
+	 * @param token
+	 *            the given {@link Token}.
+	 * @return the first special token preceding <code>token</code>.
+	 */final private static Token firstSpecial(Token token){while(token.specialToken!=null)token=token.specialToken;return token;}}PARSER_END(SlimJJParser)/* WHITE SPACE */SKIP:{" "|"\t"|"\n"|"\r"|"\f"}/* COMMENTS */MORE:{"//":IN_SINGLE_LINE_COMMENT|<"/**"~["/"]>{input_stream.backup(1);}:IN_FORMAL_COMMENT|"/*":IN_MULTI_LINE_COMMENT}<IN_SINGLE_LINE_COMMENT>SPECIAL_TOKEN:{<SINGLE_LINE_COMMENT:"\n"|"\r"|"\r\n">:DEFAULT}<IN_FORMAL_COMMENT>SPECIAL_TOKEN:{<FORMAL_COMMENT:"*/">:DEFAULT}<IN_MULTI_LINE_COMMENT>SPECIAL_TOKEN:{<MULTI_LINE_COMMENT:"*/">:DEFAULT}<IN_SINGLE_LINE_COMMENT,IN_FORMAL_COMMENT,IN_MULTI_LINE_COMMENT>MORE:{<~[]>}/* RESERVED WORDS AND LITERALS */TOKEN:{<_GRAMMARSTART:"GRAMMARSTART">|<ABSTRACT:"abstract">|<ASSERT:"assert">|<BOOLEAN:"boolean">|<BREAK:"break">|<BYTE:"byte">|<CASE:"case">|<CATCH:"catch">|<CHAR:"char">|<CLASS:"class">|<CONST:"const">|<CONTINUE:"continue">|<_DEFAULT:"default">|<DO:"do">|<DOUBLE:"double">|<ELSE:"else">|<ENUM:"enum">|<EXTENDS:"extends">|<FALSE:"false">|<FINAL:"final">|<FINALLY:"finally">|<FLOAT:"float">|<FOR:"for">|<GOTO:"goto">|<IF:"if">|<IMPLEMENTS:"implements">|<IMPORT:"import">|<INSTANCEOF:"instanceof">|<INT:"int">|<INTERFACE:"interface">|<LONG:"long">|<NATIVE:"native">|<NEW:"new">|<NULL:"null">|<PACKAGE:"package">|<PRIVATE:"private">|<PROTECTED:"protected">|<PUBLIC:"public">|<RETURN:"return">|<SHORT:"short">|<STATIC:"static">|<STRICTFP:"strictfp">|<SUPER:"super">|<SWITCH:"switch">|<SYNCHRONIZED:"synchronized">|<THIS:"this">|<THROW:"throw">|<THROWS:"throws">|<TRANSIENT:"transient">|<TRUE:"true">|<TRY:"try">|<VOID:"void">|<VOLATILE:"volatile">|<WHILE:"while">|<_LOOK_AHEAD:"LOOK_AHEAD">|<OPTIONAL:"OPTIONAL">|<_JAVA:"JAVA">|<_JAVATOKEN:"JAVATOKEN">}/* LITERALS */TOKEN:{<INTEGER_LITERAL:<DECIMAL_LITERAL>(["l","L"])?|<HEX_LITERAL>(["l","L"])?|<OCTAL_LITERAL>(["l","L"])?>|<#DECIMAL_LITERAL:["1"-"9"](["0"-"9"])*>|<#HEX_LITERAL:"0"["x","X"](["0"-"9","a"-"f","A"-"F"])+>|<#OCTAL_LITERAL:"0"(["0"-"7"])*>|<FLOATING_POINT_LITERAL:(["0"-"9"])+"."(["0"-"9"])*(<EXPONENT>)?(["f","F","d","D"])?|"."(["0"-"9"])+(<EXPONENT>)?(["f","F","d","D"])?|(["0"-"9"])+<EXPONENT>(["f","F","d","D"])?|(["0"-"9"])+(<EXPONENT>)?["f","F","d","D"]>|<#EXPONENT:["e","E"](["+","-"])?(["0"-"9"])+>|<CHARACTER_LITERAL:"'"((~["'","\\","\n","\r"])|("\\"(["n","t","b","r","f","\\","'","\""]|["0"-"7"](["0"-"7"])?|["0"-"3"]["0"-"7"]["0"-"7"])))"'">|<STRING_LITERAL:"\""((~["\"","\\","\n","\r"])|("\\"(["n","t","b","r","f","\\","'","\""]|["0"-"7"](["0"-"7"])?|["0"-"3"]["0"-"7"]["0"-"7"])))*"\"">}/* SEPARATORS */TOKEN:{<LPAREN:"(">|<RPAREN:")">|<LBRACE:"{">|<RBRACE:"}">|<LBRACKET:"[">|<RBRACKET:"]">|<SEMICOLON:";">|<COMMA:",">|<DOT:".">|<AT:"@">}/* OPERATORS */TOKEN:{<ASSIGN:"=">|<LT:"<">|<GT:">">|<BANG:"!">|<TILDE:"~">|<HOOK:"?">|<COLON:":">|<EQ:"==">|<LE:"<=">|<GE:">=">|<NE:"!=">|<SC_OR:"||">|<SC_AND:"&&">|<INCR:"++">|<DECR:"--">|<PLUS:"+">|<MINUS:"-">|<STAR:"*">|<SLASH:"/">|<BIT_AND:"&">|<BIT_OR:"|">|<XOR:"^">|<REM:"%">|<LSHIFT:"<<">|<PLUSASSIGN:"+=">|<MINUSASSIGN:"-=">|<STARASSIGN:"*=">|<SLASHASSIGN:"/=">|<ANDASSIGN:"&=">|<ORASSIGN:"|=">|<XORASSIGN:"^=">|<REMASSIGN:"%=">|<LSHIFTASSIGN:"<<=">|<RSIGNEDSHIFTASSIGN:">>=">|<RUNSIGNEDSHIFTASSIGN:">>>=">|<ELLIPSIS:"...">}/* IDENTIFIERS */TOKEN:{<IDENTIFIER:<LETTER>(<LETTER>|<DIGIT>)*>|<#LETTER:["\u0024", "\u0041"-"\u005a", "\u005f", "\u0061"-"\u007a", "\u00c0"-"\u00d6", "\u00d8"-"\u00f6", "\u00f8"-"\u00ff", "\u0100"-"\u1fff", "\u3040"-"\u318f", "\u3300"-"\u337f", "\u3400"-"\u3d2d", "\u4e00"-"\u9fff", "\uf900"-"\ufaff"]>|<#DIGIT:["\u0030"-"\u0039", "\u0660"-"\u0669", "\u06f0"-"\u06f9", "\u0966"-"\u096f", "\u09e6"-"\u09ef", "\u0a66"-"\u0a6f", "\u0ae6"-"\u0aef", "\u0b66"-"\u0b6f", "\u0be7"-"\u0bef", "\u0c66"-"\u0c6f", "\u0ce6"-"\u0cef", "\u0d66"-"\u0d6f", "\u0e50"-"\u0e59", "\u0ed0"-"\u0ed9", "\u1040"-"\u1049"]>|<OTHER:~[]>}JAVACODE Token findIntroductionBlock(){return accumulateUntilToken(_GRAMMARSTART);}
+Grammar Grammar() : { 
+	Token t;
+	ASTStringNode findintroductionblock;
+	Production production;
+	ArrayList<Production> productionList = new ArrayList<Production>();
+	Token firstToken=token;
+} { (
+	t=findIntroductionBlock(){findintroductionblock=new ASTStringNode(t.toString(),new WToken(token));} (production=Production(){productionList.add(production);})* 
+	{return new Grammar(findintroductionblock, productionList, firstToken.next,token);}
+ ) }
+
+Production Production() : { 
+	Token t;
+	ASTStringNode identifier;
+	Choice choice;
+	Choice choice1;
+	ArrayList<Choice> choice1List = new ArrayList<Choice>();
+	Token firstToken=token;
+} { (
+	t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(token));} ":" choice=Choice() ("|" choice1=Choice(){choice1List.add(choice1);})* ";" 
+	{return new Production(identifier, choice, choice1List, firstToken.next,token);}
+ ) }
+
+Choice Choice() : { 
+	Text text;
+	ArrayList<Text> textList = new ArrayList<Text>();
+	Mult mult;
+	Text text1;
+	ArrayList<Text> text1List = new ArrayList<Text>();
+	MoreMult moreMult;
+	ArrayList<MoreMult> moreMultList = new ArrayList<MoreMult>();
+	Token t;
+	ASTStringNode identifier = null;
+	Token firstToken=token;
+} { (
+	(text=Text(){textList.add(text);})* mult=Mult() (text1=Text(){text1List.add(text1);})* (moreMult=MoreMult(){moreMultList.add(moreMult);})* ["::" t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(token));}] 
+	{return new Choice(textList, mult, text1List, moreMultList, identifier, firstToken.next,token);}
+ ) }
+
+MoreMult MoreMult() : { 
+	Mult mult;
+	Text text;
+	ArrayList<Text> textList = new ArrayList<Text>();
+	Token firstToken=token;
+} { (
+	mult=Mult() (text=Text(){textList.add(text);})* 
+	{return new MoreMult(mult, textList, firstToken.next,token);}
+ ) }
+
+Mult Mult() : { 
+	OneOrMore oneOrMore;
+	ZeroOrMore zeroOrMore;
+	Wrappee wrappee;
+	OneOrZero oneOrZero;
+	Unit unit;
+	OptionalWithDefault optionalWithDefault;
+	Token firstToken=token;
+} { (
+	LOOKAHEAD(OneOrMore()) oneOrMore=OneOrMore() 
+	{return new Mult1(oneOrMore, firstToken.next,token);} |
+	LOOKAHEAD(ZeroOrMore()) zeroOrMore=ZeroOrMore() 
+	{return new Mult2(zeroOrMore, firstToken.next,token);} |
+	LOOKAHEAD(Wrappee()) wrappee=Wrappee() 
+	{return new Mult3(wrappee, firstToken.next,token);} |
+	oneOrZero=OneOrZero() 
+	{return new Mult4(oneOrZero, firstToken.next,token);} |
+	unit=Unit() 
+	{return new Mult5(unit, firstToken.next,token);} |
+	optionalWithDefault=OptionalWithDefault() 
+	{return new Mult6(optionalWithDefault, firstToken.next,token);}
+ ) }
+
+OneOrMore OneOrMore() : { 
+	Text text;
+	ArrayList<Text> textList = new ArrayList<Text>();
+	Unit unit;
+	Text text1;
+	ArrayList<Text> text1List = new ArrayList<Text>();
+	Token firstToken=token;
+} { (
+	"(" (text=Text(){textList.add(text);})* unit=Unit() (text1=Text(){text1List.add(text1);})* ")" "+" 
+	{return new OneOrMore(textList, unit, text1List, firstToken.next,token);}
+ ) }
+
+ZeroOrMore ZeroOrMore() : { 
+	Text text;
+	ArrayList<Text> textList = new ArrayList<Text>();
+	Unit unit;
+	Text text1;
+	ArrayList<Text> text1List = new ArrayList<Text>();
+	Token firstToken=token;
+} { (
+	"(" (text=Text(){textList.add(text);})* unit=Unit() (text1=Text(){text1List.add(text1);})* ")" "*" 
+	{return new ZeroOrMore(textList, unit, text1List, firstToken.next,token);}
+ ) }
+
+OneOrZero OneOrZero() : { 
+	Text text;
+	ArrayList<Text> textList = new ArrayList<Text>();
+	Unit unit;
+	Text text1;
+	ArrayList<Text> text1List = new ArrayList<Text>();
+	Token firstToken=token;
+} { (
+	"[" (text=Text(){textList.add(text);})* unit=Unit() (text1=Text(){text1List.add(text1);})* "]" 
+	{return new OneOrZero(textList, unit, text1List, firstToken.next,token);}
+ ) }
+
+OptionalWithDefault OptionalWithDefault() : { 
+	Unit unit;
+	Token t;
+	ASTStringNode string_literal;
+	Token firstToken=token;
+} { (
+	"OPTIONAL" "(" unit=Unit() "," t=<STRING_LITERAL>{string_literal=new ASTStringNode(t.toString(),new WToken(token));} ")" 
+	{return new OptionalWithDefault(unit, string_literal, firstToken.next,token);}
+ ) }
+
+Wrappee Wrappee() : { 
+	Unit unit;
+	Token firstToken=token;
+} { (
+	unit=Unit() "!" 
+	{return new Wrappee(unit, firstToken.next,token);}
+ ) }
+
+Unit Unit() : { 
+	NonTerminal nonTerminal;
+	Ident ident;
+	Token firstToken=token;
+} { (
+	nonTerminal=NonTerminal() 
+	{return new Unit1(nonTerminal, firstToken.next,token);} |
+	ident=Ident() 
+	{return new Unit2(ident, firstToken.next,token);}
+ ) }
+
+NonTerminal NonTerminal() : { 
+	Token t;
+	ASTStringNode identifier;
+	ASTStringNode identifier1 = null;
+	Token firstToken=token;
+} { (
+	t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(token));} [LOOKAHEAD(3) "{" t=<IDENTIFIER>{identifier1=new ASTStringNode(t.toString(),new WToken(token));} "}"] 
+	{return new NonTerminal(identifier, identifier1, firstToken.next,token);}
+ ) }
+
+Ident Ident() : { 
+	Token t;
+	ASTStringNode identifier;
+	ASTStringNode identifier1;
+	Token firstToken=token;
+} { (
+	"JAVATOKEN" "(" t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(token));} ")" 
+	{return new Ident1(identifier, firstToken.next,token);} |
+	"<" t=<IDENTIFIER>{identifier1=new ASTStringNode(t.toString(),new WToken(token));} ">" 
+	{return new Ident2(identifier1, firstToken.next,token);}
+ ) }
+
+Text Text() : { 
+	Lookahead lookahead;
+	Java java;
+	Token t;
+	ASTStringNode string_literal;
+	LayoutHint layoutHint;
+	Token firstToken=token;
+} { (
+	lookahead=Lookahead() 
+	{return new Text1(lookahead, firstToken.next,token);} |
+	java=Java() 
+	{return new Text2(java, firstToken.next,token);} |
+	t=<STRING_LITERAL>{string_literal=new ASTStringNode(t.toString(),new WToken(token));} 
+	{return new Text3(string_literal, firstToken.next,token);} |
+	layoutHint=LayoutHint() 
+	{return new Text4(layoutHint, firstToken.next,token);}
+ ) }
+
+LayoutHint LayoutHint() : { 
+	ASTTextNode text1 = null;
+	ASTTextNode text2 = null;
+	ASTTextNode text3 = null;
+	Token firstToken=token;
+} { (
+	"@" ["+" {text1=new ASTTextNode("+",new WToken(token));}] ["-" {text2=new ASTTextNode("-",new WToken(token));}] ["!" {text3=new ASTTextNode("!",new WToken(token));}] 
+	{return new LayoutHint(text1, text2, text3, firstToken.next,token);}
+ ) }
+
+Lookahead Lookahead() : { 
+	LookaheadBody lookaheadBody;
+	Token firstToken=token;
+} { (
+	"LOOK_AHEAD" "(" lookaheadBody=LookaheadBody() ")" 
+	{return new Lookahead(lookaheadBody, firstToken.next,token);}
+ ) }
+
+LookaheadBody LookaheadBody() : { 
+	Token t;
+	ASTStringNode integer_literal;
+	ASTStringNode string_literal;
+	Token firstToken=token;
+} { (
+	t=<INTEGER_LITERAL>{integer_literal=new ASTStringNode(t.toString(),new WToken(token));} 
+	{return new LookaheadBody1(integer_literal, firstToken.next,token);} |
+	t=<STRING_LITERAL>{string_literal=new ASTStringNode(t.toString(),new WToken(token));} 
+	{return new LookaheadBody2(string_literal, firstToken.next,token);}
+ ) }
+
+Java Java() : { 
+	Token t;
+	ASTStringNode string_literal;
+	Token firstToken=token;
+} { (
+	"JAVA" "(" t=<STRING_LITERAL>{string_literal=new ASTStringNode(t.toString(),new WToken(token));} ")" 
+	{return new Java(string_literal, firstToken.next,token);}
+ ) }
+

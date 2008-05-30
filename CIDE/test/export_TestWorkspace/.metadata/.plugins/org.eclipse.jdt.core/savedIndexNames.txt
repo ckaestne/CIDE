@@ -1,0 +1,2 @@
+INDEX VERSION 1.121+C:\Dokumente und Einstellungen\cKaestner\Eigene Dateien\uni\db\CIDE\test\export_TestWorkspace\.metadata\.plugins\org.eclipse.jdt.core
+519932420.index

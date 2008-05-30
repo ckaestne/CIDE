@@ -1,0 +1,1439 @@
+
+options {
+  STATIC = false;
+}
+
+PARSER_BEGIN(HaskellParser)
+
+package tmp.generated_haskell;
+
+import java.io.*;
+import java.util.*;
+import cide.gast.*;
+import cide.gparser.*;
+
+  public class HaskellParser{
+
+	/**
+	 * Append the given {@link Token} and any preceding special tokens to a
+	 * given {@link StringBuffer}.
+	 * 
+	 * @param token
+	 *            the given JavaCC {@link Token} object
+	 * @param buffer
+	 *            the buffer to which to append <code>token</code>
+	 */
+	final private static void accumulate(Token token, StringBuffer buffer) {
+
+		// Append preceding special tokens to <code>buffer</code>:
+		//
+		Token special = firstSpecial(token);
+		if (special != token)
+			while (special != null) {
+				buffer.append(special.toString());
+				special = special.next;
+			}
+
+		// Finally, append the token itself:
+		//
+		buffer.append(token.toString());
+	}
+
+	/**
+	 * Accumulate {@list Token} objects from the token stream, respecting nested
+	 * code inside <code>open</code> and <code>close</code> pairs, until an
+	 * unmatched <code>close</code> is the next token in the stream. This
+	 * method assumes that an <code>open</code> token has just been read from
+	 * the stream so the initial nesting level is 1. The method returns when a
+	 * matching <code>close</code> token is the next token in the token
+	 * stream. <em>The <code>close</code> token is left in the stream!</em>
+	 * 
+	 * @return the accumulated tokens as a {@link String}.
+	 * 
+	 * @throws ParseException
+	 *             if an end-of-file is found before an unmatched
+	 *             <code>close</code> token.
+	 */
+	final private Token accumulateNestedRegion(int open, int close)
+			throws ParseException {
+
+		StringBuffer buffer = new StringBuffer();
+		Token token = getToken(1);
+
+		// Initialize result with known information (starting position, etc.):
+		//
+		Token result = Token.newToken(UNANTICIPATED_SYMBOL);
+		result.specialToken = null;
+
+		Token startToken = firstSpecial(token);
+		result.beginColumn = startToken.beginColumn;
+		result.beginLine = startToken.beginLine;
+		result.offset=startToken.offset;
+
+		// Accumulate tokens until a <code>close</code> token is found:
+		//
+		for (int nesting = 1; nesting > 0;) {
+
+
+			if (token.kind == EOF)
+				throw new ParseException("accumulating from line "
+						+ result.beginLine + " at column " + result.beginColumn
+						+ ": EOF reached before ending " + tokenImage[close]
+						+ " found");
+
+			if (token.kind == open)
+				++nesting;
+			else if (token.kind == close) {
+				if (nesting == 1)
+					break;
+				--nesting;
+			}
+
+			// Update information in result:
+			//
+			result.endColumn = token.endColumn;
+			result.endLine = token.endLine;
+			result.length=(token.offset-result.offset)+token.length;
+			result.next = token.next;
+
+			accumulate(token, buffer);
+			getNextToken();
+			token = getToken(1);
+		}
+
+		result.image = buffer.toString();
+		return result;
+	}
+
+
+	final private Token accumulateUntil(boolean considerInnerBlocks,
+			int endTokenKind) throws ParseException {
+		return accumulateUntil(considerInnerBlocks, new int[] { endTokenKind });
+	}
+
+	final private Token accumulateUntil(boolean considerInnerBlocks,
+			int endTokenKind1, int endTokenKind2) throws ParseException {
+		return accumulateUntil(considerInnerBlocks, new int[] { endTokenKind1,
+				endTokenKind2 });
+	}
+
+	final private Token accumulateUntil(boolean considerInnerBlocks,
+			int endTokenKind1, int endTokenKind2, int endTokenKind3)
+			throws ParseException {
+		return accumulateUntil(considerInnerBlocks, new int[] { endTokenKind1,
+				endTokenKind2, endTokenKind3 });
+	}
+	final private Token accumulateUntil(boolean considerInnerBlocks,
+			int endTokenKind1, int endTokenKind2, int endTokenKind3, int endTokenKind4)
+			throws ParseException {
+		return accumulateUntil(considerInnerBlocks, new int[] { endTokenKind1,
+				endTokenKind2, endTokenKind3, endTokenKind4 });
+	}
+
+	final private boolean isNot(int kind) {
+		return getToken(1).kind != kind;
+	}
+
+	final private boolean isNot(int k1, int k2) {
+		return isNot(k1) && isNot(k2);
+	}
+
+	final private boolean isNot(int k1, int k2, int k3) {
+		return isNot(k1, k2) && isNot(k3);
+	}
+	final private boolean isNot(int k1, int k2, int k3, int k4) {
+		return isNot(k1, k2, k3) && isNot(k4);
+	}
+	
+	/** returns true if the CONTEXT_ARROW is found before the SEMICOLON **/
+	final private boolean isContext() throws ParseException {
+		int lookahead=1;
+		while (true) {
+			Token t = getToken(lookahead);
+			if (t.kind==EOF) throw new ParseException("EOF found before ; or =>  (line " + token.beginLine
+                                                + ", column " + token.beginColumn
+                                                + ")");
+			if (t.kind==SEMICOLON) return false;
+			if (t.kind==CONTEXT_ARROW) return true;	
+			lookahead++;
+		}
+	}
+
+	/**
+	 * Accumulate {@link Token} objects from the token stream until a token
+	 * matching <code>tokenKind</code> is consumed from the stream. The tokens
+	 * are accumulated in <code>buffer</code>, NOT including the terminating
+	 * token.
+	 * 
+	 * @return a {@link Token} formed by concatenating all intervening tokens
+	 *         and special tokens.
+	 */
+	final private Token accumulateUntil(boolean considerInnerBlocks,
+			int[] endTokenKinds) throws ParseException {
+
+		StringBuffer buffer = new StringBuffer();
+		Token token = getToken(1);
+
+		// Initialize result with known information (starting position, etc.):
+		//
+		Token result = Token.newToken(UNANTICIPATED_SYMBOL);
+		result.specialToken = null;
+
+		Token startToken = firstSpecial(token);
+		result.beginColumn = startToken.beginColumn;
+		result.beginLine = startToken.beginLine;
+		result.offset=startToken.offset;
+
+		// Accumulate tokens until a <code>tokenKind</code> token is found:
+		//
+		int nesting=0;
+		while (!contains(endTokenKinds, token.kind) || nesting >0) {
+			// Update information in result:
+			//
+			result.endColumn = token.endColumn;
+			result.endLine = token.endLine;
+			result.next = token.next;
+			result.length=(token.offset-result.offset)+token.length;
+
+			if (token.kind == EOF)
+				throw new ParseException("from line " + result.beginLine
+						+ " at column " + result.beginColumn
+						+ ": EOF reached before " + images(endTokenKinds)
+						+ " found");
+			
+			if (considerInnerBlocks && token.kind == LEFT_CURLY)
+				++nesting;
+			else if (considerInnerBlocks && token.kind == RIGHT_CURLY) {
+				--nesting;
+			}
+
+			accumulate(token, buffer);
+			getNextToken();
+			token = getToken(1);
+		}
+
+		if (buffer.length() == 0)
+			throw new ParseException("syntax error - empty pseudo-match (line " + result.beginLine
+                                                + ", column " + result.beginColumn
+                                                + ")");
+
+		result.image = buffer.toString();
+		return result;
+	}
+
+	private String images(int[] endTokenKinds) {
+		String result = "";
+		for (int i : endTokenKinds)
+			result += tokenImage[i] + " ";
+		return result;
+	}
+
+	private boolean contains(int[] endTokenKinds, int kind) {
+		for (int i : endTokenKinds)
+			if (i == kind)
+				return true;
+		return false;
+	}
+
+    /**
+     * Finds the first token, special or otherwise, in the list of special
+     * tokens preceding this {@link Token}.  If this list is non-empty, the
+     * result will be a special token.  Otherwise, it will be the starting
+     * token.
+     *
+     * @param token the given {@link Token}.
+     * @return the first special token preceding <code>token</code>.
+     **/
+    final private static Token firstSpecial (Token token) {
+
+	while (token.specialToken != null)
+	    token = token.specialToken ;
+
+	return token ;
+    }
+  }
+
+PARSER_END(HaskellParser)
+
+
+JAVACODE
+Token findListContent () {
+    return accumulateNestedRegion(LEFT_PAREN, RIGHT_PAREN) ;
+}
+
+JAVACODE
+Token findBlockContent () {
+    return accumulateNestedRegion (LEFT_CURLY, RIGHT_CURLY) ;
+}
+
+JAVACODE
+Token findConRest () {
+	//(block | ~(SEMICOLON|ALT|RIGHT_CURLY))*
+    return accumulateUntil(true,SEMICOLON,ALT,RIGHT_CURLY,DERIVING) ;
+}
+
+JAVACODE
+Token findNonstddeclRest () {
+	//(block | ~(SEMICOLON|RIGHT_CURLY))+
+    return accumulateUntil(true,SEMICOLON,RIGHT_CURLY) ;
+}
+
+JAVACODE
+Token findUntilSemiOrCCB () {
+	//~(SEMICOLON | RIGHT_CURLY)*
+    return accumulateUntil(false,SEMICOLON,RIGHT_CURLY) ;
+}
+JAVACODE
+Token findUntilSemiOrContextArrow () {
+	//(~(CONTEXT_ARROW|SEMICOLON))*;
+    return accumulateUntil(false,CONTEXT_ARROW,SEMICOLON) ;
+}
+JAVACODE
+Token findUntilSemiOrEquals () {
+	//~(EQUALS|SEMICOLON))*
+    return accumulateUntil(false,SEMICOLON,EQUALS) ;
+}
+JAVACODE
+Token findUntilEquals () {
+	//~(EQUALS))*
+    return accumulateUntil(false,EQUALS) ;
+}
+
+
+
+
+
+//options	{
+//    k = 9;
+//    // Allow any char but \uFFFF (16 bit -1)
+//    charVocabulary='\u0000'..'\uFFFE';
+//}
+
+TOKEN : {
+	<MODULE : "module">
+|	<WHERE : "where" >
+|	<IMPORT : "import" >
+|	<QUALIFIED : "qualified" >
+|	<DERIVING : "deriving" >
+|	<AS : "as" >
+|	<HIDING : "hiding" >
+|	<TYPE : "type" >
+|	<DATA : "data" >
+|	<NEWTYPE : "newtype" >
+|	<CLASS : "class" >
+|	<INSTANCE : "instance" >
+|	<DEFAULTTOKEN : "default" >
+|	<LET : "let" >
+|	<IN : "in" >
+|	<DO : "do" >
+|	<CASE : "case" >
+|	<OF : "of" >
+|	<IF : "if">
+|	<THEN : "then">
+|	<ELSE : "else">
+|	<INFIXL : "infixl" >
+|	<INFIXR : "infixr" >
+|	<INFIX : "infix" >
+|	<CONTEXT_ARROW : "=>" >
+|	<EQUALS : "=" >
+|	<ALT : "|" >
+|	<OFTYPE : "::" >
+|	<OTHER1 : "." >
+|	<OTHER2 : "-" >
+|	<OTHER3 : "@" >
+|	<OTHER4 : "_" >
+|	<OTHER5 : "~" >
+|	<OTHER6 : ":" >
+|	<OTHER7 : "->" >
+|	<OTHER8 : "+" >
+|	<OTHER9 : "\\" >
+|	<OTHER10 : "<-" >
+|	<OTHER11 : "--" >
+|	<OTHER12 : ".." >
+//|	<QVARID>//|	<QCONID>//|	<QVARSYM>
+}
+
+SPECIAL_TOKEN : {
+ " "
+|  "\t"
+|  "\n"
+|  "\r"
+|  <"--" (~["\n","\r"])* ("\n" | "\r" | "\r\n")>
+| <"{-"(~["-"])*"-"("-" | ~["-", "}"](~["-"])*"-")*"}">
+}
+
+    
+//PPDIRECTIVE
+//	:	'#' (~('\n'))* NEWLINE { $setType(Token.SKIP); }
+//	;
+
+
+TOKEN : {
+	<CONSTRUCTOR_ID : <UPPER_CASE>	( <LETTER>
+							| <DIGIT>
+							| "'" )* >
+|	<VARIABLE_ID : <LOWER_CASE>	( <LETTER>
+							| <DIGIT>
+							| "'" )*>
+
+|	<INTEGER:	(<DECIMAL>	|	"0o" <OCTAL> | "0O" <OCTAL>
+		|	"0x" <HEXADECIMAL> | "0X" <HEXADECIMAL>)>
+		
+|   <FLOAT: <DECIMAL> "." <DECIMAL> (["e","E"] (["+","-"])? <DECIMAL>)?>
+|	<#DECIMAL : (<DIGIT>)+ >
+
+|	<#HEXADECIMAL : (<HEXIT>)+>
+
+|	<#OCTAL : (<OCTIT>)+ >
+
+//|	<CHARACTER_LITERAL : "'" (~["'","\\"]|<CHARACTER_ESCAPE>) "'" >////|	<STRING_LITERAL : "\"" (~["\"","\\"]|<STRING_ESCAPE>|<GAP>)* "\"" >
+|  < CHARACTER_LITERAL:
+      "'"
+      (   (~["'","\\","\n","\r"])
+        | ("\\"
+            ( ["n","t","a","b","r","f","\\","'","\"","&"]
+            | ["0"-"7"] ( ["0"-"7"] )?
+            | ["0"-"3"] ["0"-"7"] ["0"-"7"]
+            )
+          )
+      )
+      "'"
+  >
+|
+  < STRING_LITERAL:
+      "\""
+      (   (~["\"","\\","\n","\r"])
+        | ("\\"
+            ( ["n","t","a","b","r","f","\\","'","\"","&"]
+            | ["0"-"7"] ( ["0"-"7"] )?
+            | ["0"-"3"] ["0"-"7"] ["0"-"7"]
+            )
+          )
+      )*
+      "\""
+  >
+|	<#CHARACTER_ESCAPE	:	"\\"
+		( <CHAR_ESC>
+		| <DECIMAL>
+		| "x" <HEXADECIMAL>
+		| "o" <OCTAL>
+		)
+	>
+	
+|	<#CHAR_ESC
+	:
+    	( "a"
+    	| "b"  
+    	| "f"  
+    	| "n"  
+    	| "r" 
+    	| "t" 
+    	| "v"
+    	| "\\" 
+    	| "\""
+    	| "'" )
+	>
+
+|	<#STRING_ESCAPE	: ("\\&" | <CHARACTER_ESCAPE>)>
+    
+    
+|	<#ASCII : "NUL" >
+    
+//|	<NEWLINE : "\n">
+
+//|	<#GAP : "\\" (<WS> | <NEWLINE>)+ "\\" >
+
+|	<#LOWER_CASE:	["a"-"z","_"]>	
+|	<#UPPER_CASE:	["A"-"Z"]>	
+|	<#LETTER : <UPPER_CASE> | <LOWER_CASE>>
+
+|	<#DIGIT:	["0"-"9"]>	
+
+|	<#HEXIT:	(<DIGIT> | ["A"-"F"] | ["a"-"f"] )>	
+
+|	<#OCTIT:	["0"-"7"]>	
+
+|	<LEFT_CURLY : "{" >
+
+|	<RIGHT_CURLY : "}" >
+
+|	<SEMICOLON : ";" >
+
+|	<LEFT_PAREN : "(" >
+
+|	<RIGHT_PAREN : ")" >
+
+|	<LEFT_BRACKET : "[" >
+
+|	<RIGHT_BRACKET : "]" >
+
+|	<COMMA : "," >
+
+|	<INFIX_QUOTE : "`" >
+
+|	<VARSYM : <SYMBOL> (<SYMBOL> | ":" )* >
+
+|	<CONSYM : ":" (<SYMBOL> | ":" )* >
+
+|	<SYMBOL : "!" | "#" | "$" | "%" | "&" | "*" | "+" | "." | "/" | "<" | "="
+       | ">" | "?" | "@" | "\\" | "^" | "-" | "~" | "|"
+       >
+       
+|	<UNANTICIPATED_SYMBOL : ~["a"-"z","A"-"Z","0"-"9"] >
+}
+
+
+<PAREN> TOKEN :{
+ 	<ANYTHINGP: ~["(",")"]>
+}
+module module() : { 
+	moduleHeader moduleHeader = null;
+	body body;
+	Token firstToken=token;
+} { (
+	[moduleHeader=moduleHeader()] "{" body=body() "}" 
+	{return new module(moduleHeader, body, firstToken.next,token);}
+ ) }
+
+body body() : { 
+	importDecl importDecl;
+	ArrayList<importDecl> list0=new ArrayList<importDecl>();
+	importDecl importDecl1;
+	ArrayList<importDecl> importDecl1List = new ArrayList<importDecl>();
+	definitions definitions = null;
+	definitions definitions1 = null;
+	Token firstToken=token;
+} { (
+	importDecl=importDecl(){list0.add(importDecl);} (LOOKAHEAD(2) ";" importDecl1=importDecl(){list0.add(importDecl1);})* [";" definitions=definitions()] 
+	{return new body1(list0, definitions, firstToken.next,token);} |
+	[definitions1=definitions()] 
+	{return new body2(definitions1, firstToken.next,token);}
+ ) }
+
+moduleHeader moduleHeader() : { 
+	naam naam;
+	exports exports = null;
+	Token firstToken=token;
+} { (
+	"module" naam=naam() [exports=exports()] "where" 
+	{return new moduleHeader(naam, exports, firstToken.next,token);}
+ ) }
+
+exports exports() : { 
+	exportList exportList = null;
+	Token firstToken=token;
+} { (
+	"(" [exportList=exportList()] ")" 
+	{return new exports(exportList, firstToken.next,token);}
+ ) }
+
+importDecl importDecl() : { 
+	ASTTextNode text1 = null;
+	naam naam;
+	naam naam1 = null;
+	hiding hiding = null;
+	Token firstToken=token;
+} { (
+	"import" ["qualified" {text1=new ASTTextNode("qualified",new WToken(token));}] naam=naam() ["as" naam1=naam()] [hiding=hiding()] 
+	{return new importDecl(text1, naam, naam1, hiding, firstToken.next,token);}
+ ) }
+
+hiding hiding() : { 
+	ASTTextNode text2 = null;
+	exportList exportList = null;
+	Token firstToken=token;
+} { (
+	["hiding" {text2=new ASTTextNode("hiding",new WToken(token));}] "(" [exportList=exportList()] ")" 
+	{return new hiding(text2, exportList, firstToken.next,token);}
+ ) }
+
+exportList exportList() : { 
+	export export;
+	ArrayList<export> list0=new ArrayList<export>();
+	export export1;
+	ArrayList<export> export1List = new ArrayList<export>();
+	Token firstToken=token;
+} { (
+	export=export(){list0.add(export);} ("," export1=export(){list0.add(export1);})* 
+	{return new exportList(list0, firstToken.next,token);}
+ ) }
+
+export export() : { 
+	var var;
+	naam naam;
+	exportNaamParam exportNaamParam = null;
+	naam naam1;
+	Token firstToken=token;
+} { (
+	LOOKAHEAD(var()) var=var() 
+	{return new export1(var, firstToken.next,token);} |
+	naam=naam() [exportNaamParam=exportNaamParam()] 
+	{return new export2(naam, exportNaamParam, firstToken.next,token);} |
+	"module" naam1=naam() 
+	{return new export3(naam1, firstToken.next,token);}
+ ) }
+
+exportNaamParam exportNaamParam() : { 
+	naamOrVarList naamOrVarList = null;
+	Token firstToken=token;
+} { (
+	LOOKAHEAD(2) "(" ".." ")"  
+	{return new exportNaamParam1(firstToken.next,token);} |
+	"(" [naamOrVarList=naamOrVarList()] ")" 
+	{return new exportNaamParam2(naamOrVarList, firstToken.next,token);}
+ ) }
+
+naamOrVarList naamOrVarList() : { 
+	naamOrVar naamOrVar;
+	ArrayList<naamOrVar> list0=new ArrayList<naamOrVar>();
+	naamOrVar naamOrVar1;
+	ArrayList<naamOrVar> naamOrVar1List = new ArrayList<naamOrVar>();
+	Token firstToken=token;
+} { (
+	naamOrVar=naamOrVar(){list0.add(naamOrVar);} ("," naamOrVar1=naamOrVar(){list0.add(naamOrVar1);})* 
+	{return new naamOrVarList(list0, firstToken.next,token);}
+ ) }
+
+naamOrVar naamOrVar() : { 
+	naam naam;
+	var var;
+	Token firstToken=token;
+} { (
+	LOOKAHEAD(naam()) naam=naam() 
+	{return new naamOrVar1(naam, firstToken.next,token);} |
+	var=var() 
+	{return new naamOrVar2(var, firstToken.next,token);}
+ ) }
+
+definitions definitions() : { 
+	definition definition;
+	ArrayList<definition> list0=new ArrayList<definition>();
+	definition definition1;
+	ArrayList<definition> definition1List = new ArrayList<definition>();
+	Token firstToken=token;
+} { (
+	definition=definition(){list0.add(definition);} (";" definition1=definition(){list0.add(definition1);})* 
+	{return new definitions(list0, firstToken.next,token);}
+ ) }
+
+definition definition() : { 
+	simpletype simpletype;
+	functiontype functiontype;
+	context context = null;
+	simpletype simpletype1;
+	constrs constrs;
+	deriving deriving = null;
+	context context1 = null;
+	simpletype simpletype2;
+	naam naam;
+	newtypeParam newtypeParam;
+	deriving deriving1 = null;
+	context context2 = null;
+	naam naam1;
+	var var;
+	whereDecls whereDecls = null;
+	context context3 = null;
+	naam naam2;
+	inst inst;
+	whereDecls whereDecls1 = null;
+	functiontypeList functiontypeList;
+	declaration declaration;
+	Token firstToken=token;
+} { (
+	"type" simpletype=simpletype() "=" functiontype=functiontype() 
+	{return new typedecl(simpletype, functiontype, firstToken.next,token);} |
+	"data" [LOOKAHEAD(context()) context=context()] simpletype1=simpletype() "=" constrs=constrs() [deriving=deriving()] 
+	{return new datadecl(context, simpletype1, constrs, deriving, firstToken.next,token);} |
+	"newtype" [LOOKAHEAD(context()) context1=context()] simpletype2=simpletype() "=" naam=naam() newtypeParam=newtypeParam() [deriving1=deriving()] 
+	{return new newtypedecl(context1, simpletype2, naam, newtypeParam, deriving1, firstToken.next,token);} |
+	"class" [LOOKAHEAD(context()) context2=context()] naam1=naam() var=var() [whereDecls=whereDecls()] 
+	{return new classdecl(context2, naam1, var, whereDecls, firstToken.next,token);} |
+	"instance" [LOOKAHEAD(context()) context3=context()] naam2=naam() inst=inst() [whereDecls1=whereDecls()] 
+	{return new instancedecl(context3, naam2, inst, whereDecls1, firstToken.next,token);} |
+	"default" functiontypeList=functiontypeList() 
+	{return new defaultdecl(functiontypeList, firstToken.next,token);} |
+	declaration=declaration() 
+	{return new definition7(declaration, firstToken.next,token);}
+ ) }
+
+simpletype simpletype() : { 
+	naam naam;
+	var var;
+	ArrayList<var> varList = new ArrayList<var>();
+	Token firstToken=token;
+} { (
+	naam=naam() (var=var(){varList.add(var);})* 
+	{return new simpletype(naam, varList, firstToken.next,token);}
+ ) }
+
+constrs constrs() : { 
+	constr constr;
+	ArrayList<constr> list0=new ArrayList<constr>();
+	constr constr1;
+	ArrayList<constr> constr1List = new ArrayList<constr>();
+	Token firstToken=token;
+} { (
+	constr=constr(){list0.add(constr);} ("|" constr1=constr(){list0.add(constr1);})* 
+	{return new constrs(list0, firstToken.next,token);}
+ ) }
+
+constr constr() : { 
+	naam naam;
+	vt vt;
+	ArrayList<vt> list0=new ArrayList<vt>();
+	vt vt1;
+	ArrayList<vt> vt1List = new ArrayList<vt>();
+	type type;
+	ArrayList<type> typeList = new ArrayList<type>();
+	operator operator;
+	type type1;
+	ArrayList<type> type1List = new ArrayList<type>();
+	naam naam1;
+	type type2;
+	ArrayList<type> type2List = new ArrayList<type>();
+	Token firstToken=token;
+} { (
+	LOOKAHEAD(naam() "{") naam=naam() "{" vt=vt(){list0.add(vt);} (";" vt1=vt(){list0.add(vt1);})* "}" 
+	{return new constr1(list0, naam, firstToken.next,token);} |
+	LOOKAHEAD((type())+ operator()) (LOOKAHEAD(type()) type=type(){typeList.add(type);})+ operator=operator() (type1=type(){type1List.add(type1);})+ 
+	{return new constr2(typeList, operator, type1List, firstToken.next,token);} |
+	naam1=naam() (type2=type(){type2List.add(type2);})* 
+	{return new constr3(naam1, type2List, firstToken.next,token);}
+ ) }
+
+vt vt() : { 
+	varList varList;
+	functiontype functiontype;
+	Token firstToken=token;
+} { (
+	varList=varList() "::" functiontype=functiontype() 
+	{return new vt(varList, functiontype, firstToken.next,token);}
+ ) }
+
+deriving deriving() : { 
+	naamList naamList;
+	naam naam;
+	Token firstToken=token;
+} { (
+	LOOKAHEAD(2) "deriving" "(" naamList=naamList() ")" 
+	{return new deriving1(naamList, firstToken.next,token);} |
+	"deriving" naam=naam() 
+	{return new deriving2(naam, firstToken.next,token);}
+ ) }
+
+newtypeParam newtypeParam() : { 
+	var var;
+	functiontype functiontype;
+	type type;
+	Token firstToken=token;
+} { (
+	"{" var=var() "::" functiontype=functiontype() "}" 
+	{return new newtypeParam1(var, functiontype, firstToken.next,token);} |
+	type=type() 
+	{return new newtypeParam2(type, firstToken.next,token);}
+ ) }
+
+inst inst() : { 
+	naam naam;
+	var var;
+	var var1;
+	var var2;
+	ArrayList<var> list2=new ArrayList<var>();
+	var var3;
+	ArrayList<var> var3List = new ArrayList<var>();
+	simpletype simpletype = null;
+	var var4;
+	Token firstToken=token;
+} { (
+	naam=naam() 
+	{return new inst1(naam, firstToken.next,token);} |
+	LOOKAHEAD("(" var() "->") "(" var=var() "->" var1=var() ")" 
+	{return new inst2(var, var1, firstToken.next,token);} |
+	LOOKAHEAD("(" var() ",") "(" var2=var(){list2.add(var2);} ("," var3=var(){list2.add(var3);})+ ")" 
+	{return new inst3(list2, firstToken.next,token);} |
+	"(" [simpletype=simpletype()] ")" 
+	{return new inst4(simpletype, firstToken.next,token);} |
+	"[" var4=var() "]" 
+	{return new inst5(var4, firstToken.next,token);}
+ ) }
+
+decls decls() : { 
+	declarationList declarationList = null;
+	Token firstToken=token;
+} { (
+	"{" [declarationList=declarationList()] "}" 
+	{return new decls(declarationList, firstToken.next,token);}
+ ) }
+
+declarationList declarationList() : { 
+	declaration declaration;
+	ArrayList<declaration> list0=new ArrayList<declaration>();
+	declaration declaration1;
+	ArrayList<declaration> declaration1List = new ArrayList<declaration>();
+	Token firstToken=token;
+} { (
+	declaration=declaration(){list0.add(declaration);} (";" declaration1=declaration(){list0.add(declaration1);})* 
+	{return new declarationList(list0, firstToken.next,token);}
+ ) }
+
+declaration declaration() : { 
+	function function;
+	expr expr;
+	whereDecls whereDecls = null;
+	function function1;
+	altExprAss altExprAss;
+	ArrayList<altExprAss> altExprAssList = new ArrayList<altExprAss>();
+	whereDecls whereDecls1 = null;
+	patr patr;
+	expr expr1;
+	whereDecls whereDecls2 = null;
+	patr patr1;
+	altExprAss altExprAss1;
+	ArrayList<altExprAss> altExprAss1List = new ArrayList<altExprAss>();
+	whereDecls whereDecls3 = null;
+	varList varList;
+	context context = null;
+	functiontype functiontype;
+	Token t;
+	ASTStringNode integer = null;
+	operatorList operatorList;
+	ASTStringNode integer1 = null;
+	operatorList operatorList1;
+	ASTStringNode integer2 = null;
+	operatorList operatorList2;
+	Token firstToken=token;
+} { (
+	LOOKAHEAD(function() "=") function=function() "=" expr=expr() [whereDecls=whereDecls()] 
+	{return new declaration1(function, expr, whereDecls, firstToken.next,token);} |
+	LOOKAHEAD(function() "|") function1=function() (altExprAss=altExprAss(){altExprAssList.add(altExprAss);})+ [whereDecls1=whereDecls()] 
+	{return new declaration2(function1, altExprAssList, whereDecls1, firstToken.next,token);} |
+	LOOKAHEAD(patr() "=") patr=patr() "=" expr1=expr() [whereDecls2=whereDecls()] 
+	{return new declaration3(patr, expr1, whereDecls2, firstToken.next,token);} |
+	LOOKAHEAD(patr() "|") patr1=patr() (altExprAss1=altExprAss(){altExprAss1List.add(altExprAss1);})+ [whereDecls3=whereDecls()] 
+	{return new declaration4(patr1, altExprAss1List, whereDecls3, firstToken.next,token);} |
+	varList=varList() "::" [LOOKAHEAD(context()) context=context()] functiontype=functiontype() 
+	{return new declaration5(varList, context, functiontype, firstToken.next,token);} |
+	"infix" [t=<INTEGER>{integer=new ASTStringNode(t.toString(),new WToken(t));}] operatorList=operatorList() 
+	{return new declaration6(integer, operatorList, firstToken.next,token);} |
+	"infixl" [t=<INTEGER>{integer1=new ASTStringNode(t.toString(),new WToken(t));}] operatorList1=operatorList() 
+	{return new declaration7(integer1, operatorList1, firstToken.next,token);} |
+	"infixr" [t=<INTEGER>{integer2=new ASTStringNode(t.toString(),new WToken(t));}] operatorList2=operatorList() 
+	{return new declaration8(integer2, operatorList2, firstToken.next,token);}
+ ) }
+
+altExprAss altExprAss() : { 
+	expr expr;
+	expr expr1;
+	Token firstToken=token;
+} { (
+	"|" expr=expr() "=" expr1=expr() 
+	{return new altExprAss(expr, expr1, firstToken.next,token);}
+ ) }
+
+function function() : { 
+	var var;
+	patroon patroon;
+	ArrayList<patroon> patroonList = new ArrayList<patroon>();
+	function function;
+	patroon patroon1;
+	ArrayList<patroon> patroon1List = new ArrayList<patroon>();
+	patroon patroon2;
+	operator operator;
+	patr patr;
+	Token firstToken=token;
+} { (
+	LOOKAHEAD(var() patroon()) var=var() (patroon=patroon(){patroonList.add(patroon);})+ 
+	{return new function1(var, patroonList, firstToken.next,token);} |
+	LOOKAHEAD("(" function()) "(" function=function() ")" (patroon1=patroon(){patroon1List.add(patroon1);})+ 
+	{return new function2(function, patroon1List, firstToken.next,token);} |
+	patroon2=patroon() operator=operator() patr=patr() 
+	{return new function3(patroon2, operator, patr, firstToken.next,token);}
+ ) }
+
+whereDecls whereDecls() : { 
+	decls decls;
+	Token firstToken=token;
+} { (
+	"where" decls=decls() 
+	{return new whereDecls(decls, firstToken.next,token);}
+ ) }
+
+expressie expressie() : { 
+	literal literal;
+	var var;
+	contrExprParam contrExprParam = null;
+	naam naam;
+	contrExprParam contrExprParam1 = null;
+	operator operator;
+	expr expr;
+	expr expr1;
+	operator operator1;
+	exprList exprList = null;
+	exprListSpecial exprListSpecial = null;
+	Token firstToken=token;
+} { (
+	literal=literal() 
+	{return new expressie1(literal, firstToken.next,token);} |
+	LOOKAHEAD(var()) var=var() [contrExprParam=contrExprParam()] 
+	{return new expressie2(var, contrExprParam, firstToken.next,token);} |
+	naam=naam() [contrExprParam1=contrExprParam()] 
+	{return new expressie3(naam, contrExprParam1, firstToken.next,token);} |
+	LOOKAHEAD("(" operator()) "(" operator=operator() expr=expr() ")" 
+	{return new expressie4(operator, expr, firstToken.next,token);} |
+	LOOKAHEAD("(" expr() operator()) "(" expr1=expr() operator1=operator() ")" 
+	{return new expressie5(expr1, operator1, firstToken.next,token);} |
+	"(" [exprList=exprList()] ")" 
+	{return new expressie6(exprList, firstToken.next,token);} |
+	"[" [exprListSpecial=exprListSpecial()] "]" 
+	{return new expressie7(exprListSpecial, firstToken.next,token);}
+ ) }
+
+contrExprParam contrExprParam() : { 
+	contrExprAssign contrExprAssign;
+	ArrayList<contrExprAssign> list0=new ArrayList<contrExprAssign>();
+	contrExprAssign contrExprAssign1;
+	ArrayList<contrExprAssign> contrExprAssign1List = new ArrayList<contrExprAssign>();
+	Token firstToken=token;
+} { (
+	"{" contrExprAssign=contrExprAssign(){list0.add(contrExprAssign);} ("," contrExprAssign1=contrExprAssign(){list0.add(contrExprAssign1);})* "}" 
+	{return new contrExprParam(list0, firstToken.next,token);}
+ ) }
+
+contrExprAssign contrExprAssign() : { 
+	var var;
+	expr expr;
+	Token firstToken=token;
+} { (
+	var=var() "=" expr=expr() 
+	{return new contrExprAssign(var, expr, firstToken.next,token);}
+ ) }
+
+expr expr() : { 
+	exprMain exprMain;
+	exprOperator exprOperator;
+	ArrayList<exprOperator> exprOperatorList = new ArrayList<exprOperator>();
+	exprEnd exprEnd = null;
+	Token firstToken=token;
+} { (
+	exprMain=exprMain() (LOOKAHEAD(exprOperator()) exprOperator=exprOperator(){exprOperatorList.add(exprOperator);})* [LOOKAHEAD(1) exprEnd=exprEnd()] 
+	{return new expr(exprMain, exprOperatorList, exprEnd, firstToken.next,token);}
+ ) }
+
+exprEnd exprEnd() : { 
+	context context = null;
+	functiontype functiontype;
+	Token firstToken=token;
+} { (
+	"::" [LOOKAHEAD(context()) context=context()] functiontype=functiontype() 
+	{return new exprEnd(context, functiontype, firstToken.next,token);}
+ ) }
+
+exprMain exprMain() : { 
+	expressie expressie;
+	ArrayList<expressie> expressieList = new ArrayList<expressie>();
+	expr expr;
+	patroon patroon;
+	ArrayList<patroon> patroonList = new ArrayList<patroon>();
+	expr expr1;
+	expr expr2;
+	expr expr3;
+	expr expr4;
+	expr expr5;
+	caseInner caseInner;
+	ArrayList<caseInner> list4=new ArrayList<caseInner>();
+	caseInner caseInner1;
+	ArrayList<caseInner> caseInner1List = new ArrayList<caseInner>();
+	decls decls;
+	expr expr6;
+	altSpecialSemiList altSpecialSemiList;
+	Token firstToken=token;
+} { (
+	(LOOKAHEAD(1) expressie=expressie(){expressieList.add(expressie);})+ 
+	{return new exprMain1(expressieList, firstToken.next,token);} |
+	"-" expr=expr() 
+	{return new exprMain2(expr, firstToken.next,token);} |
+	"\\" (patroon=patroon(){patroonList.add(patroon);})+ "->" expr1=expr() 
+	{return new exprMain3(patroonList, expr1, firstToken.next,token);} |
+	"if" expr2=expr() "then" expr3=expr() "else" expr4=expr() 
+	{return new exprMain4(expr2, expr3, expr4, firstToken.next,token);} |
+	"case" expr5=expr() "of" "{" caseInner=caseInner(){list4.add(caseInner);} (";" caseInner1=caseInner(){list4.add(caseInner1);})* "}" 
+	{return new exprMain5(list4, expr5, firstToken.next,token);} |
+	"let" decls=decls() "in" expr6=expr() 
+	{return new exprMain6(decls, expr6, firstToken.next,token);} |
+	"do" "{" altSpecialSemiList=altSpecialSemiList() "}" 
+	{return new exprMain7(altSpecialSemiList, firstToken.next,token);}
+ ) }
+
+exprOperator exprOperator() : { 
+	operator operator;
+	expr expr;
+	Token firstToken=token;
+} { (
+	operator=operator() expr=expr() 
+	{return new exprOperator(operator, expr, firstToken.next,token);}
+ ) }
+
+exprList exprList() : { 
+	expr expr;
+	ArrayList<expr> list0=new ArrayList<expr>();
+	expr expr1;
+	ArrayList<expr> expr1List = new ArrayList<expr>();
+	Token firstToken=token;
+} { (
+	expr=expr(){list0.add(expr);} ("," expr1=expr(){list0.add(expr1);})* 
+	{return new exprList(list0, firstToken.next,token);}
+ ) }
+
+exprListSpecial exprListSpecial() : { 
+	expr expr;
+	altSpecialList altSpecialList;
+	expr expr1;
+	expr expr2 = null;
+	expr expr3 = null;
+	expr expr4;
+	expr expr5;
+	ArrayList<expr> expr5List = new ArrayList<expr>();
+	Token firstToken=token;
+} { (
+	LOOKAHEAD(expr() "|") expr=expr() "|" altSpecialList=altSpecialList() 
+	{return new exprListSpecial1(expr, altSpecialList, firstToken.next,token);} |
+	LOOKAHEAD(expr() ["," expr()] "..") expr1=expr() ["," expr2=expr()] ".." [expr3=expr()] 
+	{return new exprListSpecial2(expr1, expr2, expr3, firstToken.next,token);} |
+	expr4=expr() ("," expr5=expr(){expr5List.add(expr5);})+ 
+	{return new exprListSpecial3(expr4, expr5List, firstToken.next,token);}
+ ) }
+
+altSpecialSemiList altSpecialSemiList() : { 
+	altSpecial altSpecial;
+	ArrayList<altSpecial> list0=new ArrayList<altSpecial>();
+	altSpecial altSpecial1;
+	ArrayList<altSpecial> altSpecial1List = new ArrayList<altSpecial>();
+	Token firstToken=token;
+} { (
+	altSpecial=altSpecial(){list0.add(altSpecial);} (";" altSpecial1=altSpecial(){list0.add(altSpecial1);})* 
+	{return new altSpecialSemiList(list0, firstToken.next,token);}
+ ) }
+
+altSpecialList altSpecialList() : { 
+	altSpecial altSpecial;
+	ArrayList<altSpecial> list0=new ArrayList<altSpecial>();
+	altSpecial altSpecial1;
+	ArrayList<altSpecial> altSpecial1List = new ArrayList<altSpecial>();
+	Token firstToken=token;
+} { (
+	altSpecial=altSpecial(){list0.add(altSpecial);} ("," altSpecial1=altSpecial(){list0.add(altSpecial1);})* 
+	{return new altSpecialList(list0, firstToken.next,token);}
+ ) }
+
+altSpecial altSpecial() : { 
+	patr patr;
+	expr expr;
+	expr expr1;
+	decls decls;
+	Token firstToken=token;
+} { (
+	LOOKAHEAD(patr() "<-") patr=patr() "<-" expr=expr() 
+	{return new altSpecial1(patr, expr, firstToken.next,token);} |
+	LOOKAHEAD(expr()) expr1=expr() 
+	{return new altSpecial2(expr1, firstToken.next,token);} |
+	"let" decls=decls() 
+	{return new altSpecial3(decls, firstToken.next,token);}
+ ) }
+
+caseInner caseInner() : { 
+	patr patr;
+	expr expr;
+	whereDecls whereDecls = null;
+	patr patr1;
+	caseInnerAlt caseInnerAlt;
+	ArrayList<caseInnerAlt> caseInnerAltList = new ArrayList<caseInnerAlt>();
+	whereDecls whereDecls1 = null;
+	Token firstToken=token;
+} { (
+	LOOKAHEAD(patr() "->") patr=patr() "->" expr=expr() [whereDecls=whereDecls()] 
+	{return new caseInner1(patr, expr, whereDecls, firstToken.next,token);} |
+	patr1=patr() (caseInnerAlt=caseInnerAlt(){caseInnerAltList.add(caseInnerAlt);})* [whereDecls1=whereDecls()] 
+	{return new caseInner2(patr1, caseInnerAltList, whereDecls1, firstToken.next,token);}
+ ) }
+
+caseInnerAlt caseInnerAlt() : { 
+	expr expr;
+	expr expr1;
+	Token firstToken=token;
+} { (
+	"|" expr=expr() "->" expr1=expr() 
+	{return new caseInnerAlt(expr, expr1, firstToken.next,token);}
+ ) }
+
+patr patr() : { 
+	patrMain patrMain;
+	patrOp patrOp;
+	ArrayList<patrOp> patrOpList = new ArrayList<patrOp>();
+	Token firstToken=token;
+} { (
+	patrMain=patrMain() (LOOKAHEAD(constructorOperator()) patrOp=patrOp(){patrOpList.add(patrOp);})* 
+	{return new patr(patrMain, patrOpList, firstToken.next,token);}
+ ) }
+
+patrOp patrOp() : { 
+	constructorOperator constructorOperator;
+	patr patr;
+	Token firstToken=token;
+} { (
+	constructorOperator=constructorOperator() patr=patr() 
+	{return new patrOp(constructorOperator, patr, firstToken.next,token);}
+ ) }
+
+patrMain patrMain() : { 
+	naam naam;
+	patroon patroon;
+	ArrayList<patroon> patroonList = new ArrayList<patroon>();
+	var var;
+	Token t;
+	ASTStringNode integer;
+	patroon patroon1;
+	Token firstToken=token;
+} { (
+	LOOKAHEAD(naam() patroon()) naam=naam() (LOOKAHEAD(1) patroon=patroon(){patroonList.add(patroon);})+ 
+	{return new patrMain1(naam, patroonList, firstToken.next,token);} |
+	LOOKAHEAD(var() "+" <INTEGER>) var=var() "+" t=<INTEGER>{integer=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new patrMain2(var, integer, firstToken.next,token);} |
+	patroon1=patroon() 
+	{return new patrMain3(patroon1, firstToken.next,token);}
+ ) }
+
+patroon patroon() : { 
+	patroonPrefix patroonPrefix;
+	ArrayList<patroonPrefix> patroonPrefixList = new ArrayList<patroonPrefix>();
+	patroonMain patroonMain;
+	Token firstToken=token;
+} { (
+	(LOOKAHEAD(patroonPrefix()) patroonPrefix=patroonPrefix(){patroonPrefixList.add(patroonPrefix);})* patroonMain=patroonMain() 
+	{return new patroon(patroonPrefixList, patroonMain, firstToken.next,token);}
+ ) }
+
+patroonPrefix patroonPrefix() : { 
+	var var;
+	Token firstToken=token;
+} { (
+	"~"  
+	{return new patroonPrefix1(firstToken.next,token);} |
+	var=var() "@" 
+	{return new patroonPrefix2(var, firstToken.next,token);}
+ ) }
+
+patroonMain patroonMain() : { 
+	ASTTextNode text6 = null;
+	literal literal;
+	var var;
+	naam naam;
+	contrPatrParam contrPatrParam = null;
+	patrList patrList = null;
+	patrList patrList1 = null;
+	Token firstToken=token;
+} { (
+	"_"  
+	{return new patroonMain1(firstToken.next,token);} |
+	["-" {text6=new ASTTextNode("-",new WToken(token));}] literal=literal() 
+	{return new patroonMain2(text6, literal, firstToken.next,token);} |
+	LOOKAHEAD(var()) var=var() 
+	{return new patroonMain3(var, firstToken.next,token);} |
+	naam=naam() [contrPatrParam=contrPatrParam()] 
+	{return new constructorNaam(naam, contrPatrParam, firstToken.next,token);} |
+	"(" [patrList=patrList()] ")" 
+	{return new patroonMain5(patrList, firstToken.next,token);} |
+	"[" [patrList1=patrList()] "]" 
+	{return new patroonMain6(patrList1, firstToken.next,token);}
+ ) }
+
+patrList patrList() : { 
+	patr patr;
+	ArrayList<patr> list0=new ArrayList<patr>();
+	patr patr1;
+	ArrayList<patr> patr1List = new ArrayList<patr>();
+	Token firstToken=token;
+} { (
+	patr=patr(){list0.add(patr);} ("," patr1=patr(){list0.add(patr1);})* 
+	{return new patrList(list0, firstToken.next,token);}
+ ) }
+
+contrPatrParam contrPatrParam() : { 
+	contrPatrAssign contrPatrAssign;
+	ArrayList<contrPatrAssign> list0=new ArrayList<contrPatrAssign>();
+	contrPatrAssign contrPatrAssign1;
+	ArrayList<contrPatrAssign> contrPatrAssign1List = new ArrayList<contrPatrAssign>();
+	Token firstToken=token;
+} { (
+	"{" contrPatrAssign=contrPatrAssign(){list0.add(contrPatrAssign);} ("," contrPatrAssign1=contrPatrAssign(){list0.add(contrPatrAssign1);})* "}" 
+	{return new contrPatrParam(list0, firstToken.next,token);}
+ ) }
+
+contrPatrAssign contrPatrAssign() : { 
+	var var;
+	patr patr;
+	Token firstToken=token;
+} { (
+	var=var() "=" patr=patr() 
+	{return new contrPatrAssign(var, patr, firstToken.next,token);}
+ ) }
+
+type type() : { 
+	naam naam;
+	var var;
+	functiontypeList functiontypeList = null;
+	functiontype functiontype;
+	Token firstToken=token;
+} { (
+	LOOKAHEAD(naam()) naam=naam() 
+	{return new type1(naam, firstToken.next,token);} |
+	var=var() 
+	{return new type2(var, firstToken.next,token);} |
+	"(" [functiontypeList=functiontypeList()] ")" 
+	{return new type3(functiontypeList, firstToken.next,token);} |
+	"[" functiontype=functiontype() "]" 
+	{return new type4(functiontype, firstToken.next,token);}
+ ) }
+
+functiontypeList functiontypeList() : { 
+	functiontype functiontype;
+	ArrayList<functiontype> list0=new ArrayList<functiontype>();
+	functiontype functiontype1;
+	ArrayList<functiontype> functiontype1List = new ArrayList<functiontype>();
+	Token firstToken=token;
+} { (
+	functiontype=functiontype(){list0.add(functiontype);} ("," functiontype1=functiontype(){list0.add(functiontype1);})* 
+	{return new functiontypeList(list0, firstToken.next,token);}
+ ) }
+
+functiontype functiontype() : { 
+	type type;
+	typArr typArr;
+	ArrayList<typArr> typArrList = new ArrayList<typArr>();
+	Token firstToken=token;
+} { (
+	type=type() (LOOKAHEAD(1) typArr=typArr(){typArrList.add(typArr);})* 
+	{return new functiontype(type, typArrList, firstToken.next,token);}
+ ) }
+
+typArr typArr() : { 
+	ASTTextNode text7 = null;
+	type type;
+	Token firstToken=token;
+} { (
+	["->" {text7=new ASTTextNode("->",new WToken(token));}] type=type() 
+	{return new typArr(text7, type, firstToken.next,token);}
+ ) }
+
+context context() : { 
+	klasse klasse;
+	klasse klasse1;
+	ArrayList<klasse> list1=new ArrayList<klasse>();
+	klasse klasse2;
+	ArrayList<klasse> klasse2List = new ArrayList<klasse>();
+	Token firstToken=token;
+} { (
+	klasse=klasse() "=>" 
+	{return new context1(klasse, firstToken.next,token);} |
+	"(" klasse1=klasse(){list1.add(klasse1);} ("," klasse2=klasse(){list1.add(klasse2);})* ")" "=>" 
+	{return new context2(list1, firstToken.next,token);}
+ ) }
+
+klasse klasse() : { 
+	naam naam;
+	klasseTypeVar klasseTypeVar;
+	Token firstToken=token;
+} { (
+	naam=naam() klasseTypeVar=klasseTypeVar() 
+	{return new klasse(naam, klasseTypeVar, firstToken.next,token);}
+ ) }
+
+klasseTypeVar klasseTypeVar() : { 
+	var var;
+	type type;
+	ArrayList<type> typeList = new ArrayList<type>();
+	var var1;
+	Token firstToken=token;
+} { (
+	"(" var=var() (type=type(){typeList.add(type);})* ")" 
+	{return new klasseTypeVar1(var, typeList, firstToken.next,token);} |
+	var1=var() 
+	{return new klasseTypeVar2(var1, firstToken.next,token);}
+ ) }
+
+varList varList() : { 
+	var var;
+	ArrayList<var> list0=new ArrayList<var>();
+	var var1;
+	ArrayList<var> var1List = new ArrayList<var>();
+	Token firstToken=token;
+} { (
+	var=var(){list0.add(var);} ("," var1=var(){list0.add(var1);})* 
+	{return new varList(list0, firstToken.next,token);}
+ ) }
+
+var var() : { 
+	ModuleNaamPrefix moduleNaamPrefix = null;
+	varMain varMain;
+	Token firstToken=token;
+} { (
+	[LOOKAHEAD(ModuleNaamPrefix()) moduleNaamPrefix=ModuleNaamPrefix()] varMain=varMain() 
+	{return new var(moduleNaamPrefix, varMain, firstToken.next,token);}
+ ) }
+
+varMain varMain() : { 
+	Token t;
+	ASTStringNode variable_id;
+	varOperator varOperator;
+	Token firstToken=token;
+} { (
+	t=<VARIABLE_ID>{variable_id=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new varMain1(variable_id, firstToken.next,token);} |
+	"`" varOperator=varOperator() "`" 
+	{return new varMain2(varOperator, firstToken.next,token);}
+ ) }
+
+naamList naamList() : { 
+	naam naam;
+	ArrayList<naam> list0=new ArrayList<naam>();
+	naam naam1;
+	ArrayList<naam> naam1List = new ArrayList<naam>();
+	Token firstToken=token;
+} { (
+	naam=naam(){list0.add(naam);} ("," naam1=naam(){list0.add(naam1);})* 
+	{return new naamList(list0, firstToken.next,token);}
+ ) }
+
+naam naam() : { 
+	ModuleNaamPrefix moduleNaamPrefix = null;
+	naamMain naamMain;
+	Token firstToken=token;
+} { (
+	[LOOKAHEAD(ModuleNaamPrefix()) moduleNaamPrefix=ModuleNaamPrefix()] naamMain=naamMain() 
+	{return new naam(moduleNaamPrefix, naamMain, firstToken.next,token);}
+ ) }
+
+naamMain naamMain() : { 
+	Token t;
+	ASTStringNode constructor_id;
+	constructorOperator constructorOperator;
+	Token firstToken=token;
+} { (
+	t=<CONSTRUCTOR_ID>{constructor_id=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new naamMain1(constructor_id, firstToken.next,token);} |
+	"`" constructorOperator=constructorOperator() "`" 
+	{return new naamMain2(constructorOperator, firstToken.next,token);}
+ ) }
+
+operatorList operatorList() : { 
+	operator operator;
+	ArrayList<operator> list0=new ArrayList<operator>();
+	operator operator1;
+	ArrayList<operator> operator1List = new ArrayList<operator>();
+	Token firstToken=token;
+} { (
+	operator=operator(){list0.add(operator);} ("," operator1=operator(){list0.add(operator1);})* 
+	{return new operatorList(list0, firstToken.next,token);}
+ ) }
+
+operator operator() : { 
+	varOperator varOperator;
+	constructorOperator constructorOperator;
+	Token firstToken=token;
+} { (
+	LOOKAHEAD(varOperator()) varOperator=varOperator() 
+	{return new operator1(varOperator, firstToken.next,token);} |
+	constructorOperator=constructorOperator() 
+	{return new operator2(constructorOperator, firstToken.next,token);}
+ ) }
+
+varOperator varOperator() : { 
+	ModuleNaamPrefix moduleNaamPrefix = null;
+	varOperatorMain varOperatorMain;
+	Token firstToken=token;
+} { (
+	[LOOKAHEAD(ModuleNaamPrefix()) moduleNaamPrefix=ModuleNaamPrefix()] varOperatorMain=varOperatorMain() 
+	{return new varOperator(moduleNaamPrefix, varOperatorMain, firstToken.next,token);}
+ ) }
+
+varOperatorMain varOperatorMain() : { 
+	Token t;
+	ASTStringNode varsym;
+	otherOperators otherOperators;
+	var var;
+	Token firstToken=token;
+} { (
+	t=<VARSYM>{varsym=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new varOperatorMain1(varsym, firstToken.next,token);} |
+	otherOperators=otherOperators() 
+	{return new varOperatorMain2(otherOperators, firstToken.next,token);} |
+	"(" var=var() ")" 
+	{return new varOperatorMain3(var, firstToken.next,token);}
+ ) }
+
+constructorOperator constructorOperator() : { 
+	ModuleNaamPrefix moduleNaamPrefix = null;
+	constructorOperatorMain constructorOperatorMain;
+	Token firstToken=token;
+} { (
+	[LOOKAHEAD(ModuleNaamPrefix()) moduleNaamPrefix=ModuleNaamPrefix()] constructorOperatorMain=constructorOperatorMain() 
+	{return new constructorOperator(moduleNaamPrefix, constructorOperatorMain, firstToken.next,token);}
+ ) }
+
+constructorOperatorMain constructorOperatorMain() : { 
+	Token t;
+	ASTStringNode consym;
+	otherOperators otherOperators;
+	naam naam;
+	Token firstToken=token;
+} { (
+	t=<CONSYM>{consym=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new constructorOperatorMain1(consym, firstToken.next,token);} |
+	otherOperators=otherOperators() 
+	{return new constructorOperatorMain2(otherOperators, firstToken.next,token);} |
+	":"  
+	{return new constructorOperatorMain3(firstToken.next,token);} |
+	"(" naam=naam() ")" 
+	{return new constructorOperatorMain4(naam, firstToken.next,token);}
+ ) }
+
+ModuleNaamPrefix ModuleNaamPrefix() : { 
+	naamMain naamMain;
+	naamMain naamMain1;
+	ArrayList<naamMain> naamMain1List = new ArrayList<naamMain>();
+	Token firstToken=token;
+} { (
+	naamMain=naamMain() "." (LOOKAHEAD(naamMain() ".") naamMain1=naamMain(){naamMain1List.add(naamMain1);} ".")* 
+	{return new ModuleNaamPrefix(naamMain, naamMain1List, firstToken.next,token);}
+ ) }
+
+otherOperators otherOperators() : { 
+	Token firstToken=token;
+} { (
+	"+"  
+	{return new otherOperators1(firstToken.next,token);} |
+	"."  
+	{return new otherOperators2(firstToken.next,token);} |
+	"-"  
+	{return new otherOperators3(firstToken.next,token);} |
+	"_"  
+	{return new otherOperators4(firstToken.next,token);}
+ ) }
+
+literal literal() : { 
+	Token t;
+	ASTStringNode integer;
+	ASTStringNode float_kw;
+	ASTStringNode character_literal;
+	ASTStringNode string_literal;
+	Token firstToken=token;
+} { (
+	t=<INTEGER>{integer=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new literal1(integer, firstToken.next,token);} |
+	t=<FLOAT>{float_kw=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new literal2(float_kw, firstToken.next,token);} |
+	t=<CHARACTER_LITERAL>{character_literal=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new literal3(character_literal, firstToken.next,token);} |
+	t=<STRING_LITERAL>{string_literal=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new literal4(string_literal, firstToken.next,token);}
+ ) }
+

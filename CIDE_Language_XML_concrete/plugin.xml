@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <!--<extension
+         point="de.ovgu.cide.core.language">
+      <language
+            class="de.ovgu.cide.language.xml.PeopeLanguageExtension"
+            fileExtensions=".xml"
+            id="de.ovgu.cide.language.xml.people"
+            name="People (XML) Language Extension">
+      </language>
+     
+   </extension>-->
+    <extension
+         point="de.ovgu.cide.core.language">
+      <language
+            class="de.ovgu.cide.language.xml.XHTMLLanguageExtension"
+            fileExtensions=".xhtml"
+            id="de.ovgu.cide.language.xml.xhmtl"
+            name="XHTML 1.0 Strict Language Extension">
+      </language>
+     
+   </extension>
+
+</plugin>

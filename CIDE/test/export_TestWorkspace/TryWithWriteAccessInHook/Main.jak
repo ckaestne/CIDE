@@ -1,0 +1,13 @@
+class Main {
+	int foo() {
+		int r=0;
+		r=hook(r);
+		return r;
+	}
+
+	protected int hook(int r) {
+		r++;
+		return r;
+	}
+}
+

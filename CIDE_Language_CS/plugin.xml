@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension
+         point="de.ovgu.cide.core.language">
+      <language
+            class="de.ovgu.cide.language.cs.CSLanguageExtension"
+            fileExtensions=".cs"
+            id="de.ovgu.cide.language.cs"
+            name="C# Language Extension">
+      </language>
+   </extension>
+
+</plugin>

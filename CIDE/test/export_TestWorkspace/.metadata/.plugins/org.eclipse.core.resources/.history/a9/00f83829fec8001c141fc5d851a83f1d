@@ -1,0 +1,11 @@
+import java.util.ArrayList;
+
+class Main extends ArrayList {
+
+
+	static void foo() {
+		a();
+		a();
+		a();
+	}
+}

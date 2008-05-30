@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension
+         point="de.ovgu.cide.core.language">
+      <language
+            class="de.ovgu.cide.language.xml.XMLLanguageExtension"
+            fileExtensions=".xml"
+            id="de.ovgu.cide.language.xml"
+            name="XML Language Extension">
+      </language>
+      <language
+            class="de.ovgu.cide.language.xml.HTMLLanguageExtension"
+            fileExtensions=".html"
+            id="de.ovgu.cide.language.html"
+            name="HTML Language Extension">
+      </language>
+   </extension>
+
+</plugin>

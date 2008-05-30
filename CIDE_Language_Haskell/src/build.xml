@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+
+<project default="main" basedir=".">
+
+	<taskdef name="astgen" classname="cide.astgen.ant.AstgenTask" />
+	<taskdef name="jcc" classname="cide.astgen.ant.JavaCCTask" />
+
+	<target name="clean">
+		<delete failonerror="false">
+			<fileset dir="tmp/generated_haskell">
+				<include name="*.java" />
+				<include name="*.class" />
+			</fileset>
+		</delete>
+	</target>
+
+	<target name="main">
+		<antcall target="clean" />
+		<mkdir dir="tmp/generated_haskell" />
+		<astgen grammarFileName="haskell.gcide" targetDirectory="tmp/generated_haskell" targetPackage="tmp.generated_haskell" />
+		<jcc grammarFileName="tmp/generated_haskell/haskell.jj" targetDirectory="tmp/generated_haskell" />
+		<echo>done.</echo>
+	</target>
+
+</project>

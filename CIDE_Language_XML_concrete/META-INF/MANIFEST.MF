@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: CIDE Language Plugin for XHTML
+Bundle-SymbolicName: de.ovgu.cide.language.xhtml;singleton:=true
+Bundle-Version: 1.0.0
+Require-Bundle: de.ovgu.cide.ast
+Bundle-Vendor: Christian Kaestner, University of Magdeburg

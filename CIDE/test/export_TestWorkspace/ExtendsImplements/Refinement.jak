@@ -1,0 +1,2 @@
+refines class Main extends LinkedList implements Serializable, Iterable {
+}

@@ -1,0 +1,7 @@
+refines class Main {
+	void foo() {
+		do {
+			Super.foo();
+		} while (true);
+	}
+}

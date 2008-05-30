@@ -1,0 +1,260 @@
+options{
+  STATIC = false;
+  JAVA_UNICODE_ESCAPE = false;
+}
+PARSER_BEGIN(AntLRParser)
+package tmp.generated_antlr;
+
+import java.io.*;
+import java.util.*;
+import cide.gast.*;
+import cide.gparser.*;
+
+public class AntLRParser{
+}
+PARSER_END(AntLRParser)
+
+/* WHITE SPACE */
+
+
+SKIP:{
+  " "
+  | "\t"
+  | "\n"
+  | "\r"
+  | "\f"
+}
+
+
+
+
+
+/* COMMENTS */
+MORE:{
+  "//":IN_SINGLE_LINE_COMMENT
+  | <"/**"~["/"]>{
+    input_stream.backup(1);
+  }
+  :IN_FORMAL_COMMENT
+  | "/*":IN_MULTI_LINE_COMMENT
+}
+<IN_SINGLE_LINE_COMMENT>SPECIAL_TOKEN:{
+  <SINGLE_LINE_COMMENT:"\n"
+  | "\r"
+  | "\r\n">:DEFAULT
+}
+<IN_FORMAL_COMMENT>SPECIAL_TOKEN:{
+  <FORMAL_COMMENT:"*/">:DEFAULT
+}
+<IN_MULTI_LINE_COMMENT>SPECIAL_TOKEN:{
+  <MULTI_LINE_COMMENT:"*/">:DEFAULT
+}
+<IN_SINGLE_LINE_COMMENT, IN_FORMAL_COMMENT, IN_MULTI_LINE_COMMENT>MORE:{
+  <~[]>
+}
+/* RESERVED WORDS AND LITERALS */
+//TOKEN:{//}
+
+TOKEN:{
+  <LPAREN:"(">
+  | <RPAREN:")">
+  | <M1:"private">
+  | <M2:"public">
+  | <M3:"protected">
+  | <M4:"fragment">
+  | <GR:"grammar">
+  | <COMMA:",">
+  | <SEMI:";">
+  | <DOT:".">
+  | <PLUS:"+">
+  | <STAR:"*">
+  | <BIT_OR:"|">
+  | <XOR:"^">
+}
+
+/* LITERALS */
+TOKEN:{
+//  <INTEGER_LITERAL:<DECIMAL_LITERAL>(["l", "L"])?//  | <HEX_LITERAL>(["l", "L"])?//  | <OCTAL_LITERAL>(["l", "L"])?>//  | <#DECIMAL_LITERAL:["1"-"9"](["0"-"9"])*>//  | <#HEX_LITERAL:"0"["x", "X"](["0"-"9", "a"-"f", "A"-"F"])+>//  | <#OCTAL_LITERAL:"0"(["0"-"7"])*>//  | <FLOATING_POINT_LITERAL:(["0"-"9"])+"."(["0"-"9"])*(<EXPONENT>)?(["f", "F", "d", "D"])?//  | "."(["0"-"9"])+(<EXPONENT>)?(["f", "F", "d", "D"])?//  | (["0"-"9"])+<EXPONENT>(["f", "F", "d", "D"])?//  | (["0"-"9"])+(<EXPONENT>)?["f", "F", "d", "D"]>//  | <#EXPONENT:["e", "E"](["+", "-"])?(["0"-"9"])+>
+
+
+	<TOKEN_REF :	["A"-"Z"] (["a"-"z","A"-"Z","_","0"-"9"])*>
+|	<RULE_REF :	["a"-"z"] (["a"-"z","A"-"Z","_","0"-"9"])*>
+	
+  | <CHAR_LITERAL:"'"((~["'", "\\", "\n", "\r"])
+  | ("\\"(["n", "t", "b", "r", "f", "\\", "'", "\""]
+  | ["0"-"7"](["0"-"7"])?
+  | ["0"-"3"]["0"-"7"]["0"-"7"])))"'">
+  | <STRING_LITERAL:"'"((~["'", "\\", "\n", "\r"])
+  | ("\\"(["n", "t", "b", "r", "f", "\\", "'", "\""]
+  | ["0"-"7"](["0"-"7"])?
+  | ["0"-"3"]["0"-"7"]["0"-"7"])))*"'">
+}
+Grammar Grammar() : { 
+	RuleId ruleId;
+	Rule rule;
+	ArrayList<Rule> ruleList = new ArrayList<Rule>();
+	Token t;
+	ASTStringNode eof;
+	Token firstToken=token;
+} { (
+	"grammar" ruleId=RuleId() ";" (rule=Rule(){ruleList.add(rule);})* t=<EOF>{eof=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new Grammar(ruleId, ruleList, eof, firstToken.next,token);}
+ ) }
+
+Modifier Modifier() : { 
+	Token firstToken=token;
+} { (
+	"protected"  
+	{return new Modifier1(firstToken.next,token);} |
+	"public"  
+	{return new Modifier2(firstToken.next,token);} |
+	"private"  
+	{return new Modifier3(firstToken.next,token);} |
+	"fragment"  
+	{return new Modifier4(firstToken.next,token);}
+ ) }
+
+Rule Rule() : { 
+	Modifier modifier = null;
+	RuleId ruleId;
+	ASTTextNode text5 = null;
+	altList altList;
+	Token firstToken=token;
+} { (
+	[modifier=Modifier()] ruleId=RuleId() ["!" {text5=new ASTTextNode("!",new WToken(token));}] ":" altList=altList() ";" 
+	{return new Rule(modifier, ruleId, text5, altList, firstToken.next,token);}
+ ) }
+
+block block() : { 
+	altList altList;
+	Token firstToken=token;
+} { (
+	"(" altList=altList() ")" 
+	{return new block(altList, firstToken.next,token);}
+ ) }
+
+altList altList() : { 
+	altRewrite altRewrite;
+	ArrayList<altRewrite> list0=new ArrayList<altRewrite>();
+	altRewrite altRewrite1;
+	ArrayList<altRewrite> altRewrite1List = new ArrayList<altRewrite>();
+	Token firstToken=token;
+} { (
+	altRewrite=altRewrite(){list0.add(altRewrite);} ("|" altRewrite1=altRewrite(){list0.add(altRewrite1);})* 
+	{return new altList(list0, firstToken.next,token);}
+ ) }
+
+altRewrite altRewrite() : { 
+	elementNoOptionSpec elementNoOptionSpec;
+	ArrayList<elementNoOptionSpec> elementNoOptionSpecList = new ArrayList<elementNoOptionSpec>();
+	Token firstToken=token;
+} { (
+	(elementNoOptionSpec=elementNoOptionSpec(){elementNoOptionSpecList.add(elementNoOptionSpec);})+ 
+	{return new altRewrite(elementNoOptionSpecList, firstToken.next,token);}
+ ) }
+
+elementNoOptionSpec elementNoOptionSpec() : { 
+	atom atom;
+	ebnfSuffix ebnfSuffix = null;
+	ebnf ebnf;
+	Token firstToken=token;
+} { (
+	atom=atom() [ebnfSuffix=ebnfSuffix()] 
+	{return new elementNoOptionSpec1(atom, ebnfSuffix, firstToken.next,token);} |
+	ebnf=ebnf() 
+	{return new elementNoOptionSpec2(ebnf, firstToken.next,token);}
+ ) }
+
+atom atom() : { 
+	terminal terminal;
+	Token t;
+	ASTStringNode rule_ref;
+	Token firstToken=token;
+} { (
+	terminal=terminal() 
+	{return new atom1(terminal, firstToken.next,token);} |
+	t=<RULE_REF>{rule_ref=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new atom2(rule_ref, firstToken.next,token);}
+ ) }
+
+ebnf ebnf() : { 
+	block block;
+	blockModifier blockModifier = null;
+	Token firstToken=token;
+} { (
+	block=block() [LOOKAHEAD(1) blockModifier=blockModifier()] 
+	{return new ebnf(block, blockModifier, firstToken.next,token);}
+ ) }
+
+blockModifier blockModifier() : { 
+	Token firstToken=token;
+} { (
+	"?"  
+	{return new blockModifier1(firstToken.next,token);} |
+	"*"  
+	{return new blockModifier2(firstToken.next,token);} |
+	"+"  
+	{return new blockModifier3(firstToken.next,token);} |
+	"^"  
+	{return new blockModifier4(firstToken.next,token);} |
+	"!"  
+	{return new blockModifier5(firstToken.next,token);}
+ ) }
+
+terminal terminal() : { 
+	Token t;
+	ASTStringNode char_literal;
+	ASTStringNode token_ref;
+	ASTStringNode string_literal;
+	Token firstToken=token;
+} { (
+	t=<CHAR_LITERAL>{char_literal=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new terminal1(char_literal, firstToken.next,token);} |
+	t=<TOKEN_REF>{token_ref=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new terminal2(token_ref, firstToken.next,token);} |
+	t=<STRING_LITERAL>{string_literal=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new terminal3(string_literal, firstToken.next,token);} |
+	"."  
+	{return new terminal4(firstToken.next,token);} |
+	"!"  
+	{return new terminal5(firstToken.next,token);}
+ ) }
+
+notTerminal notTerminal() : { 
+	Token t;
+	ASTStringNode char_literal;
+	ASTStringNode token_ref;
+	ASTStringNode string_literal;
+	Token firstToken=token;
+} { (
+	t=<CHAR_LITERAL>{char_literal=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new notTerminal1(char_literal, firstToken.next,token);} |
+	t=<TOKEN_REF>{token_ref=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new notTerminal2(token_ref, firstToken.next,token);} |
+	t=<STRING_LITERAL>{string_literal=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new notTerminal3(string_literal, firstToken.next,token);}
+ ) }
+
+ebnfSuffix ebnfSuffix() : { 
+	Token firstToken=token;
+} { (
+	"?"  
+	{return new ebnfSuffix1(firstToken.next,token);} |
+	"*"  
+	{return new ebnfSuffix2(firstToken.next,token);} |
+	"+"  
+	{return new ebnfSuffix3(firstToken.next,token);}
+ ) }
+
+RuleId RuleId() : { 
+	Token t;
+	ASTStringNode token_ref;
+	ASTStringNode rule_ref;
+	Token firstToken=token;
+} { (
+	t=<TOKEN_REF>{token_ref=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new RuleId1(token_ref, firstToken.next,token);} |
+	t=<RULE_REF>{rule_ref=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new RuleId2(rule_ref, firstToken.next,token);}
+ ) }
+

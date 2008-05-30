@@ -1,0 +1,17 @@
+class Main {
+
+	private static class Result {
+		public Integer i;
+	}
+
+	void foo() {
+		Result i = new Result();
+		a();
+		i.i.byteValue();
+		a();
+		i = null;
+	}
+
+	void a() {
+	}
+}

@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: CIDE Language Plugin for Java 1.5
+Bundle-SymbolicName: de.ovgu.cide.language.java;singleton:=true
+Bundle-Version: 1.0.0
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ de.ovgu.cide.ast,
+ de.ovgu.cide.core
+Eclipse-LazyStart: true
+Export-Package: tmp.generated_java15
+Bundle-Vendor: Christian Kaestner, University of Magdeburg

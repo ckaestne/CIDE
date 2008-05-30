@@ -1,0 +1,23 @@
+package tmp.generated_people;
+
+import cide.gast.*;
+import cide.gparser.*;
+import cide.greferences.*;
+import java.util.*;
+
+public class Content_Any2 extends Content_Any {
+  public Content_Any2(Element_button element_button, Token firstToken, Token lastToken) {
+    super(new Property[] {
+      new PropertyOne<Element_button>("element_button", element_button)
+    }, firstToken, lastToken);
+  }
+  public Content_Any2(Property[] properties, IToken firstToken, IToken lastToken) {
+    super(properties,firstToken,lastToken);
+  }
+  public ASTNode deepCopy() {
+    return new Content_Any2(cloneProperties(),firstToken,lastToken);
+  }
+  public Element_button getElement_button() {
+    return ((PropertyOne<Element_button>)getProperty("element_button")).getValue();
+  }
+}

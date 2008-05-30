@@ -1,0 +1,20 @@
+refines class Main {
+  
+  
+  @MethodObject  refines static class Main_bar {
+    protected void hook(){
+    	_this.a(i + 3);
+    }
+    protected void hook(){
+      if (true) {
+        i=1;
+        _this.a(i + 2);
+        this.hook();
+        _this.a(i + 4);
+      }
+      Super().hook();
+    }
+  }
+}
+
+

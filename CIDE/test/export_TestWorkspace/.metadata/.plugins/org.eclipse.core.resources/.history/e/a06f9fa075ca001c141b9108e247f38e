@@ -1,0 +1,19 @@
+class Main {
+
+	private static class Result {
+		public Integer i;
+	}
+
+	void foo() {
+		Result r = new Result();
+		a();
+		hook();
+		a();
+		r = null;
+	}
+
+	void a() {
+	}
+	
+	protected void hook(){}
+}

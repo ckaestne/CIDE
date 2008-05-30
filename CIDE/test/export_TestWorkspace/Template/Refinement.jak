@@ -1,0 +1,4 @@
+refines class Main {
+	void foo() {
+	}
+}

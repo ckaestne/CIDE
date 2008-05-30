@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+
+<project default="genPeople" basedir=".">
+	
+	
+	<taskdef name="astgen" classname="cide.astgen.ant.AstgenTask" />
+	<taskdef name="jcc" classname="cide.astgen.ant.JavaCCTask" />
+	<taskdef name="dtdgen" classname="cide.dtdgen.ant.DTDgenTask" />
+
+	<target name="clean">
+		<delete failonerror="false">
+			<fileset dir="tmp/generated_${language}">
+				<include name="*.java" />
+				<include name="*.class" />
+			</fileset>
+		</delete>
+	</target>
+
+	<target name="genParserFromDTD">
+		<echo>Generating Language Extension for ${language}...</echo>
+		<antcall target="clean" />
+		<mkdir dir="tmp/generated_${language}" />
+		<dtdgen dtdInputFile="${dtd}" gCIDEOutputFile="tmp/${language}.gcide" />
+		<astgen grammarFileName="tmp/${language}.gcide" targetDirectory="tmp/generated_${language}" targetPackage="tmp.generated_${language}" />
+		<jcc grammarFileName="tmp/generated_${language}/${language}.jj" targetDirectory="tmp/generated_${language}" />
+	</target>
+	
+	<target name="genPeople">
+		<property name="language" value="people"/>
+		<property name="dtd" value="people.dtd"/>
+		<antcall target="genParserFromDTD"></antcall>
+	</target>
+	
+	<target name="genXHTML">
+		<property name="language" value="xhtml"/>
+		<property name="dtd" value="xhtml1-strict_plain.dtd"/>
+		<antcall target="genParserFromDTD"></antcall>
+	</target>
+
+
+</project>

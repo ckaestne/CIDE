@@ -1,0 +1,28 @@
+options{
+  STATIC = false;
+}
+PARSER_BEGIN(PropertyParser)
+package tmp.generated_property;
+
+import java.io.*;
+import java.util.*;
+import cide.gast.*;
+import cide.gparser.*;
+
+public class PropertyParser{
+}
+PARSER_END(PropertyParser)
+
+
+
+
+<*> TOKEN :
+{
+  <LINE: (~[ "\r", "\n" ])* <NEWLINE>>
+| <#NEWLINE:    ( "\r\n" | "\r" | "\n" ) >
+}
+
+
+GRAMMARSTART
+
+Document: (<LINE>)* <EOF>;

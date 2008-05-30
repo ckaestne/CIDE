@@ -1,0 +1,24 @@
+class Main {
+
+	void foo() {
+		a(0);
+		int i = 1;
+
+		i=hook(i);
+
+		a(i+3);
+	}
+
+	int a(int i) {
+	return i;
+	}
+	
+	protected int hook(int i){
+			a(1);
+			i=hook2(i);
+			a(2);
+			return i;
+	}
+	
+	protected int hook2(int i){ return i;}
+}

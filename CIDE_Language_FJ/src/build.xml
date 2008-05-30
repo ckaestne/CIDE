@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+
+<project default="main" basedir=".">
+
+	<taskdef name="astgen" classname="cide.astgen.ant.AstgenTask" />
+	<taskdef name="jcc" classname="cide.astgen.ant.JavaCCTask" />
+
+	<target name="clean">
+		<delete>
+			<fileset dir="tmp/generated_fj">
+				<include name="*.java" />
+				<include name="*.class" />
+			</fileset>
+		</delete>
+	</target>
+
+	<target name="main">
+		<antcall target="clean" />
+		<mkdir dir="tmp/generated_fj" />
+		<astgen grammarFileName="fj.gcide" targetDirectory="tmp/generated_fj" targetPackage="tmp.generated_fj" />
+		<jcc grammarFileName="tmp/generated_fj/fj.jj" targetDirectory="tmp/generated_fj" />
+	</target>
+
+</project>

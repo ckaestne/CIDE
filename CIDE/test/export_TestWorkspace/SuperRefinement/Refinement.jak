@@ -1,0 +1,7 @@
+refines class Main {
+
+	public Object get(int index) {
+		System.out.println(index);
+		return super.get(index);
+	}
+}

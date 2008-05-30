@@ -1,0 +1,22 @@
+import java.util.ArrayList;
+
+class Main extends ArrayList {
+
+	void foo() {
+		a();
+
+		try {
+			a();
+			b();
+		} catch (Exception e) {
+		}
+		a();
+
+	}
+
+	void a() {
+	}
+
+	void b() throws Exception {
+	}
+}

@@ -1,0 +1,12 @@
+refines class Main {
+	@MethodObject refines class Main_foo {
+		protected void hook()throws Exception {
+			i++;
+			Super.hook();
+		}
+		protected void hook()throws Exception {
+			i=k-j;
+			Super.hook();
+		}
+	}
+}

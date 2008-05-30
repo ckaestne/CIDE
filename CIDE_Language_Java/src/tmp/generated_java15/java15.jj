@@ -1,0 +1,1949 @@
+
+/*
+ * Copyright © 2002 Sun Microsystems, Inc., 4150 Network Circle, Santa Clara,
+ * California 95054, U.S.A. All rights reserved.  Sun Microsystems, Inc. has
+ * intellectual property rights relating to technology embodied in the product
+ * that is described in this document. In particular, and without limitation,
+ * these intellectual property rights may include one or more of the U.S.
+ * patents listed at http://www.sun.com/patents and one or more additional
+ * patents or pending patent applications in the U.S. and in other countries.
+ * U.S. Government Rights - Commercial software. Government users are subject
+ * to the Sun Microsystems, Inc. standard license agreement and applicable
+ * provisions of the FAR and its supplements.  Use is subject to license terms.
+ * Sun,  Sun Microsystems,  the Sun logo and  Java are trademarks or registered
+ * trademarks of Sun Microsystems, Inc. in the U.S. and other countries.  This
+ * product is covered and controlled by U.S. Export Control laws and may be
+ * subject to the export or import laws in other countries.  Nuclear, missile,
+ * chemical biological weapons or nuclear maritime end uses or end users,
+ * whether direct or indirect, are strictly prohibited.  Export or reexport
+ * to countries subject to U.S. embargo or to entities identified on U.S.
+ * export exclusion lists, including, but not limited to, the denied persons
+ * and specially designated nationals lists is strictly prohibited.
+ */
+
+options {
+  JAVA_UNICODE_ESCAPE = true;
+  ERROR_REPORTING = true;
+  STATIC = false;
+  OUTPUT_DIRECTORY="generated_java15";
+  STATIC = false;
+}
+
+
+PARSER_BEGIN(Java15Parser)
+
+package tmp.generated_java15;
+import java.io.*;
+import java.util.*;
+import cide.gast.*;
+import cide.gparser.*;
+
+
+/**
+ * Grammar to parse Java version 1.5
+ * @author Sreenivasa Viswanadha - Simplified and enhanced for 1.5
+ */
+public class Java15Parser
+{
+   public Java15Parser(String fileName)
+   {
+      this(System.in);
+      try { ReInit(new FileInputStream(new File(fileName))); }
+      catch(Exception e) { e.printStackTrace(); }
+   }
+
+  public static void main(String args[]) {
+    Java15Parser parser;
+    if (args.length == 0) {
+      System.out.println("Java Parser Version 1.1:  Reading from standard input . . .");
+      parser = new Java15Parser(System.in);
+    } else if (args.length == 1) {
+      System.out.println("Java Parser Version 1.1:  Reading from file " + args[0] + " . . .");
+      try {
+        parser = new Java15Parser(new java.io.FileInputStream(args[0]));
+      } catch (java.io.FileNotFoundException e) {
+        System.out.println("Java Parser Version 1.1:  File " + args[0] + " not found.");
+        return;
+      }
+    } else {
+      System.out.println("Java Parser Version 1.1:  Usage is one of:");
+      System.out.println("         java JavaParser < inputfile");
+      System.out.println("OR");
+      System.out.println("         java JavaParser inputfile");
+      return;
+    }
+    try {
+      parser.CompilationUnit();
+      System.out.println("Java Parser Version 1.1:  Java program parsed successfully.");
+    } catch (ParseException e) {
+      System.out.println(e.getMessage());
+      System.out.println("Java Parser Version 1.1:  Encountered errors during parse.");
+      e.printStackTrace(System.out);
+    }
+  }
+
+  public Java15Parser(InputStream inputStream) {
+	this(new OffsetCharStream(inputStream));
+  }
+  private void ReInit(InputStream inputStream) {
+	ReInit(new OffsetCharStream(inputStream));
+  }
+  
+   public ISourceFile getRoot() throws ParseException {
+                return CompilationUnit();
+   }
+	
+}
+
+PARSER_END(Java15Parser)
+
+/* WHITE SPACE */
+
+SKIP :
+{
+  " "
+| "\t"
+| "\n"
+| "\r"
+| "\f"
+}
+
+/* COMMENTS */
+
+MORE :
+{
+  "//" : IN_SINGLE_LINE_COMMENT
+|
+  <"/**" ~["/"]> { input_stream.backup(1); } : IN_FORMAL_COMMENT
+|
+  "/*" : IN_MULTI_LINE_COMMENT
+}
+
+<IN_SINGLE_LINE_COMMENT>
+SPECIAL_TOKEN :
+{
+  <SINGLE_LINE_COMMENT: "\n" | "\r" | "\r\n" > : DEFAULT
+}
+
+<IN_FORMAL_COMMENT>
+SPECIAL_TOKEN :
+{
+  <FORMAL_COMMENT: "*/" > : DEFAULT
+}
+
+<IN_MULTI_LINE_COMMENT>
+SPECIAL_TOKEN :
+{
+  <MULTI_LINE_COMMENT: "*/" > : DEFAULT
+}
+
+<IN_SINGLE_LINE_COMMENT,IN_FORMAL_COMMENT,IN_MULTI_LINE_COMMENT>
+MORE :
+{
+  < ~[] >
+}
+
+/* RESERVED WORDS AND LITERALS */
+
+TOKEN :
+{
+  < ABSTRACT: "abstract" >
+| < ASSERT: "assert" >
+| < BOOLEAN: "boolean" >
+| < BREAK: "break" >
+| < BYTE: "byte" >
+| < CASE: "case" >
+| < CATCH: "catch" >
+| < CHAR: "char" >
+| < CLASS: "class" >
+| < CONST: "const" >
+| < CONTINUE: "continue" >
+| < _DEFAULT: "default" >
+| < DO: "do" >
+| < DOUBLE: "double" >
+| < ELSE: "else" >
+| < ENUM: "enum" >
+| < EXTENDS: "extends" >
+| < FALSE: "false" >
+| < FINAL: "final" >
+| < FINALLY: "finally" >
+| < FLOAT: "float" >
+| < FOR: "for" >
+| < GOTO: "goto" >
+| < IF: "if" >
+| < IMPLEMENTS: "implements" >
+| < IMPORT: "import" >
+| < INSTANCEOF: "instanceof" >
+| < INT: "int" >
+| < INTERFACE: "interface" >
+| < LONG: "long" >
+| < NATIVE: "native" >
+| < NEW: "new" >
+| < NULL: "null" >
+| < PACKAGE: "package">
+| < PRIVATE: "private" >
+| < PROTECTED: "protected" >
+| < PUBLIC: "public" >
+| < RETURN: "return" >
+| < SHORT: "short" >
+| < STATIC: "static" >
+| < STRICTFP: "strictfp" >
+| < SUPER: "super" >
+| < SWITCH: "switch" >
+| < SYNCHRONIZED: "synchronized" >
+| < THIS: "this" >
+| < THROW: "throw" >
+| < THROWS: "throws" >
+| < TRANSIENT: "transient" >
+| < TRUE: "true" >
+| < TRY: "try" >
+| < VOID: "void" >
+| < VOLATILE: "volatile" >
+| < WHILE: "while" >
+}
+
+/* LITERALS */
+
+TOKEN :
+{
+  < INTEGER_LITERAL:
+        <DECIMAL_LITERAL> (["l","L"])?
+      | <HEX_LITERAL> (["l","L"])?
+      | <OCTAL_LITERAL> (["l","L"])?
+  >
+|
+  < #DECIMAL_LITERAL: ["1"-"9"] (["0"-"9"])* >
+|
+  < #HEX_LITERAL: "0" ["x","X"] (["0"-"9","a"-"f","A"-"F"])+ >
+|
+  < #OCTAL_LITERAL: "0" (["0"-"7"])* >
+|
+  < FLOATING_POINT_LITERAL:
+        (["0"-"9"])+ "." (["0"-"9"])* (<EXPONENT>)? (["f","F","d","D"])?
+      | "." (["0"-"9"])+ (<EXPONENT>)? (["f","F","d","D"])?
+      | (["0"-"9"])+ <EXPONENT> (["f","F","d","D"])?
+      | (["0"-"9"])+ (<EXPONENT>)? ["f","F","d","D"]
+  >
+|
+  < #EXPONENT: ["e","E"] (["+","-"])? (["0"-"9"])+ >
+|
+  < CHARACTER_LITERAL:
+      "'"
+      (   (~["'","\\","\n","\r"])
+        | ("\\"
+            ( ["n","t","b","r","f","\\","'","\""]
+            | ["0"-"7"] ( ["0"-"7"] )?
+            | ["0"-"3"] ["0"-"7"] ["0"-"7"]
+            )
+          )
+      )
+      "'"
+  >
+|
+  < STRING_LITERAL:
+      "\""
+      (   (~["\"","\\","\n","\r"])
+        | ("\\"
+            ( ["n","t","b","r","f","\\","'","\""]
+            | ["0"-"7"] ( ["0"-"7"] )?
+            | ["0"-"3"] ["0"-"7"] ["0"-"7"]
+            )
+          )
+      )*
+      "\""
+  >
+}
+
+/* IDENTIFIERS */
+
+TOKEN :
+{
+  < IDENTIFIER: <LETTER> (<LETTER>|<DIGIT>)* >
+|
+  < #LETTER:
+      [
+       "\u0024",
+       "\u0041"-"\u005a",
+       "\u005f",
+       "\u0061"-"\u007a",
+       "\u00c0"-"\u00d6",
+       "\u00d8"-"\u00f6",
+       "\u00f8"-"\u00ff",
+       "\u0100"-"\u1fff",
+       "\u3040"-"\u318f",
+       "\u3300"-"\u337f",
+       "\u3400"-"\u3d2d",
+       "\u4e00"-"\u9fff",
+       "\uf900"-"\ufaff"
+      ]
+  >
+|
+  < #DIGIT:
+      [
+       "\u0030"-"\u0039",
+       "\u0660"-"\u0669",
+       "\u06f0"-"\u06f9",
+       "\u0966"-"\u096f",
+       "\u09e6"-"\u09ef",
+       "\u0a66"-"\u0a6f",
+       "\u0ae6"-"\u0aef",
+       "\u0b66"-"\u0b6f",
+       "\u0be7"-"\u0bef",
+       "\u0c66"-"\u0c6f",
+       "\u0ce6"-"\u0cef",
+       "\u0d66"-"\u0d6f",
+       "\u0e50"-"\u0e59",
+       "\u0ed0"-"\u0ed9",
+       "\u1040"-"\u1049"
+      ]
+  >
+}
+
+/* SEPARATORS */
+
+TOKEN :
+{
+  < LPAREN: "(" >
+| < RPAREN: ")" >
+| < LBRACE: "{" >
+| < RBRACE: "}" >
+| < LBRACKET: "[" >
+| < RBRACKET: "]" >
+| < SEMICOLON: ";" >
+| < COMMA: "," >
+| < DOT: "." >
+| < AT: "@" >
+}
+
+/* OPERATORS */
+
+TOKEN :
+{
+  < ASSIGN: "=" >
+| < LT: "<" >
+| < BANG: "!" >
+| < TILDE: "~" >
+| < HOOK: "?" >
+| < COLON: ":" >
+| < EQ: "==" >
+| < LE: "<=" >
+| < GE: ">=" >
+| < NE: "!=" >
+| < SC_OR: "||" >
+| < SC_AND: "&&" >
+| < INCR: "++" >
+| < DECR: "--" >
+| < PLUS: "+" >
+| < MINUS: "-" >
+| < STAR: "*" >
+| < SLASH: "/" >
+| < BIT_AND: "&" >
+| < BIT_OR: "|" >
+| < XOR: "^" >
+| < REM: "%" >
+| < LSHIFT: "<<" >
+| < PLUSASSIGN: "+=" >
+| < MINUSASSIGN: "-=" >
+| < STARASSIGN: "*=" >
+| < SLASHASSIGN: "/=" >
+| < ANDASSIGN: "&=" >
+| < ORASSIGN: "|=" >
+| < XORASSIGN: "^=" >
+| < REMASSIGN: "%=" >
+| < LSHIFTASSIGN: "<<=" >
+| < RSIGNEDSHIFTASSIGN: ">>=" >
+| < RUNSIGNEDSHIFTASSIGN: ">>>=" >
+| < ELLIPSIS: "..." >
+}
+
+/* >'s need special attention due to generics syntax. */
+TOKEN :
+{
+  < RUNSIGNEDSHIFT: ">>>" >
+| < RSIGNEDSHIFT: ">>" >
+| < GT: ">" >
+}
+CompilationUnit CompilationUnit() : { 
+	PackageDeclaration packageDeclaration = null;
+	ImportDeclaration importDeclaration;
+	ArrayList<ImportDeclaration> importDeclarationList = new ArrayList<ImportDeclaration>();
+	TypeDeclaration typeDeclaration;
+	ArrayList<TypeDeclaration> typeDeclarationList = new ArrayList<TypeDeclaration>();
+	Token t;
+	ASTStringNode eof;
+	Token firstToken=token;
+} { (
+	[packageDeclaration=PackageDeclaration()] (importDeclaration=ImportDeclaration(){importDeclarationList.add(importDeclaration);})* (typeDeclaration=TypeDeclaration(){typeDeclarationList.add(typeDeclaration);})* t=<EOF>{eof=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new CompilationUnit(packageDeclaration, importDeclarationList, typeDeclarationList, eof, firstToken.next,token);}
+ ) }
+
+PackageDeclaration PackageDeclaration() : { 
+	Name name;
+	Token firstToken=token;
+} { (
+	"package" name=Name() ";" 
+	{return new PackageDeclaration(name, firstToken.next,token);}
+ ) }
+
+ImportDeclaration ImportDeclaration() : { 
+	ASTTextNode text372 = null;
+	Name name;
+	ASTTextNode text373 = null;
+	Token firstToken=token;
+} { (
+	"import" ["static" {text372=new ASTTextNode("static",new WToken(token));}] name=Name() [{text373=new ASTTextNode(new String[]{".","*"},new WToken(token));} "." "*"] ";" 
+	{return new ImportDeclaration(text372, name, text373, firstToken.next,token);}
+ ) }
+
+Modifiers Modifiers() : { 
+	Modifier modifier;
+	ArrayList<Modifier> modifierList = new ArrayList<Modifier>();
+	Token firstToken=token;
+} { (
+	(LOOKAHEAD(1) modifier=Modifier(){modifierList.add(modifier);})* 
+	{return new Modifiers(modifierList, firstToken.next,token);}
+ ) }
+
+Modifier Modifier() : { 
+	Annotation annotation;
+	Token firstToken=token;
+} { (
+	"public"  
+	{return new Modifier1(firstToken.next,token);} |
+	"static"  
+	{return new Modifier2(firstToken.next,token);} |
+	"protected"  
+	{return new Modifier3(firstToken.next,token);} |
+	"private"  
+	{return new Modifier4(firstToken.next,token);} |
+	"final"  
+	{return new Modifier5(firstToken.next,token);} |
+	"abstract"  
+	{return new Modifier6(firstToken.next,token);} |
+	"synchronized"  
+	{return new Modifier7(firstToken.next,token);} |
+	"native"  
+	{return new Modifier8(firstToken.next,token);} |
+	"transient"  
+	{return new Modifier9(firstToken.next,token);} |
+	"volatile"  
+	{return new Modifier10(firstToken.next,token);} |
+	"strictfp"  
+	{return new Modifier11(firstToken.next,token);} |
+	annotation=Annotation() 
+	{return new Modifier12(annotation, firstToken.next,token);}
+ ) }
+
+TypeDeclaration TypeDeclaration() : { 
+	Modifiers modifiers;
+	ClassOrInterfaceDeclaration classOrInterfaceDeclaration;
+	Modifiers modifiers1;
+	EnumDeclaration enumDeclaration;
+	Modifiers modifiers2;
+	AnnotationTypeDeclaration annotationTypeDeclaration;
+	Token firstToken=token;
+} { (
+	";"  
+	{return new TypeDeclaration1(firstToken.next,token);} |
+	LOOKAHEAD(2) modifiers=Modifiers() classOrInterfaceDeclaration=ClassOrInterfaceDeclaration() 
+	{return new TypeDeclaration2(modifiers, classOrInterfaceDeclaration, firstToken.next,token);} |
+	LOOKAHEAD(2) modifiers1=Modifiers() enumDeclaration=EnumDeclaration() 
+	{return new TypeDeclaration3(modifiers1, enumDeclaration, firstToken.next,token);} |
+	LOOKAHEAD(2) modifiers2=Modifiers() annotationTypeDeclaration=AnnotationTypeDeclaration() 
+	{return new TypeDeclaration4(modifiers2, annotationTypeDeclaration, firstToken.next,token);}
+ ) }
+
+ClassOrInterfaceDeclaration ClassOrInterfaceDeclaration() : { 
+	ClassOrInterface classOrInterface;
+	Token t;
+	ASTStringNode identifier;
+	TypeParameters typeParameters = null;
+	ExtendsList extendsList = null;
+	ImplementsList implementsList = null;
+	ClassOrInterfaceBody classOrInterfaceBody;
+	Token firstToken=token;
+} { (
+	classOrInterface=ClassOrInterface() t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} [typeParameters=TypeParameters()] [extendsList=ExtendsList()] [implementsList=ImplementsList()] classOrInterfaceBody=ClassOrInterfaceBody() 
+	{return new ClassOrInterfaceDeclaration(classOrInterface, identifier, typeParameters, extendsList, implementsList, classOrInterfaceBody, firstToken.next,token);}
+ ) }
+
+ClassOrInterface ClassOrInterface() : { 
+	Token firstToken=token;
+} { (
+	"class"  
+	{return new ClassOrInterface1(firstToken.next,token);} |
+	"interface"  
+	{return new ClassOrInterface2(firstToken.next,token);}
+ ) }
+
+ExtendsList ExtendsList() : { 
+	ClassOrInterfaceType classOrInterfaceType;
+	ArrayList<ClassOrInterfaceType> list0=new ArrayList<ClassOrInterfaceType>();
+	ClassOrInterfaceType classOrInterfaceType1;
+	ArrayList<ClassOrInterfaceType> classOrInterfaceType1List = new ArrayList<ClassOrInterfaceType>();
+	Token firstToken=token;
+} { (
+	"extends" classOrInterfaceType=ClassOrInterfaceType(){list0.add(classOrInterfaceType);} ("," classOrInterfaceType1=ClassOrInterfaceType(){list0.add(classOrInterfaceType1);})* 
+	{return new ExtendsList(list0, firstToken.next,token);}
+ ) }
+
+ImplementsList ImplementsList() : { 
+	ClassOrInterfaceType classOrInterfaceType;
+	ArrayList<ClassOrInterfaceType> list0=new ArrayList<ClassOrInterfaceType>();
+	ClassOrInterfaceType classOrInterfaceType1;
+	ArrayList<ClassOrInterfaceType> classOrInterfaceType1List = new ArrayList<ClassOrInterfaceType>();
+	Token firstToken=token;
+} { (
+	"implements" classOrInterfaceType=ClassOrInterfaceType(){list0.add(classOrInterfaceType);} ("," classOrInterfaceType1=ClassOrInterfaceType(){list0.add(classOrInterfaceType1);})* 
+	{return new ImplementsList(list0, firstToken.next,token);}
+ ) }
+
+EnumDeclaration EnumDeclaration() : { 
+	Token t;
+	ASTStringNode identifier;
+	ImplementsList implementsList = null;
+	EnumBody enumBody;
+	Token firstToken=token;
+} { (
+	"enum" t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} [implementsList=ImplementsList()] enumBody=EnumBody() 
+	{return new EnumDeclaration(identifier, implementsList, enumBody, firstToken.next,token);}
+ ) }
+
+EnumBody EnumBody() : { 
+	EnumConstant enumConstant;
+	ArrayList<EnumConstant> list0=new ArrayList<EnumConstant>();
+	EnumConstant enumConstant1;
+	ArrayList<EnumConstant> enumConstant1List = new ArrayList<EnumConstant>();
+	EnumBodyInternal enumBodyInternal = null;
+	Token firstToken=token;
+} { (
+	"{" enumConstant=EnumConstant(){list0.add(enumConstant);} ("," enumConstant1=EnumConstant(){list0.add(enumConstant1);})* [enumBodyInternal=EnumBodyInternal()] "}" 
+	{return new EnumBody(list0, enumBodyInternal, firstToken.next,token);}
+ ) }
+
+EnumBodyInternal EnumBodyInternal() : { 
+	ClassOrInterfaceBodyDeclaration classOrInterfaceBodyDeclaration;
+	ArrayList<ClassOrInterfaceBodyDeclaration> classOrInterfaceBodyDeclarationList = new ArrayList<ClassOrInterfaceBodyDeclaration>();
+	Token firstToken=token;
+} { (
+	";" (classOrInterfaceBodyDeclaration=ClassOrInterfaceBodyDeclaration(){classOrInterfaceBodyDeclarationList.add(classOrInterfaceBodyDeclaration);})* 
+	{return new EnumBodyInternal(classOrInterfaceBodyDeclarationList, firstToken.next,token);}
+ ) }
+
+EnumConstant EnumConstant() : { 
+	Token t;
+	ASTStringNode identifier;
+	Arguments arguments = null;
+	ClassOrInterfaceBody classOrInterfaceBody = null;
+	Token firstToken=token;
+} { (
+	t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} [arguments=Arguments()] [classOrInterfaceBody=ClassOrInterfaceBody()] 
+	{return new EnumConstant(identifier, arguments, classOrInterfaceBody, firstToken.next,token);}
+ ) }
+
+TypeParameters TypeParameters() : { 
+	TypeParameter typeParameter;
+	ArrayList<TypeParameter> list0=new ArrayList<TypeParameter>();
+	TypeParameter typeParameter1;
+	ArrayList<TypeParameter> typeParameter1List = new ArrayList<TypeParameter>();
+	Token firstToken=token;
+} { (
+	"<" typeParameter=TypeParameter(){list0.add(typeParameter);} ("," typeParameter1=TypeParameter(){list0.add(typeParameter1);})* ">" 
+	{return new TypeParameters(list0, firstToken.next,token);}
+ ) }
+
+TypeParameter TypeParameter() : { 
+	Token t;
+	ASTStringNode identifier;
+	TypeBound typeBound = null;
+	Token firstToken=token;
+} { (
+	t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} [typeBound=TypeBound()] 
+	{return new TypeParameter(identifier, typeBound, firstToken.next,token);}
+ ) }
+
+TypeBound TypeBound() : { 
+	ClassOrInterfaceType classOrInterfaceType;
+	ClassOrInterfaceType classOrInterfaceType1;
+	ArrayList<ClassOrInterfaceType> classOrInterfaceType1List = new ArrayList<ClassOrInterfaceType>();
+	Token firstToken=token;
+} { (
+	"extends" classOrInterfaceType=ClassOrInterfaceType() ("&" classOrInterfaceType1=ClassOrInterfaceType(){classOrInterfaceType1List.add(classOrInterfaceType1);})* 
+	{return new TypeBound(classOrInterfaceType, classOrInterfaceType1List, firstToken.next,token);}
+ ) }
+
+ClassOrInterfaceBody ClassOrInterfaceBody() : { 
+	ClassOrInterfaceBodyDeclaration classOrInterfaceBodyDeclaration;
+	ArrayList<ClassOrInterfaceBodyDeclaration> classOrInterfaceBodyDeclarationList = new ArrayList<ClassOrInterfaceBodyDeclaration>();
+	Token firstToken=token;
+} { (
+	"{" (classOrInterfaceBodyDeclaration=ClassOrInterfaceBodyDeclaration(){classOrInterfaceBodyDeclarationList.add(classOrInterfaceBodyDeclaration);})* "}" 
+	{return new ClassOrInterfaceBody(classOrInterfaceBodyDeclarationList, firstToken.next,token);}
+ ) }
+
+ClassOrInterfaceBodyDeclaration ClassOrInterfaceBodyDeclaration() : { 
+	Initializer initializer;
+	Modifiers modifiers;
+	ClassOrInterfaceDeclaration classOrInterfaceDeclaration;
+	Modifiers modifiers1;
+	EnumDeclaration enumDeclaration;
+	Modifiers modifiers2;
+	ConstructorDeclaration constructorDeclaration;
+	Modifiers modifiers3;
+	FieldDeclaration fieldDeclaration;
+	Modifiers modifiers4;
+	MethodDeclaration methodDeclaration;
+	Token firstToken=token;
+} { (
+	LOOKAHEAD(2) initializer=Initializer() 
+	{return new ClassOrInterfaceBodyDeclaration1(initializer, firstToken.next,token);} |
+	LOOKAHEAD(Modifiers() ClassOrInterface()) modifiers=Modifiers() classOrInterfaceDeclaration=ClassOrInterfaceDeclaration() 
+	{return new ClassOrInterfaceBodyDeclaration2(modifiers, classOrInterfaceDeclaration, firstToken.next,token);} |
+	LOOKAHEAD(Modifiers() "enum") modifiers1=Modifiers() enumDeclaration=EnumDeclaration() 
+	{return new ClassOrInterfaceBodyDeclaration3(modifiers1, enumDeclaration, firstToken.next,token);} |
+	LOOKAHEAD( Modifiers() [ TypeParameters() ] <IDENTIFIER> "(") modifiers2=Modifiers() constructorDeclaration=ConstructorDeclaration() 
+	{return new ClassOrInterfaceBodyDeclaration4(modifiers2, constructorDeclaration, firstToken.next,token);} |
+	LOOKAHEAD(Modifiers() Type() <IDENTIFIER> ( "[" "]" )* ( "," | "=" | ";" ) ) modifiers3=Modifiers() fieldDeclaration=FieldDeclaration() 
+	{return new ClassOrInterfaceBodyDeclaration5(modifiers3, fieldDeclaration, firstToken.next,token);} |
+	LOOKAHEAD(2) modifiers4=Modifiers() methodDeclaration=MethodDeclaration() 
+	{return new ClassOrInterfaceBodyDeclaration6(modifiers4, methodDeclaration, firstToken.next,token);} |
+	";"  
+	{return new ClassOrInterfaceBodyDeclaration7(firstToken.next,token);}
+ ) }
+
+FieldDeclaration FieldDeclaration() : { 
+	Type type;
+	VariableDeclarator variableDeclarator;
+	VariableDeclarator variableDeclarator1;
+	ArrayList<VariableDeclarator> variableDeclarator1List = new ArrayList<VariableDeclarator>();
+	Token firstToken=token;
+} { (
+	type=Type() variableDeclarator=VariableDeclarator() ("," variableDeclarator1=VariableDeclarator(){variableDeclarator1List.add(variableDeclarator1);})* ";" 
+	{return new FieldDeclaration(type, variableDeclarator, variableDeclarator1List, firstToken.next,token);}
+ ) }
+
+VariableDeclarator VariableDeclarator() : { 
+	VariableDeclaratorId variableDeclaratorId;
+	VariableInitializer variableInitializer = null;
+	Token firstToken=token;
+} { (
+	variableDeclaratorId=VariableDeclaratorId() ["=" variableInitializer=VariableInitializer()] 
+	{return new VariableDeclarator(variableDeclaratorId, variableInitializer, firstToken.next,token);}
+ ) }
+
+VariableDeclaratorId VariableDeclaratorId() : { 
+	Token t;
+	ASTStringNode identifier;
+	ASTTextNode text389;
+	ArrayList<ASTTextNode> text389List = new ArrayList<ASTTextNode>();
+	Token firstToken=token;
+} { (
+	t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} ("[" "]" {text389=new ASTTextNode(new String[]{"[","]"},new WToken(token));}{text389List.add(text389);})* 
+	{return new VariableDeclaratorId(identifier, text389List, firstToken.next,token);}
+ ) }
+
+VariableInitializer VariableInitializer() : { 
+	ArrayInitializer arrayInitializer;
+	Expression expression;
+	Token firstToken=token;
+} { (
+	arrayInitializer=ArrayInitializer() 
+	{return new VariableInitializer1(arrayInitializer, firstToken.next,token);} |
+	expression=Expression() 
+	{return new VariableInitializer2(expression, firstToken.next,token);}
+ ) }
+
+ArrayInitializer ArrayInitializer() : { 
+	ArrayInitializerInternal arrayInitializerInternal = null;
+	ASTTextNode text390 = null;
+	Token firstToken=token;
+} { (
+	"{" [arrayInitializerInternal=ArrayInitializerInternal()] ["," {text390=new ASTTextNode(",",new WToken(token));}] "}" 
+	{return new ArrayInitializer(arrayInitializerInternal, text390, firstToken.next,token);}
+ ) }
+
+ArrayInitializerInternal ArrayInitializerInternal() : { 
+	VariableInitializer variableInitializer;
+	VariableInitializer variableInitializer1;
+	ArrayList<VariableInitializer> variableInitializer1List = new ArrayList<VariableInitializer>();
+	Token firstToken=token;
+} { (
+	variableInitializer=VariableInitializer() (LOOKAHEAD(2) "," variableInitializer1=VariableInitializer(){variableInitializer1List.add(variableInitializer1);})* 
+	{return new ArrayInitializerInternal(variableInitializer, variableInitializer1List, firstToken.next,token);}
+ ) }
+
+MethodDeclaration MethodDeclaration() : { 
+	TypeParameters typeParameters = null;
+	ResultType resultType;
+	MethodDeclarator methodDeclarator;
+	NameList nameList = null;
+	MethodDeclarationBody methodDeclarationBody;
+	Token firstToken=token;
+} { (
+	[typeParameters=TypeParameters()] resultType=ResultType() methodDeclarator=MethodDeclarator() ["throws" nameList=NameList()] methodDeclarationBody=MethodDeclarationBody() 
+	{return new MethodDeclaration(typeParameters, resultType, methodDeclarator, nameList, methodDeclarationBody, firstToken.next,token);}
+ ) }
+
+MethodDeclarationBody MethodDeclarationBody() : { 
+	Block block;
+	Token firstToken=token;
+} { (
+	block=Block() 
+	{return new MethodDeclarationBody1(block, firstToken.next,token);} |
+	";"  
+	{return new MethodDeclarationBody2(firstToken.next,token);}
+ ) }
+
+MethodDeclarator MethodDeclarator() : { 
+	Token t;
+	ASTStringNode identifier;
+	FormalParameters formalParameters;
+	ASTTextNode text392;
+	ArrayList<ASTTextNode> text392List = new ArrayList<ASTTextNode>();
+	Token firstToken=token;
+} { (
+	t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} formalParameters=FormalParameters() ("[" "]" {text392=new ASTTextNode(new String[]{"[","]"},new WToken(token));}{text392List.add(text392);})* 
+	{return new MethodDeclarator(identifier, formalParameters, text392List, firstToken.next,token);}
+ ) }
+
+FormalParameters FormalParameters() : { 
+	FormalParametersInternal formalParametersInternal = null;
+	Token firstToken=token;
+} { (
+	"(" [formalParametersInternal=FormalParametersInternal()] ")" 
+	{return new FormalParameters(formalParametersInternal, firstToken.next,token);}
+ ) }
+
+FormalParametersInternal FormalParametersInternal() : { 
+	FormalParameter formalParameter;
+	ArrayList<FormalParameter> list0=new ArrayList<FormalParameter>();
+	FormalParameter formalParameter1;
+	ArrayList<FormalParameter> formalParameter1List = new ArrayList<FormalParameter>();
+	Token firstToken=token;
+} { (
+	formalParameter=FormalParameter(){list0.add(formalParameter);} ("," formalParameter1=FormalParameter(){list0.add(formalParameter1);})* 
+	{return new FormalParametersInternal(list0, firstToken.next,token);}
+ ) }
+
+FormalParameter FormalParameter() : { 
+	ASTTextNode text393 = null;
+	Type type;
+	ASTTextNode text394 = null;
+	VariableDeclaratorId variableDeclaratorId;
+	Token firstToken=token;
+} { (
+	["final" {text393=new ASTTextNode("final",new WToken(token));}] type=Type() ["..." {text394=new ASTTextNode("...",new WToken(token));}] variableDeclaratorId=VariableDeclaratorId() 
+	{return new FormalParameter(text393, type, text394, variableDeclaratorId, firstToken.next,token);}
+ ) }
+
+ConstructorDeclaration ConstructorDeclaration() : { 
+	TypeParameters typeParameters = null;
+	Token t;
+	ASTStringNode identifier;
+	FormalParameters formalParameters;
+	NameList nameList = null;
+	ExplicitConstructorInvocation explicitConstructorInvocation = null;
+	BlockStatement blockStatement;
+	ArrayList<BlockStatement> blockStatementList = new ArrayList<BlockStatement>();
+	Token firstToken=token;
+} { (
+	[typeParameters=TypeParameters()] t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} formalParameters=FormalParameters() ["throws" nameList=NameList()] "{" [LOOKAHEAD(ExplicitConstructorInvocation()) explicitConstructorInvocation=ExplicitConstructorInvocation()] (blockStatement=BlockStatement(){blockStatementList.add(blockStatement);})* "}" 
+	{return new ConstructorDeclaration(typeParameters, identifier, formalParameters, nameList, explicitConstructorInvocation, blockStatementList, firstToken.next,token);}
+ ) }
+
+ExplicitConstructorInvocation ExplicitConstructorInvocation() : { 
+	Arguments arguments;
+	PrimaryExpression primaryExpression = null;
+	Arguments arguments1;
+	Token firstToken=token;
+} { (
+	LOOKAHEAD("this" Arguments() ";") "this" arguments=Arguments() ";" 
+	{return new ExplicitConstructorInvocation1(arguments, firstToken.next,token);} |
+	[LOOKAHEAD(2) primaryExpression=PrimaryExpression() "."] "super" arguments1=Arguments() ";" 
+	{return new ExplicitConstructorInvocation2(primaryExpression, arguments1, firstToken.next,token);}
+ ) }
+
+Initializer Initializer() : { 
+	ASTTextNode text395 = null;
+	Block block;
+	Token firstToken=token;
+} { (
+	["static" {text395=new ASTTextNode("static",new WToken(token));}] block=Block() 
+	{return new Initializer(text395, block, firstToken.next,token);}
+ ) }
+
+Type Type() : { 
+	ReferenceTypeP referenceTypeP;
+	PrimitiveType primitiveType;
+	Token firstToken=token;
+} { (
+	LOOKAHEAD(2) referenceTypeP=ReferenceTypeP() 
+	{return new Type1(referenceTypeP, firstToken.next,token);} |
+	primitiveType=PrimitiveType() 
+	{return new Type2(primitiveType, firstToken.next,token);}
+ ) }
+
+ReferenceTypeP ReferenceTypeP() : { 
+	PrimitiveType primitiveType;
+	ASTTextNode text396;
+	ArrayList<ASTTextNode> text396List = new ArrayList<ASTTextNode>();
+	ClassOrInterfaceType classOrInterfaceType;
+	ASTTextNode text397;
+	ArrayList<ASTTextNode> text397List = new ArrayList<ASTTextNode>();
+	Token firstToken=token;
+} { (
+	primitiveType=PrimitiveType() (LOOKAHEAD(2) "[" "]" {text396=new ASTTextNode(new String[]{"[","]"},new WToken(token));}{text396List.add(text396);})+ 
+	{return new ReferenceTypeP1(primitiveType, text396List, firstToken.next,token);} |
+	classOrInterfaceType=ClassOrInterfaceType() (LOOKAHEAD(2) "[" "]" {text397=new ASTTextNode(new String[]{"[","]"},new WToken(token));}{text397List.add(text397);})* 
+	{return new ReferenceTypeP2(classOrInterfaceType, text397List, firstToken.next,token);}
+ ) }
+
+ClassOrInterfaceType ClassOrInterfaceType() : { 
+	Token t;
+	ASTStringNode identifier;
+	TypeArguments typeArguments = null;
+	ClassOrInterfaceTypeIntern classOrInterfaceTypeIntern;
+	ArrayList<ClassOrInterfaceTypeIntern> classOrInterfaceTypeInternList = new ArrayList<ClassOrInterfaceTypeIntern>();
+	Token firstToken=token;
+} { (
+	t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} [LOOKAHEAD(2) typeArguments=TypeArguments()] (LOOKAHEAD(2) classOrInterfaceTypeIntern=ClassOrInterfaceTypeIntern(){classOrInterfaceTypeInternList.add(classOrInterfaceTypeIntern);})* 
+	{return new ClassOrInterfaceType(identifier, typeArguments, classOrInterfaceTypeInternList, firstToken.next,token);}
+ ) }
+
+ClassOrInterfaceTypeIntern ClassOrInterfaceTypeIntern() : { 
+	Token t;
+	ASTStringNode identifier;
+	TypeArguments typeArguments = null;
+	Token firstToken=token;
+} { (
+	"." t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} [LOOKAHEAD(2) typeArguments=TypeArguments()] 
+	{return new ClassOrInterfaceTypeIntern(identifier, typeArguments, firstToken.next,token);}
+ ) }
+
+TypeArguments TypeArguments() : { 
+	TypeArgument typeArgument;
+	TypeArgument typeArgument1;
+	ArrayList<TypeArgument> typeArgument1List = new ArrayList<TypeArgument>();
+	Token firstToken=token;
+} { (
+	"<" typeArgument=TypeArgument() ("," typeArgument1=TypeArgument(){typeArgument1List.add(typeArgument1);})* ">" 
+	{return new TypeArguments(typeArgument, typeArgument1List, firstToken.next,token);}
+ ) }
+
+TypeArgument TypeArgument() : { 
+	ReferenceTypeP referenceTypeP;
+	WildcardBounds wildcardBounds = null;
+	Token firstToken=token;
+} { (
+	referenceTypeP=ReferenceTypeP() 
+	{return new TypeArgument1(referenceTypeP, firstToken.next,token);} |
+	"?" [wildcardBounds=WildcardBounds()] 
+	{return new TypeArgument2(wildcardBounds, firstToken.next,token);}
+ ) }
+
+WildcardBounds WildcardBounds() : { 
+	ReferenceTypeP referenceTypeP;
+	ReferenceTypeP referenceTypeP1;
+	Token firstToken=token;
+} { (
+	"extends" referenceTypeP=ReferenceTypeP() 
+	{return new WildcardBounds1(referenceTypeP, firstToken.next,token);} |
+	"super" referenceTypeP1=ReferenceTypeP() 
+	{return new WildcardBounds2(referenceTypeP1, firstToken.next,token);}
+ ) }
+
+PrimitiveType PrimitiveType() : { 
+	Token firstToken=token;
+} { (
+	"boolean"  
+	{return new PrimitiveType1(firstToken.next,token);} |
+	"char"  
+	{return new PrimitiveType2(firstToken.next,token);} |
+	"byte"  
+	{return new PrimitiveType3(firstToken.next,token);} |
+	"short"  
+	{return new PrimitiveType4(firstToken.next,token);} |
+	"int"  
+	{return new PrimitiveType5(firstToken.next,token);} |
+	"long"  
+	{return new PrimitiveType6(firstToken.next,token);} |
+	"float"  
+	{return new PrimitiveType7(firstToken.next,token);} |
+	"double"  
+	{return new PrimitiveType8(firstToken.next,token);}
+ ) }
+
+ResultType ResultType() : { 
+	Type type;
+	Token firstToken=token;
+} { (
+	"void"  
+	{return new ResultType1(firstToken.next,token);} |
+	type=Type() 
+	{return new ResultType2(type, firstToken.next,token);}
+ ) }
+
+Name Name() : { 
+	Token t;
+	ASTStringNode identifier;
+	ASTStringNode identifier1;
+	ArrayList<ASTStringNode> identifier1List = new ArrayList<ASTStringNode>();
+	Token firstToken=token;
+} { (
+	t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} (LOOKAHEAD(2) "." t=<IDENTIFIER>{identifier1=new ASTStringNode(t.toString(),new WToken(t));}{identifier1List.add(identifier1);})* 
+	{return new Name(identifier, identifier1List, firstToken.next,token);}
+ ) }
+
+NameList NameList() : { 
+	Name name;
+	ArrayList<Name> list0=new ArrayList<Name>();
+	Name name1;
+	ArrayList<Name> name1List = new ArrayList<Name>();
+	Token firstToken=token;
+} { (
+	name=Name(){list0.add(name);} ("," name1=Name(){list0.add(name1);})* 
+	{return new NameList(list0, firstToken.next,token);}
+ ) }
+
+Expression Expression() : { 
+	ConditionalExpression conditionalExpression;
+	AssignExp assignExp = null;
+	Token firstToken=token;
+} { (
+	conditionalExpression=ConditionalExpression() [LOOKAHEAD(2) assignExp=AssignExp()] 
+	{return new Expression(conditionalExpression, assignExp, firstToken.next,token);}
+ ) }
+
+AssignExp AssignExp() : { 
+	AssignmentOperator assignmentOperator;
+	Expression expression;
+	Token firstToken=token;
+} { (
+	assignmentOperator=AssignmentOperator() expression=Expression() 
+	{return new AssignExp(assignmentOperator, expression, firstToken.next,token);}
+ ) }
+
+AssignmentOperator AssignmentOperator() : { 
+	Token firstToken=token;
+} { (
+	"="  
+	{return new AssignmentOperator1(firstToken.next,token);} |
+	"*="  
+	{return new AssignmentOperator2(firstToken.next,token);} |
+	"/="  
+	{return new AssignmentOperator3(firstToken.next,token);} |
+	"%="  
+	{return new AssignmentOperator4(firstToken.next,token);} |
+	"+="  
+	{return new AssignmentOperator5(firstToken.next,token);} |
+	"-="  
+	{return new AssignmentOperator6(firstToken.next,token);} |
+	"<<="  
+	{return new AssignmentOperator7(firstToken.next,token);} |
+	">>="  
+	{return new AssignmentOperator8(firstToken.next,token);} |
+	">>>="  
+	{return new AssignmentOperator9(firstToken.next,token);} |
+	"&="  
+	{return new AssignmentOperator10(firstToken.next,token);} |
+	"^="  
+	{return new AssignmentOperator11(firstToken.next,token);} |
+	"|="  
+	{return new AssignmentOperator12(firstToken.next,token);}
+ ) }
+
+ConditionalExpression ConditionalExpression() : { 
+	ASTNode conditionalExpressionFull;
+	ConditionalOrExpression conditionalOrExpression;
+	Token firstToken=token;
+} { (
+	LOOKAHEAD(ConditionalOrExpression() "?") conditionalExpressionFull=ConditionalExpressionFull() 
+	{return new ConditionalExpression1(conditionalExpressionFull, firstToken.next,token);} |
+	conditionalOrExpression=ConditionalOrExpression() 
+	{return new ConditionalExpression2(conditionalOrExpression, firstToken.next,token);}
+ ) }
+
+ConditionalExpressionFull ConditionalExpressionFull() : { 
+	ConditionalOrExpression conditionalOrExpression;
+	Expression expression;
+	Expression expression1;
+	Token firstToken=token;
+} { (
+	conditionalOrExpression=ConditionalOrExpression() "?" expression=Expression() ":" expression1=Expression() 
+	{return new ConditionalExpressionFull(conditionalOrExpression, expression, expression1, firstToken.next,token);}
+ ) }
+
+ConditionalOrExpression ConditionalOrExpression() : { 
+	ConditionalAndExpression conditionalAndExpression;
+	ConditionalAndExpression conditionalAndExpression1;
+	ArrayList<ConditionalAndExpression> conditionalAndExpression1List = new ArrayList<ConditionalAndExpression>();
+	Token firstToken=token;
+} { (
+	conditionalAndExpression=ConditionalAndExpression() ("||" conditionalAndExpression1=ConditionalAndExpression(){conditionalAndExpression1List.add(conditionalAndExpression1);})* 
+	{return new ConditionalOrExpression(conditionalAndExpression, conditionalAndExpression1List, firstToken.next,token);}
+ ) }
+
+ConditionalAndExpression ConditionalAndExpression() : { 
+	InclusiveOrExpression inclusiveOrExpression;
+	InclusiveOrExpression inclusiveOrExpression1;
+	ArrayList<InclusiveOrExpression> inclusiveOrExpression1List = new ArrayList<InclusiveOrExpression>();
+	Token firstToken=token;
+} { (
+	inclusiveOrExpression=InclusiveOrExpression() ("&&" inclusiveOrExpression1=InclusiveOrExpression(){inclusiveOrExpression1List.add(inclusiveOrExpression1);})* 
+	{return new ConditionalAndExpression(inclusiveOrExpression, inclusiveOrExpression1List, firstToken.next,token);}
+ ) }
+
+InclusiveOrExpression InclusiveOrExpression() : { 
+	ExclusiveOrExpression exclusiveOrExpression;
+	ExclusiveOrExpression exclusiveOrExpression1;
+	ArrayList<ExclusiveOrExpression> exclusiveOrExpression1List = new ArrayList<ExclusiveOrExpression>();
+	Token firstToken=token;
+} { (
+	exclusiveOrExpression=ExclusiveOrExpression() ("|" exclusiveOrExpression1=ExclusiveOrExpression(){exclusiveOrExpression1List.add(exclusiveOrExpression1);})* 
+	{return new InclusiveOrExpression(exclusiveOrExpression, exclusiveOrExpression1List, firstToken.next,token);}
+ ) }
+
+ExclusiveOrExpression ExclusiveOrExpression() : { 
+	AndExpression andExpression;
+	AndExpression andExpression1;
+	ArrayList<AndExpression> andExpression1List = new ArrayList<AndExpression>();
+	Token firstToken=token;
+} { (
+	andExpression=AndExpression() ("^" andExpression1=AndExpression(){andExpression1List.add(andExpression1);})* 
+	{return new ExclusiveOrExpression(andExpression, andExpression1List, firstToken.next,token);}
+ ) }
+
+AndExpression AndExpression() : { 
+	EqualityExpression equalityExpression;
+	EqualityExpression equalityExpression1;
+	ArrayList<EqualityExpression> equalityExpression1List = new ArrayList<EqualityExpression>();
+	Token firstToken=token;
+} { (
+	equalityExpression=EqualityExpression() ("&" equalityExpression1=EqualityExpression(){equalityExpression1List.add(equalityExpression1);})* 
+	{return new AndExpression(equalityExpression, equalityExpression1List, firstToken.next,token);}
+ ) }
+
+EqualityExpression EqualityExpression() : { 
+	InstanceOfExpression instanceOfExpression;
+	EqualityExpressionIntern equalityExpressionIntern;
+	ArrayList<EqualityExpressionIntern> equalityExpressionInternList = new ArrayList<EqualityExpressionIntern>();
+	Token firstToken=token;
+} { (
+	instanceOfExpression=InstanceOfExpression() (equalityExpressionIntern=EqualityExpressionIntern(){equalityExpressionInternList.add(equalityExpressionIntern);})* 
+	{return new EqualityExpression(instanceOfExpression, equalityExpressionInternList, firstToken.next,token);}
+ ) }
+
+EqualityExpressionIntern EqualityExpressionIntern() : { 
+	EqualityOp equalityOp;
+	InstanceOfExpression instanceOfExpression;
+	Token firstToken=token;
+} { (
+	equalityOp=EqualityOp() instanceOfExpression=InstanceOfExpression() 
+	{return new EqualityExpressionIntern(equalityOp, instanceOfExpression, firstToken.next,token);}
+ ) }
+
+EqualityOp EqualityOp() : { 
+	Token firstToken=token;
+} { (
+	"=="  
+	{return new EqualityOp1(firstToken.next,token);} |
+	"!="  
+	{return new EqualityOp2(firstToken.next,token);}
+ ) }
+
+InstanceOfExpression InstanceOfExpression() : { 
+	RelationalExpression relationalExpression;
+	Type type = null;
+	Token firstToken=token;
+} { (
+	relationalExpression=RelationalExpression() ["instanceof" type=Type()] 
+	{return new InstanceOfExpression(relationalExpression, type, firstToken.next,token);}
+ ) }
+
+RelationalExpression RelationalExpression() : { 
+	ShiftExpression shiftExpression;
+	RelationalExpressionIntern relationalExpressionIntern;
+	ArrayList<RelationalExpressionIntern> relationalExpressionInternList = new ArrayList<RelationalExpressionIntern>();
+	Token firstToken=token;
+} { (
+	shiftExpression=ShiftExpression() (relationalExpressionIntern=RelationalExpressionIntern(){relationalExpressionInternList.add(relationalExpressionIntern);})* 
+	{return new RelationalExpression(shiftExpression, relationalExpressionInternList, firstToken.next,token);}
+ ) }
+
+RelationalExpressionIntern RelationalExpressionIntern() : { 
+	RelationalOp relationalOp;
+	ShiftExpression shiftExpression;
+	Token firstToken=token;
+} { (
+	relationalOp=RelationalOp() shiftExpression=ShiftExpression() 
+	{return new RelationalExpressionIntern(relationalOp, shiftExpression, firstToken.next,token);}
+ ) }
+
+RelationalOp RelationalOp() : { 
+	Token firstToken=token;
+} { (
+	"<"  
+	{return new RelationalOp1(firstToken.next,token);} |
+	">"  
+	{return new RelationalOp2(firstToken.next,token);} |
+	"<="  
+	{return new RelationalOp3(firstToken.next,token);} |
+	">="  
+	{return new RelationalOp4(firstToken.next,token);}
+ ) }
+
+ShiftExpression ShiftExpression() : { 
+	AdditiveExpression additiveExpression;
+	ShiftExpressionRight shiftExpressionRight;
+	ArrayList<ShiftExpressionRight> shiftExpressionRightList = new ArrayList<ShiftExpressionRight>();
+	Token firstToken=token;
+} { (
+	additiveExpression=AdditiveExpression() (LOOKAHEAD(2) shiftExpressionRight=ShiftExpressionRight(){shiftExpressionRightList.add(shiftExpressionRight);})* 
+	{return new ShiftExpression(additiveExpression, shiftExpressionRightList, firstToken.next,token);}
+ ) }
+
+ShiftExpressionRight ShiftExpressionRight() : { 
+	ShiftOp shiftOp;
+	AdditiveExpression additiveExpression;
+	Token firstToken=token;
+} { (
+	shiftOp=ShiftOp() additiveExpression=AdditiveExpression() 
+	{return new ShiftExpressionRight(shiftOp, additiveExpression, firstToken.next,token);}
+ ) }
+
+ShiftOp ShiftOp() : { 
+	Token firstToken=token;
+} { (
+	"<<"  
+	{return new ShiftOp1(firstToken.next,token);} |
+	LOOKAHEAD(3) ">" ">" ">"  
+	{return new ShiftOp2(firstToken.next,token);} |
+	LOOKAHEAD(2) ">" ">"  
+	{return new ShiftOp3(firstToken.next,token);}
+ ) }
+
+AdditiveExpression AdditiveExpression() : { 
+	MultiplicativeExpression multiplicativeExpression;
+	AdditiveExpressionIntern additiveExpressionIntern;
+	ArrayList<AdditiveExpressionIntern> additiveExpressionInternList = new ArrayList<AdditiveExpressionIntern>();
+	Token firstToken=token;
+} { (
+	multiplicativeExpression=MultiplicativeExpression() (additiveExpressionIntern=AdditiveExpressionIntern(){additiveExpressionInternList.add(additiveExpressionIntern);})* 
+	{return new AdditiveExpression(multiplicativeExpression, additiveExpressionInternList, firstToken.next,token);}
+ ) }
+
+AdditiveExpressionIntern AdditiveExpressionIntern() : { 
+	AdditiveOp additiveOp;
+	MultiplicativeExpression multiplicativeExpression;
+	Token firstToken=token;
+} { (
+	additiveOp=AdditiveOp() multiplicativeExpression=MultiplicativeExpression() 
+	{return new AdditiveExpressionIntern(additiveOp, multiplicativeExpression, firstToken.next,token);}
+ ) }
+
+AdditiveOp AdditiveOp() : { 
+	Token firstToken=token;
+} { (
+	"+"  
+	{return new AdditiveOp1(firstToken.next,token);} |
+	"-"  
+	{return new AdditiveOp2(firstToken.next,token);}
+ ) }
+
+MultiplicativeExpression MultiplicativeExpression() : { 
+	UnaryExpression unaryExpression;
+	MultiplicativeExpressionIntern multiplicativeExpressionIntern;
+	ArrayList<MultiplicativeExpressionIntern> multiplicativeExpressionInternList = new ArrayList<MultiplicativeExpressionIntern>();
+	Token firstToken=token;
+} { (
+	unaryExpression=UnaryExpression() (multiplicativeExpressionIntern=MultiplicativeExpressionIntern(){multiplicativeExpressionInternList.add(multiplicativeExpressionIntern);})* 
+	{return new MultiplicativeExpression(unaryExpression, multiplicativeExpressionInternList, firstToken.next,token);}
+ ) }
+
+MultiplicativeExpressionIntern MultiplicativeExpressionIntern() : { 
+	MultiplicativeOp multiplicativeOp;
+	UnaryExpression unaryExpression;
+	Token firstToken=token;
+} { (
+	multiplicativeOp=MultiplicativeOp() unaryExpression=UnaryExpression() 
+	{return new MultiplicativeExpressionIntern(multiplicativeOp, unaryExpression, firstToken.next,token);}
+ ) }
+
+MultiplicativeOp MultiplicativeOp() : { 
+	Token firstToken=token;
+} { (
+	"*"  
+	{return new MultiplicativeOp1(firstToken.next,token);} |
+	"/"  
+	{return new MultiplicativeOp2(firstToken.next,token);} |
+	"%"  
+	{return new MultiplicativeOp3(firstToken.next,token);}
+ ) }
+
+UnaryExpression UnaryExpression() : { 
+	AdditiveOp additiveOp;
+	UnaryExpression unaryExpression;
+	PreIncrementExpression preIncrementExpression;
+	PreDecrementExpression preDecrementExpression;
+	UnaryExpressionNotPlusMinus unaryExpressionNotPlusMinus;
+	Token firstToken=token;
+} { (
+	additiveOp=AdditiveOp() unaryExpression=UnaryExpression() 
+	{return new UnaryExpression1(additiveOp, unaryExpression, firstToken.next,token);} |
+	preIncrementExpression=PreIncrementExpression() 
+	{return new UnaryExpression2(preIncrementExpression, firstToken.next,token);} |
+	preDecrementExpression=PreDecrementExpression() 
+	{return new UnaryExpression3(preDecrementExpression, firstToken.next,token);} |
+	unaryExpressionNotPlusMinus=UnaryExpressionNotPlusMinus() 
+	{return new UnaryExpression4(unaryExpressionNotPlusMinus, firstToken.next,token);}
+ ) }
+
+PreIncrementExpression PreIncrementExpression() : { 
+	PrimaryExpression primaryExpression;
+	Token firstToken=token;
+} { (
+	"++" primaryExpression=PrimaryExpression() 
+	{return new PreIncrementExpression(primaryExpression, firstToken.next,token);}
+ ) }
+
+PreDecrementExpression PreDecrementExpression() : { 
+	PrimaryExpression primaryExpression;
+	Token firstToken=token;
+} { (
+	"--" primaryExpression=PrimaryExpression() 
+	{return new PreDecrementExpression(primaryExpression, firstToken.next,token);}
+ ) }
+
+UnaryExpressionNotPlusMinus UnaryExpressionNotPlusMinus() : { 
+	UnaryOp unaryOp;
+	UnaryExpression unaryExpression;
+	CastExpression castExpression;
+	PostfixExpression postfixExpression;
+	Token firstToken=token;
+} { (
+	unaryOp=UnaryOp() unaryExpression=UnaryExpression() 
+	{return new UnaryExpressionNotPlusMinus1(unaryOp, unaryExpression, firstToken.next,token);} |
+	LOOKAHEAD(CastLookahead()) castExpression=CastExpression() 
+	{return new UnaryExpressionNotPlusMinus2(castExpression, firstToken.next,token);} |
+	postfixExpression=PostfixExpression() 
+	{return new UnaryExpressionNotPlusMinus3(postfixExpression, firstToken.next,token);}
+ ) }
+
+UnaryOp UnaryOp() : { 
+	Token firstToken=token;
+} { (
+	"~"  
+	{return new UnaryOp1(firstToken.next,token);} |
+	"!"  
+	{return new UnaryOp2(firstToken.next,token);}
+ ) }
+
+CastLookahead CastLookahead() : { 
+	PrimitiveType primitiveType;
+	Type type;
+	Type type1;
+	CastLAOp castLAOp;
+	Token firstToken=token;
+} { (
+	LOOKAHEAD(2) "(" primitiveType=PrimitiveType() 
+	{return new CastLookahead1(primitiveType, firstToken.next,token);} |
+	LOOKAHEAD("(" Type() "[") "(" type=Type() "[" "]" 
+	{return new CastLookahead2(type, firstToken.next,token);} |
+	"(" type1=Type() ")" castLAOp=CastLAOp() 
+	{return new CastLookahead3(type1, castLAOp, firstToken.next,token);}
+ ) }
+
+CastLAOp CastLAOp() : { 
+	Token t;
+	ASTStringNode identifier;
+	Literal literal;
+	Token firstToken=token;
+} { (
+	"~"  
+	{return new CastLAOp1(firstToken.next,token);} |
+	"!"  
+	{return new CastLAOp2(firstToken.next,token);} |
+	"("  
+	{return new CastLAOp3(firstToken.next,token);} |
+	"this"  
+	{return new CastLAOp4(firstToken.next,token);} |
+	"super"  
+	{return new CastLAOp5(firstToken.next,token);} |
+	"new"  
+	{return new CastLAOp6(firstToken.next,token);} |
+	t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new CastLAOp7(identifier, firstToken.next,token);} |
+	literal=Literal() 
+	{return new CastLAOp8(literal, firstToken.next,token);}
+ ) }
+
+PostfixExpression PostfixExpression() : { 
+	PrimaryExpression primaryExpression;
+	PostfixOp postfixOp = null;
+	Token firstToken=token;
+} { (
+	primaryExpression=PrimaryExpression() [postfixOp=PostfixOp()] 
+	{return new PostfixExpression(primaryExpression, postfixOp, firstToken.next,token);}
+ ) }
+
+PostfixOp PostfixOp() : { 
+	Token firstToken=token;
+} { (
+	"++"  
+	{return new PostfixOp1(firstToken.next,token);} |
+	"--"  
+	{return new PostfixOp2(firstToken.next,token);}
+ ) }
+
+CastExpression CastExpression() : { 
+	Type type;
+	UnaryExpression unaryExpression;
+	Type type1;
+	UnaryExpressionNotPlusMinus unaryExpressionNotPlusMinus;
+	Token firstToken=token;
+} { (
+	LOOKAHEAD("(" PrimitiveType()) "(" type=Type() ")" unaryExpression=UnaryExpression() 
+	{return new CastExpression1(type, unaryExpression, firstToken.next,token);} |
+	"(" type1=Type() ")" unaryExpressionNotPlusMinus=UnaryExpressionNotPlusMinus() 
+	{return new CastExpression2(type1, unaryExpressionNotPlusMinus, firstToken.next,token);}
+ ) }
+
+PrimaryExpression PrimaryExpression() : { 
+	PrimaryPrefix primaryPrefix;
+	PrimarySuffix primarySuffix;
+	ArrayList<PrimarySuffix> primarySuffixList = new ArrayList<PrimarySuffix>();
+	Token firstToken=token;
+} { (
+	primaryPrefix=PrimaryPrefix() (LOOKAHEAD(2) primarySuffix=PrimarySuffix(){primarySuffixList.add(primarySuffix);})* 
+	{return new PrimaryExpression(primaryPrefix, primarySuffixList, firstToken.next,token);}
+ ) }
+
+MemberSelector MemberSelector() : { 
+	TypeArguments typeArguments;
+	Token t;
+	ASTStringNode identifier;
+	Token firstToken=token;
+} { (
+	"." typeArguments=TypeArguments() t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new MemberSelector(typeArguments, identifier, firstToken.next,token);}
+ ) }
+
+PrimaryPrefix PrimaryPrefix() : { 
+	Literal literal;
+	Token t;
+	ASTStringNode identifier;
+	Expression expression;
+	AllocationExpression allocationExpression;
+	ResultType resultType;
+	Name name;
+	Token firstToken=token;
+} { (
+	literal=Literal() 
+	{return new PrimaryPrefix1(literal, firstToken.next,token);} |
+	"this"  
+	{return new PrimaryPrefix2(firstToken.next,token);} |
+	"super" "." t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new PrimaryPrefix3(identifier, firstToken.next,token);} |
+	"(" expression=Expression() ")" 
+	{return new PrimaryPrefix4(expression, firstToken.next,token);} |
+	allocationExpression=AllocationExpression() 
+	{return new PrimaryPrefix5(allocationExpression, firstToken.next,token);} |
+	LOOKAHEAD( ResultType() "." "class") resultType=ResultType() "." "class" 
+	{return new PrimaryPrefix6(resultType, firstToken.next,token);} |
+	name=Name() 
+	{return new PrimaryPrefix7(name, firstToken.next,token);}
+ ) }
+
+PrimarySuffix PrimarySuffix() : { 
+	AllocationExpression allocationExpression;
+	MemberSelector memberSelector;
+	Expression expression;
+	Token t;
+	ASTStringNode identifier;
+	Arguments arguments;
+	Token firstToken=token;
+} { (
+	LOOKAHEAD(2) "." "this"  
+	{return new PrimarySuffix1(firstToken.next,token);} |
+	LOOKAHEAD(2) "." allocationExpression=AllocationExpression() 
+	{return new PrimarySuffix2(allocationExpression, firstToken.next,token);} |
+	LOOKAHEAD(3) memberSelector=MemberSelector() 
+	{return new PrimarySuffix3(memberSelector, firstToken.next,token);} |
+	"[" expression=Expression() "]" 
+	{return new PrimarySuffix4(expression, firstToken.next,token);} |
+	"." t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new PrimarySuffix5(identifier, firstToken.next,token);} |
+	arguments=Arguments() 
+	{return new PrimarySuffix6(arguments, firstToken.next,token);}
+ ) }
+
+Literal Literal() : { 
+	Token t;
+	ASTStringNode integer_literal;
+	ASTStringNode floating_point_literal;
+	ASTStringNode character_literal;
+	ASTStringNode string_literal;
+	BooleanLiteral booleanLiteral;
+	NullLiteral nullLiteral;
+	Token firstToken=token;
+} { (
+	t=<INTEGER_LITERAL>{integer_literal=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new Literal1(integer_literal, firstToken.next,token);} |
+	t=<FLOATING_POINT_LITERAL>{floating_point_literal=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new Literal2(floating_point_literal, firstToken.next,token);} |
+	t=<CHARACTER_LITERAL>{character_literal=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new Literal3(character_literal, firstToken.next,token);} |
+	t=<STRING_LITERAL>{string_literal=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new Literal4(string_literal, firstToken.next,token);} |
+	booleanLiteral=BooleanLiteral() 
+	{return new Literal5(booleanLiteral, firstToken.next,token);} |
+	nullLiteral=NullLiteral() 
+	{return new Literal6(nullLiteral, firstToken.next,token);}
+ ) }
+
+BooleanLiteral BooleanLiteral() : { 
+	Token firstToken=token;
+} { (
+	"true"  
+	{return new BooleanLiteral1(firstToken.next,token);} |
+	"false"  
+	{return new BooleanLiteral2(firstToken.next,token);}
+ ) }
+
+NullLiteral NullLiteral() : { 
+	Token firstToken=token;
+} { (
+	"null"  
+	{return new NullLiteral(firstToken.next,token);}
+ ) }
+
+Arguments Arguments() : { 
+	ArgumentList argumentList = null;
+	Token firstToken=token;
+} { (
+	"(" [argumentList=ArgumentList()] ")" 
+	{return new Arguments(argumentList, firstToken.next,token);}
+ ) }
+
+ArgumentList ArgumentList() : { 
+	Expression expression;
+	Expression expression1;
+	ArrayList<Expression> expression1List = new ArrayList<Expression>();
+	Token firstToken=token;
+} { (
+	expression=Expression() ("," expression1=Expression(){expression1List.add(expression1);})* 
+	{return new ArgumentList(expression, expression1List, firstToken.next,token);}
+ ) }
+
+AllocationExpression AllocationExpression() : { 
+	PrimitiveType primitiveType;
+	ArrayDimsAndInits arrayDimsAndInits;
+	ClassOrInterfaceType classOrInterfaceType;
+	TypeArguments typeArguments = null;
+	AllocationExpressionInit allocationExpressionInit;
+	Token firstToken=token;
+} { (
+	LOOKAHEAD(2) "new" primitiveType=PrimitiveType() arrayDimsAndInits=ArrayDimsAndInits() 
+	{return new AllocationExpression1(primitiveType, arrayDimsAndInits, firstToken.next,token);} |
+	"new" classOrInterfaceType=ClassOrInterfaceType() [typeArguments=TypeArguments()] allocationExpressionInit=AllocationExpressionInit() 
+	{return new AllocationExpression2(classOrInterfaceType, typeArguments, allocationExpressionInit, firstToken.next,token);}
+ ) }
+
+AllocationExpressionInit AllocationExpressionInit() : { 
+	ArrayDimsAndInits arrayDimsAndInits;
+	Arguments arguments;
+	ClassOrInterfaceBody classOrInterfaceBody = null;
+	Token firstToken=token;
+} { (
+	arrayDimsAndInits=ArrayDimsAndInits() 
+	{return new AllocationExpressionInit1(arrayDimsAndInits, firstToken.next,token);} |
+	arguments=Arguments() [classOrInterfaceBody=ClassOrInterfaceBody()] 
+	{return new AllocationExpressionInit2(arguments, classOrInterfaceBody, firstToken.next,token);}
+ ) }
+
+ArrayDimsAndInits ArrayDimsAndInits() : { 
+	Expression expression;
+	Expression expression1;
+	ArrayList<Expression> expression1List = new ArrayList<Expression>();
+	ASTTextNode text448;
+	ArrayList<ASTTextNode> text448List = new ArrayList<ASTTextNode>();
+	ASTTextNode text449;
+	ArrayList<ASTTextNode> text449List = new ArrayList<ASTTextNode>();
+	ArrayInitializer arrayInitializer;
+	Token firstToken=token;
+} { (
+	LOOKAHEAD(2) "[" expression=Expression() "]" (LOOKAHEAD(2) "[" expression1=Expression(){expression1List.add(expression1);} "]")* (LOOKAHEAD(2) "[" "]" {text448=new ASTTextNode(new String[]{"[","]"},new WToken(token));}{text448List.add(text448);})* 
+	{return new ArrayDimsAndInits1(expression, expression1List, text448List, firstToken.next,token);} |
+	("[" "]" {text449=new ASTTextNode(new String[]{"[","]"},new WToken(token));}{text449List.add(text449);})+ arrayInitializer=ArrayInitializer() 
+	{return new ArrayDimsAndInits2(text449List, arrayInitializer, firstToken.next,token);}
+ ) }
+
+Statement Statement() : { 
+	LabeledStatement labeledStatement;
+	AssertStatement assertStatement;
+	Block block;
+	EmptyStatement emptyStatement;
+	StatementExpression statementExpression;
+	SwitchStatement switchStatement;
+	ASTNode ifStatement;
+	ASTNode whileStatement;
+	ASTNode doStatement;
+	ASTNode forStatement;
+	BreakStatement breakStatement;
+	ContinueStatement continueStatement;
+	ReturnStatement returnStatement;
+	ThrowStatement throwStatement;
+	ASTNode synchronizedStatement;
+	ASTNode tryStatement;
+	Token firstToken=token;
+} { (
+	LOOKAHEAD(2) labeledStatement=LabeledStatement() 
+	{return new Statement1(labeledStatement, firstToken.next,token);} |
+	assertStatement=AssertStatement() 
+	{return new Statement2(assertStatement, firstToken.next,token);} |
+	block=Block() 
+	{return new Statement3(block, firstToken.next,token);} |
+	emptyStatement=EmptyStatement() 
+	{return new Statement4(emptyStatement, firstToken.next,token);} |
+	statementExpression=StatementExpression() ";" 
+	{return new Statement5(statementExpression, firstToken.next,token);} |
+	switchStatement=SwitchStatement() 
+	{return new Statement6(switchStatement, firstToken.next,token);} |
+	ifStatement=IfStatement() 
+	{return new Statement7(ifStatement, firstToken.next,token);} |
+	whileStatement=WhileStatement() 
+	{return new Statement8(whileStatement, firstToken.next,token);} |
+	doStatement=DoStatement() 
+	{return new Statement9(doStatement, firstToken.next,token);} |
+	forStatement=ForStatement() 
+	{return new Statement10(forStatement, firstToken.next,token);} |
+	breakStatement=BreakStatement() 
+	{return new Statement11(breakStatement, firstToken.next,token);} |
+	continueStatement=ContinueStatement() 
+	{return new Statement12(continueStatement, firstToken.next,token);} |
+	returnStatement=ReturnStatement() 
+	{return new Statement13(returnStatement, firstToken.next,token);} |
+	throwStatement=ThrowStatement() 
+	{return new Statement14(throwStatement, firstToken.next,token);} |
+	synchronizedStatement=SynchronizedStatement() 
+	{return new Statement15(synchronizedStatement, firstToken.next,token);} |
+	tryStatement=TryStatement() 
+	{return new Statement16(tryStatement, firstToken.next,token);}
+ ) }
+
+AssertStatement AssertStatement() : { 
+	Expression expression;
+	Expression expression1 = null;
+	Token firstToken=token;
+} { (
+	"assert" expression=Expression() [":" expression1=Expression()] ";" 
+	{return new AssertStatement(expression, expression1, firstToken.next,token);}
+ ) }
+
+LabeledStatement LabeledStatement() : { 
+	Token t;
+	ASTStringNode identifier;
+	Statement statement;
+	Token firstToken=token;
+} { (
+	t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} ":" statement=Statement() 
+	{return new LabeledStatement(identifier, statement, firstToken.next,token);}
+ ) }
+
+Block Block() : { 
+	BlockStatement blockStatement;
+	ArrayList<BlockStatement> blockStatementList = new ArrayList<BlockStatement>();
+	Token firstToken=token;
+} { (
+	"{" (blockStatement=BlockStatement(){blockStatementList.add(blockStatement);})* "}" 
+	{return new Block(blockStatementList, firstToken.next,token);}
+ ) }
+
+BlockStatement BlockStatement() : { 
+	LocalVariableDeclaration localVariableDeclaration;
+	Statement statement;
+	ClassOrInterfaceDeclaration classOrInterfaceDeclaration;
+	Token firstToken=token;
+} { (
+	LOOKAHEAD([ "final" ] Type() <IDENTIFIER>) localVariableDeclaration=LocalVariableDeclaration() ";" 
+	{return new BlockStatement1(localVariableDeclaration, firstToken.next,token);} |
+	statement=Statement() 
+	{return new BlockStatement2(statement, firstToken.next,token);} |
+	classOrInterfaceDeclaration=ClassOrInterfaceDeclaration() 
+	{return new BlockStatement3(classOrInterfaceDeclaration, firstToken.next,token);}
+ ) }
+
+LocalVariableDeclaration LocalVariableDeclaration() : { 
+	ASTTextNode text450 = null;
+	Type type;
+	VariableDeclarator variableDeclarator;
+	VariableDeclarator variableDeclarator1;
+	ArrayList<VariableDeclarator> variableDeclarator1List = new ArrayList<VariableDeclarator>();
+	Token firstToken=token;
+} { (
+	["final" {text450=new ASTTextNode("final",new WToken(token));}] type=Type() variableDeclarator=VariableDeclarator() ("," variableDeclarator1=VariableDeclarator(){variableDeclarator1List.add(variableDeclarator1);})* 
+	{return new LocalVariableDeclaration(text450, type, variableDeclarator, variableDeclarator1List, firstToken.next,token);}
+ ) }
+
+EmptyStatement EmptyStatement() : { 
+	Token firstToken=token;
+} { (
+	";"  
+	{return new EmptyStatement(firstToken.next,token);}
+ ) }
+
+StatementExpression StatementExpression() : { 
+	PreIncrementExpression preIncrementExpression;
+	PreDecrementExpression preDecrementExpression;
+	PrimaryExpression primaryExpression;
+	StatementExpressionAssignment statementExpressionAssignment = null;
+	Token firstToken=token;
+} { (
+	preIncrementExpression=PreIncrementExpression() 
+	{return new StatementExpression1(preIncrementExpression, firstToken.next,token);} |
+	preDecrementExpression=PreDecrementExpression() 
+	{return new StatementExpression2(preDecrementExpression, firstToken.next,token);} |
+	primaryExpression=PrimaryExpression() [statementExpressionAssignment=StatementExpressionAssignment()] 
+	{return new StatementExpression3(primaryExpression, statementExpressionAssignment, firstToken.next,token);}
+ ) }
+
+StatementExpressionAssignment StatementExpressionAssignment() : { 
+	AssignmentOperator assignmentOperator;
+	Expression expression;
+	Token firstToken=token;
+} { (
+	"++"  
+	{return new StatementExpressionAssignment1(firstToken.next,token);} |
+	"--"  
+	{return new StatementExpressionAssignment2(firstToken.next,token);} |
+	assignmentOperator=AssignmentOperator() expression=Expression() 
+	{return new StatementExpressionAssignment3(assignmentOperator, expression, firstToken.next,token);}
+ ) }
+
+SwitchStatement SwitchStatement() : { 
+	Expression expression;
+	SwitchStatementLabel switchStatementLabel;
+	ArrayList<SwitchStatementLabel> switchStatementLabelList = new ArrayList<SwitchStatementLabel>();
+	Token firstToken=token;
+} { (
+	"switch" "(" expression=Expression() ")" "{" (switchStatementLabel=SwitchStatementLabel(){switchStatementLabelList.add(switchStatementLabel);})* "}" 
+	{return new SwitchStatement(expression, switchStatementLabelList, firstToken.next,token);}
+ ) }
+
+SwitchStatementLabel SwitchStatementLabel() : { 
+	SwitchLabel switchLabel;
+	BlockStatement blockStatement;
+	ArrayList<BlockStatement> blockStatementList = new ArrayList<BlockStatement>();
+	Token firstToken=token;
+} { (
+	switchLabel=SwitchLabel() (blockStatement=BlockStatement(){blockStatementList.add(blockStatement);})* 
+	{return new SwitchStatementLabel(switchLabel, blockStatementList, firstToken.next,token);}
+ ) }
+
+SwitchLabel SwitchLabel() : { 
+	Expression expression;
+	Token firstToken=token;
+} { (
+	"case" expression=Expression() ":" 
+	{return new SwitchLabel1(expression, firstToken.next,token);} |
+	"default" ":"  
+	{return new SwitchLabel2(firstToken.next,token);}
+ ) }
+
+IfStatement IfStatement() : { 
+	Expression expression;
+	Statement statement;
+	Statement statement1 = null;
+	Token firstToken=token;
+} { (
+	"if" "(" expression=Expression() ")" statement=Statement() [LOOKAHEAD(1) "else" statement1=Statement()] 
+	{return new IfStatement(expression, statement, statement1, firstToken.next,token);}
+ ) }
+
+WhileStatement WhileStatement() : { 
+	Expression expression;
+	Statement statement;
+	Token firstToken=token;
+} { (
+	"while" "(" expression=Expression() ")" statement=Statement() 
+	{return new WhileStatement(expression, statement, firstToken.next,token);}
+ ) }
+
+DoStatement DoStatement() : { 
+	Statement statement;
+	Expression expression;
+	Token firstToken=token;
+} { (
+	"do" statement=Statement() "while" "(" expression=Expression() ")" ";" 
+	{return new DoStatement(statement, expression, firstToken.next,token);}
+ ) }
+
+ForStatement ForStatement() : { 
+	ForStatementInternal forStatementInternal;
+	Statement statement;
+	Token firstToken=token;
+} { (
+	"for" "(" forStatementInternal=ForStatementInternal() ")" statement=Statement() 
+	{return new ForStatement(forStatementInternal, statement, firstToken.next,token);}
+ ) }
+
+ForStatementInternal ForStatementInternal() : { 
+	Type type;
+	Token t;
+	ASTStringNode identifier;
+	Expression expression;
+	ForInit forInit = null;
+	Expression expression1 = null;
+	ForUpdate forUpdate = null;
+	Token firstToken=token;
+} { (
+	LOOKAHEAD(Type() <IDENTIFIER> ":") type=Type() t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} ":" expression=Expression() 
+	{return new ForStatementInternal1(type, identifier, expression, firstToken.next,token);} |
+	[forInit=ForInit()] ";" [expression1=Expression()] ";" [forUpdate=ForUpdate()] 
+	{return new ForStatementInternal2(forInit, expression1, forUpdate, firstToken.next,token);}
+ ) }
+
+ForInit ForInit() : { 
+	LocalVariableDeclaration localVariableDeclaration;
+	StatementExpressionList statementExpressionList;
+	Token firstToken=token;
+} { (
+	LOOKAHEAD([ "final" ] Type() <IDENTIFIER>) localVariableDeclaration=LocalVariableDeclaration() 
+	{return new ForInit1(localVariableDeclaration, firstToken.next,token);} |
+	statementExpressionList=StatementExpressionList() 
+	{return new ForInit2(statementExpressionList, firstToken.next,token);}
+ ) }
+
+StatementExpressionList StatementExpressionList() : { 
+	StatementExpression statementExpression;
+	StatementExpression statementExpression1;
+	ArrayList<StatementExpression> statementExpression1List = new ArrayList<StatementExpression>();
+	Token firstToken=token;
+} { (
+	statementExpression=StatementExpression() ("," statementExpression1=StatementExpression(){statementExpression1List.add(statementExpression1);})* 
+	{return new StatementExpressionList(statementExpression, statementExpression1List, firstToken.next,token);}
+ ) }
+
+ForUpdate ForUpdate() : { 
+	StatementExpressionList statementExpressionList;
+	Token firstToken=token;
+} { (
+	statementExpressionList=StatementExpressionList() 
+	{return new ForUpdate(statementExpressionList, firstToken.next,token);}
+ ) }
+
+BreakStatement BreakStatement() : { 
+	Token t;
+	ASTStringNode identifier = null;
+	Token firstToken=token;
+} { (
+	"break" [t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));}] ";" 
+	{return new BreakStatement(identifier, firstToken.next,token);}
+ ) }
+
+ContinueStatement ContinueStatement() : { 
+	Token t;
+	ASTStringNode identifier = null;
+	Token firstToken=token;
+} { (
+	"continue" [t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));}] ";" 
+	{return new ContinueStatement(identifier, firstToken.next,token);}
+ ) }
+
+ReturnStatement ReturnStatement() : { 
+	Expression expression = null;
+	Token firstToken=token;
+} { (
+	"return" [expression=Expression()] ";" 
+	{return new ReturnStatement(expression, firstToken.next,token);}
+ ) }
+
+ThrowStatement ThrowStatement() : { 
+	Expression expression;
+	Token firstToken=token;
+} { (
+	"throw" expression=Expression() ";" 
+	{return new ThrowStatement(expression, firstToken.next,token);}
+ ) }
+
+SynchronizedStatement SynchronizedStatement() : { 
+	Expression expression;
+	Block block;
+	Token firstToken=token;
+} { (
+	"synchronized" "(" expression=Expression() ")" block=Block() 
+	{return new SynchronizedStatement(expression, block, firstToken.next,token);}
+ ) }
+
+TryStatement TryStatement() : { 
+	Block block;
+	TryStatementEnd tryStatementEnd;
+	Token firstToken=token;
+} { (
+	"try" block=Block() tryStatementEnd=TryStatementEnd() 
+	{return new TryStatement(block, tryStatementEnd, firstToken.next,token);}
+ ) }
+
+TryStatementEnd TryStatementEnd() : { 
+	CatchBlock catchBlock;
+	ArrayList<CatchBlock> catchBlockList = new ArrayList<CatchBlock>();
+	Block block;
+	Token firstToken=token;
+} { (
+	(catchBlock=CatchBlock(){catchBlockList.add(catchBlock);})+ 
+	{return new TryStatementEnd1(catchBlockList, firstToken.next,token);} |
+	"finally" block=Block() 
+	{return new FinallyBlock(block, firstToken.next,token);}
+ ) }
+
+CatchBlock CatchBlock() : { 
+	FormalParameter formalParameter;
+	Block block;
+	Token firstToken=token;
+} { (
+	"catch" "(" formalParameter=FormalParameter() ")" block=Block() 
+	{return new CatchBlock(formalParameter, block, firstToken.next,token);}
+ ) }
+
+Annotation Annotation() : { 
+	NormalAnnotation normalAnnotation;
+	SingleMemberAnnotation singleMemberAnnotation;
+	MarkerAnnotation markerAnnotation;
+	Token firstToken=token;
+} { (
+	LOOKAHEAD("@" Name() "(" ( <IDENTIFIER> "=" | ")" )) normalAnnotation=NormalAnnotation() 
+	{return new Annotation1(normalAnnotation, firstToken.next,token);} |
+	LOOKAHEAD("@" Name() "(") singleMemberAnnotation=SingleMemberAnnotation() 
+	{return new Annotation2(singleMemberAnnotation, firstToken.next,token);} |
+	markerAnnotation=MarkerAnnotation() 
+	{return new Annotation3(markerAnnotation, firstToken.next,token);}
+ ) }
+
+NormalAnnotation NormalAnnotation() : { 
+	Name name;
+	MemberValuePairs memberValuePairs = null;
+	Token firstToken=token;
+} { (
+	"@" name=Name() "(" [memberValuePairs=MemberValuePairs()] ")" 
+	{return new NormalAnnotation(name, memberValuePairs, firstToken.next,token);}
+ ) }
+
+MarkerAnnotation MarkerAnnotation() : { 
+	Name name;
+	Token firstToken=token;
+} { (
+	"@" name=Name() 
+	{return new MarkerAnnotation(name, firstToken.next,token);}
+ ) }
+
+SingleMemberAnnotation SingleMemberAnnotation() : { 
+	Name name;
+	MemberValue memberValue;
+	Token firstToken=token;
+} { (
+	"@" name=Name() "(" memberValue=MemberValue() ")" 
+	{return new SingleMemberAnnotation(name, memberValue, firstToken.next,token);}
+ ) }
+
+MemberValuePairs MemberValuePairs() : { 
+	MemberValuePair memberValuePair;
+	MemberValuePair memberValuePair1;
+	ArrayList<MemberValuePair> memberValuePair1List = new ArrayList<MemberValuePair>();
+	Token firstToken=token;
+} { (
+	memberValuePair=MemberValuePair() ("," memberValuePair1=MemberValuePair(){memberValuePair1List.add(memberValuePair1);})* 
+	{return new MemberValuePairs(memberValuePair, memberValuePair1List, firstToken.next,token);}
+ ) }
+
+MemberValuePair MemberValuePair() : { 
+	Token t;
+	ASTStringNode identifier;
+	MemberValue memberValue;
+	Token firstToken=token;
+} { (
+	t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} "=" memberValue=MemberValue() 
+	{return new MemberValuePair(identifier, memberValue, firstToken.next,token);}
+ ) }
+
+MemberValue MemberValue() : { 
+	Annotation annotation;
+	MemberValueArrayInitializer memberValueArrayInitializer;
+	ConditionalExpression conditionalExpression;
+	Token firstToken=token;
+} { (
+	annotation=Annotation() 
+	{return new MemberValue1(annotation, firstToken.next,token);} |
+	memberValueArrayInitializer=MemberValueArrayInitializer() 
+	{return new MemberValue2(memberValueArrayInitializer, firstToken.next,token);} |
+	conditionalExpression=ConditionalExpression() 
+	{return new MemberValue3(conditionalExpression, firstToken.next,token);}
+ ) }
+
+MemberValueArrayInitializer MemberValueArrayInitializer() : { 
+	MemberValue memberValue;
+	MemberValue memberValue1;
+	ArrayList<MemberValue> memberValue1List = new ArrayList<MemberValue>();
+	ASTTextNode text455 = null;
+	Token firstToken=token;
+} { (
+	"{" memberValue=MemberValue() (LOOKAHEAD(2) "," memberValue1=MemberValue(){memberValue1List.add(memberValue1);})* ["," {text455=new ASTTextNode(",",new WToken(token));}] "}" 
+	{return new MemberValueArrayInitializer(memberValue, memberValue1List, text455, firstToken.next,token);}
+ ) }
+
+AnnotationTypeDeclaration AnnotationTypeDeclaration() : { 
+	Token t;
+	ASTStringNode identifier;
+	AnnotationTypeBody annotationTypeBody;
+	Token firstToken=token;
+} { (
+	"@" "interface" t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} annotationTypeBody=AnnotationTypeBody() 
+	{return new AnnotationTypeDeclaration(identifier, annotationTypeBody, firstToken.next,token);}
+ ) }
+
+AnnotationTypeBody AnnotationTypeBody() : { 
+	AnnotationTypeMemberDeclaration annotationTypeMemberDeclaration;
+	ArrayList<AnnotationTypeMemberDeclaration> annotationTypeMemberDeclarationList = new ArrayList<AnnotationTypeMemberDeclaration>();
+	Token firstToken=token;
+} { (
+	"{" (annotationTypeMemberDeclaration=AnnotationTypeMemberDeclaration(){annotationTypeMemberDeclarationList.add(annotationTypeMemberDeclaration);})* "}" 
+	{return new AnnotationTypeBody(annotationTypeMemberDeclarationList, firstToken.next,token);}
+ ) }
+
+AnnotationTypeMemberDeclaration AnnotationTypeMemberDeclaration() : { 
+	Modifiers modifiers;
+	Type type;
+	Token t;
+	ASTStringNode identifier;
+	DefaultValue defaultValue = null;
+	Modifiers modifiers1;
+	ClassOrInterfaceDeclaration classOrInterfaceDeclaration;
+	Modifiers modifiers2;
+	EnumDeclaration enumDeclaration;
+	Modifiers modifiers3;
+	AnnotationTypeDeclaration annotationTypeDeclaration;
+	Modifiers modifiers4;
+	FieldDeclaration fieldDeclaration;
+	Token firstToken=token;
+} { (
+	LOOKAHEAD(Modifiers() Type() <IDENTIFIER> "(") modifiers=Modifiers() type=Type() t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} "(" ")" [defaultValue=DefaultValue()] ";" 
+	{return new AnnotationTypeMemberDeclaration1(modifiers, type, identifier, defaultValue, firstToken.next,token);} |
+	LOOKAHEAD(1) modifiers1=Modifiers() classOrInterfaceDeclaration=ClassOrInterfaceDeclaration() 
+	{return new AnnotationTypeMemberDeclaration2(modifiers1, classOrInterfaceDeclaration, firstToken.next,token);} |
+	LOOKAHEAD(2) modifiers2=Modifiers() enumDeclaration=EnumDeclaration() 
+	{return new AnnotationTypeMemberDeclaration3(modifiers2, enumDeclaration, firstToken.next,token);} |
+	LOOKAHEAD(2) modifiers3=Modifiers() annotationTypeDeclaration=AnnotationTypeDeclaration() 
+	{return new AnnotationTypeMemberDeclaration4(modifiers3, annotationTypeDeclaration, firstToken.next,token);} |
+	LOOKAHEAD(1) modifiers4=Modifiers() fieldDeclaration=FieldDeclaration() 
+	{return new AnnotationTypeMemberDeclaration5(modifiers4, fieldDeclaration, firstToken.next,token);} |
+	";"  
+	{return new AnnotationTypeMemberDeclaration6(firstToken.next,token);}
+ ) }
+
+DefaultValue DefaultValue() : { 
+	MemberValue memberValue;
+	Token firstToken=token;
+} { (
+	"default" memberValue=MemberValue() 
+	{return new DefaultValue(memberValue, firstToken.next,token);}
+ ) }
+

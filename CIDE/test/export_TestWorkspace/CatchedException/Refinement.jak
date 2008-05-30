@@ -1,0 +1,11 @@
+refines class Main {
+
+	void b() throws CloneNotSupportedException {
+	}
+	
+	protected void hook()throws ClassNotFoundException, CloneNotSupportedException {
+		a();
+		b();
+		Super.hook();
+	}
+}

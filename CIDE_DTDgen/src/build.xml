@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+
+<project default="main" basedir=".">
+	<property name="language" value="people"/>
+	
+	<taskdef name="astgen" classname="cide.astgen.ant.AstgenTask" />
+	<taskdef name="jcc" classname="cide.astgen.ant.JavaCCTask" />
+
+	<target name="clean">
+		<delete failonerror="false">
+			<fileset dir="tmp/generated_${language}">
+				<include name="*.java" />
+				<include name="*.class" />
+			</fileset>
+		</delete>
+	</target>
+
+	<target name="main">
+		<echo>Generating Language Extension for ${language}...</echo>
+		<antcall target="clean" />
+		<mkdir dir="tmp/generated_${language}" />
+		<astgen grammarFileName="${language}.gcide" targetDirectory="tmp/generated_${language}" targetPackage="tmp.generated_${language}" />
+		<jcc grammarFileName="tmp/generated_${language}/${language}.jj" targetDirectory="tmp/generated_${language}" />
+	</target>
+
+</project>

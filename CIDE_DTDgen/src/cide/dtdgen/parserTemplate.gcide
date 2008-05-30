@@ -1,0 +1,126 @@
+options{
+  STATIC = false;
+}
+PARSER_BEGIN(${Name}Parser)
+package tmp.generated_${name};
+
+import java.io.*;
+import java.util.*;
+import cide.gast.*;
+import cide.gparser.*;
+
+public class ${Name}Parser{
+}
+PARSER_END(${Name}Parser)
+
+
+
+
+<*> TOKEN :
+{
+  <#ALPHA_CHAR: ["a"-"z", "A"-"Z"] >
+| <#NUM_CHAR:   ["0"-"9"] >
+| <#ALPHANUM_CHAR: [ "a"-"z", "A"-"Z", "0"-"9" ] >
+| <#IDENTIFIER_CHAR: [ "a"-"z", "A"-"Z", "0"-"9", "_", "-", "." ] >
+| <#IDENTIFIER: <ALPHA_CHAR> (<IDENTIFIER_CHAR>)* >
+| <#QUOTED_STRING_NB: ( "'" ( ~["'", "\r", "\n"] )* "'" ) 
+                    | ( "\"" ( ~["\"", "\r", "\n"] )* "\"" ) >
+| <#QUOTED_STRING: ( "'" ( ~["'"] )* "'" ) | ( "\"" ( ~["\""] )* "\"" ) >
+| <#WHITESPACE: ( " " | "\t" | "\n" | "\r" ) >
+| <#NEWLINE:    ( "\r\n" | "\r" | "\n" ) >
+| <#QUOTE:      ( "'" | "\"" )>
+}
+
+<DEFAULT> TOKEN : 
+{
+  <XMLOPEN:"<?xml">				: LexElement_Inside
+| <SELEMENT_START:      "<"       > : LexElement_Start
+| <EELEMENT_START:      "</"       > : LexElement_Start
+| <PI_START:      "<?"       > : LexPI
+| <COMMENT_START:  "<!--"    > : LexComment
+| <CDSTART: 		"<![CDATA["> : LexCDATA
+//| <DECL_START:     "<!"      > : LexDecl
+| <PCDATA:         ( ~["<"] )+ >
+}
+
+<LexElement_Start> TOKEN :
+{
+ ${LexDefs}
+}
+
+<LexElement_Inside> SPECIAL_TOKEN :
+{
+  < (<WHITESPACE>)+ >
+}
+
+<LexElement_Inside> TOKEN :
+{
+  <ATTR_NAME: <IDENTIFIER> >		
+| <ELEMENT_END: ">" >                       : DEFAULT
+| <QEND: "?>" >                     		: DEFAULT
+| <SLASHEND: "/>" >                         : DEFAULT
+| <ATTR_EQ: "=" >                       
+| <ATTR_VAL: <QUOTED_STRING>>			
+}
+
+
+<LexComment> MORE : { <~[] > } 
+<LexComment> TOKEN : 
+{
+  < COMMENT_END:  "-->" > : DEFAULT 
+}
+
+<LexPI> MORE : { <~[] > } 
+<LexPI> TOKEN : 
+{
+  < PI_END:  "?>" > : DEFAULT 
+}
+
+<LexCDATA> MORE : { <~[] > } 
+<LexCDATA> TOKEN : 
+{
+  < CDEND:  "]]>" > : DEFAULT 
+}
+
+//<LexDecl> MORE : { <~[] > } 
+//<LexDecl> TOKEN : 
+//{
+//  < DECLEND:  ">" > : DEFAULT 
+//}
+
+GRAMMARSTART
+
+//fixed
+Document: Prolog RootElement (Misc)*;
+Misc: Comment | Whitespace | PI;
+PI: "<?" <PI_END>;
+Prolog: XMLDecl (Misc)*;
+XMLDecl	   : "<?xml" (Attribute)+ "!<QEND>?>";
+CDSect	   :  	"<![CDATA[" <CDEND>;
+Comment: "<!--"  <COMMENT_END>;
+//Reference	   :   	EntityRef | <CHARREF>;
+//EntityRef	   :  	"&" Name ";";
+Attribute :	@~ <ATTR_NAME> "!<ATTR_EQ>=" <ATTR_VAL>;
+Whitespace: LOOK_AHEAD("{getToken(1).image.trim().equals(\"\")}") <PCDATA>;
+CMisc: PI | Comment | Whitespace;
+
+${ProductionDef}
+
+
+//Element	   :  	LOOK_AHEAD("EmptyElemTag()") EmptyElemTag 
+//			| STag (Content)* ETag;
+//			
+//EmptyElemTag	   :   	"<" <ELEMENT_ID> (Attribute)* "!<SLASHEND>/>";
+//STag : "<" <ELEMENT_ID> (Attribute)* "!<ELEMENT_END>>";
+//Attribute :	@~ <ATTR_NAME> "!<ATTR_EQ>=" <ATTR_VAL>;
+//ETag: "</" <ELEMENT_ID> "!<ELEMENT_END>>";
+//
+//Content:   
+//	  Element 
+////	| Reference 
+//	| Comment 
+//	| CDSect
+//	| <PCDATA> 
+//;
+
+  

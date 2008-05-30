@@ -1,0 +1,13 @@
+refines class Main {
+	
+	protected void hook(int i) {}
+	
+	void foo() {
+		int i=a();
+		{hook(i);}
+		b(1);
+		Super.foo();
+	}
+	
+
+}

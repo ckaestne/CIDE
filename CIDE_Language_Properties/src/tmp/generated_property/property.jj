@@ -1,0 +1,34 @@
+options{
+  STATIC = false;
+}
+PARSER_BEGIN(PropertyParser)
+package tmp.generated_property;
+
+import java.io.*;
+import java.util.*;
+import cide.gast.*;
+import cide.gparser.*;
+
+public class PropertyParser{
+}
+PARSER_END(PropertyParser)
+
+
+
+
+<*> TOKEN :
+{
+  <LINE: (~[ "\r", "\n" ])* <NEWLINE>>
+| <#NEWLINE:    ( "\r\n" | "\r" | "\n" ) >
+}
+Document Document() : { 
+	Token t;
+	ASTStringNode line;
+	ArrayList<ASTStringNode> lineList = new ArrayList<ASTStringNode>();
+	ASTStringNode eof;
+	Token firstToken=token;
+} { (
+	(t=<LINE>{line=new ASTStringNode(t.toString(),new WToken(t));}{lineList.add(line);})* t=<EOF>{eof=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new Document(lineList, eof, firstToken.next,token);}
+ ) }
+

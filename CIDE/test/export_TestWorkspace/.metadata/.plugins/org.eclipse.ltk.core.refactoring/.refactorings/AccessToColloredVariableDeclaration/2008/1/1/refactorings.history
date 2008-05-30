@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Copy 1 elements(s) to &apos;Refinement.jak&apos;&#x0D;&#x0A;- Original project: &apos;AccessToColloredVariableDeclaration&apos;&#x0D;&#x0A;- Destination element: &apos;Refinement.jak&apos;&#x0D;&#x0A;- Original element: &apos;Refinement.jak&apos;" description="Copy file" element1="Refinement.jak" files="1" flags="589830" folders="0" id="org.eclipse.jdt.ui.copy" log="Refinement.jak&#x09;true&#x09;true&#x09;Derivative.jak" policy="org.eclipse.jdt.ui.copyResources" stamp="1199457443390" target="/AccessToColloredVariableDeclaration/Refinement.jak" units="0" version="1.0"/>
+</session>

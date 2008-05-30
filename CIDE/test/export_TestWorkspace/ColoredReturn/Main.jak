@@ -1,0 +1,46 @@
+import java.util.ArrayList;
+
+class Main {
+	boolean foo() {
+		try {
+			int i = a();
+			hook(i);
+			i++;
+			return false;
+		} catch (ReturnBoolean r) {
+			return r.value;
+		}
+	}
+	
+	ArrayList bar() {
+		try {
+			int i = a();
+			hook(i);
+			i++;
+			return new ArrayList();
+		} catch (ReturnObject r) {
+			return (ArrayList)r.value;
+		}
+	}
+	
+	void foobar() {
+		try {
+			int i = a();
+			hook(i);
+			i++;
+		} catch (ReturnVoid r) {
+			return;
+		}
+	}
+
+	int a() {
+		return 1;
+	}
+	
+	protected void hook(int i){
+	}
+	protected void hook(int i){
+	}
+	protected void hook(int i){
+	}
+}

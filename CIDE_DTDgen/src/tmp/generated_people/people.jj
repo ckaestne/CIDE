@@ -1,0 +1,544 @@
+options{
+  STATIC = false;
+}
+PARSER_BEGIN(PeopleParser)
+package tmp.generated_people;
+
+import java.io.*;
+import java.util.*;
+import cide.gast.*;
+import cide.gparser.*;
+
+public class PeopleParser{
+}
+PARSER_END(PeopleParser)
+
+
+
+
+<*> TOKEN :
+{
+  <#ALPHA_CHAR: ["a"-"z", "A"-"Z"] >
+| <#NUM_CHAR:   ["0"-"9"] >
+| <#ALPHANUM_CHAR: [ "a"-"z", "A"-"Z", "0"-"9" ] >
+| <#IDENTIFIER_CHAR: [ "a"-"z", "A"-"Z", "0"-"9", "_", "-", "." ] >
+| <#IDENTIFIER: <ALPHA_CHAR> (<IDENTIFIER_CHAR>)* >
+| <#QUOTED_STRING_NB: ( "'" ( ~["'", "\r", "\n"] )* "'" ) 
+                    | ( "\"" ( ~["\"", "\r", "\n"] )* "\"" ) >
+| <#QUOTED_STRING: ( "'" ( ~["'"] )* "'" ) | ( "\"" ( ~["\""] )* "\"" ) >
+| <#WHITESPACE: ( " " | "\t" | "\n" | "\r" ) >
+| <#NEWLINE:    ( "\r\n" | "\r" | "\n" ) >
+| <#QUOTE:      ( "'" | "\"" )>
+}
+
+<DEFAULT> TOKEN : 
+{
+  <XMLOPEN:"<?xml">				: LexElement_Inside
+| <SELEMENT_START:      "<"       > : LexElement_Start
+| <EELEMENT_START:      "</"       > : LexElement_Start
+| <PI_START:      "<?"       > : LexPI
+| <COMMENT_START:  "<!--"    > : LexComment
+| <CDSTART: 		"<![CDATA["> : LexCDATA
+//| <DECL_START:     "<!"      > : LexDecl
+| <PCDATA:         ( ~["<"] )+ >
+}
+
+<LexElement_Start> TOKEN :
+{
+  <E_people_list: "people_list" > : LexElement_Inside
+| <E_person: "person" > : LexElement_Inside
+| <E_name: "name" > : LexElement_Inside
+| <E_birthdate: "birthdate" > : LexElement_Inside
+| <E_gender: "gender" > : LexElement_Inside
+| <E_socialsecuritynumber: "socialsecuritynumber" > : LexElement_Inside
+
+}
+
+<LexElement_Inside> SPECIAL_TOKEN :
+{
+  < (<WHITESPACE>)+ >
+}
+
+<LexElement_Inside> TOKEN :
+{
+  <ATTR_NAME: <IDENTIFIER> >		
+| <ELEMENT_END: ">" >                       : DEFAULT
+| <QEND: "?>" >                     		: DEFAULT
+| <SLASHEND: "/>" >                       
+| <ATTR_EQ: "=" >                       
+| <ATTR_VAL: <QUOTED_STRING>>			
+}
+
+
+<LexComment> MORE : { <~[] > } 
+<LexComment> TOKEN : 
+{
+  < COMMENT_END:  "-->" > : DEFAULT 
+}
+
+<LexPI> MORE : { <~[] > } 
+<LexPI> TOKEN : 
+{
+  < PI_END:  "?>" > : DEFAULT 
+}
+
+<LexCDATA> MORE : { <~[] > } 
+<LexCDATA> TOKEN : 
+{
+  < CDEND:  "]]>" > : DEFAULT 
+}
+Document Document() : { 
+	Prolog prolog;
+	RootElement rootElement;
+	Misc misc;
+	ArrayList<Misc> miscList = new ArrayList<Misc>();
+	Token firstToken=token;
+} { (
+	prolog=Prolog() rootElement=RootElement() (misc=Misc(){miscList.add(misc);})* 
+	{return new Document(prolog, rootElement, miscList, firstToken.next,token);}
+ ) }
+
+Misc Misc() : { 
+	Comment comment;
+	Whitespace whitespace;
+	PI pI;
+	Token firstToken=token;
+} { (
+	comment=Comment() 
+	{return new Misc1(comment, firstToken.next,token);} |
+	whitespace=Whitespace() 
+	{return new Misc2(whitespace, firstToken.next,token);} |
+	pI=PI() 
+	{return new Misc3(pI, firstToken.next,token);}
+ ) }
+
+PI PI() : { 
+	Token t;
+	ASTStringNode pi_end;
+	Token firstToken=token;
+} { (
+	"<?" t=<PI_END>{pi_end=new ASTStringNode(t.toString(),new WToken(token));} 
+	{return new PI(pi_end, firstToken.next,token);}
+ ) }
+
+Prolog Prolog() : { 
+	XMLDecl xMLDecl;
+	Misc misc;
+	ArrayList<Misc> miscList = new ArrayList<Misc>();
+	Token firstToken=token;
+} { (
+	xMLDecl=XMLDecl() (misc=Misc(){miscList.add(misc);})* 
+	{return new Prolog(xMLDecl, miscList, firstToken.next,token);}
+ ) }
+
+XMLDecl XMLDecl() : { 
+	Attribute attribute;
+	ArrayList<Attribute> attributeList = new ArrayList<Attribute>();
+	Token firstToken=token;
+} { (
+	"<?xml" (attribute=Attribute(){attributeList.add(attribute);})+ <QEND> 
+	{return new XMLDecl(attributeList, firstToken.next,token);}
+ ) }
+
+CDSect CDSect() : { 
+	Token t;
+	ASTStringNode cdend;
+	Token firstToken=token;
+} { (
+	"<![CDATA[" t=<CDEND>{cdend=new ASTStringNode(t.toString(),new WToken(token));} 
+	{return new CDSect(cdend, firstToken.next,token);}
+ ) }
+
+Comment Comment() : { 
+	Token t;
+	ASTStringNode comment_end;
+	Token firstToken=token;
+} { (
+	"<!--" t=<COMMENT_END>{comment_end=new ASTStringNode(t.toString(),new WToken(token));} 
+	{return new Comment(comment_end, firstToken.next,token);}
+ ) }
+
+Attribute Attribute() : { 
+	Token t;
+	ASTStringNode attr_name;
+	ASTStringNode attr_val;
+	Token firstToken=token;
+} { (
+	t=<ATTR_NAME>{attr_name=new ASTStringNode(t.toString(),new WToken(token));} <ATTR_EQ> t=<ATTR_VAL>{attr_val=new ASTStringNode(t.toString(),new WToken(token));} 
+	{return new Attribute(attr_name, attr_val, firstToken.next,token);}
+ ) }
+
+Whitespace Whitespace() : { 
+	Token t;
+	ASTStringNode pcdata;
+	Token firstToken=token;
+} { (
+	LOOKAHEAD({getToken(1).image.trim().equals("")}) t=<PCDATA>{pcdata=new ASTStringNode(t.toString(),new WToken(token));} 
+	{return new Whitespace(pcdata, firstToken.next,token);}
+ ) }
+
+CMisc CMisc() : { 
+	PI pI;
+	Comment comment;
+	Whitespace whitespace;
+	Token firstToken=token;
+} { (
+	pI=PI() 
+	{return new CMisc1(pI, firstToken.next,token);} |
+	comment=Comment() 
+	{return new CMisc2(comment, firstToken.next,token);} |
+	whitespace=Whitespace() 
+	{return new CMisc3(whitespace, firstToken.next,token);}
+ ) }
+
+RootElement RootElement() : { 
+	Element_people_list element_people_list;
+	Token firstToken=token;
+} { (
+	element_people_list=Element_people_list() 
+	{return new RootElement(element_people_list, firstToken.next,token);}
+ ) }
+
+Element_people_list Element_people_list() : { 
+	EmptyTag_people_list emptyTag_people_list;
+	CMisc cMisc;
+	ArrayList<CMisc> cMiscList = new ArrayList<CMisc>();
+	STag_people_list sTag_people_list;
+	CMisc cMisc1;
+	ArrayList<CMisc> cMisc1List = new ArrayList<CMisc>();
+	Content_people_list_Seq1 content_people_list_Seq1;
+	ETag_people_list eTag_people_list;
+	CMisc cMisc2;
+	ArrayList<CMisc> cMisc2List = new ArrayList<CMisc>();
+	Token firstToken=token;
+} { (
+	LOOKAHEAD(EmptyTag_people_list()) emptyTag_people_list=EmptyTag_people_list() (cMisc=CMisc(){cMiscList.add(cMisc);})* 
+	{return new Element_people_list1(emptyTag_people_list, cMiscList, firstToken.next,token);} |
+	sTag_people_list=STag_people_list() (cMisc1=CMisc(){cMisc1List.add(cMisc1);})* content_people_list_Seq1=Content_people_list_Seq1() eTag_people_list=ETag_people_list() (cMisc2=CMisc(){cMisc2List.add(cMisc2);})* 
+	{return new Element_people_list2(sTag_people_list, cMisc1List, content_people_list_Seq1, eTag_people_list, cMisc2List, firstToken.next,token);}
+ ) }
+
+EmptyTag_people_list EmptyTag_people_list() : { 
+	Attribute attribute;
+	ArrayList<Attribute> attributeList = new ArrayList<Attribute>();
+	Token firstToken=token;
+} { (
+	"<" <E_people_list> (attribute=Attribute(){attributeList.add(attribute);})* <SLASHEND> 
+	{return new EmptyTag_people_list(attributeList, firstToken.next,token);}
+ ) }
+
+STag_people_list STag_people_list() : { 
+	Attribute attribute;
+	ArrayList<Attribute> attributeList = new ArrayList<Attribute>();
+	Token firstToken=token;
+} { (
+	"<" <E_people_list> (attribute=Attribute(){attributeList.add(attribute);})* <ELEMENT_END> 
+	{return new STag_people_list(attributeList, firstToken.next,token);}
+ ) }
+
+ETag_people_list ETag_people_list() : { 
+	Token firstToken=token;
+} { (
+	"</" <E_people_list>  <ELEMENT_END> 
+	{return new ETag_people_list(firstToken.next,token);}
+ ) }
+
+Content_people_list_Seq1 Content_people_list_Seq1() : { 
+	Element_person element_person;
+	ArrayList<Element_person> element_personList = new ArrayList<Element_person>();
+	Token firstToken=token;
+} { (
+	(LOOKAHEAD(2) element_person=Element_person(){element_personList.add(element_person);})* 
+	{return new Content_people_list_Seq1(element_personList, firstToken.next,token);}
+ ) }
+
+Element_person Element_person() : { 
+	EmptyTag_person emptyTag_person;
+	CMisc cMisc;
+	ArrayList<CMisc> cMiscList = new ArrayList<CMisc>();
+	STag_person sTag_person;
+	CMisc cMisc1;
+	ArrayList<CMisc> cMisc1List = new ArrayList<CMisc>();
+	Content_person_Seq1 content_person_Seq1;
+	ETag_person eTag_person;
+	CMisc cMisc2;
+	ArrayList<CMisc> cMisc2List = new ArrayList<CMisc>();
+	Token firstToken=token;
+} { (
+	LOOKAHEAD(EmptyTag_person()) emptyTag_person=EmptyTag_person() (cMisc=CMisc(){cMiscList.add(cMisc);})* 
+	{return new Element_person1(emptyTag_person, cMiscList, firstToken.next,token);} |
+	sTag_person=STag_person() (cMisc1=CMisc(){cMisc1List.add(cMisc1);})* content_person_Seq1=Content_person_Seq1() eTag_person=ETag_person() (cMisc2=CMisc(){cMisc2List.add(cMisc2);})* 
+	{return new Element_person2(sTag_person, cMisc1List, content_person_Seq1, eTag_person, cMisc2List, firstToken.next,token);}
+ ) }
+
+EmptyTag_person EmptyTag_person() : { 
+	Attribute attribute;
+	ArrayList<Attribute> attributeList = new ArrayList<Attribute>();
+	Token firstToken=token;
+} { (
+	"<" <E_person> (attribute=Attribute(){attributeList.add(attribute);})* <SLASHEND> 
+	{return new EmptyTag_person(attributeList, firstToken.next,token);}
+ ) }
+
+STag_person STag_person() : { 
+	Attribute attribute;
+	ArrayList<Attribute> attributeList = new ArrayList<Attribute>();
+	Token firstToken=token;
+} { (
+	"<" <E_person> (attribute=Attribute(){attributeList.add(attribute);})* <ELEMENT_END> 
+	{return new STag_person(attributeList, firstToken.next,token);}
+ ) }
+
+ETag_person ETag_person() : { 
+	Token firstToken=token;
+} { (
+	"</" <E_person>  <ELEMENT_END> 
+	{return new ETag_person(firstToken.next,token);}
+ ) }
+
+Content_person_Seq1 Content_person_Seq1() : { 
+	Element_name element_name;
+	Element_birthdate element_birthdate = null;
+	Element_gender element_gender = null;
+	Element_socialsecuritynumber element_socialsecuritynumber = null;
+	Token firstToken=token;
+} { (
+	element_name=Element_name() [LOOKAHEAD(2) element_birthdate=Element_birthdate()] [LOOKAHEAD(2) element_gender=Element_gender()] [LOOKAHEAD(2) element_socialsecuritynumber=Element_socialsecuritynumber()] 
+	{return new Content_person_Seq1(element_name, element_birthdate, element_gender, element_socialsecuritynumber, firstToken.next,token);}
+ ) }
+
+Element_name Element_name() : { 
+	EmptyTag_name emptyTag_name;
+	CMisc cMisc;
+	ArrayList<CMisc> cMiscList = new ArrayList<CMisc>();
+	STag_name sTag_name;
+	CMisc cMisc1;
+	ArrayList<CMisc> cMisc1List = new ArrayList<CMisc>();
+	Content_name_Seq1 content_name_Seq1;
+	ETag_name eTag_name;
+	CMisc cMisc2;
+	ArrayList<CMisc> cMisc2List = new ArrayList<CMisc>();
+	Token firstToken=token;
+} { (
+	LOOKAHEAD(EmptyTag_name()) emptyTag_name=EmptyTag_name() (cMisc=CMisc(){cMiscList.add(cMisc);})* 
+	{return new Element_name1(emptyTag_name, cMiscList, firstToken.next,token);} |
+	sTag_name=STag_name() (cMisc1=CMisc(){cMisc1List.add(cMisc1);})* content_name_Seq1=Content_name_Seq1() eTag_name=ETag_name() (cMisc2=CMisc(){cMisc2List.add(cMisc2);})* 
+	{return new Element_name2(sTag_name, cMisc1List, content_name_Seq1, eTag_name, cMisc2List, firstToken.next,token);}
+ ) }
+
+EmptyTag_name EmptyTag_name() : { 
+	Attribute attribute;
+	ArrayList<Attribute> attributeList = new ArrayList<Attribute>();
+	Token firstToken=token;
+} { (
+	"<" <E_name> (attribute=Attribute(){attributeList.add(attribute);})* <SLASHEND> 
+	{return new EmptyTag_name(attributeList, firstToken.next,token);}
+ ) }
+
+STag_name STag_name() : { 
+	Attribute attribute;
+	ArrayList<Attribute> attributeList = new ArrayList<Attribute>();
+	Token firstToken=token;
+} { (
+	"<" <E_name> (attribute=Attribute(){attributeList.add(attribute);})* <ELEMENT_END> 
+	{return new STag_name(attributeList, firstToken.next,token);}
+ ) }
+
+ETag_name ETag_name() : { 
+	Token firstToken=token;
+} { (
+	"</" <E_name>  <ELEMENT_END> 
+	{return new ETag_name(firstToken.next,token);}
+ ) }
+
+Content_name_Seq1 Content_name_Seq1() : { 
+	Token t;
+	ASTStringNode pcdata;
+	Token firstToken=token;
+} { (
+	t=<PCDATA>{pcdata=new ASTStringNode(t.toString(),new WToken(token));} 
+	{return new Content_name_Seq1(pcdata, firstToken.next,token);}
+ ) }
+
+Element_birthdate Element_birthdate() : { 
+	EmptyTag_birthdate emptyTag_birthdate;
+	CMisc cMisc;
+	ArrayList<CMisc> cMiscList = new ArrayList<CMisc>();
+	STag_birthdate sTag_birthdate;
+	CMisc cMisc1;
+	ArrayList<CMisc> cMisc1List = new ArrayList<CMisc>();
+	Content_birthdate_Seq1 content_birthdate_Seq1;
+	ETag_birthdate eTag_birthdate;
+	CMisc cMisc2;
+	ArrayList<CMisc> cMisc2List = new ArrayList<CMisc>();
+	Token firstToken=token;
+} { (
+	LOOKAHEAD(EmptyTag_birthdate()) emptyTag_birthdate=EmptyTag_birthdate() (cMisc=CMisc(){cMiscList.add(cMisc);})* 
+	{return new Element_birthdate1(emptyTag_birthdate, cMiscList, firstToken.next,token);} |
+	sTag_birthdate=STag_birthdate() (cMisc1=CMisc(){cMisc1List.add(cMisc1);})* content_birthdate_Seq1=Content_birthdate_Seq1() eTag_birthdate=ETag_birthdate() (cMisc2=CMisc(){cMisc2List.add(cMisc2);})* 
+	{return new Element_birthdate2(sTag_birthdate, cMisc1List, content_birthdate_Seq1, eTag_birthdate, cMisc2List, firstToken.next,token);}
+ ) }
+
+EmptyTag_birthdate EmptyTag_birthdate() : { 
+	Attribute attribute;
+	ArrayList<Attribute> attributeList = new ArrayList<Attribute>();
+	Token firstToken=token;
+} { (
+	"<" <E_birthdate> (attribute=Attribute(){attributeList.add(attribute);})* <SLASHEND> 
+	{return new EmptyTag_birthdate(attributeList, firstToken.next,token);}
+ ) }
+
+STag_birthdate STag_birthdate() : { 
+	Attribute attribute;
+	ArrayList<Attribute> attributeList = new ArrayList<Attribute>();
+	Token firstToken=token;
+} { (
+	"<" <E_birthdate> (attribute=Attribute(){attributeList.add(attribute);})* <ELEMENT_END> 
+	{return new STag_birthdate(attributeList, firstToken.next,token);}
+ ) }
+
+ETag_birthdate ETag_birthdate() : { 
+	Token firstToken=token;
+} { (
+	"</" <E_birthdate>  <ELEMENT_END> 
+	{return new ETag_birthdate(firstToken.next,token);}
+ ) }
+
+Content_birthdate_Seq1 Content_birthdate_Seq1() : { 
+	Token t;
+	ASTStringNode pcdata;
+	Token firstToken=token;
+} { (
+	t=<PCDATA>{pcdata=new ASTStringNode(t.toString(),new WToken(token));} 
+	{return new Content_birthdate_Seq1(pcdata, firstToken.next,token);}
+ ) }
+
+Element_gender Element_gender() : { 
+	EmptyTag_gender emptyTag_gender;
+	CMisc cMisc;
+	ArrayList<CMisc> cMiscList = new ArrayList<CMisc>();
+	STag_gender sTag_gender;
+	CMisc cMisc1;
+	ArrayList<CMisc> cMisc1List = new ArrayList<CMisc>();
+	Content_gender_Seq1 content_gender_Seq1;
+	ETag_gender eTag_gender;
+	CMisc cMisc2;
+	ArrayList<CMisc> cMisc2List = new ArrayList<CMisc>();
+	Token firstToken=token;
+} { (
+	LOOKAHEAD(EmptyTag_gender()) emptyTag_gender=EmptyTag_gender() (cMisc=CMisc(){cMiscList.add(cMisc);})* 
+	{return new Element_gender1(emptyTag_gender, cMiscList, firstToken.next,token);} |
+	sTag_gender=STag_gender() (cMisc1=CMisc(){cMisc1List.add(cMisc1);})* content_gender_Seq1=Content_gender_Seq1() eTag_gender=ETag_gender() (cMisc2=CMisc(){cMisc2List.add(cMisc2);})* 
+	{return new Element_gender2(sTag_gender, cMisc1List, content_gender_Seq1, eTag_gender, cMisc2List, firstToken.next,token);}
+ ) }
+
+EmptyTag_gender EmptyTag_gender() : { 
+	Attribute attribute;
+	ArrayList<Attribute> attributeList = new ArrayList<Attribute>();
+	Token firstToken=token;
+} { (
+	"<" <E_gender> (attribute=Attribute(){attributeList.add(attribute);})* <SLASHEND> 
+	{return new EmptyTag_gender(attributeList, firstToken.next,token);}
+ ) }
+
+STag_gender STag_gender() : { 
+	Attribute attribute;
+	ArrayList<Attribute> attributeList = new ArrayList<Attribute>();
+	Token firstToken=token;
+} { (
+	"<" <E_gender> (attribute=Attribute(){attributeList.add(attribute);})* <ELEMENT_END> 
+	{return new STag_gender(attributeList, firstToken.next,token);}
+ ) }
+
+ETag_gender ETag_gender() : { 
+	Token firstToken=token;
+} { (
+	"</" <E_gender>  <ELEMENT_END> 
+	{return new ETag_gender(firstToken.next,token);}
+ ) }
+
+Content_gender_Seq1 Content_gender_Seq1() : { 
+	Token t;
+	ASTStringNode pcdata;
+	Token firstToken=token;
+} { (
+	t=<PCDATA>{pcdata=new ASTStringNode(t.toString(),new WToken(token));} 
+	{return new Content_gender_Seq1(pcdata, firstToken.next,token);}
+ ) }
+
+Element_socialsecuritynumber Element_socialsecuritynumber() : { 
+	EmptyTag_socialsecuritynumber emptyTag_socialsecuritynumber;
+	CMisc cMisc;
+	ArrayList<CMisc> cMiscList = new ArrayList<CMisc>();
+	STag_socialsecuritynumber sTag_socialsecuritynumber;
+	CMisc cMisc1;
+	ArrayList<CMisc> cMisc1List = new ArrayList<CMisc>();
+	Content_socialsecuritynumber_Seq1 content_socialsecuritynumber_Seq1;
+	ETag_socialsecuritynumber eTag_socialsecuritynumber;
+	CMisc cMisc2;
+	ArrayList<CMisc> cMisc2List = new ArrayList<CMisc>();
+	Token firstToken=token;
+} { (
+	LOOKAHEAD(EmptyTag_socialsecuritynumber()) emptyTag_socialsecuritynumber=EmptyTag_socialsecuritynumber() (cMisc=CMisc(){cMiscList.add(cMisc);})* 
+	{return new Element_socialsecuritynumber1(emptyTag_socialsecuritynumber, cMiscList, firstToken.next,token);} |
+	sTag_socialsecuritynumber=STag_socialsecuritynumber() (cMisc1=CMisc(){cMisc1List.add(cMisc1);})* content_socialsecuritynumber_Seq1=Content_socialsecuritynumber_Seq1() eTag_socialsecuritynumber=ETag_socialsecuritynumber() (cMisc2=CMisc(){cMisc2List.add(cMisc2);})* 
+	{return new Element_socialsecuritynumber2(sTag_socialsecuritynumber, cMisc1List, content_socialsecuritynumber_Seq1, eTag_socialsecuritynumber, cMisc2List, firstToken.next,token);}
+ ) }
+
+EmptyTag_socialsecuritynumber EmptyTag_socialsecuritynumber() : { 
+	Attribute attribute;
+	ArrayList<Attribute> attributeList = new ArrayList<Attribute>();
+	Token firstToken=token;
+} { (
+	"<" <E_socialsecuritynumber> (attribute=Attribute(){attributeList.add(attribute);})* <SLASHEND> 
+	{return new EmptyTag_socialsecuritynumber(attributeList, firstToken.next,token);}
+ ) }
+
+STag_socialsecuritynumber STag_socialsecuritynumber() : { 
+	Attribute attribute;
+	ArrayList<Attribute> attributeList = new ArrayList<Attribute>();
+	Token firstToken=token;
+} { (
+	"<" <E_socialsecuritynumber> (attribute=Attribute(){attributeList.add(attribute);})* <ELEMENT_END> 
+	{return new STag_socialsecuritynumber(attributeList, firstToken.next,token);}
+ ) }
+
+ETag_socialsecuritynumber ETag_socialsecuritynumber() : { 
+	Token firstToken=token;
+} { (
+	"</" <E_socialsecuritynumber>  <ELEMENT_END> 
+	{return new ETag_socialsecuritynumber(firstToken.next,token);}
+ ) }
+
+Content_socialsecuritynumber_Seq1 Content_socialsecuritynumber_Seq1() : { 
+	Token t;
+	ASTStringNode pcdata;
+	Token firstToken=token;
+} { (
+	t=<PCDATA>{pcdata=new ASTStringNode(t.toString(),new WToken(token));} 
+	{return new Content_socialsecuritynumber_Seq1(pcdata, firstToken.next,token);}
+ ) }
+
+Content_Any Content_Any() : { 
+	Element_people_list element_people_list;
+	Element_person element_person;
+	Element_name element_name;
+	Element_birthdate element_birthdate;
+	Element_gender element_gender;
+	Element_socialsecuritynumber element_socialsecuritynumber;
+	Token firstToken=token;
+} { (
+	LOOKAHEAD(2) element_people_list=Element_people_list() 
+	{return new Content_Any1(element_people_list, firstToken.next,token);} |
+	LOOKAHEAD(2) element_person=Element_person() 
+	{return new Content_Any2(element_person, firstToken.next,token);} |
+	LOOKAHEAD(2) element_name=Element_name() 
+	{return new Content_Any3(element_name, firstToken.next,token);} |
+	LOOKAHEAD(2) element_birthdate=Element_birthdate() 
+	{return new Content_Any4(element_birthdate, firstToken.next,token);} |
+	LOOKAHEAD(2) element_gender=Element_gender() 
+	{return new Content_Any5(element_gender, firstToken.next,token);} |
+	LOOKAHEAD(2) element_socialsecuritynumber=Element_socialsecuritynumber() 
+	{return new Content_Any6(element_socialsecuritynumber, firstToken.next,token);}
+ ) }
+

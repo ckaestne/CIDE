@@ -1,0 +1,22 @@
+class Main {
+	void foo() {
+		new Main_foo().execute();
+	}
+
+	void a() {
+
+	}
+
+	@MethodObject class Main_foo {
+		void execute() {
+			a();
+			hook();
+			a();
+			hook();
+			a();
+		}
+		protected int i;
+		protected void hook(){}
+		protected void hook(){}
+	}
+}

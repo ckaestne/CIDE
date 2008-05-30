@@ -1,0 +1,189 @@
+/*
+ * HtmlParser.jj -- JavaCC grammar for HTML.  
+ * Copyright (C) 1999 Quiotix Corporation.  
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License, version 2, as 
+ * published by the Free Software Foundation.  
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License (http://www.gnu.org/copyleft/gpl.txt)
+ * for more details.
+ */
+
+
+/* 
+ * JavaCC grammar file for HTML.
+ * 
+ * Author: Brian Goetz, Quiotix
+ * Version: 1.00
+ * Revision: $Id: HtmlParser-1.0.jj,v 1.1 2002/05/31 00:37:13 brian Exp $
+ *
+ * This grammar parses an HTML document and produces a (flat) parse "tree" 
+ * representing the document.  It preserves almost all information in the
+ * source document, including carriage control and spacing (except inside
+ * of tags.)  See the HtmlDocument and HtmlDocument.* classes for a 
+ * description of the parse tree.  The parse tree supports traversal using
+ * the commonly used "Visitor" pattern.  The HtmlDumper class is a visitor
+ * which dumps out the tree to an output stream.  
+ * 
+ * It does not require begin tags to be matched with end tags, or validate
+ * the names or contents of the tags (this can easily be done post-parsing; 
+ * see the HtmlCollector class (which matches begin tags with end tags) 
+ * for an example.)  
+ * 
+ * Notable edge cases include: 
+ * - Quoted string processing.  Quoted strings are matched inside of comments, and
+ *   as tag attribute values.  Quoted strings are matched in normal text only
+ *   to the extent that they do not span line breaks.  
+ * 
+ * Please direct comments, questions, gripes or praise to 
+ * html-parser@quiotix.com.  If you like it/hate it/use it, please let us know!  
+ */
+
+options { IGNORE_CASE = true; STATIC = false; } 
+
+PARSER_BEGIN(HtmlParser)
+
+package tmp.generated_html;
+
+import java.io.*;
+import java.util.*;
+import cide.gast.*;
+import cide.gparser.*;
+
+public class HtmlParser {
+
+
+}
+
+PARSER_END(HtmlParser)
+
+
+
+<*> TOKEN :
+{
+  <#ALPHA_CHAR: ["a"-"z", "A"-"Z"] >
+| <#NUM_CHAR:   ["0"-"9"] >
+| <#ALPHANUM_CHAR: [ "a"-"z", "A"-"Z", "0"-"9" ] >
+| <#IDENTIFIER_CHAR: [ "a"-"z", "A"-"Z", "0"-"9", "_", "-", "." ] >
+| <#IDENTIFIER: <ALPHA_CHAR> (<IDENTIFIER_CHAR>)* >
+| <#QUOTED_STRING_NB: ( "'" ( ~["'", "\r", "\n"] )* "'" ) 
+                    | ( "\"" ( ~["\"", "\r", "\n"] )* "\"" ) >
+| <#QUOTED_STRING: ( "'" ( ~["'"] )* "'" ) | ( "\"" ( ~["\""] )* "\"" ) >
+| <#WHITESPACE: ( " " | "\t" | "\n" | "\r" ) >
+| <#NEWLINE:    ( "\r\n" | "\r" | "\n" ) >
+| <#QUOTE:      ( "'" | "\"" )>
+}
+
+<DEFAULT> TOKEN : 
+{
+  <EOL:            ( " " | "\t" )* <NEWLINE> >
+| <TAG_START:      "<"       > : LexStartTag
+| <ENDTAG_START:   "</"      > : LexStartTag
+| <COMMENT_START:  "<!--"    > : LexComment
+| <DECL_START:     "<!"      > : LexDecl
+| <PCDATA:         ( ~["'", "\"", "<", "\r", "\n"] )+ >
+| <PCDATA_QS:      <QUOTED_STRING_NB> >
+| <PCDATA_Q:       <QUOTE> >
+}
+
+<LexStartTag> TOKEN :
+{
+  <TAG_SCRIPT: "SCRIPT">    : LexInTag
+| <TAG_NAME: <IDENTIFIER> > : LexInTag
+| <LST_ERROR: ~[]>          : DEFAULT
+}
+
+<LexInTag> SPECIAL_TOKEN :
+{
+  < (<WHITESPACE>)+ >
+}
+
+<LexInTag> TOKEN :
+{
+  <ATTR_NAME: <IDENTIFIER> >
+| <TAG_END: ">" >                       : DEFAULT
+| <ATTR_EQ: "=" >                       : LexAttrVal
+| <SLASH: "/" >                       
+| <IMPLICIT_TAG_END: "<">               : LexStartTag
+| <LIT_ERROR: ~[]>
+}
+  
+<LexAttrVal> SPECIAL_TOKEN :
+{
+  < <WHITESPACE> >
+}
+
+<LexAttrVal> TOKEN :
+{
+  <ATTR_VAL: <QUOTED_STRING> 
+| ( ~[">", "\"", "'", " ", "\t", "\n", "\r"] )+ > : LexInTag
+| <LAV_ERROR: ~[]>
+}
+
+<LexComment> TOKEN : 
+{
+  < COMMENT_END:  "-->" > : DEFAULT 
+| < DASH:         "-" >
+| < COMMENT_EOL:  <NEWLINE> >
+| < COMMENT_WORD: ( (~[ "\n", "\r", "'", "\"", "-" ])+ 
+                    | <QUOTED_STRING_NB> 
+                    | <QUOTE> ) >
+}
+
+<LexDecl> TOKEN :
+{
+  <DECL_ANY: ( <QUOTED_STRING> | ~[ ">", "\"", "'" ] )+ >
+| <DECL_END: ">" > : DEFAULT
+}
+
+<LexScript> TOKEN :
+{
+  <SCRIPT_END:   "</SCRIPT>" > : DEFAULT
+| <SCRIPT_EOL:   <NEWLINE> >
+| <SCRIPT_LBR:   "<" >
+| <SCRIPT_WORD:  ( <QUOTED_STRING_NB> 
+                   | <QUOTE> 
+                   | (~[ "\n", "\r", "'", "\"", "<"])+ ) >
+}
+
+GRAMMARSTART
+
+HtmlDocument: ElementSequence <EOF>;
+
+ElementSequence: ( Element ) *;
+
+Element:
+    LL(2) Tag
+|   EndTag
+|   CommentTag
+|   DeclTag
+//|   LL(2) ScriptBlock
+|	LL(2) <TAG_START> <LST_ERROR>
+|	<PCDATA>
+|	<PCDATA_QS>
+|	<PCDATA_Q>
+|	<EOL>;
+
+Attribute:	<ATTR_NAME> [ "!<ATTR_EQ>" <ATTR_VAL> ];
+
+AttributeList: (Attribute)*;
+
+Tag:  "<" <TAG_NAME> AttributeList [<SLASH>] "!<TAG_END>>";
+
+//ScriptBlock : <TAG_START> <TAG_SCRIPT> AttributeList() <TAG_END>//  { token_source.SwitchTo(LexScript); }//  ( <SCRIPT_EOL>//    | <SCRIPT_WORD>//    | <SCRIPT_LBR>//  )* //  <SCRIPT_END>;
+
+
+EndTag : "</" <TAG_NAME> "!<TAG_END>>";
+
+CommentTag: "<!--"  ( CommentContent )*  CommentEnd;
+
+CommentContent: <DASH>
+    | <COMMENT_EOL> 
+    | <COMMENT_WORD>;
+CommentEnd: <EOF> | <COMMENT_END>;
+  
+DeclTag: "<!" <DECL_ANY> "!<DECL_END>>";

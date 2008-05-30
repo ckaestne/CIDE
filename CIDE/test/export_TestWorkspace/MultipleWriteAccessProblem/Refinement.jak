@@ -1,0 +1,8 @@
+refines class Main {
+	
+	protected int hook(int i, int j){
+		i+=j;
+		return Super(int, int).hook(i, j);
+	}
+
+}

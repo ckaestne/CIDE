@@ -1,0 +1,7 @@
+refines class Main {
+	protected void hook() {
+		b();
+		c();
+		Super.hook();
+	}
+}

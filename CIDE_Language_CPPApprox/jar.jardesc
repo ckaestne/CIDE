@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="WINDOWS-1252" standalone="no"?>
+<jardesc>
+    <jar path="c:/tmp/jars/astgen.jar"/>
+    <options buildIfNeeded="true" compress="true" descriptionLocation="/CIDE_Language_CApprox/jar.jardesc" exportErrors="true" exportWarnings="true" includeDirectoryEntries="true" overwrite="true" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>
+    <storedRefactorings deprecationInfo="true" structuralOnly="false"/>
+    <selectedProjects/>
+    <manifest generateManifest="true" mainClassHandleIdentifier="=CIDE_generateAST/src&lt;cide.astgen{Main.java[Main" manifestLocation="/CIDE_Language_CApprox/capprox" manifestVersion="1.0" reuseManifest="false" saveManifest="false" usesManifest="true">
+        <sealing sealJar="false">
+            <packagesToSeal/>
+            <packagesToUnSeal/>
+        </sealing>
+    </manifest>
+    <selectedElements exportClassFiles="true" exportJavaFiles="true" exportOutputFolder="false">
+        <javaElement handleIdentifier="=CIDE_generateAST/src"/>
+        <file path="/CIDE_generateAST/.project~"/>
+        <file path="/CIDE_generateAST/build.xml"/>
+        <file path="/CIDE_generateAST/.classpath"/>
+        <javaElement handleIdentifier="=CIDE_generateAST/test"/>
+        <file path="/CIDE_generateAST/.project"/>
+        <file path="/CIDE_generateAST/GenASTNode.java"/>
+    </selectedElements>
+</jardesc>
