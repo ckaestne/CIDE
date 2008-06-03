@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: CIDE (Parented) Feature List
+Bundle-SymbolicName: de.ovgu.cide.fm.list;singleton:=true
+Bundle-Version: 0.1
+Bundle-Activator: de.ovgu.cide.fm.list.Activator
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.core.resources,
+ de.ovgu.cide.core
+Eclipse-LazyStart: true
