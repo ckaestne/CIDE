@@ -16,10 +16,11 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 
-import cide.gast.*;
+import cide.gast.ASTNode;
+import cide.gast.ASTVisitor;
+import cide.gast.ISourceFile;
 import cide.gparser.ParseException;
-
-import coloredide.features.Feature;
+import coloredide.features.IFeature;
 import coloredide.features.source.ColoredSourceFile;
 import coloredide.validator.ColoredSourceFileIteratorJob;
 
@@ -46,15 +47,15 @@ public class CollectInteractionsJob extends ColoredSourceFileIteratorJob {
 		}
 	}
 
-	public final Set<Set<Feature>> interactions = new HashSet<Set<Feature>>();
+	public final Set<Set<IFeature>> interactions = new HashSet<Set<IFeature>>();
 
 	// occurrences by feature set
-	public final Map<Set<Feature>, Set<InteractionPosition>> occurences = new HashMap<Set<Feature>, Set<InteractionPosition>>();
+	public final Map<Set<IFeature>, Set<InteractionPosition>> occurences = new HashMap<Set<IFeature>, Set<InteractionPosition>>();
 
 	// occurrences by individual feature, may overlap
-	public final Map<Feature, Set<InteractionPosition>> occurencesByFeature = new HashMap<Feature, Set<InteractionPosition>>();
+	public final Map<IFeature, Set<InteractionPosition>> occurencesByFeature = new HashMap<IFeature, Set<InteractionPosition>>();
 
-	public final Set<Feature> usedFeatures = new HashSet<Feature>();
+	public final Set<IFeature> usedFeatures = new HashSet<IFeature>();
 
 	public final Map<Derivative, Set<InteractionPosition>> derivatives = new HashMap<Derivative, Set<InteractionPosition>>();
 
@@ -77,7 +78,7 @@ public class CollectInteractionsJob extends ColoredSourceFileIteratorJob {
 					boolean hasOwnColors = source.getColorManager()
 							.getOwnColors(node).size() > 0;
 					if (hasOwnColors) {
-						Set<Feature> colors = source.getColorManager()
+						Set<IFeature> colors = source.getColorManager()
 								.getColors(node);
 						colors = cleanInteractions(colors);
 						if (colors.size() > 1)
@@ -117,10 +118,9 @@ public class CollectInteractionsJob extends ColoredSourceFileIteratorJob {
 	 */
 	protected void printAllOccurrences() {
 		TreeItem allOccurrences = new TreeItem(tree, SWT.DEFAULT);
-		allOccurrences.setText("Feature Code");
-		for (Feature f : sort(usedFeatures)) {
-			createItem2(allOccurrences, f.getShortName(projects[0]),
-					occurencesByFeature.get(f));
+		allOccurrences.setText("IFeature Code");
+		for (IFeature f : sort(usedFeatures)) {
+			createItem2(allOccurrences, f.getName(), occurencesByFeature.get(f));
 		}
 		setCountingCaption(allOccurrences);
 	}
@@ -130,25 +130,25 @@ public class CollectInteractionsJob extends ColoredSourceFileIteratorJob {
 	}
 
 	private void printInteractionNumberDevelopment() {
-		List<Feature> features = sort(usedFeatures);
-		Set<Set<Feature>> leftInteractions = new HashSet<Set<Feature>>(
+		List<IFeature> features = sort(usedFeatures);
+		Set<Set<IFeature>> leftInteractions = new HashSet<Set<IFeature>>(
 				interactions);
-		Set<Feature> knownFeatures = new HashSet<Feature>();
+		Set<IFeature> knownFeatures = new HashSet<IFeature>();
 		int idx = 0, foundInteractions = 0;
 		System.out.println("Stats:");
-		for (Feature feature : features) {
+		for (IFeature feature : features) {
 			idx++;
 			knownFeatures.add(feature);
-			for (Iterator<Set<Feature>> iter = leftInteractions.iterator(); iter
+			for (Iterator<Set<IFeature>> iter = leftInteractions.iterator(); iter
 					.hasNext();) {
-				Set<Feature> interaction = iter.next();
+				Set<IFeature> interaction = iter.next();
 				if (knownFeatures.containsAll(interaction)) {
 					foundInteractions++;
 					iter.remove();
 				}
 			}
-			System.out.println(idx + " (" + feature.getShortName(projects[0])
-					+ ") - " + foundInteractions);
+			System.out.println(idx + " (" + feature.getName() + ") - "
+					+ foundInteractions);
 
 		}
 	}
@@ -156,7 +156,7 @@ public class CollectInteractionsJob extends ColoredSourceFileIteratorJob {
 	private void printAllInteractions() {
 		TreeItem allInteractions = new TreeItem(tree, SWT.DEFAULT);
 		allInteractions.setText("All interactions");
-		for (Set<Feature> inter : interactions) {
+		for (Set<IFeature> inter : interactions) {
 			String txt = getInteractionName(inter);
 			createItem(allInteractions, txt, inter);
 			System.out.println("[" + txt + "]");
@@ -183,11 +183,11 @@ public class CollectInteractionsJob extends ColoredSourceFileIteratorJob {
 
 	private void printInteractionsByFeature() {
 		TreeItem allInteractions = new TreeItem(tree, SWT.DEFAULT);
-		allInteractions.setText("Interactions by Feature");
-		for (Feature f : sort(usedFeatures)) {
-			TreeItem featureItem = createItem(allInteractions, f
-					.getShortName(projects[0]), null);
-			for (Set<Feature> inter : interactions)
+		allInteractions.setText("Interactions by IFeature");
+		for (IFeature f : sort(usedFeatures)) {
+			TreeItem featureItem = createItem(allInteractions, f.getName(),
+					null);
+			for (Set<IFeature> inter : interactions)
 				if (inter.contains(f))
 					createItem(featureItem, getInteractionName(inter), inter);
 			setCountingCaption(featureItem);
@@ -195,29 +195,29 @@ public class CollectInteractionsJob extends ColoredSourceFileIteratorJob {
 		setCountingCaption(allInteractions);
 	}
 
-	private List<Feature> sort(Set<Feature> set) {
-		ArrayList<Feature> result = new ArrayList<Feature>(set);
+	private List<IFeature> sort(Set<IFeature> set) {
+		ArrayList<IFeature> result = new ArrayList<IFeature>(set);
 		Collections.sort(result);
 		return result;
 	}
 
-	private String getInteractionName(Set<Feature> inter) {
+	private String getInteractionName(Set<IFeature> inter) {
 		String txt = "";
 		boolean first = true;
 
-		List<Feature> l = sort(inter);
-		for (Feature f : l) {
+		List<IFeature> l = sort(inter);
+		for (IFeature f : l) {
 			if (first)
 				first = false;
 			else
 				txt += " - ";
-			txt += f.getShortName(projects[0]);
+			txt += f.getName();
 		}
 		return txt;
 	}
 
 	private TreeItem createItem(TreeItem parent, String text,
-			Set<Feature> interaction) {
+			Set<IFeature> interaction) {
 		TreeItem r = new TreeItem(parent, SWT.DEFAULT);
 		r.setText(text);
 		if (interaction != null) {
@@ -248,7 +248,7 @@ public class CollectInteractionsJob extends ColoredSourceFileIteratorJob {
 		return r;
 	}
 
-	private void addOccurence(Set<Feature> colors, ASTNode node, IFile file) {
+	private void addOccurence(Set<IFeature> colors, ASTNode node, IFile file) {
 		InteractionPosition p = new InteractionPosition(node, file);
 
 		Set<InteractionPosition> occ = occurences.get(colors);
@@ -258,7 +258,7 @@ public class CollectInteractionsJob extends ColoredSourceFileIteratorJob {
 		}
 		occ.add(p);
 
-		for (Feature color : colors) {
+		for (IFeature color : colors) {
 			occ = occurencesByFeature.get(color);
 			if (occ == null) {
 				occ = new HashSet<InteractionPosition>();
@@ -278,10 +278,10 @@ public class CollectInteractionsJob extends ColoredSourceFileIteratorJob {
 		occ.add(new InteractionPosition(node, source.getResource()));
 	}
 
-	private Set<Feature> cleanInteractions(Set<Feature> colors) {
-		HashSet<Feature> result = new HashSet<Feature>(colors);
-		for (Feature f : colors) {
-			Set<Feature> parent = f.getRequiredFeatures(projects[0]);
+	private Set<IFeature> cleanInteractions(Set<IFeature> colors) {
+		HashSet<IFeature> result = new HashSet<IFeature>(colors);
+		for (IFeature f : colors) {
+			Set<IFeature> parent = f.getRequiredFeatures();
 			result.removeAll(parent);
 		}
 		return result;

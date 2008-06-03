@@ -4,14 +4,13 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 
-import cide.features.IFeature;
 import cide.gast.ASTNode;
 import cide.gast.ASTVisitor;
 import cide.gast.IASTNode;
 import cide.gast.ISourceFile;
 import cide.gparser.ParseException;
 import cide.languages.ILanguagePrintVisitor;
-import coloredide.features.Feature;
+import coloredide.features.IFeature;
 import coloredide.features.source.ColoredSourceFile;
 import coloredide.features.source.SourceFileColorManager;
 
@@ -19,10 +18,10 @@ public class ConfigureASTHelper {
 
 	public class RemoveHiddenColorsVisitor extends ASTVisitor {
 		private SourceFileColorManager colorManager;
-		private Set<Feature> hiddenColors;
+		private Set<IFeature> hiddenColors;
 
 		public RemoveHiddenColorsVisitor(SourceFileColorManager colorManager,
-				Set<Feature> hiddenColors) {
+				Set<IFeature> hiddenColors) {
 			this.colorManager = colorManager;
 			this.hiddenColors = hiddenColors;
 		}
@@ -30,7 +29,7 @@ public class ConfigureASTHelper {
 		@Override
 		public boolean visit(ASTNode node) {
 			if (node.isOptional()) {
-				Set<Feature> colors = colorManager.getColors(node);
+				Set<IFeature> colors = colorManager.getColors(node);
 				if (overlap(colors, hiddenColors)) {
 					node.remove();
 					return false;
@@ -39,7 +38,7 @@ public class ConfigureASTHelper {
 			return super.visit(node);
 		}
 
-		private boolean overlap(Set<Feature> s1, Set<Feature> s2) {
+		private boolean overlap(Set<IFeature> s1, Set<IFeature> s2) {
 			for (IFeature f : s1)
 				if (s2.contains(f))
 					return true;
@@ -48,7 +47,7 @@ public class ConfigureASTHelper {
 	}
 
 	public String hideCode(ColoredSourceFile sourceFile,
-			Set<Feature> hiddenColors) throws CoreException {
+			Set<IFeature> hiddenColors) throws CoreException {
 		try {
 			ISourceFile origAst;
 			origAst = sourceFile.getAST();

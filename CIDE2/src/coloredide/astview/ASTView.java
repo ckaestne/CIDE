@@ -19,8 +19,8 @@ import java.util.List;
 import org.eclipse.core.filebuffers.FileBuffers;
 import org.eclipse.core.filebuffers.IFileBuffer;
 import org.eclipse.core.filebuffers.IFileBufferListener;
-import org.eclipse.core.filebuffers.ITextFileBuffer;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
@@ -70,24 +70,23 @@ import org.eclipse.ui.part.ShowInContext;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.texteditor.ITextEditor;
 
-import com.sun.org.apache.bcel.internal.classfile.SourceFile;
-
 import cide.gast.ASTNode;
 import cide.gast.ISourceFile;
 import cide.gast.Property;
-import cide.gparser.ParseException;
 import coloredide.ASTColorChangedEvent;
+import coloredide.CIDECorePlugin;
 import coloredide.ColorListChangedEvent;
 import coloredide.ColoredIDEImages;
-import coloredide.CIDECorePlugin;
 import coloredide.FileColorChangedEvent;
 import coloredide.IColorChangeListener;
 import coloredide.ColorListChangedEvent.ChangeType;
 import coloredide.astview.internal.TreeCopyAction;
-import coloredide.features.Feature;
-import coloredide.features.FeatureManager;
-import coloredide.features.source.IASTRefreshListener;
+import coloredide.features.FeatureModelManager;
+import coloredide.features.FeatureModelNotFoundException;
+import coloredide.features.IFeature;
+import coloredide.features.IFeatureModel;
 import coloredide.features.source.ColoredSourceFile;
+import coloredide.features.source.IASTRefreshListener;
 import coloredide.utils.EditorUtility;
 import coloredide.utils.NodeFinder;
 
@@ -369,7 +368,8 @@ public class ASTView extends ViewPart implements IShowInSource {
 		}
 
 		public void colorListChanged(ColorListChangedEvent event) {
-			if (event.getProject() == fView.fColoredJavaSourceFile.getProject()
+			if (event.getProject() == fView.fColoredJavaSourceFile
+					.getResource().getProject()
 					&& event.anyChangeOf(ChangeType.COLOR))
 				fView.fViewer.refresh();
 		}
@@ -416,6 +416,8 @@ public class ASTView extends ViewPart implements IShowInSource {
 	private ListenerMix fSuperListener;
 
 	private IDialogSettings fDialogSettings;
+
+	private IFeatureModel fFeatureModel;
 
 	public ASTView() {
 		fSuperListener = null;
@@ -473,9 +475,15 @@ public class ASTView extends ViewPart implements IShowInSource {
 
 		if (editor != null) {
 			IFile currentFile = EditorUtility.getFileInput(editor);
-			if (currentFile != null) {
+			try {
+				fFeatureModel = FeatureModelManager.getInstance()
+						.getFeatureModel(currentFile.getProject());
+			} catch (FeatureModelNotFoundException e) {
+				fFeatureModel = null;
+			}
+			if (currentFile != null && fFeatureModel != null) {
 				fColoredJavaSourceFile = ColoredSourceFile
-						.getColoredSourceFile(currentFile);
+						.getColoredSourceFile(currentFile, fFeatureModel);
 				fColoredJavaSourceFile.addASTRefreshListener(fSuperListener);
 				ISelection selection = editor.getSelectionProvider()
 						.getSelection();
@@ -689,15 +697,14 @@ public class ASTView extends ViewPart implements IShowInSource {
 			if (!i.next().isOptional())
 				i.remove();
 
-		if (nodes != null && !nodes.isEmpty()) {
-			for (Feature feature : FeatureManager
-					.getVisibleFeatures(fColoredJavaSourceFile.getProject())) {
+		if (nodes != null && !nodes.isEmpty() && fFeatureModel != null) {
+			for (IFeature feature : fFeatureModel.getVisibleFeatures()) {
 				ToggleASTFeatureAction action = new ToggleASTFeatureAction(
 						feature, nodes, fColoredJavaSourceFile);
 				manager.add(action);
 			}
 			MenuManager allf = new MenuManager("All features");
-			for (Feature feature : FeatureManager.getFeatures()) {
+			for (IFeature feature : fFeatureModel.getFeatures()) {
 				ToggleASTFeatureAction action = new ToggleASTFeatureAction(
 						feature, nodes, fColoredJavaSourceFile);
 				allf.add(action);
@@ -906,6 +913,7 @@ public class ASTView extends ViewPart implements IShowInSource {
 
 	protected void performClear() {
 		fColoredJavaSourceFile = null;
+		fFeatureModel = null;
 		try {
 			setInput(null);
 		} catch (CoreException e) {

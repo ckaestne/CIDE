@@ -10,9 +10,9 @@ import java.util.Set;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextSelection;
 
+import cide.gast.ASTColorInheritance;
 import cide.gast.ASTNode;
 import cide.gast.ASTVisitor;
-import coloredide.features.ASTColorInheritance;
 
 class SelectionFinder extends ASTVisitor {
 

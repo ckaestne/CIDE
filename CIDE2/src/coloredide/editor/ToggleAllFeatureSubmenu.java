@@ -1,22 +1,24 @@
 package coloredide.editor;
 
-import java.util.List;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.MenuManager;
 
-import cide.features.IFeature;
-
-import coloredide.features.Feature;
+import coloredide.features.IFeature;
 
 public class ToggleAllFeatureSubmenu extends MenuManager implements
 		IContributionItem {
 
 	public ToggleAllFeatureSubmenu(ToggleTextColorContext context,
-			List<Feature> features) {
-		
+			Collection<IFeature> features) {
+
 		super("All features");
-		for (Feature feature : features) {
+		ArrayList<IFeature> list = new ArrayList<IFeature>(features);
+		Collections.sort(list);
+		for (IFeature feature : list) {
 			this.add(new ToggleTextColorAction(context, feature));
 		}
 

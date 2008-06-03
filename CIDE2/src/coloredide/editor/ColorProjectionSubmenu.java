@@ -1,5 +1,6 @@
 package coloredide.editor;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -8,8 +9,8 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.MenuManager;
 
-import coloredide.features.Feature;
-import coloredide.features.FeatureManager;
+import coloredide.features.IFeature;
+import coloredide.utils.ColorHelper;
 
 public class ColorProjectionSubmenu extends MenuManager implements
 		IContributionItem {
@@ -21,14 +22,14 @@ public class ColorProjectionSubmenu extends MenuManager implements
 
 			super("Show all");
 			this.editor = editor;
-		} 
+		}
 
 		@Override
 		public void run() {
 			editor.getProjectionColorManager().expandAllColors();
 		}
 	}
-	
+
 	public class CollapseAllAction extends Action {
 		private ColoredTextEditor editor;
 
@@ -36,7 +37,7 @@ public class ColorProjectionSubmenu extends MenuManager implements
 
 			super("Hide all");
 			this.editor = editor;
-		} 
+		}
 
 		@Override
 		public void run() {
@@ -44,19 +45,18 @@ public class ColorProjectionSubmenu extends MenuManager implements
 		}
 	}
 
-
 	public class ToggleColorProjectionAction extends Action {
 
 		private ColoredTextEditor editor;
 
-		private Feature feature;
+		private IFeature feature;
 
 		private boolean wasExpanded;
 
 		public ToggleColorProjectionAction(ColoredTextEditor editor,
-				Feature feature, boolean isExpanded, IProject project) {
+				IFeature feature, boolean isExpanded) {
 
-			super(feature.getName(project));
+			super(feature.getName());
 			this.setChecked(isExpanded);
 			this.wasExpanded = isExpanded;
 			this.editor = editor;
@@ -77,13 +77,13 @@ public class ColorProjectionSubmenu extends MenuManager implements
 			ToggleTextColorContext context) {
 
 		super("Projection");
-		Set<Feature> expandedColors = editor.getProjectionColorManager()
+		Set<IFeature> expandedColors = editor.getProjectionColorManager()
 				.getExpandedColors();
-		List<Feature> allFeatures = FeatureManager.getVisibleFeatures(context
-				.getProject());
-		for (Feature feature : allFeatures) {
+		List<IFeature> allFeatures = ColorHelper.sortFeatures(context
+				.getFeatureModel().getVisibleFeatures());
+		for (IFeature feature : allFeatures) {
 			this.add(new ToggleColorProjectionAction(editor, feature,
-					expandedColors.contains(feature), context.getProject()));
+					expandedColors.contains(feature)));
 		}
 		this.add(new ExpandAllAction(editor));
 		this.add(new CollapseAllAction(editor));

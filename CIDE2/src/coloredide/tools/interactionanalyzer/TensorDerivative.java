@@ -8,10 +8,9 @@ import java.util.Set;
 
 import org.eclipse.core.resources.IProject;
 
-import cide.gast.*;
-
-import coloredide.features.ASTColorInheritance;
-import coloredide.features.Feature;
+import cide.gast.ASTColorInheritance;
+import cide.gast.ASTNode;
+import coloredide.features.IFeature;
 import coloredide.features.source.ColoredSourceFile;
 
 /**
@@ -31,14 +30,12 @@ public class TensorDerivative implements Derivative {
 
 	public TensorDerivative(ASTNode node, ColoredSourceFile source) {
 		loadDerivative(node, source);
-		project = source.getProject();
 	}
 
-	private final List<Set<Feature>> features = new ArrayList<Set<Feature>>();
+	private final List<Set<IFeature>> features = new ArrayList<Set<IFeature>>();
 
-//	private final Set<Feature> knownFeatures = new HashSet<Feature>();
+//	private final Set<IFeature> knownFeatures = new HashSet<IFeature>();
 
-	private final IProject project;
 
 	public boolean equals(Object obj) {
 		if (obj instanceof TensorDerivative) {
@@ -60,8 +57,8 @@ public class TensorDerivative implements Derivative {
 		if (node == null)
 			return;
 
-		Set<Feature> ownColors = source.getColorManager().getOwnColors(node);
-		Set<Feature> inheritedColors = source.getColorManager()
+		Set<IFeature> ownColors = source.getColorManager().getOwnColors(node);
+		Set<IFeature> inheritedColors = source.getColorManager()
 				.getInheritedColors(node);
 
 		if (inheritedColors.size() > 0) {
@@ -77,7 +74,7 @@ public class TensorDerivative implements Derivative {
 				loadDerivative(parent, source);
 		}
 
-		Set<Feature> addedColors = new HashSet<Feature>(ownColors);
+		Set<IFeature> addedColors = new HashSet<IFeature>(ownColors);
 		addedColors.removeAll(inheritedColors);
 
 		if (addedColors.size() > 0) {
@@ -87,42 +84,42 @@ public class TensorDerivative implements Derivative {
 
 	public String getDerivativeStr() {
 		String result = "";
-		for (Set<Feature> f : features) {
+		for (Set<IFeature> f : features) {
 			result = getFeatureGroupStr(f) + "*" + result;
 		}
 		return result;
 	}
 
-	private String getFeatureGroupStr(Set<Feature> f) {
+	private String getFeatureGroupStr(Set<IFeature> f) {
 		assert f.size() > 0;
 		if (f.size() == 1)
-			return f.iterator().next().getShortName(project);
-		ArrayList<Feature> sortedList = new ArrayList<Feature>(f);
+			return f.iterator().next().getName();
+		ArrayList<IFeature> sortedList = new ArrayList<IFeature>(f);
 		Collections.sort(sortedList);
 		String result = "(";
 		boolean first = true;
-		for (Feature feature : sortedList) {
+		for (IFeature feature : sortedList) {
 			if (!first)
 				result += "*";
 			else
 				first = false;
-			result += feature.getShortName(project);
+			result += feature.getName();
 		}
 		return result + ")";
 	}
 
 	public int getOrder() {
 		int order = 0;
-		for (Set<Feature> f : features) {
+		for (Set<IFeature> f : features) {
 			order += f.size();
 		}
 		return order;
 	}
 
-	protected List<Feature> getFeatureList() {
-		List<Feature> result = new ArrayList<Feature>(getOrder());
-		for (Set<Feature> f : features) {
-			List<Feature> sort = new ArrayList<Feature>(f);
+	protected List<IFeature> getFeatureList() {
+		List<IFeature> result = new ArrayList<IFeature>(getOrder());
+		for (Set<IFeature> f : features) {
+			List<IFeature> sort = new ArrayList<IFeature>(f);
 			Collections.sort(sort);
 			result.addAll(sort);
 		}

@@ -5,7 +5,7 @@ import java.util.List;
 import cide.gast.ASTNode;
 import coloredide.ASTColorChangedEvent;
 import coloredide.CIDECorePlugin;
-import coloredide.features.Feature;
+import coloredide.features.IFeature;
 import coloredide.features.source.ColoredSourceFile;
 import coloredide.features.source.SourceFileColorManager;
 import coloredide.utils.FeatureAction;
@@ -16,17 +16,17 @@ public class ToggleASTFeatureAction extends FeatureAction {
 
 	private ColoredSourceFile file;
 
-	public ToggleASTFeatureAction(Feature feature, List<ASTNode> nodes,
+	public ToggleASTFeatureAction(IFeature feature, List<ASTNode> nodes,
 			ColoredSourceFile file) {
 		super(feature);
 		assert nodes != null && !nodes.isEmpty();
 		this.nodes = nodes;
 		this.file = file;
-		this.setText(feature.getName(file.getProject()));
+		this.setText("Feature: "+feature.getName());
 		this.setChecked(haveColor(nodes, feature));
 	}
 
-	boolean haveColor(List<ASTNode> nodes, Feature feature) {
+	boolean haveColor(List<ASTNode> nodes, IFeature feature) {
 		return file.getColorManager().hasColor(nodes.get(0), feature);
 	}
 

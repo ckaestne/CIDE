@@ -18,6 +18,9 @@ import cide.gparser.ParseException;
 import cide.gparser.TokenMgrError;
 import cide.languages.ILanguageExtension;
 import cide.languages.ILanguageParser;
+import coloredide.features.FeatureModelManager;
+import coloredide.features.FeatureModelNotFoundException;
+import coloredide.features.IFeatureModel;
 import coloredide.languages.LanguageExtensionManager;
 import coloredide.languages.LanguageExtensionProxy;
 
@@ -33,12 +36,16 @@ public class ColoredSourceFile {
 
 	protected SourceFileColorManager colorManager = null;
 
+	private final IFeatureModel featureModel;
+
 	private static final WeakHashMap<ISourceFile, ColoredSourceFile> ast2FileMap = new WeakHashMap<ISourceFile, ColoredSourceFile>();
 
 	private static final WeakHashMap<IFile, WeakReference<ColoredSourceFile>> fileCache = new WeakHashMap<IFile, WeakReference<ColoredSourceFile>>();
 
-	protected ColoredSourceFile(IFile coloredSourceFile) {
+	protected ColoredSourceFile(IFile coloredSourceFile,
+			IFeatureModel featureModel) {
 		this.coloredSourceFile = coloredSourceFile;
+		this.featureModel = featureModel;
 		this.language = findLanguageExtension(coloredSourceFile);
 		if (language != null)
 			this.colorFile = getColorFile(coloredSourceFile);
@@ -59,6 +66,18 @@ public class ColoredSourceFile {
 	 * @return
 	 */
 	public boolean isColored() {
+		return language != null;
+	}
+
+	/**
+	 * determines whether a file is colored without instanciating a
+	 * ColoredSourceFile, thus without the need of a feature model
+	 * 
+	 * @param coloredSourceFile
+	 * @return
+	 */
+	public static boolean isFileColored(IFile coloredSourceFile) {
+		ILanguageExtension language = findLanguageExtension(coloredSourceFile);
 		return language != null;
 	}
 
@@ -119,7 +138,7 @@ public class ColoredSourceFile {
 		if (colorManager == null) {
 			colorManager = new SourceFileColorManager(colorFile, this,
 					DirectoryColorManager.getColoredDirectoryManagerS(colorFile
-							.getParent()));
+							.getParent(), featureModel));
 		}
 		return colorManager;
 	}
@@ -130,13 +149,22 @@ public class ColoredSourceFile {
 		fileCache.put(sourceFile.coloredSourceFile, r);
 	}
 
-	public static ColoredSourceFile getColoredSourceFile(IFile coloredSourceFile) {
+	// public static ColoredSourceFile getColoredSourceFile(IFile
+	// coloredSourceFile)
+	// throws FeatureModelNotFoundException {
+	// IFeatureModel fm = FeatureModelManager.getInstance().getFeatureModel(
+	// coloredSourceFile.getProject());
+	// return getColoredSourceFile(coloredSourceFile, fm);
+	// }
+
+	public static ColoredSourceFile getColoredSourceFile(
+			IFile coloredSourceFile, IFeatureModel featureModel) {
 		ColoredSourceFile cachedCJSF = null;
 		WeakReference<ColoredSourceFile> r = fileCache.get(coloredSourceFile);
 		if (r != null)
 			cachedCJSF = r.get();
 		if (cachedCJSF == null) {
-			cachedCJSF = new ColoredSourceFile(coloredSourceFile);
+			cachedCJSF = new ColoredSourceFile(coloredSourceFile, featureModel);
 			cache(cachedCJSF);
 		}
 		return cachedCJSF;
@@ -147,8 +175,12 @@ public class ColoredSourceFile {
 		return ResourcesPlugin.getWorkspace().getRoot().getFile(colorFilePath);
 	}
 
-	public IProject getProject() {
-		return colorFile.getProject();
+	// public IProject getProject() {
+	// return colorFile.getProject();
+	// }
+
+	public IFeatureModel getFeatureModel() {
+		return featureModel;
 	}
 
 	public boolean hasColors() {
@@ -183,7 +215,7 @@ public class ColoredSourceFile {
 		System.err.println();
 	}
 
-	private ILanguageExtension findLanguageExtension(IFile input) {
+	private static ILanguageExtension findLanguageExtension(IFile input) {
 		List<LanguageExtensionProxy> languageExtensions = LanguageExtensionManager
 				.getInstance().getLanguageExtensions();
 		String targetFileExtension = "." + input.getFileExtension();

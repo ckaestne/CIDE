@@ -15,10 +15,9 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 
-import cide.features.IFeature;
-
-import coloredide.features.Feature;
-import coloredide.features.FeatureManager;
+import coloredide.features.FeatureModelManager;
+import coloredide.features.IFeature;
+import coloredide.features.IFeatureModel;
 
 public class WizardPageSelectFeatures extends WizardPage {
 
@@ -26,15 +25,19 @@ public class WizardPageSelectFeatures extends WizardPage {
 
 	private IProject project;
 
-	private Set<Feature> initialSelected = Collections.EMPTY_SET;
-	private Set<Feature> initialGrayed = Collections.EMPTY_SET;
+	private Set<IFeature> initialSelected = Collections.EMPTY_SET;
+	private Set<IFeature> initialGrayed = Collections.EMPTY_SET;
 
 	private boolean selectAll = false;
 
-	public WizardPageSelectFeatures(String pageName, IProject p) {
+	private IFeatureModel featureModel;
+
+	public WizardPageSelectFeatures(String pageName, IProject p,
+			IFeatureModel featureModel) {
 		super(pageName);
 		this.setTitle("Select Features for Configuration");
 		this.project = p;
+		this.featureModel = featureModel;
 	}
 
 	public void createControl(Composite parent) {
@@ -52,9 +55,9 @@ public class WizardPageSelectFeatures extends WizardPage {
 		formData.left = new FormAttachment(0, 0);
 		table.setLayoutData(formData);
 
-		for (Feature feature : FeatureManager.getVisibleFeatures(project)) {
+		for (IFeature feature : featureModel.getVisibleFeatures()) {
 			TableItem item = new TableItem(table, SWT.NONE);
-			item.setText(feature.getName(project));
+			item.setText("Feature: "+feature.getName());
 			item.setData(feature);
 			item.setChecked(selectAll || initialSelected.contains(feature));
 			if (initialGrayed.contains(feature))
@@ -73,7 +76,7 @@ public class WizardPageSelectFeatures extends WizardPage {
 	// private class SelectionDependencyManager implements Listener {
 	// private final FeatureNameManager featureManager;
 	//
-	// private final List<Feature> allFeatures;
+	// private final List<IFeature> allFeatures;
 	//
 	// private final Table table;
 	//
@@ -93,11 +96,11 @@ public class WizardPageSelectFeatures extends WizardPage {
 	// }
 	//
 	// private void updateItem(TableItem item) {
-	// assert item.getData() instanceof Feature;
-	// Feature feature = (Feature) item.getData();
+	// assert item.getData() instanceof IFeature;
+	// IFeature feature = (IFeature) item.getData();
 	// boolean isChecked = item.getChecked();
 	//
-	// Feature parentFeature = featureManager.getParentFeature(feature);
+	// IFeature parentFeature = featureManager.getParentFeature(feature);
 	// if (parentFeature != null)
 	// if (isChecked) {
 	// setChecked(parentFeature, true);
@@ -105,7 +108,7 @@ public class WizardPageSelectFeatures extends WizardPage {
 	// } else
 	// setGrayed(parentFeature, false);
 	//
-	// for (Feature childFeature : getChildFeatures(feature))
+	// for (IFeature childFeature : getChildFeatures(feature))
 	// if (!isChecked) {
 	// setChecked(childFeature, false);
 	// setGrayed(childFeature, true);
@@ -113,7 +116,7 @@ public class WizardPageSelectFeatures extends WizardPage {
 	// setGrayed(childFeature, false);
 	// }
 	//
-	// private void setGrayed(Feature feature, boolean isGrayed) {
+	// private void setGrayed(IFeature feature, boolean isGrayed) {
 	// for (TableItem item : table.getItems()) {
 	// if (item.getData() == feature) {
 	// item.setGrayed(isGrayed);
@@ -122,14 +125,14 @@ public class WizardPageSelectFeatures extends WizardPage {
 	// }
 	// }
 	//
-	// private Set<Feature> getChildFeatures(Feature feature) {
+	// private Set<IFeature> getChildFeatures(IFeature feature) {
 	// // direct and indirect children
-	// HashSet<Feature> result = new HashSet<Feature>();
+	// HashSet<IFeature> result = new HashSet<IFeature>();
 	// result.add(feature);
 	// int oldsize = 0, newsize = 1;
 	// while (oldsize != newsize) {
 	// oldsize = newsize;
-	// for (Feature f : allFeatures) {
+	// for (IFeature f : allFeatures) {
 	// if (result.contains(featureManager.getParentFeature(f)))
 	// result.add(f);
 	// }
@@ -139,7 +142,7 @@ public class WizardPageSelectFeatures extends WizardPage {
 	// return result;
 	// }
 	//
-	// private void setChecked(Feature feature, boolean checked) {
+	// private void setChecked(IFeature feature, boolean checked) {
 	// for (TableItem item : table.getItems()) {
 	// if (item.getData() == feature) {
 	// item.setChecked(checked);
@@ -156,11 +159,11 @@ public class WizardPageSelectFeatures extends WizardPage {
 	// }
 	// }
 
-	public Set<Feature> getSelectedFeatures() {
-		Set<Feature> result = new HashSet<Feature>();
+	public Set<IFeature> getSelectedFeatures() {
+		Set<IFeature> result = new HashSet<IFeature>();
 		for (TableItem item : table.getItems()) {
 			if (item.getChecked() && !item.getGrayed())
-				result.add((Feature) item.getData());
+				result.add((IFeature) item.getData());
 		}
 		return result;
 	}
@@ -170,16 +173,16 @@ public class WizardPageSelectFeatures extends WizardPage {
 	 * 
 	 * @return
 	 */
-	public Set<Feature> getNotSelectedFeatures() {
-		Set<Feature> result = new HashSet<Feature>();
+	public Set<IFeature> getNotSelectedFeatures() {
+		Set<IFeature> result = new HashSet<IFeature>();
 		for (TableItem item : table.getItems()) {
 			if (!item.getChecked() && !item.getGrayed())
-				result.add((Feature) item.getData());
+				result.add((IFeature) item.getData());
 		}
 		return result;
 	}
 
-	public void setInitialSelection(Set<Feature> selected, Set<Feature> grayed) {
+	public void setInitialSelection(Set<IFeature> selected, Set<IFeature> grayed) {
 		if (selected != null)
 			this.initialSelected = selected;
 		else
@@ -190,7 +193,7 @@ public class WizardPageSelectFeatures extends WizardPage {
 			this.initialGrayed = Collections.EMPTY_SET;
 	}
 
-	public void setInitialSelection(Set<Feature> initialSelection) {
+	public void setInitialSelection(Set<IFeature> initialSelection) {
 		setInitialSelection(initialSelection, null);
 	}
 

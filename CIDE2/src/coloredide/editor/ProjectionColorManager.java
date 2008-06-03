@@ -6,14 +6,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.text.source.Annotation;
 
 import coloredide.editor.inlineprojection.ColoredInlineProjectionAnnotation;
 import coloredide.editor.inlineprojection.InlineProjectionAnnotationModel;
 import coloredide.editor.inlineprojection.InlineProjectionSourceViewer;
-import coloredide.features.Feature;
-import coloredide.features.FeatureManager;
+import coloredide.features.IFeature;
+import coloredide.features.IFeatureModel;
 import coloredide.features.source.ColoredSourceFile;
 
 @SuppressWarnings("restriction")
@@ -25,24 +24,24 @@ public class ProjectionColorManager {
 		this.editor = editor;
 	}
 
-	private final Set<Feature> collapsedColors = new HashSet<Feature>();
+	private final Set<IFeature> collapsedColors = new HashSet<IFeature>();
 
-	public Set<Feature> getExpandedColors() {
+	public Set<IFeature> getExpandedColors() {
 		ColoredSourceFile sourceFile = editor.getSourceFile();
-		IProject p = sourceFile.getProject();
-		Set<Feature> visibleFeatures = new HashSet<Feature>(FeatureManager
-				.getVisibleFeatures(p));
+		IFeatureModel fm = sourceFile.getFeatureModel();
+		Set<IFeature> visibleFeatures = new HashSet<IFeature>(fm
+				.getVisibleFeatures());
 		visibleFeatures.removeAll(collapsedColors);
 
 		return visibleFeatures;
 	}
 
-	public void expandColor(Feature color) {
+	public void expandColor(IFeature color) {
 		collapsedColors.remove(color);
 		updateProjectionAnnotations();
 	}
 
-	public void collapseColor(Feature color) {
+	public void collapseColor(IFeature color) {
 		collapsedColors.add(color);
 		updateProjectionAnnotations();
 	}
@@ -61,7 +60,7 @@ public class ProjectionColorManager {
 				.getSourceViewerI();
 		InlineProjectionAnnotationModel annotationModel = viewer
 				.getInlineProjectionAnnotationModel();
-		Set<Feature> visibleColors = getExpandedColors();
+		Set<IFeature> visibleColors = getExpandedColors();
 
 		List<Annotation> changedAnnotations = new ArrayList<Annotation>();
 		for (Iterator iter = annotationModel.getAnnotationIterator(); iter

@@ -6,15 +6,14 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocumentListener;
 
-import coloredide.editor.ColoredTextEditor;
-import coloredide.features.Feature;
-import coloredide.features.source.ColoredSourceFile;
-import coloredide.features.source.SourceFileColorManager;
-
 import cide.gast.ASTNode;
 import cide.gast.ASTVisitor;
 import cide.gast.ISourceFile;
 import cide.gparser.ParseException;
+import coloredide.editor.ColoredTextEditor;
+import coloredide.features.IFeature;
+import coloredide.features.source.ColoredSourceFile;
+import coloredide.features.source.SourceFileColorManager;
 
 /**
  * controls the color-cache (to keep colors during editing) and connects it to
@@ -51,7 +50,7 @@ public class ColorCacheManager implements IDocumentListener {
 		cache = new ColorCache();
 		ast.accept(new ASTVisitor() {
 			public void postVisit(ASTNode node) {
-				Set<Feature> colors = colorManager.getOwnColors(node);
+				Set<IFeature> colors = colorManager.getOwnColors(node);
 				cache.addItemOL(node.getClass().getName(), colors, node
 						.getStartPosition(), node.getLength());
 			}
@@ -70,11 +69,11 @@ public class ColorCacheManager implements IDocumentListener {
 			source.getAST().accept(new ASTVisitor() {
 				@Override
 				public void postVisit(ASTNode node) {
-					Set<Feature> cachedColors = cache.findItemColors(node
+					Set<IFeature> cachedColors = cache.findItemColors(node
 							.getClass().getName(), node.getStartPosition(),
 							node.getLength());
 					if (cachedColors != null) {
-						Set<Feature> actualColors = colorManager
+						Set<IFeature> actualColors = colorManager
 								.getOwnColors(node);
 						if (!cachedColors.equals(actualColors))
 							colorManager.setColors(node, cachedColors);

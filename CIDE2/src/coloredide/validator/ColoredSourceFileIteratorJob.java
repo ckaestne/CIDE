@@ -14,9 +14,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 
-import cide.gast.ISourceFile;
-
-import coloredide.CIDECorePlugin;
+import coloredide.features.FeatureModelManager;
+import coloredide.features.IFeatureModel;
 import coloredide.features.source.ColoredSourceFile;
 
 public abstract class ColoredSourceFileIteratorJob extends WorkspaceJob {
@@ -53,8 +52,10 @@ public abstract class ColoredSourceFileIteratorJob extends WorkspaceJob {
 
 		monitor.beginTask(jobDescription, projects.size());
 
+		
 		for (IProject project : projects) {
-			processProject(project, new SubProgressMonitor(monitor, 1));
+			IFeatureModel featureModel = FeatureModelManager.getInstance().getFeatureModelCore(project);
+			processProject(project, featureModel,new SubProgressMonitor(monitor, 1));
 		}
 
 		finish();
@@ -68,8 +69,8 @@ public abstract class ColoredSourceFileIteratorJob extends WorkspaceJob {
 	protected void finish() {
 	}
 
-	private void processProject(IProject project, IProgressMonitor monitor)
-			throws CoreException {
+	private void processProject(IProject project, IFeatureModel featureModel,
+			IProgressMonitor monitor) throws CoreException {
 		if (monitor.isCanceled())
 			return;
 
@@ -78,38 +79,40 @@ public abstract class ColoredSourceFileIteratorJob extends WorkspaceJob {
 		monitor.subTask(jobPrefix + " " + project.getProject().getName());
 		cleanProject(project, monitor);
 
-		processContainer(project, monitor);
+		processContainer(project, featureModel, monitor);
 
 		monitor.done();
 	}
 
-	private void processContainer(IContainer container, IProgressMonitor monitor)
+	private void processContainer(IContainer container,
+			IFeatureModel featureModel, IProgressMonitor monitor)
 			throws CoreException {
 		if (monitor.isCanceled())
 			return;
 
 		for (IResource resource : container.members()) {
 			if (resource instanceof IContainer)
-				processContainer((IContainer) resource, monitor);
+				processContainer((IContainer) resource, featureModel, monitor);
 			if (resource instanceof IFile)
-				processSourceFile((IFile) resource, monitor);
+				processSourceFile((IFile) resource, featureModel, monitor);
 		}
 	}
 
-	private void processSourceFile(IFile file, IProgressMonitor monitor)
-			throws CoreException {
+	private void processSourceFile(IFile file, IFeatureModel featureModel,
+			IProgressMonitor monitor) throws CoreException {
 		if (monitor.isCanceled())
 			return;
 		if ("color".equals(file.getFileExtension()))
 			return;
 
-		ColoredSourceFile source = ColoredSourceFile.getColoredSourceFile(file);
+		ColoredSourceFile source = ColoredSourceFile.getColoredSourceFile(file,
+				featureModel);
 		if (!source.isColored())
 			return;
 
 		monitor.subTask(jobPrefix + " " + file.getName());
 
-//		ISourceFile ast = source.getAST();
+		// ISourceFile ast = source.getAST();
 		// ColoredIDEPlugin.getDefault().colorCache.updateASTColors(project,
 		// ast,
 		// source.getColorManager());
@@ -134,9 +137,7 @@ public abstract class ColoredSourceFileIteratorJob extends WorkspaceJob {
 				if ("color".equals(file.getFileExtension()))
 					continue;
 
-				ColoredSourceFile source = ColoredSourceFile
-						.getColoredSourceFile(file);
-				if (source.isColored())
+				if (ColoredSourceFile.isFileColored(file))
 					result++;
 			}
 

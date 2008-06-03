@@ -5,13 +5,13 @@ package coloredide.utils;
 
 import org.eclipse.jface.action.Action;
 
-import coloredide.features.Feature;
+import coloredide.features.IFeature;
 
 
-public class FeatureAction extends Action {
-	protected Feature feature;
+public abstract class FeatureAction extends Action {
+	protected IFeature feature;
 
-	public FeatureAction(Feature feature) {
+	public FeatureAction(IFeature feature) {
 		super();
 		this.feature = feature;
 	}

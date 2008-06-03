@@ -13,14 +13,16 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 
-import coloredide.features.Feature;
-import coloredide.features.FeatureManager;
+import coloredide.CIDECorePlugin;
+import coloredide.features.FeatureModelManager;
+import coloredide.features.FeatureModelNotFoundException;
+import coloredide.features.IFeature;
+import coloredide.features.IFeatureModel;
 import coloredide.features.source.ColoredSourceFile;
 import coloredide.features.source.DirectoryColorManager;
 
@@ -30,18 +32,21 @@ public class CreateConfigurationJob extends WorkspaceJob {
 
 	private final IProject sourceProject;
 
-	private final Set<Feature> selectedFeatures;
+	private final Set<IFeature> selectedFeatures;
 
 	private final IProject targetProject;
 
+	private IFeatureModel featureModel;
+
 	public CreateConfigurationJob(IProject sourceProject,
-			Set<Feature> selectedFeatures, String projectName) {
+			Set<IFeature> selectedFeatures, String projectName) {
 		super("Generating Variant: " + sourceProject.getName() + " -> "
 				+ projectName);
 		this.sourceProject = sourceProject;
 		root = ResourcesPlugin.getWorkspace().getRoot();
 		this.targetProject = root.getProject(projectName);
 		this.selectedFeatures = selectedFeatures;
+
 	}
 
 	public IStatus runInWorkspace(IProgressMonitor monitor)
@@ -67,6 +72,9 @@ public class CreateConfigurationJob extends WorkspaceJob {
 			cpFile.copy(targetProject.getFile(".classpath").getFullPath(),
 					true, new SubProgressMonitor(monitor, 0));
 		monitor.worked(1);
+
+			featureModel = FeatureModelManager.getInstance().getFeatureModelCore(
+					sourceProject);
 
 		configureProject(sourceProject, targetProject, monitor);
 
@@ -131,8 +139,8 @@ public class CreateConfigurationJob extends WorkspaceJob {
 		if (skipColoredFile(file))
 			return;
 
-		ColoredSourceFile sourceFile = ColoredSourceFile
-				.getColoredSourceFile(file);
+		ColoredSourceFile sourceFile = ColoredSourceFile.getColoredSourceFile(
+				file, featureModel);
 
 		if (!sourceFile.isColored()) {
 			IFile targetFile = targetProject.getFile(file.getFullPath()
@@ -161,8 +169,8 @@ public class CreateConfigurationJob extends WorkspaceJob {
 	}
 
 	private boolean skipColoredFile(IFile file) {
-		Set<Feature> fileColors = getFileColors(file);
-		for (Feature fileColor : fileColors)
+		Set<IFeature> fileColors = getFileColors(file);
+		for (IFeature fileColor : fileColors)
 			if (!selectedFeatures.contains(fileColor))
 				return true;
 		return false;
@@ -170,19 +178,19 @@ public class CreateConfigurationJob extends WorkspaceJob {
 
 	private boolean skipColoredContainer(IContainer dir) {
 		DirectoryColorManager colorManager = DirectoryColorManager
-				.getColoredDirectoryManagerS(dir);
+				.getColoredDirectoryManagerS(dir, featureModel);
 		if (colorManager == null)
 			return false;
-		Set<Feature> folderColors = colorManager.getFolderColors();
-		for (Feature folderColor : folderColors)
+		Set<IFeature> folderColors = colorManager.getFolderColors();
+		for (IFeature folderColor : folderColors)
 			if (!selectedFeatures.contains(folderColor))
 				return true;
 		return false;
 	}
 
-	private Set<Feature> getFileColors(IFile file) {
+	private Set<IFeature> getFileColors(IFile file) {
 		DirectoryColorManager colorManager = DirectoryColorManager
-				.getColoredDirectoryManagerS(file.getParent());
+				.getColoredDirectoryManagerS(file.getParent(), featureModel);
 		return colorManager.getColors(file);
 	}
 
@@ -207,9 +215,9 @@ public class CreateConfigurationJob extends WorkspaceJob {
 		monitor.subTask("Generating " + sourceFile.getName());
 
 		try {
-			Set<Feature> hiddenColors = new HashSet<Feature>();
-			hiddenColors.addAll(FeatureManager
-					.getVisibleFeatures(sourceProject));
+			Set<IFeature> hiddenColors = new HashSet<IFeature>();
+			hiddenColors.addAll(sourceFile.getFeatureModel()
+					.getVisibleFeatures());
 			hiddenColors.removeAll(selectedFeatures);
 			return new ConfigureASTHelper().hideCode(sourceFile, hiddenColors);
 		} finally {

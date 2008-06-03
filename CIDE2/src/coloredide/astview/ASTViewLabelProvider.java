@@ -32,9 +32,9 @@ import cide.gast.Property;
 import cide.gast.PropertyOptionalWithDefault;
 import cide.gast.PropertyZeroOrMore;
 import cide.gast.PropertyZeroOrOne;
-import coloredide.features.Feature;
-import coloredide.features.FeatureManager;
+import coloredide.features.IFeature;
 import coloredide.features.source.ColoredSourceFile;
+import coloredide.utils.ColorHelper;
 
 public class ASTViewLabelProvider extends LabelProvider implements
 		IColorProvider, IFontProvider {
@@ -163,10 +163,9 @@ public class ASTViewLabelProvider extends LabelProvider implements
 
 		if (node != null) {
 			ColoredSourceFile source = fView.getColoredJavaSourceFile();
-			Set<Feature> colors = source.getColorManager().getColors(node);
+			Set<IFeature> colors = source.getColorManager().getColors(node);
 			if (colors.size() > 0) {
-				RGB rgb = FeatureManager.getCombinedRGB(colors, source
-						.getProject());
+				RGB rgb = ColorHelper.getCombinedRGB(colors);
 				return new Color(Display.getCurrent(), rgb);
 			}
 		}

@@ -2,7 +2,6 @@ package coloredide.editor;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
@@ -17,16 +16,15 @@ import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Display;
 
-import cide.features.IFeature;
 import cide.gast.ASTNode;
 import cide.gast.ASTVisitor;
 import cide.gast.IASTNode;
 import cide.gparser.ParseException;
 import cide.gparser.TokenMgrError;
-import coloredide.features.Feature;
-import coloredide.features.FeatureManager;
+import coloredide.features.IFeature;
 import coloredide.features.source.ColoredSourceFile;
 import coloredide.features.source.SourceFileColorManager;
+import coloredide.utils.ColorHelper;
 
 public class ColorRepairer implements IPresentationRepairer {
 
@@ -42,7 +40,7 @@ public class ColorRepairer implements IPresentationRepairer {
 
 	public void createPresentation(TextPresentation presentation,
 			ITypedRegion damage) {
-		if (!sourceFile.isColored()) {
+		if (sourceFile==null || !sourceFile.isColored()) {
 			editor.markNotColored();
 			return;
 		}
@@ -61,8 +59,8 @@ public class ColorRepairer implements IPresentationRepairer {
 
 				if (hideInvisibleCode)
 					segments = grayInvisibleCode(segments, root, sourceFile
-							.getColorManager(), FeatureManager
-							.getVisibleFeatures(sourceFile.getProject()));
+							.getColorManager(), sourceFile.getFeatureModel()
+							.getVisibleFeatures());
 
 				for (CodeSegment segment : segments)
 					processSegment(presentation, damage, segment);
@@ -93,7 +91,7 @@ public class ColorRepairer implements IPresentationRepairer {
 	 */
 	private List<CodeSegment> grayInvisibleCode(List<CodeSegment> segments,
 			IASTNode ast, SourceFileColorManager colorManager,
-			Collection<Feature> visibleFeatures) {
+			Collection<IFeature> visibleFeatures) {
 		ArrayList<CodeSegment> result = new ArrayList<CodeSegment>();
 
 		List<Position> hiddenSegments = getHiddenSegments(ast, colorManager,
@@ -137,7 +135,7 @@ public class ColorRepairer implements IPresentationRepairer {
 
 	private List<Position> getHiddenSegments(IASTNode ast,
 			final SourceFileColorManager colorManager,
-			final Collection<Feature> visibleFeatures) {
+			final Collection<IFeature> visibleFeatures) {
 
 		final LinkedList<Position> invisibleSegments = new LinkedList<Position>();
 		ast.accept(new ASTVisitor() {
@@ -176,8 +174,8 @@ public class ColorRepairer implements IPresentationRepairer {
 				super.postVisit(node);
 			}
 
-			private boolean overlap(Collection<Feature> s1,
-					Collection<Feature> s2) {
+			private boolean overlap(Collection<IFeature> s1,
+					Collection<IFeature> s2) {
 				for (IFeature f : s1)
 					if (s2.contains(f))
 						return true;
@@ -233,8 +231,7 @@ public class ColorRepairer implements IPresentationRepairer {
 
 		Color background = null;
 		if (!segment.getColors().isEmpty())
-			background = FeatureManager.getCombinedColor(segment.getColors(),
-					sourceFile.getProject());
+			background = ColorHelper.getCombinedColor(segment.getColors());
 		Color foreground = null;
 		if (segment.isHidden)
 			foreground = gray;

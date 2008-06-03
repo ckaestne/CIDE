@@ -16,23 +16,30 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 
-import coloredide.features.Feature;
-import coloredide.features.FeatureManager;
+import coloredide.features.FeatureModelManager;
+import coloredide.features.IFeature;
+import coloredide.features.IFeatureModel;
 import coloredide.features.source.DirectoryColorManager;
 
+/**
+ * sets colors for a set of files or directories
+ * 
+ * @author ckaestne
+ * 
+ */
 public class SetCompUnitColorJob extends WorkspaceJob {
 
 	private Collection<IResource> resources;
 
-	private Set<Feature> features;
+	private Set<IFeature> features;
 
-	private Set<Feature> removedfeatures;
+	private Set<IFeature> removedfeatures;
 
 	private List<DirectoryColorManager> batched = new ArrayList<DirectoryColorManager>();
 
 	public SetCompUnitColorJob(Collection<IResource> resources,
-			Set<Feature> features, Set<Feature> removedfeatures) {
-		super("Set Compilation Unit Colors");
+			Set<IFeature> features, Set<IFeature> removedfeatures) {
+		super("Set Resource Colors");
 		this.resources = resources;
 		this.features = features;
 		this.removedfeatures = removedfeatures;
@@ -47,8 +54,9 @@ public class SetCompUnitColorJob extends WorkspaceJob {
 		for (IResource resource : resources) {
 			if (resource instanceof IFile) {
 				IFile file = (IFile) resource;
+				IFeatureModel fm=FeatureModelManager.getInstance().getFeatureModelCore(file.getProject());
 				DirectoryColorManager colorManager = DirectoryColorManager
-						.getColoredDirectoryManagerS(resource.getParent());
+						.getColoredDirectoryManagerS(resource.getParent(),fm);
 				colorManager.beginBatch();
 				batched.add(colorManager);
 
@@ -57,8 +65,9 @@ public class SetCompUnitColorJob extends WorkspaceJob {
 
 			if (resource instanceof IFolder || resource instanceof IProject) {
 				IContainer container = (IContainer) resource;
+				IFeatureModel fm=FeatureModelManager.getInstance().getFeatureModelCore(resource.getProject());
 				DirectoryColorManager colorManager = DirectoryColorManager
-						.getColoredDirectoryManagerS(container);
+						.getColoredDirectoryManagerS(container,fm);
 				colorManager.beginBatch();
 				batched.add(colorManager);
 
@@ -78,16 +87,16 @@ public class SetCompUnitColorJob extends WorkspaceJob {
 	}
 
 	private void setDirColors(DirectoryColorManager colorManager) {
-		for (Feature color : features)
+		for (IFeature color : features)
 			colorManager.addFolderColor(color);
-		for (Feature color : removedfeatures)
+		for (IFeature color : removedfeatures)
 			colorManager.removeFolderColor(color);
 	}
 
 	private void setFileColors(IFile file, DirectoryColorManager colorManager) {
-		for (Feature color : features)
+		for (IFeature color : features)
 			colorManager.addColor(file, color);
-		for (Feature color : removedfeatures)
+		for (IFeature color : removedfeatures)
 			colorManager.removeColor(file, color);
 	}
 

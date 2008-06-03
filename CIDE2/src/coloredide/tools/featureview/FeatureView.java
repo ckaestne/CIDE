@@ -1,7 +1,6 @@
 package coloredide.tools.featureview;
 
 import java.util.Collections;
-import java.util.List;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.action.Action;
@@ -14,21 +13,12 @@ import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.IInputValidator;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.CheckStateChangedEvent;
-import org.eclipse.jface.viewers.CheckboxTableViewer;
-import org.eclipse.jface.viewers.ICheckStateListener;
-import org.eclipse.jface.viewers.ILabelProviderListener;
-import org.eclipse.jface.viewers.IStructuredContentProvider;
-import org.eclipse.jface.viewers.ITableColorProvider;
-import org.eclipse.jface.viewers.ITableLabelProvider;
-import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.ColorDialog;
 import org.eclipse.swt.widgets.Composite;
@@ -54,9 +44,10 @@ import coloredide.ColorListChangedEvent;
 import coloredide.ColoredIDEImages;
 import coloredide.FileColorChangedEvent;
 import coloredide.IColorChangeListener;
-import coloredide.features.Feature;
-import coloredide.features.FeatureManager;
-import coloredide.features.FeatureNameManager;
+import coloredide.features.FeatureModelManager;
+import coloredide.features.FeatureModelNotFoundException;
+import coloredide.features.IFeature;
+import coloredide.features.IFeatureModel;
 import coloredide.utils.ColorHelper;
 import coloredide.utils.EditorUtility;
 
@@ -190,9 +181,12 @@ public class FeatureView extends ViewPart {
 				if (project != null && e.detail == SWT.CHECK) {
 					TableItem item = (TableItem) e.item;
 
-					FeatureNameManager.getFeatureNameManager(project)
-							.setFeatureVisible((Feature) item.getData(),
-									item.getChecked());
+					IFeature feature = (IFeature) item.getData();
+					try {
+						feature.setVisibile(item.getChecked());
+					} catch (UnsupportedOperationException ex) {
+						item.setChecked(feature.isVisible());
+					}
 				}
 			}
 		});
@@ -200,6 +194,7 @@ public class FeatureView extends ViewPart {
 	}
 
 	private IProject project;
+	private IFeatureModel featureModel;
 
 	private Menu featureContextMenu;
 
@@ -209,6 +204,14 @@ public class FeatureView extends ViewPart {
 		if (project == newProject)
 			return;
 		project = newProject;
+		if (project!=null)
+		try {
+			featureModel = FeatureModelManager.getInstance().getFeatureModel(
+					project);
+		} catch (FeatureModelNotFoundException e) {
+			project = null;
+			featureModel = null;
+		} else featureModel=null;
 
 		redraw();
 	}
@@ -216,7 +219,7 @@ public class FeatureView extends ViewPart {
 	private void redraw() {
 		try {
 			table.setRedraw(false);
-			Feature oldSelection = getSelectedFeature();
+			IFeature oldSelection = getSelectedFeature();
 
 			for (TableItem item : table.getItems()) {
 				if (item.getBackground(1) != null)
@@ -228,21 +231,16 @@ public class FeatureView extends ViewPart {
 
 				boolean isFiltered = (filterAction != null)
 						&& filterAction.isChecked();
-				FeatureNameManager featureNameManager = FeatureNameManager
-						.getFeatureNameManager(project);
-				for (Feature feature : FeatureManager.getFeatures())
-					if (!isFiltered
-							|| featureNameManager.isFeatureVisible(feature)) {
+				for (IFeature feature : ColorHelper.sortFeatures(featureModel
+						.getFeatures()))
+					if (!isFiltered || feature.isVisible()) {
 						TableItem item = new TableItem(table, SWT.DEFAULT);
-						item.setText(0, featureNameManager
-								.getFeatureName(feature));
-						item.setText(1, ColorHelper.rgb2str(feature
-								.getRGB(project)));
+						item.setText(0, feature.getName());
+						item.setText(1, ColorHelper.rgb2str(feature.getRGB()));
 						item.setBackground(1, new Color(Display.getCurrent(),
-								FeatureManager.getCombinedRGB(Collections
-										.singleton(feature), project)));
-						item.setChecked(featureNameManager
-								.isFeatureVisible(feature));
+								ColorHelper.getCombinedRGB(Collections
+										.singleton(feature))));
+						item.setChecked(feature.isVisible());
 						item.setData(feature);
 					}
 
@@ -253,7 +251,7 @@ public class FeatureView extends ViewPart {
 		}
 	}
 
-	private void setSelectedFeature(Feature feature) {
+	private void setSelectedFeature(IFeature feature) {
 		if (feature != null)
 			for (TableItem item : table.getItems()) {
 				if (item.getData() == feature) {
@@ -313,15 +311,14 @@ public class FeatureView extends ViewPart {
 
 		renameAction = new Action("Rename...") {
 			public void run() {
-				Feature feature = getSelectedFeature();
+				IFeature feature = getSelectedFeature();
 				if (feature == null)
 					return;
-				FeatureNameManager fnm = FeatureNameManager
-						.getFeatureNameManager(project);
-				String oldName = fnm.getFeatureName(feature);
+
+				String oldName = feature.getName();
 
 				InputDialog input = new InputDialog(getSite().getShell(),
-						"Rename Feature", "New name:", oldName,
+						"Rename IFeature", "New name:", oldName,
 						new IInputValidator() {
 							public String isValid(String newText) {
 								if (newText.length() == 0)
@@ -329,31 +326,40 @@ public class FeatureView extends ViewPart {
 								return null;
 							}
 						});
-				if (input.open() == InputDialog.OK) {
-					fnm.setFeatureName(feature, input.getValue());
-				}
+				if (input.open() == InputDialog.OK)
+					try {
+						feature.setName(input.getValue());
+					} catch (UnsupportedOperationException e) {
+						// nothing yet. TODO prevent renaming features that
+						// cannot
+						// be renamed
+					}
 			}
 		};
-		renameAction.setToolTipText("Rename Feature");
+		renameAction.setToolTipText("Rename IFeature");
 		renameAction.setAccelerator(SWT.F2);
 
 		selectColorAction = new Action("Select color...") {
 			@Override
 			public void run() {
-				Feature feature = getSelectedFeature();
+				IFeature feature = getSelectedFeature();
 				if (feature == null)
 					return;
 
-				RGB oldColor = feature.getRGB(project);
+				RGB oldColor = feature.getRGB();
 				ColorDialog colorDialog = new ColorDialog(getSite().getShell());
 				colorDialog.setRGB(oldColor);
-				colorDialog.setText("Color for Feature \""
-						+ feature.getShortName(project) + "\"");
+				colorDialog.setText("Color for IFeature \"" + feature.getName()
+						+ "\"");
 				RGB newColor = colorDialog.open();
-				if (newColor != null && newColor != oldColor) {
-					FeatureNameManager.getFeatureNameManager(project)
-							.setFeatureColor(feature, newColor);
-				}
+				if (newColor != null && newColor != oldColor)
+					try {
+						feature.setRGB(newColor);
+					} catch (UnsupportedOperationException e) {
+						// nothing yet. TODO prevent renaming features that
+						// cannot be renamed
+					}
+
 			}
 		};
 		findFeatureCodeAction = new Action("Find feature's code") {
@@ -366,11 +372,11 @@ public class FeatureView extends ViewPart {
 		};
 	}
 
-	protected Feature getSelectedFeature() {
+	protected IFeature getSelectedFeature() {
 		int idx = table.getSelectionIndex();
 		if (idx == -1)
 			return null;
-		return (Feature) table.getItem(idx).getData();
+		return (IFeature) table.getItem(idx).getData();
 	}
 
 	private void hookDoubleClickAction() {

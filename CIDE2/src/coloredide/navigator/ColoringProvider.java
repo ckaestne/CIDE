@@ -14,14 +14,21 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 
-import coloredide.features.Feature;
-import coloredide.features.FeatureManager;
+import coloredide.features.FeatureModelManager;
+import coloredide.features.FeatureModelNotFoundException;
+import coloredide.features.IFeature;
+import coloredide.features.IFeatureModel;
 import coloredide.features.source.DirectoryColorManager;
+import coloredide.utils.ColorHelper;
 
 /**
- * registration apparently works only for the project explorer not for the resource navigator
+ * provides colors for the project explorer
+ * 
+ * registration apparently works only for the project explorer not for the
+ * resource navigator
+ * 
  * @author ckaestne
- *
+ * 
  */
 public class ColoringProvider implements ILabelProvider, IColorProvider {
 	private Color color_red = Display.getCurrent()
@@ -57,19 +64,29 @@ public class ColoringProvider implements ILabelProvider, IColorProvider {
 	}
 
 	public Color getBackground(Object element) {
-		if (element instanceof IFile){
-			IFile file=(IFile) element;
-			DirectoryColorManager colorManager = DirectoryColorManager.getColoredDirectoryManagerS(file.getParent());
-			Set<Feature> colors = colorManager.getColors(file);
-			if (colors!=null && !colors.isEmpty())
-				return FeatureManager.getCombinedColor(colors,file.getProject());
-		}
-		if (element instanceof IFolder || element instanceof IProject){
-			IContainer folder=(IContainer) element;
-			DirectoryColorManager colorManager = DirectoryColorManager.getColoredDirectoryManagerS(folder);
-			Set<Feature> colors = colorManager.getFolderColors();
-			if (colors!=null && !colors.isEmpty())
-				return FeatureManager.getCombinedColor(colors,folder.getProject());
+		try {
+			if (element instanceof IFile) {
+				IFile file = (IFile) element;
+				IFeatureModel fm = FeatureModelManager.getInstance()
+						.getFeatureModel(file.getProject());
+				DirectoryColorManager colorManager = DirectoryColorManager
+						.getColoredDirectoryManagerS(file.getParent(), fm);
+				Set<IFeature> colors = colorManager.getColors(file);
+				if (colors != null && !colors.isEmpty())
+					return ColorHelper.getCombinedColor(colors);
+			}
+			if (element instanceof IFolder || element instanceof IProject) {
+				IContainer folder = (IContainer) element;
+				IFeatureModel fm = FeatureModelManager.getInstance()
+						.getFeatureModel(folder.getProject());
+				DirectoryColorManager colorManager = DirectoryColorManager
+						.getColoredDirectoryManagerS(folder, fm);
+				Set<IFeature> colors = colorManager.getFolderColors();
+				if (colors != null && !colors.isEmpty())
+					return ColorHelper.getCombinedColor(colors);
+			}
+		} catch (FeatureModelNotFoundException e) {
+			// ignore problems, just don't add colors to those projects
 		}
 		return null;
 	}

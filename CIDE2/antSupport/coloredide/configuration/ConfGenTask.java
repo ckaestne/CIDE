@@ -1,7 +1,7 @@
 package coloredide.configuration;
 
+import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.apache.tools.ant.BuildException;
@@ -13,8 +13,10 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 
-import coloredide.features.Feature;
-import coloredide.features.FeatureManager;
+import coloredide.features.FeatureModelManager;
+import coloredide.features.FeatureModelNotFoundException;
+import coloredide.features.IFeature;
+import coloredide.features.IFeatureModel;
 
 /**
  * task to automate the generation of program variants from colored projects.
@@ -46,27 +48,36 @@ public class ConfGenTask extends Task {
 			if (sourceProject == null)
 				throw new BuildException("Source Project " + inputProject
 						+ " not found.");
+			IFeatureModel featureModel;
+			try {
+				featureModel = FeatureModelManager.getInstance()
+						.getFeatureModel(sourceProject);
+			} catch (FeatureModelNotFoundException e) {
+				throw new BuildException("Feature Model for project "
+						+ inputProject + " not found.", e);
+			}
 
-			List<Feature> visibleFeatures = FeatureManager
-					.getVisibleFeatures(sourceProject);
+			Collection<IFeature> visibleFeatures = featureModel
+					.getVisibleFeatures();
 			if (visibleFeatures.size() == 0)
 				throw new BuildException("Source Project " + inputProject
 						+ " does not contain any (visible) features.");
 			System.out.println("Available Features:");
-			for (Feature f : visibleFeatures)
-				System.out.println("\t" + f.getShortName(sourceProject));
+			for (IFeature f : visibleFeatures)
+				System.out.println("\t" + f.getName());
 
 			String featureList = ("," + featureSelection + ",").toLowerCase();
-			Set<Feature> features = new HashSet<Feature>();
-			for (Feature f : visibleFeatures) {
-				if (featureList.indexOf("," + f.getShortName(sourceProject).toLowerCase() + ",")>=0)
+			Set<IFeature> features = new HashSet<IFeature>();
+			for (IFeature f : visibleFeatures) {
+				if (featureList.indexOf("," + f.getName().toLowerCase() + ",") >= 0)
 					features.add(f);
 			}
 			System.out.println("Generating configuration for features: ");
-			for (Feature f : features)
-				System.out.println("\t" + f.getShortName(sourceProject));
-			if (features.size()==0) System.out.println("\t[NONE]");
-			
+			for (IFeature f : features)
+				System.out.println("\t" + f.getName());
+			if (features.size() == 0)
+				System.out.println("\t[NONE]");
+
 			CreateConfigurationJob job = new CreateConfigurationJob(
 					sourceProject, features, outputProject);
 			IProgressMonitor monitor = (IProgressMonitor) getProject()

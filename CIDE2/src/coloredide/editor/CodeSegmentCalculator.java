@@ -11,11 +11,11 @@ import cide.gast.ASTNode;
 import cide.gast.ASTVisitor;
 import cide.gast.IASTNode;
 import cide.gast.IASTVisitor;
-import coloredide.features.Feature;
+import coloredide.features.IFeature;
 import coloredide.features.source.SourceFileColorManager;
 
 public class CodeSegmentCalculator {
-	protected static final Set<Feature> NOCOLORS = new HashSet<Feature>();
+	protected static final Set<IFeature> NOCOLORS = new HashSet<IFeature>();
 
 	public static List<CodeSegment> getCodeSegments(IASTNode ast,
 			final SourceFileColorManager colorManager) {
@@ -40,7 +40,7 @@ public class CodeSegmentCalculator {
 				while (stack.peek().endPosition() <= node.getStartPosition())
 					list.add(stack.pop());
 
-				Set<Feature> colors = colorManager.getColors(node);
+				Set<IFeature> colors = colorManager.getColors(node);
 				if (stack.peek().getColors().equals(colors)) {
 					// colors did not change, ignore
 					// stack.peek().containingNodes.add(node);

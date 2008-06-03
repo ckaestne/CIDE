@@ -22,8 +22,8 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
 
-import coloredide.features.Feature;
-import coloredide.features.FeatureManager;
+import coloredide.features.IFeature;
+import coloredide.utils.ColorHelper;
 
 public class InlineProjectionSupport {
 
@@ -97,10 +97,10 @@ public class InlineProjectionSupport {
 
 						Color c = gc.getForeground();
 						if (annotation instanceof ColoredInlineProjectionAnnotation) {
-							Set<Feature> colors = ((ColoredInlineProjectionAnnotation) annotation)
+							Set<IFeature> colors = ((ColoredInlineProjectionAnnotation) annotation)
 									.getColors();
-							Color combinedColor = FeatureManager
-									.getCombinedColor(colors,((ColoredInlineProjectionAnnotation) annotation).getProject());
+							Color combinedColor = ColorHelper
+									.getCombinedColor(colors);
 							gc.setForeground(combinedColor);
 						} else
 							gc.setForeground(color);
@@ -138,7 +138,8 @@ public class InlineProjectionSupport {
 		}
 	}
 
-	private class ProjectionListener implements IProjectionListener, IInlineProjectionListener {
+	private class ProjectionListener implements IProjectionListener,
+			IInlineProjectionListener {
 
 		/*
 		 * @see org.eclipse.jface.text.source.projection.IProjectionListener#projectionEnabled()
@@ -351,17 +352,18 @@ public class InlineProjectionSupport {
 			fColumn = null;
 		}
 	}
-//
-//	private InlineProjectionSummary createProjectionSummary() {
-//		InlineProjectionSummary summary = new InlineProjectionSummary(fViewer,
-//				fAnnotationAccess);
-//		if (fSummarizableTypes != null) {
-//			int size = fSummarizableTypes.size();
-//			for (int i = 0; i < size; i++)
-//				summary.addAnnotationType((String) fSummarizableTypes.get(i));
-//		}
-//		return summary;
-//	}
+
+	//
+	// private InlineProjectionSummary createProjectionSummary() {
+	// InlineProjectionSummary summary = new InlineProjectionSummary(fViewer,
+	// fAnnotationAccess);
+	// if (fSummarizableTypes != null) {
+	// int size = fSummarizableTypes.size();
+	// for (int i = 0; i < size; i++)
+	// summary.addAnnotationType((String) fSummarizableTypes.get(i));
+	// }
+	// return summary;
+	// }
 
 	private IAnnotationHover createProjectionAnnotationHover() {
 		InlineProjectionAnnotationHover hover = new InlineProjectionAnnotationHover();

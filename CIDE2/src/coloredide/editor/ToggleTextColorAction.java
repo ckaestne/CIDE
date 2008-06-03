@@ -2,15 +2,15 @@ package coloredide.editor;
 
 import org.eclipse.jface.action.Action;
 
-import coloredide.features.Feature;
+import coloredide.features.IFeature;
 
 public class ToggleTextColorAction extends Action {
 
-	Feature feature;
+	IFeature feature;
 	private ToggleTextColorContext context;
 
-	ToggleTextColorAction(ToggleTextColorContext context, Feature feature) {
-		this.setText(feature.getName(context.getProject()));
+	ToggleTextColorAction(ToggleTextColorContext context, IFeature feature) {
+		this.setText(feature.getName());
 		this.setEnabled(context.isEnabled());
 		this.setChecked(context.isChecked(feature));
 		this.feature=feature;

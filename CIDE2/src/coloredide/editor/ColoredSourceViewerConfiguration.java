@@ -13,14 +13,16 @@ import coloredide.features.source.ColoredSourceFile;
 public class ColoredSourceViewerConfiguration extends SourceViewerConfiguration {
 	private IPresentationRepairer repairer;
 	private ColorDamager damager;
-	private ColoredTextHover textHover=null;
+	private ColoredTextHover textHover = null;
 
 	public ColoredSourceViewerConfiguration(ColoredSourceFile sourceFile,
 			ColoredTextEditor editor) {
-		repairer = new ColorRepairer(sourceFile, editor);
-		damager = new ColorDamager(sourceFile);
-		if (sourceFile.isColored())
-			textHover = new ColoredTextHover(sourceFile);
+		if (sourceFile != null) {
+			repairer = new ColorRepairer(sourceFile, editor);
+			damager = new ColorDamager(sourceFile);
+			if (sourceFile.isColored())
+				textHover = new ColoredTextHover(sourceFile);
+		}
 	}
 
 	public IPresentationReconciler getPresentationReconciler(
@@ -28,8 +30,10 @@ public class ColoredSourceViewerConfiguration extends SourceViewerConfiguration 
 		PresentationReconciler reconciler = new PresentationReconciler();
 		reconciler
 				.setDocumentPartitioning(getConfiguredDocumentPartitioning(sourceViewer));
-		reconciler.setDamager(damager, IDocument.DEFAULT_CONTENT_TYPE);
-		reconciler.setRepairer(repairer, IDocument.DEFAULT_CONTENT_TYPE);
+		if (damager != null)
+			reconciler.setDamager(damager, IDocument.DEFAULT_CONTENT_TYPE);
+		if (repairer != null)
+			reconciler.setRepairer(repairer, IDocument.DEFAULT_CONTENT_TYPE);
 
 		return reconciler;
 	}

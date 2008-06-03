@@ -9,7 +9,7 @@ import cide.gast.ASTVisitor;
 import cide.gast.IASTVisitor;
 import coloredide.ASTColorChangedEvent;
 import coloredide.CIDECorePlugin;
-import coloredide.features.Feature;
+import coloredide.features.IFeature;
 import coloredide.features.source.ColoredSourceFile;
 import coloredide.features.source.SourceFileColorManager;
 
@@ -33,7 +33,7 @@ public class CleanASTColorsAction extends Action {
 		this.setText("Clean colors");
 	}
 
-	boolean haveColor(List<ASTNode> nodes, Feature feature) {
+	boolean haveColor(List<ASTNode> nodes, IFeature feature) {
 		return file.getColorManager().hasColor(nodes.get(0), feature);
 	}
 

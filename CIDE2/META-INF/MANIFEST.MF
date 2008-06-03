@@ -2,13 +2,15 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: CIDE Core
 Bundle-SymbolicName: de.ovgu.cide.core;singleton:=true
-Bundle-Version: 1.1.10
+Bundle-Version: 1.2.0
 Bundle-Activator: coloredide.CIDECorePlugin
 Bundle-Vendor: Christian Kaestner
 Bundle-Localization: plugin
 Export-Package: coloredide;x-internal:=true,
  coloredide.astview.internal;x-internal:=true,
- coloredide.languages
+ coloredide.features,
+ coloredide.languages,
+ coloredide.utils
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui.ide,
  org.eclipse.jface.text,

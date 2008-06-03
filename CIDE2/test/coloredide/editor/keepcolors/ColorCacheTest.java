@@ -1,37 +1,82 @@
 package coloredide.editor.keepcolors;
 
-import static org.junit.Assert.*;
-
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.swt.graphics.RGB;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import coloredide.editor.keepcolors.ColorCache.ColoredItem;
-import coloredide.features.Feature;
-import coloredide.features.FeatureManager;
+import coloredide.features.IFeature;
 
 public class ColorCacheTest {
 
 	private ColorCache cache;
 
+	private class TestFeature implements IFeature {
+		private long id;
+
+		TestFeature(long id) {
+			this.id = id;
+		}
+
+		public long getId() {
+			return id;
+		}
+
+		public String getName() {
+			return "feature" + id;
+		}
+
+		public RGB getRGB() {
+			return new RGB(0, 0, 0);
+		}
+
+		public Set<IFeature> getRequiredFeatures() {
+			throw new UnsupportedOperationException();
+		}
+
+		public boolean isVisible() {
+
+			return true;
+		}
+
+		public void setName(String name) throws UnsupportedOperationException {
+			throw new UnsupportedOperationException();
+		}
+
+		public void setRGB(RGB color) throws UnsupportedOperationException {
+			throw new UnsupportedOperationException();
+		}
+
+		public void setVisibile(boolean isVisible)
+				throws UnsupportedOperationException {
+			throw new UnsupportedOperationException();
+		}
+
+		public int compareTo(IFeature o) {
+			return 0;
+		}
+
+	}
+
 	@Before
 	public void setUp() throws Exception {
 		cache = new ColorCache();
-		Set<Feature> f1 = new HashSet<Feature>();
-		f1.add(FeatureManager.getFeatures().get(2));
-		f1.add(FeatureManager.getFeatures().get(3));
-		Set<Feature> f2 = new HashSet<Feature>();
-		f2.add(FeatureManager.getFeatures().get(1));
-		cache.addItem("class", new HashSet<Feature>(), 0, 1000);
+		Set<IFeature> f1 = new HashSet<IFeature>();
+		f1.add(new TestFeature(2));
+		f1.add(new TestFeature(3));
+		Set<IFeature> f2 = new HashSet<IFeature>();
+		f2.add(new TestFeature(1));
+		cache.addItem("class", new HashSet<IFeature>(), 0, 1000);
 		cache.addItem("method", f1, 100, 900);
-		cache.addItem("statement", new HashSet<Feature>(), 200, 300);
+		cache.addItem("statement", new HashSet<IFeature>(), 200, 300);
 		cache.addItem("statement", f2, 400, 500);
-		cache.addItem("statement", new HashSet<Feature>(), 600, 700);
+		cache.addItem("statement", new HashSet<IFeature>(), 600, 700);
 	}
 
 	@Test
@@ -129,7 +174,6 @@ public class ColorCacheTest {
 		assertItem("statement", 497, 597);
 		Assert.assertEquals(4, cache.itemList.size());
 	}
-	
 
 	private void assertItem(String string, int i, int j) {
 		Iterator<ColoredItem> iter = cache.itemList.iterator();

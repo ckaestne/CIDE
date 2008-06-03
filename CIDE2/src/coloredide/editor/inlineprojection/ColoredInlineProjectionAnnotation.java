@@ -5,7 +5,7 @@ import java.util.Set;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.text.Position;
 
-import coloredide.features.Feature;
+import coloredide.features.IFeature;
 
 public class ColoredInlineProjectionAnnotation extends
 		InlineProjectionAnnotation {
@@ -13,21 +13,21 @@ public class ColoredInlineProjectionAnnotation extends
 	
 	private IProject project;
 
-	public ColoredInlineProjectionAnnotation(Set<Feature> features, IProject project, Position pos){
+	public ColoredInlineProjectionAnnotation(Set<IFeature> features, IProject project, Position pos){
 		this.colors=features;
 		this.project=project;
 		this.position=pos;
 	}
 	
-	private Set<Feature> colors;
+	private Set<IFeature> colors;
 
 	private Position position;
 
-	public void setColors(Set<Feature> colors) {
+	public void setColors(Set<IFeature> colors) {
 		this.colors = colors;
 	}
 
-	public boolean adjustCollapsing(Set<Feature> selectedColors) {
+	public boolean adjustCollapsing(Set<IFeature> selectedColors) {
 		boolean expanded = selectedColors.containsAll(colors);
 		if (isCollapsed() && expanded) {
 			this.markExpanded();
@@ -48,7 +48,7 @@ public class ColoredInlineProjectionAnnotation extends
 		return position;
 	}
 
-	public Set<Feature> getColors() {
+	public Set<IFeature> getColors() {
 		return colors;
 	}
 	

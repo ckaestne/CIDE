@@ -3,7 +3,6 @@ package coloredide.colorfilter;
 import java.util.Collection;
 import java.util.Set;
 
-import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
@@ -13,8 +12,12 @@ import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 
-import coloredide.features.Feature;
-import coloredide.features.FeatureManager;
+import com.sun.org.apache.bcel.internal.generic.FMUL;
+
+import coloredide.features.FeatureModelManager;
+import coloredide.features.FeatureModelNotFoundException;
+import coloredide.features.IFeature;
+import coloredide.features.IFeatureModel;
 import coloredide.features.source.ColoredSourceFile;
 import coloredide.features.source.DirectoryColorManager;
 
@@ -55,19 +58,27 @@ public class ColorFilter2 extends ViewerFilter {
 	}
 
 	private boolean isFileVisible(IFile file) {
+		IFeatureModel featureModel;
+		try {
+			featureModel = FeatureModelManager.getInstance().getFeatureModel(
+					file.getProject());
+		} catch (FeatureModelNotFoundException e) {
+			// projects without feature model are always visible
+			return true;
+		}
 		DirectoryColorManager dirColorManager = DirectoryColorManager
-				.getColoredDirectoryManagerS(file.getParent());
-		Collection<Feature> fileColors = dirColorManager.getColors(file);
-		Collection<Feature> expectedColors = FeatureManager
-				.getVisibleFeatures(file.getProject());
+				.getColoredDirectoryManagerS(file.getParent(), featureModel);
+		Collection<IFeature> fileColors = dirColorManager.getColors(file);
+		Collection<IFeature> expectedColors = featureModel.getVisibleFeatures();
 		if (overlap(fileColors, expectedColors))
 			return true;
 
-		ColoredSourceFile source = ColoredSourceFile.getColoredSourceFile(file);
+		ColoredSourceFile source = ColoredSourceFile.getColoredSourceFile(file,
+				featureModel);
 		if (!source.isColored())
 			return false;
 
-		Set<Feature> astColors = source.getColorManager().getAllUsedColors();
+		Set<IFeature> astColors = source.getColorManager().getAllUsedColors();
 
 		if (overlap(astColors, expectedColors))
 			return true;
@@ -76,10 +87,18 @@ public class ColorFilter2 extends ViewerFilter {
 	}
 
 	private boolean isContainerVisible(IFolder folder) {
-		Collection<Feature> expectedColors = FeatureManager
-				.getVisibleFeatures(folder.getProject());
+		IFeatureModel featureModel;
+		try {
+			featureModel = FeatureModelManager.getInstance().getFeatureModel(
+					folder.getProject());
+		} catch (FeatureModelNotFoundException e) {
+			// projects without feature model are always visible
+			return true;
+		}
+		Collection<IFeature> expectedColors = featureModel
+				.getVisibleFeatures();
 		DirectoryColorManager dirColorManager = DirectoryColorManager
-				.getColoredDirectoryManager(folder);
+				.getColoredDirectoryManager(folder,featureModel);
 
 		if (overlap(dirColorManager.getFolderColors(), expectedColors))
 			return true;
@@ -107,8 +126,8 @@ public class ColorFilter2 extends ViewerFilter {
 	 * @param b
 	 * @return
 	 */
-	private boolean overlap(Collection<Feature> a, Collection<Feature> b) {
-		for (Feature f : a)
+	private boolean overlap(Collection<IFeature> a, Collection<IFeature> b) {
+		for (IFeature f : a)
 			if (b.contains(f))
 				return true;
 		return false;

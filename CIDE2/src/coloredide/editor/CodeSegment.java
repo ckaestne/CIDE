@@ -7,8 +7,7 @@ import java.util.Set;
 
 import org.eclipse.jface.text.Position;
 
-import cide.gast.ASTNode;
-import coloredide.features.Feature;
+import coloredide.features.IFeature;
 
 public class CodeSegment extends Position {
 	boolean isHidden;
@@ -19,7 +18,7 @@ public class CodeSegment extends Position {
 //		this.isHidden=isHidden;
 //	}
 
-	public CodeSegment(int start, int end, Set<Feature> col, boolean isHidden) {
+	public CodeSegment(int start, int end, Set<IFeature> col, boolean isHidden) {
 		super(start, end - start);
 		colors = col;
 		this.isHidden=isHidden;
@@ -31,7 +30,7 @@ public class CodeSegment extends Position {
 
 	// final Set<ASTNode> containingNodes=new HashSet<ASTNode>();
 
-	private Set<Feature> colors;
+	private Set<IFeature> colors;
 
 	public String toString() {
 		String result = "<" + getOffset() + "-" + endPosition() + ":" + colors;
@@ -62,7 +61,7 @@ public class CodeSegment extends Position {
 		setLength(len);
 	}
 
-	public Set<Feature> getColors() {
+	public Set<IFeature> getColors() {
 		return colors;
 	}
 }

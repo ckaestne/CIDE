@@ -1,15 +1,12 @@
 package coloredide;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.EventObject;
 
 import org.eclipse.core.resources.IProject;
 
-import cide.gast.ASTNode;
-import coloredide.features.Feature;
-import coloredide.features.source.ColoredSourceFile;
+import coloredide.features.IFeature;
 
 public class ColorListChangedEvent extends EventObject {
 
@@ -24,10 +21,10 @@ public class ColorListChangedEvent extends EventObject {
 	};
 
 	public static class Change {
-		final public Feature feature;
+		final public IFeature feature;
 		final public ChangeType type;
 
-		public Change(Feature feature, ChangeType type) {
+		public Change(IFeature feature, ChangeType type) {
 			this.feature = feature;
 			this.type = type;
 		}
@@ -47,7 +44,7 @@ public class ColorListChangedEvent extends EventObject {
 	}
 
 	public ColorListChangedEvent(Object source, IProject project,
-			Feature feature, ChangeType type) {
+			IFeature feature, ChangeType type) {
 		super(source);
 		this.changes = Collections.singleton(new Change(feature, type));
 		this.project = project;

@@ -11,11 +11,15 @@ import org.eclipse.ui.IActionDelegate;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 
+import coloredide.features.FeatureModelManager;
+import coloredide.features.FeatureModelNotFoundException;
+import coloredide.features.IFeatureModel;
+
 public class CreateConfigurationAction implements IObjectActionDelegate {
 
 	private ISelection selection;
 
-//	private IWorkbenchPart part;
+	// private IWorkbenchPart part;
 
 	/**
 	 * Constructor for Action1.
@@ -28,7 +32,7 @@ public class CreateConfigurationAction implements IObjectActionDelegate {
 	 * @see IObjectActionDelegate#setActivePart(IAction, IWorkbenchPart)
 	 */
 	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
-//		this.part = targetPart;
+		// this.part = targetPart;
 	}
 
 	/**
@@ -37,16 +41,23 @@ public class CreateConfigurationAction implements IObjectActionDelegate {
 	public void run(IAction action) {
 		Shell shell = new Shell();
 
-		IProject jproject = getSelectedProject();
-		if (jproject != null) {
-			WizardCreateConfiguration wizard = new WizardCreateConfiguration(
-					jproject.getProject());
-			WizardDialog dialog = new WizardDialog(shell, wizard);
-			dialog.create();
-			dialog.open();
+		IProject project = getSelectedProject();
+		if (project != null) {
+			try {
+				IFeatureModel fm = FeatureModelManager.getInstance()
+						.getFeatureModel(project);
+				WizardCreateConfiguration wizard = new WizardCreateConfiguration(
+						project, fm);
+				WizardDialog dialog = new WizardDialog(shell, wizard);
+				dialog.create();
+				dialog.open();
+			} catch (FeatureModelNotFoundException e) {
+				MessageDialog.openInformation(shell, "CIDE",
+						"Could not instanciate feature model.");
+			}
 		} else {
-			MessageDialog.openInformation(shell, "CIDE",
-					"No Java project selected.");
+			MessageDialog
+					.openInformation(shell, "CIDE", "No project selected.");
 		}
 	}
 

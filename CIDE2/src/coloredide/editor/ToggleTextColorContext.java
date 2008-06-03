@@ -2,7 +2,6 @@ package coloredide.editor;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.text.ITextSelection;
@@ -12,7 +11,8 @@ import cide.gast.ASTNode;
 import cide.gast.ISourceFile;
 import coloredide.ASTColorChangedEvent;
 import coloredide.CIDECorePlugin;
-import coloredide.features.Feature;
+import coloredide.features.IFeature;
+import coloredide.features.IFeatureModel;
 import coloredide.features.source.ColoredSourceFile;
 import coloredide.features.source.SourceFileColorManager;
 
@@ -26,8 +26,7 @@ public class ToggleTextColorContext {
 
 	private ColoredSourceFile sourceFile;
 
-	ToggleTextColorContext(ColoredSourceFile sourceFile,
-			ISelection selection) {
+	ToggleTextColorContext(ColoredSourceFile sourceFile, ISelection selection) {
 		this.colorManager = sourceFile.getColorManager();
 		this.sourceFile = sourceFile;
 
@@ -48,7 +47,7 @@ public class ToggleTextColorContext {
 		return enabled;
 	}
 
-	boolean isChecked(Feature feature) {
+	boolean isChecked(IFeature feature) {
 		if (!enabled)
 			return false;
 
@@ -60,7 +59,7 @@ public class ToggleTextColorContext {
 		return allSelected;
 	}
 
-	void run(Feature feature, boolean addColor) {
+	void run(IFeature feature, boolean addColor) {
 		colorManager.beginBatch();
 		for (ASTNode node : selectedNodes) {
 			if (addColor)
@@ -78,7 +77,7 @@ public class ToggleTextColorContext {
 		try {
 			selectedNodes.clear();
 			ISourceFile ast = sourceFile.getAST();
-			ast.accept(new SelectionFinder(selectedNodes, txtSelection,true));
+			ast.accept(new SelectionFinder(selectedNodes, txtSelection, true));
 
 		} catch (Exception e) {
 		}
@@ -87,8 +86,13 @@ public class ToggleTextColorContext {
 	public List<ASTNode> getSelectedNodes() {
 		return selectedNodes;
 	}
-	
-	IProject getProject(){
-		return sourceFile.getProject();
+
+	//	
+	// IProject getProject(){
+	// return sourceFile.getProject();
+	// }
+
+	public IFeatureModel getFeatureModel() {
+		return sourceFile.getFeatureModel();
 	}
 }

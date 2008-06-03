@@ -8,22 +8,23 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextHover;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.Region;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.ui.themes.ColorUtil;
 
 import cide.gast.ASTNode;
 import cide.gast.ASTVisitor;
 import cide.gast.ISourceFile;
 import cide.gparser.ParseException;
-import coloredide.features.Feature;
+import coloredide.features.IFeature;
 import coloredide.features.source.ColoredSourceFile;
 import coloredide.features.source.DirectoryColorManager;
 import coloredide.features.source.SourceFileColorManager;
+import coloredide.utils.ColorHelper;
 
 /**
  * this class shows a tooltip for a code fragment (either the node under the
@@ -43,13 +44,12 @@ import coloredide.features.source.SourceFileColorManager;
 public class ColoredTextHover implements ITextHover {
 
 	private final ColoredSourceFile sourceFile;
-	private final IProject project;
+	// private final IProject project;
 	private SourceFileColorManager colorManager;
 
 	public ColoredTextHover(ColoredSourceFile sourceFile) {
 		this.sourceFile = sourceFile;
 		this.colorManager = sourceFile.getColorManager();
-		this.project = sourceFile.getProject();
 	}
 
 	public String getHoverInfo(ITextViewer textViewer, IRegion hoverRegion) {
@@ -100,39 +100,39 @@ public class ColoredTextHover implements ITextHover {
 		assert nodes.size() > 0;
 		String tooltip = "";
 		// all colors
-		Set<Feature> allColors = getAllColors(nodes);
+		Set<IFeature> allColors = getAllColors(nodes);
 		tooltip += printColors(
 				(nodes.size() > 1 ? "Common " : "") + "Features", allColors);
 
 		// details (direct colors, inherited colors, file colors)
 		tooltip += "\n";
-		Set<Feature> directColors = getDirectColors(nodes);
+		Set<IFeature> directColors = getDirectColors(nodes);
 		if (directColors.size() > 0)
 			tooltip += printColorsShort("Direct Colors", directColors);
 		else
 			tooltip += "No direct colors.\n";
 
-		Set<Feature> inheritedColors = getInheritedColors(nodes);
+		Set<IFeature> inheritedColors = getInheritedColors(nodes);
 		if (inheritedColors.size() > 0)
 			tooltip += printColorsShort("Inherited Colors", inheritedColors);
 
-		Set<Feature> fileColors = getFileColors();
+		Set<IFeature> fileColors = getFileColors();
 		if (fileColors.size() > 0)
 			tooltip += printColorsShort("File Colors", fileColors);
 		return tooltip;
 	}
 
-	private Set<Feature> getFileColors() {
+	private Set<IFeature> getFileColors() {
 		DirectoryColorManager dirColorManager = DirectoryColorManager
 				.getColoredDirectoryManagerS(sourceFile.getResource()
-						.getParent());
+						.getParent(), sourceFile.getFeatureModel());
 		return dirColorManager.getColors(sourceFile.getResource());
 	}
 
-	private Set<Feature> getInheritedColors(Collection<ASTNode> nodes) {
+	private Set<IFeature> getInheritedColors(Collection<ASTNode> nodes) {
 		// all inherited colors, but not the file colors
 		assert nodes.size() > 0;
-		Set<Feature> result = new HashSet<Feature>();
+		Set<IFeature> result = new HashSet<IFeature>();
 		Iterator<ASTNode> i = nodes.iterator();
 		result.addAll(colorManager.getInheritedColors(i.next()));
 		while (i.hasNext()) {
@@ -142,9 +142,9 @@ public class ColoredTextHover implements ITextHover {
 		return result;
 	}
 
-	private Set<Feature> getDirectColors(Collection<ASTNode> nodes) {
+	private Set<IFeature> getDirectColors(Collection<ASTNode> nodes) {
 		assert nodes.size() > 0;
-		Set<Feature> result = new HashSet<Feature>();
+		Set<IFeature> result = new HashSet<IFeature>();
 		Iterator<ASTNode> i = nodes.iterator();
 		result.addAll(colorManager.getOwnColors(i.next()));
 		while (i.hasNext()) {
@@ -159,16 +159,16 @@ public class ColoredTextHover implements ITextHover {
 	 * @param target
 	 * @param newEntries
 	 */
-	private void join(Set<Feature> target, Set<Feature> newEntries) {
-		for (Iterator<Feature> i = target.iterator(); i.hasNext();) {
+	private void join(Set<IFeature> target, Set<IFeature> newEntries) {
+		for (Iterator<IFeature> i = target.iterator(); i.hasNext();) {
 			if (!newEntries.contains(i.next()))
 				i.remove();
 		}
 	}
 
-	private Set<Feature> getAllColors(Collection<ASTNode> nodes) {
+	private Set<IFeature> getAllColors(Collection<ASTNode> nodes) {
 		assert nodes.size() > 0;
-		Set<Feature> result = new HashSet<Feature>();
+		Set<IFeature> result = new HashSet<IFeature>();
 		Iterator<ASTNode> i = nodes.iterator();
 		result.addAll(colorManager.getColors(i.next()));
 		while (i.hasNext()) {
@@ -193,9 +193,9 @@ public class ColoredTextHover implements ITextHover {
 		if (hoverRegion.getLength() == 0) {
 			SingleNodeFinder snf = new SingleNodeFinder(hoverRegion.getOffset());
 			ast.accept(snf);
-			ASTNode node=snf.result;
-			while (node!=null && !node.isOptional())
-				node=node.getParent();
+			ASTNode node = snf.result;
+			while (node != null && !node.isOptional())
+				node = node.getParent();
 			if (node != null)
 				result.add(node);
 		} else
@@ -224,27 +224,25 @@ public class ColoredTextHover implements ITextHover {
 		}
 	}
 
-	private String printColors(String title, Collection<Feature> colors) {
+	private String printColors(String title, Collection<IFeature> colors) {
 		String result = title + ":\n";
-		ArrayList<Feature> sortedColors = new ArrayList<Feature>(colors);
-		Collections.sort(sortedColors);
-		for (Feature color : sortedColors) {
-			result += " - " + color.getShortName(project) + "\n";
+		List<IFeature> sortedColors = ColorHelper.sortFeatures(colors);
+		for (IFeature color : sortedColors) {
+			result += " - " + color.getName() + "\n";
 		}
 		return result;
 	}
 
-	private String printColorsShort(String title, Collection<Feature> colors) {
+	private String printColorsShort(String title, Collection<IFeature> colors) {
 		String result = title + ": ";
-		ArrayList<Feature> sortedColors = new ArrayList<Feature>(colors);
-		Collections.sort(sortedColors);
+		List<IFeature> sortedColors = ColorHelper.sortFeatures(colors);
 		boolean first = true;
-		for (Feature color : sortedColors) {
+		for (IFeature color : sortedColors) {
 			if (first)
 				first = false;
 			else
 				result += ", ";
-			result += color.getShortName(project);
+			result += color.getName();
 		}
 		return result + "\n";
 	}

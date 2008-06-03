@@ -5,17 +5,27 @@ import java.util.Set;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.wizard.Wizard;
 
-import coloredide.features.Feature;
+import coloredide.features.FeatureModelManager;
+import coloredide.features.FeatureModelNotFoundException;
+import coloredide.features.IFeature;
+import coloredide.features.IFeatureModel;
 
 public class SelectFeatureWizard extends Wizard {
 	public WizardPageSelectFeatures p;
 
-	private Set<Feature> sf;
-	private Set<Feature> nsf;
+	private Set<IFeature> sf;
+	private Set<IFeature> nsf;
 
-	public SelectFeatureWizard(IProject project, Set<Feature> initialSelection) {
-		p = new WizardPageSelectFeatures("", project);
+	public SelectFeatureWizard(IProject project,
+			Set<IFeature> initialSelection, IFeatureModel featureModel) {
+		p = new WizardPageSelectFeatures("", project, featureModel);
 		p.setInitialSelection(initialSelection);
+	}
+
+	public SelectFeatureWizard(IProject project, Set<IFeature> initialSelection)
+			throws FeatureModelNotFoundException {
+		this(project, initialSelection, FeatureModelManager.getInstance()
+				.getFeatureModel(project));
 	}
 
 	public void addPages() {
@@ -29,11 +39,11 @@ public class SelectFeatureWizard extends Wizard {
 		return true;
 	}
 
-	public Set<Feature> getSelectedFeatures() {
+	public Set<IFeature> getSelectedFeatures() {
 		return sf;
 	}
 
-	public Set<Feature> getNotSelectedFeatures() {
+	public Set<IFeature> getNotSelectedFeatures() {
 		return nsf;
 	}
 

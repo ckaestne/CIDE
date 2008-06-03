@@ -78,7 +78,7 @@ public class ValidationManager extends DefaultErrorCreator implements
 				.getReferences();
 
 		for (IValidationRule rule : rules) {
-			rule.validate(source.getColorManager(), references, this);
+//		TODO	rule.validate(source.getColorManager(), references, this);
 		}
 
 		createMarkers();

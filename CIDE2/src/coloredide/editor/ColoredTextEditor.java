@@ -2,6 +2,8 @@ package coloredide.editor;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.core.resources.IContainer;
@@ -10,34 +12,26 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.IDocumentListener;
 import org.eclipse.jface.text.ITextViewerExtension2;
-import org.eclipse.jface.text.source.IOverviewRuler;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.IVerticalRuler;
 import org.eclipse.jface.text.source.projection.ProjectionViewer;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditor;
 
 import cide.gast.ASTNode;
-import cide.gparser.ParseException;
-import coloredide.CIDECorePlugin;
 import coloredide.ASTColorChangedEvent;
+import coloredide.CIDECorePlugin;
 import coloredide.ColorListChangedEvent;
 import coloredide.ColoredIDEImages;
 import coloredide.FileColorChangedEvent;
@@ -46,8 +40,10 @@ import coloredide.ColorListChangedEvent.ChangeType;
 import coloredide.editor.inlineprojection.InlineProjectionSourceViewer;
 import coloredide.editor.inlineprojection.InlineProjectionSupport;
 import coloredide.editor.keepcolors.ColorCacheManager;
-import coloredide.features.Feature;
-import coloredide.features.FeatureManager;
+import coloredide.features.FeatureModelManager;
+import coloredide.features.FeatureModelNotFoundException;
+import coloredide.features.IFeature;
+import coloredide.features.IFeatureModel;
 import coloredide.features.source.ColoredSourceFile;
 import coloredide.languages.LanguageExtensionManager;
 import coloredide.languages.LanguageExtensionProxy;
@@ -73,7 +69,34 @@ public class ColoredTextEditor extends AbstractDecoratedTextEditor implements
 
 	public ColoredSourceFile getSourceFile() {
 		IFile file = EditorUtility.getFileInput(this);
-		return ColoredSourceFile.getColoredSourceFile(file);
+		if (file != null) {
+			IFeatureModel featureModel;
+			try {
+				featureModel = FeatureModelManager.getInstance()
+						.getFeatureModel(file.getProject());
+			} catch (FeatureModelNotFoundException e) {
+				markNoFeatureModel();
+				return null;
+			}
+			return ColoredSourceFile.getColoredSourceFile(file, featureModel);
+		}
+		return null;
+	}
+
+	public IFeatureModel getFeatureModel() {
+		IFile file = EditorUtility.getFileInput(this);
+		if (file != null) {
+			IFeatureModel featureModel;
+			try {
+				featureModel = FeatureModelManager.getInstance()
+						.getFeatureModel(file.getProject());
+			} catch (FeatureModelNotFoundException e) {
+				e.printStackTrace();
+				return null;
+			}
+			return featureModel;
+		}
+		return null;
 	}
 
 	@Override
@@ -98,13 +121,14 @@ public class ColoredTextEditor extends AbstractDecoratedTextEditor implements
 			ToggleTextColorContext context = new ToggleTextColorContext(
 					sourceFile, this.getSelectionProvider().getSelection());
 
-			List<Feature> visibleFeatures = FeatureManager
-					.getVisibleFeatures(this.getProject());
-			for (Feature feature : visibleFeatures) {
+			IFeatureModel fm = getFeatureModel();
+			List<IFeature> visibleFeatures = new ArrayList<IFeature>(fm
+					.getVisibleFeatures());
+			Collections.sort(visibleFeatures);
+			for (IFeature feature : visibleFeatures) {
 				menu.add(new ToggleTextColorAction(context, feature));
 			}
-			menu.add(new ToggleAllFeatureSubmenu(context, FeatureManager
-					.getFeatures()));
+			menu.add(new ToggleAllFeatureSubmenu(context, fm.getFeatures()));
 
 			menu.add(new ColorProjectionSubmenu(this, context));
 		}
@@ -238,6 +262,13 @@ public class ColoredTextEditor extends AbstractDecoratedTextEditor implements
 		errDetails = getSupportedLanguageExtensionsMsg();
 		updateErrorPanel();
 	}
+	public void markNoFeatureModel() {
+		errClr = (YELLOW);
+		errMsg = ("Cannot color file. No feature model provided.");
+		errDetails="Install feature model plugin!";
+		updateErrorPanel();
+	}
+
 
 	public void markCoreException(CoreException e) {
 		errClr = (RED);

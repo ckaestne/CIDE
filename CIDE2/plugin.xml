@@ -2,6 +2,7 @@
 <?eclipse version="3.0"?>
 <plugin>
    <extension-point id="language" name="CIDE Language Extension" schema="schema/language.exsd"/>
+   <extension-point id="featureModelProvider" name="Feature Model Provider" schema="schema/featureModelProvider.exsd"/>
 
      <extension
          point="org.eclipse.ui.views">
@@ -92,12 +93,6 @@
               enablesFor="1"
               id="coloride.newAction"
               label="Generate Variant..."
-              menubarPath="coloride.menu1/cideGroup"/>
-       <action
-              class="coloredide.tools.featurenamedialog.EditFeatureNamesAction"
-              enablesFor="1"
-              id="coloride.editFeatureNames"
-              label="Edit Features..."
               menubarPath="coloride.menu1/cideGroup"/>
                <action
               class="coloredide.validator.ForceValidationAction"

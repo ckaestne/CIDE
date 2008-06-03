@@ -5,7 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import coloredide.features.Feature;
+import coloredide.features.IFeature;
 
 /**
  * this cache stores the found colored elements with type and offset/length
@@ -27,10 +27,10 @@ public class ColorCache {
 
 	class ColoredItem {
 		String type;
-		Set<Feature> assignedFeatures;
+		Set<IFeature> assignedFeatures;
 		int offset, length;
 
-		ColoredItem(String type, Set<Feature> assignedFeatures, int offset,
+		ColoredItem(String type, Set<IFeature> assignedFeatures, int offset,
 				int length) {
 			this.type = type;
 			this.assignedFeatures = assignedFeatures;
@@ -46,11 +46,11 @@ public class ColorCache {
 
 	List<ColoredItem> itemList = new ArrayList<ColoredItem>();
 
-	public void addItem(String type, Set<Feature> features, int start, int end) {
+	public void addItem(String type, Set<IFeature> features, int start, int end) {
 		itemList.add(new ColoredItem(type, features, start, end - start));
 	}
 
-	public void addItemOL(String type, Set<Feature> features, int start,
+	public void addItemOL(String type, Set<IFeature> features, int start,
 			int length) {
 		itemList.add(new ColoredItem(type, features, start, length));
 	}
@@ -100,7 +100,7 @@ public class ColorCache {
 	 * searches the cached items for an item with fitting type and location.
 	 * returns the colors of this item or null if no such item was found.
 	 */
-	public Set<Feature> findItemColors(String name, int startPosition,
+	public Set<IFeature> findItemColors(String name, int startPosition,
 			int length) {
 		for (ColoredItem item : itemList) {
 			if (item.offset == startPosition && item.length == length
