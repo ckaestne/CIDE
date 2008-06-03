@@ -1,9 +1,5 @@
 package cide.greferences;
 
-import java.util.HashMap;
-import java.util.Set;
-
-import cide.features.IASTColorProvider;
 
 public interface IValidationRule {
 	final static int Ignore = -1; // during handling only
@@ -16,8 +12,8 @@ public interface IValidationRule {
 
 	IReferenceType[] getRequiredReferences();
 
-	void validate(IASTColorProvider colorProvider,
-			HashMap<IReferenceType, Set<IReference>> references, IValidationErrorCallback errorCallback);
+//	void validate(IASTColorProvider colorProvider,
+//			HashMap<IReferenceType, Set<IReference>> references, IValidationErrorCallback errorCallback);
 
 	String getName();
 }

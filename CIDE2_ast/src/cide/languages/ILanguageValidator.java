@@ -3,6 +3,7 @@ package cide.languages;
 import cide.greferences.IResolver;
 import cide.greferences.IValidationRule;
 
+
 /**
  * interface that bundles everything that is needed to specify a validator.
  * note, a language validator is not necessary for a language extension.
@@ -11,6 +12,7 @@ import cide.greferences.IValidationRule;
  * 
  * @author cKaestner
  * 
+ * @deprecated currently deactivated, waiting for major refactoring
  */
 public interface ILanguageValidator {
 

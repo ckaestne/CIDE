@@ -25,7 +25,7 @@ public interface ILanguageExtension {
 	 * provides all required information about validating the specific language,
 	 * including a resolver for references.
 	 * 
-	 * @return
+	 * @deprecated currently deactivated, waiting for major refactoring
 	 */
 	ILanguageValidator getValidator();
 }
