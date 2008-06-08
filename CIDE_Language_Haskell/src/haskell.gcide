@@ -564,9 +564,7 @@ declaration:
 altExprAss: "|" expr "=" expr;
 
 function:
-	// TODO Christian
-	//LL("var() patroon()")  var (patroon)+
-	LL("var() patroon()")  var &LI patroon (&LI patroon)*
+	LL("var() patroon()") var &LI patroon (&LI patroon)*
 	| LL("\"(\" function()") "(" function ")" (patroon)+
 	| patroon operator patr;
 
@@ -650,10 +648,8 @@ type: LL("naam()") /*type*/naam
 functiontypeList: &LI functiontype ("," &LI functiontype)*;
 
 // TODO Christian
-//functiontype: type (LL(1) typArr)*;
-//typArr:	["->"<NONE>] type;
-functiontype: &LI paramtype ("->" &LI paramtype)*;
-paramtype: (type)+;
+functiontype: &LI paramtype (LL(2) "->" &LI paramtype)*;
+paramtype: (LL("type()") type)+;
 	
 //context
 context: klasse "=>"
