@@ -6,10 +6,9 @@ import cide.greferences.*;
 import java.util.*;
 
 public class functiontype extends GenASTNode {
-  public functiontype(type type, ArrayList<typArr> typArr, Token firstToken, Token lastToken) {
+  public functiontype(ArrayList<paramtype> paramtype, Token firstToken, Token lastToken) {
     super(new Property[] {
-      new PropertyOne<type>("type", type),
-      new PropertyZeroOrMore<typArr>("typArr", typArr)
+      new PropertyList<paramtype>("paramtype", paramtype)
     }, firstToken, lastToken);
   }
   public functiontype(Property[] properties, IToken firstToken, IToken lastToken) {
@@ -18,10 +17,7 @@ public class functiontype extends GenASTNode {
   public ASTNode deepCopy() {
     return new functiontype(cloneProperties(),firstToken,lastToken);
   }
-  public type getType() {
-    return ((PropertyOne<type>)getProperty("type")).getValue();
-  }
-  public ArrayList<typArr> getTypArr() {
-    return ((PropertyZeroOrMore<typArr>)getProperty("typArr")).getValue();
+  public ArrayList<paramtype> getParamtype() {
+    return ((PropertyList<paramtype>)getProperty("paramtype")).getValue();
   }
 }

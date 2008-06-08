@@ -6,10 +6,10 @@ import cide.greferences.*;
 import java.util.*;
 
 public class function2 extends function {
-  public function2(function function, ArrayList<patroon> patroon1, Token firstToken, Token lastToken) {
+  public function2(function function, ArrayList<patroon> patroon2, Token firstToken, Token lastToken) {
     super(new Property[] {
       new PropertyOne<function>("function", function),
-      new PropertyOneOrMore<patroon>("patroon1", patroon1)
+      new PropertyOneOrMore<patroon>("patroon2", patroon2)
     }, firstToken, lastToken);
   }
   public function2(Property[] properties, IToken firstToken, IToken lastToken) {
@@ -21,7 +21,7 @@ public class function2 extends function {
   public function getFunction() {
     return ((PropertyOne<function>)getProperty("function")).getValue();
   }
-  public ArrayList<patroon> getPatroon1() {
-    return ((PropertyOneOrMore<patroon>)getProperty("patroon1")).getValue();
+  public ArrayList<patroon> getPatroon2() {
+    return ((PropertyOneOrMore<patroon>)getProperty("patroon2")).getValue();
   }
 }

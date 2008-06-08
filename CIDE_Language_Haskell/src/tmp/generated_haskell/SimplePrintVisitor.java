@@ -856,14 +856,18 @@ public class SimplePrintVisitor extends AbstractPrintVisitor implements ILanguag
 		}
 		if (node instanceof function1) {
 			function1 n = (function1)node;
+			Iterator<patroon> listElements = n.getPatroon().iterator();
 			{
 				var v=n.getVar();
 				if (v!=null) {
 					v.accept(this);
 				}
 			}
-			for (patroon v : n.getPatroon()) {
-				v.accept(this);
+			if (listElements.hasNext()) {
+				listElements.next().accept(this);
+			}
+			while (listElements.hasNext()) {
+				listElements.next().accept(this);
 			}
 			return false;
 		}
@@ -877,7 +881,7 @@ public class SimplePrintVisitor extends AbstractPrintVisitor implements ILanguag
 				}
 			}
 			printToken(")");
-			for (patroon v : n.getPatroon1()) {
+			for (patroon v : n.getPatroon2()) {
 				v.accept(this);
 			}
 			return false;
@@ -885,7 +889,7 @@ public class SimplePrintVisitor extends AbstractPrintVisitor implements ILanguag
 		if (node instanceof function3) {
 			function3 n = (function3)node;
 			{
-				patroon v=n.getPatroon2();
+				patroon v=n.getPatroon3();
 				if (v!=null) {
 					v.accept(this);
 				}
@@ -1680,31 +1684,20 @@ public class SimplePrintVisitor extends AbstractPrintVisitor implements ILanguag
 		}
 		if (node instanceof functiontype) {
 			functiontype n = (functiontype)node;
-			{
-				type v=n.getType();
-				if (v!=null) {
-					v.accept(this);
-				}
+			Iterator<paramtype> listElements = n.getParamtype().iterator();
+			if (listElements.hasNext()) {
+				listElements.next().accept(this);
 			}
-			for (typArr v : n.getTypArr()) {
-				v.accept(this);
+			while (listElements.hasNext()) {
+				printToken("->");
+				listElements.next().accept(this);
 			}
 			return false;
 		}
-		if (node instanceof typArr) {
-			typArr n = (typArr)node;
-			{
-				ASTTextNode v=n.getText7();
-				if (v!=null) {
-					printToken("->");
-					v.accept(this);
-				}
-			}
-			{
-				type v=n.getType();
-				if (v!=null) {
-					v.accept(this);
-				}
+		if (node instanceof paramtype) {
+			paramtype n = (paramtype)node;
+			for (type v : n.getType()) {
+				v.accept(this);
 			}
 			return false;
 		}

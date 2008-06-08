@@ -647,7 +647,6 @@ type: LL("naam()") /*type*/naam
 	| "[" functiontype "]" ;
 functiontypeList: &LI functiontype ("," &LI functiontype)*;
 
-// TODO Christian
 functiontype: &LI paramtype (LL(2) "->" &LI paramtype)*;
 paramtype: (LL("type()") type)+;
 	
@@ -685,4 +684,3 @@ otherOperators: "+"|"."|"-"|"_";//not an operator: .. : :: = \ | <- -> @ ~ => --
 //reservedOperators: ".."|":"|"::"|"="|"\\"|"|"|"<-"|"->"|"@"|"~"|"=>"|"--";
 		
 literal :<INTEGER>|<FLOAT>|<CHARACTER_LITERAL>|<STRING_LITERAL>;
-		

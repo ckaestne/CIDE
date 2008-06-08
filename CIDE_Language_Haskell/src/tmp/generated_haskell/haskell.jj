@@ -833,21 +833,23 @@ altExprAss altExprAss() : {
 function function() : { 
 	var var;
 	patroon patroon;
-	ArrayList<patroon> patroonList = new ArrayList<patroon>();
-	function function;
+	ArrayList<patroon> list0=new ArrayList<patroon>();
 	patroon patroon1;
 	ArrayList<patroon> patroon1List = new ArrayList<patroon>();
+	function function;
 	patroon patroon2;
+	ArrayList<patroon> patroon2List = new ArrayList<patroon>();
+	patroon patroon3;
 	operator operator;
 	patr patr;
 	Token firstToken=token;
 } { (
-	LOOKAHEAD(var() patroon()) var=var() (patroon=patroon(){patroonList.add(patroon);})+ 
-	{return new function1(var, patroonList, firstToken.next,token);} |
-	LOOKAHEAD("(" function()) "(" function=function() ")" (patroon1=patroon(){patroon1List.add(patroon1);})+ 
-	{return new function2(function, patroon1List, firstToken.next,token);} |
-	patroon2=patroon() operator=operator() patr=patr() 
-	{return new function3(patroon2, operator, patr, firstToken.next,token);}
+	LOOKAHEAD(var() patroon()) var=var() patroon=patroon(){list0.add(patroon);} (patroon1=patroon(){list0.add(patroon1);})* 
+	{return new function1(list0, var, firstToken.next,token);} |
+	LOOKAHEAD("(" function()) "(" function=function() ")" (patroon2=patroon(){patroon2List.add(patroon2);})+ 
+	{return new function2(function, patroon2List, firstToken.next,token);} |
+	patroon3=patroon() operator=operator() patr=patr() 
+	{return new function3(patroon3, operator, patr, firstToken.next,token);}
  ) }
 
 whereDecls whereDecls() : { 
@@ -1206,22 +1208,23 @@ functiontypeList functiontypeList() : {
  ) }
 
 functiontype functiontype() : { 
-	type type;
-	typArr typArr;
-	ArrayList<typArr> typArrList = new ArrayList<typArr>();
+	paramtype paramtype;
+	ArrayList<paramtype> list0=new ArrayList<paramtype>();
+	paramtype paramtype1;
+	ArrayList<paramtype> paramtype1List = new ArrayList<paramtype>();
 	Token firstToken=token;
 } { (
-	type=type() (LOOKAHEAD(1) typArr=typArr(){typArrList.add(typArr);})* 
-	{return new functiontype(type, typArrList, firstToken.next,token);}
+	paramtype=paramtype(){list0.add(paramtype);} (LOOKAHEAD(2) "->" paramtype1=paramtype(){list0.add(paramtype1);})* 
+	{return new functiontype(list0, firstToken.next,token);}
  ) }
 
-typArr typArr() : { 
-	ASTTextNode text7 = null;
+paramtype paramtype() : { 
 	type type;
+	ArrayList<type> typeList = new ArrayList<type>();
 	Token firstToken=token;
 } { (
-	["->" {text7=new ASTTextNode("->",new WToken(token));}] type=type() 
-	{return new typArr(text7, type, firstToken.next,token);}
+	(LOOKAHEAD(type()) type=type(){typeList.add(type);})+ 
+	{return new paramtype(typeList, firstToken.next,token);}
  ) }
 
 context context() : { 
