@@ -45,7 +45,8 @@ public class Main {
 		System.out.println("Reading " + grammarFileName);
 		SlimJJParser parser = new SlimJJParser(reader);
 		NGrammar grammar = parser.Grammar();
-		runProductions(grammar, targetDirectory, targetPackage);
+		System.out.println("Number of Productions for \""+grammarFileName+"\": "+grammar.productions.size());
+//		runProductions(grammar, targetDirectory, targetPackage);
 	}
 
 	private void runProductions(NGrammar grammar, File targetDirectory,
