@@ -46,6 +46,12 @@ public interface IFeature extends Comparable<IFeature> {
 	public void setName(String name) throws UnsupportedOperationException;
 
 	/**
+	 * returns whether modifying the name of the feature is possible (depends on
+	 * the feature model implementation)
+	 */
+	public boolean canSetName();
+
+	/**
 	 * returns the color to represent this feature
 	 * 
 	 * @return not null
@@ -62,6 +68,12 @@ public interface IFeature extends Comparable<IFeature> {
 	 *             if not supported by the feature model
 	 */
 	public void setRGB(RGB color) throws UnsupportedOperationException;
+
+	/**
+	 * returns whether modifying the color of the feature is possible (depends
+	 * on the feature model implementation)
+	 */
+	public boolean canSetRGB();
 
 	/**
 	 * returns whether this feature is visible. invisible features are hidden
@@ -81,7 +93,14 @@ public interface IFeature extends Comparable<IFeature> {
 	 * @throws UnsupportedOperationException
 	 *             if not supported by the feature model
 	 */
-	public void setVisibile(boolean isVisible) throws UnsupportedOperationException;
+	public void setVisible(boolean isVisible)
+			throws UnsupportedOperationException;
+
+	/**
+	 * returns whether modifying the visibility of the feature is possible
+	 * (depends on the feature model implementation)
+	 */
+	public boolean canSetVisible();
 
 	/**
 	 * a feature can require other features. that's specific to the List Feature

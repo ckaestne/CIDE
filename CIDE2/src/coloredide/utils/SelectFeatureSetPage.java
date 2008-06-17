@@ -2,6 +2,7 @@ package coloredide.utils;
 
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.resources.IProject;
@@ -15,29 +16,31 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 
-import coloredide.features.FeatureModelManager;
 import coloredide.features.IFeature;
 import coloredide.features.IFeatureModel;
 
-public class WizardPageSelectFeatures extends WizardPage {
+/**
+ * selects one or more features from a given list without checking validity
+ * against a feature model
+ * 
+ * @author ckaestne
+ * 
+ */
+public class SelectFeatureSetPage extends WizardPage {
 
 	private Table table;
-
-	private IProject project;
 
 	private Set<IFeature> initialSelected = Collections.EMPTY_SET;
 	private Set<IFeature> initialGrayed = Collections.EMPTY_SET;
 
 	private boolean selectAll = false;
 
-	private IFeatureModel featureModel;
+	private final List<IFeature> featureList;
 
-	public WizardPageSelectFeatures(String pageName, IProject p,
-			IFeatureModel featureModel) {
+	public SelectFeatureSetPage(String pageName, List<IFeature> featureList) {
 		super(pageName);
-		this.setTitle("Select Features for Configuration");
-		this.project = p;
-		this.featureModel = featureModel;
+		this.setTitle("Select Features");
+		this.featureList = featureList;
 	}
 
 	public void createControl(Composite parent) {
@@ -55,9 +58,9 @@ public class WizardPageSelectFeatures extends WizardPage {
 		formData.left = new FormAttachment(0, 0);
 		table.setLayoutData(formData);
 
-		for (IFeature feature : featureModel.getVisibleFeatures()) {
+		for (IFeature feature : featureList) {
 			TableItem item = new TableItem(table, SWT.NONE);
-			item.setText("Feature: "+feature.getName());
+			item.setText("Feature: " + feature.getName());
 			item.setData(feature);
 			item.setChecked(selectAll || initialSelected.contains(feature));
 			if (initialGrayed.contains(feature))

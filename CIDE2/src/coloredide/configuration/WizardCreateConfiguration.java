@@ -5,7 +5,8 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.wizard.Wizard;
 
 import coloredide.features.IFeatureModel;
-import coloredide.utils.WizardPageSelectFeatures;
+import coloredide.utils.ColorHelper;
+import coloredide.utils.SelectFeatureSetPage;
 
 public class WizardCreateConfiguration extends Wizard {
 
@@ -19,14 +20,14 @@ public class WizardCreateConfiguration extends Wizard {
 		this.featureModel = fm;
 	}
 
-	private WizardPageSelectFeatures selectFeaturesPage;
+	private AbstractConfigurationPage selectFeaturesPage;
 
 	private WizardPageCreateProject createProjectPage;
 
 	@Override
 	public void addPages() {
-		selectFeaturesPage = new WizardPageSelectFeatures("SelectFeatures",
-				sourceProject, featureModel);
+		selectFeaturesPage = featureModel
+				.getConfigurationPage("SelectFeatures");
 		addPage(selectFeaturesPage);
 		createProjectPage = new WizardPageCreateProject("CreateProjects",
 				sourceProject);

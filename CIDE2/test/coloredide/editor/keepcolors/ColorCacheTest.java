@@ -53,13 +53,28 @@ public class ColorCacheTest {
 			throw new UnsupportedOperationException();
 		}
 
-		public void setVisibile(boolean isVisible)
+		public void setVisible(boolean isVisible)
 				throws UnsupportedOperationException {
 			throw new UnsupportedOperationException();
 		}
 
 		public int compareTo(IFeature o) {
 			return 0;
+		}
+
+		public boolean canSetName() {
+			// TODO Auto-generated method stub
+			return false;
+		}
+
+		public boolean canSetRGB() {
+			// TODO Auto-generated method stub
+			return false;
+		}
+
+		public boolean canSetVisible() {
+			// TODO Auto-generated method stub
+			return false;
 		}
 
 	}

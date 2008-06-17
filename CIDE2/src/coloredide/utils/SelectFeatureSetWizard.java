@@ -1,5 +1,6 @@
 package coloredide.utils;
 
+import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.resources.IProject;
@@ -10,23 +11,31 @@ import coloredide.features.FeatureModelNotFoundException;
 import coloredide.features.IFeature;
 import coloredide.features.IFeatureModel;
 
-public class SelectFeatureWizard extends Wizard {
-	public WizardPageSelectFeatures p;
+/**
+ * wizard to select a subset from a given list of features. no validation
+ * against a feature model provided
+ * 
+ * @author ckaestne
+ * 
+ */
+public class SelectFeatureSetWizard extends Wizard {
+	public SelectFeatureSetPage p;
 
 	private Set<IFeature> sf;
 	private Set<IFeature> nsf;
 
-	public SelectFeatureWizard(IProject project,
-			Set<IFeature> initialSelection, IFeatureModel featureModel) {
-		p = new WizardPageSelectFeatures("", project, featureModel);
+	public SelectFeatureSetWizard(List<IFeature> featureList,
+			Set<IFeature> initialSelection) {
+		p = new SelectFeatureSetPage("", featureList);
 		p.setInitialSelection(initialSelection);
 	}
 
-	public SelectFeatureWizard(IProject project, Set<IFeature> initialSelection)
-			throws FeatureModelNotFoundException {
-		this(project, initialSelection, FeatureModelManager.getInstance()
-				.getFeatureModel(project));
-	}
+	// ColorHelper.sortFeatures(featureModel.getVisibleFeatures())
+//	public SelectFeatureWizard(IProject project, Set<IFeature> initialSelection)
+//			throws FeatureModelNotFoundException {
+//		this(project, initialSelection, FeatureModelManager.getInstance()
+//				.getFeatureModel(project));
+//	}
 
 	public void addPages() {
 		this.addPage(p);

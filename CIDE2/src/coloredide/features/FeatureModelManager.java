@@ -14,7 +14,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 
 import coloredide.CIDECorePlugin;
-import coloredide.ColorListChangedEvent;
+import coloredide.configuration.AbstractConfigurationPage;
 
 public class FeatureModelManager {
 
@@ -72,7 +72,7 @@ public class FeatureModelManager {
 
 	public IFeatureModel getFeatureModel(IProject project)
 			throws FeatureModelNotFoundException {
-		assert project != null && project.exists();
+		assert project != null && project.exists() && project.isOpen();
 
 		IFeatureModel featureModel = featureModelCache.get(project);
 		if (featureModel == null) {
@@ -86,6 +86,7 @@ public class FeatureModelManager {
 		return featureModel;
 	}
 
+	
 	/**
 	 * same as getFeatureModel, but throws a coreException in case of an error.
 	 * to be used in jobs

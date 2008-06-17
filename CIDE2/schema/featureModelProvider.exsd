@@ -64,14 +64,14 @@ Supports the following tasks:
          <attribute name="name" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  Name of the feature model provider. Might be used in the userinterface when users can select between different feature models.
                </documentation>
             </annotation>
          </attribute>
          <attribute name="provider" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  Mandatory IFeatureModelProvider, which is a factory class to create feature models for projects.
                </documentation>
                <appInfo>
                   <meta.attribute kind="java" basedOn=":coloredide.features.IFeatureModelProvider"/>

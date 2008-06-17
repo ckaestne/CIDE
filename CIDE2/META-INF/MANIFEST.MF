@@ -8,6 +8,7 @@ Bundle-Vendor: Christian Kaestner
 Bundle-Localization: plugin
 Export-Package: coloredide;x-internal:=true,
  coloredide.astview.internal;x-internal:=true,
+ coloredide.configuration,
  coloredide.features,
  coloredide.languages,
  coloredide.utils

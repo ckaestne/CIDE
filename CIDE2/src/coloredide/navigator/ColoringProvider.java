@@ -77,13 +77,15 @@ public class ColoringProvider implements ILabelProvider, IColorProvider {
 			}
 			if (element instanceof IFolder || element instanceof IProject) {
 				IContainer folder = (IContainer) element;
-				IFeatureModel fm = FeatureModelManager.getInstance()
-						.getFeatureModel(folder.getProject());
-				DirectoryColorManager colorManager = DirectoryColorManager
-						.getColoredDirectoryManagerS(folder, fm);
-				Set<IFeature> colors = colorManager.getFolderColors();
-				if (colors != null && !colors.isEmpty())
-					return ColorHelper.getCombinedColor(colors);
+				if (folder.getProject().isOpen()) {
+					IFeatureModel fm = FeatureModelManager.getInstance()
+							.getFeatureModel(folder.getProject());
+					DirectoryColorManager colorManager = DirectoryColorManager
+							.getColoredDirectoryManagerS(folder, fm);
+					Set<IFeature> colors = colorManager.getFolderColors();
+					if (colors != null && !colors.isEmpty())
+						return ColorHelper.getCombinedColor(colors);
+				}
 			}
 		} catch (FeatureModelNotFoundException e) {
 			// ignore problems, just don't add colors to those projects

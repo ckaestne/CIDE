@@ -182,11 +182,14 @@ public class FeatureView extends ViewPart {
 					TableItem item = (TableItem) e.item;
 
 					IFeature feature = (IFeature) item.getData();
-					try {
-						feature.setVisibile(item.getChecked());
-					} catch (UnsupportedOperationException ex) {
+					if (item.getGrayed())
 						item.setChecked(feature.isVisible());
-					}
+					else
+						try {
+							feature.setVisible(item.getChecked());
+						} catch (UnsupportedOperationException ex) {
+							item.setChecked(feature.isVisible());
+						}
 				}
 			}
 		});
@@ -204,14 +207,16 @@ public class FeatureView extends ViewPart {
 		if (project == newProject)
 			return;
 		project = newProject;
-		if (project!=null)
-		try {
-			featureModel = FeatureModelManager.getInstance().getFeatureModel(
-					project);
-		} catch (FeatureModelNotFoundException e) {
-			project = null;
+		if (project != null)
+			try {
+				featureModel = FeatureModelManager.getInstance()
+						.getFeatureModel(project);
+			} catch (FeatureModelNotFoundException e) {
+				project = null;
+				featureModel = null;
+			}
+		else
 			featureModel = null;
-		} else featureModel=null;
 
 		redraw();
 	}
@@ -227,7 +232,7 @@ public class FeatureView extends ViewPart {
 			}
 			table.removeAll();
 
-			if (project != null) {
+			if (project != null && featureModel != null) {
 
 				boolean isFiltered = (filterAction != null)
 						&& filterAction.isChecked();
@@ -241,6 +246,7 @@ public class FeatureView extends ViewPart {
 								ColorHelper.getCombinedRGB(Collections
 										.singleton(feature))));
 						item.setChecked(feature.isVisible());
+						item.setGrayed(!feature.canSetVisible());
 						item.setData(feature);
 					}
 
@@ -283,8 +289,9 @@ public class FeatureView extends ViewPart {
 
 	private void fillContextMenu(IMenuManager manager) {
 		boolean enabled = getSelectedFeature() != null;
-		renameAction.setEnabled(enabled);
-		selectColorAction.setEnabled(enabled);
+		renameAction.setEnabled(enabled && getSelectedFeature().canSetName());
+		selectColorAction.setEnabled(enabled
+				&& getSelectedFeature().canSetRGB());
 		findFeatureCodeAction.setEnabled(enabled);
 
 		manager.add(renameAction);

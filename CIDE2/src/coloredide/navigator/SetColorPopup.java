@@ -29,7 +29,8 @@ import coloredide.features.FeatureModelNotFoundException;
 import coloredide.features.IFeature;
 import coloredide.features.IFeatureModel;
 import coloredide.features.source.DirectoryColorManager;
-import coloredide.utils.SelectFeatureWizard;
+import coloredide.utils.ColorHelper;
+import coloredide.utils.SelectFeatureSetWizard;
 
 public class SetColorPopup implements IWorkbenchWindowActionDelegate,
 		IObjectActionDelegate {
@@ -65,8 +66,8 @@ public class SetColorPopup implements IWorkbenchWindowActionDelegate,
 			try {
 				IFeatureModel fm = FeatureModelManager.getInstance()
 						.getFeatureModel(project);
-				SelectFeatureWizard wizard = new SelectFeatureWizard(project,
-						null, fm);
+				SelectFeatureSetWizard wizard = new SelectFeatureSetWizard(
+						ColorHelper.sortFeatures(fm.getVisibleFeatures()), null);
 				calcInitialSelection(resources, wizard, fm);
 				WizardDialog dialog = new WizardDialog(new Shell(), wizard);
 				dialog.create();
@@ -91,7 +92,7 @@ public class SetColorPopup implements IWorkbenchWindowActionDelegate,
 	}
 
 	private void calcInitialSelection(List<IResource> resources2,
-			SelectFeatureWizard wizard, IFeatureModel fm) {
+			SelectFeatureSetWizard wizard, IFeatureModel fm) {
 		Set<IFeature> selected = null;
 		Set<IFeature> grayed = new HashSet<IFeature>();
 		for (IResource r : resources2) {
