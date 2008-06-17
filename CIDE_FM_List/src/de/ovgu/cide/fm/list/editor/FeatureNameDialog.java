@@ -29,15 +29,16 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.themes.ColorUtil;
 
 import coloredide.ColoredIDEImages;
 import coloredide.features.IFeature;
 import coloredide.utils.ColorHelper;
-import coloredide.utils.SelectFeatureWizard;
-import de.ovgu.cide.fm.list.FixedFeature;
+import coloredide.utils.SelectFeatureSetWizard;
 import de.ovgu.cide.fm.list.FeatureAdapter;
 import de.ovgu.cide.fm.list.FeatureManager;
 import de.ovgu.cide.fm.list.FeatureNameManager;
+import de.ovgu.cide.fm.list.FixedFeature;
 import de.ovgu.cide.fm.list.ListFeatureModel;
 
 public class FeatureNameDialog extends Dialog {
@@ -53,8 +54,9 @@ public class FeatureNameDialog extends Dialog {
 			Set<IFeature> oldValue = new HashSet<IFeature>();
 			for (FixedFeature f : (Set<FixedFeature>) this.getValue())
 				oldValue.add(new FeatureAdapter(f, featureModel));
-			SelectFeatureWizard wizard = new SelectFeatureWizard(project,
-					oldValue, featureModel);
+			SelectFeatureSetWizard wizard = new SelectFeatureSetWizard(
+					ColorHelper.sortFeatures(featureModel.getFeatures()),
+					oldValue);
 			WizardDialog dialog = new WizardDialog(cellEditorWindow.getShell(),
 					wizard);
 			dialog.create();
@@ -297,7 +299,8 @@ public class FeatureNameDialog extends Dialog {
 				true);
 	}
 
-	protected String getFeatureSetString(IProject project, Set<FixedFeature> features) {
+	protected String getFeatureSetString(IProject project,
+			Set<FixedFeature> features) {
 		if (features == null || features.isEmpty())
 			return "- none -";
 		String result = "";

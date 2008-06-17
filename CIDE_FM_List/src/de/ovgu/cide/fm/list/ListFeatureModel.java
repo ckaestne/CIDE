@@ -10,6 +10,8 @@ import java.util.WeakHashMap;
 import org.eclipse.core.resources.IProject;
 
 import coloredide.ColorListChangedEvent;
+import coloredide.configuration.AbstractConfigurationPage;
+import coloredide.configuration.NonValidatingConfigurationListPage;
 import coloredide.features.AbstractFeatureModel;
 import coloredide.features.IFeature;
 
@@ -75,6 +77,10 @@ public class ListFeatureModel extends AbstractFeatureModel {
 				return new FeatureAdapter(f, this);
 		}
 		return null;
+	}
+
+	public AbstractConfigurationPage getConfigurationPage(String pageName) {
+		return new NonValidatingConfigurationListPage(pageName, this);
 	}
 
 }

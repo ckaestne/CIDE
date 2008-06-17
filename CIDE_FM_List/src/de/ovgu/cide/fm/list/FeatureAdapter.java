@@ -37,8 +37,8 @@ public class FeatureAdapter implements IFeature {
 	}
 
 	public Set<IFeature> getRequiredFeatures() {
-		Set<FixedFeature> requiredFeatures = featureModel.getFeatureNameManager()
-				.getRequiredFeatures(feature);
+		Set<FixedFeature> requiredFeatures = featureModel
+				.getFeatureNameManager().getRequiredFeatures(feature);
 		if (requiredFeatures.isEmpty())
 			return Collections.emptySet();
 		Set<IFeature> result = new HashSet<IFeature>();
@@ -80,10 +80,22 @@ public class FeatureAdapter implements IFeature {
 		featureModel.getFeatureNameManager().setFeatureColor(feature, color);
 	}
 
-	public void setVisibile(boolean isVisible)
+	public void setVisible(boolean isVisible)
 			throws UnsupportedOperationException {
 		featureModel.getFeatureNameManager().setFeatureVisible(feature,
 				isVisible);
+	}
+
+	public boolean canSetName() {
+		return true;
+	}
+
+	public boolean canSetRGB() {
+		return true;
+	}
+
+	public boolean canSetVisible() {
+		return true;
 	}
 
 }
