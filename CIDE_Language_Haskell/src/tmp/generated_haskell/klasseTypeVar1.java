@@ -6,9 +6,9 @@ import cide.greferences.*;
 import java.util.*;
 
 public class klasseTypeVar1 extends klasseTypeVar {
-  public klasseTypeVar1(var var, ArrayList<type> type, Token firstToken, Token lastToken) {
+  public klasseTypeVar1(ASTStringNode variable_id, ArrayList<type> type, Token firstToken, Token lastToken) {
     super(new Property[] {
-      new PropertyOne<var>("var", var),
+      new PropertyOne<ASTStringNode>("variable_id", variable_id),
       new PropertyZeroOrMore<type>("type", type)
     }, firstToken, lastToken);
   }
@@ -18,8 +18,8 @@ public class klasseTypeVar1 extends klasseTypeVar {
   public ASTNode deepCopy() {
     return new klasseTypeVar1(cloneProperties(),firstToken,lastToken);
   }
-  public var getVar() {
-    return ((PropertyOne<var>)getProperty("var")).getValue();
+  public ASTStringNode getVariable_id() {
+    return ((PropertyOne<ASTStringNode>)getProperty("variable_id")).getValue();
   }
   public ArrayList<type> getType() {
     return ((PropertyZeroOrMore<type>)getProperty("type")).getValue();

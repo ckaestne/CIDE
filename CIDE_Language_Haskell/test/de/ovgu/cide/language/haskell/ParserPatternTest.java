@@ -35,8 +35,10 @@ public class ParserPatternTest {
 		parse("ConName", "patr");
 		parse("Mod.ConName", "patr");
 		parse("var@ConName", "patr");
-		parse("(varName, X, `%%`)", "patr");
-		parse("[varName, X, `%%`, (a,b)]", "patr");
+		// parse("(varName, X, `%%`)", "patr");
+		// parse("[varName, X, `%%`, (a,b)]", "patr");
+		parse("(varName, X, aa)", "patr");
+		parse("[varName, X, aa, (a,b)]", "patr");
 		parse("Mod.ConName{v=X,v=(a,b)}", "patr");
 		parse("ConName :! x := a", "patr");
 		parse("X Y Z", "patr");
@@ -48,16 +50,36 @@ public class ParserPatternTest {
 	}
 
 	@Test
+	public void testLowend() throws ParseException {
+		parse(":", "gconsym");
+		parse(":%%", "gconsym");
+		parse("Mod. :%%", "qconsym");
+		parse("a", "qvarid");
+		parse("Mod.a", "qvarid");
+		parse(":%", "qconop");
+		parse("`Xx`", "qconop");
+		parse("`Mod.Xx`", "qconop");
+		parse("%%", "qvarop");
+		parse("`xx`", "qvarop");
+		parse("`Mod.xx`", "qvarop");
+		parse("%%", "op");
+		notParse("Mod.%%", "op");
+	}
+
+	@Test
 	public void testVar() throws ParseException {
 		parse("varName", "var");
 		parse("Module.varName", "var");
-		parse("Module.`Mod. %`", "var");
-		parse("Module.`Mod. %%`", "var");
-		parse("Module.`(var)`", "var");
-		parse("Module.`Mod.(var)`", "var");
-		parse("Module.`Mod. %!`", "var");
-		parse("Module.`Mod.Mod2. (Mod3.Abc.`Mod5. !::`)`", "var");
-		notParse("Module.`Mod. :%!`", "var");
+		// parse("Module.`Mod. %`", "var");
+		// parse("Module.`Mod. %%`", "var");
+		// parse("Module.`(var)`", "var");
+		// parse("Module.`Mod.(var)`", "var");
+		// parse("Module.`Mod. %!`", "var");
+		// parse("Module.`Mod.Mod2. (Mod3.Abc.`Mod5. !::`)`", "var");
+		// notParse("Module.`Mod. :%!`", "var");
+		parse("(%)", "var");
+		parse("(.|.)", "var");
+		parse("(.)", "var");
 	}
 
 	@Test
@@ -65,11 +87,11 @@ public class ParserPatternTest {
 		parse("ConName", "naam");
 		parse("Module.ConName", "naam");
 		parse("Mod1.Mod2.Mod3.ConName", "naam");
-		parse("Module.`:=`", "naam");
-		parse("Module.`Mod. :!`", "naam");
-		parse("Module.`Mod.Mod2. (Mod3.Abc)`", "naam");
-		parse("Module.`Mod.Mod2. (Mod3.Abc.`Mod5. :=`)`", "naam");
-		notParse("Module.`Mod. %!`", "naam");
+		parse("`X.Y`", "qconop");
+		// parse("(Module.::)", "naam");
+		// parse("Module.`Mod.Mod2. (Mod3.Abc)`", "naam");
+		// parse("Module.`Mod.Mod2. (Mod3.Abc.`Mod5. :=`)`", "naam");
+		// notParse("Module.`Mod. %!`", "naam");
 	}
 
 	@Test
@@ -81,6 +103,9 @@ public class ParserPatternTest {
 		parse("(a->b->c)", "type");
 		parse("(a->(vonName, Con, var),b)", "type");
 		parse("((vonName, Con, var)->(b->[C->X]))", "type");
+		parse("()", "type");
+		parse("()", "functiontype");
+		parse("X ()", "functiontype");
 		parse("a->b->c", "functiontype");
 
 	}
@@ -88,7 +113,8 @@ public class ParserPatternTest {
 	@Test
 	public void testKlasse() throws ParseException {
 		parse("ConName b", "klasse");
-		parse("Mod.VonName Mod2.b", "klasse");
+		// parse("Mod.VonName Mod2.b", "klasse");
+		parse("Mod.VonName b", "klasse");
 		parse("X (b (vonName, Con, var))", "klasse");
 		parse("X (b (a->b) x C)", "klasse");
 	}
@@ -96,7 +122,8 @@ public class ParserPatternTest {
 	@Test
 	public void testContext() throws ParseException {
 		parse("ConName b =>", "context");
-		parse("Mod.VonName Mod2.b=>", "context");
+		// parse("Mod.VonName Mod2.b=>", "context");
+		parse("Mod.VonName b=>", "context");
 		parse("X (b (vonName, Con, var))=>", "context");
 		parse("X (b (a->b) x C)=>", "context");
 		parse("(X (b (a->b) x C),X b, A c)=>", "context");
@@ -110,8 +137,8 @@ public class ParserPatternTest {
 		parse("1 x X", "expr");
 		parse("-X 1", "expr");
 		parse("\\ X Y -> x", "expr");
-		parse("x + y := z", "expr");
-		parse("- x + y := z", "expr");
+		parse("x + y :% z", "expr");
+		parse("- x + y :% z", "expr");
 		parse("if - x + y then z else 3+3", "expr");
 		parse("case 3+3 of { x -> 3+3 }", "expr");
 		parse("case 3+3 of { x | y-> 3+3 }", "expr");
@@ -128,6 +155,10 @@ public class ParserPatternTest {
 		parse("let {} in 1+1", "expr");
 		parse("let " + decls + " in 1+3", "expr");
 		parse("do { let {}; 1<-3;3+3}", "expr");
+		parse("[1]", "expr");
+		parse("[(0,0,0,0)]", "expr");
+		parse("not . null . (gsel (\\ c -> (node' c `elem` suc' c)))", "expr");
+		parse("(.) . (.)", "expr");
 	}
 
 	@Test
@@ -177,6 +208,7 @@ public class ParserPatternTest {
 		parse("var, var, var::Naam var=>(x->Z)", "declaration");
 		parse("var::(x->Z)", "declaration");
 		parse("infix 3 $, $", "declaration");
+		parse("var :: X ()", "declaration");
 	}
 
 	@Test
@@ -252,6 +284,18 @@ public class ParserPatternTest {
 		parse(
 				"	  liftResult (Result x : rest)		    = case liftResult rest of		          { Result xs -> Result (x : xs);		            Fail e -> Fail e}",
 				"declaration");
+		parse(" (GraphM m gr) =>","context");
+		parse(" var:: (GraphM m gr) => Int -> m (gr () ())","declaration");
+		
+//		parse("instance GraphM IO SGr","definition");
+//		parse("instance (Show a, Show b) => Show (IO (SGr a b)) ","definition");
+		
+		parse("fst $ mkNodes m asx","expr");
+		parse(" delNodes (v : vs) g = delNodes vs (snd (match v g))","declaration");
+		parse("mkNodes_ m asx = fst $ mkNodes m asx","declaration");
+		parse("(.:) = (.) . (.)","declaration");
+		
+		
 	}
 
 	private void notParse(String code, String production) throws ParseException {

@@ -6,9 +6,9 @@ import cide.greferences.*;
 import java.util.*;
 
 public class patrOp extends GenASTNode {
-  public patrOp(constructorOperator constructorOperator, patr patr, Token firstToken, Token lastToken) {
+  public patrOp(qconop qconop, patr patr, Token firstToken, Token lastToken) {
     super(new Property[] {
-      new PropertyOne<constructorOperator>("constructorOperator", constructorOperator),
+      new PropertyOne<qconop>("qconop", qconop),
       new PropertyOne<patr>("patr", patr)
     }, firstToken, lastToken);
   }
@@ -18,8 +18,8 @@ public class patrOp extends GenASTNode {
   public ASTNode deepCopy() {
     return new patrOp(cloneProperties(),firstToken,lastToken);
   }
-  public constructorOperator getConstructorOperator() {
-    return ((PropertyOne<constructorOperator>)getProperty("constructorOperator")).getValue();
+  public qconop getQconop() {
+    return ((PropertyOne<qconop>)getProperty("qconop")).getValue();
   }
   public patr getPatr() {
     return ((PropertyOne<patr>)getProperty("patr")).getValue();

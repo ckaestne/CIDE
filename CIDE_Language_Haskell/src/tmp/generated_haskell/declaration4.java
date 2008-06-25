@@ -6,11 +6,11 @@ import cide.greferences.*;
 import java.util.*;
 
 public class declaration4 extends declaration {
-  public declaration4(patr patr1, ArrayList<altExprAss> altExprAss1, whereDecls whereDecls3, Token firstToken, Token lastToken) {
+  public declaration4(patr patr, expr expr1, whereDecls whereDecls2, Token firstToken, Token lastToken) {
     super(new Property[] {
-      new PropertyOne<patr>("patr1", patr1),
-      new PropertyOneOrMore<altExprAss>("altExprAss1", altExprAss1),
-      new PropertyZeroOrOne<whereDecls>("whereDecls3", whereDecls3)
+      new PropertyOne<patr>("patr", patr),
+      new PropertyOne<expr>("expr1", expr1),
+      new PropertyZeroOrOne<whereDecls>("whereDecls2", whereDecls2)
     }, firstToken, lastToken);
   }
   public declaration4(Property[] properties, IToken firstToken, IToken lastToken) {
@@ -19,13 +19,13 @@ public class declaration4 extends declaration {
   public ASTNode deepCopy() {
     return new declaration4(cloneProperties(),firstToken,lastToken);
   }
-  public patr getPatr1() {
-    return ((PropertyOne<patr>)getProperty("patr1")).getValue();
+  public patr getPatr() {
+    return ((PropertyOne<patr>)getProperty("patr")).getValue();
   }
-  public ArrayList<altExprAss> getAltExprAss1() {
-    return ((PropertyOneOrMore<altExprAss>)getProperty("altExprAss1")).getValue();
+  public expr getExpr1() {
+    return ((PropertyOne<expr>)getProperty("expr1")).getValue();
   }
-  public whereDecls getWhereDecls3() {
-    return ((PropertyZeroOrOne<whereDecls>)getProperty("whereDecls3")).getValue();
+  public whereDecls getWhereDecls2() {
+    return ((PropertyZeroOrOne<whereDecls>)getProperty("whereDecls2")).getValue();
   }
 }

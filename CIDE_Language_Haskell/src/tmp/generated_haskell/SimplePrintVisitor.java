@@ -371,11 +371,8 @@ public class SimplePrintVisitor extends AbstractPrintVisitor implements ILanguag
 					v.accept(this);
 				}
 			}
-			{
-				var v=n.getVar();
-				if (v!=null) {
-					v.accept(this);
-				}
+			for (var v : n.getVar()) {
+				v.accept(this);
 			}
 			{
 				whereDecls v=n.getWhereDecls();
@@ -723,6 +720,29 @@ public class SimplePrintVisitor extends AbstractPrintVisitor implements ILanguag
 		if (node instanceof declaration3) {
 			declaration3 n = (declaration3)node;
 			{
+				varList v=n.getVarList();
+				if (v!=null) {
+					v.accept(this);
+				}
+			}
+			printToken("::");
+			{
+				context v=n.getContext();
+				if (v!=null) {
+					v.accept(this);
+				}
+			}
+			{
+				functiontype v=n.getFunctiontype();
+				if (v!=null) {
+					v.accept(this);
+				}
+			}
+			return false;
+		}
+		if (node instanceof declaration4) {
+			declaration4 n = (declaration4)node;
+			{
 				patr v=n.getPatr();
 				if (v!=null) {
 					v.accept(this);
@@ -743,8 +763,8 @@ public class SimplePrintVisitor extends AbstractPrintVisitor implements ILanguag
 			}
 			return false;
 		}
-		if (node instanceof declaration4) {
-			declaration4 n = (declaration4)node;
+		if (node instanceof declaration5) {
+			declaration5 n = (declaration5)node;
 			{
 				patr v=n.getPatr1();
 				if (v!=null) {
@@ -756,29 +776,6 @@ public class SimplePrintVisitor extends AbstractPrintVisitor implements ILanguag
 			}
 			{
 				whereDecls v=n.getWhereDecls3();
-				if (v!=null) {
-					v.accept(this);
-				}
-			}
-			return false;
-		}
-		if (node instanceof declaration5) {
-			declaration5 n = (declaration5)node;
-			{
-				varList v=n.getVarList();
-				if (v!=null) {
-					v.accept(this);
-				}
-			}
-			printToken("::");
-			{
-				context v=n.getContext();
-				if (v!=null) {
-					v.accept(this);
-				}
-			}
-			{
-				functiontype v=n.getFunctiontype();
 				if (v!=null) {
 					v.accept(this);
 				}
@@ -1429,7 +1426,7 @@ public class SimplePrintVisitor extends AbstractPrintVisitor implements ILanguag
 		if (node instanceof patrOp) {
 			patrOp n = (patrOp)node;
 			{
-				constructorOperator v=n.getConstructorOperator();
+				qconop v=n.getQconop();
 				if (v!=null) {
 					v.accept(this);
 				}
@@ -1639,7 +1636,7 @@ public class SimplePrintVisitor extends AbstractPrintVisitor implements ILanguag
 		if (node instanceof type2) {
 			type2 n = (type2)node;
 			{
-				var v=n.getVar();
+				ASTStringNode v=n.getVariable_id();
 				if (v!=null) {
 					v.accept(this);
 				}
@@ -1714,6 +1711,13 @@ public class SimplePrintVisitor extends AbstractPrintVisitor implements ILanguag
 		}
 		if (node instanceof context2) {
 			context2 n = (context2)node;
+			printToken("(");
+			printToken(")");
+			printToken("=>");
+			return false;
+		}
+		if (node instanceof context3) {
+			context3 n = (context3)node;
 			Iterator<klasse> listElements = n.getKlasse1().iterator();
 			printToken("(");
 			if (listElements.hasNext()) {
@@ -1735,11 +1739,8 @@ public class SimplePrintVisitor extends AbstractPrintVisitor implements ILanguag
 					v.accept(this);
 				}
 			}
-			{
-				klasseTypeVar v=n.getKlasseTypeVar();
-				if (v!=null) {
-					v.accept(this);
-				}
+			for (klasseTypeVar v : n.getKlasseTypeVar()) {
+				v.accept(this);
 			}
 			return false;
 		}
@@ -1747,7 +1748,7 @@ public class SimplePrintVisitor extends AbstractPrintVisitor implements ILanguag
 			klasseTypeVar1 n = (klasseTypeVar1)node;
 			printToken("(");
 			{
-				var v=n.getVar();
+				ASTStringNode v=n.getVariable_id();
 				if (v!=null) {
 					v.accept(this);
 				}
@@ -1761,7 +1762,7 @@ public class SimplePrintVisitor extends AbstractPrintVisitor implements ILanguag
 		if (node instanceof klasseTypeVar2) {
 			klasseTypeVar2 n = (klasseTypeVar2)node;
 			{
-				var v=n.getVar1();
+				ASTStringNode v=n.getVariable_id1();
 				if (v!=null) {
 					v.accept(this);
 				}
@@ -1808,14 +1809,14 @@ public class SimplePrintVisitor extends AbstractPrintVisitor implements ILanguag
 		}
 		if (node instanceof varMain2) {
 			varMain2 n = (varMain2)node;
-			printToken("`");
+			printToken("(");
 			{
-				varOperator v=n.getVarOperator();
+				varsym v=n.getVarsym();
 				if (v!=null) {
 					v.accept(this);
 				}
 			}
-			printToken("`");
+			printToken(")");
 			return false;
 		}
 		if (node instanceof naamList) {
@@ -1833,39 +1834,33 @@ public class SimplePrintVisitor extends AbstractPrintVisitor implements ILanguag
 		if (node instanceof naam) {
 			naam n = (naam)node;
 			{
-				ModuleNaamPrefix v=n.getModuleNaamPrefix();
-				if (v!=null) {
-					v.accept(this);
-				}
-			}
-			{
-				naamMain v=n.getNaamMain();
+				qcon v=n.getQcon();
 				if (v!=null) {
 					v.accept(this);
 				}
 			}
 			return false;
 		}
-		if (node instanceof naamMain1) {
-			naamMain1 n = (naamMain1)node;
+		if (node instanceof qcon1) {
+			qcon1 n = (qcon1)node;
 			{
-				ASTStringNode v=n.getConstructor_id();
+				qconid v=n.getQconid();
 				if (v!=null) {
 					v.accept(this);
 				}
 			}
 			return false;
 		}
-		if (node instanceof naamMain2) {
-			naamMain2 n = (naamMain2)node;
-			printToken("`");
+		if (node instanceof qcon2) {
+			qcon2 n = (qcon2)node;
+			printToken("(");
 			{
-				constructorOperator v=n.getConstructorOperator();
+				gconsym v=n.getGconsym();
 				if (v!=null) {
 					v.accept(this);
 				}
 			}
-			printToken("`");
+			printToken(")");
 			return false;
 		}
 		if (node instanceof operatorList) {
@@ -1880,54 +1875,38 @@ public class SimplePrintVisitor extends AbstractPrintVisitor implements ILanguag
 			}
 			return false;
 		}
-		if (node instanceof operator1) {
-			operator1 n = (operator1)node;
+		if (node instanceof operator) {
+			operator n = (operator)node;
 			{
-				varOperator v=n.getVarOperator();
+				qop v=n.getQop();
 				if (v!=null) {
 					v.accept(this);
 				}
 			}
 			return false;
 		}
-		if (node instanceof operator2) {
-			operator2 n = (operator2)node;
+		if (node instanceof op1) {
+			op1 n = (op1)node;
 			{
-				constructorOperator v=n.getConstructorOperator();
+				varop v=n.getVarop();
 				if (v!=null) {
 					v.accept(this);
 				}
 			}
 			return false;
 		}
-		if (node instanceof varOperator) {
-			varOperator n = (varOperator)node;
+		if (node instanceof op2) {
+			op2 n = (op2)node;
 			{
-				ModuleNaamPrefix v=n.getModuleNaamPrefix();
-				if (v!=null) {
-					v.accept(this);
-				}
-			}
-			{
-				varOperatorMain v=n.getVarOperatorMain();
+				conop v=n.getConop();
 				if (v!=null) {
 					v.accept(this);
 				}
 			}
 			return false;
 		}
-		if (node instanceof varOperatorMain1) {
-			varOperatorMain1 n = (varOperatorMain1)node;
-			{
-				ASTStringNode v=n.getVarsym();
-				if (v!=null) {
-					v.accept(this);
-				}
-			}
-			return false;
-		}
-		if (node instanceof varOperatorMain2) {
-			varOperatorMain2 n = (varOperatorMain2)node;
+		if (node instanceof op3) {
+			op3 n = (op3)node;
 			{
 				otherOperators v=n.getOtherOperators();
 				if (v!=null) {
@@ -1936,20 +1915,28 @@ public class SimplePrintVisitor extends AbstractPrintVisitor implements ILanguag
 			}
 			return false;
 		}
-		if (node instanceof varOperatorMain3) {
-			varOperatorMain3 n = (varOperatorMain3)node;
-			printToken("(");
+		if (node instanceof qop1) {
+			qop1 n = (qop1)node;
 			{
-				var v=n.getVar();
+				qvarop v=n.getQvarop();
 				if (v!=null) {
 					v.accept(this);
 				}
 			}
-			printToken(")");
 			return false;
 		}
-		if (node instanceof constructorOperator) {
-			constructorOperator n = (constructorOperator)node;
+		if (node instanceof qop2) {
+			qop2 n = (qop2)node;
+			{
+				qconop v=n.getQconop();
+				if (v!=null) {
+					v.accept(this);
+				}
+			}
+			return false;
+		}
+		if (node instanceof qop3) {
+			qop3 n = (qop3)node;
 			{
 				ModuleNaamPrefix v=n.getModuleNaamPrefix();
 				if (v!=null) {
@@ -1957,15 +1944,59 @@ public class SimplePrintVisitor extends AbstractPrintVisitor implements ILanguag
 				}
 			}
 			{
-				constructorOperatorMain v=n.getConstructorOperatorMain();
+				otherOperators v=n.getOtherOperators();
 				if (v!=null) {
 					v.accept(this);
 				}
 			}
 			return false;
 		}
-		if (node instanceof constructorOperatorMain1) {
-			constructorOperatorMain1 n = (constructorOperatorMain1)node;
+		if (node instanceof varop1) {
+			varop1 n = (varop1)node;
+			{
+				varsym v=n.getVarsym();
+				if (v!=null) {
+					v.accept(this);
+				}
+			}
+			return false;
+		}
+		if (node instanceof varop2) {
+			varop2 n = (varop2)node;
+			printToken("`");
+			{
+				ASTStringNode v=n.getVariable_id();
+				if (v!=null) {
+					v.accept(this);
+				}
+			}
+			printToken("`");
+			return false;
+		}
+		if (node instanceof qvarop1) {
+			qvarop1 n = (qvarop1)node;
+			printToken("`");
+			{
+				qvarid v=n.getQvarid();
+				if (v!=null) {
+					v.accept(this);
+				}
+			}
+			printToken("`");
+			return false;
+		}
+		if (node instanceof qvarop2) {
+			qvarop2 n = (qvarop2)node;
+			{
+				qvarsym v=n.getQvarsym();
+				if (v!=null) {
+					v.accept(this);
+				}
+			}
+			return false;
+		}
+		if (node instanceof conop1) {
+			conop1 n = (conop1)node;
 			{
 				ASTStringNode v=n.getConsym();
 				if (v!=null) {
@@ -1974,8 +2005,131 @@ public class SimplePrintVisitor extends AbstractPrintVisitor implements ILanguag
 			}
 			return false;
 		}
-		if (node instanceof constructorOperatorMain2) {
-			constructorOperatorMain2 n = (constructorOperatorMain2)node;
+		if (node instanceof conop2) {
+			conop2 n = (conop2)node;
+			printToken("`");
+			{
+				ASTStringNode v=n.getConstructor_id();
+				if (v!=null) {
+					v.accept(this);
+				}
+			}
+			printToken("`");
+			return false;
+		}
+		if (node instanceof qconop1) {
+			qconop1 n = (qconop1)node;
+			printToken("`");
+			{
+				qconid v=n.getQconid();
+				if (v!=null) {
+					v.accept(this);
+				}
+			}
+			printToken("`");
+			return false;
+		}
+		if (node instanceof qconop2) {
+			qconop2 n = (qconop2)node;
+			{
+				gconsym v=n.getGconsym();
+				if (v!=null) {
+					v.accept(this);
+				}
+			}
+			return false;
+		}
+		if (node instanceof qvarsym) {
+			qvarsym n = (qvarsym)node;
+			{
+				ModuleNaamPrefix v=n.getModuleNaamPrefix();
+				if (v!=null) {
+					v.accept(this);
+				}
+			}
+			{
+				varsym v=n.getVarsym();
+				if (v!=null) {
+					v.accept(this);
+				}
+			}
+			return false;
+		}
+		if (node instanceof qvarid) {
+			qvarid n = (qvarid)node;
+			{
+				ModuleNaamPrefix v=n.getModuleNaamPrefix();
+				if (v!=null) {
+					v.accept(this);
+				}
+			}
+			{
+				ASTStringNode v=n.getVariable_id();
+				if (v!=null) {
+					v.accept(this);
+				}
+			}
+			return false;
+		}
+		if (node instanceof qconsym) {
+			qconsym n = (qconsym)node;
+			{
+				ModuleNaamPrefix v=n.getModuleNaamPrefix();
+				if (v!=null) {
+					v.accept(this);
+				}
+			}
+			{
+				ASTStringNode v=n.getConsym();
+				if (v!=null) {
+					v.accept(this);
+				}
+			}
+			return false;
+		}
+		if (node instanceof qconid) {
+			qconid n = (qconid)node;
+			{
+				ModuleNaamPrefix v=n.getModuleNaamPrefix();
+				if (v!=null) {
+					v.accept(this);
+				}
+			}
+			{
+				ASTStringNode v=n.getConstructor_id();
+				if (v!=null) {
+					v.accept(this);
+				}
+			}
+			return false;
+		}
+		if (node instanceof gconsym1) {
+			gconsym1 n = (gconsym1)node;
+			printToken(":");
+			return false;
+		}
+		if (node instanceof gconsym2) {
+			gconsym2 n = (gconsym2)node;
+			{
+				qconsym v=n.getQconsym();
+				if (v!=null) {
+					v.accept(this);
+				}
+			}
+			return false;
+		}
+		if (node instanceof varsym1) {
+			varsym1 n = (varsym1)node;
+			{
+				ASTStringNode v=n.getVarsym();
+				if (v!=null) {
+					v.accept(this);
+				}
+			}
+			return false;
+		}
+		if (node instanceof varsym2) {
+			varsym2 n = (varsym2)node;
 			{
 				otherOperators v=n.getOtherOperators();
 				if (v!=null) {
@@ -1984,33 +2138,16 @@ public class SimplePrintVisitor extends AbstractPrintVisitor implements ILanguag
 			}
 			return false;
 		}
-		if (node instanceof constructorOperatorMain3) {
-			constructorOperatorMain3 n = (constructorOperatorMain3)node;
-			printToken(":");
-			return false;
-		}
-		if (node instanceof constructorOperatorMain4) {
-			constructorOperatorMain4 n = (constructorOperatorMain4)node;
-			printToken("(");
-			{
-				naam v=n.getNaam();
-				if (v!=null) {
-					v.accept(this);
-				}
-			}
-			printToken(")");
-			return false;
-		}
 		if (node instanceof ModuleNaamPrefix) {
 			ModuleNaamPrefix n = (ModuleNaamPrefix)node;
 			{
-				naamMain v=n.getNaamMain();
+				ASTStringNode v=n.getConstructor_id();
 				if (v!=null) {
 					v.accept(this);
 				}
 			}
 			printToken(".");
-			for (naamMain v : n.getNaamMain1()) {
+			for (ASTStringNode v : n.getConstructor_id1()) {
 				v.accept(this);
 				printToken(".");
 			}

@@ -631,6 +631,7 @@ definition definition() : {
 	context context2 = null;
 	naam naam1;
 	var var;
+	ArrayList<var> varList = new ArrayList<var>();
 	whereDecls whereDecls = null;
 	context context3 = null;
 	naam naam2;
@@ -646,8 +647,8 @@ definition definition() : {
 	{return new datadecl(context, simpletype1, constrs, deriving, firstToken.next,token);} |
 	"newtype" [LOOKAHEAD(context()) context1=context()] simpletype2=simpletype() "=" naam=naam() newtypeParam=newtypeParam() [deriving1=deriving()] 
 	{return new newtypedecl(context1, simpletype2, naam, newtypeParam, deriving1, firstToken.next,token);} |
-	"class" [LOOKAHEAD(context()) context2=context()] naam1=naam() var=var() [whereDecls=whereDecls()] 
-	{return new classdecl(context2, naam1, var, whereDecls, firstToken.next,token);} |
+	"class" [LOOKAHEAD(context()) context2=context()] naam1=naam() (var=var(){varList.add(var);})+ [whereDecls=whereDecls()] 
+	{return new classdecl(context2, naam1, varList, whereDecls, firstToken.next,token);} |
 	"instance" [LOOKAHEAD(context()) context3=context()] naam2=naam() inst=inst() [whereDecls1=whereDecls()] 
 	{return new instancedecl(context3, naam2, inst, whereDecls1, firstToken.next,token);} |
 	"default" functiontypeList=functiontypeList() 
@@ -745,7 +746,7 @@ inst inst() : {
 	var var4;
 	Token firstToken=token;
 } { (
-	naam=naam() 
+	LOOKAHEAD(naam()) naam=naam() 
 	{return new inst1(naam, firstToken.next,token);} |
 	LOOKAHEAD("(" var() "->") "(" var=var() "->" var1=var() ")" 
 	{return new inst2(var, var1, firstToken.next,token);} |
@@ -784,6 +785,9 @@ declaration declaration() : {
 	altExprAss altExprAss;
 	ArrayList<altExprAss> altExprAssList = new ArrayList<altExprAss>();
 	whereDecls whereDecls1 = null;
+	varList varList;
+	context context = null;
+	functiontype functiontype;
 	patr patr;
 	expr expr1;
 	whereDecls whereDecls2 = null;
@@ -791,9 +795,6 @@ declaration declaration() : {
 	altExprAss altExprAss1;
 	ArrayList<altExprAss> altExprAss1List = new ArrayList<altExprAss>();
 	whereDecls whereDecls3 = null;
-	varList varList;
-	context context = null;
-	functiontype functiontype;
 	Token t;
 	ASTStringNode integer = null;
 	operatorList operatorList;
@@ -807,12 +808,12 @@ declaration declaration() : {
 	{return new declaration1(function, expr, whereDecls, firstToken.next,token);} |
 	LOOKAHEAD(function() "|") function1=function() (altExprAss=altExprAss(){altExprAssList.add(altExprAss);})+ [whereDecls1=whereDecls()] 
 	{return new declaration2(function1, altExprAssList, whereDecls1, firstToken.next,token);} |
+	LOOKAHEAD(varList() "::") varList=varList() "::" [LOOKAHEAD(context()) context=context()] functiontype=functiontype() 
+	{return new declaration3(varList, context, functiontype, firstToken.next,token);} |
 	LOOKAHEAD(patr() "=") patr=patr() "=" expr1=expr() [whereDecls2=whereDecls()] 
-	{return new declaration3(patr, expr1, whereDecls2, firstToken.next,token);} |
+	{return new declaration4(patr, expr1, whereDecls2, firstToken.next,token);} |
 	LOOKAHEAD(patr() "|") patr1=patr() (altExprAss1=altExprAss(){altExprAss1List.add(altExprAss1);})+ [whereDecls3=whereDecls()] 
-	{return new declaration4(patr1, altExprAss1List, whereDecls3, firstToken.next,token);} |
-	varList=varList() "::" [LOOKAHEAD(context()) context=context()] functiontype=functiontype() 
-	{return new declaration5(varList, context, functiontype, firstToken.next,token);} |
+	{return new declaration5(patr1, altExprAss1List, whereDecls3, firstToken.next,token);} |
 	"infix" [t=<INTEGER>{integer=new ASTStringNode(t.toString(),new WToken(t));}] operatorList=operatorList() 
 	{return new declaration6(integer, operatorList, firstToken.next,token);} |
 	"infixl" [t=<INTEGER>{integer1=new ASTStringNode(t.toString(),new WToken(t));}] operatorList1=operatorList() 
@@ -878,7 +879,7 @@ expressie expressie() : {
 	{return new expressie1(literal, firstToken.next,token);} |
 	LOOKAHEAD(var()) var=var() [contrExprParam=contrExprParam()] 
 	{return new expressie2(var, contrExprParam, firstToken.next,token);} |
-	naam=naam() [contrExprParam1=contrExprParam()] 
+	LOOKAHEAD(naam()) naam=naam() [contrExprParam1=contrExprParam()] 
 	{return new expressie3(naam, contrExprParam1, firstToken.next,token);} |
 	LOOKAHEAD("(" operator()) "(" operator=operator() expr=expr() ")" 
 	{return new expressie4(operator, expr, firstToken.next,token);} |
@@ -917,7 +918,7 @@ expr expr() : {
 	exprEnd exprEnd = null;
 	Token firstToken=token;
 } { (
-	exprMain=exprMain() (LOOKAHEAD(exprOperator()) exprOperator=exprOperator(){exprOperatorList.add(exprOperator);})* [LOOKAHEAD(1) exprEnd=exprEnd()] 
+	exprMain=exprMain() (LOOKAHEAD(exprOperator()) exprOperator=exprOperator(){exprOperatorList.add(exprOperator);})* [LOOKAHEAD(exprEnd()) exprEnd=exprEnd()] 
 	{return new expr(exprMain, exprOperatorList, exprEnd, firstToken.next,token);}
  ) }
 
@@ -1001,7 +1002,7 @@ exprListSpecial exprListSpecial() : {
 	{return new exprListSpecial1(expr, altSpecialList, firstToken.next,token);} |
 	LOOKAHEAD(expr() ["," expr()] "..") expr1=expr() ["," expr2=expr()] ".." [expr3=expr()] 
 	{return new exprListSpecial2(expr1, expr2, expr3, firstToken.next,token);} |
-	expr4=expr() ("," expr5=expr(){expr5List.add(expr5);})+ 
+	expr4=expr() ("," expr5=expr(){expr5List.add(expr5);})* 
 	{return new exprListSpecial3(expr4, expr5List, firstToken.next,token);}
  ) }
 
@@ -1073,17 +1074,17 @@ patr patr() : {
 	ArrayList<patrOp> patrOpList = new ArrayList<patrOp>();
 	Token firstToken=token;
 } { (
-	patrMain=patrMain() (LOOKAHEAD(constructorOperator()) patrOp=patrOp(){patrOpList.add(patrOp);})* 
+	patrMain=patrMain() (LOOKAHEAD(qconop()) patrOp=patrOp(){patrOpList.add(patrOp);})* 
 	{return new patr(patrMain, patrOpList, firstToken.next,token);}
  ) }
 
 patrOp patrOp() : { 
-	constructorOperator constructorOperator;
+	qconop qconop;
 	patr patr;
 	Token firstToken=token;
 } { (
-	constructorOperator=constructorOperator() patr=patr() 
-	{return new patrOp(constructorOperator, patr, firstToken.next,token);}
+	qconop=qconop() patr=patr() 
+	{return new patrOp(qconop, patr, firstToken.next,token);}
  ) }
 
 patrMain patrMain() : { 
@@ -1140,7 +1141,7 @@ patroonMain patroonMain() : {
 	{return new patroonMain2(text6, literal, firstToken.next,token);} |
 	LOOKAHEAD(var()) var=var() 
 	{return new patroonMain3(var, firstToken.next,token);} |
-	naam=naam() [contrPatrParam=contrPatrParam()] 
+	LOOKAHEAD(naam()) naam=naam() [contrPatrParam=contrPatrParam()] 
 	{return new constructorNaam(naam, contrPatrParam, firstToken.next,token);} |
 	"(" [patrList=patrList()] ")" 
 	{return new patroonMain5(patrList, firstToken.next,token);} |
@@ -1181,15 +1182,16 @@ contrPatrAssign contrPatrAssign() : {
 
 type type() : { 
 	naam naam;
-	var var;
+	Token t;
+	ASTStringNode variable_id;
 	functiontypeList functiontypeList = null;
 	functiontype functiontype;
 	Token firstToken=token;
 } { (
 	LOOKAHEAD(naam()) naam=naam() 
 	{return new type1(naam, firstToken.next,token);} |
-	var=var() 
-	{return new type2(var, firstToken.next,token);} |
+	t=<VARIABLE_ID>{variable_id=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new type2(variable_id, firstToken.next,token);} |
 	"(" [functiontypeList=functiontypeList()] ")" 
 	{return new type3(functiontypeList, firstToken.next,token);} |
 	"[" functiontype=functiontype() "]" 
@@ -1230,37 +1232,41 @@ paramtype paramtype() : {
 context context() : { 
 	klasse klasse;
 	klasse klasse1;
-	ArrayList<klasse> list1=new ArrayList<klasse>();
+	ArrayList<klasse> list2=new ArrayList<klasse>();
 	klasse klasse2;
 	ArrayList<klasse> klasse2List = new ArrayList<klasse>();
 	Token firstToken=token;
 } { (
-	klasse=klasse() "=>" 
+	LOOKAHEAD(klasse() "=>") klasse=klasse() "=>" 
 	{return new context1(klasse, firstToken.next,token);} |
-	"(" klasse1=klasse(){list1.add(klasse1);} ("," klasse2=klasse(){list1.add(klasse2);})* ")" "=>" 
-	{return new context2(list1, firstToken.next,token);}
+	LOOKAHEAD(2) "(" ")" "=>"  
+	{return new context2(firstToken.next,token);} |
+	"(" klasse1=klasse(){list2.add(klasse1);} ("," klasse2=klasse(){list2.add(klasse2);})* ")" "=>" 
+	{return new context3(list2, firstToken.next,token);}
  ) }
 
 klasse klasse() : { 
 	naam naam;
 	klasseTypeVar klasseTypeVar;
+	ArrayList<klasseTypeVar> klasseTypeVarList = new ArrayList<klasseTypeVar>();
 	Token firstToken=token;
 } { (
-	naam=naam() klasseTypeVar=klasseTypeVar() 
-	{return new klasse(naam, klasseTypeVar, firstToken.next,token);}
+	naam=naam() (klasseTypeVar=klasseTypeVar(){klasseTypeVarList.add(klasseTypeVar);})+ 
+	{return new klasse(naam, klasseTypeVarList, firstToken.next,token);}
  ) }
 
 klasseTypeVar klasseTypeVar() : { 
-	var var;
+	Token t;
+	ASTStringNode variable_id;
 	type type;
 	ArrayList<type> typeList = new ArrayList<type>();
-	var var1;
+	ASTStringNode variable_id1;
 	Token firstToken=token;
 } { (
-	"(" var=var() (type=type(){typeList.add(type);})* ")" 
-	{return new klasseTypeVar1(var, typeList, firstToken.next,token);} |
-	var1=var() 
-	{return new klasseTypeVar2(var1, firstToken.next,token);}
+	"(" t=<VARIABLE_ID>{variable_id=new ASTStringNode(t.toString(),new WToken(t));} (type=type(){typeList.add(type);})* ")" 
+	{return new klasseTypeVar1(variable_id, typeList, firstToken.next,token);} |
+	t=<VARIABLE_ID>{variable_id1=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new klasseTypeVar2(variable_id1, firstToken.next,token);}
  ) }
 
 varList varList() : { 
@@ -1286,13 +1292,13 @@ var var() : {
 varMain varMain() : { 
 	Token t;
 	ASTStringNode variable_id;
-	varOperator varOperator;
+	varsym varsym;
 	Token firstToken=token;
 } { (
 	t=<VARIABLE_ID>{variable_id=new ASTStringNode(t.toString(),new WToken(t));} 
 	{return new varMain1(variable_id, firstToken.next,token);} |
-	"`" varOperator=varOperator() "`" 
-	{return new varMain2(varOperator, firstToken.next,token);}
+	"(" varsym=varsym() ")" 
+	{return new varMain2(varsym, firstToken.next,token);}
  ) }
 
 naamList naamList() : { 
@@ -1307,24 +1313,22 @@ naamList naamList() : {
  ) }
 
 naam naam() : { 
-	ModuleNaamPrefix moduleNaamPrefix = null;
-	naamMain naamMain;
+	qcon qcon;
 	Token firstToken=token;
 } { (
-	[LOOKAHEAD(ModuleNaamPrefix()) moduleNaamPrefix=ModuleNaamPrefix()] naamMain=naamMain() 
-	{return new naam(moduleNaamPrefix, naamMain, firstToken.next,token);}
+	qcon=qcon() 
+	{return new naam(qcon, firstToken.next,token);}
  ) }
 
-naamMain naamMain() : { 
-	Token t;
-	ASTStringNode constructor_id;
-	constructorOperator constructorOperator;
+qcon qcon() : { 
+	qconid qconid;
+	gconsym gconsym;
 	Token firstToken=token;
 } { (
-	t=<CONSTRUCTOR_ID>{constructor_id=new ASTStringNode(t.toString(),new WToken(t));} 
-	{return new naamMain1(constructor_id, firstToken.next,token);} |
-	"`" constructorOperator=constructorOperator() "`" 
-	{return new naamMain2(constructorOperator, firstToken.next,token);}
+	qconid=qconid() 
+	{return new qcon1(qconid, firstToken.next,token);} |
+	"(" gconsym=gconsym() ")" 
+	{return new qcon2(gconsym, firstToken.next,token);}
  ) }
 
 operatorList operatorList() : { 
@@ -1339,74 +1343,158 @@ operatorList operatorList() : {
  ) }
 
 operator operator() : { 
-	varOperator varOperator;
-	constructorOperator constructorOperator;
+	qop qop;
 	Token firstToken=token;
 } { (
-	LOOKAHEAD(varOperator()) varOperator=varOperator() 
-	{return new operator1(varOperator, firstToken.next,token);} |
-	constructorOperator=constructorOperator() 
-	{return new operator2(constructorOperator, firstToken.next,token);}
+	qop=qop() 
+	{return new operator(qop, firstToken.next,token);}
  ) }
 
-varOperator varOperator() : { 
-	ModuleNaamPrefix moduleNaamPrefix = null;
-	varOperatorMain varOperatorMain;
-	Token firstToken=token;
-} { (
-	[LOOKAHEAD(ModuleNaamPrefix()) moduleNaamPrefix=ModuleNaamPrefix()] varOperatorMain=varOperatorMain() 
-	{return new varOperator(moduleNaamPrefix, varOperatorMain, firstToken.next,token);}
- ) }
-
-varOperatorMain varOperatorMain() : { 
-	Token t;
-	ASTStringNode varsym;
+op op() : { 
+	varop varop;
+	conop conop;
 	otherOperators otherOperators;
-	var var;
 	Token firstToken=token;
 } { (
-	t=<VARSYM>{varsym=new ASTStringNode(t.toString(),new WToken(t));} 
-	{return new varOperatorMain1(varsym, firstToken.next,token);} |
+	LOOKAHEAD(varop()) varop=varop() 
+	{return new op1(varop, firstToken.next,token);} |
+	conop=conop() 
+	{return new op2(conop, firstToken.next,token);} |
 	otherOperators=otherOperators() 
-	{return new varOperatorMain2(otherOperators, firstToken.next,token);} |
-	"(" var=var() ")" 
-	{return new varOperatorMain3(var, firstToken.next,token);}
+	{return new op3(otherOperators, firstToken.next,token);}
  ) }
 
-constructorOperator constructorOperator() : { 
+qop qop() : { 
+	qvarop qvarop;
+	qconop qconop;
 	ModuleNaamPrefix moduleNaamPrefix = null;
-	constructorOperatorMain constructorOperatorMain;
+	otherOperators otherOperators;
 	Token firstToken=token;
 } { (
-	[LOOKAHEAD(ModuleNaamPrefix()) moduleNaamPrefix=ModuleNaamPrefix()] constructorOperatorMain=constructorOperatorMain() 
-	{return new constructorOperator(moduleNaamPrefix, constructorOperatorMain, firstToken.next,token);}
+	LOOKAHEAD(qvarop()) qvarop=qvarop() 
+	{return new qop1(qvarop, firstToken.next,token);} |
+	LOOKAHEAD(qconop()) qconop=qconop() 
+	{return new qop2(qconop, firstToken.next,token);} |
+	[LOOKAHEAD(ModuleNaamPrefix()) moduleNaamPrefix=ModuleNaamPrefix()] otherOperators=otherOperators() 
+	{return new qop3(moduleNaamPrefix, otherOperators, firstToken.next,token);}
  ) }
 
-constructorOperatorMain constructorOperatorMain() : { 
+varop varop() : { 
+	varsym varsym;
+	Token t;
+	ASTStringNode variable_id;
+	Token firstToken=token;
+} { (
+	varsym=varsym() 
+	{return new varop1(varsym, firstToken.next,token);} |
+	"`" t=<VARIABLE_ID>{variable_id=new ASTStringNode(t.toString(),new WToken(t));} "`" 
+	{return new varop2(variable_id, firstToken.next,token);}
+ ) }
+
+qvarop qvarop() : { 
+	qvarid qvarid;
+	qvarsym qvarsym;
+	Token firstToken=token;
+} { (
+	LOOKAHEAD(1) "`" qvarid=qvarid() "`" 
+	{return new qvarop1(qvarid, firstToken.next,token);} |
+	qvarsym=qvarsym() 
+	{return new qvarop2(qvarsym, firstToken.next,token);}
+ ) }
+
+conop conop() : { 
 	Token t;
 	ASTStringNode consym;
-	otherOperators otherOperators;
-	naam naam;
+	ASTStringNode constructor_id;
 	Token firstToken=token;
 } { (
 	t=<CONSYM>{consym=new ASTStringNode(t.toString(),new WToken(t));} 
-	{return new constructorOperatorMain1(consym, firstToken.next,token);} |
-	otherOperators=otherOperators() 
-	{return new constructorOperatorMain2(otherOperators, firstToken.next,token);} |
+	{return new conop1(consym, firstToken.next,token);} |
+	"`" t=<CONSTRUCTOR_ID>{constructor_id=new ASTStringNode(t.toString(),new WToken(t));} "`" 
+	{return new conop2(constructor_id, firstToken.next,token);}
+ ) }
+
+qconop qconop() : { 
+	qconid qconid;
+	gconsym gconsym;
+	Token firstToken=token;
+} { (
+	LOOKAHEAD(1) "`" qconid=qconid() "`" 
+	{return new qconop1(qconid, firstToken.next,token);} |
+	gconsym=gconsym() 
+	{return new qconop2(gconsym, firstToken.next,token);}
+ ) }
+
+qvarsym qvarsym() : { 
+	ModuleNaamPrefix moduleNaamPrefix = null;
+	varsym varsym;
+	Token firstToken=token;
+} { (
+	[LOOKAHEAD(ModuleNaamPrefix()) moduleNaamPrefix=ModuleNaamPrefix()] varsym=varsym() 
+	{return new qvarsym(moduleNaamPrefix, varsym, firstToken.next,token);}
+ ) }
+
+qvarid qvarid() : { 
+	ModuleNaamPrefix moduleNaamPrefix = null;
+	Token t;
+	ASTStringNode variable_id;
+	Token firstToken=token;
+} { (
+	[LOOKAHEAD(ModuleNaamPrefix()) moduleNaamPrefix=ModuleNaamPrefix()] t=<VARIABLE_ID>{variable_id=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new qvarid(moduleNaamPrefix, variable_id, firstToken.next,token);}
+ ) }
+
+qconsym qconsym() : { 
+	ModuleNaamPrefix moduleNaamPrefix = null;
+	Token t;
+	ASTStringNode consym;
+	Token firstToken=token;
+} { (
+	[LOOKAHEAD(ModuleNaamPrefix()) moduleNaamPrefix=ModuleNaamPrefix()] t=<CONSYM>{consym=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new qconsym(moduleNaamPrefix, consym, firstToken.next,token);}
+ ) }
+
+qconid qconid() : { 
+	ModuleNaamPrefix moduleNaamPrefix = null;
+	Token t;
+	ASTStringNode constructor_id;
+	Token firstToken=token;
+} { (
+	[LOOKAHEAD(ModuleNaamPrefix()) moduleNaamPrefix=ModuleNaamPrefix()] t=<CONSTRUCTOR_ID>{constructor_id=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new qconid(moduleNaamPrefix, constructor_id, firstToken.next,token);}
+ ) }
+
+gconsym gconsym() : { 
+	qconsym qconsym;
+	Token firstToken=token;
+} { (
 	":"  
-	{return new constructorOperatorMain3(firstToken.next,token);} |
-	"(" naam=naam() ")" 
-	{return new constructorOperatorMain4(naam, firstToken.next,token);}
+	{return new gconsym1(firstToken.next,token);} |
+	qconsym=qconsym() 
+	{return new gconsym2(qconsym, firstToken.next,token);}
+ ) }
+
+varsym varsym() : { 
+	Token t;
+	ASTStringNode varsym;
+	otherOperators otherOperators;
+	Token firstToken=token;
+} { (
+	t=<VARSYM>{varsym=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new varsym1(varsym, firstToken.next,token);} |
+	otherOperators=otherOperators() 
+	{return new varsym2(otherOperators, firstToken.next,token);}
  ) }
 
 ModuleNaamPrefix ModuleNaamPrefix() : { 
-	naamMain naamMain;
-	naamMain naamMain1;
-	ArrayList<naamMain> naamMain1List = new ArrayList<naamMain>();
+	Token t;
+	ASTStringNode constructor_id;
+	ASTStringNode constructor_id1;
+	ArrayList<ASTStringNode> constructor_id1List = new ArrayList<ASTStringNode>();
 	Token firstToken=token;
 } { (
-	naamMain=naamMain() "." (LOOKAHEAD(naamMain() ".") naamMain1=naamMain(){naamMain1List.add(naamMain1);} ".")* 
-	{return new ModuleNaamPrefix(naamMain, naamMain1List, firstToken.next,token);}
+	t=<CONSTRUCTOR_ID>{constructor_id=new ASTStringNode(t.toString(),new WToken(t));} "." (LOOKAHEAD(<CONSTRUCTOR_ID> ".") t=<CONSTRUCTOR_ID>{constructor_id1=new ASTStringNode(t.toString(),new WToken(t));}{constructor_id1List.add(constructor_id1);} ".")* 
+	{return new ModuleNaamPrefix(constructor_id, constructor_id1List, firstToken.next,token);}
  ) }
 
 otherOperators otherOperators() : { 

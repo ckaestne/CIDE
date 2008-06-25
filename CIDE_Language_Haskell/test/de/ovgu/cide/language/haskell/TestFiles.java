@@ -1,4 +1,5 @@
 package de.ovgu.cide.language.haskell;
+
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileReader;
@@ -14,7 +15,6 @@ import cide.languages.ILanguagePrintVisitor;
 import de.ovgu.cide.language.haskell.HaskellLanguageExtension;
 
 public class TestFiles {
-
 
 	private HaskellParser parse(String string) {
 		ByteArrayInputStream a = new ByteArrayInputStream(string.getBytes());
@@ -35,11 +35,16 @@ public class TestFiles {
 
 	@Test
 	public void testArminsExamples() throws Exception {
-		parseFilesInFolder(new File("test/armin"), true);
+		parseFilesInFolder(new File("test/armin"), true, ".hs");
 	}
 
-	private void parseFilesInFolder(File folder, boolean recursive)
-			throws Exception {
+	@Test
+	public void testXMonad() throws Exception {
+		parseFilesInFolder(new File("test/fgl-5.4.2"), true, ".block");
+	}
+
+	private void parseFilesInFolder(File folder, boolean recursive,
+			String fileextension) throws Exception {
 		for (File file : folder.listFiles()) {
 			if (file.isFile()) {
 				if (file.isHidden()) {
@@ -47,17 +52,18 @@ public class TestFiles {
 				} else {
 					String name = file.getName();
 					int idx = name.lastIndexOf('.');
-					if (idx > 0 && (name.substring(idx).equals(".hs")/*
-																		 * ||
-																		 * name.substring(
-																		 * idx).equals(".h")
-																		 */)) {
+					if (idx > 0 && (name.substring(idx).equals(fileextension)/*
+																				 * ||
+																				 * name.substring(
+																				 * idx).equals(".h")
+																				 */)) {
 						try {
-//							System.out.println("parsing " + file);
+							// System.out.println("parsing " + file);
 							HaskellParser p = new HaskellParser(
 									new OffsetCharStream(new FileReader(file)));
 							module m = p.module();
-							ILanguagePrintVisitor pp = new HaskellLanguageExtension().getPrettyPrinter();
+							ILanguagePrintVisitor pp = new HaskellLanguageExtension()
+									.getPrettyPrinter();
 							m.accept(pp);
 							System.out.println(pp.getResult());
 						} catch (ParseException e) {
@@ -70,7 +76,7 @@ public class TestFiles {
 				}
 			}
 			if (recursive && file.isDirectory())
-				parseFilesInFolder(file, recursive);
+				parseFilesInFolder(file, recursive, fileextension);
 		}
 	}
 

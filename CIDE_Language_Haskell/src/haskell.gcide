@@ -521,7 +521,7 @@ naamOrVar: LL("naam()") naam | var;
 //definition
 definitions: &LI definition (";"@!@! &LI definition)*;
 definition :	
-		"type"		simpletype "=" functiontype :: typedecl	|   "data" [LL("context()") context] simpletype "=" constrs [deriving] :: datadecl	|	"newtype"  [LL("context()") context] simpletype "=" naam newtypeParam [deriving]  :: newtypedecl	|   "class"    [LL("context()") context] naam var [whereDecls] :: classdecl    |   "instance" [LL("context()") context] naam inst [whereDecls]  :: instancedecl	|   "default" functiontypeList  :: defaultdecl	|   declaration	;
+		"type"		simpletype "=" functiontype :: typedecl	|   "data" [LL("context()") context] simpletype "=" constrs [deriving] :: datadecl	|	"newtype"  [LL("context()") context] simpletype "=" naam newtypeParam [deriving]  :: newtypedecl	|   "class"    [LL("context()") context] naam (var)+ [whereDecls] :: classdecl    |   "instance" [LL("context()") context] naam inst [whereDecls]  :: instancedecl	|   "default" functiontypeList  :: defaultdecl	|   declaration	;
 
 simpletype:naam (var)*;
 
@@ -541,7 +541,7 @@ deriving:
 newtypeParam: "{" var "::" functiontype "}" | type; 
 
 inst: 
-	naam
+	LL("naam()") naam
 	| LL("\"(\" var() \"->\"") 	"(" var "->" var ")"
 	| LL("\"(\" var() \",\"")		"(" &LI var ("," &LI var)+ ")"
 	| "(" [simpletype] ")"
@@ -554,9 +554,9 @@ declarationList: &LI declaration (";" @! &LI declaration)*;
 declaration:
 	LL("function() \"=\"") function "=" expr [whereDecls]
 	| LL("function() \"|\"") function (altExprAss)+ [whereDecls]
+	| LL("varList() \"::\"") varList "::" [LL("context()") context] functiontype
 	| LL("patr() \"=\"") patr "=" expr [whereDecls]
 	| LL("patr() \"|\"") patr (altExprAss)+ [whereDecls]
-	| varList "::" [LL("context()") context] functiontype
 	| "infix" [<INTEGER>] operatorList
 	| "infixl" [<INTEGER>] operatorList
 	| "infixr" [<INTEGER>] operatorList;
@@ -564,7 +564,7 @@ declaration:
 altExprAss: "|" expr "=" expr;
 
 function:
-	LL("var() patroon()") var &LI patroon (&LI patroon)*
+	LL("var() patroon()")  var &LI patroon (&LI patroon)*
 	| LL("\"(\" function()") "(" function ")" (patroon)+
 	| patroon operator patr;
 
@@ -574,7 +574,7 @@ whereDecls: "where" @+! decls @-;
 expressie: 
 		literal 
 		| LL("var()") var [contrExprParam]
-		| naam [contrExprParam]
+		| LL("naam()") naam [contrExprParam]
 		| LL("\"(\" operator()") "(" operator expr ")"
 		| LL("\"(\" expr() operator()") "(" expr operator ")"
 		| "(" [exprList] ")"
@@ -584,7 +584,7 @@ contrExprParam: "{" &LI contrExprAssign ("," &LI contrExprAssign)* "}";
 contrExprAssign: var "=" expr;
 		
 		
-expr: exprMain (LL("exprOperator()") exprOperator)* [LL(1) exprEnd];
+expr: exprMain (LL("exprOperator()") exprOperator)* [LL("exprEnd()") exprEnd];
 
 exprEnd: "::" [LL("context()") context] functiontype;
 
@@ -602,7 +602,7 @@ exprList: &LI expr ("," &LI expr)*;
 exprListSpecial: 
 	LL("expr() \"|\"") expr "|" altSpecialList 
 	| LL("expr() [\",\" expr()] \"..\"") expr ["," expr] ".." [expr]
-	| expr ("," expr)+;
+	| expr ("," expr)*;
 	
 altSpecialSemiList: &LI altSpecial (";" &LI altSpecial)*;
 altSpecialList: &LI altSpecial ("," &LI altSpecial)*;
@@ -616,9 +616,9 @@ caseInner: LL("patr() \"->\"") patr "->" expr [whereDecls]
 caseInnerAlt: "|"@! expr "->" expr;
 
 //pattern
-patr: patrMain (LL("constructorOperator()") patrOp)*;
+patr: patrMain (LL("qconop()") patrOp)*;
 
-patrOp: constructorOperator patr;
+patrOp: qconop patr;
 patrMain: 
 	LL("naam() patroon()") naam (LL(1) patroon)+
 	| LL("var() \"+\" <INTEGER>") var "+" <INTEGER>
@@ -631,7 +631,7 @@ patroonPrefix: "~" | var "@";
 patroonMain: "_" 
 	| ["-"<NONE>] literal
 	| LL("var()") var
-	| naam [contrPatrParam]:: constructorNaam
+	| LL("naam()") naam [contrPatrParam]:: constructorNaam
 	| "(" [patrList] ")"
 	| "[" [patrList] "]";
 
@@ -642,45 +642,64 @@ contrPatrAssign: var "=" patr;
 
 //type
 type: LL("naam()") /*type*/naam
-	| /*type*/var
+	| /*tyvar*/<VARIABLE_ID>
 	| "(" [functiontypeList] ")"
 	| "[" functiontype "]" ;
 functiontypeList: &LI functiontype ("," &LI functiontype)*;
 
+// TODO Christian
+//functiontype: type (LL(1) typArr)*;
+//typArr:	["->"<NONE>] type;
 functiontype: &LI paramtype (LL(2) "->" &LI paramtype)*;
 paramtype: (LL("type()") type)+;
 	
 //context
-context: klasse "=>"
+context: LL("klasse() \"=>\"") klasse "=>"
+		| LL(2) "(" ")" "=>" <NONE>
 		| "(" &LI klasse ("," &LI klasse)* ")" "=>";
 
 //class
-klasse: /*klasse*/naam klasseTypeVar;
-klasseTypeVar: "(" var (type)* ")" | var; 	
+klasse: /*klasse*/naam (klasseTypeVar)+;
+klasseTypeVar: "(" /*tyvar*/<VARIABLE_ID> (type)* ")" | /*tyvar*/<VARIABLE_ID>; 	
 	
 //var and naam	
 varList: &LI var ("," &LI var)*;
 var : [LL("ModuleNaamPrefix()") ModuleNaamPrefix] varMain;
 varMain: <VARIABLE_ID>
-	|	"`" varOperator "`"	;
+	| "(" varsym ")";
+	//|	"`" varOperator "`"	; does not fit H98 standard
 
 naamList: &LI naam ("," &LI naam)*;
-naam: [LL("ModuleNaamPrefix()") ModuleNaamPrefix] naamMain;
-naamMain: <CONSTRUCTOR_ID>  
-	|	"`" constructorOperator "`"	;
+naam: qcon;
+
+qcon: qconid | "(" gconsym ")";
+
+//naam: [LL("ModuleNaamPrefix()") ModuleNaamPrefix] naamMain;//naamMain: <CONSTRUCTOR_ID>  //	|	"`" constructorOperator "`"	;
 
 operatorList: &LI operator ("," &LI operator)*;
-operator: LL("varOperator()") varOperator | constructorOperator;
+operator: qop;
+op: LL("varop()") varop | conop | otherOperators;
+qop: LL("qvarop()") qvarop | LL("qconop()")qconop | [LL("ModuleNaamPrefix()") ModuleNaamPrefix] otherOperators;
 
-varOperator: [LL("ModuleNaamPrefix()") ModuleNaamPrefix] varOperatorMain;
-varOperatorMain: <VARSYM> | otherOperators | "(" var ")";
+//varOperator: [LL("ModuleNaamPrefix()") ModuleNaamPrefix] varOperatorMain;//varOperatorMain: <VARSYM> | otherOperators | "(" var ")";
+varop:   varsym | "`" <VARIABLE_ID> "`";
+qvarop:  LL(1) "`" qvarid "`" | qvarsym;
+conop:   <CONSYM> | "`" <CONSTRUCTOR_ID> "`";
+qconop:  LL(1) "`" qconid "`" | gconsym;
 
-constructorOperator: [LL("ModuleNaamPrefix()") ModuleNaamPrefix] constructorOperatorMain;
-constructorOperatorMain: <CONSYM> | otherOperators | ":" | "(" naam ")";
+qvarsym: [LL("ModuleNaamPrefix()") ModuleNaamPrefix] varsym;
+qvarid: [LL("ModuleNaamPrefix()") ModuleNaamPrefix] <VARIABLE_ID>;
+qconsym: [LL("ModuleNaamPrefix()") ModuleNaamPrefix] <CONSYM>;
+qconid: [LL("ModuleNaamPrefix()") ModuleNaamPrefix] <CONSTRUCTOR_ID>;
+gconsym: ":"|qconsym;
+varsym: <VARSYM> | otherOperators;
 
-ModuleNaamPrefix: naamMain "." (LL("naamMain() \".\"") naamMain ".")*;
+//constructorOperator: [LL("ModuleNaamPrefix()") ModuleNaamPrefix] constructorOperatorMain;//constructorOperatorMain: <CONSYM> | otherOperators | ":" | "(" naam ")";
+
+ModuleNaamPrefix: <CONSTRUCTOR_ID> "." (LL("<CONSTRUCTOR_ID> \".\"") <CONSTRUCTOR_ID> ".")*;
 
 otherOperators: "+"|"."|"-"|"_";//not an operator: .. : :: = \ | <- -> @ ~ => --
 //reservedOperators: ".."|":"|"::"|"="|"\\"|"|"|"<-"|"->"|"@"|"~"|"=>"|"--";
 		
 literal :<INTEGER>|<FLOAT>|<CHARACTER_LITERAL>|<STRING_LITERAL>;
+		

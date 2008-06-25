@@ -6,11 +6,11 @@ import cide.greferences.*;
 import java.util.*;
 
 public class declaration5 extends declaration {
-  public declaration5(varList varList, context context, functiontype functiontype, Token firstToken, Token lastToken) {
+  public declaration5(patr patr1, ArrayList<altExprAss> altExprAss1, whereDecls whereDecls3, Token firstToken, Token lastToken) {
     super(new Property[] {
-      new PropertyOne<varList>("varList", varList),
-      new PropertyZeroOrOne<context>("context", context),
-      new PropertyOne<functiontype>("functiontype", functiontype)
+      new PropertyOne<patr>("patr1", patr1),
+      new PropertyOneOrMore<altExprAss>("altExprAss1", altExprAss1),
+      new PropertyZeroOrOne<whereDecls>("whereDecls3", whereDecls3)
     }, firstToken, lastToken);
   }
   public declaration5(Property[] properties, IToken firstToken, IToken lastToken) {
@@ -19,13 +19,13 @@ public class declaration5 extends declaration {
   public ASTNode deepCopy() {
     return new declaration5(cloneProperties(),firstToken,lastToken);
   }
-  public varList getVarList() {
-    return ((PropertyOne<varList>)getProperty("varList")).getValue();
+  public patr getPatr1() {
+    return ((PropertyOne<patr>)getProperty("patr1")).getValue();
   }
-  public context getContext() {
-    return ((PropertyZeroOrOne<context>)getProperty("context")).getValue();
+  public ArrayList<altExprAss> getAltExprAss1() {
+    return ((PropertyOneOrMore<altExprAss>)getProperty("altExprAss1")).getValue();
   }
-  public functiontype getFunctiontype() {
-    return ((PropertyOne<functiontype>)getProperty("functiontype")).getValue();
+  public whereDecls getWhereDecls3() {
+    return ((PropertyZeroOrOne<whereDecls>)getProperty("whereDecls3")).getValue();
   }
 }

@@ -5,7 +5,19 @@ import cide.gparser.*;
 import cide.greferences.*;
 import java.util.*;
 
-public abstract class operator extends GenASTNode {
-  protected operator(Property[] p, Token firstToken, Token lastToken) { super(p, firstToken, lastToken); }
-  protected operator(Property[] p, IToken firstToken, IToken lastToken) { super(p, firstToken, lastToken); }
+public class operator extends GenASTNode {
+  public operator(qop qop, Token firstToken, Token lastToken) {
+    super(new Property[] {
+      new PropertyOne<qop>("qop", qop)
+    }, firstToken, lastToken);
+  }
+  public operator(Property[] properties, IToken firstToken, IToken lastToken) {
+    super(properties,firstToken,lastToken);
+  }
+  public ASTNode deepCopy() {
+    return new operator(cloneProperties(),firstToken,lastToken);
+  }
+  public qop getQop() {
+    return ((PropertyOne<qop>)getProperty("qop")).getValue();
+  }
 }

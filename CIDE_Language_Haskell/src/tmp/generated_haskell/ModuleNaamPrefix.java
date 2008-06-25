@@ -6,10 +6,10 @@ import cide.greferences.*;
 import java.util.*;
 
 public class ModuleNaamPrefix extends GenASTNode {
-  public ModuleNaamPrefix(naamMain naamMain, ArrayList<naamMain> naamMain1, Token firstToken, Token lastToken) {
+  public ModuleNaamPrefix(ASTStringNode constructor_id, ArrayList<ASTStringNode> constructor_id1, Token firstToken, Token lastToken) {
     super(new Property[] {
-      new PropertyOne<naamMain>("naamMain", naamMain),
-      new PropertyZeroOrMore<naamMain>("naamMain1", naamMain1)
+      new PropertyOne<ASTStringNode>("constructor_id", constructor_id),
+      new PropertyZeroOrMore<ASTStringNode>("constructor_id1", constructor_id1)
     }, firstToken, lastToken);
   }
   public ModuleNaamPrefix(Property[] properties, IToken firstToken, IToken lastToken) {
@@ -18,10 +18,10 @@ public class ModuleNaamPrefix extends GenASTNode {
   public ASTNode deepCopy() {
     return new ModuleNaamPrefix(cloneProperties(),firstToken,lastToken);
   }
-  public naamMain getNaamMain() {
-    return ((PropertyOne<naamMain>)getProperty("naamMain")).getValue();
+  public ASTStringNode getConstructor_id() {
+    return ((PropertyOne<ASTStringNode>)getProperty("constructor_id")).getValue();
   }
-  public ArrayList<naamMain> getNaamMain1() {
-    return ((PropertyZeroOrMore<naamMain>)getProperty("naamMain1")).getValue();
+  public ArrayList<ASTStringNode> getConstructor_id1() {
+    return ((PropertyZeroOrMore<ASTStringNode>)getProperty("constructor_id1")).getValue();
   }
 }

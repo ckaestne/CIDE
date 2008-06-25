@@ -6,10 +6,9 @@ import cide.greferences.*;
 import java.util.*;
 
 public class naam extends GenASTNode {
-  public naam(ModuleNaamPrefix moduleNaamPrefix, naamMain naamMain, Token firstToken, Token lastToken) {
+  public naam(qcon qcon, Token firstToken, Token lastToken) {
     super(new Property[] {
-      new PropertyZeroOrOne<ModuleNaamPrefix>("moduleNaamPrefix", moduleNaamPrefix),
-      new PropertyOne<naamMain>("naamMain", naamMain)
+      new PropertyOne<qcon>("qcon", qcon)
     }, firstToken, lastToken);
   }
   public naam(Property[] properties, IToken firstToken, IToken lastToken) {
@@ -18,10 +17,7 @@ public class naam extends GenASTNode {
   public ASTNode deepCopy() {
     return new naam(cloneProperties(),firstToken,lastToken);
   }
-  public ModuleNaamPrefix getModuleNaamPrefix() {
-    return ((PropertyZeroOrOne<ModuleNaamPrefix>)getProperty("moduleNaamPrefix")).getValue();
-  }
-  public naamMain getNaamMain() {
-    return ((PropertyOne<naamMain>)getProperty("naamMain")).getValue();
+  public qcon getQcon() {
+    return ((PropertyOne<qcon>)getProperty("qcon")).getValue();
   }
 }

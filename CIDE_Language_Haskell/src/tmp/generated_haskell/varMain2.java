@@ -6,9 +6,9 @@ import cide.greferences.*;
 import java.util.*;
 
 public class varMain2 extends varMain {
-  public varMain2(varOperator varOperator, Token firstToken, Token lastToken) {
+  public varMain2(varsym varsym, Token firstToken, Token lastToken) {
     super(new Property[] {
-      new PropertyOne<varOperator>("varOperator", varOperator)
+      new PropertyOne<varsym>("varsym", varsym)
     }, firstToken, lastToken);
   }
   public varMain2(Property[] properties, IToken firstToken, IToken lastToken) {
@@ -17,7 +17,7 @@ public class varMain2 extends varMain {
   public ASTNode deepCopy() {
     return new varMain2(cloneProperties(),firstToken,lastToken);
   }
-  public varOperator getVarOperator() {
-    return ((PropertyOne<varOperator>)getProperty("varOperator")).getValue();
+  public varsym getVarsym() {
+    return ((PropertyOne<varsym>)getProperty("varsym")).getValue();
   }
 }
