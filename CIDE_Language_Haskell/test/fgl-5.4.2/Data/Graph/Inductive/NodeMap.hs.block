@@ -13,7 +13,7 @@ module Data.Graph.Inductive.NodeMap
   import Data.Graph.Inductive.Graph;
   import Data.Graph.Inductive.Internal.FiniteMap;
    
-  data (Ord a) => NodeMap a = NodeMap{map :: FiniteMap a Node;
+  data (Ord a) => NodeMap a = NodeMap{map :: FiniteMap a Node,
                                       key :: Int}
                             deriving Show;
    

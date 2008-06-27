@@ -98,12 +98,23 @@ public class ParserPatternTest {
 	public void testType() throws ParseException {
 		parse("ConName", "type");
 		parse("vonName", "type");
+		parse("()", "type");
+		parse("(())", "type");
+		parse("(A)", "type");
+		parse("(A A)", "type");
+		parse("(A, A)", "type");
+		parse("(A a, B b)", "type");
+		parse("[a]", "type");
+		parse("[a a]", "type");
+		parse("[a a -> b -> c d]", "type");
+		notParse("[vonName, Con var]", "type");
 		parse("(vonName, Con, var)", "type");
-		parse("[vonName]", "type");
 		parse("(a->b->c)", "type");
 		parse("(a->(vonName, Con, var),b)", "type");
 		parse("((vonName, Con, var)->(b->[C->X]))", "type");
-		parse("()", "type");
+		parse("((vonName  Con, var) (b->[C->X]))", "type");
+		parse("((vonName  Con, var), (b->[C->X]))", "type");
+		parse("(a->(b))", "type");
 		parse("()", "functiontype");
 		parse("X ()", "functiontype");
 		parse("a->b->c", "functiontype");
@@ -159,6 +170,12 @@ public class ParserPatternTest {
 		parse("[(0,0,0,0)]", "expr");
 		parse("not . null . (gsel (\\ c -> (node' c `elem` suc' c)))", "expr");
 		parse("(.) . (.)", "expr");
+		
+		parse("I.keys A","expr");
+		parse("(I.filter fromNode)","expr");
+		parse("(-1 ==)","expressie");
+		parse("I.keys (I.filter (-1 ==) fromNode)","expr");
+
 	}
 
 	@Test
@@ -223,7 +240,7 @@ public class ParserPatternTest {
 		parse("type TypeNaam var var var = (x->y)", "definition");
 		parse("data TypeNaam var = (x->y) $ (x->y) | X", "definition");
 		parse("data X v=> TypeNaam var = (x->y) $ (x->y) | X", "definition");
-		parse("data TypeNaam var = Y|x$x|X|Y { v, v:: X; x::x->X}",
+		parse("data TypeNaam var = Y|x$x|X|Y { v, v:: X, x::x->X}",
 				"definition");
 		parse("data TypeNaam = X deriving X", "definition");
 		parse("data TypeNaam = X deriving (X, Y, Z)", "definition");
@@ -274,6 +291,33 @@ public class ParserPatternTest {
 		parse("{import X ();import Y;default (x->y)}", "module");
 		notParse("{import Y;default (x->y);import X ()}", "module");
 	}
+	
+	@Test
+	public void testInst() throws ParseException {
+		//test to ensure we do not loose expressiveness compared to H98 standard
+		parse("X X","inst");
+		parse("X (X)","inst");
+		parse("X (X y z)","inst");
+		parse("X ()","inst");
+		parse("X (v->v)","inst");
+		parse("X (v,v,v)","inst");
+		parse("X [v]","inst");
+	}
+	
+	@Test
+	public void testConstr() throws ParseException {
+		//test to ensure we do not loose expressiveness compared to H98 standard
+		parse("X","constr");
+		parse("X (x x)","constr");
+		parse("X () () X","constr");
+		parse("X { x::T}","constr");
+		parse("X {x,y::T}","constr");
+		parse("X {x::T,y::T}","constr");
+		parse("X {x,y::T,z::T,a,b::T}","constr");
+		parse("NodeMap{map :: FiniteMap a Node, key :: Int}","constr");
+		
+	}
+	
 
 	@Test
 	public void testRealExamples() throws ParseException {
@@ -287,8 +331,9 @@ public class ParserPatternTest {
 		parse(" (GraphM m gr) =>","context");
 		parse(" var:: (GraphM m gr) => Int -> m (gr () ())","declaration");
 		
-//		parse("instance GraphM IO SGr","definition");
-//		parse("instance (Show a, Show b) => Show (IO (SGr a b)) ","definition");
+		parse("instance GraphM IO SGr","definition");
+		parse("Show (IO (SGr a b)) ","inst");
+		parse("instance (Show a, Show b) => Show (IO (SGr a b)) ","definition");
 		
 		parse("fst $ mkNodes m asx","expr");
 		parse(" delNodes (v : vs) g = delNodes vs (snd (match v g))","declaration");

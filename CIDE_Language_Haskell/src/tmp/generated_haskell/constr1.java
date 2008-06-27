@@ -6,9 +6,9 @@ import cide.greferences.*;
 import java.util.*;
 
 public class constr1 extends constr {
-  public constr1(ArrayList<vt> vt, naam naam, Token firstToken, Token lastToken) {
+  public constr1(ArrayList<fielddeclaration> fielddeclaration, naam naam, Token firstToken, Token lastToken) {
     super(new Property[] {
-      new PropertyList<vt>("vt", vt),
+      new PropertyList<fielddeclaration>("fielddeclaration", fielddeclaration),
       new PropertyOne<naam>("naam", naam)
     }, firstToken, lastToken);
   }
@@ -18,8 +18,8 @@ public class constr1 extends constr {
   public ASTNode deepCopy() {
     return new constr1(cloneProperties(),firstToken,lastToken);
   }
-  public ArrayList<vt> getVt() {
-    return ((PropertyList<vt>)getProperty("vt")).getValue();
+  public ArrayList<fielddeclaration> getFielddeclaration() {
+    return ((PropertyList<fielddeclaration>)getProperty("fielddeclaration")).getValue();
   }
   public naam getNaam() {
     return ((PropertyOne<naam>)getProperty("naam")).getValue();

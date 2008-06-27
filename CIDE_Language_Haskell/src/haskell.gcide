@@ -521,18 +521,18 @@ naamOrVar: LL("naam()") naam | var;
 //definition
 definitions: &LI definition (";"@!@! &LI definition)*;
 definition :	
-		"type"		simpletype "=" functiontype :: typedecl	|   "data" [LL("context()") context] simpletype "=" constrs [deriving] :: datadecl	|	"newtype"  [LL("context()") context] simpletype "=" naam newtypeParam [deriving]  :: newtypedecl	|   "class"    [LL("context()") context] naam (var)+ [whereDecls] :: classdecl    |   "instance" [LL("context()") context] naam inst [whereDecls]  :: instancedecl	|   "default" functiontypeList  :: defaultdecl	|   declaration	;
+		"type"		simpletype "=" functiontype :: typedecl	|   "data" [LL("context()") context] simpletype "=" constrs [deriving] :: datadecl	|	"newtype"  [LL("context()") context] simpletype "=" naam newtypeParam [deriving]  :: newtypedecl	|   "class"    [LL("context()") context] naam (var)+ [whereDecls] :: classdecl    |   "instance" [LL("context()") context] inst [whereDecls]  :: instancedecl	|   "default" functiontypeList  :: defaultdecl	|   declaration	;
 
-simpletype:naam (var)*;
+simpletype: naam (var)*;
 
 constrs: @+ &LI constr ("|"@! &LI constr)* @-;
 
 constr: 
-	  LL("naam() \"{\"")  naam "{"  &LI vt (";" &LI vt)* "}"
+	  LL("naam() \"{\"")  naam "{"  &LI fielddeclaration ("," &LI fielddeclaration)* "}"
 	| LL("(type())+ operator()") (LL("type()")type)+ operator (type)+
 	| naam (type)*;
 
-vt: varList "::" functiontype;
+fielddeclaration: varList "::" functiontype;
 
 deriving: 
 	LL(2) @! "deriving" "(" naamList ")"
@@ -540,12 +540,8 @@ deriving:
 	
 newtypeParam: "{" var "::" functiontype "}" | type; 
 
-inst: 
-	LL("naam()") naam
-	| LL("\"(\" var() \"->\"") 	"(" var "->" var ")"
-	| LL("\"(\" var() \",\"")		"(" &LI var ("," &LI var)+ ")"
-	| "(" [simpletype] ")"
-	| "[" var "]";
+inst: naam (type)+;
+//inst: naam inst_rest;//inst_rest: type;//	LL("naam()") naam//	| LL("\"(\" var() \"->\"") 	"(" var "->" var ")"//	| LL("\"(\" var() \",\"")		"(" &LI var ("," &LI var)+ ")"//	| "(" [simpletype] ")"//	| "[" var "]";
 
 //declaratie
 decls: "{" @+ [ declarationList] @- "}";
@@ -575,8 +571,8 @@ expressie:
 		literal 
 		| LL("var()") var [contrExprParam]
 		| LL("naam()") naam [contrExprParam]
-		| LL("\"(\" operator()") "(" operator expr ")"
 		| LL("\"(\" expr() operator()") "(" expr operator ")"
+		| LL("\"(\" operator()") "(" operator expr ")"
 		| "(" [exprList] ")"
 		| "[" [exprListSpecial] "]"; 
 		

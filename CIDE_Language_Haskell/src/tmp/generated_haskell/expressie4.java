@@ -6,10 +6,10 @@ import cide.greferences.*;
 import java.util.*;
 
 public class expressie4 extends expressie {
-  public expressie4(operator operator, expr expr, Token firstToken, Token lastToken) {
+  public expressie4(expr expr, operator operator, Token firstToken, Token lastToken) {
     super(new Property[] {
-      new PropertyOne<operator>("operator", operator),
-      new PropertyOne<expr>("expr", expr)
+      new PropertyOne<expr>("expr", expr),
+      new PropertyOne<operator>("operator", operator)
     }, firstToken, lastToken);
   }
   public expressie4(Property[] properties, IToken firstToken, IToken lastToken) {
@@ -18,10 +18,10 @@ public class expressie4 extends expressie {
   public ASTNode deepCopy() {
     return new expressie4(cloneProperties(),firstToken,lastToken);
   }
-  public operator getOperator() {
-    return ((PropertyOne<operator>)getProperty("operator")).getValue();
-  }
   public expr getExpr() {
     return ((PropertyOne<expr>)getProperty("expr")).getValue();
+  }
+  public operator getOperator() {
+    return ((PropertyOne<operator>)getProperty("operator")).getValue();
   }
 }

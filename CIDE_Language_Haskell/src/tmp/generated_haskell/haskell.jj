@@ -634,7 +634,6 @@ definition definition() : {
 	ArrayList<var> varList = new ArrayList<var>();
 	whereDecls whereDecls = null;
 	context context3 = null;
-	naam naam2;
 	inst inst;
 	whereDecls whereDecls1 = null;
 	functiontypeList functiontypeList;
@@ -649,8 +648,8 @@ definition definition() : {
 	{return new newtypedecl(context1, simpletype2, naam, newtypeParam, deriving1, firstToken.next,token);} |
 	"class" [LOOKAHEAD(context()) context2=context()] naam1=naam() (var=var(){varList.add(var);})+ [whereDecls=whereDecls()] 
 	{return new classdecl(context2, naam1, varList, whereDecls, firstToken.next,token);} |
-	"instance" [LOOKAHEAD(context()) context3=context()] naam2=naam() inst=inst() [whereDecls1=whereDecls()] 
-	{return new instancedecl(context3, naam2, inst, whereDecls1, firstToken.next,token);} |
+	"instance" [LOOKAHEAD(context()) context3=context()] inst=inst() [whereDecls1=whereDecls()] 
+	{return new instancedecl(context3, inst, whereDecls1, firstToken.next,token);} |
 	"default" functiontypeList=functiontypeList() 
 	{return new defaultdecl(functiontypeList, firstToken.next,token);} |
 	declaration=declaration() 
@@ -680,10 +679,10 @@ constrs constrs() : {
 
 constr constr() : { 
 	naam naam;
-	vt vt;
-	ArrayList<vt> list0=new ArrayList<vt>();
-	vt vt1;
-	ArrayList<vt> vt1List = new ArrayList<vt>();
+	fielddeclaration fielddeclaration;
+	ArrayList<fielddeclaration> list0=new ArrayList<fielddeclaration>();
+	fielddeclaration fielddeclaration1;
+	ArrayList<fielddeclaration> fielddeclaration1List = new ArrayList<fielddeclaration>();
 	type type;
 	ArrayList<type> typeList = new ArrayList<type>();
 	operator operator;
@@ -694,7 +693,7 @@ constr constr() : {
 	ArrayList<type> type2List = new ArrayList<type>();
 	Token firstToken=token;
 } { (
-	LOOKAHEAD(naam() "{") naam=naam() "{" vt=vt(){list0.add(vt);} (";" vt1=vt(){list0.add(vt1);})* "}" 
+	LOOKAHEAD(naam() "{") naam=naam() "{" fielddeclaration=fielddeclaration(){list0.add(fielddeclaration);} ("," fielddeclaration1=fielddeclaration(){list0.add(fielddeclaration1);})* "}" 
 	{return new constr1(list0, naam, firstToken.next,token);} |
 	LOOKAHEAD((type())+ operator()) (LOOKAHEAD(type()) type=type(){typeList.add(type);})+ operator=operator() (type1=type(){type1List.add(type1);})+ 
 	{return new constr2(typeList, operator, type1List, firstToken.next,token);} |
@@ -702,13 +701,13 @@ constr constr() : {
 	{return new constr3(naam1, type2List, firstToken.next,token);}
  ) }
 
-vt vt() : { 
+fielddeclaration fielddeclaration() : { 
 	varList varList;
 	functiontype functiontype;
 	Token firstToken=token;
 } { (
 	varList=varList() "::" functiontype=functiontype() 
-	{return new vt(varList, functiontype, firstToken.next,token);}
+	{return new fielddeclaration(varList, functiontype, firstToken.next,token);}
  ) }
 
 deriving deriving() : { 
@@ -736,26 +735,12 @@ newtypeParam newtypeParam() : {
 
 inst inst() : { 
 	naam naam;
-	var var;
-	var var1;
-	var var2;
-	ArrayList<var> list2=new ArrayList<var>();
-	var var3;
-	ArrayList<var> var3List = new ArrayList<var>();
-	simpletype simpletype = null;
-	var var4;
+	type type;
+	ArrayList<type> typeList = new ArrayList<type>();
 	Token firstToken=token;
 } { (
-	LOOKAHEAD(naam()) naam=naam() 
-	{return new inst1(naam, firstToken.next,token);} |
-	LOOKAHEAD("(" var() "->") "(" var=var() "->" var1=var() ")" 
-	{return new inst2(var, var1, firstToken.next,token);} |
-	LOOKAHEAD("(" var() ",") "(" var2=var(){list2.add(var2);} ("," var3=var(){list2.add(var3);})+ ")" 
-	{return new inst3(list2, firstToken.next,token);} |
-	"(" [simpletype=simpletype()] ")" 
-	{return new inst4(simpletype, firstToken.next,token);} |
-	"[" var4=var() "]" 
-	{return new inst5(var4, firstToken.next,token);}
+	naam=naam() (type=type(){typeList.add(type);})+ 
+	{return new inst(naam, typeList, firstToken.next,token);}
  ) }
 
 decls decls() : { 
@@ -867,10 +852,10 @@ expressie expressie() : {
 	contrExprParam contrExprParam = null;
 	naam naam;
 	contrExprParam contrExprParam1 = null;
-	operator operator;
 	expr expr;
-	expr expr1;
+	operator operator;
 	operator operator1;
+	expr expr1;
 	exprList exprList = null;
 	exprListSpecial exprListSpecial = null;
 	Token firstToken=token;
@@ -881,10 +866,10 @@ expressie expressie() : {
 	{return new expressie2(var, contrExprParam, firstToken.next,token);} |
 	LOOKAHEAD(naam()) naam=naam() [contrExprParam1=contrExprParam()] 
 	{return new expressie3(naam, contrExprParam1, firstToken.next,token);} |
-	LOOKAHEAD("(" operator()) "(" operator=operator() expr=expr() ")" 
-	{return new expressie4(operator, expr, firstToken.next,token);} |
-	LOOKAHEAD("(" expr() operator()) "(" expr1=expr() operator1=operator() ")" 
-	{return new expressie5(expr1, operator1, firstToken.next,token);} |
+	LOOKAHEAD("(" expr() operator()) "(" expr=expr() operator=operator() ")" 
+	{return new expressie4(expr, operator, firstToken.next,token);} |
+	LOOKAHEAD("(" operator()) "(" operator1=operator() expr1=expr() ")" 
+	{return new expressie5(operator1, expr1, firstToken.next,token);} |
 	"(" [exprList=exprList()] ")" 
 	{return new expressie6(exprList, firstToken.next,token);} |
 	"[" [exprListSpecial=exprListSpecial()] "]" 

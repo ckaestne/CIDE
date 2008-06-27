@@ -392,12 +392,6 @@ public class SimplePrintVisitor extends AbstractPrintVisitor implements ILanguag
 				}
 			}
 			{
-				naam v=n.getNaam2();
-				if (v!=null) {
-					v.accept(this);
-				}
-			}
-			{
 				inst v=n.getInst();
 				if (v!=null) {
 					v.accept(this);
@@ -462,7 +456,7 @@ public class SimplePrintVisitor extends AbstractPrintVisitor implements ILanguag
 		}
 		if (node instanceof constr1) {
 			constr1 n = (constr1)node;
-			Iterator<vt> listElements = n.getVt().iterator();
+			Iterator<fielddeclaration> listElements = n.getFielddeclaration().iterator();
 			{
 				naam v=n.getNaam();
 				if (v!=null) {
@@ -474,7 +468,7 @@ public class SimplePrintVisitor extends AbstractPrintVisitor implements ILanguag
 				listElements.next().accept(this);
 			}
 			while (listElements.hasNext()) {
-				printToken(";");
+				printToken(",");
 				listElements.next().accept(this);
 			}
 			printToken("}");
@@ -509,8 +503,8 @@ public class SimplePrintVisitor extends AbstractPrintVisitor implements ILanguag
 			}
 			return false;
 		}
-		if (node instanceof vt) {
-			vt n = (vt)node;
+		if (node instanceof fielddeclaration) {
+			fielddeclaration n = (fielddeclaration)node;
 			{
 				varList v=n.getVarList();
 				if (v!=null) {
@@ -581,71 +575,17 @@ public class SimplePrintVisitor extends AbstractPrintVisitor implements ILanguag
 			}
 			return false;
 		}
-		if (node instanceof inst1) {
-			inst1 n = (inst1)node;
+		if (node instanceof inst) {
+			inst n = (inst)node;
 			{
 				naam v=n.getNaam();
 				if (v!=null) {
 					v.accept(this);
 				}
 			}
-			return false;
-		}
-		if (node instanceof inst2) {
-			inst2 n = (inst2)node;
-			printToken("(");
-			{
-				var v=n.getVar();
-				if (v!=null) {
-					v.accept(this);
-				}
+			for (type v : n.getType()) {
+				v.accept(this);
 			}
-			printToken("->");
-			{
-				var v=n.getVar1();
-				if (v!=null) {
-					v.accept(this);
-				}
-			}
-			printToken(")");
-			return false;
-		}
-		if (node instanceof inst3) {
-			inst3 n = (inst3)node;
-			Iterator<var> listElements = n.getVar2().iterator();
-			printToken("(");
-			if (listElements.hasNext()) {
-				listElements.next().accept(this);
-			}
-			while (listElements.hasNext()) {
-				printToken(",");
-				listElements.next().accept(this);
-			}
-			printToken(")");
-			return false;
-		}
-		if (node instanceof inst4) {
-			inst4 n = (inst4)node;
-			printToken("(");
-			{
-				simpletype v=n.getSimpletype();
-				if (v!=null) {
-					v.accept(this);
-				}
-			}
-			printToken(")");
-			return false;
-		}
-		if (node instanceof inst5) {
-			inst5 n = (inst5)node;
-			printToken("[");
-			{
-				var v=n.getVar4();
-				if (v!=null) {
-					v.accept(this);
-				}
-			}
-			printToken("]");
 			return false;
 		}
 		if (node instanceof decls) {
@@ -965,13 +905,13 @@ public class SimplePrintVisitor extends AbstractPrintVisitor implements ILanguag
 			expressie4 n = (expressie4)node;
 			printToken("(");
 			{
-				operator v=n.getOperator();
+				expr v=n.getExpr();
 				if (v!=null) {
 					v.accept(this);
 				}
 			}
 			{
-				expr v=n.getExpr();
+				operator v=n.getOperator();
 				if (v!=null) {
 					v.accept(this);
 				}
@@ -983,13 +923,13 @@ public class SimplePrintVisitor extends AbstractPrintVisitor implements ILanguag
 			expressie5 n = (expressie5)node;
 			printToken("(");
 			{
-				expr v=n.getExpr1();
+				operator v=n.getOperator1();
 				if (v!=null) {
 					v.accept(this);
 				}
 			}
 			{
-				operator v=n.getOperator1();
+				expr v=n.getExpr1();
 				if (v!=null) {
 					v.accept(this);
 				}
