@@ -72,7 +72,7 @@ public class FeatureModelManager {
 
 	public IFeatureModel getFeatureModel(IProject project)
 			throws FeatureModelNotFoundException {
-		assert project != null && project.exists() && project.isOpen();
+//		assert project != null && project.exists() && project.isOpen();
 
 		IFeatureModel featureModel = featureModelCache.get(project);
 		if (featureModel == null) {

@@ -28,6 +28,7 @@ public class WizardCreateConfiguration extends Wizard {
 	public void addPages() {
 		selectFeaturesPage = featureModel
 				.getConfigurationPage("SelectFeatures");
+		selectFeaturesPage.setTitle("Select Features");
 		addPage(selectFeaturesPage);
 		createProjectPage = new WizardPageCreateProject("CreateProjects",
 				sourceProject);

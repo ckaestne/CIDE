@@ -68,4 +68,5 @@ public interface IFeatureModel {
 	 */
 	AbstractConfigurationPage getConfigurationPage(String pageName);
 
+	boolean isValidSelection(Set<IFeature> selection);
 }

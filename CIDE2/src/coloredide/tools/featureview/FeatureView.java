@@ -20,13 +20,19 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
+import org.eclipse.swt.layout.FormAttachment;
+import org.eclipse.swt.layout.FormData;
+import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.widgets.ColorDialog;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
@@ -93,6 +99,7 @@ public class FeatureView extends ViewPart {
 				Display.getDefault().asyncExec(new Runnable() {
 					public void run() {
 						redraw();
+						updateValidPanel();
 					}
 				});
 		}
@@ -130,16 +137,42 @@ public class FeatureView extends ViewPart {
 
 	private Table table;
 
+	private Label validPanel;
+
 	/**
 	 * This is a callback that will allow us to create the viewer and initialize
 	 * it.
 	 */
 	public void createPartControl(Composite parent) {
 		createTable(parent);
+		createValidPanel(parent);
+		createLayout(parent);
 		makeActions();
 		hookContextMenu();
 		hookDoubleClickAction();
 		contributeToActionBars();
+	}
+
+	private void createLayout(Composite parent) {
+		FormData formData = new FormData(-1, 16);
+		formData.height = 16;
+		formData.right = new FormAttachment(100, 0);
+		formData.left = new FormAttachment(0, 0);
+		formData.bottom = new FormAttachment(100, 0);
+		FormData tableLayoutData = new FormData(-1, -1);
+		tableLayoutData.top = new FormAttachment(0, 0);
+		tableLayoutData.right = new FormAttachment(100, 0);
+		tableLayoutData.left = new FormAttachment(0, 0);
+		tableLayoutData.bottom = new FormAttachment(validPanel);
+		table.setLayoutData(tableLayoutData);
+		validPanel.setLayoutData(formData);
+		parent.setLayout(new FormLayout());
+		parent.pack();
+	}
+
+	private void createValidPanel(Composite parent) {
+		validPanel = new Label(parent, SWT.NONE);
+		validPanel.setText("");
 	}
 
 	private void createTable(Composite parent) {
@@ -187,6 +220,7 @@ public class FeatureView extends ViewPart {
 					else
 						try {
 							feature.setVisible(item.getChecked());
+							updateValidPanel();
 						} catch (UnsupportedOperationException ex) {
 							item.setChecked(feature.isVisible());
 						}
@@ -194,6 +228,13 @@ public class FeatureView extends ViewPart {
 			}
 		});
 
+	}
+
+	protected void updateValidPanel() {
+		if (featureModel.isValidSelection(featureModel.getVisibleFeatures())) {
+			validPanel.setText("Valid configuration");
+		} else
+			validPanel.setText("");
 	}
 
 	private IProject project;
