@@ -83,4 +83,8 @@ public class ListFeatureModel extends AbstractFeatureModel {
 		return new NonValidatingConfigurationListPage(pageName, this);
 	}
 
+	public boolean isValidSelection(Set<IFeature> selection) {
+		return true;
+	}
+
 }
