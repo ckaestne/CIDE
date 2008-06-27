@@ -56,6 +56,25 @@ public class FeatureAdapter implements IFeature {
 		return getName().compareTo(o.getName());
 	}
 
+	@Override
+	public int hashCode() {
+		return getName().hashCode();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof FeatureAdapter)
+			return feature.equals(((FeatureAdapter) obj).feature);
+		if (obj instanceof Feature)
+			return feature.equals(obj);
+		return super.equals(obj);
+	}
+
+	@Override
+	public String toString() {
+		return "Feature:" + getName() + "[" + hashCode() + "]";
+	}
+
 	public boolean canSetName() {
 		return false;
 	}
