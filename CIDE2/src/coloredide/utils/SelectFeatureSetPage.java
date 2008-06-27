@@ -62,7 +62,8 @@ public class SelectFeatureSetPage extends WizardPage {
 			TableItem item = new TableItem(table, SWT.NONE);
 			item.setText("Feature: " + feature.getName());
 			item.setData(feature);
-			item.setChecked(selectAll || initialSelected.contains(feature));
+			boolean contains=initialSelected.contains(feature);
+			item.setChecked(selectAll || contains);
 			if (initialGrayed.contains(feature))
 				item.setGrayed(true);
 		}

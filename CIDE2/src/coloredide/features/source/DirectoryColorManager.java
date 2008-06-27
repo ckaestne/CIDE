@@ -1,8 +1,11 @@
 package coloredide.features.source;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 import java.util.WeakHashMap;
 
@@ -27,6 +30,7 @@ public class DirectoryColorManager extends AbstractColorManager {
 			IFeatureModel featureModel) {
 		super(getColorFile(directory), featureModel);
 		this.directory = directory;
+		FolderCacheManager.registerDirectoryColorManager(this);
 	}
 
 	protected static IFile getColorFile(IContainer directory) {
@@ -82,7 +86,10 @@ public class DirectoryColorManager extends AbstractColorManager {
 	}
 
 	public boolean addFolderColor(IFeature color) {
-		return super.addColor(THIS_DIR, color);
+		boolean success = super.addColor(THIS_DIR, color);
+		if (success)
+			FolderCacheManager.invalidateAllCaches();
+		return success;
 	}
 
 	public boolean addColor(IFile node, IFeature color) {
@@ -90,7 +97,10 @@ public class DirectoryColorManager extends AbstractColorManager {
 	}
 
 	public boolean removeFolderColor(IFeature color) {
-		return super.removeColor(THIS_DIR, color);
+		boolean success = super.removeColor(THIS_DIR, color);
+		if (success)
+			FolderCacheManager.invalidateAllCaches();
+		return success;
 	}
 
 	public boolean removeColor(IFile node, IFeature color) {
@@ -105,16 +115,49 @@ public class DirectoryColorManager extends AbstractColorManager {
 		return super.hasColor(node.getName(), color);
 	}
 
-	private Set<IFeature> folderColorHash = null;
+	/**
+	 * folder color cache is a quick hack to prevent looking up the folder
+	 * colors over and over again
+	 * 
+	 * the static inner class cache manager deletes all caches ones any folder
+	 * color is changed. quick and dirty solution with static methods.
+	 */
+	private Set<IFeature> folderColorCache = null;
+
+	private static class FolderCacheManager {
+		private static List<WeakReference<DirectoryColorManager>> registeredManagers = new ArrayList<WeakReference<DirectoryColorManager>>();
+
+		static void registerDirectoryColorManager(DirectoryColorManager d) {
+			registeredManagers.add(new WeakReference<DirectoryColorManager>(d));
+		}
+
+		static void invalidateAllCaches() {
+			Iterator<WeakReference<DirectoryColorManager>> managerIterator = registeredManagers
+					.iterator();
+			while (managerIterator.hasNext()) {
+				WeakReference<DirectoryColorManager> managerRef = managerIterator
+						.next();
+				DirectoryColorManager manager = managerRef.get();
+				if (manager == null)
+					managerIterator.remove();
+				else
+					manager.invalidateFolderColorCache();
+			}
+		}
+	}
+
+	public void invalidateFolderColorCache() {
+		folderColorCache = null;
+	}
 
 	public Set<IFeature> getFolderColors() {
-		if (folderColorHash == null) {
+		if (folderColorCache == null) {
 			Set<IFeature> result = new HashSet<IFeature>();
 			result.addAll(getOwnFolderColors());
 			result.addAll(getInheritedFolderColors());
-			folderColorHash = Collections.unmodifiableSet(result);
+			folderColorCache = Collections.unmodifiableSet(result);
 		}
-		return folderColorHash;
+		return folderColorCache;
 	}
 
 	public Set<IFeature> getColors(IFile node) {
@@ -141,7 +184,10 @@ public class DirectoryColorManager extends AbstractColorManager {
 	}
 
 	public boolean clearFolderColor() {
-		return super.clearColor(THIS_DIR);
+		boolean success = super.clearColor(THIS_DIR);
+		if (success)
+			FolderCacheManager.invalidateAllCaches();
+		return success;
 	}
 
 	public boolean clearColor(IFile node) {
@@ -150,6 +196,7 @@ public class DirectoryColorManager extends AbstractColorManager {
 
 	public void setFolderColors(Set<IFeature> newColors) {
 		super.setColors(THIS_DIR, newColors);
+		FolderCacheManager.invalidateAllCaches();
 	}
 
 	public void setColors(IFile node, Set<IFeature> newColors) {
