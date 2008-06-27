@@ -105,11 +105,16 @@ public class DirectoryColorManager extends AbstractColorManager {
 		return super.hasColor(node.getName(), color);
 	}
 
+	private Set<IFeature> folderColorHash = null;
+
 	public Set<IFeature> getFolderColors() {
-		Set<IFeature> result = new HashSet<IFeature>();
-		result.addAll(getOwnFolderColors());
-		result.addAll(getInheritedFolderColors());
-		return Collections.unmodifiableSet(result);
+		if (folderColorHash == null) {
+			Set<IFeature> result = new HashSet<IFeature>();
+			result.addAll(getOwnFolderColors());
+			result.addAll(getInheritedFolderColors());
+			folderColorHash = Collections.unmodifiableSet(result);
+		}
+		return folderColorHash;
 	}
 
 	public Set<IFeature> getColors(IFile node) {
