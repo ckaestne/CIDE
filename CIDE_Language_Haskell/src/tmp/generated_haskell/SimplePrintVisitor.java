@@ -1030,8 +1030,9 @@ public class SimplePrintVisitor extends AbstractPrintVisitor implements ILanguag
 		}
 		if (node instanceof exprMain1) {
 			exprMain1 n = (exprMain1)node;
-			for (expressie v : n.getExpressie()) {
-				v.accept(this);
+			Iterator<expressie> listElements = n.getExpressie().iterator();
+			while (listElements.hasNext()) {
+				listElements.next().accept(this);
 			}
 			return false;
 		}
@@ -1213,15 +1214,13 @@ public class SimplePrintVisitor extends AbstractPrintVisitor implements ILanguag
 		}
 		if (node instanceof exprListSpecial3) {
 			exprListSpecial3 n = (exprListSpecial3)node;
-			{
-				expr v=n.getExpr4();
-				if (v!=null) {
-					v.accept(this);
-				}
+			Iterator<expr> listElements = n.getExpr4().iterator();
+			if (listElements.hasNext()) {
+				listElements.next().accept(this);
 			}
-			for (expr v : n.getExpr5()) {
+			while (listElements.hasNext()) {
 				printToken(",");
-				v.accept(this);
+				listElements.next().accept(this);
 			}
 			return false;
 		}

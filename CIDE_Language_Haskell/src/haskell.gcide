@@ -585,7 +585,9 @@ expr: exprMain (LL("exprOperator()") exprOperator)* [LL("exprEnd()") exprEnd];
 exprEnd: "::" [LL("context()") context] functiontype;
 
 exprMain:
-	(LL(1) expressie)+
+	// TODO Christian
+	//(LL(1) expressie)+
+	(LL(1) &LI expressie)+
 	| "-" expr
 	| "\\" (patroon)+ "->" expr
 	| "if" expr "then" expr "else" expr
@@ -598,7 +600,9 @@ exprList: &LI expr ("," &LI expr)*;
 exprListSpecial: 
 	LL("expr() \"|\"") expr "|" altSpecialList 
 	| LL("expr() [\",\" expr()] \"..\"") expr ["," expr] ".." [expr]
-	| expr ("," expr)*;
+	// TODO Christian
+	//| expr ("," expr)*;
+	| &LI expr ("," &LI expr)*;
 	
 altSpecialSemiList: &LI altSpecial (";" &LI altSpecial)*;
 altSpecialList: &LI altSpecial ("," &LI altSpecial)*;

@@ -919,6 +919,7 @@ exprEnd exprEnd() : {
 exprMain exprMain() : { 
 	expressie expressie;
 	ArrayList<expressie> expressieList = new ArrayList<expressie>();
+	ArrayList<expressie> list0=new ArrayList<expressie>();
 	expr expr;
 	patroon patroon;
 	ArrayList<patroon> patroonList = new ArrayList<patroon>();
@@ -936,8 +937,8 @@ exprMain exprMain() : {
 	altSpecialSemiList altSpecialSemiList;
 	Token firstToken=token;
 } { (
-	(LOOKAHEAD(1) expressie=expressie(){expressieList.add(expressie);})+ 
-	{return new exprMain1(expressieList, firstToken.next,token);} |
+	(LOOKAHEAD(1) expressie=expressie(){list0.add(expressie);})+ 
+	{return new exprMain1(list0, firstToken.next,token);} |
 	"-" expr=expr() 
 	{return new exprMain2(expr, firstToken.next,token);} |
 	"\\" (patroon=patroon(){patroonList.add(patroon);})+ "->" expr1=expr() 
@@ -979,6 +980,7 @@ exprListSpecial exprListSpecial() : {
 	expr expr2 = null;
 	expr expr3 = null;
 	expr expr4;
+	ArrayList<expr> list2=new ArrayList<expr>();
 	expr expr5;
 	ArrayList<expr> expr5List = new ArrayList<expr>();
 	Token firstToken=token;
@@ -987,8 +989,8 @@ exprListSpecial exprListSpecial() : {
 	{return new exprListSpecial1(expr, altSpecialList, firstToken.next,token);} |
 	LOOKAHEAD(expr() ["," expr()] "..") expr1=expr() ["," expr2=expr()] ".." [expr3=expr()] 
 	{return new exprListSpecial2(expr1, expr2, expr3, firstToken.next,token);} |
-	expr4=expr() ("," expr5=expr(){expr5List.add(expr5);})* 
-	{return new exprListSpecial3(expr4, expr5List, firstToken.next,token);}
+	expr4=expr(){list2.add(expr4);} ("," expr5=expr(){list2.add(expr5);})* 
+	{return new exprListSpecial3(list2, firstToken.next,token);}
  ) }
 
 altSpecialSemiList altSpecialSemiList() : { 

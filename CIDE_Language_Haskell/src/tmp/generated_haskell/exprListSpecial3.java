@@ -6,10 +6,9 @@ import cide.greferences.*;
 import java.util.*;
 
 public class exprListSpecial3 extends exprListSpecial {
-  public exprListSpecial3(expr expr4, ArrayList<expr> expr5, Token firstToken, Token lastToken) {
+  public exprListSpecial3(ArrayList<expr> expr4, Token firstToken, Token lastToken) {
     super(new Property[] {
-      new PropertyOne<expr>("expr4", expr4),
-      new PropertyZeroOrMore<expr>("expr5", expr5)
+      new PropertyList<expr>("expr4", expr4)
     }, firstToken, lastToken);
   }
   public exprListSpecial3(Property[] properties, IToken firstToken, IToken lastToken) {
@@ -18,10 +17,7 @@ public class exprListSpecial3 extends exprListSpecial {
   public ASTNode deepCopy() {
     return new exprListSpecial3(cloneProperties(),firstToken,lastToken);
   }
-  public expr getExpr4() {
-    return ((PropertyOne<expr>)getProperty("expr4")).getValue();
-  }
-  public ArrayList<expr> getExpr5() {
-    return ((PropertyZeroOrMore<expr>)getProperty("expr5")).getValue();
+  public ArrayList<expr> getExpr4() {
+    return ((PropertyList<expr>)getProperty("expr4")).getValue();
   }
 }
