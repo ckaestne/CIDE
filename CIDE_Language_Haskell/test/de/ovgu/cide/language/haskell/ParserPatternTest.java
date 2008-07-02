@@ -38,6 +38,7 @@ public class ParserPatternTest {
 		// parse("(varName, X, `%%`)", "patr");
 		// parse("[varName, X, `%%`, (a,b)]", "patr");
 		parse("(varName, X, aa)", "patr");
+		parse("(# varName, X, aa #)", "patr");//extension: unboxed tuple
 		parse("[varName, X, aa, (a,b)]", "patr");
 		parse("Mod.ConName{v=X,v=(a,b)}", "patr");
 		parse("ConName :! x := a", "patr");
@@ -70,16 +71,10 @@ public class ParserPatternTest {
 	public void testVar() throws ParseException {
 		parse("varName", "var");
 		parse("Module.varName", "var");
-		// parse("Module.`Mod. %`", "var");
-		// parse("Module.`Mod. %%`", "var");
-		// parse("Module.`(var)`", "var");
-		// parse("Module.`Mod.(var)`", "var");
-		// parse("Module.`Mod. %!`", "var");
-		// parse("Module.`Mod.Mod2. (Mod3.Abc.`Mod5. !::`)`", "var");
-		// notParse("Module.`Mod. :%!`", "var");
 		parse("(%)", "var");
 		parse("(.|.)", "var");
 		parse("(.)", "var");
+		parse("fork#","var");//extension, see armins email from 2.jul.2007
 	}
 
 	@Test
@@ -103,6 +98,7 @@ public class ParserPatternTest {
 		parse("(A)", "type");
 		parse("(A A)", "type");
 		parse("(A, A)", "type");
+		parse("(# A, A #)", "type");//extension: unboxed tuple
 		parse("(A a, B b)", "type");
 		parse("[a]", "type");
 		parse("[a a]", "type");
@@ -118,7 +114,9 @@ public class ParserPatternTest {
 		parse("()", "functiontype");
 		parse("X ()", "functiontype");
 		parse("a->b->c", "functiontype");
-
+		parse("IO (Handle, SockAddr)","paramtype");
+		parse("Socket -> IO (Handle, SockAddr)","functiontype");
+		
 	}
 
 	@Test
@@ -186,6 +184,7 @@ public class ParserPatternTest {
 		parse("Naam{var=3+3}", "expressie");
 		parse("var{var=3+3,var2=22}", "expressie");
 		parse("(3,4,a+2)", "expressie");
+		parse("(#3,4,a+2#)", "expressie");//extension: unboxed tuple
 		parse("()", "expressie");
 		parse("(3+3+)", "expressie");
 		parse("(+3+3)", "expressie");
@@ -339,8 +338,15 @@ public class ParserPatternTest {
 		parse(" delNodes (v : vs) g = delNodes vs (snd (match v g))","declaration");
 		parse("mkNodes_ m asx = fst $ mkNodes m asx","declaration");
 		parse("(.:) = (.) . (.)","declaration");
-		
-		
+		parse("accept :: Socket -> IO (Handle, SockAddr)","declaration");
+		parse(    "       case (fork# action s) of\n"+
+			    "           { (# s1, id #) -> (# s1, ThreadId id #) }","expr");
+		parse("forkIOIgnoreExceptions action \n"+
+		    " = IO $\n"+
+		    "     \\ s ->\n"+
+		    "       case (fork# action s) of\n"+
+		    "           { (# s1, id #) -> (# s1, ThreadId id #) }","declaration");
+
 	}
 
 	private void notParse(String code, String production) throws ParseException {

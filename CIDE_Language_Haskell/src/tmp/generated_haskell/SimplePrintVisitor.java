@@ -14,7 +14,7 @@ public class SimplePrintVisitor extends AbstractPrintVisitor implements ILanguag
 	public SimplePrintVisitor() {
 		super();
 	}
-	public boolean visit(ASTNode node) {
+	public boolean visit(IASTNode node) {
 		if (node instanceof ASTStringNode){
 			printToken(((ASTStringNode)node).getValue());
 			return false;
@@ -951,6 +951,18 @@ public class SimplePrintVisitor extends AbstractPrintVisitor implements ILanguag
 		}
 		if (node instanceof expressie7) {
 			expressie7 n = (expressie7)node;
+			printToken("(#");
+			{
+				exprList v=n.getExprList1();
+				if (v!=null) {
+					v.accept(this);
+				}
+			}
+			printToken("#)");
+			return false;
+		}
+		if (node instanceof expressie8) {
+			expressie8 n = (expressie8)node;
 			printToken("[");
 			{
 				exprListSpecial v=n.getExprListSpecial();
@@ -1509,9 +1521,21 @@ public class SimplePrintVisitor extends AbstractPrintVisitor implements ILanguag
 		}
 		if (node instanceof patroonMain6) {
 			patroonMain6 n = (patroonMain6)node;
-			printToken("[");
+			printToken("(#");
 			{
 				patrList v=n.getPatrList1();
+				if (v!=null) {
+					v.accept(this);
+				}
+			}
+			printToken("#)");
+			return false;
+		}
+		if (node instanceof patroonMain7) {
+			patroonMain7 n = (patroonMain7)node;
+			printToken("[");
+			{
+				patrList v=n.getPatrList2();
 				if (v!=null) {
 					v.accept(this);
 				}
@@ -1596,6 +1620,18 @@ public class SimplePrintVisitor extends AbstractPrintVisitor implements ILanguag
 		}
 		if (node instanceof type4) {
 			type4 n = (type4)node;
+			printToken("(#");
+			{
+				functiontypeList v=n.getFunctiontypeList1();
+				if (v!=null) {
+					v.accept(this);
+				}
+			}
+			printToken("#)");
+			return false;
+		}
+		if (node instanceof type5) {
+			type5 n = (type5)node;
 			printToken("[");
 			{
 				functiontype v=n.getFunctiontype();

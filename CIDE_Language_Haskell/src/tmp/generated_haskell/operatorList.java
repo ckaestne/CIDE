@@ -14,7 +14,7 @@ public class operatorList extends GenASTNode {
   public operatorList(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new operatorList(cloneProperties(),firstToken,lastToken);
   }
   public ArrayList<operator> getOperator() {

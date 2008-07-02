@@ -14,7 +14,7 @@ public class whereDecls extends GenASTNode {
   public whereDecls(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new whereDecls(cloneProperties(),firstToken,lastToken);
   }
   public decls getDecls() {

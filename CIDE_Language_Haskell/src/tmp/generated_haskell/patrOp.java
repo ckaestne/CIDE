@@ -15,7 +15,7 @@ public class patrOp extends GenASTNode {
   public patrOp(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new patrOp(cloneProperties(),firstToken,lastToken);
   }
   public qconop getQconop() {

@@ -14,7 +14,7 @@ public class naam extends GenASTNode {
   public naam(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new naam(cloneProperties(),firstToken,lastToken);
   }
   public qcon getQcon() {

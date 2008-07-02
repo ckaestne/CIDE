@@ -1,0 +1,1648 @@
+./scripts/CalcFix.hs
+module CalcFix where
+{ import Char;
+  import Prelude hiding (head, span, map);
+  import WASH.CGI.CGI hiding (div);
+  main = run mainCGI;
+  mainCGI = calc "0" id;
+  calc dstr f
+    = standardQuery "Calculator" $ table $
+        do { dsp <- tr
+                      (td
+                         (textInputField (attr "value" dstr ## attr "name" "result") ##
+                            attr "colspan" "4"));
+             let { button c
+                     = td
+                         (submit dsp (calcAction c f)
+                            (attr "value" [c] ## attr "name" ('k' : [c])))};
+             tr (button '1' ## button '2' ## button '3' ## button '+');
+             tr (button '4' ## button '5' ## button '6' ## button '-');
+             tr (button '7' ## button '8' ## button '9' ## button '*');
+             tr (button 'C' ## button '0' ## button '=' ## button '/')};
+  calcAction c f dsp
+    | isDigit c = calc (dstr ++ [c]) f
+    | c == 'C' = mainCGI
+    | c == '=' = calc (show (f (read dstr :: Integer))) id
+    | otherwise = calc "0" (optable c (read dstr :: Integer))
+    where { dstr = value dsp;
+            optable '+' = (+);
+            optable '-' = (-);
+            optable '*' = (*);
+            optable '/' = div}}
+./scripts/CalcHistory.hs
+module CalcHistory where
+{ import Char;
+  import Prelude hiding (head, span, map);
+  import WASH.CGI.CGI hiding (div);
+  main = run mainCGI;
+  mainCGI
+    = do { callWithCurrentHistory doCalc ("0", Id);
+           tell "Good Bye"};
+  doCalc continueWith (display, fun)
+    = standardQuery "Calculator" $ table $
+        do { dsp <- tr
+                      (td
+                         (textInputField (attr "value" display ## attr "name" "result") ##
+                            attr "colspan" "4"));
+             let { button c
+                     = td
+                         (submit dsp (calcAction continueWith c fun)
+                            (attr "value" [c] ## attr "name" ('k' : [c])))};
+             tr (button '1' ## button '2' ## button '3' ## button '+');
+             tr (button '4' ## button '5' ## button '6' ## button '-');
+             tr (button '7' ## button '8' ## button '9' ## button '*');
+             tr (button 'C' ## button '0' ## button '=' ## button '/')};
+  calcAction continueWith c fun displayH
+    | isDigit c = continueWith (dstr ++ [c], fun)
+    | c == 'C' = continueWith ("0", Id)
+    | c == '=' =
+      continueWith (show (apply fun (read dstr :: Integer)), Id)
+    | otherwise =
+      continueWith ("0", getOp c fun (read dstr :: Integer))
+    where { dstr = value displayH};
+  getOp '+' (Add z1) z2 = Add (z1 + z2);
+  getOp '+' _ z = Add z;
+  getOp '-' (Sub z1) z2 = Sub (z1 - z2);
+  getOp '-' _ z = Sub z;
+  getOp '*' (Mul z1) z2 = Mul (z1 * z2);
+  getOp '*' _ z = Mul z;
+  getOp '/' (Div z1) z2 = Div (div z1 z2);
+  getOp '/' _ z = Div z;
+   
+  data CalcFunction = Add Integer
+                    | Sub Integer
+                    | Mul Integer
+                    | Div Integer
+                    | Id
+                    deriving (Read, Show);
+  apply (Id) z = z;
+  apply (Add z1) z2 = (z1 + z2);
+  apply (Sub z1) z2 = (z1 - z2);
+  apply (Mul z1) z2 = (z1 * z2);
+  apply (Div z1) z2 = (div z1 z2)}
+./scripts/CGICounter.hs
+module CGICounter where
+{ import Prelude hiding (map, span, head, div);
+  import WASH.CGI.CGI;
+   
+  mainCGI :: CGI ();
+  mainCGI = do { counter 0};
+  counter n
+    = standardQuery "Counter" $
+        do { text "Current counter value ";
+             text (show n);
+             br empty;
+             submit0 (counter (n + 1)) (fieldVALUE "Increment");
+             submit0 (counter (n - 1)) (fieldVALUE "Decrement")}}
+./scripts/HelloWorld.hs
+module HelloWorld where
+{ import Prelude hiding (head, span, div, map);
+  import WASH.CGI.CGI;
+   
+  mainCGI :: CGI ();
+  mainCGI = standardQuery "Hello World" empty}
+./scripts/Multi.hs
+./scripts/Multiplication.hs
+./Webserver/AccessLogger.hs
+./Webserver/Compile.hs
+module Compile where
+{ import qualified List;
+  import qualified System.Plugins as P;
+  import WASH.CGI.CGI as CGI (makeServlet);
+  import WASH.CGI.CGITypes as CGITypes;
+  import Deployment;
+  import Util;
+   
+  type Errors = [String];
+   
+  compileOptions :: Descriptor -> [String];
+  compileOptions dep
+    = "-pgmF" : "/usr/local/bin/wash2hs" : "-F" :
+        let { pkgs = "WashNGo" : packages dep} in
+          List.concatMap (\ pkgName -> ["-package", pkgName]) pkgs ++
+            compilerFlags dep;
+  moduleTemplate modToImport nameToCall
+    = ["module XXXXXXXX where",
+       "import " ++ modToImport ++ "(" ++ nameToCall ++ ")",
+       "import WASH.CGI.CGI (makeServlet)",
+       "xxxxxxxx = makeServlet " ++ nameToCall];
+   
+  compileServlet :: Descriptor -> IO (Either Errors DeployedObject);
+  compileServlet dep
+    = let { options = compileOptions dep;
+            objDir = deploymentDirectory dep;
+            moduleToImport = mainModule dep;
+            symbolToCall = mainSymbol dep;
+            moduleToLoad = objDir ++ "/XXXXXXXX.hs";
+            symbolToLoad = "xxxxxxxx"}
+        in
+        trace ("Compile.compileServlet using " ++ show options) $
+          do { writeFile moduleToLoad
+                 (unlines $ moduleTemplate moduleToImport symbolToCall);
+               s <- P.makeAll moduleToLoad options;
+               let { loadObject obj
+                       = do { l <- P.load obj [objDir] [] symbolToLoad;
+                              case l of
+                                  { P.LoadSuccess mod val
+                                      -> do { trace
+                                                ("Compile.compileServlet/LoadSuccess " ++ P.path mod
+                                                   ++ " "
+                                                   ++ moduleToImport)
+                                                $ return ();
+                                              return $ Right $
+                                                DeployedObject{objectName = applicationName dep,
+                                                               objectPath = applicationPath dep,
+                                                               objectMod = moduleToImport,
+                                                               objectVal = val,
+                                                               objectActive = False,
+                                                               objectSystem = False,
+                                                               objectOptions =
+                                                                 [SessionMode LogOnly]}};
+                                    P.LoadFailure e
+                                      -> trace ("Compile.compileServlet/LoadFailure " ++ show e) $
+                                           do { return $ Left $ e}}}};
+               case s of
+                   { P.MakeSuccess P.NotReq obj
+                       -> trace
+                            ("Compile.compileServlet/MakeSuccess NotReq: " ++ show obj)
+                            $ do { loadObject obj};
+                     P.MakeSuccess P.ReComp obj
+                       -> trace
+                            ("Compile.compileServlet/MakeSuccess ReComp: " ++ show obj)
+                            $ do { loadObject obj};
+                     P.MakeFailure e
+                       -> trace ("Compile.compileServlet/MakeFailure: " ++ show e) $
+                            do { return $ Left $ e};
+                     _ -> trace ("Compile.compileServlet/UNKNOWN") $
+                            do { return $ Left $ ["unknown outcome of Plugins.makeAll"]}}}}
+./Webserver/Config.hs
+./Webserver/ConfigParser.hs
+module ConfigParser where
+{ import Char;
+  import ParseToken;
+  import Text.ParserCombinators.Parsec;
+  import Config;
+   
+  type ConfigBuilder = Config -> Config;
+   
+  parseConfig :: String -> IO (Either ParseError ConfigBuilder);
+  parseConfig fname
+    = do { input <- readFile fname;
+           return $ parse configParser fname (dropComments input)};
+  dropComments "" = "";
+  dropComments ('#' : xs) = dropComments (dropWhile (/= '\n') xs);
+  dropComments ('"' : xs) = '"' : copyToEOL xs;
+  dropComments (x : xs) = x : dropComments xs;
+  copyToEOL "" = "";
+  copyToEOL ('\n' : xs) = '\n' : dropComments xs;
+  copyToEOL (x : xs) = x : copyToEOL xs;
+  ws_char = oneOf (" \t");
+  ws = many ws_char;
+  ws1 = many1 ws_char;
+   
+  configParser :: Parser ConfigBuilder;
+  configParser
+    = do { whiteSpace;
+           cs <- many
+                   (do { c <- configLine;
+                         newLine;
+                         whiteSpace;
+                         return c});
+           eof;
+           return (foldr (.) id cs)};
+  newLine = ws >> char '\n';
+   
+  configLine :: Parser ConfigBuilder;
+  configLine
+    = do { (reserved "userdir" >> p_userDir)} <|>
+        (reserved "user" >> p_user)
+        <|> (reserved "group" >> p_group)
+        <|> (reserved "serveradmin" >> p_serverAdmin)
+        <|> (reserved "servername" >> p_serverName)
+        <|> (reserved "serveralias" >> p_serverAlias)
+        <|> (reserved "serversignature" >> p_ignoreString)
+        <|> (reserved "usecanonicalname" >> p_useCanonicalName)
+        <|> (reserved "documentroot" >> p_documentRoot)
+        <|> (reserved "servertype" >> p_ignoreString)
+        <|> (reserved "serverroot" >> p_ignoreString)
+        <|> (reserved "lockfile" >> p_ignoreString)
+        <|> (reserved "pidfile" >> p_ignoreString)
+        <|> (reserved "scoreboardfile" >> p_ignoreString)
+        <|> (reserved "keepalivetimeout" >> p_keepAliveTimeout)
+        <|> (reserved "keepalive" >> p_ignoreString)
+        <|> (reserved "maxkeepaliverequests" >> p_ignoreString)
+        <|> (reserved "maxspareservers" >> p_ignoreString)
+        <|> (reserved "minspareservers" >> p_ignoreString)
+        <|> (reserved "startservers" >> p_ignoreString)
+        <|> (reserved "maxrequestsperchild" >> p_ignoreString)
+        <|> (reserved "include" >> p_ignoreString)
+        <|> (reserved "clearmodulelist" >> return id)
+        <|> (reserved "addmodule" >> p_ignoreString)
+        <|> (reserved "loadmodule" >> p_ignoreString2)
+        <|> (reserved "extendedstatus" >> p_ignoreString)
+        <|> (reserved "customlog" >> p_ignoreString2)
+        <|> (reserved "port" >> p_port)
+        <|> (reserved "maxclients" >> p_maxClients)
+        <|> (reserved "timeout" >> p_timeout)
+        <|> (reserved "directoryindex" >> p_directoryIndex)
+        <|> (reserved "accessfilename" >> p_accessFileName)
+        <|> (reserved "typesconfig" >> p_typesConfig)
+        <|> (reserved "scriptalias" >> p_scriptAlias)
+        <|> (reserved "defaulttype" >> p_defaultType)
+        <|> (reserved "hostnamelookups" >> p_hostnameLookups)
+        <|> (reserved "errorlog" >> p_errorLog)
+        <|> (reserved "loglevel" >> p_logLevel)
+        <|> (reserved "logFormat" >> p_logFormat)
+        <|> (reserved "accesslogfile" >> p_accessLogFile)
+        <|> (reserved "accesslogformat" >> p_accessLogFormat)
+        <|> (reserved "listen" >> p_listen)
+        <|> (reserved "addlanguage" >> p_addlanguage)
+        <|> (reserved "languagepriority" >> p_languagepriority)
+        <|> (p_element >> return id);
+  p_user
+    = do { str <- p_lit_or_string;
+           return (\ c -> c{user = str})};
+  p_timeout
+    = do { i <- int;
+           return (\ c -> c{requestTimeout = i})};
+  p_keepAliveTimeout
+    = do { i <- int;
+           return (\ c -> c{keepAliveTimeout = i})};
+  p_maxClients
+    = do { i <- int;
+           return (\ c -> c{maxClients = i})};
+  p_port
+    = do { i <- int;
+           return (\ c -> c{port = i})};
+  p_group
+    = do { str <- p_lit_or_string;
+           return (\ c -> c{group = str})};
+  p_serverAdmin
+    = do { str <- p_lit_or_string;
+           return (\ c -> c{serverAdmin = str})};
+  p_serverName
+    = do { str <- p_lit_or_string;
+           return (\ c -> c{serverName = str})};
+  p_serverAlias
+    = do { str <- p_lit_or_string;
+           return (\ c -> c{serverAlias = str : serverAlias c})};
+  p_useCanonicalName
+    = do { b <- bool;
+           return (\ c -> c{useCanonicalName = b})};
+  p_documentRoot
+    = do { str <- p_lit_or_string;
+           return (\ c -> c{documentRoot = str})};
+  p_ignoreString
+    = do { str <- p_lit_or_string;
+           return (\ c -> c)};
+  p_ignoreString2
+    = do { str <- p_lit_or_string;
+           str2 <- p_lit_or_string;
+           return (\ c -> c)};
+  p_logFormat
+    = do { p_lit_or_string;
+           p_lit_or_string;
+           return id};
+  p_scriptAlias
+    = do { str <- p_lit_or_string;
+           str1 <- p_lit_or_string;
+           return (\ c -> c{scriptAlias = Just (str, str1)})};
+  p_userDir
+    = do { str <- p_lit_or_string;
+           return (\ c -> c{userDir = str})};
+  p_directoryIndex
+    = do { str <- p_lit_or_string;
+           return (\ c -> c{directoryIndex = str})};
+  p_accessFileName
+    = do { str <- p_lit_or_string;
+           return (\ c -> c{accessFileName = str})};
+  p_typesConfig
+    = do { str <- p_lit_or_string;
+           return (\ c -> c{typesConfig = str})};
+  p_defaultType
+    = do { str <- p_lit_or_string;
+           return (\ c -> c{defaultType = str})};
+  p_hostnameLookups
+    = do { b <- bool;
+           return (\ c -> c{hostnameLookups = b})};
+  p_errorLog
+    = do { str <- p_lit_or_string;
+           return (\ c -> c{errorLogFile = str})};
+  p_logLevel
+    = do { i <- (ll <|> int);
+           return (\ c -> c{logLevel = i})};
+  p_accessLogFile
+    = do { str <- p_lit_or_string;
+           return (\ c -> c{accessLogFile = str})};
+  p_accessLogFormat
+    = do { str <- p_lit_or_string;
+           return (\ c -> c{accessLogFormat = str})};
+  p_listen
+    = do { i <- int;
+           return (\ c -> c{listen = i : listen c})};
+  p_addlanguage
+    = do { lang <- p_lit_or_string;
+           ext <- p_lit_or_string;
+           return (\ c -> c{addLanguage = (lang, ext) : addLanguage c})};
+  p_languagepriority
+    = do { langs <- many p_lit_or_string;
+           return (\ c -> c{languagePriority = langs})};
+  bool
+    = do { string "On";
+           return True}
+        <|>
+        do { string "Off";
+             return False};
+   
+  ll :: Parser Int;
+  ll
+    = do { string "debug";
+           return 7}
+        <|>
+        do { string "info";
+             return 6}
+        <|>
+        do { string "notice";
+             return 5}
+        <|>
+        do { string "warn";
+             return 4}
+        <|>
+        do { string "error";
+             return 3}
+        <|>
+        do { string "crit";
+             return 2}
+        <|>
+        do { string "alert";
+             return 1}
+        <|>
+        do { string "emerg";
+             return 0};
+   
+  int :: Parser Int;
+  int
+    = do { str <- many1 digit;
+           return (read str)};
+  p_element
+    = do { symbol "<";
+           tag <- many alphaNum;
+           p_rest tag};
+  p_rest tag
+    = do { many (satisfy (/= '>'));
+           symbol ">";
+           let { p_contents
+                   = (symbol "<" >>
+                        ((symbol "/" >> ((symbol tag >> symbol ">"))) <|>
+                           do { newt <- many alphaNum;
+                                p_rest newt;
+                                p_contents}))
+                       <|> (p_lit_or_string >> p_contents)
+                       <|> (ws >> p_contents)
+                       <|> (many (noneOf "<\"#") >> p_contents)};
+           p_contents};
+  p_literal
+    = do { many1
+             (satisfy (\ c -> not (isSpace c || c `elem` "\"<>")))};
+  p_string
+    = do { char '"';
+           str <- many (noneOf "\n\"\\");
+           char '"';
+           return str};
+  p_lit_or_string = ws >> (p_literal <|> p_string)}
+./Webserver/Console.hs
+module Console where
+{ import Char;
+  import Control.Concurrent.MVar;
+  import Directory;
+  import IO;
+  import List;
+  import Monad;
+  import WASH.CGI.CGI;
+  import WASH.CGI.CGITypes;
+  import WASH.CGI.BaseCombinators (unsafe_io);
+  import WASH.Utility.Auxiliary;
+  import WASH.Utility.BulkIO;
+  import WASH.Utility.Unique;
+  import Compile;
+  import qualified Deploy;
+  import Deployment;
+  import State;
+  depRoot = "/tmp/Webserver/deployments/";
+  console
+    = forever $
+        do { st <- unsafe_io (readMVar currentState);
+             standardQuery "HWS+WASH Console" $
+               do { p $ text "Currently deployed applications";
+                    cbs <- listDeployments st;
+                    p $ text "Select an action:";
+                    p $
+                      do { submit cbs Console.activate (attr "value" "Activate");
+                           submit cbs passivate (attr "value" "Passivate");
+                           submit cbs changeOptions (attr "value" "Options");
+                           makeA "" "" (text "Refresh");
+                           submit cbs undeploy (attr "value" "Undeploy");
+                           submit0 deployNew (attr "value" "Deploy new")}}};
+  getNames (FL cbs) = loop cbs
+    where { loop [] = [];
+            loop (FA name hdl : rest)
+              = if value hdl then name : loop rest else loop rest};
+  changeOptions handles
+    = let { names = getNames handles} in
+        standardQuery ("HWS+WASH Console/Options") $
+          do { p $ text "Set options on the following deployments";
+               let { noInput = null names;
+                     modifier = if noInput then attr "disabled" "disabled" else empty};
+               if noInput then p $ text "NONE" else ul $ mapM_ (li . text) names;
+               p $ text "Choose an option";
+               optH <- selectBounded (Just LogOnly) empty;
+               p $
+                 do { submit optH (doChangeOptions names)
+                        (attr "value" ("SET OPTIONS") ## modifier);
+                      makeA "" "" (text "CANCEL")}};
+  doChangeOptions names optH
+    = let { opt = value optH;
+            action
+              = unsafe_io $ Deploy.modifyOptions names (++ [SessionMode opt])}
+        in confirmAction ("Set option " ++ show opt) names action;
+  confirmAction what names action
+    = standardQuery ("HWS+WASH Console/" ++ what) $
+        do { p $ text (what ++ " the following deployments");
+             let { noInput = null names;
+                   modifier = if noInput then attr "disabled" "disabled" else empty};
+             if noInput then p $ text "NONE" else ul $ mapM_ (li . text) names;
+             p $
+               do { submit0 action
+                      (attr "value" ("CONFIRM " ++ what) ## modifier);
+                    makeA "" "" (text ("CANCEL " ++ what))}};
+  activate handles
+    = let { names = getNames handles;
+            action = unsafe_io $ Deploy.activate names}
+        in confirmAction "ACTIVATE" names action;
+  passivate handles
+    = let { names = getNames handles;
+            action = unsafe_io $ Deploy.passivate names}
+        in confirmAction "PASSIVATE" names action;
+  undeploy handles
+    = let { names = getNames handles;
+            action = unsafe_io $ Deploy.undeploy names}
+        in confirmAction "UNDEPLOY" names action;
+  deployNew
+    = let { newDesc
+              = Descriptor{applicationName = "", applicationDescription = "",
+                           applicationPath = "/", deploymentDirectory = "",
+                           extra_resources = [], mainModule = "", mainSymbol = "",
+                           sources = [], libraries = [], extra_libraries = [], packages = [],
+                           compilerFlags = [], linkerFlags = []}}
+        in deployInitUser newDesc empty;
+  deployInitUser newDesc message
+    = standardQuery "HWS+WASH Console/create new deployment" $
+        do { message;
+             table $
+               do { tr (td (text "Application Data"));
+                    nameF <- tr
+                               (td (text "Application Name") >>
+                                  (td $ inputField (attr "value" (applicationName newDesc))));
+                    descF <- tr
+                               (td (text "Application Description") >>
+                                  (td $
+                                     inputField (attr "value" (applicationDescription newDesc))));
+                    pathF <- tr
+                               (td (text "Application Path") >>
+                                  (td $ inputField (attr "value" (applicationPath newDesc))));
+                    tr
+                      (td
+                         (submit (F3 nameF descF pathF) (deployInit newDesc)
+                            (attr "value" "CREATE")))}};
+  deployInit oldDesc (F3 nameF descF pathF)
+    = do { let { name = unNonEmpty (value nameF);
+                 desc = unNonEmpty (value descF);
+                 path = unNonEmpty (value pathF);
+                 depDir = depRoot ++ path;
+                 newDesc
+                   = oldDesc{applicationName = name, applicationDescription = desc,
+                             applicationPath = path, deploymentDirectory = depDir};
+                 bailout msg
+                   = deployInitUser newDesc
+                       (p $ text msg >> attr "style" "color: red")};
+           case path of
+               { '/' : x : xs
+                   | isAlphaNum x ->
+                     do { pathExists <- io $
+                                          do { assertDirectoryExists depRoot (return ());
+                                               liftM (either (Left . const ()) Right) $
+                                                 try (createDirectory depDir)};
+                          case pathExists of
+                              { Left _
+                                  -> bailout
+                                       "Unable to create application directory. Change the path.";
+                                Right _ -> deployLoop newDesc}};
+                 _ -> bailout "Illegal path name."}};
+  deleteLast desc0 get set (F2 mmodF msymF)
+    = let { mmod = unNonEmpty (value mmodF);
+            msym = unNonEmpty (value msymF);
+            desc1 = desc0{mainModule = mmod, mainSymbol = msym};
+            desc2 = set desc1 (List.init $ get desc1)}
+        in deployLoop desc2;
+  addLast desc0 get set (F2 (F2 mmodF msymF) xresF)
+    = let { mmod = unNonEmpty (value mmodF);
+            msym = unNonEmpty (value msymF);
+            xres = unNonEmpty (value xresF);
+            desc1 = desc0{mainModule = mmod, mainSymbol = msym};
+            desc2 = set desc1 (get desc1 ++ [xres])}
+        in deployLoop desc2;
+  deleteFile desc0 get set (F2 mmodF msymF)
+    = let { mmod = unNonEmpty (value mmodF);
+            msym = unNonEmpty (value msymF);
+            desc1 = desc0{mainModule = mmod, mainSymbol = msym};
+            desc2 = set desc1 (List.init $ get desc1);
+            whichFile
+              = deploymentDirectory desc0 ++ '/' : List.head (get desc1)}
+        in
+        do { io $ liftM (const ()) $ try $ removeFile whichFile;
+             deployLoop desc2};
+  addFile desc0 get set (F2 (F2 mmodF msymF) fileF)
+    = do { let { mmod = unNonEmpty (value mmodF);
+                 msym = unNonEmpty (value msymF);
+                 file = value fileF;
+                 extName = fileReferenceExternalName file;
+                 depDir = deploymentDirectory desc0;
+                 sourceName = fileReferenceName file;
+                 targetName = depDir ++ '/' : extName};
+           io $
+             do { src <- openFile sourceName ReadMode;
+                  trg <- openFile targetName WriteMode;
+                  rawHandleCopy src trg;
+                  hClose src;
+                  hClose trg;
+                  removeFile sourceName};
+           let { desc1 = desc0{mainModule = mmod, mainSymbol = msym};
+                 desc2 = set desc1 (get desc1 ++ [extName])};
+           deployLoop desc2};
+  genericEdit add delete field desc title f2parm get set
+    = do { multiRow desc title get;
+           tr
+             (do { td empty;
+                   td $
+                     do { submit f2parm (delete desc get set)
+                            (attr "value" "DELETE LAST");
+                          xresF <- field empty;
+                          submit (F2 f2parm xresF) (add desc get set)
+                            (attr "value" "ADD")}})};
+  fileEdit x = genericEdit addFile deleteFile fileInputField x;
+  listEdit = genericEdit addLast deleteLast inputField;
+  deployLoop newDesc
+    = standardQuery "HWS+WASH Console/install new deployment" $
+        do { table $
+               do { headOfDeployment newDesc;
+                    tr (td (text "System parameters"));
+                    mmodF <- tr
+                               (td (text "Main Module") >>
+                                  (td $ inputField (attr "value" (mainModule newDesc))));
+                    msymF <- tr
+                               (td (text "Main Symbol") >>
+                                  (td $ inputField (attr "value" (mainSymbol newDesc))));
+                    let { f2parm = F2 mmodF msymF};
+                    fileEdit newDesc "Extra resources" f2parm extra_resources
+                      (\ r x -> r{extra_resources = x});
+                    fileEdit newDesc "Source files" f2parm sources
+                      (\ r x -> r{sources = x});
+                    fileEdit newDesc "Library files" f2parm libraries
+                      (\ r x -> r{libraries = x});
+                    listEdit newDesc "Extra libraries" f2parm extra_libraries
+                      (\ r x -> r{extra_libraries = x});
+                    listEdit newDesc "Required packages" f2parm packages
+                      (\ r x -> r{packages = x});
+                    listEdit newDesc "Compiler flags" f2parm compilerFlags
+                      (\ r x -> r{compilerFlags = x});
+                    listEdit newDesc "Linker flags" f2parm linkerFlags
+                      (\ r x -> r{linkerFlags = x});
+                    tr $ td $
+                      do { submit f2parm (deployNew2 newDesc) (attr "value" "FINISH");
+                           makeA "" "" (text "CANCEL")}}};
+  deployNew2 desc0 (F2 mmodF msymF)
+    = let { mmod = unNonEmpty (value mmodF);
+            msym = unNonEmpty (value msymF);
+            newDesc = desc0{mainModule = mmod, mainSymbol = msym}}
+        in
+        standardQuery "HWS+WASH Console/check new deployment" $ table $
+          do { headOfDeployment newDesc;
+               bodyOfDeployment newDesc;
+               let { checkSources
+                       = if null (sources newDesc) then ["no source files"] else [];
+                     checkMainModule
+                       = if mainModule newDesc ++ ".hs" `elem` sources newDesc then []
+                           else ["main module not uploaded"];
+                     checkAll = checkSources ++ checkMainModule;
+                     allOk = null checkAll;
+                     modifier = if allOk then empty else attr "disabled" "disabled";
+                     oneCheck str
+                       = tr (td empty ## td (text str >> attr "style" "color: red"))};
+               mapM_ oneCheck checkAll;
+               tr $ td $
+                 do { submit0 (deployComp newDesc)
+                        (attr "value" "DEPLOY" ## modifier);
+                      submit0 (deployLoop newDesc) (attr "value" "EDIT");
+                      makeA "" "" (text "CANCEL")}};
+  deployComp newDesc
+    = do { cr <- io $
+                   do { compResult <- compileServlet newDesc;
+                        case compResult of
+                            { Left errorMessage -> return $ Left errorMessage;
+                              Right newObj
+                                -> do { st <- takeMVar currentState;
+                                        let { deployments = deploymentState st;
+                                              newDeployments
+                                                = deployments{desc = newDesc : desc deployments,
+                                                              objs = newObj : objs deployments};
+                                              newSt = st{deploymentState = newDeployments}};
+                                        putMVar currentState newSt;
+                                        writeFile (deploymentDirectory newDesc ++ "/DESCRIPTOR")
+                                          (show newDesc);
+                                        return $ Right ()}}};
+           case cr of
+               { Left errorMessage -> deployCompFailed newDesc errorMessage;
+                 Right dobj -> deployCompSucceeded newDesc dobj}};
+  deployCompFailed newDesc errorMessage
+    = standardQuery "HWS+WASH Compilation Failure" $
+        do { p $
+               do { text "Compilation of application ";
+                    text (applicationName newDesc);
+                    text " failed with the following error message."};
+             pre $ text $ unlines errorMessage;
+             submit0 (deployLoop newDesc) (attr "value" "CONTINUE")};
+  deployCompSucceeded newDesc newObj
+    = standardQuery "HWS+WASH Compilation Success" $
+        do { p $
+               do { text "Compilation of application ";
+                    text (applicationName newDesc);
+                    text " succeeded."};
+             p $ text "Application loaded. Status: passive.";
+             makeA "" "" (text "CONTINUE")};
+  singleRow newDesc label get
+    = tr (td (text label) >> (td (tt (text (get newDesc)))));
+  multiRow newDesc label get
+    = tr
+        (td (text label) >>
+           (td $ table $ tr $ stringListToCells (get newDesc)));
+  headOfDeployment newDesc
+    = do { tr (td (text "Application"));
+           singleRow newDesc "Application Name" applicationName;
+           singleRow newDesc "Description" applicationDescription;
+           singleRow newDesc "Path" applicationPath};
+  bodyOfDeployment newDesc
+    = do { tr (td (text "System parameters"));
+           singleRow newDesc "Main Module" mainModule;
+           singleRow newDesc "Main Symbol" mainSymbol;
+           multiRow newDesc "Extra resources" extra_resources;
+           multiRow newDesc "Source files" sources;
+           multiRow newDesc "Library files" libraries;
+           multiRow newDesc "Extra libraries" extra_libraries;
+           multiRow newDesc "Required packages" packages;
+           multiRow newDesc "Compiler flags" compilerFlags;
+           multiRow newDesc "Linker flags" linkerFlags};
+  tableOfDeployment newDesc
+    = table $
+        do { headOfDeployment newDesc;
+             bodyOfDeployment newDesc};
+   
+  stringListToCells :: [String] -> WithHTML x CGI ();
+  stringListToCells = mapM_ (td . tt . text);
+  listDeployments st
+    = let { deployments = deploymentState st} in
+        table $
+          do { attr "border" "1";
+               tr $
+                 do { th $ text "";
+                      th $ text "Name";
+                      th $ text "Path";
+                      th $ text "Module";
+                      th $ text "Kind";
+                      th $ text "Status";
+                      th $ text "Options"};
+               l <- mapM (showDeployedObject (desc deployments))
+                      (objs deployments);
+               return $ FL l};
+  showDeployedObject descriptors dobj
+    = let { path = objectPath dobj} in
+        tr $
+          do { cb <- td (checkboxInputField empty);
+               td (text $ objectName dobj);
+               td $ a (attr "href" path ## tt (text path));
+               td (text $ objectMod dobj);
+               td (text $ showKind $ objectSystem dobj);
+               td (text $ showStatus $ objectActive dobj);
+               td (text $ showOptions $ objectOptions dobj);
+               return (FA (objectName dobj) cb)};
+  showKind (True) = "System";
+  showKind (False) = "User";
+  showStatus (True) = "Active";
+  showStatus (False) = "Passive";
+  showOptions xs = g LogOnly xs
+    where { g def [] = show def;
+            g def (SessionMode ssm : xs) = g ssm xs;
+            g def (_ : opts) = g def opts};
+   
+  deploymentCandidates :: IO [Descriptor];
+  deploymentCandidates = do { return []}}
+./Webserver/ConsoleDeployment.hs
+module ConsoleDeployment where
+{ import Console (console);
+  import Deployment;
+  import WASH.CGI.CGI as CGI (makeServlet);
+  import WASH.CGI.CGITypes as CGITypes;
+   
+  mkConsole :: String -> DeployedObject;
+  mkConsole absPathPrefix
+    = DeployedObject{objectName = "System console",
+                     objectPath = absPathPrefix, objectMod = "*internal*",
+                     objectVal = makeServlet console, objectActive = True,
+                     objectSystem = True, objectOptions = [SessionMode LogOnly]}}
+./Webserver/Deploy.hs
+module Deploy where
+{ import Deployment;
+  import State;
+  import Control.Concurrent.MVar;
+  import WASH.CGI.RawCGI as RawCGI;
+   
+  addDeployment :: DeployedObject -> IO ();
+  addDeployment dobj
+    = do { st0 <- takeMVar currentState;
+           let { ds = deploymentState st0;
+                 dobjs = objs ds;
+                 st1 = st0{deploymentState = ds{objs = dobj : dobjs}}};
+           putMVar currentState st1};
+   
+  activate :: [String] -> IO ();
+  activate names = modify names True;
+   
+  passivate :: [String] -> IO ();
+  passivate names = modify names False;
+   
+  modify :: [String] -> Bool -> IO ();
+  modify names newValue
+    = do { st0 <- takeMVar currentState;
+           let { ds = deploymentState st0;
+                 dobjs = map actOn (objs ds);
+                 st1 = st0{deploymentState = ds{objs = dobjs}};
+                 actOn dobj
+                   = if objectName dobj `elem` names && not (objectSystem dobj) then
+                       dobj{objectActive = newValue} else dobj};
+           putMVar currentState st1};
+   
+  undeploy :: [String] -> IO ();
+  undeploy names
+    = do { st0 <- takeMVar currentState;
+           let { ds = deploymentState st0;
+                 dobjs = filter testOn (objs ds);
+                 st1 = st0{deploymentState = ds{objs = dobjs}};
+                 testOn dobj = objectName dobj `elem` names};
+           putMVar currentState st1};
+   
+  modifyOptions :: [String] -> (CGIOptions -> CGIOptions) -> IO ();
+  modifyOptions names converter
+    = do { st0 <- takeMVar currentState;
+           let { ds = deploymentState st0;
+                 dobjs = map actOn (objs ds);
+                 st1 = st0{deploymentState = ds{objs = dobjs}};
+                 actOn dobj
+                   = if objectName dobj `elem` names then
+                       dobj{objectOptions = converter (objectOptions dobj)} else dobj};
+           putMVar currentState st1}}
+./Webserver/Deployment.hs
+module Deployment where
+{ import System.Plugins as P;
+  import WASH.CGI.RawCGI as RawCGI (CGIProgram, CGIOptions);
+   
+  data DeploymentState = DeploymentState{desc :: [Descriptor],
+                                         objs :: [DeployedObject]};
+  initialDeploymentState = DeploymentState{desc = [], objs = []};
+   
+  data Descriptor = Descriptor{applicationName :: String,
+                               applicationDescription :: String, applicationPath :: String,
+                               deploymentDirectory :: FilePath, extra_resources :: [String],
+                               mainModule :: String, mainSymbol :: String, sources :: [String],
+                               libraries :: [String], extra_libraries :: [String],
+                               packages :: [String], compilerFlags :: [String],
+                               linkerFlags :: [String]}
+                  deriving (Read, Show);
+   
+  data DeployedObject = DeployedObject{objectName :: String,
+                                       objectPath :: String, objectMod :: String,
+                                       objectVal :: CGIProgram, objectActive :: Bool,
+                                       objectSystem :: Bool, objectOptions :: CGIOptions}}
+./Webserver/Dispatch.hs
+module Dispatch where
+{ import Control.Concurrent.MVar;
+  import Maybe;
+  import Monad;
+  import Deployment;
+  import State;
+  import WASH.CGI.CGI;
+  import WASH.CGI.RawCGI;
+   
+  runDispatch ::
+                a -> String -> IO (Maybe (String, CGIOptions, CGIProgram));
+  runDispatch conf path
+    = do { st <- readMVar currentState;
+           let { deployments = deploymentState st;
+                 dobjs = objs deployments};
+           return $ dispatchLoop path dobjs};
+   
+  dispatchLoop ::
+                 String ->
+                   [DeployedObject] -> Maybe (String, CGIOptions, CGIProgram);
+  dispatchLoop path [] = Nothing;
+  dispatchLoop path (dobj : dobjs)
+    = do { if objectActive dobj then return () else Nothing;
+           pathInfo <- splitPath (objectPath dobj) path;
+           return (pathInfo, objectOptions dobj, objectVal dobj)}
+        `mplus` dispatchLoop path dobjs;
+   
+  splitPath :: String -> String -> Maybe String;
+  splitPath "" testPath
+    = if legalSuffix testPath then Just testPath else Nothing;
+  splitPath _ "" = Nothing;
+  splitPath (p : ps) (t : ts)
+    = if p == t then splitPath ps ts else Nothing;
+   
+  legalSuffix :: String -> Bool;
+  legalSuffix "" = True;
+  legalSuffix (x : xs) = legalSuffixChar x;
+   
+  legalSuffixChar :: Char -> Bool;
+  legalSuffixChar x = x `elem` "/?"}
+./Webserver/ErrorLogger.hs
+module ErrorLogger
+       (startErrorLogger, stopErrorLogger, logError, catchAndLogError,
+        showIOError)
+       where
+{ import Config;
+  import Util;
+  import Time;
+  import IO;
+  import System.IO.Unsafe;
+  import Control.Concurrent;
+  import Control.Exception as Exception;
+  import GHC.IOBase (IOException(..));
+   
+  logError :: String -> IO ();
+  logError err = writeChan error_log_chan err;
+   
+  error_log_chan :: Chan String;
+  error_log_chan = unsafePerformIO (newChan);
+   
+  error_log_pid :: MVar ThreadId;
+  error_log_pid = unsafePerformIO (newEmptyMVar);
+   
+  startErrorLogger :: Config -> IO ();
+  startErrorLogger conf
+    = do { logError
+             ("error logger started (level " ++ show (logLevel conf) ++ ") on '"
+                ++ errorLogFile conf
+                ++ "'");
+           t <- forkIO
+                  (Exception.catch (run_error_logger conf) (error_handler conf));
+           putMVar error_log_pid t};
+   
+  stopErrorLogger :: IO ();
+  stopErrorLogger
+    = do { t <- takeMVar error_log_pid;
+           throwTo t (ErrorCall "**stop**")};
+  error_handler conf (ErrorCall "**stop**")
+    = logError ("error logger stopped");
+  error_handler conf exception
+    = do { logError ("error logger died: " ++ show exception);
+           Exception.catch (run_error_logger conf) (error_handler conf)};
+  run_error_logger conf
+    = do { Exception.bracket (openFile (errorLogFile conf) AppendMode)
+             (\ hdl -> hClose hdl)
+             (\ hdl -> doErrLogRequests hdl)};
+  doErrLogRequests hdl
+    = do { str <- readChan error_log_chan;
+           clock_time <- getClockTime;
+           let { time_str = formatTimeSensibly (toUTCTime clock_time)};
+           hPutStr hdl time_str;
+           hPutStrLn hdl ("  " ++ str);
+           hFlush hdl;
+           doErrLogRequests hdl};
+   
+  catchAndLogError :: String -> IO a -> (Exception -> IO a) -> IO a;
+  catchAndLogError str io handler
+    = Exception.catch io
+        (\ e -> logError (str ++ show e) >> handler e);
+   
+  showIOError :: IOException -> String;
+  showIOError (IOError _hdl iot loc s m_filename)
+    = (showString loc . showString ": " . shows iot . showString " (" .
+         showString s
+         . showString ") in ["
+         . shows m_filename
+         . showChar ']')
+        ""}
+./Webserver/Global.hs
+module Global where
+{ import System.IO.Unsafe;
+  import Network.BSD;
+  import Control.Concurrent;
+   
+  local_hostent :: MVar HostEntry;
+  local_hostent = unsafePerformIO newEmptyMVar}
+./Webserver/InitialDeployments.hs
+module InitialDeployments where
+{ import ConsoleDeployment;
+  import Deploy;
+   
+  init :: IO ();
+  init = do { addDeployment (mkConsole "/console")}}
+./Webserver/Main.hs
+module Main where
+{ import qualified Server;
+  main = Server.main}
+./Webserver/MimeTypes.hs
+module MimeTypes (MimeType(..), initMimeTypes, mimeTypeOf) where
+{ import qualified Data.Map as Map;
+  import IO;
+  import System.IO.Unsafe;
+  import Data.IORef;
+  import Text.Regex;
+  import Monad;
+   
+  data MimeType = MimeType String String;
+   
+  instance Show MimeType where
+          { showsPrec _ (MimeType part1 part2)
+              = showString (part1 ++ '/' : part2)};
+   
+  mime_types_ref :: IORef (Map.Map String MimeType);
+  mime_types_ref = unsafePerformIO (newIORef Map.empty);
+   
+  mimeTypeOf :: String -> Maybe MimeType;
+  mimeTypeOf filename
+    = unsafePerformIO
+        (do { mime_types <- readIORef mime_types_ref;
+              let { g (base, "") = Nothing;
+                    g (base, ext)
+                      = Map.lookup ext mime_types `mplus` g (extension base)};
+              return $ g (extension filename)});
+   
+  extension :: String -> (String, String);
+  extension fn = go (reverse fn) ""
+    where { go [] ext = (ext, "");
+            go ('.' : r) ext = (reverse r, ext);
+            go (x : s) ext = go s (x : ext)};
+   
+  initMimeTypes :: String -> IO ();
+  initMimeTypes mime_types_file
+    = do { h <- openFile mime_types_file ReadMode;
+           stuff <- hGetContents h;
+           let { mime_types = Map.fromList (parseMimeTypes stuff)};
+           writeIORef mime_types_ref mime_types};
+  parseMimeTypes file
+    = [(ext, val) |
+       Just (val, exts) <- map (parseMimeLine . takeWhile (/= '#'))
+                             (lines file),
+       ext <- exts];
+  mimeRegex = mkRegex "^([^/]+)/([^ \t]+)[ \t]+(.*)$";
+  parseMimeLine l
+    = case matchRegex mimeRegex l of
+          { Just (part1 : part2 : extns : _)
+              -> Just (MimeType part1 part2, words extns);
+            _ -> Nothing}}
+./Webserver/ParseToken.hs
+module ParseToken
+       (identifier, reserved, operator, reservedOp, charLiteral,
+        stringLiteral, natural, integer, float, naturalOrFloat, decimal,
+        hexadecimal, octal, symbol, lexeme, whiteSpace, parens, braces,
+        brackets, squares, semi, comma, colon, dot, semiSep, semiSep1,
+        commaSep, commaSep1)
+       where
+{ import qualified Text.ParserCombinators.Parsec.Token as T;
+  import qualified Text.ParserCombinators.Parsec.Language as L;
+  myLanguage
+    = L.emptyDef{L.commentLine = "#", L.nestedComments = False,
+                 L.reservedNames = [], L.reservedOpNames = [],
+                 L.caseSensitive = False};
+  myTokenParser = T.makeTokenParser myLanguage;
+  identifier = T.identifier myTokenParser;
+  reserved = T.reserved myTokenParser;
+  operator = T.operator myTokenParser;
+  reservedOp = T.reservedOp myTokenParser;
+  charLiteral = T.charLiteral myTokenParser;
+  stringLiteral = T.stringLiteral myTokenParser;
+  natural = T.natural myTokenParser;
+  integer = T.integer myTokenParser;
+  float = T.float myTokenParser;
+  naturalOrFloat = T.naturalOrFloat myTokenParser;
+  decimal = T.decimal myTokenParser;
+  hexadecimal = T.hexadecimal myTokenParser;
+  octal = T.octal myTokenParser;
+  symbol = T.symbol myTokenParser;
+  lexeme = T.lexeme myTokenParser;
+  whiteSpace = T.whiteSpace myTokenParser;
+  parens = T.parens myTokenParser;
+  braces = T.braces myTokenParser;
+  brackets = T.brackets myTokenParser;
+  squares = T.squares myTokenParser;
+  semi = T.semi myTokenParser;
+  comma = T.comma myTokenParser;
+  colon = T.colon myTokenParser;
+  dot = T.dot myTokenParser;
+  semiSep = T.semiSep myTokenParser;
+  semiSep1 = T.semiSep1 myTokenParser;
+  commaSep = T.commaSep myTokenParser;
+  commaSep1 = T.commaSep1 myTokenParser}
+./Webserver/Request.hs
+module Request where
+{ import Text.ParserCombinators.Parsec;
+  import ParseToken hiding (commaSep);
+  import Config;
+  import Response;
+  import Util;
+  import Network.URI (URI, parseabsoluteURI, unEscapeString);
+  import Char;
+   
+  data RequestCmd = OptionsReq
+                  | GetReq
+                  | HeadReq
+                  | PostReq
+                  | PutReq
+                  | DeleteReq
+                  | TraceReq
+                  | ConnectReq
+                  | ExtensionReq String
+                  deriving Eq;
+   
+  type CResponse = Config -> Response;
+  requestCmdString cmd
+    = case cmd of
+          { OptionsReq -> "OPTIONS";
+            GetReq -> "GET";
+            HeadReq -> "HEAD";
+            PostReq -> "POST";
+            PutReq -> "PUT";
+            DeleteReq -> "DELETE";
+            TraceReq -> "TRACE";
+            ConnectReq -> "CONNECT"};
+   
+  data Request = Request{reqCmd :: RequestCmd, reqURI :: ReqURI,
+                         reqHTTPVer :: HTTPVersion, reqHeaders :: [RequestHeader]};
+   
+  instance Show Request where
+          { showsPrec _
+              Request{reqCmd = cmd, reqURI = uri, reqHTTPVer = (maj, min)}
+              = showString (requestCmdString cmd) . (' ' :) . shows uri . (' ' :)
+                  . showString "HTTP/"
+                  . shows maj
+                  . showString "."
+                  . shows min};
+   
+  type HTTPVersion = (Int, Int);
+   
+  http1_1, http1_0 :: HTTPVersion;
+  http1_1 = (1, 1);
+  http1_0 = (1, 0);
+   
+  data ReqURI = NoURI
+              | AbsURI URI
+              | AbsPath String
+              | AuthorityURI String;
+   
+  instance Show ReqURI where
+          { showsPrec _ (NoURI) = showString "<no URI>";
+            showsPrec _ (AbsURI uri) = shows uri;
+            showsPrec _ (AbsPath path) = showString path;
+            showsPrec _ (AuthorityURI s) = showString s};
+   
+  data Connection = ConnectionClose
+                  | ConnectionKeepAlive
+                  | ConnectionOther String
+                  deriving (Eq, Show);
+   
+  data Expect = ExpectContinue
+              deriving Show;
+   
+  data RequestHeader = CacheControl String
+                     | Connection [Connection]
+                     | Date String
+                     | Pragma String
+                     | Trailer String
+                     | TransferEncoding String
+                     | Upgrade String
+                     | Via String
+                     | Warning String
+                     | Accept String
+                     | AcceptCharset String
+                     | AcceptEncoding String
+                     | AcceptLanguage String
+                     | Authorization String
+                     | Expect Expect
+                     | From String
+                     | Host String (Maybe Int)
+                     | IfMatch String
+                     | IfModifiedSince String
+                     | IfNoneMatch String
+                     | IfRange String
+                     | IfUnmodifiedSince String
+                     | MaxForwards String
+                     | ProxyAuthorization String
+                     | Range String
+                     | Referer String
+                     | TE String
+                     | UserAgent String
+                     | ExtensionHeader String String
+                     deriving Show;
+   
+  parseRequest :: [String] -> E CResponse Request;
+  parseRequest [] = failE badRequestResponse;
+  parseRequest (request : headers)
+    = case words request of
+          { [cmd, uri, http_ver]
+              -> do { req_cmd <- maybeE badRequestResponse (parseCmd cmd);
+                      req_uri <- maybeE badRequestResponse (parseReqURI uri);
+                      req_http_ver <- maybeE badRequestResponse
+                                        (parseHTTPVersion http_ver);
+                      req_headers <- parseHeaders headers;
+                      trace (show req_headers) $
+                        return (Request req_cmd req_uri req_http_ver req_headers)};
+            _other -> failE badRequestResponse};
+   
+  parseCmd :: String -> Maybe RequestCmd;
+  parseCmd "OPTIONS" = Just OptionsReq;
+  parseCmd "GET" = Just GetReq;
+  parseCmd "HEAD" = Just HeadReq;
+  parseCmd "POST" = Just PostReq;
+  parseCmd "PUT" = Just PutReq;
+  parseCmd "DELETE" = Just DeleteReq;
+  parseCmd "TRACE" = Just TraceReq;
+  parseCmd "CONNECT" = Just ConnectReq;
+  parseCmd other = Just (ExtensionReq other);
+   
+  parseReqURI :: String -> Maybe ReqURI;
+  parseReqURI "*" = Just NoURI;
+  parseReqURI (uri@('/' : _)) = Just (AbsPath (unEscapeString uri));
+  parseReqURI uri
+    = case parseabsoluteURI uri of
+          { Nothing -> Nothing;
+            Just uri -> Just (AbsURI uri)};
+   
+  parseHTTPVersion :: String -> Maybe (Int, Int);
+  parseHTTPVersion s
+    = case parse httpVersionParser "HTTP version" s of
+          { Right result -> Just result;
+            Left error -> Nothing};
+  httpVersionParser
+    = do { string "HTTP/";
+           major <- int;
+           char '.';
+           minor <- int;
+           return (major, minor)};
+   
+  int :: Parser Int;
+  int
+    = do { digits <- many1 digit;
+           let { n = foldl (\ x d -> 10 * x + digitToInt d) 0 digits};
+           seq n (return n)};
+   
+  parseHeaders :: [String] -> E CResponse [RequestHeader];
+  parseHeaders hs = sequence (map parseHeader hs);
+   
+  parseHeader :: String -> E CResponse RequestHeader;
+  parseHeader header
+    = let { (header_type, val) = break (== ':') header} in
+        case val of
+            { ':' : val -> parseHeaderAs header_type (stripWS val);
+              _ -> failE badRequestResponse};
+   
+  parseHeaderAs :: String -> String -> E CResponse RequestHeader;
+  parseHeaderAs header_type value
+    = let { normalized_header = (map toLower header_type)} in
+        case normalized_header of
+            { "connection" -> parseConnection value;
+              "date" -> valString Date;
+              "pragma" -> valString Pragma;
+              "trailer" -> valString Trailer;
+              "transfer-encoding" -> valString TransferEncoding;
+              "upgrade" -> valString Upgrade;
+              "via" -> valString Via;
+              "warning" -> valString Warning;
+              "accept" -> valString Accept;
+              "accept-charset" -> valString AcceptCharset;
+              "accept-encoding" -> valString AcceptEncoding;
+              "accept-language" -> valString AcceptLanguage;
+              "authorization" -> valString Authorization;
+              "cache-control" -> valString CacheControl;
+              "expect" -> parseExpect value;
+              "from" -> valString From;
+              "host" -> parseHost value;
+              "if-match" -> valString IfMatch;
+              "if-modified-since" -> valString IfModifiedSince;
+              "if-none-match" -> valString IfNoneMatch;
+              "if-range" -> valString IfRange;
+              "if-unmodified-since" -> valString IfUnmodifiedSince;
+              "max-forwards" -> valString MaxForwards;
+              "proxy-authorization" -> valString ProxyAuthorization;
+              "range" -> valString Range;
+              "referer" -> valString Referer;
+              "te" -> valString TE;
+              "user-agent" -> valString UserAgent;
+              _ -> valString (ExtensionHeader normalized_header)}
+    where {  
+            valString ::
+                        (String -> RequestHeader) -> E CResponse RequestHeader;
+            valString header_con = return (header_con value)};
+   
+  parseConnection :: String -> E CResponse RequestHeader;
+  parseConnection s
+    = return (Connection (map fn (commaSep (map toLower s))))
+    where { fn "close" = ConnectionClose;
+            fn "keep-alive" = ConnectionKeepAlive;
+            fn other = ConnectionOther other};
+   
+  parseExpect :: String -> E CResponse RequestHeader;
+  parseExpect s
+    = case commaSep s of
+          { ["100-continue"] -> return (Expect ExpectContinue);
+            _ -> failE expectationFailedResponse};
+   
+  parseHost :: String -> E CResponse RequestHeader;
+  parseHost s
+    = case port of
+          { "" -> return (Host host Nothing);
+            ':' : port
+              | all isDigit port -> return (Host host (Just (read port)));
+            _ -> failE badRequestResponse}
+    where { (host, port) = break (== ':') s}}
+./Webserver/Response.hs
+module Response where
+{ import Config;
+  import Util;
+  import IO;
+  import Time;
+  import Monad;
+  import Control.Exception as Exception;
+  import Text.Html;
+  import WASH.Utility.BulkIO as BulkIO (rawHandleCopy);
+   
+  data ResponseBody = NoBody
+                    | FileBody Integer FilePath
+                    | HereItIs String
+                    | RunMe (Handle -> IO ());
+   
+  data Response = Response{respCode :: Int, respHeaders :: [String],
+                           respCoding :: [TransferCoding], respBody :: ResponseBody,
+                           respSendBody :: Bool};
+   
+  instance Show Response where
+          { showsPrec _ (Response s hs _ _ _)
+              = foldr (\ s r -> s . r) id
+                  (shows s : (' ' :) : showString (responseDescription s) :
+                     map (showString . ('\n' :)) hs)
+                  . showChar '\n'};
+   
+  response :: Config -> Handle -> Response -> IO ();
+  response _conf h
+    (Response{respCode = code, respHeaders = headers, respCoding = tes,
+              respBody = body, respSendBody = send_body})
+    = do { hPutStrCrLf h (statusLine code);
+           hPutStrCrLf h serverHeader;
+           date <- dateHeader;
+           hPutStrCrLf h date;
+           mapM_ (hPutStrCrLf h) headers;
+           let { content_length = contentLength body};
+           when (content_length /= 0 && null tes)
+             (hPutStrCrLf h (contentLengthHeader content_length));
+           mapM_ (hPutStrCrLf h . transferCodingHeader) tes;
+           if send_body then sendBody h body else hPutStr h crlf;
+           hFlush h};
+   
+  contentLength :: ResponseBody -> Integer;
+  contentLength (NoBody) = 0;
+  contentLength (HereItIs stuff) = toInteger (length stuff);
+  contentLength (FileBody size _) = size;
+  contentLength (RunMe _) = 0;
+   
+  getFileName :: ResponseBody -> String;
+  getFileName (NoBody) = "<no file>";
+  getFileName (FileBody _size filename) = filename;
+  getFileName (HereItIs _) = "<generated content>";
+  getFileName (RunMe _) = "generated";
+   
+  sendBody :: Handle -> ResponseBody -> IO ();
+  sendBody h (NoBody) = hPutStr h crlf;
+  sendBody h (HereItIs stuff)
+    = do { hPutStr h crlf;
+           hPutStr h stuff};
+  sendBody h (FileBody _size filename)
+    = do { hPutStr h crlf;
+           Exception.bracket (openFile filename ReadMode)
+             (\ handle -> hClose handle)
+             (\ handle -> BulkIO.rawHandleCopy handle h)};
+  sendBody h (RunMe cgiProgram)
+    = do { trace "sendBody..." $ return ();
+           cgiProgram h};
+   
+  statusLine :: Int -> String;
+  statusLine code
+    = httpVersion ++ ' ' : show code ++ ' ' : responseDescription code;
+  httpVersion = "HTTP/1.1";
+   
+  data TransferCoding = ChunkedTransferCoding
+                      | GzipTransferCoding
+                      | CompressTransferCoding
+                      | DeflateTransferCoding
+                      deriving Eq;
+   
+  transferCodingStr :: TransferCoding -> String;
+  transferCodingStr (ChunkedTransferCoding) = "chunked";
+  transferCodingStr (GzipTransferCoding) = "gzip";
+  transferCodingStr (CompressTransferCoding) = "compress";
+  transferCodingStr (DeflateTransferCoding) = "deflate";
+   
+  validTransferCoding :: [TransferCoding] -> Bool;
+  validTransferCoding codings
+    | null codings || last codings == ChunkedTransferCoding &&
+        ChunkedTransferCoding
+        `notElem` init codings
+      = True
+    | otherwise = False;
+   
+  dateHeader :: IO String;
+  dateHeader
+    = do { clock_time <- getClockTime;
+           let { utc = toUTCTime clock_time};
+           let { time_str = formatTimeSensibly utc};
+           return ("Date: " ++ time_str)};
+   
+  serverHeader :: String;
+  serverHeader = "Server: " ++ serverSoftware ++ '/' : serverVersion;
+   
+  contentLengthHeader :: Integer -> String;
+  contentLengthHeader i = "Content-Length: " ++ show i;
+   
+  contentTypeHeader :: String -> String;
+  contentTypeHeader t = "Content-Type: " ++ t;
+   
+  lastModifiedHeader :: ClockTime -> String;
+  lastModifiedHeader t
+    = "Last-Modified: " ++ formatTimeSensibly (toUTCTime t);
+   
+  transferCodingHeader :: TransferCoding -> String;
+  transferCodingHeader te
+    = "Transfer-Coding: " ++ transferCodingStr te;
+  contResponse = error_resp 100;
+  switchingProtocolsResponse = error_resp 101;
+  okResponse = body_resp 200;
+  createdResponse = error_resp 201;
+  acceptedResponse = error_resp 202;
+  nonAuthoritiveInformationResponse = error_resp 203;
+  noContentResponse = error_resp 204;
+  resetContentResponse = error_resp 205;
+  partialContentResponse = error_resp 206;
+  multipleChoicesResponse = error_resp 300;
+  movedPermanentlyResponse = error_resp 301;
+  foundResponse = error_resp 302;
+  seeOtherResponse = error_resp 303;
+  notModifiedResponse = error_resp 304;
+  useProxyResponse = error_resp 305;
+  temporaryRedirectResponse = error_resp 307;
+  badRequestResponse = error_resp 400;
+  unauthorizedResponse = error_resp 401;
+  paymentRequiredResponse = error_resp 402;
+  forbiddenResponse = error_resp 403;
+  notFoundResponse = error_resp 404;
+  methodNotAllowedResponse = error_resp 405;
+  notAcceptableResponse = error_resp 406;
+  proxyAuthenticationRequiredResponse = error_resp 407;
+  requestTimeOutResponse = error_resp 408;
+  conflictResponse = error_resp 409;
+  goneResponse = error_resp 410;
+  lengthRequiredResponse = error_resp 411;
+  preconditionFailedResponse = error_resp 412;
+  requestEntityTooLargeResponse = error_resp 413;
+  requestURITooLargeResponse = error_resp 414;
+  unsupportedMediaTypeResponse = error_resp 415;
+  requestedRangeNotSatisfiableResponse = error_resp 416;
+  expectationFailedResponse = error_resp 417;
+  internalServerErrorResponse = error_resp 500;
+  notImplementedResponse = error_resp 501;
+  badGatewayResponse = error_resp 502;
+  serviceUnavailableResponse = error_resp 503;
+  gatewayTimeOutResponse = error_resp 504;
+  versionNotSupportedResponse = error_resp 505;
+   
+  responseDescription :: Int -> String;
+  responseDescription 100 = "Continue";
+  responseDescription 101 = "Switching Protocols";
+  responseDescription 200 = "OK";
+  responseDescription 201 = "Created";
+  responseDescription 202 = "Accepted";
+  responseDescription 203 = "Non-Authoritative Information";
+  responseDescription 204 = "No Content";
+  responseDescription 205 = "Reset Content";
+  responseDescription 206 = "Partial Content";
+  responseDescription 300 = "Multiple Choices";
+  responseDescription 301 = "Moved Permanently";
+  responseDescription 302 = "Found";
+  responseDescription 303 = "See Other";
+  responseDescription 304 = "Not Modified";
+  responseDescription 305 = "Use Proxy";
+  responseDescription 307 = "Temporary Redirect";
+  responseDescription 400 = "Bad Request";
+  responseDescription 401 = "Unauthorized";
+  responseDescription 402 = "Payment Required";
+  responseDescription 403 = "Forbidden";
+  responseDescription 404 = "Not Found";
+  responseDescription 405 = "Method Not Allowed";
+  responseDescription 406 = "Not Acceptable";
+  responseDescription 407 = "Proxy Authentication Required";
+  responseDescription 408 = "Request Time-out";
+  responseDescription 409 = "Conflict";
+  responseDescription 410 = "Gone";
+  responseDescription 411 = "Length Required";
+  responseDescription 412 = "Precondition Failed";
+  responseDescription 413 = "Request Entity Too Large";
+  responseDescription 414 = "Request-URI Too Large";
+  responseDescription 415 = "Unsupported Media Type";
+  responseDescription 416 = "Requested range not satisfiable";
+  responseDescription 417 = "Expectation Failed";
+  responseDescription 500 = "Internal Server Error";
+  responseDescription 501 = "Not Implemented";
+  responseDescription 502 = "Bad Gateway";
+  responseDescription 503 = "Service Unavailable";
+  responseDescription 504 = "Gateway Time-out";
+  responseDescription 505 = "HTTP Version not supported";
+  responseDescription _ = "Unknown response";
+  error_resp code conf
+    = Response code [contentTypeHeader "text/html"] []
+        (generateErrorPage code conf)
+        True;
+  body_resp code _conf body headers = Response code headers [] body;
+   
+  generateErrorPage :: Int -> Config -> ResponseBody;
+  generateErrorPage code conf
+    = HereItIs (renderHtml (genErrorHtml code conf));
+   
+  genErrorHtml :: Int -> Config -> Html;
+  genErrorHtml code conf
+    = header << thetitle << response +++ body <<
+        (h1 << response +++ hr +++ serverSoftware +++ '/' +++ serverVersion
+           +++
+           case serverName conf of
+               { "" -> noHtml;
+                 me -> " on " +++ me +++ br}
+           +++
+           case serverAdmin conf of
+               { "" -> noHtml;
+                 her
+                   -> "Server Admin: " +++ hotlink ("mailto:" ++ her) [toHtml her]})
+    where { descr = responseDescription code;
+            response = show code +++ ' ' +++ descr}}
+./Webserver/RunCGI.hs
+module RunCGI where
+{ import qualified Config as C;
+  import qualified WASH.Utility.BulkIO as B;
+  import WASH.CGI.RawCGIInternal;
+  import WASH.CGI.RawCGI;
+  import IO;
+  import Request;
+  runCGI h host conf cgiPath pathinfo queryArgs reqString is_head
+    headers cgioptions pgm
+    = do { let { readContents n = B.rawGetBytes h n;
+                 locate header_type def = g headers
+                   where { g (ExtensionHeader n v : _) | n == header_type = v;
+                           g (_ : rest) = g rest;
+                           g [] = def};
+                 content_length = locate "content-length" "0";
+                 content_type
+                   = locate "content-type" "application/x-www-form-urlencoded";
+                 http_cookie = locate "cookie" "";
+                 http_accept = locate "accept" "";
+                 path_info = dropWhile (== '/') pathinfo;
+                 method = read reqString};
+           contents <- readContents (read content_length);
+           let { env
+                   = CGIEnv{serverName = C.serverName conf,
+                            serverPort = show (C.port conf),
+                            serverSoftware =
+                              C.serverSoftware ++ ' ' : C.serverVersion ++ "/WASH",
+                            serverProtocol = "HTTP/1.1", scriptName = cgiPath,
+                            gatewayInterface = "CGI/1.1", requestMethod = method,
+                            contentLength = content_length, contentType = content_type,
+                            httpCookie = http_cookie, httpAccept = http_accept,
+                            pathInfo = path_info,
+                            pathTranslated = C.documentRoot conf ++ '/' : path_info,
+                            remoteHost = "", remoteAddr = host, remoteUser = "", authType = "",
+                            rawContents = contents, rawArgs = queryArgs, handle = h,
+                            httpsEnabled = False}};
+           startEnv env cgioptions pgm}}
+./Webserver/Server.hs
+./Webserver/State.hs
+module State where
+{ import System.IO.Unsafe (unsafePerformIO);
+  import Control.Concurrent.MVar;
+  import Deployment;
+   
+  data State = State{deploymentState :: DeploymentState};
+   
+  currentState :: MVar State;
+  currentState = unsafePerformIO (newMVar initialState);
+   
+  initialState :: State;
+  initialState = State{deploymentState = initialDeploymentState}}
+./Webserver/Util.hs
+module Util where
+{ import Foreign.C.Error (getErrno, eNOENT);
+  import System.Posix;
+  import Control.Exception as Exception;
+  import Control.Concurrent;
+  import Network.Socket hiding (accept);
+  import qualified Network.Socket as SocketPrim (accept);
+  import System.Time;
+  import Locale;
+  import Char;
+  import IO;
+  import GHC.Base;
+  import GHC.Conc;
+  import GHC.IOBase;
+  import qualified Debug.Trace;
+  trace s e = Debug.Trace.trace s e;
+  crlf = "\r\n";
+  emptyLine "\r" = True;
+  emptyLine _ = False;
+   
+  stripWS :: String -> String;
+  stripWS = stripLeadingWS . reverse . stripLeadingWS . reverse;
+   
+  stripLeadingWS :: String -> String;
+  stripLeadingWS = dropWhile isSpace;
+   
+  data E b a = Ok a
+             | Bad b;
+   
+  instance Monad (E b) where
+          { m >>= k
+              = case m of
+                    { Ok a -> k a;
+                      Bad b -> Bad b};
+            return a = Ok a};
+   
+  failE :: b -> E b a;
+  failE b = Bad b;
+   
+  maybeE :: b -> Maybe a -> E b a;
+  maybeE _ (Just a) = return a;
+  maybeE b (Nothing) = failE b;
+   
+  commaSep :: String -> [String];
+  commaSep s = go (dropWhile isSpace s)
+    where { go "" = [];
+            go s
+              = word :
+                  case rest of
+                      { ',' : rest -> go rest;
+                        _ -> go rest}
+              where { (word, rest) = break (== ',') s}};
+  hPutStrCrLf h s
+    = hPutStr h s >> hPutChar h '\r' >> hPutChar h '\n';
+   
+  formatTimeSensibly :: CalendarTime -> String;
+  formatTimeSensibly time
+    = formatCalendarTime defaultTimeLocale "%a, %d %b %Y %H:%M:%S GMT"
+        time;
+   
+  epochTimeToClockTime :: EpochTime -> ClockTime;
+  epochTimeToClockTime epoch_time
+    = TOD (fromIntegral $ fromEnum epoch_time) 0;
+   
+  timeout :: Int -> IO a -> IO a -> IO a;
+  timeout secs action on_timeout
+    = do { threadid <- myThreadId;
+           timeout <- forkIOIgnoreExceptions
+                        (do { threadDelay (secs * 1000000);
+                              throwTo threadid (ErrorCall "__timeout")});
+           (do { result <- action;
+                 killThread timeout;
+                 return result})
+             `Exception.catch`
+             (\ exception ->
+                case exception of
+                    { ErrorCall "__timeout" -> on_timeout;
+                      _other
+                        -> do { killThread timeout;
+                                throw exception}})};
+   
+  accept :: Socket -> IO (Handle, SockAddr);
+  accept sock
+    = do { (sock', addr) <- SocketPrim.accept sock;
+           handle <- socketToHandle sock' ReadWriteMode;
+           return (handle, addr)};
+   
+  statFile :: String -> IO (Maybe FileStatus);
+  statFile filename
+    = do { maybe_stat <- tryJust ioErrors (getFileStatus filename);
+           case maybe_stat of
+               { Left e
+                   -> do { errno <- getErrno;
+                           if errno == eNOENT then return Nothing else ioError e};
+                 Right stat -> return (Just stat)}}}

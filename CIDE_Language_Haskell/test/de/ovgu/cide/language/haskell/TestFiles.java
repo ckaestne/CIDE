@@ -33,14 +33,19 @@ public class TestFiles {
 	// System.out.println(v.getResult());
 	// }
 
-	@Test
-	public void testArminsExamples() throws Exception {
-		parseFilesInFolder(new File("test/armin"), true, ".hs");
-	}
+//	@Test
+//	public void testArminsExamples() throws Exception {
+//		parseFilesInFolder(new File("test/arith"), true, ".hs");
+//	}
 
 	@Test
-	public void testXMonad() throws Exception {
+	public void testFGL() throws Exception {
 		parseFilesInFolder(new File("test/fgl-5.4.2"), true, ".block");
+	}
+	
+	@Test
+	public void testWSP() throws Exception {
+		parseFilesInFolder(new File("test/WSP"), true, ".hs");
 	}
 
 	private void parseFilesInFolder(File folder, boolean recursive,

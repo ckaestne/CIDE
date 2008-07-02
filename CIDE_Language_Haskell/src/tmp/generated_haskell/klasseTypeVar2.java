@@ -14,7 +14,7 @@ public class klasseTypeVar2 extends klasseTypeVar {
   public klasseTypeVar2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new klasseTypeVar2(cloneProperties(),firstToken,lastToken);
   }
   public ASTStringNode getVariable_id1() {

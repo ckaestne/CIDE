@@ -13,7 +13,7 @@ public class exportNaamParam1 extends exportNaamParam {
   public exportNaamParam1(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new exportNaamParam1(cloneProperties(),firstToken,lastToken);
   }
 }

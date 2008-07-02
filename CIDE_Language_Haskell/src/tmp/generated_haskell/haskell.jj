@@ -371,10 +371,10 @@ SPECIAL_TOKEN : {
 TOKEN : {
 	<CONSTRUCTOR_ID : <UPPER_CASE>	( <LETTER>
 							| <DIGIT>
-							| "'" )* >
+							| "'"  | "#" )* >
 |	<VARIABLE_ID : <LOWER_CASE>	( <LETTER>
 							| <DIGIT>
-							| "'" )*>
+							| "'"  | "#" )*>
 
 |	<INTEGER:	(<DECIMAL>	|	"0o" <OCTAL> | "0O" <OCTAL>
 		|	"0x" <HEXADECIMAL> | "0X" <HEXADECIMAL>)>
@@ -459,6 +459,10 @@ TOKEN : {
 
 |	<SEMICOLON : ";" >
 
+//extension: unboxed tuple
+|	<LEFT_HPAREN : "(#" >
+
+|	<RIGHT_HPAREN : "#)" >
 |	<LEFT_PAREN : "(" >
 
 |	<RIGHT_PAREN : ")" >
@@ -473,7 +477,7 @@ TOKEN : {
 
 |	<VARSYM : <SYMBOL> (<SYMBOL> | ":" )* >
 
-|	<CONSYM : ":" (<SYMBOL> | ":" )* >
+|	<CONSYM : ":" (<SYMBOL> | ":"  )* >
 
 |	<SYMBOL : "!" | "#" | "$" | "%" | "&" | "*" | "+" | "." | "/" | "<" | "="
        | ">" | "?" | "@" | "\\" | "^" | "-" | "~" | "|"
@@ -857,6 +861,7 @@ expressie expressie() : {
 	operator operator1;
 	expr expr1;
 	exprList exprList = null;
+	exprList exprList1 = null;
 	exprListSpecial exprListSpecial = null;
 	Token firstToken=token;
 } { (
@@ -872,8 +877,10 @@ expressie expressie() : {
 	{return new expressie5(operator1, expr1, firstToken.next,token);} |
 	"(" [exprList=exprList()] ")" 
 	{return new expressie6(exprList, firstToken.next,token);} |
+	"(#" [exprList1=exprList()] "#)" 
+	{return new expressie7(exprList1, firstToken.next,token);} |
 	"[" [exprListSpecial=exprListSpecial()] "]" 
-	{return new expressie7(exprListSpecial, firstToken.next,token);}
+	{return new expressie8(exprListSpecial, firstToken.next,token);}
  ) }
 
 contrExprParam contrExprParam() : { 
@@ -1120,6 +1127,7 @@ patroonMain patroonMain() : {
 	contrPatrParam contrPatrParam = null;
 	patrList patrList = null;
 	patrList patrList1 = null;
+	patrList patrList2 = null;
 	Token firstToken=token;
 } { (
 	"_"  
@@ -1132,8 +1140,10 @@ patroonMain patroonMain() : {
 	{return new constructorNaam(naam, contrPatrParam, firstToken.next,token);} |
 	"(" [patrList=patrList()] ")" 
 	{return new patroonMain5(patrList, firstToken.next,token);} |
-	"[" [patrList1=patrList()] "]" 
-	{return new patroonMain6(patrList1, firstToken.next,token);}
+	"(#" [patrList1=patrList()] "#)" 
+	{return new patroonMain6(patrList1, firstToken.next,token);} |
+	"[" [patrList2=patrList()] "]" 
+	{return new patroonMain7(patrList2, firstToken.next,token);}
  ) }
 
 patrList patrList() : { 
@@ -1172,6 +1182,7 @@ type type() : {
 	Token t;
 	ASTStringNode variable_id;
 	functiontypeList functiontypeList = null;
+	functiontypeList functiontypeList1 = null;
 	functiontype functiontype;
 	Token firstToken=token;
 } { (
@@ -1181,8 +1192,10 @@ type type() : {
 	{return new type2(variable_id, firstToken.next,token);} |
 	"(" [functiontypeList=functiontypeList()] ")" 
 	{return new type3(functiontypeList, firstToken.next,token);} |
+	"(#" [functiontypeList1=functiontypeList()] "#)" 
+	{return new type4(functiontypeList1, firstToken.next,token);} |
 	"[" functiontype=functiontype() "]" 
-	{return new type4(functiontype, firstToken.next,token);}
+	{return new type5(functiontype, firstToken.next,token);}
  ) }
 
 functiontypeList functiontypeList() : { 
@@ -1203,7 +1216,7 @@ functiontype functiontype() : {
 	ArrayList<paramtype> paramtype1List = new ArrayList<paramtype>();
 	Token firstToken=token;
 } { (
-	paramtype=paramtype(){list0.add(paramtype);} (LOOKAHEAD(2) "->" paramtype1=paramtype(){list0.add(paramtype1);})* 
+	paramtype=paramtype(){list0.add(paramtype);} (LOOKAHEAD("->" paramtype()) "->" paramtype1=paramtype(){list0.add(paramtype1);})* 
 	{return new functiontype(list0, firstToken.next,token);}
  ) }
 

@@ -371,10 +371,10 @@ SPECIAL_TOKEN : {
 TOKEN : {
 	<CONSTRUCTOR_ID : <UPPER_CASE>	( <LETTER>
 							| <DIGIT>
-							| "'" )* >
+							| "'"  | "#" )* >
 |	<VARIABLE_ID : <LOWER_CASE>	( <LETTER>
 							| <DIGIT>
-							| "'" )*>
+							| "'"  | "#" )*>
 
 |	<INTEGER:	(<DECIMAL>	|	"0o" <OCTAL> | "0O" <OCTAL>
 		|	"0x" <HEXADECIMAL> | "0X" <HEXADECIMAL>)>
@@ -459,6 +459,10 @@ TOKEN : {
 
 |	<SEMICOLON : ";" >
 
+//extension: unboxed tuple
+|	<LEFT_HPAREN : "(#" >
+
+|	<RIGHT_HPAREN : "#)" >
 |	<LEFT_PAREN : "(" >
 
 |	<RIGHT_PAREN : ")" >
@@ -473,7 +477,7 @@ TOKEN : {
 
 |	<VARSYM : <SYMBOL> (<SYMBOL> | ":" )* >
 
-|	<CONSYM : ":" (<SYMBOL> | ":" )* >
+|	<CONSYM : ":" (<SYMBOL> | ":"  )* >
 
 |	<SYMBOL : "!" | "#" | "$" | "%" | "&" | "*" | "+" | "." | "/" | "<" | "="
        | ">" | "?" | "@" | "\\" | "^" | "-" | "~" | "|"
@@ -574,6 +578,7 @@ expressie:
 		| LL("\"(\" expr() operator()") "(" expr operator ")"
 		| LL("\"(\" operator()") "(" operator expr ")"
 		| "(" [exprList] ")"
+		| "(#" [exprList] "#)"//extension: unboxed tuple
 		| "[" [exprListSpecial] "]"; 
 		
 contrExprParam: "{" &LI contrExprAssign ("," &LI contrExprAssign)* "}";
@@ -633,6 +638,7 @@ patroonMain: "_"
 	| LL("var()") var
 	| LL("naam()") naam [contrPatrParam]:: constructorNaam
 	| "(" [patrList] ")"
+	| "(#" [patrList] "#)"
 	| "[" [patrList] "]";
 
 patrList: &LI patr ("," &LI patr)*;
@@ -644,13 +650,14 @@ contrPatrAssign: var "=" patr;
 type: LL("naam()") /*type*/naam
 	| /*tyvar*/<VARIABLE_ID>
 	| "(" [functiontypeList] ")"
+	| "(#" [functiontypeList] "#)"//extension: unboxed tuple
 	| "[" functiontype "]" ;
 functiontypeList: &LI functiontype ("," &LI functiontype)*;
 
 // TODO Christian
 //functiontype: type (LL(1) typArr)*;
 //typArr:	["->"<NONE>] type;
-functiontype: &LI paramtype (LL(2) "->" &LI paramtype)*;
+functiontype: &LI paramtype (LL("\"->\" paramtype()") "->" &LI paramtype)*;
 paramtype: (LL("type()") type)+;
 	
 //context

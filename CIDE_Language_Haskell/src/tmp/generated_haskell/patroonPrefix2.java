@@ -14,7 +14,7 @@ public class patroonPrefix2 extends patroonPrefix {
   public patroonPrefix2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new patroonPrefix2(cloneProperties(),firstToken,lastToken);
   }
   public var getVar() {

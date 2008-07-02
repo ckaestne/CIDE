@@ -14,7 +14,7 @@ public class functiontype extends GenASTNode {
   public functiontype(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new functiontype(cloneProperties(),firstToken,lastToken);
   }
   public ArrayList<paramtype> getParamtype() {

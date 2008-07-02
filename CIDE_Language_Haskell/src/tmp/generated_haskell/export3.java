@@ -14,7 +14,7 @@ public class export3 extends export {
   public export3(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new export3(cloneProperties(),firstToken,lastToken);
   }
   public naam getNaam1() {

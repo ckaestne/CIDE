@@ -15,7 +15,7 @@ public class patroonMain2 extends patroonMain {
   public patroonMain2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new patroonMain2(cloneProperties(),firstToken,lastToken);
   }
   public ASTTextNode getText6() {

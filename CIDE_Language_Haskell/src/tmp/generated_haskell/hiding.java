@@ -15,7 +15,7 @@ public class hiding extends GenASTNode {
   public hiding(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new hiding(cloneProperties(),firstToken,lastToken);
   }
   public ASTTextNode getText2() {

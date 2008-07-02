@@ -13,7 +13,7 @@ import cide.languages.ILanguageValidator;
 
 public class HaskellLanguageExtension implements ILanguageExtension {
 
-	public ILanguageParser getParser(final InputStream inputStream) {
+	public ILanguageParser getParser(final InputStream inputStream, String filePath) {
 		
 		return new ILanguageParser(){
 

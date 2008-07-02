@@ -66,17 +66,19 @@ public interface HaskellParserConstants {
   int LEFT_CURLY = 66;
   int RIGHT_CURLY = 67;
   int SEMICOLON = 68;
-  int LEFT_PAREN = 69;
-  int RIGHT_PAREN = 70;
-  int LEFT_BRACKET = 71;
-  int RIGHT_BRACKET = 72;
-  int COMMA = 73;
-  int INFIX_QUOTE = 74;
-  int VARSYM = 75;
-  int CONSYM = 76;
-  int SYMBOL = 77;
-  int UNANTICIPATED_SYMBOL = 78;
-  int ANYTHINGP = 79;
+  int LEFT_HPAREN = 69;
+  int RIGHT_HPAREN = 70;
+  int LEFT_PAREN = 71;
+  int RIGHT_PAREN = 72;
+  int LEFT_BRACKET = 73;
+  int RIGHT_BRACKET = 74;
+  int COMMA = 75;
+  int INFIX_QUOTE = 76;
+  int VARSYM = 77;
+  int CONSYM = 78;
+  int SYMBOL = 79;
+  int UNANTICIPATED_SYMBOL = 80;
+  int ANYTHINGP = 81;
 
   int DEFAULT = 0;
   int PAREN = 1;
@@ -151,6 +153,8 @@ public interface HaskellParserConstants {
     "\"{\"",
     "\"}\"",
     "\";\"",
+    "\"(#\"",
+    "\"#)\"",
     "\"(\"",
     "\")\"",
     "\"[\"",

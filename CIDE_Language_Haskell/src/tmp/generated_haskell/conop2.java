@@ -14,7 +14,7 @@ public class conop2 extends conop {
   public conop2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new conop2(cloneProperties(),firstToken,lastToken);
   }
   public ASTStringNode getConstructor_id() {

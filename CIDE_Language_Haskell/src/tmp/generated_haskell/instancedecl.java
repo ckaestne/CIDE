@@ -16,7 +16,7 @@ public class instancedecl extends definition {
   public instancedecl(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new instancedecl(cloneProperties(),firstToken,lastToken);
   }
   public context getContext3() {

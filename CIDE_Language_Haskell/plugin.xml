@@ -5,7 +5,7 @@
          point="de.ovgu.cide.core.language">
       <language
             class="de.ovgu.cide.language.haskell.HaskellLanguageExtension"
-            fileExtensions=".hs"
+            fileExtensions=".hs,.block"
             id="de.ovgu.cide.language.haskell"
             name="Haskell Language Extension">
       </language>

@@ -14,7 +14,7 @@ public class patrList extends GenASTNode {
   public patrList(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new patrList(cloneProperties(),firstToken,lastToken);
   }
   public ArrayList<patr> getPatr() {
