@@ -14,7 +14,7 @@ public class exportNaamParam2 extends exportNaamParam {
   public exportNaamParam2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public IASTNode deepCopy() {
+  public ASTNode deepCopy() {
     return new exportNaamParam2(cloneProperties(),firstToken,lastToken);
   }
   public naamOrVarList getNaamOrVarList() {

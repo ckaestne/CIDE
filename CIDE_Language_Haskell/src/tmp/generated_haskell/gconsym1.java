@@ -13,7 +13,7 @@ public class gconsym1 extends gconsym {
   public gconsym1(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public IASTNode deepCopy() {
+  public ASTNode deepCopy() {
     return new gconsym1(cloneProperties(),firstToken,lastToken);
   }
 }

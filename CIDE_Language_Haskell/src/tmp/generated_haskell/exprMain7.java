@@ -14,7 +14,7 @@ public class exprMain7 extends exprMain {
   public exprMain7(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public IASTNode deepCopy() {
+  public ASTNode deepCopy() {
     return new exprMain7(cloneProperties(),firstToken,lastToken);
   }
   public altSpecialSemiList getAltSpecialSemiList() {

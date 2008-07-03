@@ -13,7 +13,7 @@ public class patroonPrefix1 extends patroonPrefix {
   public patroonPrefix1(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public IASTNode deepCopy() {
+  public ASTNode deepCopy() {
     return new patroonPrefix1(cloneProperties(),firstToken,lastToken);
   }
 }

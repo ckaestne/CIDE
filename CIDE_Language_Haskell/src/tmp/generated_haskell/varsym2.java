@@ -14,7 +14,7 @@ public class varsym2 extends varsym {
   public varsym2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public IASTNode deepCopy() {
+  public ASTNode deepCopy() {
     return new varsym2(cloneProperties(),firstToken,lastToken);
   }
   public otherOperators getOtherOperators() {

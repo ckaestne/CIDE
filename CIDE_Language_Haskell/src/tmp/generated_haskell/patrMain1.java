@@ -15,7 +15,7 @@ public class patrMain1 extends patrMain {
   public patrMain1(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public IASTNode deepCopy() {
+  public ASTNode deepCopy() {
     return new patrMain1(cloneProperties(),firstToken,lastToken);
   }
   public naam getNaam() {

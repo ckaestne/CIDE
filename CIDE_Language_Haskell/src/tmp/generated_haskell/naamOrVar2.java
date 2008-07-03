@@ -14,7 +14,7 @@ public class naamOrVar2 extends naamOrVar {
   public naamOrVar2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public IASTNode deepCopy() {
+  public ASTNode deepCopy() {
     return new naamOrVar2(cloneProperties(),firstToken,lastToken);
   }
   public var getVar() {

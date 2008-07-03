@@ -15,7 +15,7 @@ public class qconid extends GenASTNode {
   public qconid(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public IASTNode deepCopy() {
+  public ASTNode deepCopy() {
     return new qconid(cloneProperties(),firstToken,lastToken);
   }
   public ModuleNaamPrefix getModuleNaamPrefix() {

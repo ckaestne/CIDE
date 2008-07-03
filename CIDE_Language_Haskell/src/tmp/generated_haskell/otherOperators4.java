@@ -13,7 +13,7 @@ public class otherOperators4 extends otherOperators {
   public otherOperators4(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public IASTNode deepCopy() {
+  public ASTNode deepCopy() {
     return new otherOperators4(cloneProperties(),firstToken,lastToken);
   }
 }

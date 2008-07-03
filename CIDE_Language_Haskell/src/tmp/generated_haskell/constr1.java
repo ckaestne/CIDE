@@ -15,7 +15,7 @@ public class constr1 extends constr {
   public constr1(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public IASTNode deepCopy() {
+  public ASTNode deepCopy() {
     return new constr1(cloneProperties(),firstToken,lastToken);
   }
   public ArrayList<fielddeclaration> getFielddeclaration() {

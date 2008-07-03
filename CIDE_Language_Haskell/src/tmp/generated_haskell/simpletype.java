@@ -15,7 +15,7 @@ public class simpletype extends GenASTNode {
   public simpletype(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public IASTNode deepCopy() {
+  public ASTNode deepCopy() {
     return new simpletype(cloneProperties(),firstToken,lastToken);
   }
   public naam getNaam() {

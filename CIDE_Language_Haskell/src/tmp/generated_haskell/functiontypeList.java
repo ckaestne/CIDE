@@ -14,7 +14,7 @@ public class functiontypeList extends GenASTNode {
   public functiontypeList(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public IASTNode deepCopy() {
+  public ASTNode deepCopy() {
     return new functiontypeList(cloneProperties(),firstToken,lastToken);
   }
   public ArrayList<functiontype> getFunctiontype() {

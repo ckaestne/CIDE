@@ -15,7 +15,7 @@ public class exprMain5 extends exprMain {
   public exprMain5(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public IASTNode deepCopy() {
+  public ASTNode deepCopy() {
     return new exprMain5(cloneProperties(),firstToken,lastToken);
   }
   public ArrayList<caseInner> getCaseInner() {

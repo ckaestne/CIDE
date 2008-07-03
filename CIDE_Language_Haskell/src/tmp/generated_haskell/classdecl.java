@@ -17,7 +17,7 @@ public class classdecl extends definition {
   public classdecl(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public IASTNode deepCopy() {
+  public ASTNode deepCopy() {
     return new classdecl(cloneProperties(),firstToken,lastToken);
   }
   public context getContext2() {

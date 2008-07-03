@@ -15,7 +15,7 @@ public class declaration6 extends declaration {
   public declaration6(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public IASTNode deepCopy() {
+  public ASTNode deepCopy() {
     return new declaration6(cloneProperties(),firstToken,lastToken);
   }
   public ASTStringNode getInteger() {

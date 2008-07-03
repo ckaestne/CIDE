@@ -14,7 +14,7 @@ public class altSpecialSemiList extends GenASTNode {
   public altSpecialSemiList(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public IASTNode deepCopy() {
+  public ASTNode deepCopy() {
     return new altSpecialSemiList(cloneProperties(),firstToken,lastToken);
   }
   public ArrayList<altSpecial> getAltSpecial() {

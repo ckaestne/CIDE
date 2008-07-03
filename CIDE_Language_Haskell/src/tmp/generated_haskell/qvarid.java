@@ -15,7 +15,7 @@ public class qvarid extends GenASTNode {
   public qvarid(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public IASTNode deepCopy() {
+  public ASTNode deepCopy() {
     return new qvarid(cloneProperties(),firstToken,lastToken);
   }
   public ModuleNaamPrefix getModuleNaamPrefix() {

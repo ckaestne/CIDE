@@ -15,7 +15,7 @@ public class patrMain2 extends patrMain {
   public patrMain2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public IASTNode deepCopy() {
+  public ASTNode deepCopy() {
     return new patrMain2(cloneProperties(),firstToken,lastToken);
   }
   public var getVar() {

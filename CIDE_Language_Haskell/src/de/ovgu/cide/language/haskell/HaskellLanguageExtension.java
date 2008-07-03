@@ -2,7 +2,8 @@ package de.ovgu.cide.language.haskell;
 
 import java.io.InputStream;
 
-import tmp.generated_haskell.*;
+import tmp.generated_haskell.HaskellParser;
+import tmp.generated_haskell.SimplePrintVisitor;
 import cide.gast.ISourceFile;
 import cide.gparser.OffsetCharStream;
 import cide.gparser.ParseException;
@@ -13,8 +14,9 @@ import cide.languages.ILanguageValidator;
 
 public class HaskellLanguageExtension implements ILanguageExtension {
 
-	public ILanguageParser getParser(final InputStream inputStream, String filePath) {
-		
+	// TODO Christian
+	//public ILanguageParser getParser(final InputStream inputStream, String filePath) {
+	public ILanguageParser getParser(final InputStream inputStream) {
 		return new ILanguageParser(){
 
 			public ISourceFile getRoot() throws ParseException {

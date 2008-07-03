@@ -16,7 +16,7 @@ public class exprListSpecial2 extends exprListSpecial {
   public exprListSpecial2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public IASTNode deepCopy() {
+  public ASTNode deepCopy() {
     return new exprListSpecial2(cloneProperties(),firstToken,lastToken);
   }
   public expr getExpr1() {

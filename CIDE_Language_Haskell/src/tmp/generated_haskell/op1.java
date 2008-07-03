@@ -14,7 +14,7 @@ public class op1 extends op {
   public op1(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public IASTNode deepCopy() {
+  public ASTNode deepCopy() {
     return new op1(cloneProperties(),firstToken,lastToken);
   }
   public varop getVarop() {

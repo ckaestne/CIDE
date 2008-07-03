@@ -14,7 +14,7 @@ public class literal2 extends literal {
   public literal2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public IASTNode deepCopy() {
+  public ASTNode deepCopy() {
     return new literal2(cloneProperties(),firstToken,lastToken);
   }
   public ASTStringNode getFloat_kw() {

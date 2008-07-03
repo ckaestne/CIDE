@@ -15,7 +15,7 @@ public class altExprAss extends GenASTNode {
   public altExprAss(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public IASTNode deepCopy() {
+  public ASTNode deepCopy() {
     return new altExprAss(cloneProperties(),firstToken,lastToken);
   }
   public expr getExpr() {

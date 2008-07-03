@@ -15,7 +15,7 @@ public class constructorNaam extends patroonMain {
   public constructorNaam(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public IASTNode deepCopy() {
+  public ASTNode deepCopy() {
     return new constructorNaam(cloneProperties(),firstToken,lastToken);
   }
   public naam getNaam() {

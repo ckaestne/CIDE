@@ -15,7 +15,7 @@ public class qconsym extends GenASTNode {
   public qconsym(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public IASTNode deepCopy() {
+  public ASTNode deepCopy() {
     return new qconsym(cloneProperties(),firstToken,lastToken);
   }
   public ModuleNaamPrefix getModuleNaamPrefix() {

@@ -14,7 +14,7 @@ public class varMain1 extends varMain {
   public varMain1(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public IASTNode deepCopy() {
+  public ASTNode deepCopy() {
     return new varMain1(cloneProperties(),firstToken,lastToken);
   }
   public ASTStringNode getVariable_id() {

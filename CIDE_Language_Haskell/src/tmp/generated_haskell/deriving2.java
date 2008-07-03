@@ -14,7 +14,7 @@ public class deriving2 extends deriving {
   public deriving2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public IASTNode deepCopy() {
+  public ASTNode deepCopy() {
     return new deriving2(cloneProperties(),firstToken,lastToken);
   }
   public naam getNaam() {

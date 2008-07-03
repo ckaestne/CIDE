@@ -14,7 +14,7 @@ public class altSpecial2 extends altSpecial {
   public altSpecial2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public IASTNode deepCopy() {
+  public ASTNode deepCopy() {
     return new altSpecial2(cloneProperties(),firstToken,lastToken);
   }
   public expr getExpr1() {

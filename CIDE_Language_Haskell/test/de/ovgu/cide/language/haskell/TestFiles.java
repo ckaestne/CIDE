@@ -33,10 +33,10 @@ public class TestFiles {
 	// System.out.println(v.getResult());
 	// }
 
-//	@Test
-//	public void testArminsExamples() throws Exception {
-//		parseFilesInFolder(new File("test/arith"), true, ".hs");
-//	}
+	@Test
+	public void testArithOrig() throws Exception {
+		parseFilesInFolder(new File("test/arith/orig_armin"), true, ".block");
+	}
 
 	@Test
 	public void testFGL() throws Exception {

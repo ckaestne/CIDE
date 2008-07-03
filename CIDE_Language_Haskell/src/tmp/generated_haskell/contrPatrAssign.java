@@ -15,7 +15,7 @@ public class contrPatrAssign extends GenASTNode {
   public contrPatrAssign(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public IASTNode deepCopy() {
+  public ASTNode deepCopy() {
     return new contrPatrAssign(cloneProperties(),firstToken,lastToken);
   }
   public var getVar() {

@@ -14,7 +14,7 @@ public class type4 extends type {
   public type4(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public IASTNode deepCopy() {
+  public ASTNode deepCopy() {
     return new type4(cloneProperties(),firstToken,lastToken);
   }
   public functiontypeList getFunctiontypeList1() {

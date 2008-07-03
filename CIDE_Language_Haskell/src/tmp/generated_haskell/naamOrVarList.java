@@ -14,7 +14,7 @@ public class naamOrVarList extends GenASTNode {
   public naamOrVarList(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public IASTNode deepCopy() {
+  public ASTNode deepCopy() {
     return new naamOrVarList(cloneProperties(),firstToken,lastToken);
   }
   public ArrayList<naamOrVar> getNaamOrVar() {

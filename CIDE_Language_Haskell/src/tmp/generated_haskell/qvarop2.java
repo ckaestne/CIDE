@@ -14,7 +14,7 @@ public class qvarop2 extends qvarop {
   public qvarop2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public IASTNode deepCopy() {
+  public ASTNode deepCopy() {
     return new qvarop2(cloneProperties(),firstToken,lastToken);
   }
   public qvarsym getQvarsym() {

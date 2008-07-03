@@ -15,7 +15,7 @@ public class function1 extends function {
   public function1(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public IASTNode deepCopy() {
+  public ASTNode deepCopy() {
     return new function1(cloneProperties(),firstToken,lastToken);
   }
   public ArrayList<patroon> getPatroon() {

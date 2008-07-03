@@ -15,7 +15,7 @@ public class typedecl extends definition {
   public typedecl(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public IASTNode deepCopy() {
+  public ASTNode deepCopy() {
     return new typedecl(cloneProperties(),firstToken,lastToken);
   }
   public simpletype getSimpletype() {

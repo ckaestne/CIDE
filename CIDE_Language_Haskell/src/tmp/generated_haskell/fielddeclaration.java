@@ -15,7 +15,7 @@ public class fielddeclaration extends GenASTNode {
   public fielddeclaration(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public IASTNode deepCopy() {
+  public ASTNode deepCopy() {
     return new fielddeclaration(cloneProperties(),firstToken,lastToken);
   }
   public varList getVarList() {

@@ -14,7 +14,7 @@ public class qop2 extends qop {
   public qop2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public IASTNode deepCopy() {
+  public ASTNode deepCopy() {
     return new qop2(cloneProperties(),firstToken,lastToken);
   }
   public qconop getQconop() {
