@@ -590,7 +590,7 @@ expr: exprMain (LL("exprOperator()") exprOperator)* [LL("exprEnd()") exprEnd];
 exprEnd: "::" [LL("context()") context] functiontype;
 
 exprMain:
-	(LL(1) expressie)+
+	(LL(1) &LI expressie)+
 	| "-" expr
 	| "\\" (patroon)+ "->" expr
 	| "if" expr "then" expr "else" expr

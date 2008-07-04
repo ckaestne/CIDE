@@ -926,6 +926,7 @@ exprEnd exprEnd() : {
 exprMain exprMain() : { 
 	expressie expressie;
 	ArrayList<expressie> expressieList = new ArrayList<expressie>();
+	ArrayList<expressie> list0=new ArrayList<expressie>();
 	expr expr;
 	patroon patroon;
 	ArrayList<patroon> patroonList = new ArrayList<patroon>();
@@ -943,8 +944,8 @@ exprMain exprMain() : {
 	altSpecialSemiList altSpecialSemiList;
 	Token firstToken=token;
 } { (
-	(LOOKAHEAD(1) expressie=expressie(){expressieList.add(expressie);})+ 
-	{return new exprMain1(expressieList, firstToken.next,token);} |
+	(LOOKAHEAD(1) expressie=expressie(){list0.add(expressie);})+ 
+	{return new exprMain1(list0, firstToken.next,token);} |
 	"-" expr=expr() 
 	{return new exprMain2(expr, firstToken.next,token);} |
 	"\\" (patroon=patroon(){patroonList.add(patroon);})+ "->" expr1=expr() 
