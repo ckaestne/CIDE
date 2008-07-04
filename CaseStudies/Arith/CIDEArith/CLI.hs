@@ -1,16 +1,18 @@
 module CLI where
 { import Control.Exception (catch);
+  import System.Console.SimpleLineEditor as SLE;
   import System.IO;
   import Text.ParserCombinators.Parsec;
   import Text.ParserCombinators.Parsec.Expr;
   import Text.ParserCombinators.Parsec.Language;
   import qualified Text.ParserCombinators.Parsec.Token as PT;
+  
   import Arith;
   
   lexer :: PT.TokenParser ();
   lexer
     = PT.makeTokenParser
-        (haskellDef{reservedNames = ["let", "in", "ite"],
+        (haskellDef{reservedNames = ["let", "in", "ite", "true", "false"],
         						-- TODO MRO: - bei BinOps ODER UnOps
                     reservedOpNames = ["+", "-", "*", "/", "&&", "||", "#", "!", "\\", "=", "->"]});
   reserved = PT.reserved lexer;
@@ -24,7 +26,8 @@ module CLI where
   table
   -- TODO MRO: && und ||
     = [[op "*" Mul AssocLeft, op "/" Div AssocLeft],
-       [op "+" Add AssocLeft, op "-" Sub AssocLeft]]
+       [op "+" Add AssocLeft, op "-" Sub AssocLeft],
+       [op "&&" And AssocLeft], [op "||" Or AssocLeft]]
     where { op s f assoc
               = Infix
                   (do { reservedOp s;
@@ -35,7 +38,7 @@ module CLI where
   expr :: Parser (Exp TypedVal);
   expr = buildExpressionParser table factor <?> "expression";
   
-  -- TODO MRO
+  -- TODO MRO: färben
   factor :: Parser (Exp TypedVal);
   factor
     =   do { reservedOp "-";
@@ -90,7 +93,6 @@ module CLI where
            return (ITE cond t e)}
         <?> "conditional expression";
    
-  -- TODO MRO
   appExpr :: Parser (Exp TypedVal);
   appExpr
     = do { es <- many1 appArg;
@@ -105,6 +107,7 @@ module CLI where
         <|> parens expr
         <|> number
         <|> stringConst
+        <|> boolConst
         <?> "argument expression";
    
   number :: Parser (Exp TypedVal);
@@ -121,11 +124,19 @@ module CLI where
            return (Const (TVString s))}
         <?> "string literal";
         
-  -- TODO MRO: Boolesche Konstanten
+  boolConst :: Parser (Exp TypedVal);
+  boolConst
+    = do { reserved "true";
+           return (Const (TVBool True))}
+      <|>
+      do { reserved "false";
+           return (Const (TVBool False))}
+      <?> "bool constant";
    
   loop :: IO ();
   loop
-    = do { putStr "> ";
+    = do { l <- SLE.getLineEdited "> ";
+    	   putStr "> ";
            l' <- getLine;
            let { l = Just l'};
            case l of
@@ -145,6 +156,8 @@ module CLI where
    
   main :: IO ();
   main
-    = do { hSetBuffering stdout NoBuffering;
+    = do { SLE.initialise;
+    	   hSetBuffering stdout NoBuffering;
            putStrLn "Simple command line interpreter. Exit with empty input.";
-           loop}}
+           loop;
+           SLE.restore}}
