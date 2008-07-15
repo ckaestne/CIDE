@@ -15,7 +15,7 @@ public class CompoundStatement extends GenASTNode {
   public CompoundStatement(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new CompoundStatement(cloneProperties(),firstToken,lastToken);
   }
   public DeclarationList getDeclarationList() {

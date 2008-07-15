@@ -14,7 +14,7 @@ public class AbstractDeclarator1 extends AbstractDeclarator {
   public AbstractDeclarator1(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new AbstractDeclarator1(cloneProperties(),firstToken,lastToken);
   }
   public Pointer getPointer() {

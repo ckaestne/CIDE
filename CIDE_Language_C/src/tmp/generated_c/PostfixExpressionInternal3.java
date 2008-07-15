@@ -14,7 +14,7 @@ public class PostfixExpressionInternal3 extends PostfixExpressionInternal {
   public PostfixExpressionInternal3(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new PostfixExpressionInternal3(cloneProperties(),firstToken,lastToken);
   }
   public ASTStringNode getIdentifier() {

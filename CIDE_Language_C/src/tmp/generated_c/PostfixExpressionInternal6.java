@@ -14,7 +14,7 @@ public class PostfixExpressionInternal6 extends PostfixExpressionInternal {
   public PostfixExpressionInternal6(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new PostfixExpressionInternal6(cloneProperties(),firstToken,lastToken);
   }
   public ASTStringNode getMinusminus() {

@@ -14,7 +14,7 @@ public class DirectDeclaratorP12 extends DirectDeclaratorP1 {
   public DirectDeclaratorP12(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new DirectDeclaratorP12(cloneProperties(),firstToken,lastToken);
   }
   public Declarator getDeclarator() {

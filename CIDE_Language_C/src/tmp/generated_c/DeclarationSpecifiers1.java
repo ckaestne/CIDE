@@ -15,7 +15,7 @@ public class DeclarationSpecifiers1 extends DeclarationSpecifiers {
   public DeclarationSpecifiers1(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new DeclarationSpecifiers1(cloneProperties(),firstToken,lastToken);
   }
   public StorageClassSpecifier getStorageClassSpecifier() {

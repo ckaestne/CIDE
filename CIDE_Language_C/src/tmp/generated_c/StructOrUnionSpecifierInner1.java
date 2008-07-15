@@ -15,7 +15,7 @@ public class StructOrUnionSpecifierInner1 extends StructOrUnionSpecifierInner {
   public StructOrUnionSpecifierInner1(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new StructOrUnionSpecifierInner1(cloneProperties(),firstToken,lastToken);
   }
   public ASTStringNode getIdentifier() {

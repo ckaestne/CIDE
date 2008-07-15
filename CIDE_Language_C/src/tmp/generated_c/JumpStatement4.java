@@ -15,7 +15,7 @@ public class JumpStatement4 extends JumpStatement {
   public JumpStatement4(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new JumpStatement4(cloneProperties(),firstToken,lastToken);
   }
   public ASTStringNode getReturn_kw() {

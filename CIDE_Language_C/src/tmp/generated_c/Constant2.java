@@ -14,7 +14,7 @@ public class Constant2 extends Constant {
   public Constant2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new Constant2(cloneProperties(),firstToken,lastToken);
   }
   public ASTStringNode getFloating_point_literal() {

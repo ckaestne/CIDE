@@ -15,7 +15,7 @@ public class Pointer extends GenASTNode {
   public Pointer(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new Pointer(cloneProperties(),firstToken,lastToken);
   }
   public TypeQualifierList getTypeQualifierList() {

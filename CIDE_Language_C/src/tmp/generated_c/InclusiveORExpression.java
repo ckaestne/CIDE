@@ -15,7 +15,7 @@ public class InclusiveORExpression extends GenASTNode {
   public InclusiveORExpression(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new InclusiveORExpression(cloneProperties(),firstToken,lastToken);
   }
   public ExclusiveORExpression getExclusiveORExpression() {

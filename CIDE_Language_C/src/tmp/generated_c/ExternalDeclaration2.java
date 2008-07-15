@@ -14,7 +14,7 @@ public class ExternalDeclaration2 extends ExternalDeclaration {
   public ExternalDeclaration2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new ExternalDeclaration2(cloneProperties(),firstToken,lastToken);
   }
   public Declaration getDeclaration() {

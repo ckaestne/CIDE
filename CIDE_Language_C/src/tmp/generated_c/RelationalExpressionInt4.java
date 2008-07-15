@@ -14,7 +14,7 @@ public class RelationalExpressionInt4 extends RelationalExpressionInt {
   public RelationalExpressionInt4(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new RelationalExpressionInt4(cloneProperties(),firstToken,lastToken);
   }
   public RelationalExpression getRelationalExpression3() {

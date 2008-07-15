@@ -14,7 +14,7 @@ public class TypeSpecifier9 extends TypeSpecifier {
   public TypeSpecifier9(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new TypeSpecifier9(cloneProperties(),firstToken,lastToken);
   }
   public ASTStringNode getUnsigned() {

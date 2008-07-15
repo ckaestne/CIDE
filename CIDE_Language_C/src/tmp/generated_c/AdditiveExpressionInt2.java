@@ -14,7 +14,7 @@ public class AdditiveExpressionInt2 extends AdditiveExpressionInt {
   public AdditiveExpressionInt2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new AdditiveExpressionInt2(cloneProperties(),firstToken,lastToken);
   }
   public AdditiveExpression getAdditiveExpression1() {

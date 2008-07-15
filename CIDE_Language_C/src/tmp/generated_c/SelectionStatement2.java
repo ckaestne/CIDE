@@ -16,7 +16,7 @@ public class SelectionStatement2 extends SelectionStatement {
   public SelectionStatement2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new SelectionStatement2(cloneProperties(),firstToken,lastToken);
   }
   public ASTStringNode getSwitch_kw() {

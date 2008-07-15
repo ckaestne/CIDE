@@ -14,7 +14,7 @@ public class Initializer2 extends Initializer {
   public Initializer2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new Initializer2(cloneProperties(),firstToken,lastToken);
   }
   public InitializerList getInitializerList() {

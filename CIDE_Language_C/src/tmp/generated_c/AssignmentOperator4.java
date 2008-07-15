@@ -14,7 +14,7 @@ public class AssignmentOperator4 extends AssignmentOperator {
   public AssignmentOperator4(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new AssignmentOperator4(cloneProperties(),firstToken,lastToken);
   }
   public ASTStringNode getAsspercent() {

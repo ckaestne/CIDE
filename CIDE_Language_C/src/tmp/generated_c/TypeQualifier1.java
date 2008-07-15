@@ -14,7 +14,7 @@ public class TypeQualifier1 extends TypeQualifier {
   public TypeQualifier1(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new TypeQualifier1(cloneProperties(),firstToken,lastToken);
   }
   public ASTStringNode getConst_kw() {

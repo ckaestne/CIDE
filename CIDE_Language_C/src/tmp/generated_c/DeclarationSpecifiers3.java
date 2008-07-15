@@ -15,7 +15,7 @@ public class DeclarationSpecifiers3 extends DeclarationSpecifiers {
   public DeclarationSpecifiers3(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new DeclarationSpecifiers3(cloneProperties(),firstToken,lastToken);
   }
   public TypeQualifier getTypeQualifier() {

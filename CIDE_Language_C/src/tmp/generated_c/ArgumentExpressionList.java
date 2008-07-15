@@ -15,7 +15,7 @@ public class ArgumentExpressionList extends GenASTNode {
   public ArgumentExpressionList(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new ArgumentExpressionList(cloneProperties(),firstToken,lastToken);
   }
   public AssignmentExpression getAssignmentExpression() {

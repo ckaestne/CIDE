@@ -14,7 +14,7 @@ public class DirectAbstractDeclaratorP12 extends DirectAbstractDeclaratorP1 {
   public DirectAbstractDeclaratorP12(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new DirectAbstractDeclaratorP12(cloneProperties(),firstToken,lastToken);
   }
   public ConstantExpression getConstantExpression() {

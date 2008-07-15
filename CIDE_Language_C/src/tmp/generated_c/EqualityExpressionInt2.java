@@ -15,7 +15,7 @@ public class EqualityExpressionInt2 extends EqualityExpressionInt {
   public EqualityExpressionInt2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new EqualityExpressionInt2(cloneProperties(),firstToken,lastToken);
   }
   public ASTStringNode getNoteq() {

@@ -15,7 +15,7 @@ public class StructDeclarationList extends GenASTNode {
   public StructDeclarationList(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new StructDeclarationList(cloneProperties(),firstToken,lastToken);
   }
   public StructDeclaration getStructDeclaration() {

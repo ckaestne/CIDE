@@ -14,7 +14,7 @@ public class StructOrUnion2 extends StructOrUnion {
   public StructOrUnion2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new StructOrUnion2(cloneProperties(),firstToken,lastToken);
   }
   public ASTStringNode getUnion() {

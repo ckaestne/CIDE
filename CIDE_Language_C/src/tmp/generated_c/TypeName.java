@@ -15,7 +15,7 @@ public class TypeName extends GenASTNode {
   public TypeName(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new TypeName(cloneProperties(),firstToken,lastToken);
   }
   public SpecifierQualifierList getSpecifierQualifierList() {

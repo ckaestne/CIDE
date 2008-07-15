@@ -14,7 +14,7 @@ public class DirectDeclaratorP22 extends DirectDeclaratorP2 {
   public DirectDeclaratorP22(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new DirectDeclaratorP22(cloneProperties(),firstToken,lastToken);
   }
   public ParameterTypeList getParameterTypeList() {

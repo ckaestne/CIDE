@@ -15,7 +15,7 @@ public class EnumSpecifierInternal1 extends EnumSpecifierInternal {
   public EnumSpecifierInternal1(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new EnumSpecifierInternal1(cloneProperties(),firstToken,lastToken);
   }
   public ASTStringNode getIdentifier() {

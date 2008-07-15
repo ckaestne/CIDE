@@ -14,7 +14,7 @@ public class MultiplicativeExpressionInt2 extends MultiplicativeExpressionInt {
   public MultiplicativeExpressionInt2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new MultiplicativeExpressionInt2(cloneProperties(),firstToken,lastToken);
   }
   public MultiplicativeExpression getMultiplicativeExpression1() {

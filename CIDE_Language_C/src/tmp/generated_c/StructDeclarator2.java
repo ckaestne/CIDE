@@ -15,7 +15,7 @@ public class StructDeclarator2 extends StructDeclarator {
   public StructDeclarator2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new StructDeclarator2(cloneProperties(),firstToken,lastToken);
   }
   public Declarator getDeclarator1() {

@@ -14,7 +14,7 @@ public class JumpStatement2 extends JumpStatement {
   public JumpStatement2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new JumpStatement2(cloneProperties(),firstToken,lastToken);
   }
   public ASTStringNode getContinue_kw() {

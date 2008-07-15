@@ -15,7 +15,7 @@ public class UnaryExpression5 extends UnaryExpression {
   public UnaryExpression5(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new UnaryExpression5(cloneProperties(),firstToken,lastToken);
   }
   public ASTStringNode getSizeof() {

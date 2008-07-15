@@ -15,7 +15,7 @@ public class ExclusiveORExpression extends GenASTNode {
   public ExclusiveORExpression(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new ExclusiveORExpression(cloneProperties(),firstToken,lastToken);
   }
   public ANDExpression getANDExpression() {

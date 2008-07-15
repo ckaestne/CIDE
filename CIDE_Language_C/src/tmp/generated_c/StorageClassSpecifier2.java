@@ -14,7 +14,7 @@ public class StorageClassSpecifier2 extends StorageClassSpecifier {
   public StorageClassSpecifier2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new StorageClassSpecifier2(cloneProperties(),firstToken,lastToken);
   }
   public ASTStringNode getRegister() {

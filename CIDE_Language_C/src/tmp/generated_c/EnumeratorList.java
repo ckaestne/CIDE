@@ -15,7 +15,7 @@ public class EnumeratorList extends GenASTNode {
   public EnumeratorList(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new EnumeratorList(cloneProperties(),firstToken,lastToken);
   }
   public Enumerator getEnumerator() {

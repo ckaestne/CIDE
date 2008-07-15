@@ -14,7 +14,7 @@ public class UnaryOperator6 extends UnaryOperator {
   public UnaryOperator6(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new UnaryOperator6(cloneProperties(),firstToken,lastToken);
   }
   public ASTStringNode getNot() {

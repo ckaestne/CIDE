@@ -15,7 +15,7 @@ public class InitDeclarator extends GenASTNode {
   public InitDeclarator(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new InitDeclarator(cloneProperties(),firstToken,lastToken);
   }
   public Declarator getDeclarator() {

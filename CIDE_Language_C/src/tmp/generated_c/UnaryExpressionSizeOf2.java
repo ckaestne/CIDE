@@ -14,7 +14,7 @@ public class UnaryExpressionSizeOf2 extends UnaryExpressionSizeOf {
   public UnaryExpressionSizeOf2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new UnaryExpressionSizeOf2(cloneProperties(),firstToken,lastToken);
   }
   public TypeName getTypeName() {
