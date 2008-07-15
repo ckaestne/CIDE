@@ -13,7 +13,7 @@ public class decl5 extends decl {
   public decl5(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new decl5(cloneProperties(),firstToken,lastToken);
   }
 }

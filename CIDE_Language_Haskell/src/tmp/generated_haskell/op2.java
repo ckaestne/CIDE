@@ -14,7 +14,7 @@ public class op2 extends op {
   public op2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new op2(cloneProperties(),firstToken,lastToken);
   }
   public conop getConop() {

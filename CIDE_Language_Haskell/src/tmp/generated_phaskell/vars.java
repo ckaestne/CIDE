@@ -14,7 +14,7 @@ public class vars extends GenASTNode {
   public vars(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new vars(cloneProperties(),firstToken,lastToken);
   }
   public ArrayList<var> getVar() {

@@ -14,7 +14,7 @@ public class body2 extends body {
   public body2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new body2(cloneProperties(),firstToken,lastToken);
   }
   public definitions getDefinitions1() {

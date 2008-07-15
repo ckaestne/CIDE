@@ -532,23 +532,23 @@ exports exports() : {
  ) }
 
 importDecl importDecl() : { 
-	ASTTextNode text1 = null;
+	ASTTextNode text351 = null;
 	naam naam;
 	naam naam1 = null;
 	hiding hiding = null;
 	Token firstToken=token;
 } { (
-	"import" ["qualified" {text1=new ASTTextNode("qualified",new WToken(token));}] naam=naam() ["as" naam1=naam()] [hiding=hiding()] 
-	{return new importDecl(text1, naam, naam1, hiding, firstToken.next,token);}
+	"import" ["qualified" {text351=new ASTTextNode("qualified",new WToken(token));}] naam=naam() ["as" naam1=naam()] [hiding=hiding()] 
+	{return new importDecl(text351, naam, naam1, hiding, firstToken.next,token);}
  ) }
 
 hiding hiding() : { 
-	ASTTextNode text2 = null;
+	ASTTextNode text352 = null;
 	exportList exportList = null;
 	Token firstToken=token;
 } { (
-	["hiding" {text2=new ASTTextNode("hiding",new WToken(token));}] "(" [exportList=exportList()] ")" 
-	{return new hiding(text2, exportList, firstToken.next,token);}
+	["hiding" {text352=new ASTTextNode("hiding",new WToken(token));}] "(" [exportList=exportList()] ")" 
+	{return new hiding(text352, exportList, firstToken.next,token);}
  ) }
 
 exportList exportList() : { 
@@ -1120,7 +1120,7 @@ patroonPrefix patroonPrefix() : {
  ) }
 
 patroonMain patroonMain() : { 
-	ASTTextNode text6 = null;
+	ASTTextNode text356 = null;
 	literal literal;
 	var var;
 	naam naam;
@@ -1132,8 +1132,8 @@ patroonMain patroonMain() : {
 } { (
 	"_"  
 	{return new patroonMain1(firstToken.next,token);} |
-	["-" {text6=new ASTTextNode("-",new WToken(token));}] literal=literal() 
-	{return new patroonMain2(text6, literal, firstToken.next,token);} |
+	["-" {text356=new ASTTextNode("-",new WToken(token));}] literal=literal() 
+	{return new patroonMain2(text356, literal, firstToken.next,token);} |
 	LOOKAHEAD(var()) var=var() 
 	{return new patroonMain3(var, firstToken.next,token);} |
 	LOOKAHEAD(naam()) naam=naam() [contrPatrParam=contrPatrParam()] 

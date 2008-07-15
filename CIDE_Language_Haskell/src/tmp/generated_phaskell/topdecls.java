@@ -14,7 +14,7 @@ public class topdecls extends GenASTNode {
   public topdecls(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new topdecls(cloneProperties(),firstToken,lastToken);
   }
   public ArrayList<topdecl> getTopdecl() {

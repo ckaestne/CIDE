@@ -13,7 +13,7 @@ public class impdecl2 extends impdecl {
   public impdecl2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new impdecl2(cloneProperties(),firstToken,lastToken);
   }
 }

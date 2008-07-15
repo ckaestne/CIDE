@@ -15,7 +15,7 @@ public class impspec extends GenASTNode {
   public impspec(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new impspec(cloneProperties(),firstToken,lastToken);
   }
   public ASTTextNode getText367() {

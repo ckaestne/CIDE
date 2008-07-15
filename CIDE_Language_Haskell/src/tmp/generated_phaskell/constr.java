@@ -15,7 +15,7 @@ public class constr extends GenASTNode {
   public constr(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new constr(cloneProperties(),firstToken,lastToken);
   }
   public conP getConP() {

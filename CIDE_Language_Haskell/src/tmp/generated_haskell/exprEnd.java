@@ -15,7 +15,7 @@ public class exprEnd extends GenASTNode {
   public exprEnd(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new exprEnd(cloneProperties(),firstToken,lastToken);
   }
   public context getContext() {

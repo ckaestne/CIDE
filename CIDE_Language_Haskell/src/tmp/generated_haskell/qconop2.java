@@ -14,7 +14,7 @@ public class qconop2 extends qconop {
   public qconop2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new qconop2(cloneProperties(),firstToken,lastToken);
   }
   public gconsym getGconsym() {

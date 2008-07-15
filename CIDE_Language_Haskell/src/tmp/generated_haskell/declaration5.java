@@ -16,7 +16,7 @@ public class declaration5 extends declaration {
   public declaration5(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new declaration5(cloneProperties(),firstToken,lastToken);
   }
   public patr getPatr1() {

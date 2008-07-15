@@ -14,7 +14,7 @@ public class qvar2 extends qvar {
   public qvar2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new qvar2(cloneProperties(),firstToken,lastToken);
   }
   public qvarsym getQvarsym() {

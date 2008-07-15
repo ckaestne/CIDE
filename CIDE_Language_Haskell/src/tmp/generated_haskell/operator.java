@@ -14,7 +14,7 @@ public class operator extends GenASTNode {
   public operator(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new operator(cloneProperties(),firstToken,lastToken);
   }
   public qop getQop() {

@@ -14,7 +14,7 @@ public class cname2 extends cname {
   public cname2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new cname2(cloneProperties(),firstToken,lastToken);
   }
   public ASTStringNode getConstructor_id() {

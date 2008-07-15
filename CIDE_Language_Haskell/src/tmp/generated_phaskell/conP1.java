@@ -14,7 +14,7 @@ public class conP1 extends conP {
   public conP1(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new conP1(cloneProperties(),firstToken,lastToken);
   }
   public ASTStringNode getConstructor_id() {

@@ -14,7 +14,7 @@ public class cdecl2 extends cdecl {
   public cdecl2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new cdecl2(cloneProperties(),firstToken,lastToken);
   }
   public nonstddecl getNonstddecl() {

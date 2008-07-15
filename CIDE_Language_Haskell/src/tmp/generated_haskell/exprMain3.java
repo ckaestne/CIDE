@@ -15,7 +15,7 @@ public class exprMain3 extends exprMain {
   public exprMain3(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new exprMain3(cloneProperties(),firstToken,lastToken);
   }
   public ArrayList<patroon> getPatroon() {

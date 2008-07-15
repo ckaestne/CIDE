@@ -14,7 +14,7 @@ public class optContext extends GenASTNode {
   public optContext(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new optContext(cloneProperties(),firstToken,lastToken);
   }
   public context getContext() {

@@ -14,7 +14,7 @@ public class conop1 extends conop {
   public conop1(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new conop1(cloneProperties(),firstToken,lastToken);
   }
   public ASTStringNode getConsym() {

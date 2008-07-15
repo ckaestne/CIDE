@@ -14,7 +14,7 @@ public class defaultdecl extends topdecl {
   public defaultdecl(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new defaultdecl(cloneProperties(),firstToken,lastToken);
   }
   public list getList() {

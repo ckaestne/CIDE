@@ -17,7 +17,7 @@ public class module extends GenASTNode implements ISourceFile {
   public module(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new module(cloneProperties(),firstToken,lastToken);
   }
   public modid getModid() {

@@ -14,7 +14,7 @@ public class exprList extends GenASTNode {
   public exprList(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new exprList(cloneProperties(),firstToken,lastToken);
   }
   public ArrayList<expr> getExpr() {

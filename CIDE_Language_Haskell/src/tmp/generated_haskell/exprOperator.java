@@ -15,7 +15,7 @@ public class exprOperator extends GenASTNode {
   public exprOperator(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new exprOperator(cloneProperties(),firstToken,lastToken);
   }
   public operator getOperator() {

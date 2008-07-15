@@ -14,7 +14,7 @@ public class contrExprParam extends GenASTNode {
   public contrExprParam(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new contrExprParam(cloneProperties(),firstToken,lastToken);
   }
   public ArrayList<contrExprAssign> getContrExprAssign() {

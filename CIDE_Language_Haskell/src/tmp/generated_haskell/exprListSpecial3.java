@@ -14,7 +14,7 @@ public class exprListSpecial3 extends exprListSpecial {
   public exprListSpecial3(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new exprListSpecial3(cloneProperties(),firstToken,lastToken);
   }
   public ArrayList<expr> getExpr4() {

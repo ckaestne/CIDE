@@ -14,7 +14,7 @@ public class definition7 extends definition {
   public definition7(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new definition7(cloneProperties(),firstToken,lastToken);
   }
   public declaration getDeclaration() {

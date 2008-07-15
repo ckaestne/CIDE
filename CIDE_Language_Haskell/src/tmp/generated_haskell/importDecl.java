@@ -6,9 +6,9 @@ import cide.greferences.*;
 import java.util.*;
 
 public class importDecl extends GenASTNode {
-  public importDecl(ASTTextNode text1, naam naam, naam naam1, hiding hiding, Token firstToken, Token lastToken) {
+  public importDecl(ASTTextNode text351, naam naam, naam naam1, hiding hiding, Token firstToken, Token lastToken) {
     super(new Property[] {
-      new PropertyZeroOrOne<ASTTextNode>("text1", text1),
+      new PropertyZeroOrOne<ASTTextNode>("text351", text351),
       new PropertyOne<naam>("naam", naam),
       new PropertyZeroOrOne<naam>("naam1", naam1),
       new PropertyZeroOrOne<hiding>("hiding", hiding)
@@ -17,11 +17,11 @@ public class importDecl extends GenASTNode {
   public importDecl(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new importDecl(cloneProperties(),firstToken,lastToken);
   }
-  public ASTTextNode getText1() {
-    return ((PropertyZeroOrOne<ASTTextNode>)getProperty("text1")).getValue();
+  public ASTTextNode getText351() {
+    return ((PropertyZeroOrOne<ASTTextNode>)getProperty("text351")).getValue();
   }
   public naam getNaam() {
     return ((PropertyOne<naam>)getProperty("naam")).getValue();

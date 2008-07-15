@@ -412,7 +412,7 @@ import cide.gparser.*;
   }
 
   final public importDecl importDecl() throws ParseException {
-        ASTTextNode text1 = null;
+        ASTTextNode text351 = null;
         naam naam;
         naam naam1 = null;
         hiding hiding = null;
@@ -421,7 +421,7 @@ import cide.gparser.*;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case QUALIFIED:
       jj_consume_token(QUALIFIED);
-                               text1=new ASTTextNode("qualified",new WToken(token));
+                               text351=new ASTTextNode("qualified",new WToken(token));
       break;
     default:
       jj_la1[6] = jj_gen;
@@ -446,18 +446,18 @@ import cide.gparser.*;
       jj_la1[8] = jj_gen;
       ;
     }
-         {if (true) return new importDecl(text1, naam, naam1, hiding, firstToken.next,token);}
+         {if (true) return new importDecl(text351, naam, naam1, hiding, firstToken.next,token);}
     throw new Error("Missing return statement in function");
   }
 
   final public hiding hiding() throws ParseException {
-        ASTTextNode text2 = null;
+        ASTTextNode text352 = null;
         exportList exportList = null;
         Token firstToken=token;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case HIDING:
       jj_consume_token(HIDING);
-                   text2=new ASTTextNode("hiding",new WToken(token));
+                   text352=new ASTTextNode("hiding",new WToken(token));
       break;
     default:
       jj_la1[9] = jj_gen;
@@ -476,7 +476,7 @@ import cide.gparser.*;
       ;
     }
     jj_consume_token(RIGHT_PAREN);
-         {if (true) return new hiding(text2, exportList, firstToken.next,token);}
+         {if (true) return new hiding(text352, exportList, firstToken.next,token);}
     throw new Error("Missing return statement in function");
   }
 
@@ -2202,7 +2202,7 @@ import cide.gparser.*;
   }
 
   final public patroonMain patroonMain() throws ParseException {
-        ASTTextNode text6 = null;
+        ASTTextNode text356 = null;
         literal literal;
         var var;
         naam naam;
@@ -2224,14 +2224,14 @@ import cide.gparser.*;
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case OTHER2:
         jj_consume_token(OTHER2);
-              text6=new ASTTextNode("-",new WToken(token));
+              text356=new ASTTextNode("-",new WToken(token));
         break;
       default:
         jj_la1[76] = jj_gen;
         ;
       }
       literal = literal();
-         {if (true) return new patroonMain2(text6, literal, firstToken.next,token);}
+         {if (true) return new patroonMain2(text356, literal, firstToken.next,token);}
       break;
     default:
       jj_la1[81] = jj_gen;

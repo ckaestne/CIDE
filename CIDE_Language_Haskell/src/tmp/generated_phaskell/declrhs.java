@@ -14,7 +14,7 @@ public class declrhs extends GenASTNode {
   public declrhs(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new declrhs(cloneProperties(),firstToken,lastToken);
   }
   public ASTStringNode getFindnonstddeclrest() {

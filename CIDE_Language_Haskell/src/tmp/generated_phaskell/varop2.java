@@ -14,7 +14,7 @@ public class varop2 extends varop {
   public varop2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new varop2(cloneProperties(),firstToken,lastToken);
   }
   public ASTStringNode getVariable_id() {

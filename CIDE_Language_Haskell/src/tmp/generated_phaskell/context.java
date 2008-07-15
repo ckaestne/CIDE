@@ -14,7 +14,7 @@ public class context extends GenASTNode {
   public context(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new context(cloneProperties(),firstToken,lastToken);
   }
   public ASTStringNode getFinduntilsemiorcontextarrow() {

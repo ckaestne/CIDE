@@ -14,7 +14,7 @@ public class paramtype extends GenASTNode {
   public paramtype(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new paramtype(cloneProperties(),firstToken,lastToken);
   }
   public ArrayList<type> getType() {

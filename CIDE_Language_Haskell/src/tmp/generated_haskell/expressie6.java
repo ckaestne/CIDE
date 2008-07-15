@@ -14,7 +14,7 @@ public class expressie6 extends expressie {
   public expressie6(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new expressie6(cloneProperties(),firstToken,lastToken);
   }
   public exprList getExprList() {

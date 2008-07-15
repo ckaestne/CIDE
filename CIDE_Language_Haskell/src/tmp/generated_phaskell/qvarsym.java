@@ -14,7 +14,7 @@ public class qvarsym extends GenASTNode {
   public qvarsym(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new qvarsym(cloneProperties(),firstToken,lastToken);
   }
   public ASTStringNode getVarsym() {

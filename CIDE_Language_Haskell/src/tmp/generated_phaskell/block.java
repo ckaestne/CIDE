@@ -14,7 +14,7 @@ public class block extends GenASTNode {
   public block(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new block(cloneProperties(),firstToken,lastToken);
   }
   public ASTStringNode getFindblockcontent() {

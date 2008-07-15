@@ -14,9 +14,7 @@ import cide.languages.ILanguageValidator;
 
 public class HaskellLanguageExtension implements ILanguageExtension {
 
-	// TODO Christian
-	//public ILanguageParser getParser(final InputStream inputStream, String filePath) {
-	public ILanguageParser getParser(final InputStream inputStream) {
+	public ILanguageParser getParser(final InputStream inputStream, String filename) {
 		return new ILanguageParser(){
 
 			public ISourceFile getRoot() throws ParseException {

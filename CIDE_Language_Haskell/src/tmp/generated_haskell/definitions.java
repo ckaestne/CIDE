@@ -14,7 +14,7 @@ public class definitions extends GenASTNode {
   public definitions(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new definitions(cloneProperties(),firstToken,lastToken);
   }
   public ArrayList<definition> getDefinition() {

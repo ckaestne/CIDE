@@ -15,7 +15,7 @@ public class export2 extends export {
   public export2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new export2(cloneProperties(),firstToken,lastToken);
   }
   public qtyconorcls getQtyconorcls() {

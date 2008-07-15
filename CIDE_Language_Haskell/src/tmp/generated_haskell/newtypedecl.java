@@ -18,7 +18,7 @@ public class newtypedecl extends definition {
   public newtypedecl(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new newtypedecl(cloneProperties(),firstToken,lastToken);
   }
   public context getContext1() {

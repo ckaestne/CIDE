@@ -14,7 +14,7 @@ public class exprMain2 extends exprMain {
   public exprMain2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new exprMain2(cloneProperties(),firstToken,lastToken);
   }
   public expr getExpr() {

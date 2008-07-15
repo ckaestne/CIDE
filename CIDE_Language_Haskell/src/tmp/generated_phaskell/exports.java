@@ -15,7 +15,7 @@ public class exports extends GenASTNode {
   public exports(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new exports(cloneProperties(),firstToken,lastToken);
   }
   public exportsList getExportsList() {

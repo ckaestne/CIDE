@@ -14,7 +14,7 @@ public class declaration extends topdecl {
   public declaration(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new declaration(cloneProperties(),firstToken,lastToken);
   }
   public decl getDecl() {

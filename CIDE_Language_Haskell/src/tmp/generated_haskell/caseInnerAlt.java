@@ -15,7 +15,7 @@ public class caseInnerAlt extends GenASTNode {
   public caseInnerAlt(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new caseInnerAlt(cloneProperties(),firstToken,lastToken);
   }
   public expr getExpr() {

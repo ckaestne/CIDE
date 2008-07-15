@@ -14,7 +14,7 @@ public class var2 extends var {
   public var2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new var2(cloneProperties(),firstToken,lastToken);
   }
   public ASTStringNode getVarsym() {

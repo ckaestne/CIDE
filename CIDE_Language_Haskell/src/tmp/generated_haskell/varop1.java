@@ -14,7 +14,7 @@ public class varop1 extends varop {
   public varop1(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new varop1(cloneProperties(),firstToken,lastToken);
   }
   public varsym getVarsym() {

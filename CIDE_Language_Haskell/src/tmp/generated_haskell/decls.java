@@ -14,7 +14,7 @@ public class decls extends GenASTNode {
   public decls(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new decls(cloneProperties(),firstToken,lastToken);
   }
   public declarationList getDeclarationList() {

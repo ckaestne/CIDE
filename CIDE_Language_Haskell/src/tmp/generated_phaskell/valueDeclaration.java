@@ -14,7 +14,7 @@ public class valueDeclaration extends decl {
   public valueDeclaration(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new valueDeclaration(cloneProperties(),firstToken,lastToken);
   }
   public valdef getValdef() {

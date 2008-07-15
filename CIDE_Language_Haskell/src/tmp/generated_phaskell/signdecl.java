@@ -15,7 +15,7 @@ public class signdecl extends GenASTNode {
   public signdecl(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new signdecl(cloneProperties(),firstToken,lastToken);
   }
   public vars getVars() {

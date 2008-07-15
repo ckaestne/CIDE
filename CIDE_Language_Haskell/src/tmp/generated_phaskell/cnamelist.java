@@ -14,7 +14,7 @@ public class cnamelist extends GenASTNode {
   public cnamelist(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new cnamelist(cloneProperties(),firstToken,lastToken);
   }
   public ArrayList<cname> getCname() {

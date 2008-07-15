@@ -15,7 +15,7 @@ public class klasse extends GenASTNode {
   public klasse(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new klasse(cloneProperties(),firstToken,lastToken);
   }
   public naam getNaam() {
