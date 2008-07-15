@@ -15,7 +15,7 @@ public class PrimitiveRewriteNode extends Rewrite {
   public PrimitiveRewriteNode(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new PrimitiveRewriteNode(cloneProperties(),firstToken,lastToken);
   }
   public Primitive getPrimitive1() {

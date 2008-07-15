@@ -14,7 +14,7 @@ public class StateSet extends GenASTNode {
   public StateSet(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new StateSet(cloneProperties(),firstToken,lastToken);
   }
   public StatesSpecifier getStatesSpecifier() {

@@ -15,7 +15,7 @@ public class BaliGrammarRule extends GenASTNode {
   public BaliGrammarRule(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new BaliGrammarRule(cloneProperties(),firstToken,lastToken);
   }
   public ArrayList<Production> getProduction() {

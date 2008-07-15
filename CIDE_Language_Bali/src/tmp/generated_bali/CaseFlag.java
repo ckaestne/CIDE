@@ -14,7 +14,7 @@ public class CaseFlag extends GenASTNode {
   public CaseFlag(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new CaseFlag(cloneProperties(),firstToken,lastToken);
   }
   public ASTStringNode get_ignore_case() {

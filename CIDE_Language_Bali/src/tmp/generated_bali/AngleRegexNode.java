@@ -14,7 +14,7 @@ public class AngleRegexNode extends Regex {
   public AngleRegexNode(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new AngleRegexNode(cloneProperties(),firstToken,lastToken);
   }
   public AngleRegex getAngleRegex() {

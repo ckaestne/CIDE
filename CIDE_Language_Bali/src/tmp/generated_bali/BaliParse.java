@@ -16,7 +16,7 @@ public class BaliParse extends GenASTNode implements ISourceFile {
   public BaliParse(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new BaliParse(cloneProperties(),firstToken,lastToken);
   }
   public OptionsNode getOptionsNode() {

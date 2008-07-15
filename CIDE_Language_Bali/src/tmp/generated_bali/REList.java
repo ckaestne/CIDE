@@ -14,7 +14,7 @@ public class REList extends GenASTNode {
   public REList(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new REList(cloneProperties(),firstToken,lastToken);
   }
   public ArrayList<RegexBlock> getRegexBlock() {

@@ -14,7 +14,7 @@ public class StringNode extends Terminal {
   public StringNode(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new StringNode(cloneProperties(),firstToken,lastToken);
   }
   public ASTStringNode getString() {

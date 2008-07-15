@@ -14,7 +14,7 @@ public class NextState extends GenASTNode {
   public NextState(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new NextState(cloneProperties(),firstToken,lastToken);
   }
   public ASTStringNode getBali_token() {

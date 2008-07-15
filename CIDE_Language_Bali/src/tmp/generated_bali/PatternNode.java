@@ -15,7 +15,7 @@ public class PatternNode extends PrimitiveRewrite {
   public PatternNode(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new PatternNode(cloneProperties(),firstToken,lastToken);
   }
   public Pattern getPattern() {

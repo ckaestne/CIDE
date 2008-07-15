@@ -16,7 +16,7 @@ public class ParserCode extends GenASTNode {
   public ParserCode(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new ParserCode(cloneProperties(),firstToken,lastToken);
   }
   public ASTStringNode get_code() {

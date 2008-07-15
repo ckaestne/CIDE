@@ -15,7 +15,7 @@ public class Label extends GenASTNode {
   public Label(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new Label(cloneProperties(),firstToken,lastToken);
   }
   public ASTTextNode getText17() {

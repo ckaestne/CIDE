@@ -15,7 +15,7 @@ public class BaliTokenDefinition extends GenASTNode {
   public BaliTokenDefinition(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new BaliTokenDefinition(cloneProperties(),firstToken,lastToken);
   }
   public ASTStringNode getString() {

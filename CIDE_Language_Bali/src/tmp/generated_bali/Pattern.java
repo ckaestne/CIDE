@@ -14,7 +14,7 @@ public class Pattern extends GenASTNode {
   public Pattern(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new Pattern(cloneProperties(),firstToken,lastToken);
   }
   public ArrayList<Primitive> getPrimitive() {

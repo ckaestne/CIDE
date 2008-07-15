@@ -14,7 +14,7 @@ public class StringComplexNode extends ComplexRegex {
   public StringComplexNode(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new StringComplexNode(cloneProperties(),firstToken,lastToken);
   }
   public ASTStringNode getString() {

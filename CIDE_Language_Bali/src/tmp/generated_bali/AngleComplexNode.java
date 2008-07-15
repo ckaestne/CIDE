@@ -14,7 +14,7 @@ public class AngleComplexNode extends ComplexRegex {
   public AngleComplexNode(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new AngleComplexNode(cloneProperties(),firstToken,lastToken);
   }
   public ASTStringNode getFindcloseangle() {

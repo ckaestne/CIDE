@@ -14,7 +14,7 @@ public class StringRegexNode extends Regex {
   public StringRegexNode(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new StringRegexNode(cloneProperties(),firstToken,lastToken);
   }
   public ASTStringNode getString() {

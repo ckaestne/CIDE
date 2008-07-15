@@ -16,7 +16,7 @@ public class ComplexListNode extends PrimitiveRewrite {
   public ComplexListNode(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new ComplexListNode(cloneProperties(),firstToken,lastToken);
   }
   public Lookahead getLookahead() {

@@ -594,7 +594,7 @@ public class BaliParser implements BaliParserConstants {
   }
 
   final public Primitive Primitive() throws ParseException {
-        ASTNode optionalNode;
+        IASTNode optionalNode;
         Terminal terminal;
         Token firstToken=token;
     switch (jj_nt.kind) {

@@ -527,7 +527,7 @@ ClassName ClassName() : {
  ) }
 
 Primitive Primitive() : { 
-	ASTNode optionalNode;
+	IASTNode optionalNode;
 	Terminal terminal;
 	Token firstToken=token;
 } { (

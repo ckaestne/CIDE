@@ -14,7 +14,7 @@ public class StateName extends GenASTNode {
   public StateName(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new StateName(cloneProperties(),firstToken,lastToken);
   }
   public ASTStringNode getBali_token() {

@@ -14,7 +14,7 @@ public class ListStatesNode extends StatesSpecifier {
   public ListStatesNode(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new ListStatesNode(cloneProperties(),firstToken,lastToken);
   }
   public StatesList getStatesList() {

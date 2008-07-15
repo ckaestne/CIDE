@@ -14,7 +14,7 @@ public class Primitive2 extends Primitive {
   public Primitive2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new Primitive2(cloneProperties(),firstToken,lastToken);
   }
   public Terminal getTerminal() {

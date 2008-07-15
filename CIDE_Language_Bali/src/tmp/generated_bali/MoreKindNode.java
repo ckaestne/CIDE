@@ -14,7 +14,7 @@ public class MoreKindNode extends REKind {
   public MoreKindNode(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new MoreKindNode(cloneProperties(),firstToken,lastToken);
   }
   public ASTStringNode get_more() {

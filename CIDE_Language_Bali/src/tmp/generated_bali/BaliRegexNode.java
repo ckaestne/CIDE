@@ -14,7 +14,7 @@ public class BaliRegexNode extends AngleRegex {
   public BaliRegexNode(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new BaliRegexNode(cloneProperties(),firstToken,lastToken);
   }
   public ASTStringNode getBali_token() {

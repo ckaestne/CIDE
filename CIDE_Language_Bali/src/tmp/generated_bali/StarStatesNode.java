@@ -13,7 +13,7 @@ public class StarStatesNode extends StatesSpecifier {
   public StarStatesNode(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new StarStatesNode(cloneProperties(),firstToken,lastToken);
   }
 }
