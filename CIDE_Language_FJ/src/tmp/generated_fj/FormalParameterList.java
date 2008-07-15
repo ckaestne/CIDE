@@ -15,7 +15,7 @@ public class FormalParameterList extends GenASTNode {
   public FormalParameterList(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new FormalParameterList(cloneProperties(),firstToken,lastToken);
   }
   public FormalParameter getFormalParameter() {

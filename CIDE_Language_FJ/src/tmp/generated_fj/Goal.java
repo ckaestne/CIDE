@@ -15,7 +15,7 @@ public class Goal extends GenASTNode implements ISourceFile {
   public Goal(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new Goal(cloneProperties(),firstToken,lastToken);
   }
   public TypeDeclaration getTypeDeclaration() {

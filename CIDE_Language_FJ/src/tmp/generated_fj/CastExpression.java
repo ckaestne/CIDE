@@ -15,7 +15,7 @@ public class CastExpression extends GenASTNode {
   public CastExpression(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new CastExpression(cloneProperties(),firstToken,lastToken);
   }
   public Type getType() {

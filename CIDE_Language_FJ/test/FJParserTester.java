@@ -9,7 +9,7 @@ import java.io.IOException;
 import junit.framework.Assert;
 import tmp.generated_fj.FJParser;
 import tmp.generated_fj.SimplePrintVisitor;
-import cide.gast.ASTNode;
+import cide.gast.IASTNode;
 import cide.gast.ASTVisitor;
 import cide.gast.ISourceFile;
 import cide.gparser.OffsetCharStream;
@@ -131,7 +131,7 @@ public class FJParserTester {
 		foundInner = foundOuter = false;
 		ast.accept(new ASTVisitor() {
 			@Override
-			public boolean visit(ASTNode node) {
+			public boolean visit(IASTNode node) {
 				if (foundOuter && node.getClass().isAssignableFrom(inner))
 					foundInner = true;
 				if (node.getClass().isAssignableFrom(outer))
@@ -147,7 +147,7 @@ public class FJParserTester {
 		foundOuter = false;
 		ast.accept(new ASTVisitor() {
 			@Override
-			public boolean visit(ASTNode node) {
+			public boolean visit(IASTNode node) {
 				if (node.getClass().isAssignableFrom(target))
 					foundOuter = true;
 				return super.visit(node);
@@ -160,7 +160,7 @@ public class FJParserTester {
 		foundOuter = false;
 		ast.accept(new ASTVisitor() {
 			@Override
-			public boolean visit(ASTNode node) {
+			public boolean visit(IASTNode node) {
 				if (node.getClass().isAssignableFrom(target))
 					foundOuter = true;
 				return super.visit(node);

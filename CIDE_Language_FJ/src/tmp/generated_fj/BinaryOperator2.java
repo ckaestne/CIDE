@@ -13,7 +13,7 @@ public class BinaryOperator2 extends BinaryOperator {
   public BinaryOperator2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new BinaryOperator2(cloneProperties(),firstToken,lastToken);
   }
 }

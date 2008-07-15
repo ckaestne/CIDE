@@ -14,7 +14,7 @@ public class TimesExpressionRest extends GenASTNode {
   public TimesExpressionRest(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new TimesExpressionRest(cloneProperties(),firstToken,lastToken);
   }
   public PrimaryExpression getPrimaryExpression() {

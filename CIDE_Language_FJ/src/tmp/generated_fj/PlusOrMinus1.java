@@ -14,7 +14,7 @@ public class PlusOrMinus1 extends PlusOrMinus {
   public PlusOrMinus1(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new PlusOrMinus1(cloneProperties(),firstToken,lastToken);
   }
   public PlusExpressionRest getPlusExpressionRest() {

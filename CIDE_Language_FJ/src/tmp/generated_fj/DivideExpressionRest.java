@@ -14,7 +14,7 @@ public class DivideExpressionRest extends GenASTNode {
   public DivideExpressionRest(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new DivideExpressionRest(cloneProperties(),firstToken,lastToken);
   }
   public PrimaryExpression getPrimaryExpression() {

@@ -14,7 +14,7 @@ public class InvokeTarget1 extends InvokeTarget {
   public InvokeTarget1(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new InvokeTarget1(cloneProperties(),firstToken,lastToken);
   }
   public AllocationExpression getAllocationExpression() {

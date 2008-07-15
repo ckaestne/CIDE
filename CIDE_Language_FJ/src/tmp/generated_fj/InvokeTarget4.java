@@ -13,7 +13,7 @@ public class InvokeTarget4 extends InvokeTarget {
   public InvokeTarget4(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new InvokeTarget4(cloneProperties(),firstToken,lastToken);
   }
 }

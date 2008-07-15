@@ -14,7 +14,7 @@ public class TimesOrDivide1 extends TimesOrDivide {
   public TimesOrDivide1(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new TimesOrDivide1(cloneProperties(),firstToken,lastToken);
   }
   public TimesExpressionRest getTimesExpressionRest() {

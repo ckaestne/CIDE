@@ -14,7 +14,7 @@ public class MinusExpressionRest extends GenASTNode {
   public MinusExpressionRest(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new MinusExpressionRest(cloneProperties(),firstToken,lastToken);
   }
   public Term getTerm() {

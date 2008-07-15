@@ -17,7 +17,7 @@ public class MethodDeclaration extends GenASTNode {
   public MethodDeclaration(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new MethodDeclaration(cloneProperties(),firstToken,lastToken);
   }
   public Type getType() {

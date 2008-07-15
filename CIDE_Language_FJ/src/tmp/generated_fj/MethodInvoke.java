@@ -16,7 +16,7 @@ public class MethodInvoke extends GenASTNode {
   public MethodInvoke(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new MethodInvoke(cloneProperties(),firstToken,lastToken);
   }
   public InvokeTarget getInvokeTarget() {

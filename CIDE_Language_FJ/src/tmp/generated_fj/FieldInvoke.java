@@ -15,7 +15,7 @@ public class FieldInvoke extends GenASTNode {
   public FieldInvoke(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new FieldInvoke(cloneProperties(),firstToken,lastToken);
   }
   public InvokeTarget getInvokeTarget() {

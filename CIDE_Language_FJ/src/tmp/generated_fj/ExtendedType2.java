@@ -13,7 +13,7 @@ public class ExtendedType2 extends ExtendedType {
   public ExtendedType2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new ExtendedType2(cloneProperties(),firstToken,lastToken);
   }
 }
