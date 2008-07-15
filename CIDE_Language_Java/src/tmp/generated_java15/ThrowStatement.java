@@ -14,7 +14,7 @@ public class ThrowStatement extends GenASTNode {
   public ThrowStatement(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new ThrowStatement(cloneProperties(),firstToken,lastToken);
   }
   public Expression getExpression() {

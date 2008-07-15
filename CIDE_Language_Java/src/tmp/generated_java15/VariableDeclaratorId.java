@@ -15,7 +15,7 @@ public class VariableDeclaratorId extends GenASTNode {
   public VariableDeclaratorId(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new VariableDeclaratorId(cloneProperties(),firstToken,lastToken);
   }
   public ASTStringNode getIdentifier() {

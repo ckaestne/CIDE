@@ -14,7 +14,7 @@ public class Type1 extends Type {
   public Type1(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new Type1(cloneProperties(),firstToken,lastToken);
   }
   public ReferenceTypeP getReferenceTypeP() {

@@ -15,7 +15,7 @@ public class EqualityExpressionIntern extends GenASTNode {
   public EqualityExpressionIntern(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new EqualityExpressionIntern(cloneProperties(),firstToken,lastToken);
   }
   public EqualityOp getEqualityOp() {

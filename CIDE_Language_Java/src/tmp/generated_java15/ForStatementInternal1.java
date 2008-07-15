@@ -16,7 +16,7 @@ public class ForStatementInternal1 extends ForStatementInternal {
   public ForStatementInternal1(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new ForStatementInternal1(cloneProperties(),firstToken,lastToken);
   }
   public Type getType() {

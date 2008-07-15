@@ -15,7 +15,7 @@ public class AnnotationTypeDeclaration extends GenASTNode {
   public AnnotationTypeDeclaration(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new AnnotationTypeDeclaration(cloneProperties(),firstToken,lastToken);
   }
   public ASTStringNode getIdentifier() {

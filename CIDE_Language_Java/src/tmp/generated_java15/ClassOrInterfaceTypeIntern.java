@@ -15,7 +15,7 @@ public class ClassOrInterfaceTypeIntern extends GenASTNode {
   public ClassOrInterfaceTypeIntern(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new ClassOrInterfaceTypeIntern(cloneProperties(),firstToken,lastToken);
   }
   public ASTStringNode getIdentifier() {

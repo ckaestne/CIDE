@@ -13,7 +13,7 @@ public class EmptyStatement extends GenASTNode {
   public EmptyStatement(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new EmptyStatement(cloneProperties(),firstToken,lastToken);
   }
 }

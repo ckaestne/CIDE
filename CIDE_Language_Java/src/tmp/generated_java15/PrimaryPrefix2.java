@@ -13,7 +13,7 @@ public class PrimaryPrefix2 extends PrimaryPrefix {
   public PrimaryPrefix2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new PrimaryPrefix2(cloneProperties(),firstToken,lastToken);
   }
 }

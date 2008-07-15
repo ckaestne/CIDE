@@ -14,7 +14,7 @@ public class PreIncrementExpression extends GenASTNode {
   public PreIncrementExpression(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new PreIncrementExpression(cloneProperties(),firstToken,lastToken);
   }
   public PrimaryExpression getPrimaryExpression() {

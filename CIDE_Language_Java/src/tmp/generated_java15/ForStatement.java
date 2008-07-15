@@ -15,7 +15,7 @@ public class ForStatement extends GenASTNode {
   public ForStatement(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new ForStatement(cloneProperties(),firstToken,lastToken);
   }
   public ForStatementInternal getForStatementInternal() {

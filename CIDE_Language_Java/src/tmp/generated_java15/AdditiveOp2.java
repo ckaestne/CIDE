@@ -13,7 +13,7 @@ public class AdditiveOp2 extends AdditiveOp {
   public AdditiveOp2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new AdditiveOp2(cloneProperties(),firstToken,lastToken);
   }
 }

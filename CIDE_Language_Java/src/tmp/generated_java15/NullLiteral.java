@@ -13,7 +13,7 @@ public class NullLiteral extends GenASTNode {
   public NullLiteral(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new NullLiteral(cloneProperties(),firstToken,lastToken);
   }
 }

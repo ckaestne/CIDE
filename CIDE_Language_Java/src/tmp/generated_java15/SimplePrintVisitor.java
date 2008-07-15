@@ -14,7 +14,7 @@ public class SimplePrintVisitor extends AbstractPrintVisitor implements ILanguag
 	public SimplePrintVisitor() {
 		super();
 	}
-	public boolean visit(ASTNode node) {
+	public boolean visit(IASTNode node) {
 		if (node instanceof ASTStringNode){
 			printToken(((ASTStringNode)node).getValue());
 			return false;
@@ -1156,7 +1156,7 @@ public class SimplePrintVisitor extends AbstractPrintVisitor implements ILanguag
 		if (node instanceof ConditionalExpression1) {
 			ConditionalExpression1 n = (ConditionalExpression1)node;
 			{
-				ASTNode v=n.getConditionalExpressionFull();
+				IASTNode v=n.getConditionalExpressionFull();
 				if (v!=null) {
 					v.accept(this);
 				}
@@ -2202,7 +2202,7 @@ public class SimplePrintVisitor extends AbstractPrintVisitor implements ILanguag
 		if (node instanceof Statement7) {
 			Statement7 n = (Statement7)node;
 			{
-				ASTNode v=n.getIfStatement();
+				IASTNode v=n.getIfStatement();
 				if (v!=null) {
 					v.accept(this);
 				}
@@ -2213,7 +2213,7 @@ public class SimplePrintVisitor extends AbstractPrintVisitor implements ILanguag
 		if (node instanceof Statement8) {
 			Statement8 n = (Statement8)node;
 			{
-				ASTNode v=n.getWhileStatement();
+				IASTNode v=n.getWhileStatement();
 				if (v!=null) {
 					v.accept(this);
 				}
@@ -2224,7 +2224,7 @@ public class SimplePrintVisitor extends AbstractPrintVisitor implements ILanguag
 		if (node instanceof Statement9) {
 			Statement9 n = (Statement9)node;
 			{
-				ASTNode v=n.getDoStatement();
+				IASTNode v=n.getDoStatement();
 				if (v!=null) {
 					v.accept(this);
 				}
@@ -2235,7 +2235,7 @@ public class SimplePrintVisitor extends AbstractPrintVisitor implements ILanguag
 		if (node instanceof Statement10) {
 			Statement10 n = (Statement10)node;
 			{
-				ASTNode v=n.getForStatement();
+				IASTNode v=n.getForStatement();
 				if (v!=null) {
 					v.accept(this);
 				}
@@ -2290,7 +2290,7 @@ public class SimplePrintVisitor extends AbstractPrintVisitor implements ILanguag
 		if (node instanceof Statement15) {
 			Statement15 n = (Statement15)node;
 			{
-				ASTNode v=n.getSynchronizedStatement();
+				IASTNode v=n.getSynchronizedStatement();
 				if (v!=null) {
 					v.accept(this);
 				}
@@ -2301,7 +2301,7 @@ public class SimplePrintVisitor extends AbstractPrintVisitor implements ILanguag
 		if (node instanceof Statement16) {
 			Statement16 n = (Statement16)node;
 			{
-				ASTNode v=n.getTryStatement();
+				IASTNode v=n.getTryStatement();
 				if (v!=null) {
 					v.accept(this);
 				}
@@ -2811,19 +2811,15 @@ public class SimplePrintVisitor extends AbstractPrintVisitor implements ILanguag
 			}
 			return false;
 		}
-		if (node instanceof TryStatementEnd1) {
-			TryStatementEnd1 n = (TryStatementEnd1)node;
+		if (node instanceof TryStatementEnd) {
+			TryStatementEnd n = (TryStatementEnd)node;
 			for (CatchBlock v : n.getCatchBlock()) {
 				v.accept(this);
 			}
-			return false;
-		}
-		if (node instanceof FinallyBlock) {
-			FinallyBlock n = (FinallyBlock)node;
-			printToken("finally");
 			{
 				Block v=n.getBlock();
 				if (v!=null) {
+					printToken("finally");
 					v.accept(this);
 				}
 			}

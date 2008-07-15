@@ -14,7 +14,7 @@ public class StatementExpression2 extends StatementExpression {
   public StatementExpression2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new StatementExpression2(cloneProperties(),firstToken,lastToken);
   }
   public PreDecrementExpression getPreDecrementExpression() {

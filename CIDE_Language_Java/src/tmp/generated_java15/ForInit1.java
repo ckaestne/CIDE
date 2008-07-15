@@ -14,7 +14,7 @@ public class ForInit1 extends ForInit {
   public ForInit1(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new ForInit1(cloneProperties(),firstToken,lastToken);
   }
   public LocalVariableDeclaration getLocalVariableDeclaration() {

@@ -17,7 +17,7 @@ public class LocalVariableDeclaration extends GenASTNode {
   public LocalVariableDeclaration(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new LocalVariableDeclaration(cloneProperties(),firstToken,lastToken);
   }
   public ASTTextNode getText450() {

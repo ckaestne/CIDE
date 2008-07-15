@@ -15,7 +15,7 @@ public class WhileStatement extends GenASTNode {
   public WhileStatement(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new WhileStatement(cloneProperties(),firstToken,lastToken);
   }
   public Expression getExpression() {

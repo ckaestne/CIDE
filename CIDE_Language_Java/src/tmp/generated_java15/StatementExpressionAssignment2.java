@@ -13,7 +13,7 @@ public class StatementExpressionAssignment2 extends StatementExpressionAssignmen
   public StatementExpressionAssignment2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new StatementExpressionAssignment2(cloneProperties(),firstToken,lastToken);
   }
 }

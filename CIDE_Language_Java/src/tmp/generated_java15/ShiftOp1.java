@@ -13,7 +13,7 @@ public class ShiftOp1 extends ShiftOp {
   public ShiftOp1(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new ShiftOp1(cloneProperties(),firstToken,lastToken);
   }
 }

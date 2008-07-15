@@ -14,7 +14,7 @@ public class ResultType2 extends ResultType {
   public ResultType2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new ResultType2(cloneProperties(),firstToken,lastToken);
   }
   public Type getType() {

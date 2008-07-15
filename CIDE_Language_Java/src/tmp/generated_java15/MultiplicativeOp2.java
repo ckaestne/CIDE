@@ -13,7 +13,7 @@ public class MultiplicativeOp2 extends MultiplicativeOp {
   public MultiplicativeOp2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new MultiplicativeOp2(cloneProperties(),firstToken,lastToken);
   }
 }

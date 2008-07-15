@@ -15,7 +15,7 @@ public class AndExpression extends GenASTNode {
   public AndExpression(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new AndExpression(cloneProperties(),firstToken,lastToken);
   }
   public EqualityExpression getEqualityExpression() {

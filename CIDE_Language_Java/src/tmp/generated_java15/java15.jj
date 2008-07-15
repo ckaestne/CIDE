@@ -231,7 +231,7 @@ TOKEN :
       "'"
       (   (~["'","\\","\n","\r"])
         | ("\\"
-            ( ["n","t","b","r","f","\\","'","\""]
+            ( ["n","t","b","r","f","u","\\","'","\""]
             | ["0"-"7"] ( ["0"-"7"] )?
             | ["0"-"3"] ["0"-"7"] ["0"-"7"]
             )
@@ -244,7 +244,7 @@ TOKEN :
       "\""
       (   (~["\"","\\","\n","\r"])
         | ("\\"
-            ( ["n","t","b","r","f","\\","'","\""]
+            ( ["n","t","b","r","f","u","\\","'","\""]
             | ["0"-"7"] ( ["0"-"7"] )?
             | ["0"-"3"] ["0"-"7"] ["0"-"7"]
             )
@@ -359,9 +359,8 @@ TOKEN :
 /* >'s need special attention due to generics syntax. */
 TOKEN :
 {
-  < RUNSIGNEDSHIFT: ">>>" >
-| < RSIGNEDSHIFT: ">>" >
-| < GT: ">" >
+//  < RUNSIGNEDSHIFT: ">>>" >//| < RSIGNEDSHIFT: ">>" >
+ < GT: ">" >
 }
 CompilationUnit CompilationUnit() : { 
 	PackageDeclaration packageDeclaration = null;
@@ -953,7 +952,7 @@ AssignmentOperator AssignmentOperator() : {
  ) }
 
 ConditionalExpression ConditionalExpression() : { 
-	ASTNode conditionalExpressionFull;
+	IASTNode conditionalExpressionFull;
 	ConditionalOrExpression conditionalOrExpression;
 	Token firstToken=token;
 } { (
@@ -1485,16 +1484,16 @@ Statement Statement() : {
 	EmptyStatement emptyStatement;
 	StatementExpression statementExpression;
 	SwitchStatement switchStatement;
-	ASTNode ifStatement;
-	ASTNode whileStatement;
-	ASTNode doStatement;
-	ASTNode forStatement;
+	IASTNode ifStatement;
+	IASTNode whileStatement;
+	IASTNode doStatement;
+	IASTNode forStatement;
 	BreakStatement breakStatement;
 	ContinueStatement continueStatement;
 	ReturnStatement returnStatement;
 	ThrowStatement throwStatement;
-	ASTNode synchronizedStatement;
-	ASTNode tryStatement;
+	IASTNode synchronizedStatement;
+	IASTNode tryStatement;
 	Token firstToken=token;
 } { (
 	LOOKAHEAD(2) labeledStatement=LabeledStatement() 
@@ -1787,13 +1786,11 @@ TryStatement TryStatement() : {
 TryStatementEnd TryStatementEnd() : { 
 	CatchBlock catchBlock;
 	ArrayList<CatchBlock> catchBlockList = new ArrayList<CatchBlock>();
-	Block block;
+	Block block = null;
 	Token firstToken=token;
 } { (
-	(catchBlock=CatchBlock(){catchBlockList.add(catchBlock);})+ 
-	{return new TryStatementEnd1(catchBlockList, firstToken.next,token);} |
-	"finally" block=Block() 
-	{return new FinallyBlock(block, firstToken.next,token);}
+	(catchBlock=CatchBlock(){catchBlockList.add(catchBlock);})+ ["finally" block=Block()] 
+	{return new TryStatementEnd(catchBlockList, block, firstToken.next,token);}
  ) }
 
 CatchBlock CatchBlock() : { 

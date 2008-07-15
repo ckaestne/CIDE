@@ -15,7 +15,7 @@ public class ShiftExpression extends GenASTNode {
   public ShiftExpression(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new ShiftExpression(cloneProperties(),firstToken,lastToken);
   }
   public AdditiveExpression getAdditiveExpression() {

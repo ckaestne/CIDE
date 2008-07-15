@@ -13,7 +13,7 @@ public class AssignmentOperator10 extends AssignmentOperator {
   public AssignmentOperator10(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new AssignmentOperator10(cloneProperties(),firstToken,lastToken);
   }
 }

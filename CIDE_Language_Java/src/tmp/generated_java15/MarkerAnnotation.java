@@ -14,7 +14,7 @@ public class MarkerAnnotation extends GenASTNode {
   public MarkerAnnotation(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new MarkerAnnotation(cloneProperties(),firstToken,lastToken);
   }
   public Name getName() {

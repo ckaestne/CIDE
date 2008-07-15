@@ -14,7 +14,7 @@ public class ExplicitConstructorInvocation1 extends ExplicitConstructorInvocatio
   public ExplicitConstructorInvocation1(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new ExplicitConstructorInvocation1(cloneProperties(),firstToken,lastToken);
   }
   public Arguments getArguments() {

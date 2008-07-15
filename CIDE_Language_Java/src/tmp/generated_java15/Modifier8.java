@@ -13,7 +13,7 @@ public class Modifier8 extends Modifier {
   public Modifier8(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new Modifier8(cloneProperties(),firstToken,lastToken);
   }
 }

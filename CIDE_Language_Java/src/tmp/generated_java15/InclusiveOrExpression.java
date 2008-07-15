@@ -15,7 +15,7 @@ public class InclusiveOrExpression extends GenASTNode {
   public InclusiveOrExpression(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new InclusiveOrExpression(cloneProperties(),firstToken,lastToken);
   }
   public ExclusiveOrExpression getExclusiveOrExpression() {

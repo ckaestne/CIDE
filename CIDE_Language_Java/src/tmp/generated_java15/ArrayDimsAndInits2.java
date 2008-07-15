@@ -15,7 +15,7 @@ public class ArrayDimsAndInits2 extends ArrayDimsAndInits {
   public ArrayDimsAndInits2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new ArrayDimsAndInits2(cloneProperties(),firstToken,lastToken);
   }
   public ArrayList<ASTTextNode> getText449() {

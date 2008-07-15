@@ -5,7 +5,23 @@ import cide.gparser.*;
 import cide.greferences.*;
 import java.util.*;
 
-public abstract class TryStatementEnd extends GenASTNode {
-  protected TryStatementEnd(Property[] p, Token firstToken, Token lastToken) { super(p, firstToken, lastToken); }
-  protected TryStatementEnd(Property[] p, IToken firstToken, IToken lastToken) { super(p, firstToken, lastToken); }
+public class TryStatementEnd extends GenASTNode {
+  public TryStatementEnd(ArrayList<CatchBlock> catchBlock, Block block, Token firstToken, Token lastToken) {
+    super(new Property[] {
+      new PropertyOneOrMore<CatchBlock>("catchBlock", catchBlock),
+      new PropertyZeroOrOne<Block>("block", block)
+    }, firstToken, lastToken);
+  }
+  public TryStatementEnd(Property[] properties, IToken firstToken, IToken lastToken) {
+    super(properties,firstToken,lastToken);
+  }
+  public IASTNode deepCopy() {
+    return new TryStatementEnd(cloneProperties(),firstToken,lastToken);
+  }
+  public ArrayList<CatchBlock> getCatchBlock() {
+    return ((PropertyOneOrMore<CatchBlock>)getProperty("catchBlock")).getValue();
+  }
+  public Block getBlock() {
+    return ((PropertyZeroOrOne<Block>)getProperty("block")).getValue();
+  }
 }

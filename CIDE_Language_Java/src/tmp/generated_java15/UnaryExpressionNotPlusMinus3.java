@@ -14,7 +14,7 @@ public class UnaryExpressionNotPlusMinus3 extends UnaryExpressionNotPlusMinus {
   public UnaryExpressionNotPlusMinus3(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new UnaryExpressionNotPlusMinus3(cloneProperties(),firstToken,lastToken);
   }
   public PostfixExpression getPostfixExpression() {

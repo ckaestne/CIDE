@@ -15,7 +15,7 @@ public class StatementExpressionList extends GenASTNode {
   public StatementExpressionList(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new StatementExpressionList(cloneProperties(),firstToken,lastToken);
   }
   public StatementExpression getStatementExpression() {

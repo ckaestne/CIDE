@@ -15,7 +15,7 @@ public class NormalAnnotation extends GenASTNode {
   public NormalAnnotation(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new NormalAnnotation(cloneProperties(),firstToken,lastToken);
   }
   public Name getName() {

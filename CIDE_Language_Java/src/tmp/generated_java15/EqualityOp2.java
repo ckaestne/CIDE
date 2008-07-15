@@ -13,7 +13,7 @@ public class EqualityOp2 extends EqualityOp {
   public EqualityOp2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new EqualityOp2(cloneProperties(),firstToken,lastToken);
   }
 }
