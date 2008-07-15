@@ -85,7 +85,7 @@
 			<param name="parserClass" value="UMLParser" />
 			<param name="mainProduction" value="Document" />
 			<param name="directory" value="${fstgen_dir}/test" />
-			<param name="testFile" value="testfiles/Dialing.uml" />
+			<param name="testFile" value="testfiles/FooBar.xmi" />
 		</antcall>
 	</target>
 	<target name="testGrammar" description="--> description">
