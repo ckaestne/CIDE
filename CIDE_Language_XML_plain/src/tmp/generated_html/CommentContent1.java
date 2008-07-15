@@ -14,7 +14,7 @@ public class CommentContent1 extends CommentContent {
   public CommentContent1(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new CommentContent1(cloneProperties(),firstToken,lastToken);
   }
   public ASTStringNode getDash() {

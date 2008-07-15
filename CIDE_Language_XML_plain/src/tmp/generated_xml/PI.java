@@ -14,7 +14,7 @@ public class PI extends GenASTNode {
   public PI(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new PI(cloneProperties(),firstToken,lastToken);
   }
   public ASTStringNode getPi_end() {

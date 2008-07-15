@@ -14,7 +14,7 @@ public class Comment extends GenASTNode {
   public Comment(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new Comment(cloneProperties(),firstToken,lastToken);
   }
   public ASTStringNode getComment_end() {

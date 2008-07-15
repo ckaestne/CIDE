@@ -14,7 +14,7 @@ public class DeclTag extends GenASTNode {
   public DeclTag(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new DeclTag(cloneProperties(),firstToken,lastToken);
   }
   public ASTStringNode getDecl_any() {

@@ -14,7 +14,7 @@ public class Misc1 extends Misc {
   public Misc1(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new Misc1(cloneProperties(),firstToken,lastToken);
   }
   public Comment getComment() {

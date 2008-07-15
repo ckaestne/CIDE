@@ -14,7 +14,7 @@ public class Content1 extends Content {
   public Content1(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new Content1(cloneProperties(),firstToken,lastToken);
   }
   public Element getElement() {

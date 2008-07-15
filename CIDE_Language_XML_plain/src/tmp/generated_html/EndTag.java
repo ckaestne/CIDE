@@ -14,7 +14,7 @@ public class EndTag extends GenASTNode {
   public EndTag(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new EndTag(cloneProperties(),firstToken,lastToken);
   }
   public ASTStringNode getTag_name() {

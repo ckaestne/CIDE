@@ -14,7 +14,7 @@ public class Element6 extends Element {
   public Element6(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new Element6(cloneProperties(),firstToken,lastToken);
   }
   public ASTStringNode getPcdata() {

@@ -15,7 +15,7 @@ public class STag extends GenASTNode {
   public STag(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new STag(cloneProperties(),firstToken,lastToken);
   }
   public ASTStringNode getElement_id() {

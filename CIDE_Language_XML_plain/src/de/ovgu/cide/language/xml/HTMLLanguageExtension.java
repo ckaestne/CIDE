@@ -18,7 +18,7 @@ public class HTMLLanguageExtension implements ILanguageExtension {
 		// TODO Auto-generated constructor stub
 	}
 
-	public ILanguageParser getParser(final InputStream inputStream) {
+	public ILanguageParser getParser(final InputStream inputStream, String filePath) {
 		return new ILanguageParser() {
 
 			public ISourceFile getRoot() throws ParseException {

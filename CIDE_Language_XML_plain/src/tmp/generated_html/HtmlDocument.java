@@ -15,7 +15,7 @@ public class HtmlDocument extends GenASTNode implements ISourceFile {
   public HtmlDocument(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new HtmlDocument(cloneProperties(),firstToken,lastToken);
   }
   public ElementSequence getElementSequence() {

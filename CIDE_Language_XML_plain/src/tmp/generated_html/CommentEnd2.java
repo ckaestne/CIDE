@@ -14,7 +14,7 @@ public class CommentEnd2 extends CommentEnd {
   public CommentEnd2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new CommentEnd2(cloneProperties(),firstToken,lastToken);
   }
   public ASTStringNode getComment_end() {
