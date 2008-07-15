@@ -27,6 +27,12 @@
               id="coloride.editFeatureNames"
               label="Edit Features..."
               menubarPath="coloride.menu1/cideGroup"/>
+       <action
+              class="de.ovgu.cide.fm.list.editor.ExportFeatureModelAction"
+              enablesFor="1"
+              id="coloride.exportToGuidsl"
+              label="Export to GUIDSL Model..."
+              menubarPath="coloride.menu1/cideGroup"/>
      </objectContribution>
  
   </extension>

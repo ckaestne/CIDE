@@ -48,7 +48,7 @@ public class EditFeatureModelAction implements IObjectActionDelegate {
 		}
 	}
 
-	private IProject getSelectedProject() {
+	protected IProject getSelectedProject() {
 		if (selection instanceof IStructuredSelection) {
 			Object selected = ((IStructuredSelection) selection)
 					.getFirstElement();
