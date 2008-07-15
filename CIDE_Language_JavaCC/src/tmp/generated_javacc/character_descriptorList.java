@@ -14,7 +14,7 @@ public class character_descriptorList extends GenASTNode {
   public character_descriptorList(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new character_descriptorList(cloneProperties(),firstToken,lastToken);
   }
   public ArrayList<character_descriptor> getCharacter_descriptor() {

@@ -15,7 +15,7 @@ public class RegId extends GenASTNode {
   public RegId(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new RegId(cloneProperties(),firstToken,lastToken);
   }
   public ASTTextNode getText475() {

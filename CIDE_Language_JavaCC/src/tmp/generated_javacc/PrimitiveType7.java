@@ -13,7 +13,7 @@ public class PrimitiveType7 extends PrimitiveType {
   public PrimitiveType7(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new PrimitiveType7(cloneProperties(),firstToken,lastToken);
   }
 }

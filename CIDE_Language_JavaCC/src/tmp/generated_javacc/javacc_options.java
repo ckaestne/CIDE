@@ -14,7 +14,7 @@ public class javacc_options extends GenASTNode {
   public javacc_options(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new javacc_options(cloneProperties(),firstToken,lastToken);
   }
   public ArrayList<option_binding> getOption_binding() {

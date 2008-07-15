@@ -14,7 +14,7 @@ public class CastLookahead2 extends CastLookahead {
   public CastLookahead2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new CastLookahead2(cloneProperties(),firstToken,lastToken);
   }
   public Type getType() {

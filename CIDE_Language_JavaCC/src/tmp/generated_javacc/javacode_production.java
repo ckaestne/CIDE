@@ -19,7 +19,7 @@ public class javacode_production extends GenASTNode {
   public javacode_production(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new javacode_production(cloneProperties(),firstToken,lastToken);
   }
   public AccessModifier getAccessModifier() {

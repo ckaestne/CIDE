@@ -13,7 +13,7 @@ public class JavaIdentifier6 extends JavaIdentifier {
   public JavaIdentifier6(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new JavaIdentifier6(cloneProperties(),firstToken,lastToken);
   }
 }

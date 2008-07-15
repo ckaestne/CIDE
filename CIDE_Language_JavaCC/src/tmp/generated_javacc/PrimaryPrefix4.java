@@ -14,7 +14,7 @@ public class PrimaryPrefix4 extends PrimaryPrefix {
   public PrimaryPrefix4(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new PrimaryPrefix4(cloneProperties(),firstToken,lastToken);
   }
   public Expression getExpression() {

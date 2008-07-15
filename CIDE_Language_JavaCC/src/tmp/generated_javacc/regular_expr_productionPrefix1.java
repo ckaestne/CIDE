@@ -13,7 +13,7 @@ public class regular_expr_productionPrefix1 extends regular_expr_productionPrefi
   public regular_expr_productionPrefix1(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new regular_expr_productionPrefix1(cloneProperties(),firstToken,lastToken);
   }
 }

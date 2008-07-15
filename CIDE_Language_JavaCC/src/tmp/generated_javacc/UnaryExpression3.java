@@ -14,7 +14,7 @@ public class UnaryExpression3 extends UnaryExpression {
   public UnaryExpression3(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new UnaryExpression3(cloneProperties(),firstToken,lastToken);
   }
   public PreDecrementExpression getPreDecrementExpression() {

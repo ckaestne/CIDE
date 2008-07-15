@@ -14,7 +14,7 @@ public class TypeParameters extends GenASTNode {
   public TypeParameters(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new TypeParameters(cloneProperties(),firstToken,lastToken);
   }
   public ArrayList<TypeParameter> getTypeParameter() {

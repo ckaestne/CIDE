@@ -14,7 +14,7 @@ public class token_manager_decls extends GenASTNode {
   public token_manager_decls(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new token_manager_decls(cloneProperties(),firstToken,lastToken);
   }
   public ClassOrInterfaceBody getClassOrInterfaceBody() {

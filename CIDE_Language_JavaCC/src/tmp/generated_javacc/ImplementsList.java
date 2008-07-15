@@ -14,7 +14,7 @@ public class ImplementsList extends GenASTNode {
   public ImplementsList(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new ImplementsList(cloneProperties(),firstToken,lastToken);
   }
   public ArrayList<ClassOrInterfaceType> getClassOrInterfaceType() {

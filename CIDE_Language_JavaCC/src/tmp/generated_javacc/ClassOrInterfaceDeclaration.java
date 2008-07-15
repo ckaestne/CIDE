@@ -19,7 +19,7 @@ public class ClassOrInterfaceDeclaration extends GenASTNode {
   public ClassOrInterfaceDeclaration(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new ClassOrInterfaceDeclaration(cloneProperties(),firstToken,lastToken);
   }
   public ClassOrInterface getClassOrInterface() {

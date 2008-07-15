@@ -14,7 +14,7 @@ public class expansion_choices extends GenASTNode {
   public expansion_choices(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new expansion_choices(cloneProperties(),firstToken,lastToken);
   }
   public ArrayList<expansion> getExpansion() {

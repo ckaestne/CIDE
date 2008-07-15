@@ -14,7 +14,7 @@ public class OptionValue2 extends OptionValue {
   public OptionValue2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new OptionValue2(cloneProperties(),firstToken,lastToken);
   }
   public BooleanLiteral getBooleanLiteral() {

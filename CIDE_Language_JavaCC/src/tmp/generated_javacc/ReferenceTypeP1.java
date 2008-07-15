@@ -15,7 +15,7 @@ public class ReferenceTypeP1 extends ReferenceTypeP {
   public ReferenceTypeP1(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new ReferenceTypeP1(cloneProperties(),firstToken,lastToken);
   }
   public PrimitiveType getPrimitiveType() {

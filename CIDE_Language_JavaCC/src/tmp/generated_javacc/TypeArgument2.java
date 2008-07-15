@@ -14,7 +14,7 @@ public class TypeArgument2 extends TypeArgument {
   public TypeArgument2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new TypeArgument2(cloneProperties(),firstToken,lastToken);
   }
   public WildcardBounds getWildcardBounds() {

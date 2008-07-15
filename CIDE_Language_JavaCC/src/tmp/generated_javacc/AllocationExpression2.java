@@ -16,7 +16,7 @@ public class AllocationExpression2 extends AllocationExpression {
   public AllocationExpression2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new AllocationExpression2(cloneProperties(),firstToken,lastToken);
   }
   public ClassOrInterfaceType getClassOrInterfaceType() {

@@ -15,7 +15,7 @@ public class MultiplicativeExpressionIntern extends GenASTNode {
   public MultiplicativeExpressionIntern(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new MultiplicativeExpressionIntern(cloneProperties(),firstToken,lastToken);
   }
   public MultiplicativeOp getMultiplicativeOp() {

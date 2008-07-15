@@ -14,7 +14,7 @@ public class TypeArgument1 extends TypeArgument {
   public TypeArgument1(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new TypeArgument1(cloneProperties(),firstToken,lastToken);
   }
   public ReferenceTypeP getReferenceTypeP() {

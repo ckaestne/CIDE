@@ -14,7 +14,7 @@ public class production1 extends production {
   public production1(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new production1(cloneProperties(),firstToken,lastToken);
   }
   public javacode_production getJavacode_production() {

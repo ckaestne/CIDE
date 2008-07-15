@@ -17,7 +17,7 @@ public class FormalParameter extends GenASTNode {
   public FormalParameter(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new FormalParameter(cloneProperties(),firstToken,lastToken);
   }
   public ASTTextNode getText501() {

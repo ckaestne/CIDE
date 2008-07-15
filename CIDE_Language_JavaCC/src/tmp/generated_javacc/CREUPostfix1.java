@@ -13,7 +13,7 @@ public class CREUPostfix1 extends CREUPostfix {
   public CREUPostfix1(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new CREUPostfix1(cloneProperties(),firstToken,lastToken);
   }
 }

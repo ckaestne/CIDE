@@ -13,7 +13,7 @@ public class OptionName4 extends OptionName {
   public OptionName4(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new OptionName4(cloneProperties(),firstToken,lastToken);
   }
 }

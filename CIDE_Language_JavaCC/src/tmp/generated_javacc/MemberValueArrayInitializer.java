@@ -16,7 +16,7 @@ public class MemberValueArrayInitializer extends GenASTNode {
   public MemberValueArrayInitializer(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new MemberValueArrayInitializer(cloneProperties(),firstToken,lastToken);
   }
   public MemberValue getMemberValue() {

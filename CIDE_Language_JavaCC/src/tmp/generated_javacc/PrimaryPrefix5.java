@@ -14,7 +14,7 @@ public class PrimaryPrefix5 extends PrimaryPrefix {
   public PrimaryPrefix5(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new PrimaryPrefix5(cloneProperties(),firstToken,lastToken);
   }
   public AllocationExpression getAllocationExpression() {

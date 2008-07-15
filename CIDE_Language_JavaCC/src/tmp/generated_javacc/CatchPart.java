@@ -16,7 +16,7 @@ public class CatchPart extends GenASTNode {
   public CatchPart(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new CatchPart(cloneProperties(),firstToken,lastToken);
   }
   public Name getName() {

@@ -15,7 +15,7 @@ public class ClassOrInterfaceBodyDeclaration2 extends ClassOrInterfaceBodyDeclar
   public ClassOrInterfaceBodyDeclaration2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new ClassOrInterfaceBodyDeclaration2(cloneProperties(),firstToken,lastToken);
   }
   public Modifiers getModifiers() {

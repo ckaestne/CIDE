@@ -15,7 +15,7 @@ public class option_binding extends GenASTNode {
   public option_binding(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new option_binding(cloneProperties(),firstToken,lastToken);
   }
   public OptionName getOptionName() {

@@ -13,7 +13,7 @@ public class EOFExpr extends regular_expression {
   public EOFExpr(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new EOFExpr(cloneProperties(),firstToken,lastToken);
   }
 }

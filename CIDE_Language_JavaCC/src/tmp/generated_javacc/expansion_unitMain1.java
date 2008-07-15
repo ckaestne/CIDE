@@ -15,7 +15,7 @@ public class expansion_unitMain1 extends expansion_unitMain {
   public expansion_unitMain1(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new expansion_unitMain1(cloneProperties(),firstToken,lastToken);
   }
   public ASTStringNode getIdentifier() {

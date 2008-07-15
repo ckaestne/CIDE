@@ -13,7 +13,7 @@ public class regexpr_kind1 extends regexpr_kind {
   public regexpr_kind1(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new regexpr_kind1(cloneProperties(),firstToken,lastToken);
   }
 }

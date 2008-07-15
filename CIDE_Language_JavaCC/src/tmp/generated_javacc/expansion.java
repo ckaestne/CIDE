@@ -15,7 +15,7 @@ public class expansion extends GenASTNode {
   public expansion(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new expansion(cloneProperties(),firstToken,lastToken);
   }
   public local_lookahead getLocal_lookahead() {

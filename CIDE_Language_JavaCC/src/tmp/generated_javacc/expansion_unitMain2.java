@@ -15,7 +15,7 @@ public class expansion_unitMain2 extends expansion_unitMain {
   public expansion_unitMain2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new expansion_unitMain2(cloneProperties(),firstToken,lastToken);
   }
   public regular_expression getRegular_expression() {

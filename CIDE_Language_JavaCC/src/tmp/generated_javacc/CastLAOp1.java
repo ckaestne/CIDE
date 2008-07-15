@@ -13,7 +13,7 @@ public class CastLAOp1 extends CastLAOp {
   public CastLAOp1(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new CastLAOp1(cloneProperties(),firstToken,lastToken);
   }
 }

@@ -55,7 +55,7 @@ public class TestFiles {
 						try {
 							// System.out.println("parsing " + file);
 							ILanguageParser p = new JavaCCLanguageExtension()
-									.getParser(new FileInputStream(file));
+									.getParser(new FileInputStream(file),file.getAbsolutePath());
 							ISourceFile m = p.getRoot();
 							ILanguagePrintVisitor pp = new JavaCCLanguageExtension()
 									.getPrettyPrinter();

@@ -14,7 +14,7 @@ public class UnaryExpression4 extends UnaryExpression {
   public UnaryExpression4(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new UnaryExpression4(cloneProperties(),firstToken,lastToken);
   }
   public UnaryExpressionNotPlusMinus getUnaryExpressionNotPlusMinus() {

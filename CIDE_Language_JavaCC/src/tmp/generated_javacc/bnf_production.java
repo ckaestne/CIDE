@@ -20,7 +20,7 @@ public class bnf_production extends GenASTNode {
   public bnf_production(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new bnf_production(cloneProperties(),firstToken,lastToken);
   }
   public AccessModifier getAccessModifier() {

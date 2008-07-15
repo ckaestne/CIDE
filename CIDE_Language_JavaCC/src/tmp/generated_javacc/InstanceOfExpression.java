@@ -15,7 +15,7 @@ public class InstanceOfExpression extends GenASTNode {
   public InstanceOfExpression(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new InstanceOfExpression(cloneProperties(),firstToken,lastToken);
   }
   public RelationalExpression getRelationalExpression() {

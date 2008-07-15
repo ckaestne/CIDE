@@ -14,7 +14,7 @@ public class MethodDeclarationBody1 extends MethodDeclarationBody {
   public MethodDeclarationBody1(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new MethodDeclarationBody1(cloneProperties(),firstToken,lastToken);
   }
   public Block getBlock() {

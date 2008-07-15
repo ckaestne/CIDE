@@ -14,7 +14,7 @@ public class regular_expression1 extends regular_expression {
   public regular_expression1(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new regular_expression1(cloneProperties(),firstToken,lastToken);
   }
   public ASTStringNode getString_literal() {

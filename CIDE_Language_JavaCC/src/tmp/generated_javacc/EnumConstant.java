@@ -16,7 +16,7 @@ public class EnumConstant extends GenASTNode {
   public EnumConstant(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new EnumConstant(cloneProperties(),firstToken,lastToken);
   }
   public JavaIdentifier getJavaIdentifier() {

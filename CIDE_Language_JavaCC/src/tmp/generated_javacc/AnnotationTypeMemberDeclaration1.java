@@ -17,7 +17,7 @@ public class AnnotationTypeMemberDeclaration1 extends AnnotationTypeMemberDeclar
   public AnnotationTypeMemberDeclaration1(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new AnnotationTypeMemberDeclaration1(cloneProperties(),firstToken,lastToken);
   }
   public Modifiers getModifiers() {

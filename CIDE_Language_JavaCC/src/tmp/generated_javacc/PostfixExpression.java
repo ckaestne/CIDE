@@ -15,7 +15,7 @@ public class PostfixExpression extends GenASTNode {
   public PostfixExpression(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new PostfixExpression(cloneProperties(),firstToken,lastToken);
   }
   public PrimaryExpression getPrimaryExpression() {

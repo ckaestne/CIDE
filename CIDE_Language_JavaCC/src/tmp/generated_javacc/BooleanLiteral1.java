@@ -13,7 +13,7 @@ public class BooleanLiteral1 extends BooleanLiteral {
   public BooleanLiteral1(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new BooleanLiteral1(cloneProperties(),firstToken,lastToken);
   }
 }

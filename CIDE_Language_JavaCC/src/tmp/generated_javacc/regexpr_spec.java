@@ -16,7 +16,7 @@ public class regexpr_spec extends GenASTNode {
   public regexpr_spec(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new regexpr_spec(cloneProperties(),firstToken,lastToken);
   }
   public regular_expression getRegular_expression() {

@@ -14,7 +14,7 @@ public class PreDecrementExpression extends GenASTNode {
   public PreDecrementExpression(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new PreDecrementExpression(cloneProperties(),firstToken,lastToken);
   }
   public PrimaryExpression getPrimaryExpression() {

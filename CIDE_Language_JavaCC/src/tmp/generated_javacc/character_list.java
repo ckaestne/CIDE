@@ -15,7 +15,7 @@ public class character_list extends GenASTNode {
   public character_list(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new character_list(cloneProperties(),firstToken,lastToken);
   }
   public ASTTextNode getText479() {

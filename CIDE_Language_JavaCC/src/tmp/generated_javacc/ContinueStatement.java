@@ -14,7 +14,7 @@ public class ContinueStatement extends GenASTNode {
   public ContinueStatement(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new ContinueStatement(cloneProperties(),firstToken,lastToken);
   }
   public JavaIdentifier getJavaIdentifier() {

@@ -14,7 +14,7 @@ public class complex_regular_expression_unit2 extends complex_regular_expression
   public complex_regular_expression_unit2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new complex_regular_expression_unit2(cloneProperties(),firstToken,lastToken);
   }
   public ASTStringNode getIdentifier() {

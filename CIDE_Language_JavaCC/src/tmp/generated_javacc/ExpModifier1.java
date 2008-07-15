@@ -13,7 +13,7 @@ public class ExpModifier1 extends ExpModifier {
   public ExpModifier1(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new ExpModifier1(cloneProperties(),firstToken,lastToken);
   }
 }

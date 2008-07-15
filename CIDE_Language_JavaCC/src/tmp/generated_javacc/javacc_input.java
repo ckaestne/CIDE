@@ -19,7 +19,7 @@ public class javacc_input extends GenASTNode implements ISourceFile {
   public javacc_input(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new javacc_input(cloneProperties(),firstToken,lastToken);
   }
   public javacc_options getJavacc_options() {

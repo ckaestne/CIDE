@@ -15,7 +15,7 @@ public class MemberSelector extends GenASTNode {
   public MemberSelector(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new MemberSelector(cloneProperties(),firstToken,lastToken);
   }
   public TypeArguments getTypeArguments() {

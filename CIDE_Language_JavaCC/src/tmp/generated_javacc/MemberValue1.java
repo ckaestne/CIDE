@@ -14,7 +14,7 @@ public class MemberValue1 extends MemberValue {
   public MemberValue1(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new MemberValue1(cloneProperties(),firstToken,lastToken);
   }
   public Annotation getAnnotation() {

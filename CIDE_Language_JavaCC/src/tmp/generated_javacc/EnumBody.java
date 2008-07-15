@@ -15,7 +15,7 @@ public class EnumBody extends GenASTNode {
   public EnumBody(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new EnumBody(cloneProperties(),firstToken,lastToken);
   }
   public ArrayList<EnumConstant> getEnumConstant() {

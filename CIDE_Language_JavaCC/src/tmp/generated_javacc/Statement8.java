@@ -6,18 +6,18 @@ import cide.greferences.*;
 import java.util.*;
 
 public class Statement8 extends Statement {
-  public Statement8(ASTNode whileStatement, Token firstToken, Token lastToken) {
+  public Statement8(IASTNode whileStatement, Token firstToken, Token lastToken) {
     super(new Property[] {
-      new PropertyWrapper<ASTNode,Statement>("whileStatement", whileStatement, "statement")
+      new PropertyWrapper<IASTNode,Statement>("whileStatement", whileStatement, "statement")
     }, firstToken, lastToken);
   }
   public Statement8(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new Statement8(cloneProperties(),firstToken,lastToken);
   }
-  public ASTNode getWhileStatement() {
-    return ((PropertyWrapper<ASTNode,Statement>)getProperty("whileStatement")).getValue();
+  public IASTNode getWhileStatement() {
+    return ((PropertyWrapper<IASTNode,Statement>)getProperty("whileStatement")).getValue();
   }
 }

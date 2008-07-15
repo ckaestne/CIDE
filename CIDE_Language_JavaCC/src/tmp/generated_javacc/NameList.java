@@ -14,7 +14,7 @@ public class NameList extends GenASTNode {
   public NameList(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new NameList(cloneProperties(),firstToken,lastToken);
   }
   public ArrayList<Name> getName() {

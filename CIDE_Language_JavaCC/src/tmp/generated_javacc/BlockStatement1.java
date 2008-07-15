@@ -14,7 +14,7 @@ public class BlockStatement1 extends BlockStatement {
   public BlockStatement1(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new BlockStatement1(cloneProperties(),firstToken,lastToken);
   }
   public LocalVariableDeclaration getLocalVariableDeclaration() {

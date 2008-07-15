@@ -15,7 +15,7 @@ public class expansion_unit6 extends expansion_unit {
   public expansion_unit6(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new expansion_unit6(cloneProperties(),firstToken,lastToken);
   }
   public expansion_choices getExpansion_choices2() {

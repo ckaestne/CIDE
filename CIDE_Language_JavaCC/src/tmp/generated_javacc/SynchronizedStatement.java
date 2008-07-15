@@ -15,7 +15,7 @@ public class SynchronizedStatement extends GenASTNode {
   public SynchronizedStatement(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new SynchronizedStatement(cloneProperties(),firstToken,lastToken);
   }
   public Expression getExpression() {

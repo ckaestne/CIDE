@@ -17,7 +17,7 @@ public class regular_expr_production extends GenASTNode {
   public regular_expr_production(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new regular_expr_production(cloneProperties(),firstToken,lastToken);
   }
   public ArrayList<regexpr_spec> getRegexpr_spec() {

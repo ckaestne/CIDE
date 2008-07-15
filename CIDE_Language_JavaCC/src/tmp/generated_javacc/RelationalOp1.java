@@ -13,7 +13,7 @@ public class RelationalOp1 extends RelationalOp {
   public RelationalOp1(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new RelationalOp1(cloneProperties(),firstToken,lastToken);
   }
 }

@@ -14,7 +14,7 @@ public class Annotation2 extends Annotation {
   public Annotation2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new Annotation2(cloneProperties(),firstToken,lastToken);
   }
   public SingleMemberAnnotation getSingleMemberAnnotation() {

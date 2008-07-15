@@ -14,7 +14,7 @@ public class SwitchLabel1 extends SwitchLabel {
   public SwitchLabel1(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new SwitchLabel1(cloneProperties(),firstToken,lastToken);
   }
   public Expression getExpression() {

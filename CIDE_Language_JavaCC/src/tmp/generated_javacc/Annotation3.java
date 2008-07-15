@@ -14,7 +14,7 @@ public class Annotation3 extends Annotation {
   public Annotation3(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new Annotation3(cloneProperties(),firstToken,lastToken);
   }
   public MarkerAnnotation getMarkerAnnotation() {

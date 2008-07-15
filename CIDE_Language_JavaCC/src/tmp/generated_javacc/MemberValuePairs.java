@@ -15,7 +15,7 @@ public class MemberValuePairs extends GenASTNode {
   public MemberValuePairs(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new MemberValuePairs(cloneProperties(),firstToken,lastToken);
   }
   public MemberValuePair getMemberValuePair() {

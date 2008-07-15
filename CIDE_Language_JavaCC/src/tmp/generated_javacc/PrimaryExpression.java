@@ -15,7 +15,7 @@ public class PrimaryExpression extends GenASTNode {
   public PrimaryExpression(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new PrimaryExpression(cloneProperties(),firstToken,lastToken);
   }
   public PrimaryPrefix getPrimaryPrefix() {

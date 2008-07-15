@@ -14,7 +14,7 @@ public class WildcardBounds2 extends WildcardBounds {
   public WildcardBounds2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new WildcardBounds2(cloneProperties(),firstToken,lastToken);
   }
   public ReferenceTypeP getReferenceTypeP1() {

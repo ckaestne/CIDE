@@ -15,7 +15,7 @@ public class AssignExp extends GenASTNode {
   public AssignExp(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new AssignExp(cloneProperties(),firstToken,lastToken);
   }
   public AssignmentOperator getAssignmentOperator() {

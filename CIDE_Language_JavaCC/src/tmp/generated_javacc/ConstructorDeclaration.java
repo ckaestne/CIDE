@@ -19,7 +19,7 @@ public class ConstructorDeclaration extends GenASTNode {
   public ConstructorDeclaration(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new ConstructorDeclaration(cloneProperties(),firstToken,lastToken);
   }
   public TypeParameters getTypeParameters() {

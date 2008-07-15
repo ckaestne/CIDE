@@ -15,7 +15,7 @@ public class TypeDeclaration2 extends TypeDeclaration {
   public TypeDeclaration2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new TypeDeclaration2(cloneProperties(),firstToken,lastToken);
   }
   public Modifiers getModifiers() {

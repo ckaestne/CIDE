@@ -14,7 +14,7 @@ public class ConditionalExpression2 extends ConditionalExpression {
   public ConditionalExpression2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new ConditionalExpression2(cloneProperties(),firstToken,lastToken);
   }
   public ConditionalOrExpression getConditionalOrExpression() {

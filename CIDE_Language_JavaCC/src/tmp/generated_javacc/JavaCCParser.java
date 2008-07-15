@@ -2825,7 +2825,7 @@ public class JavaCCParser implements JavaCCParserConstants {
   }
 
   final public ConditionalExpression ConditionalExpression() throws ParseException {
-        ASTNode conditionalExpressionFull;
+        IASTNode conditionalExpressionFull;
         ConditionalOrExpression conditionalOrExpression;
         Token firstToken=token;
     if (jj_2_28(2147483647)) {
@@ -4098,16 +4098,16 @@ public class JavaCCParser implements JavaCCParserConstants {
         EmptyStatement emptyStatement;
         StatementExpression statementExpression;
         SwitchStatement switchStatement;
-        ASTNode ifStatement;
-        ASTNode whileStatement;
-        ASTNode doStatement;
-        ASTNode forStatement;
+        IASTNode ifStatement;
+        IASTNode whileStatement;
+        IASTNode doStatement;
+        IASTNode forStatement;
         BreakStatement breakStatement;
         ContinueStatement continueStatement;
         ReturnStatement returnStatement;
         ThrowStatement throwStatement;
-        ASTNode synchronizedStatement;
-        ASTNode tryStatement;
+        IASTNode synchronizedStatement;
+        IASTNode tryStatement;
         Token firstToken=token;
     if (jj_2_45(2)) {
       labeledStatement = LabeledStatement();

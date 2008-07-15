@@ -14,7 +14,7 @@ public class complex_regular_expression extends GenASTNode {
   public complex_regular_expression(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new complex_regular_expression(cloneProperties(),firstToken,lastToken);
   }
   public ArrayList<complex_regular_expression_unit> getComplex_regular_expression_unit() {

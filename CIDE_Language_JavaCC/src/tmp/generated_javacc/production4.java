@@ -14,7 +14,7 @@ public class production4 extends production {
   public production4(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new production4(cloneProperties(),firstToken,lastToken);
   }
   public bnf_production getBnf_production() {

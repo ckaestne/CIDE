@@ -1944,7 +1944,7 @@ AssignmentOperator AssignmentOperator() : {
  ) }
 
 ConditionalExpression ConditionalExpression() : { 
-	ASTNode conditionalExpressionFull;
+	IASTNode conditionalExpressionFull;
 	ConditionalOrExpression conditionalOrExpression;
 	Token firstToken=token;
 } { (
@@ -2472,16 +2472,16 @@ Statement Statement() : {
 	EmptyStatement emptyStatement;
 	StatementExpression statementExpression;
 	SwitchStatement switchStatement;
-	ASTNode ifStatement;
-	ASTNode whileStatement;
-	ASTNode doStatement;
-	ASTNode forStatement;
+	IASTNode ifStatement;
+	IASTNode whileStatement;
+	IASTNode doStatement;
+	IASTNode forStatement;
 	BreakStatement breakStatement;
 	ContinueStatement continueStatement;
 	ReturnStatement returnStatement;
 	ThrowStatement throwStatement;
-	ASTNode synchronizedStatement;
-	ASTNode tryStatement;
+	IASTNode synchronizedStatement;
+	IASTNode tryStatement;
 	Token firstToken=token;
 } { (
 	LOOKAHEAD(2) labeledStatement=LabeledStatement() 

@@ -13,7 +13,7 @@ public class AccessModifier1 extends AccessModifier {
   public AccessModifier1(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new AccessModifier1(cloneProperties(),firstToken,lastToken);
   }
 }
