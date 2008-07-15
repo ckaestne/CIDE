@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class PropertyZeroOrMore<T extends ASTNode> extends Property {
+public class PropertyZeroOrMore<T extends IASTNode> extends Property {
 
 	protected final ArrayList<T> valueList;
 	/**
@@ -45,22 +45,22 @@ public class PropertyZeroOrMore<T extends ASTNode> extends Property {
 	// this.valueList.remove(value);
 	// }
 
-	public boolean canRemoveSubtree(ASTNode node) {
+	public boolean canRemoveSubtree(IASTNode node) {
 		return valueList.contains(node);
 	}
 
-	public void removeSubtree(ASTNode node) {
+	public void removeSubtree(IASTNode node) {
 		this.valueList.remove(node);
 		notifyChange();
 	}
 
-	void setParent(ASTNode parent) {
+	void setParent(IASTNode parent) {
 		super.setParent(parent);
 		for (T value : valueList)
 			value.setParent(parent, this);
 	}
 
-	String getId(ASTNode node) {
+	String getId(IASTNode node) {
 		return super.getId(node) + indexList.indexOf(node);
 	}
 
@@ -75,8 +75,8 @@ public class PropertyZeroOrMore<T extends ASTNode> extends Property {
 		return new PropertyZeroOrMore<T>(new String(name), clonedList);
 	}
 
-	public ASTNode[] getChildren() {
-		return valueList.toArray(new ASTNode[valueList.size()]);
+	public IASTNode[] getChildren() {
+		return valueList.toArray(new IASTNode[valueList.size()]);
 	}
 
 }

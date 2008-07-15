@@ -5,7 +5,7 @@ public abstract class Property {
 
 	protected final PropertyType type;
 
-	protected ASTNode parent;
+	protected IASTNode parent;
 
 	public enum PropertyType {
 		ONE, ZEROORONE, ZEROORMORE, ONEORMORE, LIST
@@ -16,17 +16,17 @@ public abstract class Property {
 		this.type = type;
 	}
 
-	public abstract boolean canRemoveSubtree(ASTNode node);
+	public abstract boolean canRemoveSubtree(IASTNode node);
 
-	public abstract void removeSubtree(ASTNode node);
+	public abstract void removeSubtree(IASTNode node);
 
-	public abstract ASTNode[] getChildren();
+	public abstract IASTNode[] getChildren();
 
-	void setParent(ASTNode node) {
+	void setParent(IASTNode node) {
 		this.parent = node;
 	}
 
-	public ASTNode getNode() {
+	public IASTNode getNode() {
 		return parent;
 	}
 
@@ -39,12 +39,12 @@ public abstract class Property {
 	}
 
 	/**
-	 * generates part of the ASTNode's id
+	 * generates part of the IASTNode's id
 	 * 
 	 * @param node
 	 * @return
 	 */
-	String getId(ASTNode node) {
+	String getId(IASTNode node) {
 		return name;
 	}
 

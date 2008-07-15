@@ -31,7 +31,7 @@ public class ASTTextNode extends ASTNode {
 	}
 
 	@Override
-	public ASTNode deepCopy() {
+	public IASTNode deepCopy() {
 		return new ASTTextNode(value, firstToken);
 	}
 	

@@ -4,19 +4,19 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class PropertyOneOrMore<T extends ASTNode> extends PropertyZeroOrMore<T> {
+public class PropertyOneOrMore<T extends IASTNode> extends PropertyZeroOrMore<T> {
 
 	public PropertyOneOrMore(String name, ArrayList<T> value) {
 		super(name, value);
 	}
 
-	public void removeSubtree(ASTNode value) {
+	public void removeSubtree(IASTNode value) {
 		if (this.valueList.indexOf(value) != 0)
 			super.removeSubtree(value);
 		notifyChange();
 	}
 
-	public boolean canRemoveSubtree(ASTNode node) {
+	public boolean canRemoveSubtree(IASTNode node) {
 		return this.valueList.indexOf(node) != 0;
 	}
 

@@ -8,9 +8,13 @@ public interface ILanguageExtension {
 	 * 
 	 * @param inputStream
 	 *            input for the parser
+	 * @param filePath
+	 *            full path to the file, in the OS format, to be used in some
+	 *            extensions when more context information is required (e.g. the
+	 *            current eclipse project)
 	 * @return the parser itself for the input stream
 	 */
-	ILanguageParser getParser(InputStream inputStream);
+	ILanguageParser getParser(InputStream inputStream, String filePath);
 
 	/**
 	 * returns a pretty printer for this language implemented as AST visitor.

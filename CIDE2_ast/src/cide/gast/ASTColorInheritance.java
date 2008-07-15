@@ -9,15 +9,15 @@ public class ASTColorInheritance {
 	 * returns if n inherits the colors of its parent node. usually colors are
 	 * inherited, but there are some exceptions, i.e., if statements
 	 */
-	public static boolean inheritsColors(ASTNode parent, ASTNode n) {
+	public static boolean inheritsColors(IASTNode parent, IASTNode n) {
 		if (parent == null)
 			return true;
 		Property property = parent.getLocationInParent();
 		if (property == null)
 			return true;
 		boolean isWrapper = property.isWrapper();
-		if (isWrapper
-				&& ((PropertyWrapper<ASTNode, ASTNode>) property).getWrappee() == n)
+		if (isWrapper 
+				&& ((PropertyWrapper<IASTNode, IASTNode>) property).getWrappee() == n)
 			return false;
 		return true;
 	}
@@ -27,7 +27,7 @@ public class ASTColorInheritance {
 	 * 
 	 * @return
 	 */
-	// public static List<ASTNode> getNotInheritedChildren(ASTNode parent){
+	// public static List<IASTNode> getNotInheritedChildren(IASTNode parent){
 	// // to not inherit to blocks beneath if statements
 	// if (parent instanceof IfStatement)
 	// return wrapItems(((IfStatement) parent).getThenStatement(),((IfStatement)
@@ -57,14 +57,14 @@ public class ASTColorInheritance {
 	// notInheritedProperties.add(ConditionalExpression.THEN_EXPRESSION_PROPERTY);
 	// notInheritedProperties.add(ConditionalExpression.ELSE_EXPRESSION_PROPERTY);
 	// }
-	// private static List<ASTNode> wrapItem(ASTNode node){
-	// List<ASTNode> result=new ArrayList<ASTNode>();
+	// private static List<IASTNode> wrapItem(IASTNode node){
+	// List<IASTNode> result=new ArrayList<IASTNode>();
 	// if (node!=null)
 	// result.add(node);
 	// return result;
 	// }
-	// private static List<ASTNode> wrapItems(ASTNode nodeA,ASTNode nodeB){
-	// List<ASTNode> result=new ArrayList<ASTNode>();
+	// private static List<IASTNode> wrapItems(IASTNode nodeA,IASTNode nodeB){
+	// List<IASTNode> result=new ArrayList<IASTNode>();
 	// if (nodeA!=null)
 	// result.add(nodeA);
 	// if (nodeB!=null)

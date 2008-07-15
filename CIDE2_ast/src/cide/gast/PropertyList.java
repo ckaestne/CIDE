@@ -13,13 +13,13 @@ import java.util.List;
  * 
  * @param <T>
  */
-public class PropertyList<T extends ASTNode> extends PropertyZeroOrMore<T> {
+public class PropertyList<T extends IASTNode> extends PropertyZeroOrMore<T> {
 
 	public PropertyList(String name, ArrayList<T> value) {
 		super(name, value, PropertyType.LIST);
 	}
 
-	public void removeSubtree(ASTNode value) {
+	public void removeSubtree(IASTNode value) {
 		super.removeSubtree(value);
 		if (this.valueList.isEmpty())
 			removeParent();
@@ -39,7 +39,7 @@ public class PropertyList<T extends ASTNode> extends PropertyZeroOrMore<T> {
 	}
 
 	@Override
-	void setParent(ASTNode parent) {
+	void setParent(IASTNode parent) {
 		super.setParent(parent);
 	}
 

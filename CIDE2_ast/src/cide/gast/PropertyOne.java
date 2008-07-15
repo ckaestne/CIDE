@@ -1,6 +1,6 @@
 package cide.gast;
 
-public class PropertyOne<T extends ASTNode> extends Property {
+public class PropertyOne<T extends IASTNode> extends Property {
 
 	protected T value;
 
@@ -20,15 +20,15 @@ public class PropertyOne<T extends ASTNode> extends Property {
 		}
 	}
 
-	public boolean canRemoveSubtree(ASTNode node) {
+	public boolean canRemoveSubtree(IASTNode node) {
 		return false;
 	}
 
-	public void removeSubtree(ASTNode node) {
+	public void removeSubtree(IASTNode node) {
 		throw new UnsupportedOperationException();
 	}
 
-	void setParent(ASTNode parent) {
+	public void setParent(IASTNode parent) {
 		super.setParent(parent);
 		value.setParent(parent, this);
 	}
@@ -37,7 +37,7 @@ public class PropertyOne<T extends ASTNode> extends Property {
 		return new PropertyOne<T>(new String(name), (T) value.deepCopy());
 	}
 
-	public ASTNode[] getChildren() {
-		return new ASTNode[] { value };
+	public IASTNode[] getChildren() {
+		return new IASTNode[] { value };
 	}
 }

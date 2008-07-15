@@ -4,7 +4,7 @@ package cide.gast;
  * optional value that is replaced by a string for print-visitors if removed.
  * 
  */
-public class PropertyOptionalWithDefault<T extends ASTNode> extends Property {
+public class PropertyOptionalWithDefault<T extends IASTNode> extends Property {
 
 	protected T value;
 	private final String defaultValue;
@@ -29,7 +29,7 @@ public class PropertyOptionalWithDefault<T extends ASTNode> extends Property {
 		};
 	}
 
-	public ASTNode getValue() {
+	public IASTNode getValue() {
 		if (value == null)
 			return defaultNode;
 		return value;
@@ -40,11 +40,11 @@ public class PropertyOptionalWithDefault<T extends ASTNode> extends Property {
 		notifyChange();
 	}
 
-	public boolean canRemoveSubtree(ASTNode node) {
+	public boolean canRemoveSubtree(IASTNode node) {
 		return node == value;
 	}
 
-	public void removeSubtree(ASTNode node) {
+	public void removeSubtree(IASTNode node) {
 		if (node == value){
 			value = null;
 			notifyChange();
@@ -52,7 +52,7 @@ public class PropertyOptionalWithDefault<T extends ASTNode> extends Property {
 	}
 
 
-	void setParent(ASTNode parent) {
+	void setParent(IASTNode parent) {
 		super.setParent(parent);
 		value.setParent(parent, this);
 	}
@@ -62,10 +62,10 @@ public class PropertyOptionalWithDefault<T extends ASTNode> extends Property {
 				.deepCopy(), new String(defaultValue));
 	}
 	
-	public ASTNode[] getChildren() {
+	public IASTNode[] getChildren() {
 		if (value!=null)
-			return new ASTNode[] { value };
+			return new IASTNode[] { value };
 		else
-			return new ASTNode[] { defaultNode };
+			return new IASTNode[] { defaultNode };
 	}
 }

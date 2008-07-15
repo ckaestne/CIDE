@@ -20,7 +20,7 @@ public class ASTStringNode extends ASTNode {
 	}
 
 	@Override
-	public ASTNode deepCopy() {
+	public IASTNode deepCopy() {
 		return new ASTStringNode(new String(value), firstToken);
 	}
 	

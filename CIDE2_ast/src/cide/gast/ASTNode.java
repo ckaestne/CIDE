@@ -10,9 +10,9 @@ import cide.greferences.IReferenceType;
 
 public abstract class ASTNode implements IASTNode {
 
-	public class StartPositionSorter implements Comparator<ASTNode> {
+	public class StartPositionSorter implements Comparator<IASTNode> {
 
-		public int compare(ASTNode o1, ASTNode o2) {
+		public int compare(IASTNode o1, IASTNode o2) {
 			if (o1.getStartPosition() < o2.getStartPosition())
 				return -1;
 			if (o1.getStartPosition() > o2.getStartPosition())
@@ -55,17 +55,20 @@ public abstract class ASTNode implements IASTNode {
 
 	public void accept(IASTVisitor visitor) {
 		if (visitor.visit(this)) {
-			List<ASTNode> children = getChildren();
+			List<IASTNode> children = getChildren();
 
-			for (ASTNode child : children)
+			for (IASTNode child : children)
 				child.accept(visitor);
 		}
 		visitor.postVisit(this);
 	}
 
-	private List<ASTNode> childrenCache;
+	private List<IASTNode> childrenCache;
 
-	void notifyPropertyChanged(Property p) {
+	/**
+	 * never call this method from outside this package
+	 */
+	public void notifyPropertyChanged(Property p) {
 		childrenCache = null;
 	}
 
@@ -76,12 +79,12 @@ public abstract class ASTNode implements IASTNode {
 	 * 
 	 * @return
 	 */
-	private List<ASTNode> getChildren() {
+	private List<IASTNode> getChildren() {
 		if (childrenCache == null) {
-			List<ASTNode> children = new ArrayList<ASTNode>();
+			List<IASTNode> children = new ArrayList<IASTNode>();
 
 			for (Property property : properties)
-				for (ASTNode child : property.getChildren())
+				for (IASTNode child : property.getChildren())
 					children.add(child);
 
 			Collections.sort(children, new StartPositionSorter());
@@ -98,23 +101,26 @@ public abstract class ASTNode implements IASTNode {
 	}
 
 	public ISourceFile getRoot() {
-		ASTNode parent = this;
+		IASTNode parent = this;
 		while (parent.getParent() != null) {
 			parent = parent.getParent();
 		}
 		return (ISourceFile) parent;
 	}
 
-	private ASTNode parentNode;
+	private IASTNode parentNode;
 
 	private Property parentProperty;
 
-	void setParent(ASTNode parentNode, Property parentProperty) {
+	/**
+	 * never call from outside this package
+	 */
+	public void setParent(IASTNode parentNode, Property parentProperty) {
 		this.parentNode = parentNode;
 		this.parentProperty = parentProperty;
 	}
 
-	public ASTNode getParent() {
+	public IASTNode getParent() {
 		return parentNode;
 	}
 
@@ -167,7 +173,7 @@ public abstract class ASTNode implements IASTNode {
 		return result;
 	}
 
-	public abstract ASTNode deepCopy();
+	public abstract IASTNode deepCopy();
 
 	public void remove() {
 		if (!isOptional())
@@ -195,5 +201,9 @@ public abstract class ASTNode implements IASTNode {
 	 * @return string representation of ASTNode
 	 */
 	public abstract String render();
+
+	public String getDisplayName() {
+		return this.getClass().getSimpleName();
+	}
 
 }

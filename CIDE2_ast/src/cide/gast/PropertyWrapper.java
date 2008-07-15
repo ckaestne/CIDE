@@ -1,6 +1,6 @@
 package cide.gast;
 
-public class PropertyWrapper<T extends ASTNode, TWrappee extends ASTNode>
+public class PropertyWrapper<T extends IASTNode, TWrappee extends IASTNode>
 		extends Property {
 
 	protected T value;
@@ -14,7 +14,7 @@ public class PropertyWrapper<T extends ASTNode, TWrappee extends ASTNode>
 		this.isRemoved = false;
 	}
 
-	public ASTNode getValue() {
+	public IASTNode getValue() {
 		if (!isRemoved)
 			return value;
 		else
@@ -34,18 +34,18 @@ public class PropertyWrapper<T extends ASTNode, TWrappee extends ASTNode>
 		}
 	}
 
-	public boolean canRemoveSubtree(ASTNode node) {
+	public boolean canRemoveSubtree(IASTNode node) {
 		return !isRemoved;
 	}
 
-	public void removeSubtree(ASTNode node) {
+	public void removeSubtree(IASTNode node) {
 		if (node == value) {
 			isRemoved = true;
 			notifyChange();
 		}
 	}
 
-	void setParent(ASTNode parent) {
+	void setParent(IASTNode parent) {
 		super.setParent(parent);
 		value.setParent(parent, this);
 	}
@@ -55,8 +55,8 @@ public class PropertyWrapper<T extends ASTNode, TWrappee extends ASTNode>
 				.deepCopy(), new String(wrappeeProperty));
 	}
 
-	public ASTNode[] getChildren() {
-		return new ASTNode[] { getValue() };
+	public IASTNode[] getChildren() {
+		return new IASTNode[] { getValue() };
 	}
 
 	public boolean isWrapper() {

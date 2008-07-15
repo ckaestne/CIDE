@@ -1,6 +1,6 @@
 package cide.gast;
 
-public class PropertyZeroOrOne<T extends ASTNode> extends Property {
+public class PropertyZeroOrOne<T extends IASTNode> extends Property {
 
 	protected T value;
 
@@ -18,17 +18,17 @@ public class PropertyZeroOrOne<T extends ASTNode> extends Property {
 		notifyChange();
 	}
 
-	public boolean canRemoveSubtree(ASTNode node) {
+	public boolean canRemoveSubtree(IASTNode node) {
 		return value == node;
 	}
 
-	public void removeSubtree(ASTNode node) {
+	public void removeSubtree(IASTNode node) {
 		if (value == node)
 			setValue(null);
 	}
 
 	
-	void setParent(ASTNode parent) {
+	void setParent(IASTNode parent) {
 		super.setParent(parent);
 		if (value != null)
 			value.setParent(parent, this);
@@ -45,10 +45,10 @@ public class PropertyZeroOrOne<T extends ASTNode> extends Property {
 		return new PropertyZeroOrOne<T>(new String(name), newValue);
 	}
 
-	public ASTNode[] getChildren() {
+	public IASTNode[] getChildren() {
 		if (value != null)
-			return new ASTNode[] { value };
+			return new IASTNode[] { value };
 		else
-			return new ASTNode[] {};
+			return new IASTNode[] {};
 	}
 }

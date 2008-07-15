@@ -1,7 +1,7 @@
 package cide.greferences;
 
-import cide.gast.ASTNode;
+import cide.gast.IASTNode;
 
 public interface IValidationErrorCallback {
-	public void validationError(ASTNode node, IValidationRule brokenRule);
+	public void validationError(IASTNode node, IValidationRule brokenRule);
 }
