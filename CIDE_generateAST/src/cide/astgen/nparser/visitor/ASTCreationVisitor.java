@@ -93,7 +93,7 @@ public class ASTCreationVisitor extends NVisitor {
 						+ "(Property[] properties, IToken firstToken, IToken lastToken) {");
 		out.println("    super(properties,firstToken,lastToken);");
 		out.println("  }");
-		out.println("  public ASTNode deepCopy() {");
+		out.println("  public IASTNode deepCopy() {");
 		out.println("    return new " + c.genClassname()
 				+ "(cloneProperties(),firstToken,lastToken);");
 		out.println("  }");

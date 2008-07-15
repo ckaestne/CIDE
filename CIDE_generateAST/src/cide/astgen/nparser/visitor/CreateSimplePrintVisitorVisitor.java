@@ -157,7 +157,7 @@ public class CreateSimplePrintVisitorVisitor extends NCreateFileVisitor {
 		println("public SimplePrintVisitor() {", 1);
 		println("super();", 2);
 		println("}", 1);
-		println("public boolean visit(ASTNode node) {", 1);
+		println("public boolean visit(IASTNode node) {", 1);
 		println("if (node instanceof ASTStringNode){", 2);
 		println("printToken(((ASTStringNode)node).getValue());", 3);
 		println("return false;", 3);

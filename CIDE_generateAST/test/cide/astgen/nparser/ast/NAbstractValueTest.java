@@ -66,7 +66,7 @@ public class NAbstractValueTest {
 		Assert.assertEquals("Name", nonTerminal.genVariableType());
 		Assert.assertEquals("name", nonTerminalLower.genVariableType());
 		Assert.assertEquals("ArrayList<Name>", nonTerminalZeroOrMore.genVariableType());
-		Assert.assertEquals("ASTNode", nonTerminalWrapper.genVariableType());
+		Assert.assertEquals("IASTNode", nonTerminalWrapper.genVariableType());
 	}
 
 	@Test
@@ -74,7 +74,7 @@ public class NAbstractValueTest {
 		Assert.assertEquals("Name", nonTerminal.genVariablePlainType());
 		Assert.assertEquals("name", nonTerminalLower.genVariablePlainType());
 		Assert.assertEquals("Name", nonTerminalZeroOrMore.genVariablePlainType());
-		Assert.assertEquals("ASTNode", nonTerminalWrapper.genVariablePlainType());
+		Assert.assertEquals("IASTNode", nonTerminalWrapper.genVariablePlainType());
 	}
 
 	@Test

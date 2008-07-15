@@ -25,7 +25,7 @@ public class NNonTerminal extends NAbstractValue {
 	@Override
 	public String genVariablePlainType() {
 		if (wrapsAroundType != null)
-			return "ASTNode";
+			return "IASTNode";
 
 		return name;
 	}
