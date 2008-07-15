@@ -15,7 +15,7 @@ public class Document extends GenASTNode implements ISourceFile {
   public Document(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new Document(cloneProperties(),firstToken,lastToken);
   }
   public ArrayList<ASTStringNode> getLine() {
