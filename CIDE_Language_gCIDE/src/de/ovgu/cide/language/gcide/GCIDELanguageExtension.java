@@ -18,7 +18,7 @@ public class GCIDELanguageExtension implements ILanguageExtension {
 		// TODO Auto-generated constructor stub
 	}
 
-	public ILanguageParser getParser(final InputStream inputStream) {
+	public ILanguageParser getParser(final InputStream inputStream, String filename) {
 		return new ILanguageParser() {
 
 			public ISourceFile getRoot() throws ParseException {

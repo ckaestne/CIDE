@@ -14,7 +14,7 @@ public class Mult1 extends Mult {
   public Mult1(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new Mult1(cloneProperties(),firstToken,lastToken);
   }
   public OneOrMore getOneOrMore() {

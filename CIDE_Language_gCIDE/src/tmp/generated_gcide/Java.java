@@ -14,7 +14,7 @@ public class Java extends GenASTNode {
   public Java(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new Java(cloneProperties(),firstToken,lastToken);
   }
   public ASTStringNode getString_literal() {

@@ -16,7 +16,7 @@ public class OneOrZero extends GenASTNode {
   public OneOrZero(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new OneOrZero(cloneProperties(),firstToken,lastToken);
   }
   public ArrayList<Text> getText() {

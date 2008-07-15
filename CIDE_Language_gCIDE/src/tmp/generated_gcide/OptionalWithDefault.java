@@ -15,7 +15,7 @@ public class OptionalWithDefault extends GenASTNode {
   public OptionalWithDefault(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new OptionalWithDefault(cloneProperties(),firstToken,lastToken);
   }
   public Unit getUnit() {

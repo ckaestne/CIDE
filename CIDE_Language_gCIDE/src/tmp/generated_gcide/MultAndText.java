@@ -15,7 +15,7 @@ public class MultAndText extends GenASTNode {
   public MultAndText(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new MultAndText(cloneProperties(),firstToken,lastToken);
   }
   public Mult getMult() {

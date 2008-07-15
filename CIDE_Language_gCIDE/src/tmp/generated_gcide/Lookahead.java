@@ -14,7 +14,7 @@ public class Lookahead extends GenASTNode {
   public Lookahead(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new Lookahead(cloneProperties(),firstToken,lastToken);
   }
   public LookaheadBody getLookaheadBody() {

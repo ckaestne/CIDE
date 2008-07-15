@@ -16,7 +16,7 @@ public class Choice extends GenASTNode {
   public Choice(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new Choice(cloneProperties(),firstToken,lastToken);
   }
   public ArrayList<Text> getText() {

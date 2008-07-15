@@ -15,7 +15,7 @@ public class Production extends GenASTNode {
   public Production(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new Production(cloneProperties(),firstToken,lastToken);
   }
   public ArrayList<Choice> getChoice() {

@@ -14,7 +14,7 @@ public class Text1 extends Text {
   public Text1(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new Text1(cloneProperties(),firstToken,lastToken);
   }
   public Lookahead getLookahead() {

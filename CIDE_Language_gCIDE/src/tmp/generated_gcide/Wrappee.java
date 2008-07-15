@@ -14,7 +14,7 @@ public class Wrappee extends GenASTNode {
   public Wrappee(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new Wrappee(cloneProperties(),firstToken,lastToken);
   }
   public Unit getUnit() {

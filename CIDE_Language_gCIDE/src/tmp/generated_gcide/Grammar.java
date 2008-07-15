@@ -16,7 +16,7 @@ public class Grammar extends GenASTNode implements ISourceFile {
   public Grammar(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new Grammar(cloneProperties(),firstToken,lastToken);
   }
   public ASTStringNode getFindintroductionblock() {

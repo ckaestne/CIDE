@@ -14,7 +14,7 @@ public class Unit1 extends Unit {
   public Unit1(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new Unit1(cloneProperties(),firstToken,lastToken);
   }
   public NonTerminal getNonTerminal() {

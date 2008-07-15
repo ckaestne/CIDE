@@ -14,7 +14,7 @@ public class LookaheadBody2 extends LookaheadBody {
   public LookaheadBody2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new LookaheadBody2(cloneProperties(),firstToken,lastToken);
   }
   public ASTStringNode getString_literal() {

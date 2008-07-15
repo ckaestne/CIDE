@@ -16,7 +16,7 @@ public class OneOrMore extends GenASTNode {
   public OneOrMore(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new OneOrMore(cloneProperties(),firstToken,lastToken);
   }
   public ArrayList<Text> getText() {
