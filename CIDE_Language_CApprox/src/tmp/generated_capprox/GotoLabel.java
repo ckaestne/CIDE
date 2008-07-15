@@ -14,7 +14,7 @@ public class GotoLabel extends GenASTNode {
   public GotoLabel(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new GotoLabel(cloneProperties(),firstToken,lastToken);
   }
   public ASTStringNode getIdentifier() {

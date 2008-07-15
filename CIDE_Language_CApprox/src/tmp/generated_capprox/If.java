@@ -14,7 +14,7 @@ public class If extends CodeUnit_InBlock {
   public If(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new If(cloneProperties(),firstToken,lastToken);
   }
   public IfStatement getIfStatement() {

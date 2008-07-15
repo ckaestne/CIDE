@@ -14,7 +14,7 @@ public class VarDeclToken10 extends VarDeclToken {
   public VarDeclToken10(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new VarDeclToken10(cloneProperties(),firstToken,lastToken);
   }
   public PPOtherIgnore getPPOtherIgnore() {

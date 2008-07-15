@@ -14,7 +14,7 @@ public class ExternDec extends CodeUnit_TopLevel {
   public ExternDec(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new ExternDec(cloneProperties(),firstToken,lastToken);
   }
   public ExternDecl getExternDecl() {

@@ -22,7 +22,7 @@ public class CApproxLanguageExtension implements ILanguageExtension {
 		return EXTENSIONS;
 	}
 
-	public ILanguageParser getParser(final InputStream inputStream) {
+	public ILanguageParser getParser(final InputStream inputStream, String filename) {
 		return new ILanguageParser() {
 			public ISourceFile getRoot() throws ParseException {
 				return new CApproxParser(new OffsetCharStream(inputStream))

@@ -14,7 +14,7 @@ public class Blck extends CodeUnit_InBlock {
   public Blck(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new Blck(cloneProperties(),firstToken,lastToken);
   }
   public Block getBlock() {

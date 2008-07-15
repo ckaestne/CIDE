@@ -14,7 +14,7 @@ public class FunctionParameterList extends GenASTNode {
   public FunctionParameterList(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new FunctionParameterList(cloneProperties(),firstToken,lastToken);
   }
   public ArrayList<FunctionParameter> getFunctionParameter() {

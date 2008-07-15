@@ -14,7 +14,7 @@ public class PPDefineStatement1 extends PPDefineStatement {
   public PPDefineStatement1(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new PPDefineStatement1(cloneProperties(),firstToken,lastToken);
   }
   public ASTStringNode getFindlineend() {

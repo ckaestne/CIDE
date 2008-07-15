@@ -17,7 +17,7 @@ public class PPIfDef_TopLevel extends GenASTNode {
   public PPIfDef_TopLevel(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new PPIfDef_TopLevel(cloneProperties(),firstToken,lastToken);
   }
   public IfDefLine getIfDefLine() {

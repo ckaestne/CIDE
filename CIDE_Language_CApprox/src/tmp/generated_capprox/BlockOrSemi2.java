@@ -14,7 +14,7 @@ public class BlockOrSemi2 extends BlockOrSemi {
   public BlockOrSemi2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new BlockOrSemi2(cloneProperties(),firstToken,lastToken);
   }
   public Block getBlock() {

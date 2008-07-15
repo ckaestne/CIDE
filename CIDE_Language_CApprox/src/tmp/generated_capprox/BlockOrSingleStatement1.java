@@ -14,7 +14,7 @@ public class BlockOrSingleStatement1 extends BlockOrSingleStatement {
   public BlockOrSingleStatement1(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new BlockOrSingleStatement1(cloneProperties(),firstToken,lastToken);
   }
   public Block getBlock() {

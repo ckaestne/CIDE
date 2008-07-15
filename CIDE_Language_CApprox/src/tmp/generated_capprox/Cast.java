@@ -14,7 +14,7 @@ public class Cast extends GenASTNode {
   public Cast(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new Cast(cloneProperties(),firstToken,lastToken);
   }
   public FunctionReturnType getFunctionReturnType() {

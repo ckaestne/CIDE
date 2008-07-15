@@ -14,7 +14,7 @@ public class SwCase1 extends SwCase {
   public SwCase1(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new SwCase1(cloneProperties(),firstToken,lastToken);
   }
   public Sequence_CodeUnit_InBlock getSequence_CodeUnit_InBlock() {

@@ -14,7 +14,7 @@ public class FunctionParameter extends GenASTNode {
   public FunctionParameter(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new FunctionParameter(cloneProperties(),firstToken,lastToken);
   }
   public ArrayList<VarDeclToken> getVarDeclToken() {

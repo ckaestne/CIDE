@@ -14,7 +14,7 @@ public class StmtTL extends CodeUnit_TopLevel {
   public StmtTL(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new StmtTL(cloneProperties(),firstToken,lastToken);
   }
   public Statement getStatement() {

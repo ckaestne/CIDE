@@ -14,7 +14,7 @@ public class FunctionExoticStuff extends GenASTNode {
   public FunctionExoticStuff(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new FunctionExoticStuff(cloneProperties(),firstToken,lastToken);
   }
   public ASTStringNode getLiteral() {

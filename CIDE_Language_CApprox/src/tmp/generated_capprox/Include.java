@@ -14,7 +14,7 @@ public class Include extends CodeUnit_TopLevel {
   public Include(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new Include(cloneProperties(),firstToken,lastToken);
   }
   public PPIncludeStatement getPPIncludeStatement() {

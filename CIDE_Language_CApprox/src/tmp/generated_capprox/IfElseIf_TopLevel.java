@@ -16,7 +16,7 @@ public class IfElseIf_TopLevel extends GenASTNode {
   public IfElseIf_TopLevel(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new IfElseIf_TopLevel(cloneProperties(),firstToken,lastToken);
   }
   public IfElseIf getIfElseIf() {

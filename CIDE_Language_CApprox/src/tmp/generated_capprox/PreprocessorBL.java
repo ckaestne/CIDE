@@ -15,7 +15,7 @@ public class PreprocessorBL extends CodeUnit_InBlock {
   public PreprocessorBL(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new PreprocessorBL(cloneProperties(),firstToken,lastToken);
   }
   public PPOtherIgnore getPPOtherIgnore() {

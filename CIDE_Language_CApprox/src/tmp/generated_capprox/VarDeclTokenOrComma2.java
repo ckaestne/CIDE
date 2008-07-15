@@ -13,7 +13,7 @@ public class VarDeclTokenOrComma2 extends VarDeclTokenOrComma {
   public VarDeclTokenOrComma2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new VarDeclTokenOrComma2(cloneProperties(),firstToken,lastToken);
   }
 }
