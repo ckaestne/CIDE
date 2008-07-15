@@ -3,11 +3,10 @@ package coloredide.editor;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.ISelection;
 
-import cide.gast.ASTNode;
+import cide.gast.IASTNode;
 import cide.gast.ISourceFile;
 import coloredide.ASTColorChangedEvent;
 import coloredide.CIDECorePlugin;
@@ -20,7 +19,7 @@ public class ToggleTextColorContext {
 
 	private boolean enabled = false;
 
-	private final List<ASTNode> selectedNodes = new ArrayList<ASTNode>();
+	private final List<IASTNode> selectedNodes = new ArrayList<IASTNode>();
 
 	private SourceFileColorManager colorManager;
 
@@ -52,7 +51,7 @@ public class ToggleTextColorContext {
 			return false;
 
 		boolean allSelected = true;
-		for (ASTNode node : selectedNodes) {
+		for (IASTNode node : selectedNodes) {
 			allSelected &= colorManager.hasColor(node, feature);
 		}
 
@@ -61,7 +60,7 @@ public class ToggleTextColorContext {
 
 	void run(IFeature feature, boolean addColor) {
 		colorManager.beginBatch();
-		for (ASTNode node : selectedNodes) {
+		for (IASTNode node : selectedNodes) {
 			if (addColor)
 				colorManager.addColor(node, feature);
 			else
@@ -83,7 +82,7 @@ public class ToggleTextColorContext {
 		}
 	}
 
-	public List<ASTNode> getSelectedNodes() {
+	public List<IASTNode> getSelectedNodes() {
 		return selectedNodes;
 	}
 

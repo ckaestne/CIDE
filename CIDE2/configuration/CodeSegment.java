@@ -5,13 +5,13 @@ package coloredide.configuration;
 
 import java.util.Set;
 
-import org.eclipse.jdt.core.dom.ASTNode;
+import org.eclipse.jdt.core.dom.IASTNode;
 import org.eclipse.jface.text.Position;
 
 import coloredide.features.Feature;
 
 public class CodeSegment extends Position {
-	public CodeSegment(int start, int end, Set<Feature> col, Set<ASTNode> nodes) {
+	public CodeSegment(int start, int end, Set<Feature> col, Set<IASTNode> nodes) {
 		super(start, end - start);
 		colors = col;
 	}
@@ -25,7 +25,7 @@ public class CodeSegment extends Position {
 		return getOffset() + getLength();
 	}
 
-	// final Set<ASTNode> containingNodes=new HashSet<ASTNode>();
+	// final Set<IASTNode> containingNodes=new HashSet<IASTNode>();
 
 	Set<Feature> colors;
 

@@ -29,7 +29,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditor;
 
-import cide.gast.ASTNode;
+import cide.gast.IASTNode;
 import coloredide.ASTColorChangedEvent;
 import coloredide.CIDECorePlugin;
 import coloredide.ColorListChangedEvent;
@@ -223,7 +223,7 @@ public class ColoredTextEditor extends AbstractDecoratedTextEditor implements
 
 			int offset = doc.getLength();
 			int endOffset = 0;
-			for (ASTNode node : event.getAffectedNodes()) {
+			for (IASTNode node : event.getAffectedNodes()) {
 				offset = Math.min(offset, node.getStartPosition());
 				endOffset = Math.max(endOffset, node.getStartPosition()
 						+ node.getLength());

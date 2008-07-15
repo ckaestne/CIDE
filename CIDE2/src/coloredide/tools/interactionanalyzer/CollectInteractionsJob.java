@@ -16,7 +16,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 
-import cide.gast.ASTNode;
+import cide.gast.IASTNode;
 import cide.gast.ASTVisitor;
 import cide.gast.ISourceFile;
 import cide.gparser.ParseException;
@@ -27,7 +27,7 @@ import coloredide.validator.ColoredSourceFileIteratorJob;
 public class CollectInteractionsJob extends ColoredSourceFileIteratorJob {
 
 	public static class InteractionPosition {
-		InteractionPosition(ASTNode node, IFile file) {
+		InteractionPosition(IASTNode node, IFile file) {
 			start = node.getStartPosition();
 			length = node.getLength();
 			this.file = file;
@@ -40,7 +40,7 @@ public class CollectInteractionsJob extends ColoredSourceFileIteratorJob {
 
 		public String name;
 
-		private static String nodeToStr(ASTNode node, IFile file) {
+		private static String nodeToStr(IASTNode node, IFile file) {
 			return file.getName() + " " + node.getClass().getSimpleName()
 					+ " (" + node.getStartPosition() + "-"
 					+ (node.getStartPosition() + node.getLength()) + ")";
@@ -74,7 +74,7 @@ public class CollectInteractionsJob extends ColoredSourceFileIteratorJob {
 			ISourceFile ast;
 			ast = source.getAST();
 			ast.accept(new ASTVisitor() {
-				public void postVisit(ASTNode node) {
+				public void postVisit(IASTNode node) {
 					boolean hasOwnColors = source.getColorManager()
 							.getOwnColors(node).size() > 0;
 					if (hasOwnColors) {
@@ -248,7 +248,7 @@ public class CollectInteractionsJob extends ColoredSourceFileIteratorJob {
 		return r;
 	}
 
-	private void addOccurence(Set<IFeature> colors, ASTNode node, IFile file) {
+	private void addOccurence(Set<IFeature> colors, IASTNode node, IFile file) {
 		InteractionPosition p = new InteractionPosition(node, file);
 
 		Set<InteractionPosition> occ = occurences.get(colors);
@@ -268,7 +268,7 @@ public class CollectInteractionsJob extends ColoredSourceFileIteratorJob {
 		}
 	}
 
-	private void addDerivative(ASTNode node, ColoredSourceFile source) {
+	private void addDerivative(IASTNode node, ColoredSourceFile source) {
 		Derivative d = new TensorDerivative(node, source);
 		Set<InteractionPosition> occ = derivatives.get(d);
 		if (occ == null) {

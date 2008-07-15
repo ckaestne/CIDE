@@ -4,7 +4,6 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 
-import cide.gast.ASTNode;
 import cide.gast.ASTVisitor;
 import cide.gast.IASTNode;
 import cide.gast.ISourceFile;
@@ -27,7 +26,7 @@ public class ConfigureASTHelper {
 		}
 
 		@Override
-		public boolean visit(ASTNode node) {
+		public boolean visit(IASTNode node) {
 			if (node.isOptional()) {
 				Set<IFeature> colors = colorManager.getColors(node);
 				if (overlap(colors, hiddenColors)) {

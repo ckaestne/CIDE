@@ -6,7 +6,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocumentListener;
 
-import cide.gast.ASTNode;
+import cide.gast.IASTNode;
 import cide.gast.ASTVisitor;
 import cide.gast.ISourceFile;
 import cide.gparser.ParseException;
@@ -49,7 +49,7 @@ public class ColorCacheManager implements IDocumentListener {
 			final SourceFileColorManager colorManager) {
 		cache = new ColorCache();
 		ast.accept(new ASTVisitor() {
-			public void postVisit(ASTNode node) {
+			public void postVisit(IASTNode node) {
 				Set<IFeature> colors = colorManager.getOwnColors(node);
 				cache.addItemOL(node.getClass().getName(), colors, node
 						.getStartPosition(), node.getLength());
@@ -68,7 +68,7 @@ public class ColorCacheManager implements IDocumentListener {
 		try {
 			source.getAST().accept(new ASTVisitor() {
 				@Override
-				public void postVisit(ASTNode node) {
+				public void postVisit(IASTNode node) {
 					Set<IFeature> cachedColors = cache.findItemColors(node
 							.getClass().getName(), node.getStartPosition(),
 							node.getLength());
@@ -99,7 +99,8 @@ public class ColorCacheManager implements IDocumentListener {
 	}
 
 	public void documentChanged(DocumentEvent event) {
-		cache.modifiedText(event.fText, event.fOffset, event.fLength);
+		if (cache != null && event!=null) 
+			cache.modifiedText(event.fText, event.fOffset, event.fLength);
 	}
 
 }

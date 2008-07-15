@@ -1,5 +1,7 @@
 package coloredide.utils;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.Collection;
 
 public class StrUtils {
@@ -29,4 +31,10 @@ public class StrUtils {
 		}
 		return result;
 	}
+	
+	
+	public static InputStream strToInputStream(String txt){
+		return new ByteArrayInputStream(txt.getBytes());	
+	}
+	
 }

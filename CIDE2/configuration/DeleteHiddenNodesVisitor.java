@@ -11,7 +11,7 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.dom.AST;
-import org.eclipse.jdt.core.dom.ASTNode;
+import org.eclipse.jdt.core.dom.IASTNode;
 import org.eclipse.jdt.core.dom.ASTVisitor;
 import org.eclipse.jdt.core.dom.Block;
 import org.eclipse.jdt.core.dom.ChildListPropertyDescriptor;
@@ -54,23 +54,23 @@ public class DeleteHiddenNodesVisitor extends ASTVisitor {
 		return super.visit(node);
 	}
 
-	public void postVisit(ASTNode node) {
+	public void postVisit(IASTNode node) {
 		if (shouldHide(node)) {
 			// are there children that should not be deleted as well?
-			List<ASTNode> replacements = new ArrayList<ASTNode>();
+			List<IASTNode> replacements = new ArrayList<IASTNode>();
 			for (Object prop : node.structuralPropertiesForType()) {
 				if (ASTColorInheritance.notInheritedProperties.contains(prop)) {
 					Object replace = rewrite.get(node,
 							(StructuralPropertyDescriptor) prop);
-					if (replace instanceof ASTNode)
-						replacements.add((ASTNode) replace);
+					if (replace instanceof IASTNode)
+						replacements.add((IASTNode) replace);
 				}
 			}
 			remove(node, replacements);
 		}
 	}
 
-	private boolean shouldHide(ASTNode node) {
+	private boolean shouldHide(IASTNode node) {
 		Set<Feature> nodeColors = colorManager.getOwnColors(node);
 		for (Feature color : nodeColors)
 			if (hiddenColors.contains(color))
@@ -89,8 +89,8 @@ public class DeleteHiddenNodesVisitor extends ASTVisitor {
 	 * @param replacements
 	 *            not null
 	 */
-	private void remove(ASTNode node, List<ASTNode> replacements) {
-		ASTNode parent = node.getParent();
+	private void remove(IASTNode node, List<IASTNode> replacements) {
+		IASTNode parent = node.getParent();
 		StructuralPropertyDescriptor prop = node.getLocationInParent();
 		if (prop instanceof ChildListPropertyDescriptor) {
 			rewriteListChild(node, parent, (ChildListPropertyDescriptor) prop,
@@ -107,16 +107,16 @@ public class DeleteHiddenNodesVisitor extends ASTVisitor {
 
 	}
 
-	private void rewriteInfix(ASTNode node, InfixExpression parent,
-			StructuralPropertyDescriptor prop, List<ASTNode> replacements) {
+	private void rewriteInfix(IASTNode node, InfixExpression parent,
+			StructuralPropertyDescriptor prop, List<IASTNode> replacements) {
 		// ListRewrite extOperands = rewrite.getListRewrite(parent,
 		// InfixExpression.EXTENDED_OPERANDS_PROPERTY);
 		// if (extOperands.getRewrittenList().size() > 0) {
 		// // if more than two operands, just shift.
-		// ASTNode first = (ASTNode) extOperands.getRewrittenList().get(0);
+		// IASTNode first = (IASTNode) extOperands.getRewrittenList().get(0);
 		// extOperands.remove(first, null);
 		// if (prop == InfixExpression.LEFT_OPERAND_PROPERTY) {
-		// ASTNode right = (ASTNode) rewrite.get(parent,
+		// IASTNode right = (IASTNode) rewrite.get(parent,
 		// InfixExpression.RIGHT_OPERAND_PROPERTY);
 		// rewrite.set(parent, InfixExpression.LEFT_OPERAND_PROPERTY,
 		// rewrite.createMoveTarget(right), null);
@@ -125,7 +125,7 @@ public class DeleteHiddenNodesVisitor extends ASTVisitor {
 		// .createMoveTarget(first), null);
 		// } else {
 		// // otherwise remove infixexpression
-		// ASTNode value = (ASTNode) rewrite
+		// IASTNode value = (IASTNode) rewrite
 		// .get(
 		// parent,
 		// (prop == InfixExpression.RIGHT_OPERAND_PROPERTY ?
@@ -134,7 +134,7 @@ public class DeleteHiddenNodesVisitor extends ASTVisitor {
 		// rewrite.set(parent.getParent(), parent.getLocationInParent(),
 		// rewrite.createMoveTarget(value), null);
 		// }
-		ASTNode defaultValue = null;
+		IASTNode defaultValue = null;
 		AST ast = rewrite.getAST();
 		if (parent.getOperator() == Operator.CONDITIONAL_AND)
 			defaultValue = ast.newBooleanLiteral(true);
@@ -150,35 +150,35 @@ public class DeleteHiddenNodesVisitor extends ASTVisitor {
 			rewrite.set(parent, prop, defaultValue, null);
 	}
 
-	private void rewriteIfWhileEtc(ASTNode node, ASTNode parent,
-			StructuralPropertyDescriptor prop, List<ASTNode> replacements) {
+	private void rewriteIfWhileEtc(IASTNode node, IASTNode parent,
+			StructuralPropertyDescriptor prop, List<IASTNode> replacements) {
 		Block replacement = node.getAST().newBlock();
 		rewrite.set(parent, prop, replacement, null);
 		if (replacements.size() > 0) {
 			ListRewrite blockRewriteList = getRewriteList(replacement,
 					Block.STATEMENTS_PROPERTY);
-			for (ASTNode s : replacements)
-				for (ASTNode n : resolveBlock(s)) {
+			for (IASTNode s : replacements)
+				for (IASTNode n : resolveBlock(s)) {
 					blockRewriteList.insertLast(move(n), null);
 				}
 		} else if (prop == IfStatement.ELSE_STATEMENT_PROPERTY)
 			rewrite.set(parent, prop, null, null);
 	}
 
-	private void rewriteListChild(ASTNode node, ASTNode parent,
-			ChildListPropertyDescriptor prop, List<ASTNode> replacements) {
+	private void rewriteListChild(IASTNode node, IASTNode parent,
+			ChildListPropertyDescriptor prop, List<IASTNode> replacements) {
 		ListRewrite statementsListRewrite = getRewriteList(parent, prop);
 		int position = statementsListRewrite.getRewrittenList().indexOf(node);
 		statementsListRewrite.remove(node, null);
 		// replacements?
 		if (replacements.size() > 0) {
 			boolean parentBlock = parent instanceof Block;
-			for (ASTNode repl : replacements) {
+			for (IASTNode repl : replacements) {
 				if (!parentBlock) {
 					statementsListRewrite
 							.insertAt(move(repl), ++position, null);
 				} else {
-					for (ASTNode s : resolveBlock(repl))
+					for (IASTNode s : resolveBlock(repl))
 						statementsListRewrite.insertAt(move(s), ++position,
 								null);
 				}
@@ -187,7 +187,7 @@ public class DeleteHiddenNodesVisitor extends ASTVisitor {
 
 	}
 
-	private ASTNode move(ASTNode s) {
+	private IASTNode move(IASTNode s) {
 		if (s.getStartPosition() != -1)
 			return rewrite.createMoveTarget(s);
 		return s;
@@ -202,7 +202,7 @@ public class DeleteHiddenNodesVisitor extends ASTVisitor {
 	// if (node.getParent() instanceof Block)
 	// replacements = resolveBlock(replacements);
 	// for (int idx = replacements.size() - 1; idx >= 0; idx--)
-	// statementsListRewrite.insertAt((ASTNode) replacements
+	// statementsListRewrite.insertAt((IASTNode) replacements
 	// .get(idx), position, null);
 	// }
 	// } else {
@@ -214,16 +214,16 @@ public class DeleteHiddenNodesVisitor extends ASTVisitor {
 	// replacement, null);
 	// ListRewrite blockRewriteList = getRewriteList(replacement,
 	// Block.STATEMENTS_PROPERTY);
-	// for (ASTNode s : replacements)
-	// for (ASTNode n : resolveBlock(s))
+	// for (IASTNode s : replacements)
+	// for (IASTNode n : resolveBlock(s))
 	// blockRewriteList.insertLast(n, null);
 	// }
 
 	//
 	// }
 	// }
-	// private ListRewrite getRewriteList(ASTNode node) {
-	// ASTNode parent = node.getParent();
+	// private ListRewrite getRewriteList(IASTNode node) {
+	// IASTNode parent = node.getParent();
 	// StructuralPropertyDescriptor property = node.getLocationInParent();
 	// if (property instanceof ChildListPropertyDescriptor)
 	// return getRewriteList(parent,
@@ -231,27 +231,27 @@ public class DeleteHiddenNodesVisitor extends ASTVisitor {
 	// return null;
 	// }
 
-	// private List<ASTNode> resolveBlock(List<ASTNode> replacement) {
+	// private List<IASTNode> resolveBlock(List<IASTNode> replacement) {
 	// if (replacement.size() == 1 && replacement.get(0) instanceof Block)
 	// return ((Block) replacement.get(0)).statements();
 	// return replacement;
 	// }
-	private List<ASTNode> resolveBlock(ASTNode replacement) {
+	private List<IASTNode> resolveBlock(IASTNode replacement) {
 		if (replacement instanceof Block) {
 			ListRewrite rewrittenBlock = getRewriteList(replacement,
 					Block.STATEMENTS_PROPERTY);
 			List l = rewrittenBlock.getRewrittenList();
 			if (replacement.getStartPosition() == -1)
-				return new ArrayList<ASTNode>();//TODO debugging only
+				return new ArrayList<IASTNode>();//TODO debugging only
 			return l;
 
 		}
 		return Collections.singletonList(replacement);
 	}
 
-	private final HashMap<ASTNode, HashMap<ChildListPropertyDescriptor, ListRewrite>> knownRewriteLists = new HashMap<ASTNode, HashMap<ChildListPropertyDescriptor, ListRewrite>>();
+	private final HashMap<IASTNode, HashMap<ChildListPropertyDescriptor, ListRewrite>> knownRewriteLists = new HashMap<IASTNode, HashMap<ChildListPropertyDescriptor, ListRewrite>>();
 
-	private ListRewrite getRewriteList(ASTNode parent,
+	private ListRewrite getRewriteList(IASTNode parent,
 			ChildListPropertyDescriptor descriptor) {
 
 		HashMap<ChildListPropertyDescriptor, ListRewrite> known = knownRewriteLists

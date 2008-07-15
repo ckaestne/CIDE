@@ -7,7 +7,7 @@ import java.util.Set;
 import org.eclipse.core.resources.IFile;
 
 import cide.gast.ASTColorInheritance;
-import cide.gast.ASTNode;
+import cide.gast.IASTNode;
 import coloredide.features.IFeature;
 
 /**
@@ -29,28 +29,28 @@ public class SourceFileColorManager extends AbstractColorManager {
 		this.source = source;
 	}
 
-	public Set<IFeature> getOwnColors(ASTNode node) {
+	public Set<IFeature> getOwnColors(IASTNode node) {
 		return super.getOwnColors(node.getId());
 	}
 
-	public boolean addColor(ASTNode node, IFeature color) {
+	public boolean addColor(IASTNode node, IFeature color) {
 		return super.addColor(node.getId(), color);
 	}
 
-	public boolean removeColor(ASTNode node, IFeature color) {
+	public boolean removeColor(IASTNode node, IFeature color) {
 		return super.removeColor(node.getId(), color);
 	}
 
-	public boolean hasColor(ASTNode node, IFeature color) {
+	public boolean hasColor(IASTNode node, IFeature color) {
 		return super.hasColor(node.getId(), color);
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see coloredide.features.source.ISourceFileColorProvider#getColors(cide.gast.ASTNode)
+	 * @see coloredide.features.source.ISourceFileColorProvider#getColors(cide.gast.IASTNode)
 	 */
-	public Set<IFeature> getColors(ASTNode node) {
+	public Set<IFeature> getColors(IASTNode node) {
 		Set<IFeature> result = new HashSet<IFeature>();
 		result.addAll(getOwnColors(node));
 		result.addAll(getInheritedColors(node));
@@ -60,12 +60,12 @@ public class SourceFileColorManager extends AbstractColorManager {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see coloredide.features.source.ISourceFileColorProvider#getInheritedColors(cide.gast.ASTNode)
+	 * @see coloredide.features.source.ISourceFileColorProvider#getInheritedColors(cide.gast.IASTNode)
 	 */
-	public Set<IFeature> getInheritedColors(ASTNode node) {
+	public Set<IFeature> getInheritedColors(IASTNode node) {
 		Set<IFeature> result = new HashSet<IFeature>();
 
-		ASTNode parent = node.getParent();
+		IASTNode parent = node.getParent();
 		if (parent != null) {
 			if (parent.isOptional())
 				if (ASTColorInheritance.inheritsColors(parent, node))
@@ -77,11 +77,11 @@ public class SourceFileColorManager extends AbstractColorManager {
 		return Collections.unmodifiableSet(result);
 	}
 
-	public boolean clearColor(ASTNode node) {
+	public boolean clearColor(IASTNode node) {
 		return super.clearColor(node.getId());
 	}
 
-	public void setColors(ASTNode node, Set<IFeature> newColors) {
+	public void setColors(IASTNode node, Set<IFeature> newColors) {
 		super.setColors(node.getId(), newColors);
 	}
 

@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.Stack;
 
-import cide.gast.ASTNode;
+import cide.gast.IASTNode;
 import cide.gast.ASTVisitor;
 import cide.gast.IASTNode;
 import cide.gast.IASTVisitor;
@@ -27,10 +27,10 @@ public class CodeSegmentCalculator {
 				+ ast.getLength(), NOCOLORS, false));
 
 		IASTVisitor visitor = new ASTVisitor() {
-			private ASTNode last;
+			private IASTNode last;
 
-			public boolean visit(ASTNode node) {
-				ASTNode next = node;
+			public boolean visit(IASTNode node) {
+				IASTNode next = node;
 				node = last;
 				last = next;
 

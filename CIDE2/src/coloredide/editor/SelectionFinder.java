@@ -11,14 +11,14 @@ import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextSelection;
 
 import cide.gast.ASTColorInheritance;
-import cide.gast.ASTNode;
+import cide.gast.IASTNode;
 import cide.gast.ASTVisitor;
 
 class SelectionFinder extends ASTVisitor {
 
-	private final List<ASTNode> selectedNodes;
+	private final List<IASTNode> selectedNodes;
 
-	private final Set<ASTNode> knownNodes = new HashSet<ASTNode>();
+	private final Set<IASTNode> knownNodes = new HashSet<IASTNode>();
 
 	private final int offset;
 
@@ -26,7 +26,7 @@ class SelectionFinder extends ASTVisitor {
 
 	private final boolean optionalOnly;
 
-	public SelectionFinder(List<ASTNode> selectedNodes,
+	public SelectionFinder(List<IASTNode> selectedNodes,
 			ITextSelection selection, boolean optionalOnly) {
 		this.selectedNodes = selectedNodes;
 		this.offset = selection.getOffset();
@@ -34,7 +34,7 @@ class SelectionFinder extends ASTVisitor {
 		this.optionalOnly = optionalOnly;
 	}
 
-	public SelectionFinder(List<ASTNode> selectedNodes, IRegion region,
+	public SelectionFinder(List<IASTNode> selectedNodes, IRegion region,
 			boolean optionalOnly) {
 		this.selectedNodes = selectedNodes;
 		this.offset = region.getOffset();
@@ -43,7 +43,7 @@ class SelectionFinder extends ASTVisitor {
 	}
 
 	@Override
-	public boolean visit(ASTNode node) {
+	public boolean visit(IASTNode node) {
 		boolean r = super.visit(node);
 		if (node.getStartPosition() >= offset
 				&& (node.getStartPosition() + node.getLength()) <= (offset + length)) {

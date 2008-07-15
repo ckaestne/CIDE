@@ -16,7 +16,7 @@ import org.eclipse.jface.text.Region;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.ui.themes.ColorUtil;
 
-import cide.gast.ASTNode;
+import cide.gast.IASTNode;
 import cide.gast.ASTVisitor;
 import cide.gast.ISourceFile;
 import cide.gparser.ParseException;
@@ -57,7 +57,7 @@ public class ColoredTextHover implements ITextHover {
 			return null;
 
 		// find colors
-		List<ASTNode> nodes = findSelectedNodes(hoverRegion);
+		List<IASTNode> nodes = findSelectedNodes(hoverRegion);
 
 		if ((nodes == null || nodes.isEmpty()) && hoverRegion.getLength() == 0)
 			return null;
@@ -72,7 +72,7 @@ public class ColoredTextHover implements ITextHover {
 		return tooltip.trim();
 	}
 
-	private String tooltipNodes(List<ASTNode> nodes) {
+	private String tooltipNodes(List<IASTNode> nodes) {
 		assert nodes.size() > 0;
 		String result = "";
 		for (int nodeidx = 0; nodeidx < nodes.size() && nodeidx < 5; nodeidx++) {
@@ -85,7 +85,7 @@ public class ColoredTextHover implements ITextHover {
 		return result + "\n";
 	}
 
-	private String getASTStringOutput(ASTNode node) {
+	private String getASTStringOutput(IASTNode node) {
 		String aststr = node.render().trim();
 		aststr = aststr.replace('\n', ' ').replace('\r', ' ')
 				.replace('\t', ' ');
@@ -96,7 +96,7 @@ public class ColoredTextHover implements ITextHover {
 		return aststr;
 	}
 
-	private String tooltipColors(Collection<ASTNode> nodes) {
+	private String tooltipColors(Collection<IASTNode> nodes) {
 		assert nodes.size() > 0;
 		String tooltip = "";
 		// all colors
@@ -129,11 +129,11 @@ public class ColoredTextHover implements ITextHover {
 		return dirColorManager.getColors(sourceFile.getResource());
 	}
 
-	private Set<IFeature> getInheritedColors(Collection<ASTNode> nodes) {
+	private Set<IFeature> getInheritedColors(Collection<IASTNode> nodes) {
 		// all inherited colors, but not the file colors
 		assert nodes.size() > 0;
 		Set<IFeature> result = new HashSet<IFeature>();
-		Iterator<ASTNode> i = nodes.iterator();
+		Iterator<IASTNode> i = nodes.iterator();
 		result.addAll(colorManager.getInheritedColors(i.next()));
 		while (i.hasNext()) {
 			join(result, colorManager.getInheritedColors(i.next()));
@@ -142,10 +142,10 @@ public class ColoredTextHover implements ITextHover {
 		return result;
 	}
 
-	private Set<IFeature> getDirectColors(Collection<ASTNode> nodes) {
+	private Set<IFeature> getDirectColors(Collection<IASTNode> nodes) {
 		assert nodes.size() > 0;
 		Set<IFeature> result = new HashSet<IFeature>();
-		Iterator<ASTNode> i = nodes.iterator();
+		Iterator<IASTNode> i = nodes.iterator();
 		result.addAll(colorManager.getOwnColors(i.next()));
 		while (i.hasNext()) {
 			join(result, colorManager.getOwnColors(i.next()));
@@ -166,10 +166,10 @@ public class ColoredTextHover implements ITextHover {
 		}
 	}
 
-	private Set<IFeature> getAllColors(Collection<ASTNode> nodes) {
+	private Set<IFeature> getAllColors(Collection<IASTNode> nodes) {
 		assert nodes.size() > 0;
 		Set<IFeature> result = new HashSet<IFeature>();
-		Iterator<ASTNode> i = nodes.iterator();
+		Iterator<IASTNode> i = nodes.iterator();
 		result.addAll(colorManager.getColors(i.next()));
 		while (i.hasNext()) {
 			join(result, colorManager.getColors(i.next()));
@@ -177,7 +177,7 @@ public class ColoredTextHover implements ITextHover {
 		return result;
 	}
 
-	private List<ASTNode> findSelectedNodes(IRegion hoverRegion) {
+	private List<IASTNode> findSelectedNodes(IRegion hoverRegion) {
 		ISourceFile ast;
 		try {
 			ast = sourceFile.getAST();
@@ -189,11 +189,11 @@ public class ColoredTextHover implements ITextHover {
 			return null;
 		}
 
-		ArrayList<ASTNode> result = new ArrayList<ASTNode>();
+		ArrayList<IASTNode> result = new ArrayList<IASTNode>();
 		if (hoverRegion.getLength() == 0) {
 			SingleNodeFinder snf = new SingleNodeFinder(hoverRegion.getOffset());
 			ast.accept(snf);
-			ASTNode node = snf.result;
+			IASTNode node = snf.result;
 			while (node != null && !node.isOptional())
 				node = node.getParent();
 			if (node != null)
@@ -210,10 +210,10 @@ public class ColoredTextHover implements ITextHover {
 			this.offset = offset;
 		}
 
-		ASTNode result = null;
+		IASTNode result = null;
 
 		@Override
-		public boolean visit(ASTNode node) {
+		public boolean visit(IASTNode node) {
 			if (node.getStartPosition() <= offset
 					&& (node.getStartPosition() + node.getLength()) > offset) {
 				if (result == null || node.getLength() < result.getLength())

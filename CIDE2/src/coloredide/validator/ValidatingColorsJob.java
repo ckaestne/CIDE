@@ -23,7 +23,7 @@ class ValidatingColorsJob extends ColoredSourceFileIteratorJob {
 
 	protected void processSource(ColoredSourceFile source)
 			throws CoreException { 
-		CIDECorePlugin.getDefault().getValidator().runValidation(source);
+//		CIDECorePlugin.getDefault().getValidator().runValidation(source);
 	}
 
 	@Override

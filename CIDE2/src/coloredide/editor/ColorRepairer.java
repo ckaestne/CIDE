@@ -16,7 +16,7 @@ import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Display;
 
-import cide.gast.ASTNode;
+import cide.gast.IASTNode;
 import cide.gast.ASTVisitor;
 import cide.gast.IASTNode;
 import cide.gparser.ParseException;
@@ -140,17 +140,17 @@ public class ColorRepairer implements IPresentationRepairer {
 		final LinkedList<Position> invisibleSegments = new LinkedList<Position>();
 		ast.accept(new ASTVisitor() {
 
-			private Stack<List<ASTNode>> visibleNodes = new Stack<List<ASTNode>>();
+			private Stack<List<IASTNode>> visibleNodes = new Stack<List<IASTNode>>();
 
 			@Override
-			public boolean visit(ASTNode node) {
-				visibleNodes.push(new ArrayList<ASTNode>());
+			public boolean visit(IASTNode node) {
+				visibleNodes.push(new ArrayList<IASTNode>());
 				return super.visit(node);
 			}
 
 			@Override
-			public void postVisit(ASTNode node) {
-				List<ASTNode> visibleChildren = visibleNodes.pop();
+			public void postVisit(IASTNode node) {
+				List<IASTNode> visibleChildren = visibleNodes.pop();
 
 				boolean isVisible = !visibleChildren.isEmpty();
 				if (!isVisible

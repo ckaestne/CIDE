@@ -14,7 +14,7 @@ package coloredide.astview;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
-import cide.gast.ASTNode;
+import cide.gast.IASTNode;
 import cide.gast.IASTNode;
 import cide.gast.Property;
 
@@ -63,9 +63,9 @@ public class ASTViewContentProvider implements ITreeContentProvider {
 	 * @see org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.Object)
 	 */
 	public Object getParent(Object child) {
-		if (child instanceof ASTNode) {
-			ASTNode node = (ASTNode) child;
-			ASTNode parent = node.getParent();
+		if (child instanceof IASTNode) {
+			IASTNode node = (IASTNode) child;
+			IASTNode parent = node.getParent();
 			if (parent != null) {
 				return node.getLocationInParent();
 			}
@@ -83,8 +83,8 @@ public class ASTViewContentProvider implements ITreeContentProvider {
 	public Object[] getChildren(Object parent) {
 		if (parent instanceof Property) {
 			return ((Property) parent).getChildren();
-		} else if (parent instanceof ASTNode) {
-			return ((ASTNode) parent).getProperties().toArray();
+		} else if (parent instanceof IASTNode) {
+			return ((IASTNode) parent).getProperties().toArray();
 		}
 		return new Object[0];
 	}

@@ -34,10 +34,10 @@ public class LanguageExtensionProxy implements ILanguageExtension {
 		return fileExtensions;
 	}
 
-	public ILanguageParser getParser(InputStream inputStream) {
+	public ILanguageParser getParser(InputStream inputStream, String filePath) {
 		if (target == null)
 			loadTarget();
-		return target.getParser(inputStream);
+		return target.getParser(inputStream,filePath);
 	}
 
 	public ILanguagePrintVisitor getPrettyPrinter() {

@@ -26,8 +26,8 @@ import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 
-import cide.gast.ASTNode;
 import cide.gast.ASTStringNode;
+import cide.gast.IASTNode;
 import cide.gast.Property;
 import cide.gast.PropertyOptionalWithDefault;
 import cide.gast.PropertyZeroOrMore;
@@ -91,10 +91,10 @@ public class ASTViewLabelProvider extends LabelProvider implements
 		StringBuffer buf = new StringBuffer();
 		if (obj instanceof ASTStringNode) {
 			buf.append(shorten(((ASTStringNode) obj).getValue()));
-			appendOffset((ASTNode) obj, buf);
-		} else if (obj instanceof ASTNode) {
-			buf.append(obj.getClass().getSimpleName());
-			appendOffset((ASTNode) obj, buf);
+			appendOffset((IASTNode) obj, buf);
+		} else if (obj instanceof IASTNode) {
+			buf.append(((IASTNode)obj).getDisplayName());
+			appendOffset((IASTNode) obj, buf);
 		} else if (obj instanceof PropertyZeroOrOne) {
 			return "[" + ((Property) obj).getName() + "]";
 		} else if (obj instanceof PropertyZeroOrMore) {
@@ -113,16 +113,16 @@ public class ASTViewLabelProvider extends LabelProvider implements
 		return value.substring(0, 30) + " ...";
 	}
 
-	private void appendOffset(ASTNode node, StringBuffer buf) {
+	private void appendOffset(IASTNode node, StringBuffer buf) {
 		buf.append(" ["); //$NON-NLS-1$
 		buf.append(node.getStartPosition());
 		buf.append(", "); //$NON-NLS-1$
 		buf.append(node.getLength());
 		buf.append(']');
-		// if ((node.getFlags() & ASTNode.MALFORMED) != 0) {
+		// if ((node.getFlags() & IASTNode.MALFORMED) != 0) {
 		// buf.append(" (malformed)"); //$NON-NLS-1$
 		// }
-		// if ((node.getFlags() & ASTNode.RECOVERED) != 0) {
+		// if ((node.getFlags() & IASTNode.RECOVERED) != 0) {
 		// buf.append(" (recovered)"); //$NON-NLS-1$
 		// }
 	}
@@ -136,9 +136,9 @@ public class ASTViewLabelProvider extends LabelProvider implements
 
 		if (element instanceof ASTStringNode) {
 			return fRed;
-		} else if (element instanceof ASTNode) {
-			// ASTNode node = (ASTNode) element;
-			// if ((node.getFlags() & ASTNode.MALFORMED) != 0) {
+		} else if (element instanceof IASTNode) {
+			// IASTNode node = (IASTNode) element;
+			// if ((node.getFlags() & IASTNode.MALFORMED) != 0) {
 			// return fRed;
 			// }
 			return null;
@@ -154,12 +154,12 @@ public class ASTViewLabelProvider extends LabelProvider implements
 	 * @see org.eclipse.jface.viewers.IColorProvider#getBackground(java.lang.Object)
 	 */
 	public Color getBackground(Object element) {
-		ASTNode node = null;
-		if (element instanceof ASTNode)
-			node = (ASTNode) element;
+		IASTNode node = null;
+		if (element instanceof IASTNode)
+			node = (IASTNode) element;
 		if (element instanceof Property
-				&& ((Property) element).getNode() instanceof ASTNode)
-			node = (ASTNode) ((Property) element).getNode();
+				&& ((Property) element).getNode() instanceof IASTNode)
+			node = (IASTNode) ((Property) element).getNode();
 
 		if (node != null) {
 			ColoredSourceFile source = fView.getColoredJavaSourceFile();
@@ -179,12 +179,12 @@ public class ASTViewLabelProvider extends LabelProvider implements
 	}
 
 	private boolean isNotProperlyNested(Object element) {
-		if (element instanceof ASTNode) {
-			ASTNode node = (ASTNode) element;
+		if (element instanceof IASTNode) {
+			IASTNode node = (IASTNode) element;
 			int start = node.getStartPosition();
 			int end = start + node.getLength();
 
-			ASTNode parent = node.getParent();
+			IASTNode parent = node.getParent();
 			if (parent != null) {
 				int parentstart = parent.getStartPosition();
 				int parentend = parentstart + parent.getLength();
@@ -197,7 +197,7 @@ public class ASTViewLabelProvider extends LabelProvider implements
 		return false;
 	}
 
-	private boolean isInsideNode(ASTNode node) {
+	private boolean isInsideNode(IASTNode node) {
 		int start = node.getStartPosition();
 		int end = start + node.getLength();
 		if (start <= fSelectionStart
@@ -208,13 +208,13 @@ public class ASTViewLabelProvider extends LabelProvider implements
 	}
 
 	private boolean isInside(Object element) {
-		if (element instanceof ASTNode) {
-			return isInsideNode((ASTNode) element);
+		if (element instanceof IASTNode) {
+			return isInsideNode((IASTNode) element);
 		} else if (element instanceof Property) {
 			Property property = (Property) element;
 			Object object = property.getNode();
-			if (object instanceof ASTNode) {
-				return isInsideNode((ASTNode) object);
+			if (object instanceof IASTNode) {
+				return isInsideNode((IASTNode) object);
 			}
 		}
 		return false;
@@ -226,8 +226,8 @@ public class ASTViewLabelProvider extends LabelProvider implements
 	 * @see org.eclipse.jface.viewers.IFontProvider#getFont(java.lang.Object)
 	 */
 	public Font getFont(Object element) {
-		if (element instanceof ASTNode)
-			if (((ASTNode) element).isOptional())
+		if (element instanceof IASTNode)
+			if (((IASTNode) element).isOptional())
 				return fBold;
 		return null;
 	}

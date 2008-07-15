@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.eclipse.jface.action.Action;
 
-import cide.gast.ASTNode;
+import cide.gast.IASTNode;
 import cide.gast.ASTVisitor;
 import cide.gast.IASTVisitor;
 import coloredide.ASTColorChangedEvent;
@@ -21,11 +21,11 @@ import coloredide.features.source.SourceFileColorManager;
  */
 public class CleanASTColorsAction extends Action {
 
-	private List<ASTNode> nodes;
+	private List<IASTNode> nodes;
 
 	private ColoredSourceFile file;
 
-	public CleanASTColorsAction(List<ASTNode> nodes, ColoredSourceFile file) {
+	public CleanASTColorsAction(List<IASTNode> nodes, ColoredSourceFile file) {
 		super();
 		assert nodes != null && !nodes.isEmpty();
 		this.nodes = nodes;
@@ -33,7 +33,7 @@ public class CleanASTColorsAction extends Action {
 		this.setText("Clean colors");
 	}
 
-	boolean haveColor(List<ASTNode> nodes, IFeature feature) {
+	boolean haveColor(List<IASTNode> nodes, IFeature feature) {
 		return file.getColorManager().hasColor(nodes.get(0), feature);
 	}
 
@@ -43,7 +43,7 @@ public class CleanASTColorsAction extends Action {
 		SourceFileColorManager colorManager = file.getColorManager();
 		colorManager.beginBatch();
 		IASTVisitor colorRemover = new ColorRemover(colorManager);
-		for (ASTNode node : nodes)
+		for (IASTNode node : nodes)
 			node.accept(colorRemover);
 		colorManager.endBatch();
 		CIDECorePlugin.getDefault().notifyListeners(
@@ -57,7 +57,7 @@ public class CleanASTColorsAction extends Action {
 			this.colorManager = colorManager;
 		}
 
-		public boolean visit(ASTNode node) {
+		public boolean visit(IASTNode node) {
 			colorManager.clearColor(node);
 			return super.visit(node);
 		}

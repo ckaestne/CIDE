@@ -6,7 +6,7 @@ import java.util.List;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 
-import cide.gast.ASTNode;
+import cide.gast.IASTNode;
 import cide.greferences.IValidationErrorCallback;
 import cide.greferences.IValidationRule;
 import coloredide.features.source.ColoredSourceFile;
@@ -16,14 +16,14 @@ public class DefaultErrorCreator implements IValidationErrorCallback {
 	private final ColorProblemFactory problemFactory = new ColorProblemFactory();
 
 	protected static class ColorProblemFactory {
-		public ColorProblem createError(ASTNode node, String message,
+		public ColorProblem createError(IASTNode node, String message,
 				IValidationRule brokenRule) {
 			return createError(node, message, node.getStartPosition(), node
 					.getStartPosition()
 					+ node.getLength(), brokenRule);
 		}
 
-		public ColorProblem createError(ASTNode node, String message,
+		public ColorProblem createError(IASTNode node, String message,
 				int startPosition, int endPosition, IValidationRule brokenRule) {
 			return createProblem(ColoredSourceFile.getResource(node), message,/* IProblem.ExternalProblemNotFixable, */
 			IMarker.SEVERITY_ERROR, startPosition, endPosition, 0, 0,
@@ -49,7 +49,7 @@ public class DefaultErrorCreator implements IValidationErrorCallback {
 
 	protected final List<ColorProblem> problems = new ArrayList<ColorProblem>();
 
-	// public void errorCallMustHaveDeclarationColor(ASTNode call,
+	// public void errorCallMustHaveDeclarationColor(IASTNode call,
 	// Set<Feature> callColors, IMethodBinding decl,
 	// Set<Feature> declColors) {
 	//
@@ -66,7 +66,7 @@ public class DefaultErrorCreator implements IValidationErrorCallback {
 	// ColorProblem.METHODCALL));
 	// }
 	//
-	// public void errorVariableAccessMustHaveDeclarationColor(ASTNode
+	// public void errorVariableAccessMustHaveDeclarationColor(IASTNode
 	// varAccess,
 	// Set<Feature> callColors, IVariableBinding decl,
 	// Set<Feature> declColors) {
@@ -84,16 +84,16 @@ public class DefaultErrorCreator implements IValidationErrorCallback {
 	// ColorProblem.FIELDACCESS));
 	// }
 	//
-	// public void nodeMustHaveParentsColor(ASTNode node, Set<Feature>
+	// public void nodeMustHaveParentsColor(IASTNode node, Set<Feature>
 	// declColors,
-	// ASTNode parent) {
+	// IASTNode parent) {
 	// String message = "Invalid coloring: must have parents color ("
 	// + declColors + ")";
 	//
 	// problems.add(problemFactory.createError(node, message));
 	// }
 	//
-	// public void warningCannotResolveBinding(ASTNode node) {
+	// public void warningCannotResolveBinding(IASTNode node) {
 	// String message = "Cannot resolve binding";
 	// problems.add(problemFactory.createError(node, message));
 	// }
@@ -107,7 +107,7 @@ public class DefaultErrorCreator implements IValidationErrorCallback {
 	// problems.add(problemFactory.createError(param, message));
 	// }
 	//
-	// public void errorTypeRefMustHaveTypeColor(ASTNode node,
+	// public void errorTypeRefMustHaveTypeColor(IASTNode node,
 	// Set<Feature> typeColors) {
 	// String message = "Type reference must have Type colors (" + typeColors
 	// + ")";
@@ -124,14 +124,14 @@ public class DefaultErrorCreator implements IValidationErrorCallback {
 	// ColorProblem.IMPORT));
 	// }
 	//
-	// public void errorImportedTypeMustHaveImportColor(ASTNode type,
+	// public void errorImportedTypeMustHaveImportColor(IASTNode type,
 	// Set<Feature> typeColors, Set<Feature> importColors) {
 	// String message = "Imported Type must have Import colors ("
 	// + importColors + ")";
 	//
 	// problems.add(problemFactory.createError(type, message));
 	// }
-	public void validationError(ASTNode node, IValidationRule brokenRule) {
+	public void validationError(IASTNode node, IValidationRule brokenRule) {
 		problems.add(problemFactory.createError(node, brokenRule
 				.getErrorMessage(), brokenRule));
 	}

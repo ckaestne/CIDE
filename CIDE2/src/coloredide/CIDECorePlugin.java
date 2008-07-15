@@ -34,10 +34,10 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
-import coloredide.colorfilter.ColorFilterUpdater;
 import coloredide.features.source.FileColorChangeListener;
 import coloredide.navigator.FileColorUpdater;
-import coloredide.validator.ValidationManager; 
+
+import com.sun.org.apache.xerces.internal.impl.validation.ValidationManager;
 
 public class CIDECorePlugin extends AbstractUIPlugin {
 

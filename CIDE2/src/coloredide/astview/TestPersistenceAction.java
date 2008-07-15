@@ -9,7 +9,7 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 
-import cide.gast.ASTNode;
+import cide.gast.IASTNode;
 
 public class TestPersistenceAction extends Action {
 	private static Set<String> set = new HashSet<String>();
@@ -20,20 +20,20 @@ public class TestPersistenceAction extends Action {
 		this.viewer = viewer;
 	}
 
-	private ASTNode getSelection() {
+	private IASTNode getSelection() {
 		IStructuredSelection selection = (IStructuredSelection) viewer
 				.getSelection();
 		for (Iterator iter = selection.iterator(); iter.hasNext();) {
 			Object element = iter.next();
-			if (element instanceof ASTNode) {
-				return (ASTNode) element;
+			if (element instanceof IASTNode) {
+				return (IASTNode) element;
 			}
 		}
 		return null;
 	}
 
 	public void update() {
-		ASTNode node = getSelection();
+		IASTNode node = getSelection();
 		String id = "";
 		if (node != null)
 			id = node.getId();
@@ -50,7 +50,7 @@ public class TestPersistenceAction extends Action {
 	 * @see com.ibm.lab.soln.jdt.excerpt.ChangeIMemberFlagAction#performAction(IAction,
 	 *      IMember)
 	 */
-	protected boolean performAction(IAction action, ASTNode member) {
+	protected boolean performAction(IAction action, IASTNode member) {
 		if (member == null)
 			return false;
 		String i = member.getId();
@@ -66,7 +66,7 @@ public class TestPersistenceAction extends Action {
 	 * @see com.ibm.lab.soln.jdt.excerpt.ChangeIMemberFlagAction#isChecked(IAction,
 	 *      IMember)
 	 */
-	protected boolean isChecked(IAction action, ASTNode member) {
+	protected boolean isChecked(IAction action, IASTNode member) {
 		return set.contains(member.getId());
 	}
 }

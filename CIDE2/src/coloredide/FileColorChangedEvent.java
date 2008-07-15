@@ -1,15 +1,10 @@
 package coloredide;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.EventObject;
 
 import org.eclipse.core.resources.IContainer;
-import org.eclipse.core.resources.IResource;
-
-import cide.gast.ASTNode;
-import coloredide.features.source.ColoredSourceFile;
 
 public class FileColorChangedEvent extends EventObject {
 

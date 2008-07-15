@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.Stack;
 
-import org.eclipse.jdt.core.dom.ASTNode;
+import org.eclipse.jdt.core.dom.IASTNode;
 import org.eclipse.jdt.core.dom.ASTVisitor;
 
 import coloredide.features.Feature;
@@ -16,7 +16,7 @@ import coloredide.features.source.CompilationUnitColorManager;
 public class CodeSegmentCalculator {
 	protected static final Set NOCOLORS = new HashSet<Feature>();
 
-	public static List<CodeSegment> getCodeSegments(ASTNode ast,
+	public static List<CodeSegment> getCodeSegments(IASTNode ast,
 			final CompilationUnitColorManager colorManager) {
 		final Stack<CodeSegment> stack = new Stack<CodeSegment>();
 		final List<CodeSegment> list = new ArrayList<CodeSegment>();
@@ -26,10 +26,10 @@ public class CodeSegmentCalculator {
 				+ ast.getLength(), NOCOLORS));
 
 		ASTVisitor visitor = new ASTVisitor() {
-			private ASTNode last;
+			private IASTNode last;
 
-			public void preVisit(ASTNode node) {
-				ASTNode next = node;
+			public void preVisit(IASTNode node) {
+				IASTNode next = node;
 				node = last;
 				last = next;
 

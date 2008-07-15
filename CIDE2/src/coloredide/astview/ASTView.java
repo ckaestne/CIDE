@@ -70,7 +70,7 @@ import org.eclipse.ui.part.ShowInContext;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.texteditor.ITextEditor;
 
-import cide.gast.ASTNode;
+import cide.gast.IASTNode;
 import cide.gast.ISourceFile;
 import cide.gast.Property;
 import coloredide.ASTColorChangedEvent;
@@ -426,11 +426,11 @@ public class ASTView extends ViewPart implements IShowInSource {
 				.getBoolean(SETTINGS_LINK_WITH_EDITOR);
 	}
 
-	private void colorUpdated(Collection<ASTNode> affectedNodes) {
+	private void colorUpdated(Collection<IASTNode> affectedNodes) {
 		if (affectedNodes.size() > 3)
 			fViewer.refresh();
 		else
-			for (ASTNode affectedNode : affectedNodes)
+			for (IASTNode affectedNode : affectedNodes)
 				fViewer.refresh(affectedNode);
 	}
 
@@ -513,7 +513,7 @@ public class ASTView extends ViewPart implements IShowInSource {
 			setContentDescription("AST could not be created."); //$NON-NLS-1$
 			return null;
 		}
-		ASTNode node = NodeFinder.perform(root, offset, length);
+		IASTNode node = NodeFinder.perform(root, offset, length);
 		if (node != null) {
 			fViewer.getTree().setRedraw(false);
 			fASTLabelProvider.setSelectedRange(node.getStartPosition(), node
@@ -661,14 +661,14 @@ public class ASTView extends ViewPart implements IShowInSource {
 		// }
 	}
 
-	private List<ASTNode> getSelection() {
-		List<ASTNode> result = new ArrayList<ASTNode>();
+	private List<IASTNode> getSelection() {
+		List<IASTNode> result = new ArrayList<IASTNode>();
 		IStructuredSelection selection = (IStructuredSelection) fViewer
 				.getSelection();
 		for (Iterator<Object> iter = selection.iterator(); iter.hasNext();) {
 			Object element = iter.next();
-			if (element instanceof ASTNode) {
-				result.add((ASTNode) element);
+			if (element instanceof IASTNode) {
+				result.add((IASTNode) element);
 			}
 		}
 		return result;
@@ -691,9 +691,9 @@ public class ASTView extends ViewPart implements IShowInSource {
 		manager.add(idmenu);
 		fTestPersistenceAction.update();
 
-		List<ASTNode> nodes = new ArrayList<ASTNode>(getSelection());
+		List<IASTNode> nodes = new ArrayList<IASTNode>(getSelection());
 		// only colors for optional nodes!
-		for (Iterator<ASTNode> i = nodes.iterator(); i.hasNext();)
+		for (Iterator<IASTNode> i = nodes.iterator(); i.hasNext();)
 			if (!i.next().isOptional())
 				i.remove();
 
@@ -844,7 +844,7 @@ public class ASTView extends ViewPart implements IShowInSource {
 
 		NodeFinder finder = new NodeFinder(offset, length);
 		fRoot.accept(finder);
-		ASTNode covering = finder.getCoveringNode();
+		IASTNode covering = finder.getCoveringNode();
 		if (covering != null) {
 			fViewer.reveal(covering);
 			fViewer.setSelection(new StructuredSelection(covering));
@@ -940,14 +940,14 @@ public class ASTView extends ViewPart implements IShowInSource {
 		boolean isTripleClick = (obj == fPreviousDouble);
 		fPreviousDouble = isTripleClick ? null : obj;
 
-		ASTNode node = null;
-		if (obj instanceof ASTNode) {
-			node = (ASTNode) obj;
+		IASTNode node = null;
+		if (obj instanceof IASTNode) {
+			node = (IASTNode) obj;
 
 		} else if (obj instanceof Property) {
 			Object val = ((Property) obj).getNode();
-			if (val instanceof ASTNode) {
-				node = (ASTNode) val;
+			if (val instanceof IASTNode) {
+				node = (IASTNode) val;
 			}
 
 		}

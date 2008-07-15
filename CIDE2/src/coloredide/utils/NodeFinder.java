@@ -10,7 +10,7 @@
  *******************************************************************************/
 package coloredide.utils;
 
-import cide.gast.ASTNode;
+import cide.gast.IASTNode;
 import cide.gast.ASTVisitor;
 import cide.gast.IASTNode;
 
@@ -20,7 +20,7 @@ import cide.gast.IASTNode;
 public class NodeFinder extends ASTVisitor {
 
 	/**
-	 * A visitor that maps a selection to a given ASTNode. The result node is
+	 * A visitor that maps a selection to a given IASTNode. The result node is
 	 * determined as follows:
 	 * <ul>
 	 * <li>first the visitor tries to find a node with the exact start and
@@ -32,10 +32,10 @@ public class NodeFinder extends ASTVisitor {
 	 * <li>otherwise <code>null</code> is returned.</li>
 	 * </ul>
 	 */
-	public static ASTNode perform(IASTNode root, int start, int length) {
+	public static IASTNode perform(IASTNode root, int start, int length) {
 		NodeFinder finder = new NodeFinder(start, length);
 		root.accept(finder);
-		ASTNode result = finder.getCoveredNode();
+		IASTNode result = finder.getCoveredNode();
 		if (result == null || result.getStartPosition() != start
 				|| result.getLength() != length) {
 			return finder.getCoveringNode();
@@ -47,16 +47,16 @@ public class NodeFinder extends ASTVisitor {
 
 	private int fEnd;
 
-	private ASTNode fCoveringNode;
+	private IASTNode fCoveringNode;
 
-	private ASTNode fCoveredNode;
+	private IASTNode fCoveredNode;
 
 	public NodeFinder(int offset, int length) {
 		fStart = offset;
 		fEnd = offset + length;
 	}
 
-	public boolean visit(ASTNode node) {
+	public boolean visit(IASTNode node) {
 		int nodeStart = node.getStartPosition();
 		int nodeEnd = nodeStart + node.getLength();
 		if (nodeEnd < fStart || fEnd < nodeStart) {
@@ -84,9 +84,9 @@ public class NodeFinder extends ASTVisitor {
 	 * selection, the returned node is first covered node found in a top-down
 	 * traversal of the AST
 	 * 
-	 * @return ASTNode
+	 * @return IASTNode
 	 */
-	public ASTNode getCoveredNode() {
+	public IASTNode getCoveredNode() {
 		return fCoveredNode;
 	}
 
@@ -95,9 +95,9 @@ public class NodeFinder extends ASTVisitor {
 	 * selection, the returned node is last covering node found in a top-down
 	 * traversal of the AST
 	 * 
-	 * @return ASTNode
+	 * @return IASTNode
 	 */
-	public ASTNode getCoveringNode() {
+	public IASTNode getCoveringNode() {
 		return fCoveringNode;
 	}
 

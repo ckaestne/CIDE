@@ -6,10 +6,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.core.resources.IProject;
-
 import cide.gast.ASTColorInheritance;
-import cide.gast.ASTNode;
+import cide.gast.IASTNode;
+import cide.gast.IASTNode;
 import coloredide.features.IFeature;
 import coloredide.features.source.ColoredSourceFile;
 
@@ -28,7 +27,7 @@ import coloredide.features.source.ColoredSourceFile;
  */
 public class TensorDerivative implements Derivative {
 
-	public TensorDerivative(ASTNode node, ColoredSourceFile source) {
+	public TensorDerivative(IASTNode node, ColoredSourceFile source) {
 		loadDerivative(node, source);
 	}
 
@@ -53,7 +52,7 @@ public class TensorDerivative implements Derivative {
 		return getDerivativeStr();
 	}
 
-	private void loadDerivative(ASTNode node, ColoredSourceFile source) {
+	private void loadDerivative(IASTNode node, ColoredSourceFile source) {
 		if (node == null)
 			return;
 
@@ -62,8 +61,8 @@ public class TensorDerivative implements Derivative {
 				.getInheritedColors(node);
 
 		if (inheritedColors.size() > 0) {
-			ASTNode lnode=node;
-			ASTNode parent = node.getParent();
+			IASTNode lnode=node;
+			IASTNode parent = node.getParent();
 				
 			 while (parent != null
 					&& !ASTColorInheritance.inheritsColors(parent, lnode)){

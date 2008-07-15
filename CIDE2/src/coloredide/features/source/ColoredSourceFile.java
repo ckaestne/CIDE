@@ -6,20 +6,17 @@ import java.util.List;
 import java.util.WeakHashMap;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 
-import cide.gast.ASTNode;
+import cide.gast.IASTNode;
 import cide.gast.IASTNode;
 import cide.gast.ISourceFile;
 import cide.gparser.ParseException;
 import cide.gparser.TokenMgrError;
 import cide.languages.ILanguageExtension;
 import cide.languages.ILanguageParser;
-import coloredide.features.FeatureModelManager;
-import coloredide.features.FeatureModelNotFoundException;
 import coloredide.features.IFeatureModel;
 import coloredide.languages.LanguageExtensionManager;
 import coloredide.languages.LanguageExtensionProxy;
@@ -99,7 +96,7 @@ public class ColoredSourceFile {
 		ISourceFile astRoot = null;
 		long start = System.currentTimeMillis();
 		ILanguageParser parser = language.getParser(coloredSourceFile
-				.getContents());
+				.getContents(),coloredSourceFile.getFullPath().toOSString());
 		try {
 			astRoot = parser.getRoot();
 		} catch (TokenMgrError error) {
@@ -119,7 +116,7 @@ public class ColoredSourceFile {
 		fireASTRefreshed();
 	}
 
-	public static ISourceFile getASTRoot(ASTNode node) {
+	public static ISourceFile getASTRoot(IASTNode node) {
 		return node.getRoot();
 	}
 
