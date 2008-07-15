@@ -7,6 +7,5 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/CIDE2_ast"/>
 	<classpathentry kind="var" path="ANT_HOME/lib/ant.jar"/>
-	<classpathentry kind="var" path="JAVACC_HOME/bin/lib/javacc.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
