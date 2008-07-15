@@ -14,7 +14,7 @@ public class memoryInitializerList extends GenASTNode {
   public memoryInitializerList(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new memoryInitializerList(cloneProperties(),firstToken,lastToken);
   }
   public ArrayList<memoryInitializer> getMemoryInitializer() {

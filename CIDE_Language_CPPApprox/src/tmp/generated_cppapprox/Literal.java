@@ -14,7 +14,7 @@ public class Literal extends GenASTNode {
   public Literal(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new Literal(cloneProperties(),firstToken,lastToken);
   }
   public ASTStringNode getLiteral() {

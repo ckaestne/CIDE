@@ -13,7 +13,7 @@ public class AnyStmtToken12 extends AnyStmtToken {
   public AnyStmtToken12(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new AnyStmtToken12(cloneProperties(),firstToken,lastToken);
   }
 }

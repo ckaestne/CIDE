@@ -14,7 +14,7 @@ public class TemplateDecl extends GenASTNode {
   public TemplateDecl(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new TemplateDecl(cloneProperties(),firstToken,lastToken);
   }
   public TemplateArgs getTemplateArgs() {

@@ -15,7 +15,7 @@ public class CPPClass extends GenASTNode {
   public CPPClass(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new CPPClass(cloneProperties(),firstToken,lastToken);
   }
   public class_head getClass_head() {

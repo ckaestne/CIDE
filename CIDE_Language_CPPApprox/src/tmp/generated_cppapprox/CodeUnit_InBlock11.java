@@ -14,7 +14,7 @@ public class CodeUnit_InBlock11 extends CodeUnit_InBlock {
   public CodeUnit_InBlock11(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new CodeUnit_InBlock11(cloneProperties(),firstToken,lastToken);
   }
   public GotoLabel getGotoLabel() {

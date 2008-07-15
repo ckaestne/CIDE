@@ -14,7 +14,7 @@ public class TemplateArg2 extends TemplateArg {
   public TemplateArg2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new TemplateArg2(cloneProperties(),firstToken,lastToken);
   }
   public ASTStringNode getIdentifier1() {

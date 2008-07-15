@@ -14,7 +14,7 @@ public class Stmt extends CodeUnit_InBlock {
   public Stmt(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new Stmt(cloneProperties(),firstToken,lastToken);
   }
   public Statement getStatement() {

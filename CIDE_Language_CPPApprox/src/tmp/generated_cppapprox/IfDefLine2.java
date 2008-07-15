@@ -14,7 +14,7 @@ public class IfDefLine2 extends IfDefLine {
   public IfDefLine2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new IfDefLine2(cloneProperties(),firstToken,lastToken);
   }
   public ASTStringNode getIdentifier1() {

@@ -14,7 +14,7 @@ public class IfDefBL extends CodeUnit_InBlock {
   public IfDefBL(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new IfDefBL(cloneProperties(),firstToken,lastToken);
   }
   public PPIfDef_BlockLevel getPPIfDef_BlockLevel() {

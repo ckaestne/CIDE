@@ -13,7 +13,7 @@ public class VarDeclToken15 extends VarDeclToken {
   public VarDeclToken15(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new VarDeclToken15(cloneProperties(),firstToken,lastToken);
   }
 }

@@ -14,7 +14,7 @@ public class CodeUnit_TopLevel10 extends CodeUnit_TopLevel {
   public CodeUnit_TopLevel10(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new CodeUnit_TopLevel10(cloneProperties(),firstToken,lastToken);
   }
   public CPPClass getCPPClass() {

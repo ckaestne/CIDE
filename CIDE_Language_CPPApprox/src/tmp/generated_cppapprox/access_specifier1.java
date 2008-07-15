@@ -13,7 +13,7 @@ public class access_specifier1 extends access_specifier {
   public access_specifier1(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new access_specifier1(cloneProperties(),firstToken,lastToken);
   }
 }

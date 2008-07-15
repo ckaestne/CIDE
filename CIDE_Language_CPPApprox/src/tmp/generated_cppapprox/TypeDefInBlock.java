@@ -14,7 +14,7 @@ public class TypeDefInBlock extends CodeUnit_InBlock {
   public TypeDefInBlock(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new TypeDefInBlock(cloneProperties(),firstToken,lastToken);
   }
   public TypeDef getTypeDef() {

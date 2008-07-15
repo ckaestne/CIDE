@@ -14,7 +14,7 @@ public class AnyTypeDefToken3 extends AnyTypeDefToken {
   public AnyTypeDefToken3(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new AnyTypeDefToken3(cloneProperties(),firstToken,lastToken);
   }
   public AnyStmtToken getAnyStmtToken() {

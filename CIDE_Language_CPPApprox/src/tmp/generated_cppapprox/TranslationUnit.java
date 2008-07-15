@@ -15,7 +15,7 @@ public class TranslationUnit extends GenASTNode implements ISourceFile {
   public TranslationUnit(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new TranslationUnit(cloneProperties(),firstToken,lastToken);
   }
   public Sequence_CodeUnit_TopLevel getSequence_CodeUnit_TopLevel() {

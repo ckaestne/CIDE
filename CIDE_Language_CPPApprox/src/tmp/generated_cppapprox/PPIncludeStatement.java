@@ -14,7 +14,7 @@ public class PPIncludeStatement extends GenASTNode {
   public PPIncludeStatement(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new PPIncludeStatement(cloneProperties(),firstToken,lastToken);
   }
   public ASTStringNode getFindlineend() {

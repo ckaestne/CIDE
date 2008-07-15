@@ -14,7 +14,7 @@ public class Sequence_CodeUnit_InBlock extends GenASTNode {
   public Sequence_CodeUnit_InBlock(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new Sequence_CodeUnit_InBlock(cloneProperties(),firstToken,lastToken);
   }
   public ArrayList<CodeUnit_InBlock> getCodeUnit_InBlock() {

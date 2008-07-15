@@ -13,7 +13,7 @@ public class AnyOpSymbol6 extends AnyOpSymbol {
   public AnyOpSymbol6(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new AnyOpSymbol6(cloneProperties(),firstToken,lastToken);
   }
 }

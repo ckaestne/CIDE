@@ -19,7 +19,7 @@ public class FunctionReturnType1 extends FunctionReturnType {
   public FunctionReturnType1(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new FunctionReturnType1(cloneProperties(),firstToken,lastToken);
   }
   public ASTTextNode getText74() {

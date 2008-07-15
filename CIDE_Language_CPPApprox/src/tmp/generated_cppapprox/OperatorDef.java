@@ -14,7 +14,7 @@ public class OperatorDef extends CodeUnit_TopLevel {
   public OperatorDef(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new OperatorDef(cloneProperties(),firstToken,lastToken);
   }
   public OperatorOverloading getOperatorOverloading() {

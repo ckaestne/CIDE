@@ -14,7 +14,7 @@ public class TypeDef2 extends TypeDef {
   public TypeDef2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new TypeDef2(cloneProperties(),firstToken,lastToken);
   }
   public ArrayList<AnyStmtToken> getAnyStmtToken() {

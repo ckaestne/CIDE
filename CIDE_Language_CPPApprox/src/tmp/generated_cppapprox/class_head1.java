@@ -16,7 +16,7 @@ public class class_head1 extends class_head {
   public class_head1(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new class_head1(cloneProperties(),firstToken,lastToken);
   }
   public class_key getClass_key() {

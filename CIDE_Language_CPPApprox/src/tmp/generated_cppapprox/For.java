@@ -14,7 +14,7 @@ public class For extends CodeUnit_InBlock {
   public For(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new For(cloneProperties(),firstToken,lastToken);
   }
   public ForStatement getForStatement() {

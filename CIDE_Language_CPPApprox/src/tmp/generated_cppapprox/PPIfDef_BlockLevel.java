@@ -17,7 +17,7 @@ public class PPIfDef_BlockLevel extends GenASTNode {
   public PPIfDef_BlockLevel(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new PPIfDef_BlockLevel(cloneProperties(),firstToken,lastToken);
   }
   public IfDefLine getIfDefLine() {

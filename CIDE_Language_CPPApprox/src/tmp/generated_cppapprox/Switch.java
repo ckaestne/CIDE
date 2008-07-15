@@ -14,7 +14,7 @@ public class Switch extends CodeUnit_InBlock {
   public Switch(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new Switch(cloneProperties(),firstToken,lastToken);
   }
   public SwitchStatement getSwitchStatement() {

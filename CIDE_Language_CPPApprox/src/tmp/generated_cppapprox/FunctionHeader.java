@@ -17,7 +17,7 @@ public class FunctionHeader extends GenASTNode {
   public FunctionHeader(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new FunctionHeader(cloneProperties(),firstToken,lastToken);
   }
   public ArrayList<Modifier> getModifier() {

@@ -16,7 +16,7 @@ public class ConstructorHeader extends GenASTNode {
   public ConstructorHeader(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new ConstructorHeader(cloneProperties(),firstToken,lastToken);
   }
   public ArrayList<Modifier> getModifier() {

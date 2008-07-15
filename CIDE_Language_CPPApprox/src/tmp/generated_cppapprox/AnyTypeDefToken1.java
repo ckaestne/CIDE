@@ -13,7 +13,7 @@ public class AnyTypeDefToken1 extends AnyTypeDefToken {
   public AnyTypeDefToken1(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new AnyTypeDefToken1(cloneProperties(),firstToken,lastToken);
   }
 }

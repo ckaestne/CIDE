@@ -14,7 +14,7 @@ public class AnyOpSymbol1 extends AnyOpSymbol {
   public AnyOpSymbol1(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new AnyOpSymbol1(cloneProperties(),firstToken,lastToken);
   }
   public ASTStringNode getSymbols() {

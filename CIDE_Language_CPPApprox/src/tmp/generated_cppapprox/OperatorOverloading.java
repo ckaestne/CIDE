@@ -17,7 +17,7 @@ public class OperatorOverloading extends GenASTNode {
   public OperatorOverloading(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new OperatorOverloading(cloneProperties(),firstToken,lastToken);
   }
   public OperatorHeader getOperatorHeader() {

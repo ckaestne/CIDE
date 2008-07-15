@@ -21,7 +21,7 @@ public class CPPApproxLanguageExtension implements ILanguageExtension {
 		return EXTENSIONS;
 	}
 
-	public ILanguageParser getParser(final InputStream inputStream) {
+	public ILanguageParser getParser(final InputStream inputStream, String filename) {
 		return new ILanguageParser() {
 			public ISourceFile getRoot() throws ParseException {
 				return new CPPApproxParser(new OffsetCharStream(inputStream))

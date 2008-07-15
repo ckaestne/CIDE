@@ -36,7 +36,7 @@ public class CPPApproxParserTester {
 	private void checkASTLength(IASTNode root) {
 		root.accept(new ASTVisitor() {
 			@Override
-			public boolean visit(ASTNode node) {
+			public boolean visit(IASTNode node) {
 				Assert.assertTrue("Node " + node + " has a length < 0", node
 						.getLength() >= 0);
 				return super.visit(node);
@@ -145,7 +145,7 @@ public class CPPApproxParserTester {
 		foundInner = foundOuter = false;
 		ast.accept(new ASTVisitor() {
 			@Override
-			public boolean visit(ASTNode node) {
+			public boolean visit(IASTNode node) {
 				if (foundOuter && node.getClass().isAssignableFrom(inner))
 					foundInner = true;
 				if (node.getClass().isAssignableFrom(outer))
@@ -161,7 +161,7 @@ public class CPPApproxParserTester {
 		foundOuter = false;
 		ast.accept(new ASTVisitor() {
 			@Override
-			public boolean visit(ASTNode node) {
+			public boolean visit(IASTNode node) {
 				if (node.getClass().isAssignableFrom(target))
 					foundOuter = true;
 				return super.visit(node);
@@ -174,7 +174,7 @@ public class CPPApproxParserTester {
 		foundOuter = false;
 		ast.accept(new ASTVisitor() {
 			@Override
-			public boolean visit(ASTNode node) {
+			public boolean visit(IASTNode node) {
 				if (node.getClass().isAssignableFrom(target))
 					foundOuter = true;
 				return super.visit(node);

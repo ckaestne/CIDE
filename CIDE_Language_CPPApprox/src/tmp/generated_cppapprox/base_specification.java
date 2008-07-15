@@ -14,7 +14,7 @@ public class base_specification extends GenASTNode {
   public base_specification(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new base_specification(cloneProperties(),firstToken,lastToken);
   }
   public ArrayList<base_specifier> getBase_specifier() {

@@ -14,7 +14,7 @@ public class Sequence_CodeUnit_TopLevel extends GenASTNode {
   public Sequence_CodeUnit_TopLevel(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new Sequence_CodeUnit_TopLevel(cloneProperties(),firstToken,lastToken);
   }
   public ArrayList<CodeUnit_TopLevel> getCodeUnit_TopLevel() {

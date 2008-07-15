@@ -15,7 +15,7 @@ public class BlockAssignment extends GenASTNode {
   public BlockAssignment(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new BlockAssignment(cloneProperties(),firstToken,lastToken);
   }
   public Cast getCast() {

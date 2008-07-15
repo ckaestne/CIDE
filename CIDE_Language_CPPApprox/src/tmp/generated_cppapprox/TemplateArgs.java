@@ -15,7 +15,7 @@ public class TemplateArgs extends GenASTNode {
   public TemplateArgs(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new TemplateArgs(cloneProperties(),firstToken,lastToken);
   }
   public TemplateArg getTemplateArg() {

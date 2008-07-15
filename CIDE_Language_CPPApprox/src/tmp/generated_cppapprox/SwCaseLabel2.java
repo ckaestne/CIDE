@@ -15,7 +15,7 @@ public class SwCaseLabel2 extends SwCaseLabel {
   public SwCaseLabel2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new SwCaseLabel2(cloneProperties(),firstToken,lastToken);
   }
   public ASTStringNode getOther() {

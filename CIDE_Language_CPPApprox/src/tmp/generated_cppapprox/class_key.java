@@ -13,7 +13,7 @@ public class class_key extends GenASTNode {
   public class_key(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new class_key(cloneProperties(),firstToken,lastToken);
   }
 }

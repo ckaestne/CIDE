@@ -14,7 +14,7 @@ public class AnyStmtToken30 extends AnyStmtToken {
   public AnyStmtToken30(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new AnyStmtToken30(cloneProperties(),firstToken,lastToken);
   }
   public PPOtherIgnore getPPOtherIgnore() {
