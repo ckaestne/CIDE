@@ -15,7 +15,7 @@ public class creation_expression extends GenASTNode {
   public creation_expression(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new creation_expression(cloneProperties(),firstToken,lastToken);
   }
   public non_array_type getNon_array_type() {

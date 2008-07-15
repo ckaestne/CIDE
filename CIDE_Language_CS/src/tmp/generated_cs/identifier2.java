@@ -13,7 +13,7 @@ public class identifier2 extends identifier {
   public identifier2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new identifier2(cloneProperties(),firstToken,lastToken);
   }
 }

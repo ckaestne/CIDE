@@ -14,7 +14,7 @@ public class class_body extends GenASTNode {
   public class_body(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new class_body(cloneProperties(),firstToken,lastToken);
   }
   public ArrayList<class_member_declaration> getClass_member_declaration() {

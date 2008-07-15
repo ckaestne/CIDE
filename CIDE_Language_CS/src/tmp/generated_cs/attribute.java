@@ -15,7 +15,7 @@ public class attribute extends GenASTNode {
   public attribute(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new attribute(cloneProperties(),firstToken,lastToken);
   }
   public type_name getType_name() {

@@ -15,7 +15,7 @@ public class destructor_declaration extends GenASTNode {
   public destructor_declaration(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new destructor_declaration(cloneProperties(),firstToken,lastToken);
   }
   public identifier getIdentifier() {

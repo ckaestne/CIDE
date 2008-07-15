@@ -17,7 +17,7 @@ public class struct_declaration extends GenASTNode {
   public struct_declaration(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new struct_declaration(cloneProperties(),firstToken,lastToken);
   }
   public identifier getIdentifier() {

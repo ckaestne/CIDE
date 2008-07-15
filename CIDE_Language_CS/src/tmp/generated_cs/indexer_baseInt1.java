@@ -14,7 +14,7 @@ public class indexer_baseInt1 extends indexer_baseInt {
   public indexer_baseInt1(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new indexer_baseInt1(cloneProperties(),firstToken,lastToken);
   }
   public identifier getIdentifier() {

@@ -15,7 +15,7 @@ public class event_declarationInt2 extends event_declarationInt {
   public event_declarationInt2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new event_declarationInt2(cloneProperties(),firstToken,lastToken);
   }
   public event_variable_declarator getEvent_variable_declarator() {

@@ -14,7 +14,7 @@ public class typeEnd1 extends typeEnd {
   public typeEnd1(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new typeEnd1(cloneProperties(),firstToken,lastToken);
   }
   public constructor_declaration getConstructor_declaration() {

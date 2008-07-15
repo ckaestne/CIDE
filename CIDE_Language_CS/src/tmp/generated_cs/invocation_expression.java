@@ -14,7 +14,7 @@ public class invocation_expression extends GenASTNode {
   public invocation_expression(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new invocation_expression(cloneProperties(),firstToken,lastToken);
   }
   public argument_list getArgument_list() {

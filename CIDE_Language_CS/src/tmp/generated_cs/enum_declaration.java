@@ -17,7 +17,7 @@ public class enum_declaration extends GenASTNode {
   public enum_declaration(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new enum_declaration(cloneProperties(),firstToken,lastToken);
   }
   public identifier getIdentifier() {

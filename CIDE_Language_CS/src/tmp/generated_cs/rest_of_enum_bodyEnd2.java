@@ -14,7 +14,7 @@ public class rest_of_enum_bodyEnd2 extends rest_of_enum_bodyEnd {
   public rest_of_enum_bodyEnd2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new rest_of_enum_bodyEnd2(cloneProperties(),firstToken,lastToken);
   }
   public rest_of_enum_body getRest_of_enum_body() {

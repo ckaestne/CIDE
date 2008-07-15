@@ -15,7 +15,7 @@ public class unary_expression1 extends unary_expression {
   public unary_expression1(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new unary_expression1(cloneProperties(),firstToken,lastToken);
   }
   public unary_operator getUnary_operator() {

@@ -16,7 +16,7 @@ public class fixed_parameter extends GenASTNode {
   public fixed_parameter(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new fixed_parameter(cloneProperties(),firstToken,lastToken);
   }
   public parameter_modifier getParameter_modifier() {

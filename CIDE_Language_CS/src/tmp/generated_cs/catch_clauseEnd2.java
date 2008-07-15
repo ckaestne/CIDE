@@ -14,7 +14,7 @@ public class catch_clauseEnd2 extends catch_clauseEnd {
   public catch_clauseEnd2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new catch_clauseEnd2(cloneProperties(),firstToken,lastToken);
   }
   public block getBlock1() {

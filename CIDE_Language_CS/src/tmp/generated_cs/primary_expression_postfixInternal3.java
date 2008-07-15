@@ -14,7 +14,7 @@ public class primary_expression_postfixInternal3 extends primary_expression_post
   public primary_expression_postfixInternal3(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new primary_expression_postfixInternal3(cloneProperties(),firstToken,lastToken);
   }
   public element_access getElement_access() {

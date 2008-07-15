@@ -15,7 +15,7 @@ public class rest_of_enum_body2 extends rest_of_enum_body {
   public rest_of_enum_body2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new rest_of_enum_body2(cloneProperties(),firstToken,lastToken);
   }
   public enum_member_declaration getEnum_member_declaration() {

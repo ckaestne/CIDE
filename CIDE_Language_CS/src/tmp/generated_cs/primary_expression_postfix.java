@@ -14,7 +14,7 @@ public class primary_expression_postfix extends GenASTNode {
   public primary_expression_postfix(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new primary_expression_postfix(cloneProperties(),firstToken,lastToken);
   }
   public ArrayList<primary_expression_postfixInternal> getPrimary_expression_postfixInternal() {

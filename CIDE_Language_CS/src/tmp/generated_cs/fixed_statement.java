@@ -16,7 +16,7 @@ public class fixed_statement extends GenASTNode {
   public fixed_statement(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new fixed_statement(cloneProperties(),firstToken,lastToken);
   }
   public type getType() {

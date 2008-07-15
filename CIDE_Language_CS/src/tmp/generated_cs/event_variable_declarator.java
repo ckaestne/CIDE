@@ -15,7 +15,7 @@ public class event_variable_declarator extends GenASTNode {
   public event_variable_declarator(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new event_variable_declarator(cloneProperties(),firstToken,lastToken);
   }
   public identifier getIdentifier() {

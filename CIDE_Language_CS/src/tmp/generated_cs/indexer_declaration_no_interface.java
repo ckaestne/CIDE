@@ -15,7 +15,7 @@ public class indexer_declaration_no_interface extends GenASTNode {
   public indexer_declaration_no_interface(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new indexer_declaration_no_interface(cloneProperties(),firstToken,lastToken);
   }
   public formal_parameter_list getFormal_parameter_list() {

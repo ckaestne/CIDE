@@ -15,7 +15,7 @@ public class rest_of_array_initializer2 extends rest_of_array_initializer {
   public rest_of_array_initializer2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new rest_of_array_initializer2(cloneProperties(),firstToken,lastToken);
   }
   public variable_initializer getVariable_initializer() {

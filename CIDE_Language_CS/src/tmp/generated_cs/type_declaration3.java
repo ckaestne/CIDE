@@ -14,7 +14,7 @@ public class type_declaration3 extends type_declaration {
   public type_declaration3(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new type_declaration3(cloneProperties(),firstToken,lastToken);
   }
   public interface_declaration getInterface_declaration() {

@@ -14,7 +14,7 @@ public class local_variable_initializer1 extends local_variable_initializer {
   public local_variable_initializer1(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new local_variable_initializer1(cloneProperties(),firstToken,lastToken);
   }
   public array_initializer getArray_initializer() {

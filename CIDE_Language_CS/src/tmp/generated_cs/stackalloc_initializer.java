@@ -15,7 +15,7 @@ public class stackalloc_initializer extends GenASTNode {
   public stackalloc_initializer(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new stackalloc_initializer(cloneProperties(),firstToken,lastToken);
   }
   public non_array_type getNon_array_type() {

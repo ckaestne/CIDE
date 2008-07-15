@@ -14,7 +14,7 @@ public class using_directiveEnd1 extends using_directiveEnd {
   public using_directiveEnd1(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new using_directiveEnd1(cloneProperties(),firstToken,lastToken);
   }
   public type_name getType_name() {

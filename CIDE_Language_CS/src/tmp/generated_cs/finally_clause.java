@@ -14,7 +14,7 @@ public class finally_clause extends GenASTNode {
   public finally_clause(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new finally_clause(cloneProperties(),firstToken,lastToken);
   }
   public block getBlock() {

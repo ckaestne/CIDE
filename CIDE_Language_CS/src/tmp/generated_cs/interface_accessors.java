@@ -15,7 +15,7 @@ public class interface_accessors extends GenASTNode {
   public interface_accessors(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new interface_accessors(cloneProperties(),firstToken,lastToken);
   }
   public interface_accessor getInterface_accessor() {

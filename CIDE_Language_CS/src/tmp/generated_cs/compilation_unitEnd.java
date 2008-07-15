@@ -15,7 +15,7 @@ public class compilation_unitEnd extends GenASTNode {
   public compilation_unitEnd(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new compilation_unitEnd(cloneProperties(),firstToken,lastToken);
   }
   public namespace_member_declaration_no_attr getNamespace_member_declaration_no_attr() {

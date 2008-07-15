@@ -14,7 +14,7 @@ public class local_variable_assignment extends GenASTNode {
   public local_variable_assignment(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new local_variable_assignment(cloneProperties(),firstToken,lastToken);
   }
   public local_variable_initializer getLocal_variable_initializer() {

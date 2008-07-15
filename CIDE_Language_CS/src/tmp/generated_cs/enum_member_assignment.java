@@ -14,7 +14,7 @@ public class enum_member_assignment extends GenASTNode {
   public enum_member_assignment(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new enum_member_assignment(cloneProperties(),firstToken,lastToken);
   }
   public expression getExpression() {

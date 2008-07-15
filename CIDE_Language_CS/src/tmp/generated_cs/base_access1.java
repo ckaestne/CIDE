@@ -14,7 +14,7 @@ public class base_access1 extends base_access {
   public base_access1(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new base_access1(cloneProperties(),firstToken,lastToken);
   }
   public member_access getMember_access() {

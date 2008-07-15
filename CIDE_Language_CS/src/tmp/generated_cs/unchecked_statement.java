@@ -14,7 +14,7 @@ public class unchecked_statement extends GenASTNode {
   public unchecked_statement(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new unchecked_statement(cloneProperties(),firstToken,lastToken);
   }
   public block getBlock() {

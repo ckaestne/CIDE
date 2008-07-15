@@ -17,7 +17,7 @@ public class for_statement extends GenASTNode {
   public for_statement(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new for_statement(cloneProperties(),firstToken,lastToken);
   }
   public for_initializer getFor_initializer() {

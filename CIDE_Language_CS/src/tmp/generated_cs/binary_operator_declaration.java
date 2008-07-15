@@ -19,7 +19,7 @@ public class binary_operator_declaration extends GenASTNode {
   public binary_operator_declaration(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new binary_operator_declaration(cloneProperties(),firstToken,lastToken);
   }
   public overloadable_binary_operator getOverloadable_binary_operator() {

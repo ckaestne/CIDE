@@ -13,7 +13,7 @@ public class type_modifier8 extends type_modifier {
   public type_modifier8(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new type_modifier8(cloneProperties(),firstToken,lastToken);
   }
 }

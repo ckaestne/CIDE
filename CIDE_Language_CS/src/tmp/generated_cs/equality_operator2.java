@@ -13,7 +13,7 @@ public class equality_operator2 extends equality_operator {
   public equality_operator2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new equality_operator2(cloneProperties(),firstToken,lastToken);
   }
 }

@@ -14,7 +14,7 @@ public class sizeof_expression extends GenASTNode {
   public sizeof_expression(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new sizeof_expression(cloneProperties(),firstToken,lastToken);
   }
   public type getType() {

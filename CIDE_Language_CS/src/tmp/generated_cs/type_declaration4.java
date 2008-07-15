@@ -14,7 +14,7 @@ public class type_declaration4 extends type_declaration {
   public type_declaration4(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new type_declaration4(cloneProperties(),firstToken,lastToken);
   }
   public enum_declaration getEnum_declaration() {

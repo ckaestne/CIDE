@@ -15,7 +15,7 @@ public class class_base extends GenASTNode {
   public class_base(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new class_base(cloneProperties(),firstToken,lastToken);
   }
   public class_type getClass_type() {

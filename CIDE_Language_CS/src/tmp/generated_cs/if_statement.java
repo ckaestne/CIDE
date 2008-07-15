@@ -16,7 +16,7 @@ public class if_statement extends GenASTNode {
   public if_statement(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new if_statement(cloneProperties(),firstToken,lastToken);
   }
   public expression getExpression() {

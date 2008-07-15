@@ -14,7 +14,7 @@ public class for_initializer1 extends for_initializer {
   public for_initializer1(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new for_initializer1(cloneProperties(),firstToken,lastToken);
   }
   public local_variable_declaration getLocal_variable_declaration() {

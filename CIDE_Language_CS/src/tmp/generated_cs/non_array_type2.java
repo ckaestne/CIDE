@@ -14,7 +14,7 @@ public class non_array_type2 extends non_array_type {
   public non_array_type2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new non_array_type2(cloneProperties(),firstToken,lastToken);
   }
   public type_name getType_name() {

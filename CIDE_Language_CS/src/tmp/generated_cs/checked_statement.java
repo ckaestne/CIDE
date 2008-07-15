@@ -14,7 +14,7 @@ public class checked_statement extends GenASTNode {
   public checked_statement(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new checked_statement(cloneProperties(),firstToken,lastToken);
   }
   public block getBlock() {

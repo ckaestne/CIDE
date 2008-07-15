@@ -15,7 +15,7 @@ public class expressionInternal extends GenASTNode {
   public expressionInternal(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new expressionInternal(cloneProperties(),firstToken,lastToken);
   }
   public assignment_operator getAssignment_operator() {

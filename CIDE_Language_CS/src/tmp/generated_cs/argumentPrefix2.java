@@ -13,7 +13,7 @@ public class argumentPrefix2 extends argumentPrefix {
   public argumentPrefix2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new argumentPrefix2(cloneProperties(),firstToken,lastToken);
   }
 }

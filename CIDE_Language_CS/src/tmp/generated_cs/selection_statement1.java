@@ -14,7 +14,7 @@ public class selection_statement1 extends selection_statement {
   public selection_statement1(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new selection_statement1(cloneProperties(),firstToken,lastToken);
   }
   public if_statement getIf_statement() {

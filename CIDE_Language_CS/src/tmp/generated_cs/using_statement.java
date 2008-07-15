@@ -15,7 +15,7 @@ public class using_statement extends GenASTNode {
   public using_statement(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new using_statement(cloneProperties(),firstToken,lastToken);
   }
   public resource_acquisition getResource_acquisition() {

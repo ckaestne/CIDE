@@ -15,7 +15,7 @@ public class accessor_declarations extends GenASTNode {
   public accessor_declarations(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new accessor_declarations(cloneProperties(),firstToken,lastToken);
   }
   public accessor_declaration getAccessor_declaration() {

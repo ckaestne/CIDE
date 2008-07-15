@@ -14,7 +14,7 @@ public class statement3 extends statement {
   public statement3(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new statement3(cloneProperties(),firstToken,lastToken);
   }
   public local_constant_declaration getLocal_constant_declaration() {

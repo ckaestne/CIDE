@@ -14,7 +14,7 @@ public class for_initializer2 extends for_initializer {
   public for_initializer2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new for_initializer2(cloneProperties(),firstToken,lastToken);
   }
   public expression_list getExpression_list() {

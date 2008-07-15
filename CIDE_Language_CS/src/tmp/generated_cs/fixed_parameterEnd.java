@@ -15,7 +15,7 @@ public class fixed_parameterEnd extends GenASTNode {
   public fixed_parameterEnd(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new fixed_parameterEnd(cloneProperties(),firstToken,lastToken);
   }
   public attributes getAttributes() {

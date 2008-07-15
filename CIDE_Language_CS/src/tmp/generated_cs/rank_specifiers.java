@@ -14,7 +14,7 @@ public class rank_specifiers extends GenASTNode {
   public rank_specifiers(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new rank_specifiers(cloneProperties(),firstToken,lastToken);
   }
   public ArrayList<rank_specifier> getRank_specifier() {

@@ -15,7 +15,7 @@ public class equality_expressionInternal extends GenASTNode {
   public equality_expressionInternal(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new equality_expressionInternal(cloneProperties(),firstToken,lastToken);
   }
   public equality_operator getEquality_operator() {

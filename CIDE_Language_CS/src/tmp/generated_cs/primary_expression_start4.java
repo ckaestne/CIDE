@@ -15,7 +15,7 @@ public class primary_expression_start4 extends primary_expression_start {
   public primary_expression_start4(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new primary_expression_start4(cloneProperties(),firstToken,lastToken);
   }
   public predefined_type getPredefined_type() {

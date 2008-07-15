@@ -15,7 +15,7 @@ public class fixed_pointer_initializer extends GenASTNode {
   public fixed_pointer_initializer(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new fixed_pointer_initializer(cloneProperties(),firstToken,lastToken);
   }
   public ASTTextNode getText281() {

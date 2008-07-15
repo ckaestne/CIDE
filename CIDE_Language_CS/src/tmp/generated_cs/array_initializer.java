@@ -14,7 +14,7 @@ public class array_initializer extends GenASTNode {
   public array_initializer(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new array_initializer(cloneProperties(),firstToken,lastToken);
   }
   public rest_of_array_initializer getRest_of_array_initializer() {

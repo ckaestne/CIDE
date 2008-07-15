@@ -14,7 +14,7 @@ public class type_modifiers extends GenASTNode {
   public type_modifiers(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new type_modifiers(cloneProperties(),firstToken,lastToken);
   }
   public ArrayList<type_modifier> getType_modifier() {

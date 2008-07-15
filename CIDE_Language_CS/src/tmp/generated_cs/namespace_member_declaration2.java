@@ -16,7 +16,7 @@ public class namespace_member_declaration2 extends namespace_member_declaration 
   public namespace_member_declaration2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new namespace_member_declaration2(cloneProperties(),firstToken,lastToken);
   }
   public attributes getAttributes() {

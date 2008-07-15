@@ -15,7 +15,7 @@ public class local_constant_declarators extends GenASTNode {
   public local_constant_declarators(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new local_constant_declarators(cloneProperties(),firstToken,lastToken);
   }
   public local_constant_declarator getLocal_constant_declarator() {

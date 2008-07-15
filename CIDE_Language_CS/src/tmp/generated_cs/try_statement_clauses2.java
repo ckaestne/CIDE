@@ -14,7 +14,7 @@ public class try_statement_clauses2 extends try_statement_clauses {
   public try_statement_clauses2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new try_statement_clauses2(cloneProperties(),firstToken,lastToken);
   }
   public finally_clause getFinally_clause1() {

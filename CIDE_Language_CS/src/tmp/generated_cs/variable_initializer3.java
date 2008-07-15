@@ -14,7 +14,7 @@ public class variable_initializer3 extends variable_initializer {
   public variable_initializer3(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new variable_initializer3(cloneProperties(),firstToken,lastToken);
   }
   public stackalloc_initializer getStackalloc_initializer() {

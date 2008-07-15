@@ -15,7 +15,7 @@ public class local_attribute extends GenASTNode {
   public local_attribute(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new local_attribute(cloneProperties(),firstToken,lastToken);
   }
   public attribute_target_specifier getAttribute_target_specifier() {

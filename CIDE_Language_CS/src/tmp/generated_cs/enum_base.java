@@ -14,7 +14,7 @@ public class enum_base extends GenASTNode {
   public enum_base(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new enum_base(cloneProperties(),firstToken,lastToken);
   }
   public integral_type getIntegral_type() {

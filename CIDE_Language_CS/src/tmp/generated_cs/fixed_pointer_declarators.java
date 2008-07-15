@@ -15,7 +15,7 @@ public class fixed_pointer_declarators extends GenASTNode {
   public fixed_pointer_declarators(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new fixed_pointer_declarators(cloneProperties(),firstToken,lastToken);
   }
   public fixed_pointer_declarator getFixed_pointer_declarator() {

@@ -14,7 +14,7 @@ public class iteration_statement2 extends iteration_statement {
   public iteration_statement2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new iteration_statement2(cloneProperties(),firstToken,lastToken);
   }
   public do_statement getDo_statement() {

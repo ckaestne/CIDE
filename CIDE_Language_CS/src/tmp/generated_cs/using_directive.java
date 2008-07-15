@@ -15,7 +15,7 @@ public class using_directive extends GenASTNode {
   public using_directive(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new using_directive(cloneProperties(),firstToken,lastToken);
   }
   public type_name getType_name() {

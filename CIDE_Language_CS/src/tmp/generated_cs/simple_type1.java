@@ -14,7 +14,7 @@ public class simple_type1 extends simple_type {
   public simple_type1(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new simple_type1(cloneProperties(),firstToken,lastToken);
   }
   public numeric_type getNumeric_type() {

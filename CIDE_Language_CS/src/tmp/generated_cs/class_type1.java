@@ -14,7 +14,7 @@ public class class_type1 extends class_type {
   public class_type1(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new class_type1(cloneProperties(),firstToken,lastToken);
   }
   public type_name getType_name() {

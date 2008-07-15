@@ -14,7 +14,7 @@ public class attributes_either extends GenASTNode {
   public attributes_either(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new attributes_either(cloneProperties(),firstToken,lastToken);
   }
   public ArrayList<attribute_section_start> getAttribute_section_start() {

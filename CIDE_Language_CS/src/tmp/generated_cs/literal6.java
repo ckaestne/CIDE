@@ -14,7 +14,7 @@ public class literal6 extends literal {
   public literal6(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new literal6(cloneProperties(),firstToken,lastToken);
   }
   public ASTStringNode getVerbatim_string_literal() {

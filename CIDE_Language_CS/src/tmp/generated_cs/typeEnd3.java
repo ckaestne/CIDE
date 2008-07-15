@@ -14,7 +14,7 @@ public class typeEnd3 extends typeEnd {
   public typeEnd3(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new typeEnd3(cloneProperties(),firstToken,lastToken);
   }
   public operator_declaration getOperator_declaration() {

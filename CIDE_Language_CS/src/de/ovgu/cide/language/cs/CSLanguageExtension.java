@@ -14,7 +14,7 @@ import cide.languages.ILanguageValidator;
 
 public class CSLanguageExtension implements ILanguageExtension {
 
-	public ILanguageParser getParser(final InputStream inputStream) {
+	public ILanguageParser getParser(final InputStream inputStream, String filename) {
 		
 		return new ILanguageParser(){
 

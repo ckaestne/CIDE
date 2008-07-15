@@ -13,7 +13,7 @@ public class jump_statement2 extends jump_statement {
   public jump_statement2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new jump_statement2(cloneProperties(),firstToken,lastToken);
   }
 }

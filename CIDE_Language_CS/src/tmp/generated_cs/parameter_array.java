@@ -15,7 +15,7 @@ public class parameter_array extends GenASTNode {
   public parameter_array(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new parameter_array(cloneProperties(),firstToken,lastToken);
   }
   public type getType() {

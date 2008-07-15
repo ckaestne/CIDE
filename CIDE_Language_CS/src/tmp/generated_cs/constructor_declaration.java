@@ -16,7 +16,7 @@ public class constructor_declaration extends GenASTNode {
   public constructor_declaration(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new constructor_declaration(cloneProperties(),firstToken,lastToken);
   }
   public formal_parameter_list getFormal_parameter_list() {

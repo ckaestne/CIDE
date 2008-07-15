@@ -15,7 +15,7 @@ public class additive_expressionInternal extends GenASTNode {
   public additive_expressionInternal(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new additive_expressionInternal(cloneProperties(),firstToken,lastToken);
   }
   public additive_operator getAdditive_operator() {

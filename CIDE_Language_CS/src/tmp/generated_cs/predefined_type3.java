@@ -13,7 +13,7 @@ public class predefined_type3 extends predefined_type {
   public predefined_type3(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new predefined_type3(cloneProperties(),firstToken,lastToken);
   }
 }

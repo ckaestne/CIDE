@@ -14,7 +14,7 @@ public class array_creation_postfix_expressionInternal3 extends array_creation_p
   public array_creation_postfix_expressionInternal3(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new array_creation_postfix_expressionInternal3(cloneProperties(),firstToken,lastToken);
   }
   public post_increment_expression getPost_increment_expression() {

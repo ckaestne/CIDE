@@ -13,7 +13,7 @@ public class post_increment_expression extends GenASTNode {
   public post_increment_expression(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new post_increment_expression(cloneProperties(),firstToken,lastToken);
   }
 }

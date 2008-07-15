@@ -14,7 +14,7 @@ public class base_interfaces extends GenASTNode {
   public base_interfaces(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new base_interfaces(cloneProperties(),firstToken,lastToken);
   }
   public interface_type_list getInterface_type_list() {

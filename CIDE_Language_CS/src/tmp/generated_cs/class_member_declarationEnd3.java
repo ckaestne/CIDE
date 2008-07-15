@@ -14,7 +14,7 @@ public class class_member_declarationEnd3 extends class_member_declarationEnd {
   public class_member_declarationEnd3(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new class_member_declarationEnd3(cloneProperties(),firstToken,lastToken);
   }
   public destructor_declaration getDestructor_declaration() {

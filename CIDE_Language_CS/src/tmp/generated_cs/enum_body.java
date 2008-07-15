@@ -14,7 +14,7 @@ public class enum_body extends GenASTNode {
   public enum_body(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new enum_body(cloneProperties(),firstToken,lastToken);
   }
   public rest_of_enum_body getRest_of_enum_body() {

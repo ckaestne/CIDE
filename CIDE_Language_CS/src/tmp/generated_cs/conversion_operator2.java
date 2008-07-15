@@ -13,7 +13,7 @@ public class conversion_operator2 extends conversion_operator {
   public conversion_operator2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new conversion_operator2(cloneProperties(),firstToken,lastToken);
   }
 }

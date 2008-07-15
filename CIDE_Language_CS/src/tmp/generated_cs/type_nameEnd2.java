@@ -14,7 +14,7 @@ public class type_nameEnd2 extends type_nameEnd {
   public type_nameEnd2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new type_nameEnd2(cloneProperties(),firstToken,lastToken);
   }
   public property_declaration getProperty_declaration() {

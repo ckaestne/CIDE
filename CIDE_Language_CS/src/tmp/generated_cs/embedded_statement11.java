@@ -14,7 +14,7 @@ public class embedded_statement11 extends embedded_statement {
   public embedded_statement11(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new embedded_statement11(cloneProperties(),firstToken,lastToken);
   }
   public unsafe_statement getUnsafe_statement() {

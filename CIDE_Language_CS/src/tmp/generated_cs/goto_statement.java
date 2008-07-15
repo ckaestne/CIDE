@@ -14,7 +14,7 @@ public class goto_statement extends GenASTNode {
   public goto_statement(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new goto_statement(cloneProperties(),firstToken,lastToken);
   }
   public goto_statementEnd getGoto_statementEnd() {

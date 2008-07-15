@@ -14,7 +14,7 @@ public class primary_expression_start10 extends primary_expression_start {
   public primary_expression_start10(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new primary_expression_start10(cloneProperties(),firstToken,lastToken);
   }
   public unchecked_expression getUnchecked_expression() {

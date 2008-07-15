@@ -16,7 +16,7 @@ public class assignment extends GenASTNode {
   public assignment(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new assignment(cloneProperties(),firstToken,lastToken);
   }
   public conditional_expression getConditional_expression() {

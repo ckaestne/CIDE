@@ -15,7 +15,7 @@ public class constructor_initializer extends GenASTNode {
   public constructor_initializer(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new constructor_initializer(cloneProperties(),firstToken,lastToken);
   }
   public constructor_initializerInt getConstructor_initializerInt() {

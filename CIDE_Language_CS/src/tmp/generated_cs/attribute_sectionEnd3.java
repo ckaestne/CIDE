@@ -14,7 +14,7 @@ public class attribute_sectionEnd3 extends attribute_sectionEnd {
   public attribute_sectionEnd3(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new attribute_sectionEnd3(cloneProperties(),firstToken,lastToken);
   }
   public attribute_section getAttribute_section() {

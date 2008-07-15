@@ -18,7 +18,7 @@ public class conversion_operator_declaration extends GenASTNode {
   public conversion_operator_declaration(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new conversion_operator_declaration(cloneProperties(),firstToken,lastToken);
   }
   public conversion_operator getConversion_operator() {

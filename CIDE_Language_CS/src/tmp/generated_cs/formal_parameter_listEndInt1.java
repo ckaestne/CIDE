@@ -14,7 +14,7 @@ public class formal_parameter_listEndInt1 extends formal_parameter_listEndInt {
   public formal_parameter_listEndInt1(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new formal_parameter_listEndInt1(cloneProperties(),firstToken,lastToken);
   }
   public fixed_parameter getFixed_parameter() {

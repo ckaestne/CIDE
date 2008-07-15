@@ -15,7 +15,7 @@ public class conditional_expressionInternal extends GenASTNode {
   public conditional_expressionInternal(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new conditional_expressionInternal(cloneProperties(),firstToken,lastToken);
   }
   public expression getExpression() {

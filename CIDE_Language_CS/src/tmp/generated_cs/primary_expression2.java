@@ -14,7 +14,7 @@ public class primary_expression2 extends primary_expression {
   public primary_expression2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new primary_expression2(cloneProperties(),firstToken,lastToken);
   }
   public creation_expression getCreation_expression() {

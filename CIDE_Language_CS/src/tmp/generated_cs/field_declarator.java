@@ -15,7 +15,7 @@ public class field_declarator extends GenASTNode {
   public field_declarator(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new field_declarator(cloneProperties(),firstToken,lastToken);
   }
   public identifier getIdentifier() {

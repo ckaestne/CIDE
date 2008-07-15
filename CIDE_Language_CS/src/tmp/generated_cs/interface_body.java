@@ -14,7 +14,7 @@ public class interface_body extends GenASTNode {
   public interface_body(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new interface_body(cloneProperties(),firstToken,lastToken);
   }
   public ArrayList<interface_member_declaration> getInterface_member_declaration() {

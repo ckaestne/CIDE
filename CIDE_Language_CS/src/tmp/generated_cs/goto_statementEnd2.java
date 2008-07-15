@@ -14,7 +14,7 @@ public class goto_statementEnd2 extends goto_statementEnd {
   public goto_statementEnd2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new goto_statementEnd2(cloneProperties(),firstToken,lastToken);
   }
   public expression getExpression() {

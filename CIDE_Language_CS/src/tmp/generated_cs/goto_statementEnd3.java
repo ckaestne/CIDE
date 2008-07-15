@@ -13,7 +13,7 @@ public class goto_statementEnd3 extends goto_statementEnd {
   public goto_statementEnd3(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new goto_statementEnd3(cloneProperties(),firstToken,lastToken);
   }
 }

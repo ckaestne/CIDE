@@ -17,7 +17,7 @@ public class unary_operator_declaration extends GenASTNode {
   public unary_operator_declaration(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new unary_operator_declaration(cloneProperties(),firstToken,lastToken);
   }
   public overloadable_unary_operator getOverloadable_unary_operator() {

@@ -14,7 +14,7 @@ public class variable_initializer1 extends variable_initializer {
   public variable_initializer1(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new variable_initializer1(cloneProperties(),firstToken,lastToken);
   }
   public array_initializer getArray_initializer() {

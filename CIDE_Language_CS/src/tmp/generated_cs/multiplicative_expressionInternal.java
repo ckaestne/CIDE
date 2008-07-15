@@ -15,7 +15,7 @@ public class multiplicative_expressionInternal extends GenASTNode {
   public multiplicative_expressionInternal(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new multiplicative_expressionInternal(cloneProperties(),firstToken,lastToken);
   }
   public multiplicative_operator getMultiplicative_operator() {

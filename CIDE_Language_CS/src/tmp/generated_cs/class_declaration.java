@@ -17,7 +17,7 @@ public class class_declaration extends GenASTNode {
   public class_declaration(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new class_declaration(cloneProperties(),firstToken,lastToken);
   }
   public identifier getIdentifier() {

@@ -15,7 +15,7 @@ public class relational_expressionInternal2 extends relational_expressionInterna
   public relational_expressionInternal2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new relational_expressionInternal2(cloneProperties(),firstToken,lastToken);
   }
   public relational_operator2I getRelational_operator2I() {

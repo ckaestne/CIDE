@@ -13,7 +13,7 @@ public class constructor_initializerInt1 extends constructor_initializerInt {
   public constructor_initializerInt1(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new constructor_initializerInt1(cloneProperties(),firstToken,lastToken);
   }
 }

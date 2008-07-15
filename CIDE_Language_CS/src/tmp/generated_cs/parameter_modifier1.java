@@ -13,7 +13,7 @@ public class parameter_modifier1 extends parameter_modifier {
   public parameter_modifier1(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new parameter_modifier1(cloneProperties(),firstToken,lastToken);
   }
 }

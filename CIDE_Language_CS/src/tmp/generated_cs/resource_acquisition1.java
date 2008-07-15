@@ -14,7 +14,7 @@ public class resource_acquisition1 extends resource_acquisition {
   public resource_acquisition1(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new resource_acquisition1(cloneProperties(),firstToken,lastToken);
   }
   public local_variable_declaration getLocal_variable_declaration() {

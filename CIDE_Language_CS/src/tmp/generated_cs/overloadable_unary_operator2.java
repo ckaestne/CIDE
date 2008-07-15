@@ -13,7 +13,7 @@ public class overloadable_unary_operator2 extends overloadable_unary_operator {
   public overloadable_unary_operator2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new overloadable_unary_operator2(cloneProperties(),firstToken,lastToken);
   }
 }

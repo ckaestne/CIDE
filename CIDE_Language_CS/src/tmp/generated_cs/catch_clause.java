@@ -14,7 +14,7 @@ public class catch_clause extends GenASTNode {
   public catch_clause(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new catch_clause(cloneProperties(),firstToken,lastToken);
   }
   public catch_clauseEnd getCatch_clauseEnd() {

@@ -14,7 +14,7 @@ public class typeEnd4 extends typeEnd {
   public typeEnd4(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new typeEnd4(cloneProperties(),firstToken,lastToken);
   }
   public indexer_declaration_interface getIndexer_declaration_interface() {

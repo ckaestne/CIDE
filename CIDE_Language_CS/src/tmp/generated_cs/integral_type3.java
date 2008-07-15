@@ -13,7 +13,7 @@ public class integral_type3 extends integral_type {
   public integral_type3(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new integral_type3(cloneProperties(),firstToken,lastToken);
   }
 }

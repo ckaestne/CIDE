@@ -13,7 +13,7 @@ public class interface_member_modifier1 extends interface_member_modifier {
   public interface_member_modifier1(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new interface_member_modifier1(cloneProperties(),firstToken,lastToken);
   }
 }

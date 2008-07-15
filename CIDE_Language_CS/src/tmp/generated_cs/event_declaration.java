@@ -15,7 +15,7 @@ public class event_declaration extends GenASTNode {
   public event_declaration(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new event_declaration(cloneProperties(),firstToken,lastToken);
   }
   public type getType() {

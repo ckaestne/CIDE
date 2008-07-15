@@ -15,7 +15,7 @@ public class switch_section extends GenASTNode {
   public switch_section(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new switch_section(cloneProperties(),firstToken,lastToken);
   }
   public ArrayList<switch_label> getSwitch_label() {

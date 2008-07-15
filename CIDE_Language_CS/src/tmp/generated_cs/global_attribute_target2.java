@@ -13,7 +13,7 @@ public class global_attribute_target2 extends global_attribute_target {
   public global_attribute_target2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new global_attribute_target2(cloneProperties(),firstToken,lastToken);
   }
 }

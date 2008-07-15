@@ -14,7 +14,7 @@ public class namespace_member_declaration_no_attr1 extends namespace_member_decl
   public namespace_member_declaration_no_attr1(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new namespace_member_declaration_no_attr1(cloneProperties(),firstToken,lastToken);
   }
   public namespace_declaration getNamespace_declaration() {

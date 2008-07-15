@@ -15,7 +15,7 @@ public class expression_list extends GenASTNode {
   public expression_list(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new expression_list(cloneProperties(),firstToken,lastToken);
   }
   public expression getExpression() {

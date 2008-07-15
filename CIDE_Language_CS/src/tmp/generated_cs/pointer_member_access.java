@@ -14,7 +14,7 @@ public class pointer_member_access extends GenASTNode {
   public pointer_member_access(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new pointer_member_access(cloneProperties(),firstToken,lastToken);
   }
   public ASTStringNode getIdentifier() {

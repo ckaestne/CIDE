@@ -16,7 +16,7 @@ public class delegate_declaration extends GenASTNode {
   public delegate_declaration(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new delegate_declaration(cloneProperties(),firstToken,lastToken);
   }
   public type getType() {

@@ -13,7 +13,7 @@ public class member_modifier6 extends member_modifier {
   public member_modifier6(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new member_modifier6(cloneProperties(),firstToken,lastToken);
   }
 }

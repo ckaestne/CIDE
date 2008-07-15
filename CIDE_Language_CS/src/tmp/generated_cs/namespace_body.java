@@ -16,7 +16,7 @@ public class namespace_body extends GenASTNode {
   public namespace_body(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new namespace_body(cloneProperties(),firstToken,lastToken);
   }
   public ArrayList<using_directive> getUsing_directive() {

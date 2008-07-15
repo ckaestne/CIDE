@@ -14,7 +14,7 @@ public class element_access extends GenASTNode {
   public element_access(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new element_access(cloneProperties(),firstToken,lastToken);
   }
   public argument_list getArgument_list() {

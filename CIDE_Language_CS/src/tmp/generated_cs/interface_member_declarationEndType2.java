@@ -15,7 +15,7 @@ public class interface_member_declarationEndType2 extends interface_member_decla
   public interface_member_declarationEndType2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new interface_member_declarationEndType2(cloneProperties(),firstToken,lastToken);
   }
   public identifier getIdentifier() {

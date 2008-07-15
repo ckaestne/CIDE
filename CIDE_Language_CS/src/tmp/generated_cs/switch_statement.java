@@ -15,7 +15,7 @@ public class switch_statement extends GenASTNode {
   public switch_statement(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new switch_statement(cloneProperties(),firstToken,lastToken);
   }
   public expression getExpression() {

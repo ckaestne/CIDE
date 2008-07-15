@@ -14,7 +14,7 @@ public class local_variable_initializer2 extends local_variable_initializer {
   public local_variable_initializer2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new local_variable_initializer2(cloneProperties(),firstToken,lastToken);
   }
   public expression getExpression() {

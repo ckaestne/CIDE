@@ -14,7 +14,7 @@ public class primary_expression_postfixInternal5 extends primary_expression_post
   public primary_expression_postfixInternal5(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new primary_expression_postfixInternal5(cloneProperties(),firstToken,lastToken);
   }
   public post_decrement_expression getPost_decrement_expression() {

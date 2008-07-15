@@ -15,7 +15,7 @@ public class shift_expressionInternal extends GenASTNode {
   public shift_expressionInternal(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new shift_expressionInternal(cloneProperties(),firstToken,lastToken);
   }
   public shift_operator getShift_operator() {

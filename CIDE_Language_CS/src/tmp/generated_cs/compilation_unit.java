@@ -17,7 +17,7 @@ public class compilation_unit extends GenASTNode implements ISourceFile {
   public compilation_unit(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new compilation_unit(cloneProperties(),firstToken,lastToken);
   }
   public ArrayList<using_directive> getUsing_directive() {

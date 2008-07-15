@@ -17,7 +17,7 @@ public class creation_expressionPostFix2 extends creation_expressionPostFix {
   public creation_expressionPostFix2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new creation_expressionPostFix2(cloneProperties(),firstToken,lastToken);
   }
   public expression_list getExpression_list() {

@@ -15,7 +15,7 @@ public class expression extends GenASTNode {
   public expression(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new expression(cloneProperties(),firstToken,lastToken);
   }
   public conditional_expression getConditional_expression() {

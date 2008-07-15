@@ -14,7 +14,7 @@ public class operator_declaration1 extends operator_declaration {
   public operator_declaration1(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new operator_declaration1(cloneProperties(),firstToken,lastToken);
   }
   public unary_operator_declaration getUnary_operator_declaration() {

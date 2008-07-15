@@ -14,7 +14,7 @@ public class field_declaration_start extends GenASTNode {
   public field_declaration_start(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new field_declaration_start(cloneProperties(),firstToken,lastToken);
   }
   public variable_initializer getVariable_initializer() {

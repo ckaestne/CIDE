@@ -15,7 +15,7 @@ public class namespace_declaration extends GenASTNode {
   public namespace_declaration(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new namespace_declaration(cloneProperties(),firstToken,lastToken);
   }
   public type_name getType_name() {

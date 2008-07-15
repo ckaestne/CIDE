@@ -13,7 +13,7 @@ public class class_type3 extends class_type {
   public class_type3(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new class_type3(cloneProperties(),firstToken,lastToken);
   }
 }

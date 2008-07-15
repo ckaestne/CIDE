@@ -14,7 +14,7 @@ public class numeric_type2 extends numeric_type {
   public numeric_type2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new numeric_type2(cloneProperties(),firstToken,lastToken);
   }
   public floating_point_type getFloating_point_type() {

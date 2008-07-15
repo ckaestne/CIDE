@@ -15,7 +15,7 @@ public class attribute_section_start2 extends attribute_section_start {
   public attribute_section_start2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new attribute_section_start2(cloneProperties(),firstToken,lastToken);
   }
   public attribute_target_specifier getAttribute_target_specifier() {

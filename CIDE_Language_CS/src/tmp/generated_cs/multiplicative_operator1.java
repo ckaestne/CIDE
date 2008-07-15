@@ -13,7 +13,7 @@ public class multiplicative_operator1 extends multiplicative_operator {
   public multiplicative_operator1(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new multiplicative_operator1(cloneProperties(),firstToken,lastToken);
   }
 }

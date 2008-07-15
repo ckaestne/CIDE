@@ -15,7 +15,7 @@ public class lock_statement extends GenASTNode {
   public lock_statement(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new lock_statement(cloneProperties(),firstToken,lastToken);
   }
   public expression getExpression() {

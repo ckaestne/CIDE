@@ -15,7 +15,7 @@ public class constant_declarator extends GenASTNode {
   public constant_declarator(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new constant_declarator(cloneProperties(),firstToken,lastToken);
   }
   public identifier getIdentifier() {

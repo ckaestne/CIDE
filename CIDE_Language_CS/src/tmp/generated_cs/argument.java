@@ -15,7 +15,7 @@ public class argument extends GenASTNode {
   public argument(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new argument(cloneProperties(),firstToken,lastToken);
   }
   public argumentPrefix getArgumentPrefix() {

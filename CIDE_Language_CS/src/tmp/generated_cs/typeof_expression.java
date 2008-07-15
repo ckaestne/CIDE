@@ -14,7 +14,7 @@ public class typeof_expression extends GenASTNode {
   public typeof_expression(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new typeof_expression(cloneProperties(),firstToken,lastToken);
   }
   public type getType() {

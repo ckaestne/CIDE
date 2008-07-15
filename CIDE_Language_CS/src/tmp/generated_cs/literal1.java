@@ -14,7 +14,7 @@ public class literal1 extends literal {
   public literal1(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new literal1(cloneProperties(),firstToken,lastToken);
   }
   public boolean_literal getBoolean_literal() {

@@ -15,7 +15,7 @@ public class do_statement extends GenASTNode {
   public do_statement(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new do_statement(cloneProperties(),firstToken,lastToken);
   }
   public embedded_statement getEmbedded_statement() {
