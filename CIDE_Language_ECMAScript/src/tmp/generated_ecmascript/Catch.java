@@ -15,7 +15,7 @@ public class Catch extends GenASTNode {
   public Catch(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new Catch(cloneProperties(),firstToken,lastToken);
   }
   public Identifier getIdentifier() {

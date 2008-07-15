@@ -15,7 +15,7 @@ public class RelationalExpression extends GenASTNode {
   public RelationalExpression(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new RelationalExpression(cloneProperties(),firstToken,lastToken);
   }
   public ShiftExpression getShiftExpression() {

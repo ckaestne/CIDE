@@ -14,7 +14,7 @@ public class CaseClauses extends GenASTNode {
   public CaseClauses(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new CaseClauses(cloneProperties(),firstToken,lastToken);
   }
   public ArrayList<CaseClause> getCaseClause() {

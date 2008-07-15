@@ -14,7 +14,7 @@ public class SourceElements extends GenASTNode {
   public SourceElements(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new SourceElements(cloneProperties(),firstToken,lastToken);
   }
   public ArrayList<SourceElement> getSourceElement() {

@@ -14,7 +14,7 @@ public class SourceElement1 extends SourceElement {
   public SourceElement1(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new SourceElement1(cloneProperties(),firstToken,lastToken);
   }
   public FunctionDeclaration getFunctionDeclaration() {

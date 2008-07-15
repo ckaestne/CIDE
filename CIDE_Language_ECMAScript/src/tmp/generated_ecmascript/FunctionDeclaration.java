@@ -16,7 +16,7 @@ public class FunctionDeclaration extends GenASTNode {
   public FunctionDeclaration(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new FunctionDeclaration(cloneProperties(),firstToken,lastToken);
   }
   public Identifier getIdentifier() {

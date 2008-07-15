@@ -15,7 +15,7 @@ public class AllocationExpressionEnd extends GenASTNode {
   public AllocationExpressionEnd(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new AllocationExpressionEnd(cloneProperties(),firstToken,lastToken);
   }
   public Arguments getArguments() {

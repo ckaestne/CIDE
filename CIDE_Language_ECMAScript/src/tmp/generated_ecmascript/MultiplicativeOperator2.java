@@ -14,7 +14,7 @@ public class MultiplicativeOperator2 extends MultiplicativeOperator {
   public MultiplicativeOperator2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new MultiplicativeOperator2(cloneProperties(),firstToken,lastToken);
   }
   public ASTStringNode getSlash() {

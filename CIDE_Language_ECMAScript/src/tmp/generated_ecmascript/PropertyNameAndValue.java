@@ -15,7 +15,7 @@ public class PropertyNameAndValue extends GenASTNode {
   public PropertyNameAndValue(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new PropertyNameAndValue(cloneProperties(),firstToken,lastToken);
   }
   public PropertyName getPropertyName() {

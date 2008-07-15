@@ -14,7 +14,7 @@ public class PropertyName3 extends PropertyName {
   public PropertyName3(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new PropertyName3(cloneProperties(),firstToken,lastToken);
   }
   public ASTStringNode getDecimal_literal() {

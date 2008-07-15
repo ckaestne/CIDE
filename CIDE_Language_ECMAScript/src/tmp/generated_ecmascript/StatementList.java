@@ -14,7 +14,7 @@ public class StatementList extends GenASTNode {
   public StatementList(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new StatementList(cloneProperties(),firstToken,lastToken);
   }
   public ArrayList<Statement> getStatement() {

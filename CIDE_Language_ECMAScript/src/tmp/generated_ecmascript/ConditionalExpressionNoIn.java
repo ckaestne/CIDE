@@ -15,7 +15,7 @@ public class ConditionalExpressionNoIn extends GenASTNode {
   public ConditionalExpressionNoIn(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new ConditionalExpressionNoIn(cloneProperties(),firstToken,lastToken);
   }
   public LogicalORExpressionNoIn getLogicalORExpressionNoIn() {

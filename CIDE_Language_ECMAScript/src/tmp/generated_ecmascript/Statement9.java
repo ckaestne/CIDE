@@ -14,7 +14,7 @@ public class Statement9 extends Statement {
   public Statement9(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new Statement9(cloneProperties(),firstToken,lastToken);
   }
   public ContinueStatement getContinueStatement() {

@@ -14,7 +14,7 @@ public class Initialiser extends GenASTNode {
   public Initialiser(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new Initialiser(cloneProperties(),firstToken,lastToken);
   }
   public AssignmentExpression getAssignmentExpression() {

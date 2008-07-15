@@ -14,7 +14,7 @@ public class CallExpressionPart1 extends CallExpressionPart {
   public CallExpressionPart1(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new CallExpressionPart1(cloneProperties(),firstToken,lastToken);
   }
   public Arguments getArguments() {

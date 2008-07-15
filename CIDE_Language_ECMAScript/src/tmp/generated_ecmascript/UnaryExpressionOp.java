@@ -15,7 +15,7 @@ public class UnaryExpressionOp extends GenASTNode {
   public UnaryExpressionOp(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new UnaryExpressionOp(cloneProperties(),firstToken,lastToken);
   }
   public UnaryOperator getUnaryOperator() {

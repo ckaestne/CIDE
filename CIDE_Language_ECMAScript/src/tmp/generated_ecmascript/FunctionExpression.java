@@ -16,7 +16,7 @@ public class FunctionExpression extends GenASTNode {
   public FunctionExpression(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new FunctionExpression(cloneProperties(),firstToken,lastToken);
   }
   public Identifier getIdentifier() {

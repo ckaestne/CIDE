@@ -15,7 +15,7 @@ public class BitwiseXORExpressionNoIn extends GenASTNode {
   public BitwiseXORExpressionNoIn(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new BitwiseXORExpressionNoIn(cloneProperties(),firstToken,lastToken);
   }
   public BitwiseANDExpressionNoIn getBitwiseANDExpressionNoIn() {

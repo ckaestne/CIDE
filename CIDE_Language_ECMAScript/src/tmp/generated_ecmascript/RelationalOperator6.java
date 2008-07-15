@@ -13,7 +13,7 @@ public class RelationalOperator6 extends RelationalOperator {
   public RelationalOperator6(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new RelationalOperator6(cloneProperties(),firstToken,lastToken);
   }
 }

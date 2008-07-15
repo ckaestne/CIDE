@@ -15,7 +15,7 @@ public class EqualityExpressionNoInEnd extends GenASTNode {
   public EqualityExpressionNoInEnd(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new EqualityExpressionNoInEnd(cloneProperties(),firstToken,lastToken);
   }
   public EqualityOperator getEqualityOperator() {

@@ -14,7 +14,7 @@ public class Elision extends GenASTNode {
   public Elision(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new Elision(cloneProperties(),firstToken,lastToken);
   }
   public ArrayList<ASTTextNode> getText283() {

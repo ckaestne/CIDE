@@ -13,7 +13,7 @@ public class RelationalNoInOperator4 extends RelationalNoInOperator {
   public RelationalNoInOperator4(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new RelationalNoInOperator4(cloneProperties(),firstToken,lastToken);
   }
 }

@@ -15,7 +15,7 @@ public class LogicalORExpressionNoIn extends GenASTNode {
   public LogicalORExpressionNoIn(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new LogicalORExpressionNoIn(cloneProperties(),firstToken,lastToken);
   }
   public LogicalANDExpressionNoIn getLogicalANDExpressionNoIn() {

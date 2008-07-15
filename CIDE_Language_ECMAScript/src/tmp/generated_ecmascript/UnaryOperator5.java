@@ -13,7 +13,7 @@ public class UnaryOperator5 extends UnaryOperator {
   public UnaryOperator5(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new UnaryOperator5(cloneProperties(),firstToken,lastToken);
   }
 }

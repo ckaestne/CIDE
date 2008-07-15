@@ -16,7 +16,7 @@ public class AssignmentExpression1 extends AssignmentExpression {
   public AssignmentExpression1(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new AssignmentExpression1(cloneProperties(),firstToken,lastToken);
   }
   public LeftHandSideExpression getLeftHandSideExpression() {

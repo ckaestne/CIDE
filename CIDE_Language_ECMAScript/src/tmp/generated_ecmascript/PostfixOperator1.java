@@ -13,7 +13,7 @@ public class PostfixOperator1 extends PostfixOperator {
   public PostfixOperator1(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new PostfixOperator1(cloneProperties(),firstToken,lastToken);
   }
 }

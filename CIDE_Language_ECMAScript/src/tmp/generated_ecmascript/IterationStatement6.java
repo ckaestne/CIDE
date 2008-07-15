@@ -16,7 +16,7 @@ public class IterationStatement6 extends IterationStatement {
   public IterationStatement6(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new IterationStatement6(cloneProperties(),firstToken,lastToken);
   }
   public LeftHandSideExpressionForIn getLeftHandSideExpressionForIn() {

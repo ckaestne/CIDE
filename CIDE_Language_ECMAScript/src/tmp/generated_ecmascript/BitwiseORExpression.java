@@ -15,7 +15,7 @@ public class BitwiseORExpression extends GenASTNode {
   public BitwiseORExpression(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new BitwiseORExpression(cloneProperties(),firstToken,lastToken);
   }
   public BitwiseXORExpression getBitwiseXORExpression() {

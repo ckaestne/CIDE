@@ -14,7 +14,7 @@ public class Literal2 extends Literal {
   public Literal2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new Literal2(cloneProperties(),firstToken,lastToken);
   }
   public ASTStringNode getHex_integer_literal() {

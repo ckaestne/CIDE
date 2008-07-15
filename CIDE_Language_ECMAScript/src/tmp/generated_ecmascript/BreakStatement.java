@@ -15,7 +15,7 @@ public class BreakStatement extends GenASTNode {
   public BreakStatement(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new BreakStatement(cloneProperties(),firstToken,lastToken);
   }
   public Identifier getIdentifier() {

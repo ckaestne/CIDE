@@ -15,7 +15,7 @@ public class Program extends GenASTNode implements ISourceFile {
   public Program(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new Program(cloneProperties(),firstToken,lastToken);
   }
   public SourceElements getSourceElements() {

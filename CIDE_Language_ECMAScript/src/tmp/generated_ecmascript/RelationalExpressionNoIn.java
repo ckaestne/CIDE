@@ -15,7 +15,7 @@ public class RelationalExpressionNoIn extends GenASTNode {
   public RelationalExpressionNoIn(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new RelationalExpressionNoIn(cloneProperties(),firstToken,lastToken);
   }
   public ShiftExpression getShiftExpression() {

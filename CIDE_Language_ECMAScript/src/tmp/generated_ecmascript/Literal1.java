@@ -14,7 +14,7 @@ public class Literal1 extends Literal {
   public Literal1(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new Literal1(cloneProperties(),firstToken,lastToken);
   }
   public ASTStringNode getDecimal_literal() {

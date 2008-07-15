@@ -15,7 +15,7 @@ public class VariableDeclarationNoIn extends GenASTNode {
   public VariableDeclarationNoIn(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new VariableDeclarationNoIn(cloneProperties(),firstToken,lastToken);
   }
   public Identifier getIdentifier() {

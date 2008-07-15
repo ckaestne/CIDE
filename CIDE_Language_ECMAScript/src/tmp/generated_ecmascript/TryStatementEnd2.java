@@ -15,7 +15,7 @@ public class TryStatementEnd2 extends TryStatementEnd {
   public TryStatementEnd2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new TryStatementEnd2(cloneProperties(),firstToken,lastToken);
   }
   public Catch getCatch_KW() {

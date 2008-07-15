@@ -15,7 +15,7 @@ public class LogicalORExpression extends GenASTNode {
   public LogicalORExpression(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new LogicalORExpression(cloneProperties(),firstToken,lastToken);
   }
   public LogicalANDExpression getLogicalANDExpression() {

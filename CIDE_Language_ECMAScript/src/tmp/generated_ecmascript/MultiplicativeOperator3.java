@@ -13,7 +13,7 @@ public class MultiplicativeOperator3 extends MultiplicativeOperator {
   public MultiplicativeOperator3(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new MultiplicativeOperator3(cloneProperties(),firstToken,lastToken);
   }
 }

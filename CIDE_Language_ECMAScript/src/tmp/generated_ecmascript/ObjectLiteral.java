@@ -14,7 +14,7 @@ public class ObjectLiteral extends GenASTNode {
   public ObjectLiteral(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new ObjectLiteral(cloneProperties(),firstToken,lastToken);
   }
   public PropertyNameAndValueList getPropertyNameAndValueList() {

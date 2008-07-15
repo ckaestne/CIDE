@@ -15,7 +15,7 @@ public class ArrayLiteral2 extends ArrayLiteral {
   public ArrayLiteral2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new ArrayLiteral2(cloneProperties(),firstToken,lastToken);
   }
   public ElementList getElementList() {

@@ -17,7 +17,7 @@ public class IterationStatement4 extends IterationStatement {
   public IterationStatement4(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new IterationStatement4(cloneProperties(),firstToken,lastToken);
   }
   public VariableDeclarationList getVariableDeclarationList() {

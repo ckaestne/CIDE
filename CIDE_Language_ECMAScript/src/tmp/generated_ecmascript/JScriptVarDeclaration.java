@@ -16,7 +16,7 @@ public class JScriptVarDeclaration extends GenASTNode {
   public JScriptVarDeclaration(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new JScriptVarDeclaration(cloneProperties(),firstToken,lastToken);
   }
   public Identifier getIdentifier() {

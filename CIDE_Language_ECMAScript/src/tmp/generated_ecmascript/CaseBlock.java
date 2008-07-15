@@ -15,7 +15,7 @@ public class CaseBlock extends GenASTNode {
   public CaseBlock(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new CaseBlock(cloneProperties(),firstToken,lastToken);
   }
   public CaseClauses getCaseClauses() {

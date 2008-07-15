@@ -13,7 +13,7 @@ public class ShiftOperator3 extends ShiftOperator {
   public ShiftOperator3(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new ShiftOperator3(cloneProperties(),firstToken,lastToken);
   }
 }

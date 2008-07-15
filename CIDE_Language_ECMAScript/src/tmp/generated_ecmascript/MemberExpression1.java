@@ -15,7 +15,7 @@ public class MemberExpression1 extends MemberExpression {
   public MemberExpression1(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new MemberExpression1(cloneProperties(),firstToken,lastToken);
   }
   public MemberExpressionPre getMemberExpressionPre() {

@@ -15,7 +15,7 @@ public class ImportStatement extends GenASTNode {
   public ImportStatement(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new ImportStatement(cloneProperties(),firstToken,lastToken);
   }
   public Name getName() {

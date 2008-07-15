@@ -15,7 +15,7 @@ public class RelationalExpressionEnd extends GenASTNode {
   public RelationalExpressionEnd(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new RelationalExpressionEnd(cloneProperties(),firstToken,lastToken);
   }
   public RelationalOperator getRelationalOperator() {

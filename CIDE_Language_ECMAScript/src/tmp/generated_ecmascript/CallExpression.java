@@ -16,7 +16,7 @@ public class CallExpression extends GenASTNode {
   public CallExpression(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new CallExpression(cloneProperties(),firstToken,lastToken);
   }
   public MemberExpression getMemberExpression() {

@@ -15,7 +15,7 @@ public class ExpressionNoIn extends GenASTNode {
   public ExpressionNoIn(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new ExpressionNoIn(cloneProperties(),firstToken,lastToken);
   }
   public AssignmentExpressionNoIn getAssignmentExpressionNoIn() {

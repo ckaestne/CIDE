@@ -15,7 +15,7 @@ public class ConditionalExpressionEnd extends GenASTNode {
   public ConditionalExpressionEnd(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new ConditionalExpressionEnd(cloneProperties(),firstToken,lastToken);
   }
   public AssignmentExpression getAssignmentExpression() {

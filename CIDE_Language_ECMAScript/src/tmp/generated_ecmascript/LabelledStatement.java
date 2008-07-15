@@ -15,7 +15,7 @@ public class LabelledStatement extends GenASTNode {
   public LabelledStatement(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new LabelledStatement(cloneProperties(),firstToken,lastToken);
   }
   public Identifier getIdentifier() {

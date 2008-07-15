@@ -14,7 +14,7 @@ public class AssignmentExpressionNoIn2 extends AssignmentExpressionNoIn {
   public AssignmentExpressionNoIn2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new AssignmentExpressionNoIn2(cloneProperties(),firstToken,lastToken);
   }
   public ConditionalExpressionNoIn getConditionalExpressionNoIn() {

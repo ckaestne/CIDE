@@ -13,7 +13,7 @@ public class PropertyNameAndValueListEnd2 extends PropertyNameAndValueListEnd {
   public PropertyNameAndValueListEnd2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new PropertyNameAndValueListEnd2(cloneProperties(),firstToken,lastToken);
   }
 }
