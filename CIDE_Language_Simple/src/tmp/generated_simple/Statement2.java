@@ -6,18 +6,18 @@ import cide.greferences.*;
 import java.util.*;
 
 public class Statement2 extends Statement {
-  public Statement2(ASTNode ifStatement, Token firstToken, Token lastToken) {
+  public Statement2(IASTNode ifStatement, Token firstToken, Token lastToken) {
     super(new Property[] {
-      new PropertyWrapper<ASTNode,Block>("ifStatement", ifStatement, "block")
+      new PropertyWrapper<IASTNode,Block>("ifStatement", ifStatement, "block")
     }, firstToken, lastToken);
   }
   public Statement2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new Statement2(cloneProperties(),firstToken,lastToken);
   }
-  public ASTNode getIfStatement() {
-    return ((PropertyWrapper<ASTNode,Block>)getProperty("ifStatement")).getValue();
+  public IASTNode getIfStatement() {
+    return ((PropertyWrapper<IASTNode,Block>)getProperty("ifStatement")).getValue();
   }
 }

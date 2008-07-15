@@ -160,7 +160,7 @@ public class JavaParser implements JavaParserConstants {
 
   final public Statement Statement() throws ParseException {
         MethodInvocation methodInvocation;
-        ASTNode ifStatement;
+        IASTNode ifStatement;
         Assignment assignment;
         Block block;
         Token firstToken=token;

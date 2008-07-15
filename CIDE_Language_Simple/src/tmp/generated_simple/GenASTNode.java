@@ -7,7 +7,9 @@ import java.util.*;
 
 public abstract class GenASTNode extends ASTNode {
   public GenASTNode(Property[] p, Token firstToken, Token lastToken) {
-    super(p, new WToken(firstToken), new WToken(lastToken));
+    		super(p, 
+    		    		(lastToken.next == firstToken ? new NoToken(firstToken.offset) : new WToken(firstToken)), 
+    		    		(lastToken.next == firstToken ? new NoToken(firstToken.offset)	: new WToken(lastToken)));
   }
   public GenASTNode(Property[] p, IToken firstToken, IToken lastToken) {
     super(p, firstToken, lastToken);

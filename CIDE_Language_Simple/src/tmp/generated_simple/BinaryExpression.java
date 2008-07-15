@@ -8,20 +8,20 @@ import java.util.*;
 public class BinaryExpression extends GenASTNode {
   public BinaryExpression(UnaryExpression unaryExpression, Expression expression, Token firstToken, Token lastToken) {
     super(new Property[] {
-      new PropertyOptionalWithDefault<UnaryExpression>("unaryExpression", unaryExpression, "0"),
-      new PropertyOptionalWithDefault<Expression>("expression", expression, "0")
+      new PropertyOne<UnaryExpression>("unaryExpression", unaryExpression),
+      new PropertyOne<Expression>("expression", expression)
     }, firstToken, lastToken);
   }
   public BinaryExpression(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new BinaryExpression(cloneProperties(),firstToken,lastToken);
   }
   public UnaryExpression getUnaryExpression() {
-    return ((PropertyOptionalWithDefault<UnaryExpression>)getProperty("unaryExpression")).getValue();
+    return ((PropertyOne<UnaryExpression>)getProperty("unaryExpression")).getValue();
   }
   public Expression getExpression() {
-    return ((PropertyOptionalWithDefault<Expression>)getProperty("expression")).getValue();
+    return ((PropertyOne<Expression>)getProperty("expression")).getValue();
   }
 }

@@ -14,7 +14,7 @@ public class UnaryExpression extends GenASTNode {
   public UnaryExpression(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new UnaryExpression(cloneProperties(),firstToken,lastToken);
   }
   public ASTStringNode getInteger_literal() {

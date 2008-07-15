@@ -351,7 +351,7 @@ IfStatement: "if" "(" Expression ")" Block! [ "else" Block ];
 
 Expression: LL(2) BinaryExpression | UnaryExpression;
 UnaryExpression: <INTEGER_LITERAL>;
-BinaryExpression: OPTIONAL(UnaryExpression, "0") "+" OPTIONAL(Expression, "0");
+BinaryExpression: UnaryExpression "+" Expression;
 
 
 

@@ -14,7 +14,7 @@ public class SimplePrintVisitor extends AbstractPrintVisitor implements ILanguag
 	public SimplePrintVisitor() {
 		super();
 	}
-	public boolean visit(ASTNode node) {
+	public boolean visit(IASTNode node) {
 		if (node instanceof ASTStringNode){
 			printToken(((ASTStringNode)node).getValue());
 			return false;
@@ -155,7 +155,7 @@ public class SimplePrintVisitor extends AbstractPrintVisitor implements ILanguag
 		if (node instanceof Statement2) {
 			Statement2 n = (Statement2)node;
 			{
-				ASTNode v=n.getIfStatement();
+				IASTNode v=n.getIfStatement();
 				if (v!=null) {
 					v.accept(this);
 				}

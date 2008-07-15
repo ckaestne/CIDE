@@ -386,7 +386,7 @@ Block Block() : {
 
 Statement Statement() : { 
 	MethodInvocation methodInvocation;
-	ASTNode ifStatement;
+	IASTNode ifStatement;
 	Assignment assignment;
 	Block block;
 	Token firstToken=token;

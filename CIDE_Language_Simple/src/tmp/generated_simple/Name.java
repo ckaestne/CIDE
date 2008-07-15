@@ -14,7 +14,7 @@ public class Name extends GenASTNode {
   public Name(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new Name(cloneProperties(),firstToken,lastToken);
   }
   public ASTStringNode getIdentifier() {

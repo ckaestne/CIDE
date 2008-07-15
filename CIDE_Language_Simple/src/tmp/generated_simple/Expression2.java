@@ -14,7 +14,7 @@ public class Expression2 extends Expression {
   public Expression2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new Expression2(cloneProperties(),firstToken,lastToken);
   }
   public UnaryExpression getUnaryExpression() {
