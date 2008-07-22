@@ -1,2 +1,1 @@
-NewCompound1 : NewLayer1 ;
-
+SPL: [PF_NoVars] [Lazy_Vars] [ITE] [Lambdas] [Lazy_Lambdas] [Strict_Lambdas] [Dynamic_Lambdas] [Static_Lambdas] [Strict_Vars] [Vars] [EvalError] [BinOps] [UnOps] [Bools] [Windows] [Feature17] [Linux] [Feature19] [Feature18] [Feature21] [Feature20] [Feature23] [Feature22] [Feature25] [Feature24] [Feature27] [Feature26] [Feature29] [Feature28] [Feature31] [Feature30] [Feature34] [Feature35] [Feature32] [Feature33] [Feature38] [Feature39] [Feature36] [Feature37] [Feature42] [Feature43] [Feature40] [Feature41] [Feature46] [Feature47] [Feature44] [Feature45] [Feature50] [Feature49] [Feature48] ::generatedSPL;
