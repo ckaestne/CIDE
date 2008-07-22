@@ -38,8 +38,9 @@ public class GuidslExport {
 			Map<Long, RGB> featureColors = new HashMap<Long, RGB>();
 			Map<Long, Boolean> featureVisibility = new HashMap<Long, Boolean>();
 			for (IFeature f : listModel.getFeatures()) {
-				grammarContent += "[" + f.getName() + "] ";
-				featureIds.put(f.getName(), f.getId());
+				String name=f.getName().replace(' ', '_');
+				grammarContent += "[" + name+ "] ";
+				featureIds.put(name, f.getId());
 				featureColors.put(f.getId(), f.getRGB());
 				featureVisibility.put(f.getId(), f.isVisible());
 			}
