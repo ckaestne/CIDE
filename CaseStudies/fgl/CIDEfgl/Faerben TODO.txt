@@ -1,0 +1,5 @@
+Problem: Code der von mehreren Features abhängt, also nur dann ausgeführt 
+werden kann alle features dafür vorhanden sind. Wie modellieren ?
+Insbesondere: Einzelne Beispiele die mehrere Features brauchen.
+
+Abhängig einfügen: ArtPoint nur mit DFS_Tree möglich  
