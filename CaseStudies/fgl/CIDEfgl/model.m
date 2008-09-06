@@ -1,13 +1,21 @@
 fgl_ : fgl+ :: _fgl ;
 
-fgl : [UnlabeldEdges] [UnlabeldNodes] :: UnlabeldGraph
+fgl : UnlabeldGraph+ :: UnlabeldGraph_
 	| DynGraph
-	| Graphalgorithmen
+	| Graphalgorithmen+ :: Graphalgorithmen_
 	| StaticMonadGraph
-	| GraphVisualation ;
+	| GraphViz ;
 
-Graphalgorithmen : DFS_TreeM ;
+UnlabeldGraph : UnlabeldEdges
+	| UnlabeldNodes ;
 
-DFS_TreeM : ArtPoint
+Graphalgorithmen : ArtPointM+ :: ArtPointM_
+	| ConnectedComponent
+	| BFSM+ :: BFSM_ ;
+
+ArtPointM : ArtPoint
 	| DFS_Tree ;
+
+BFSM : ShortestPath
+	| BFS ;
 

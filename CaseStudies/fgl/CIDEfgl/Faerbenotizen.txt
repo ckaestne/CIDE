@@ -1,4 +1,12 @@
-Da die ganze Bibliothek auf gerichteten Graphen mit Knoten und Kanten Labeln beruht, können als Feature nur die Unterstützung für Graphen ohne Knotenlabel ohne Kantelabel oder für ungerichtete Graphen gefärbt werden.
+Da die ganze Bibliothek auf gerichteten Graphen mit Knoten und Kanten Labeln
+beruht, können als Feature nur die Unterstützung für Graphen ohne Knotenlabel
+ohne Kantelabel oder für ungerichtete Graphen gefärbt werden.
 
-Statische Graphen mit Monaden werden ein Feature, weil sie anscheinend für nichts in der Bibliothek gebraucht werden und auch für die meisten Nutzer uninteressant erscheinen.
+Statische Graphen mit Monaden werden ein Feature, weil sie anscheinend für 
+nichts in der Bibliothek gebraucht werden und auch für die meisten Nutzer 
+uninteressant erscheinen.
+
+Das Modul BCC für Conected Componets braucht in einer Funktion das Modul 
+ArtPoint, diese Funktion wurde mit ArtPoint gefärbt anstatt eine Abhänigkeit
+den Modulen ArtPoint und BCC einzuführen.
 

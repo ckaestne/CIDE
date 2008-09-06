@@ -1,5 +1,6 @@
 Problem: Code der von mehreren Features abhängt, also nur dann ausgeführt 
 werden kann alle features dafür vorhanden sind. Wie modellieren ?
-Insbesondere: Einzelne Beispiele die mehrere Features brauchen.
+Insbesondere: Einzelne Beispiele im Modul Example die mehrere Features brauchen.
 
-Abhängig einfügen: ArtPoint nur mit DFS_Tree möglich  
+Abhängigkeit einfügen: ArtPoint braucht DFS_Tree
+Abhängigkeit einfügen: ConectedComponents braucht DynGraph und DFS
