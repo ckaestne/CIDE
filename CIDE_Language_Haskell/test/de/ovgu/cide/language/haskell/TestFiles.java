@@ -19,7 +19,7 @@ public class TestFiles {
 	private HaskellParser parse(String string) {
 		ByteArrayInputStream a = new ByteArrayInputStream(string.getBytes());
 		InputStreamReader b = new InputStreamReader(a);
-		HaskellParser p = new HaskellParser(new OffsetCharStream(b));
+		HaskellParser p = new HaskellParser(new HaskellLexer(new OffsetCharStream(b)));
 		return p;
 	}
 

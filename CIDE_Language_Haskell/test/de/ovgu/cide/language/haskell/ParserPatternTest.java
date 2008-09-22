@@ -420,7 +420,7 @@ public class ParserPatternTest {
 		}
 	}
 
-	private HaskellParser newParser(String string) {
+	protected HaskellParser newParser(String string) {
 		ByteArrayInputStream a = new ByteArrayInputStream(string.getBytes());
 		InputStreamReader b = new InputStreamReader(a);
 		HaskellParser p = new HaskellParser(new OffsetCharStream(b));

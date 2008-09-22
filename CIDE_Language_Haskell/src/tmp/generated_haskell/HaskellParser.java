@@ -5,6 +5,7 @@ import java.io.*;
 import java.util.*;
 import cide.gast.*;
 import cide.gparser.*;
+import de.ovgu.cide.language.haskell.HaskellLexer;
 
   public class HaskellParser implements HaskellParserConstants {
 
