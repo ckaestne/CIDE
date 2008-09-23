@@ -11,7 +11,15 @@ UnlabeldGraph : UnlabeldEdges
 
 Graphalgorithmen : ArtPointM+ :: ArtPointM_
 	| ConnectedComponent
-	| BFSM+ :: BFSM_ ;
+	| BFSM+ :: BFSM_
+	| DFS
+	| Dominators
+	| GVD
+	| IndependentComponents
+	| MaxFlow
+	| MaxFlow2
+	| MST
+	| TransitiveClosure ;
 
 ArtPointM : ArtPoint
 	| DFS_Tree ;
