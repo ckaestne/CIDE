@@ -3,20 +3,41 @@ package de.ovgu.cide.language.haskell;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Stack;
 
+import tmp.generated_haskell.HaskellParserTokenManager;
 import cide.gparser.CharStream;
 import cide.gparser.Token;
 import cide.gparser.TokenMgrError;
-import tmp.generated_haskell.HaskellParserTokenManager;
 
 public class HaskellLexer extends HaskellParserTokenManager {
 
 	private Token special = null;
+	public static final int LAYOUTMIN = Integer.MAX_VALUE - 3;
+	public static final int LAYOUTCURLY = Integer.MAX_VALUE - 1;
+	public static final int LAYOUTPOINTY = Integer.MAX_VALUE - 2;
 
 	public HaskellLexer(CharStream stream) {
+		this(stream, Integer.MAX_VALUE);
+	}
+
+	/**
+	 * debuglevels are used for unit tests where only partial results are needed
+	 * 
+	 * @param stream
+	 * @param debugLevel
+	 */
+	HaskellLexer(CharStream stream, int debugLevel) {
 		super(stream);
-		tokenizeStream();
+		if (debugLevel >= 1)
+			tokenizeStream();
+		if (debugLevel >= 2)
+			insertLayoutToken();
+		if (debugLevel >= 3)
+			tokens = rewriteLayoutToken(tokens);
+
 		tokenIterator = tokens.iterator();
 	}
 
@@ -72,60 +93,60 @@ public class HaskellLexer extends HaskellParserTokenManager {
 				continue;
 			if (checkTextToken("infix", INFIX))
 				continue;
-			if (checkSymbolToken("=>", CONTEXT_ARROW,false))
+			if (checkSymbolToken("=>", CONTEXT_ARROW, false))
 				continue;
-			if (checkSymbolToken("=", EQUALS,false))
+			if (checkSymbolToken("=", EQUALS, false))
 				continue;
-			if (checkSymbolToken("|", ALT,false))
+			if (checkSymbolToken("|", ALT, false))
 				continue;
-			if (checkSymbolToken("::", OFTYPE,false))
+			if (checkSymbolToken("::", OFTYPE, false))
 				continue;
-			if (checkSymbolToken("..", OTHER12,false))
+			if (checkSymbolToken("..", OTHER12, false))
 				continue;
-			if (checkSymbolToken(".", OTHER1,false))
+			if (checkSymbolToken(".", OTHER1, false))
 				continue;
-			if (checkSymbolToken("->", OTHER7,false))
+			if (checkSymbolToken("->", OTHER7, false))
 				continue;
-			if (checkSymbolToken("--", OTHER11,false))
+			if (checkSymbolToken("--", OTHER11, false))
 				continue;
-			if (checkSymbolToken("-", OTHER2,false))
+			if (checkSymbolToken("-", OTHER2, false))
 				continue;
-			if (checkSymbolToken("@", OTHER3,false))
+			if (checkSymbolToken("@", OTHER3, false))
 				continue;
-			if (checkSymbolToken("_", OTHER4,false))
+			if (checkSymbolToken("_", OTHER4, false))
 				continue;
-			if (checkSymbolToken("~", OTHER5,false))
+			if (checkSymbolToken("~", OTHER5, false))
 				continue;
-			if (checkSymbolToken(":", OTHER6,false))
+			if (checkSymbolToken(":", OTHER6, false))
 				continue;
-			if (checkSymbolToken("+", OTHER8,false))
+			if (checkSymbolToken("+", OTHER8, false))
 				continue;
-			if (checkSymbolToken("\\", OTHER9,false))
+			if (checkSymbolToken("\\", OTHER9, false))
 				continue;
-			if (checkSymbolToken("<-", OTHER10,false))
+			if (checkSymbolToken("<-", OTHER10, false))
 				continue;
 
-			if (checkSymbolToken("{", LEFT_CURLY,true))
+			if (checkSymbolToken("{", LEFT_CURLY, true))
 				continue;
-			if (checkSymbolToken("}", RIGHT_CURLY,true))
+			if (checkSymbolToken("}", RIGHT_CURLY, true))
 				continue;
-			if (checkSymbolToken(";", SEMICOLON,true))
+			if (checkSymbolToken(";", SEMICOLON, true))
 				continue;
-			if (checkSymbolToken("(#", LEFT_HPAREN,true))
+			if (checkSymbolToken("(#", LEFT_HPAREN, true))
 				continue;
-			if (checkSymbolToken("#)", RIGHT_HPAREN,true))
+			if (checkSymbolToken("#)", RIGHT_HPAREN, true))
 				continue;
-			if (checkSymbolToken("(", LEFT_PAREN,true))
+			if (checkSymbolToken("(", LEFT_PAREN, true))
 				continue;
-			if (checkSymbolToken(")", RIGHT_PAREN,true))
+			if (checkSymbolToken(")", RIGHT_PAREN, true))
 				continue;
-			if (checkSymbolToken("[", LEFT_BRACKET,true))
+			if (checkSymbolToken("[", LEFT_BRACKET, true))
 				continue;
-			if (checkSymbolToken("]", RIGHT_BRACKET,true))
+			if (checkSymbolToken("]", RIGHT_BRACKET, true))
 				continue;
-			if (checkSymbolToken(",", COMMA,true))
+			if (checkSymbolToken(",", COMMA, true))
 				continue;
-			if (checkSymbolToken("`", INFIX_QUOTE,true))
+			if (checkSymbolToken("`", INFIX_QUOTE, true))
 				continue;
 
 			if (checkConstructor())
@@ -406,7 +427,7 @@ public class HaskellLexer extends HaskellParserTokenManager {
 			foundSpecialToken(" ");
 			return true;
 		} else if (c == '\t') {
-			foundSpecialToken("\n");
+			foundSpecialToken("\t");
 			return true;
 		} else if (c == '\r') {
 			foundSpecialToken("\r");
@@ -423,8 +444,15 @@ public class HaskellLexer extends HaskellParserTokenManager {
 	private void foundSpecialToken(String string) {
 		Token s = new Token();
 		s.image = string;
-		s.next = special;
-		special = s;
+
+		if (special == null)
+			special = s;
+		else {
+			Token lastSpecial = special;
+			while (lastSpecial.next != null)
+				lastSpecial = lastSpecial.next;
+			lastSpecial.next = s;
+		}
 	}
 
 	private boolean checkSymbolToken(String image, int kind,
@@ -495,11 +523,13 @@ public class HaskellLexer extends HaskellParserTokenManager {
 	private void foundToken(String image, int kind) {
 		Token t = createToken(image, kind);
 
+		if (tokens.size() > 0)
+			tokens.get(tokens.size() - 1).next = t;
 		tokens.add(t);
 
 	}
 
-	protected final List<Token> tokens = new ArrayList<Token>();
+	protected List<Token> tokens = new ArrayList<Token>();
 	protected final Iterator<Token> tokenIterator;
 
 	/**
@@ -514,6 +544,14 @@ public class HaskellLexer extends HaskellParserTokenManager {
 		t.image = image;
 		t.kind = kind;
 		t.specialToken = special;
+
+		t.beginLine = input_stream.getBeginLine();
+		t.beginColumn = input_stream.getBeginColumn();
+		t.endLine = input_stream.getEndLine();
+		t.endColumn = input_stream.getEndColumn();
+		t.offset = input_stream.getOffset();
+		t.length = input_stream.getLength();
+
 		special = null;
 		return t;
 	}
@@ -530,6 +568,300 @@ public class HaskellLexer extends HaskellParserTokenManager {
 		}
 		result = result.replace("\n", "\\n").replace("\r", "\\r");
 		return result;
+	}
+
+	public String debugSerialize() {
+		String result = "";
+		for (Token t : tokens) {
+			Token s = t.specialToken;
+			while (s != null) {
+				result += s.image;
+				s = s.next;
+			}
+			if (t.kind != EOF)
+				result += t.image;
+		}
+		result = result.replace("\n", "\\n").replace("\r", "\\r");
+		return result;
+	}
+
+	private void insertLayoutToken() {
+		// A stream of lexemes as specified by the lexical syntax in the Haskell
+		// report, with the following additional tokens:
+		// If a let, where, do, or of keyword is not followed by the lexeme {,
+		// the token {n} is inserted after the keyword, where n is the
+		// indentation of the next lexeme if there is one, or 0 if the end of
+		// file has been reached.
+
+		for (Token t : new ArrayList<Token>(tokens)) {
+			if (t.kind == LET || t.kind == WHERE || t.kind == DO
+					|| t.kind == OF) {
+				if (t.next.kind != LEFT_CURLY) {
+					int indent = 0;
+					if (t.next.kind != EOF)
+						indent = getTokenIndentation(t.next);
+					Token layoutToken = new LayoutTokenCurly(indent);
+					tokens.add(tokens.indexOf(t) + 1, layoutToken);
+					layoutToken.next = t.next;
+					t.next = layoutToken;
+				}
+			}
+		}
+
+		// If the first lexeme of a module is not { or module, then it is
+		// preceded by {n} where n is the indentation of the lexeme.
+		if (tokens.get(0).kind != MODULE && tokens.get(0).kind != LEFT_CURLY)
+			tokens.add(0, new LayoutTokenCurly(getTokenIndentation(tokens
+					.get(0))));
+
+		// Where the start of a lexeme is preceded only by white space on the
+		// same line, this lexeme is preceded by <n> where n is the indentation
+		// of the lexeme, provided that it is not, as a consequence of the first
+		// two rules, preceded by {n}. (NB: a string literal may span multiple
+		// lines -- Section 2.6. So in the fragment
+		//
+		// f = ("Hello \
+		// \Bill", "Jake")
+		//
+		// There is no <n> inserted before the \Bill, because it is not the
+		// beginning of a complete lexeme; nor before the ,, because it is not
+		// preceded only by white space.)
+
+		boolean first = true;
+		Token last = null;
+		for (Token t : new ArrayList<Token>(tokens)) {
+			if (t.kind < LAYOUTMIN) {
+				Token specialToken = t.specialToken;
+				boolean succeedsLineBreak = first;
+				first = false;
+				while (!succeedsLineBreak && specialToken != null) {
+					if (specialToken.image.equals("\n")
+							|| specialToken.image.equals("\r"))
+						succeedsLineBreak = true;
+					specialToken = specialToken.next;
+				}
+
+				// ... provided that it is not, as a consequence of the first
+				// two rules, preceded by {n} ...
+				if (succeedsLineBreak && last != null
+						&& last.kind == LAYOUTCURLY)
+					succeedsLineBreak = false;
+
+				if (succeedsLineBreak) {
+					Token layoutToken = new LayoutTokenPointy(
+							getTokenIndentation(t));
+					tokens.add(tokens.indexOf(t), layoutToken);
+					layoutToken.next = t;
+					if (last != null)
+						last.next = layoutToken;
+				}
+			}
+			last = t;
+		}
+		// A stack of "layout contexts", in which each element is either:
+		// Zero, indicating that the enclosing context is explicit (i.e. the
+		// programmer supplied the opening brace. If the innermost context is 0,
+		// then no layout tokens will be inserted until either the enclosing
+		// context ends or a new context is pushed.
+		// A positive integer, which is the indentation column of the enclosing
+		// layout context.
+	}
+
+	private static class LayoutTokenCurly extends Token {
+		private int indentation;
+
+		LayoutTokenCurly(int indentation) {
+			this.indentation = indentation;
+			this.image = "{" + indentation + "}";
+			this.kind = LAYOUTCURLY;
+		}
+
+		public int getIndentation() {
+			return indentation;
+		}
+	}
+
+	private static class LayoutTokenPointy extends Token {
+		private int indentation;
+
+		LayoutTokenPointy(int indentation) {
+			this.indentation = indentation;
+			this.image = "<" + indentation + ">";
+			this.kind = LAYOUTPOINTY;
+		}
+
+		public int getIndentation() {
+			return indentation;
+		}
+	}
+
+	/**
+	 * searches backward for the line-beginning and counts the characters
+	 * 
+	 * @return
+	 */
+	protected int getTokenIndentation(Token t) {
+		/*
+		 * The "indentation" of a lexeme is the column number of the first
+		 * character of that lexeme; the indentation of a line is the
+		 * indentation of its leftmost lexeme. To determine the column number,
+		 * assume a fixed-width font with the following conventions:
+		 * 
+		 * The characters newline, return, linefeed, and formfeed, all start a
+		 * new line.
+		 * 
+		 * The first column is designated column 1, not 0.
+		 * 
+		 * Tab stops are 8 characters apart.
+		 * 
+		 * A tab character causes the insertion of enough spaces to align the
+		 * current position with the next tab stop.
+		 */
+
+		int tokenIdx = tokens.indexOf(t);
+
+		String prefix = tokenIdx == 0 ? "\n" : "";
+		String line = "";
+		while (tokenIdx >= 0) {
+			Token s = t.specialToken;
+			while (s != null) {
+				prefix += s.image;
+				s = s.next;
+			}
+			line = prefix + line;
+			int start = Math
+					.max(line.lastIndexOf('\n'), line.lastIndexOf('\r'));
+			if (start >= 0)
+				return calcTabIndent(line.substring(start + 1)) + 1;
+			else {
+				t = tokens.get(--tokenIdx);
+				if (t.kind < LAYOUTMIN)
+					line = t.image + line;
+				prefix = tokenIdx == 0 ? "\n" : "";
+			}
+		}
+		return 0;
+	}
+
+	static int calcTabIndent(String text) {
+		while (text.indexOf('\t') >= 0) {
+			int tabPos = text.indexOf('\t');
+			int shiftAmount = 8 - (tabPos % 8);
+			String spaces = "";
+			for (int i = 0; i < shiftAmount; i++)
+				spaces += " ";
+			text = text.substring(0, tabPos) + spaces
+					+ text.substring(tabPos + 1);
+		}
+		// System.out.println(text);
+		return text.length();
+	}
+
+	/**
+	 * iterates over the token list and replaces layout annotations by new
+	 * tokens as described in sec. 9.3
+	 */
+	private List<Token> rewriteLayoutToken(List<Token> input) {
+		System.out.println(debugSerialize());
+
+		input = new LinkedList<Token>(input);
+		List<Token> result = new LinkedList<Token>();
+		Stack<Integer> layoutContext = new Stack<Integer>();
+
+		while (!input.isEmpty()) {
+			Token currentToken = input.get(0);
+
+			// L (<n>:ts) (m:ms) = ; : (L ts (m:ms)) if m = n
+			// = } : (L (<n>:ts) ms) if n < m
+			// L (<n>:ts) ms = L ts ms
+			if (currentToken.kind == LAYOUTPOINTY) {
+				int n = ((LayoutTokenPointy) currentToken).getIndentation();
+				int m = 0;
+				if (!layoutContext.isEmpty())
+					m = layoutContext.peek();
+				if (m == n) {
+					result.add(createExtraToken(";", SEMICOLON));
+					input.remove(0);
+					continue;
+				} else if (n < m) {
+					result.add(createExtraToken("}", RIGHT_CURLY));
+					layoutContext.pop();
+					continue;
+				} else {
+					input.remove(0);
+					continue;
+				}
+			}
+
+			// L ({n}:ts) (m:ms) = { : (L ts (n:m:ms)) if n > m (Note 1)
+			// L ({n}:ts) [] = { : (L ts [n]) if n > 0 (Note 1)
+			// L ({n}:ts) ms = { : } : (L (<n>:ts) ms) (Note 2)
+			if (currentToken.kind == LAYOUTCURLY) {
+				int n = ((LayoutTokenCurly) currentToken).getIndentation();
+				int m = 0;
+				if (!layoutContext.isEmpty())
+					m = layoutContext.peek();
+				if (n > m) {
+					result.add(createExtraToken("{", LEFT_CURLY));
+					input.remove(0);
+					layoutContext.push(n);
+					continue;
+				} else {
+					result.add(createExtraToken("{", LEFT_CURLY));
+					result.add(createExtraToken("}", RIGHT_CURLY));
+					input.remove(0);
+					input.add(0, new LayoutTokenPointy(n));
+					continue;
+				}
+
+			}
+
+			// L (}:ts) (0:ms) = } : (L ts ms) (Note 3)
+			// L (}:ts) ms = parse-error (Note 3)
+			if (currentToken.kind == RIGHT_CURLY) {
+				if (layoutContext.isEmpty() || layoutContext.peek() != 0)
+					throw new TokenMgrError(
+							"Brakets {} set incorrectly (Sec. 9.3, Note 3) "
+									+ layoutContext.toString(), 0);
+				layoutContext.pop();
+				result.add(input.remove(0));
+				continue;
+			}
+
+			// L ({:ts) ms = { : (L ts (0:ms)) (Note 4)
+			if (currentToken.kind == LEFT_CURLY) {
+				result.add(input.remove(0));
+				layoutContext.push(0);
+				continue;
+			}
+
+			// TODO: L (t:ts) (m:ms) = } : (L (t:ts) ms) if m /= 0 and
+			// parse-error(t) (Note 5)
+
+			// L (t:ts) ms = t : (L ts ms)
+			result.add(input.remove(0));
+
+		}
+		// L [] [] = []
+		// L [] (m:ms) = } : L [] ms if m /=0 (Note 6)
+		while (!layoutContext.isEmpty()) {
+			int m = layoutContext.pop();
+			if (m != 0)
+				result.add(createExtraToken("}", RIGHT_CURLY));
+			else
+				throw new TokenMgrError(
+						"Layout error, closing brackets do not match (see Sec. 9.3, Note 6)",
+						0);
+		}
+
+		return result;
+	}
+
+	private static Token createExtraToken(String image, int kind) {
+		Token t = new Token();
+		t.image = image;
+		t.kind = kind;
+		return t;
 	}
 
 }
