@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: CIDE_FM_PureVariants Plug-in
+Bundle-SymbolicName: CIDE_FM_PureVariants;singleton:=true
+Bundle-Version: 1.0.0
+Bundle-Activator: cide_fm_purevariants.Activator
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ com.ps.consul.eclipse.core;bundle-version="2.4.3",
+ com.ps.consul.eclipse.ui;bundle-version="2.4.3",
+ de.ovgu.cide.core;bundle-version="1.2.0"
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

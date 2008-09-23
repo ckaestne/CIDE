@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension id="com.ps.pvesdk.example.simpleeditors" name="Simple Editors" point="com.ps.consul.eclipse.ui.ElementEditors">
+      <editor
+            class="de.ovgu.cide.fm.purevariants.ColorEditor"
+            elementclass="ps:part"
+            elementtype="ps:color"
+            icon="icons/ps.gif"
+            name="Color"
+            parentclass="ps:component"
+            priority="50"/>
+   </extension>
+</plugin>
