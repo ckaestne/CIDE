@@ -21,9 +21,9 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 
+import coloredide.Change;
+import coloredide.ChangeType;
 import coloredide.ColorListChangedEvent;
-import coloredide.ColorListChangedEvent.Change;
-import coloredide.ColorListChangedEvent.ChangeType;
 import coloredide.configuration.AbstractConfigurationPage;
 import coloredide.configuration.NonValidatingConfigurationListPage;
 import coloredide.features.AbstractFeatureModel;
@@ -64,7 +64,7 @@ public class GuidslFeatureModelWrapper extends AbstractFeatureModel {
 					+ grammarFile.getResource().getFullPath() + " changed");
 			Job job = new Job("Load Model") {
 				protected IStatus run(IProgressMonitor monitor) {
-					List<ColorListChangedEvent.Change> changes = new ArrayList<Change>();
+					List<Change> changes = new ArrayList<Change>();
 					for (IFeature f : getFeatures())
 						changes.add(new Change(f, ChangeType.REMOVE));
 
@@ -170,7 +170,7 @@ public class GuidslFeatureModelWrapper extends AbstractFeatureModel {
 
 	public void fireFeatureChanged(Feature feature, ChangeType type) {
 		fireFeatureModelChanged(new ColorListChangedEvent(this, project,
-				new ColorListChangedEvent.Change(new FeatureAdapter(feature,
+				new Change(new FeatureAdapter(feature,
 						this), type)));
 	}
 

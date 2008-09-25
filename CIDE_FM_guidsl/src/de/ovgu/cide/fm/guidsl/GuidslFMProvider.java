@@ -8,6 +8,7 @@ import coloredide.features.IFeatureModelProvider;
 
 /**
  * feature model provider, initializes the guidsl feature model for each project
+ * (if a model.m file is present)
  * 
  * @author ckaestne
  * 
@@ -19,7 +20,12 @@ public class GuidslFMProvider implements IFeatureModelProvider {
 
 	public IFeatureModel getFeatureModel(IProject project)
 			throws FeatureModelNotFoundException {
-		return GuidslFeatureModelWrapper.getInstance(project);
+
+		if (project.exists() && project.getFile("model.m").exists())
+			return GuidslFeatureModelWrapper.getInstance(project);
+		else
+			return new EmptyFeatureModel(project);// the empty model is not
+													// cached
 	}
 
 }

@@ -10,12 +10,10 @@ import org.eclipse.jface.viewers.ITreeSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.IEditorPart;
 
 import coloredide.configuration.AbstractConfigurationPage;
 import coloredide.features.IFeature;
 import featureide_core.model.Feature;
-import featureide_core.model.FeatureModel;
 import featureide_core.model.configuration.Configuration;
 import featureide_core.model.configuration.SelectableFeature;
 import featureide_core.model.configuration.Selection;

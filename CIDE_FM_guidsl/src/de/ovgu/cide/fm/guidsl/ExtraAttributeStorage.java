@@ -14,9 +14,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.swt.graphics.RGB;
 
-import coloredide.ColorListChangedEvent;
-import coloredide.ColorListChangedEvent.ChangeType;
-import coloredide.features.AbstractFeatureModel;
+import coloredide.ChangeType;
 import coloredide.utils.ColorHelper;
 import featureide_core.model.Feature;
 
