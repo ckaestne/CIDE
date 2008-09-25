@@ -2,8 +2,6 @@ package coloredide.features;
 
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.resources.IProject;

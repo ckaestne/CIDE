@@ -16,20 +16,6 @@ public class ColorListChangedEvent extends EventObject {
 
 	private final IProject project;
 
-	public enum ChangeType {
-		NAME, COLOR, VISIBILITY, ADD, REMOVE
-	};
-
-	public static class Change {
-		final public IFeature feature;
-		final public ChangeType type;
-
-		public Change(IFeature feature, ChangeType type) {
-			this.feature = feature;
-			this.type = type;
-		}
-	}
-
 	public ColorListChangedEvent(Object source, IProject project,
 			Collection<Change> changes) {
 		super(source);

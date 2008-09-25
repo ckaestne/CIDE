@@ -6,12 +6,26 @@ Bundle-Version: 1.2.0
 Bundle-Activator: coloredide.CIDECorePlugin
 Bundle-Vendor: Christian Kaestner
 Bundle-Localization: plugin
-Export-Package: coloredide;x-internal:=true,
+Export-Package: coloredide,
  coloredide.astview.internal;x-internal:=true,
- coloredide.configuration,
- coloredide.features,
- coloredide.languages,
- coloredide.utils
+ coloredide.configuration;uses:="org.apache.tools.ant",
+ coloredide.features;
+  uses:="coloredide,
+   org.eclipse.core.runtime,
+   coloredide.configuration,
+   org.eclipse.core.resources,
+   org.eclipse.swt.graphics",
+ coloredide.languages;uses:="org.eclipse.core.runtime,cide.languages",
+ coloredide.utils;
+  uses:="org.eclipse.jface.wizard,
+   org.eclipse.ui.texteditor,
+   org.eclipse.ui,
+   org.eclipse.jface.action,
+   coloredide.features,
+   cide.gast,
+   org.eclipse.core.resources,
+   org.eclipse.swt.graphics,
+   org.eclipse.swt.widgets"
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui.ide,
  org.eclipse.jface.text,

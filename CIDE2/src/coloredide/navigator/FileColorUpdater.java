@@ -16,10 +16,10 @@ import org.eclipse.ui.navigator.CommonViewer;
 import org.eclipse.ui.navigator.resources.ProjectExplorer;
 
 import coloredide.ASTColorChangedEvent;
+import coloredide.ChangeType;
 import coloredide.ColorListChangedEvent;
 import coloredide.FileColorChangedEvent;
 import coloredide.IColorChangeListener;
-import coloredide.ColorListChangedEvent.ChangeType;
 
 /**
  * listens to changes to the .dircolor files and publishes them as

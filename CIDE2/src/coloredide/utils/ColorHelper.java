@@ -114,4 +114,14 @@ public class ColorHelper {
 	public static Color getCombinedColor(Collection<IFeature> featureList) {
 		return getColor(getCombinedRGB(featureList));
 	}
+
+	public static RGB str2rgb(String color) {
+		if (color.length() != 7 || color.charAt(0) != '#')
+			return new RGB(0, 0, 0);
+
+		int r = Integer.parseInt(color.substring(1, 3), 16);
+		int g = Integer.parseInt(color.substring(3, 5), 16);
+		int b = Integer.parseInt(color.substring(5, 7), 16);
+		return new RGB(r, g, b);
+	}
 }

@@ -13,10 +13,10 @@ import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.swt.widgets.Display;
 
 import coloredide.ASTColorChangedEvent;
+import coloredide.ChangeType;
 import coloredide.ColorListChangedEvent;
 import coloredide.FileColorChangedEvent;
 import coloredide.IColorChangeListener;
-import coloredide.ColorListChangedEvent.ChangeType;
 
 /**
  * listens to color changes and updates the view (including the filter) at the
