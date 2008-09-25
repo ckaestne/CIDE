@@ -1,9 +1,10 @@
 package tmp.generated_haskell;
 
-import cide.gast.*;
-import cide.gparser.*;
-import cide.greferences.*;
-import java.util.*;
+import cide.gast.IASTNode;
+import cide.gast.IToken;
+import cide.gast.Property;
+import cide.gast.PropertyOne;
+import cide.gparser.Token;
 
 public class exprListSpecial1 extends exprListSpecial {
   public exprListSpecial1(expr expr, altSpecialList altSpecialList, Token firstToken, Token lastToken) {

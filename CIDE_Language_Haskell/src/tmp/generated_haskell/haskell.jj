@@ -525,30 +525,31 @@ moduleHeader moduleHeader() : {
 
 exports exports() : { 
 	exportList exportList = null;
+	ASTTextNode text1 = null;
 	Token firstToken=token;
 } { (
-	"(" [exportList=exportList()] ")" 
-	{return new exports(exportList, firstToken.next,token);}
+	"(" [exportList=exportList()] ["," {text1=new ASTTextNode(",",new WToken(token));}] ")" 
+	{return new exports(exportList, text1, firstToken.next,token);}
  ) }
 
 importDecl importDecl() : { 
-	ASTTextNode text351 = null;
+	ASTTextNode text2 = null;
 	naam naam;
 	naam naam1 = null;
 	hiding hiding = null;
 	Token firstToken=token;
 } { (
-	"import" ["qualified" {text351=new ASTTextNode("qualified",new WToken(token));}] naam=naam() ["as" naam1=naam()] [hiding=hiding()] 
-	{return new importDecl(text351, naam, naam1, hiding, firstToken.next,token);}
+	"import" ["qualified" {text2=new ASTTextNode("qualified",new WToken(token));}] naam=naam() ["as" naam1=naam()] [hiding=hiding()] 
+	{return new importDecl(text2, naam, naam1, hiding, firstToken.next,token);}
  ) }
 
 hiding hiding() : { 
-	ASTTextNode text352 = null;
+	ASTTextNode text3 = null;
 	exportList exportList = null;
 	Token firstToken=token;
 } { (
-	["hiding" {text352=new ASTTextNode("hiding",new WToken(token));}] "(" [exportList=exportList()] ")" 
-	{return new hiding(text352, exportList, firstToken.next,token);}
+	["hiding" {text3=new ASTTextNode("hiding",new WToken(token));}] "(" [exportList=exportList()] ")" 
+	{return new hiding(text3, exportList, firstToken.next,token);}
  ) }
 
 exportList exportList() : { 
@@ -558,7 +559,7 @@ exportList exportList() : {
 	ArrayList<export> export1List = new ArrayList<export>();
 	Token firstToken=token;
 } { (
-	export=export(){list0.add(export);} ("," export1=export(){list0.add(export1);})* 
+	export=export(){list0.add(export);} (LOOKAHEAD(2) "," export1=export(){list0.add(export1);})* 
 	{return new exportList(list0, firstToken.next,token);}
  ) }
 
@@ -1120,7 +1121,7 @@ patroonPrefix patroonPrefix() : {
  ) }
 
 patroonMain patroonMain() : { 
-	ASTTextNode text356 = null;
+	ASTTextNode text7 = null;
 	literal literal;
 	var var;
 	naam naam;
@@ -1132,8 +1133,8 @@ patroonMain patroonMain() : {
 } { (
 	"_"  
 	{return new patroonMain1(firstToken.next,token);} |
-	["-" {text356=new ASTTextNode("-",new WToken(token));}] literal=literal() 
-	{return new patroonMain2(text356, literal, firstToken.next,token);} |
+	["-" {text7=new ASTTextNode("-",new WToken(token));}] literal=literal() 
+	{return new patroonMain2(text7, literal, firstToken.next,token);} |
 	LOOKAHEAD(var()) var=var() 
 	{return new patroonMain3(var, firstToken.next,token);} |
 	LOOKAHEAD(naam()) naam=naam() [contrPatrParam=contrPatrParam()] 

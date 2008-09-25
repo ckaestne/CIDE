@@ -1,9 +1,10 @@
 package tmp.generated_haskell;
 
-import cide.gast.*;
-import cide.gparser.*;
-import cide.greferences.*;
-import java.util.*;
+import cide.gast.IASTNode;
+import cide.gast.IToken;
+import cide.gast.Property;
+import cide.gast.PropertyZeroOrOne;
+import cide.gparser.Token;
 
 public class patroonMain7 extends patroonMain {
   public patroonMain7(patrList patrList2, Token firstToken, Token lastToken) {

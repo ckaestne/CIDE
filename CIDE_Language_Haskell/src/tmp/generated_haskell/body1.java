@@ -1,9 +1,13 @@
 package tmp.generated_haskell;
 
-import cide.gast.*;
-import cide.gparser.*;
-import cide.greferences.*;
-import java.util.*;
+import java.util.ArrayList;
+
+import cide.gast.IASTNode;
+import cide.gast.IToken;
+import cide.gast.Property;
+import cide.gast.PropertyList;
+import cide.gast.PropertyZeroOrOne;
+import cide.gparser.Token;
 
 public class body1 extends body {
   public body1(ArrayList<importDecl> importDecl, definitions definitions, Token firstToken, Token lastToken) {

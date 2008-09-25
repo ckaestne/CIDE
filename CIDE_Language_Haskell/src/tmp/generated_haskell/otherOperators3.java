@@ -1,9 +1,9 @@
 package tmp.generated_haskell;
 
-import cide.gast.*;
-import cide.gparser.*;
-import cide.greferences.*;
-import java.util.*;
+import cide.gast.IASTNode;
+import cide.gast.IToken;
+import cide.gast.Property;
+import cide.gparser.Token;
 
 public class otherOperators3 extends otherOperators {
   public otherOperators3(Token firstToken, Token lastToken) {

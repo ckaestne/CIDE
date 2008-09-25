@@ -1,9 +1,12 @@
 package tmp.generated_haskell;
 
-import cide.gast.*;
-import cide.gparser.*;
-import cide.greferences.*;
-import java.util.*;
+import java.util.ArrayList;
+
+import cide.gast.IASTNode;
+import cide.gast.IToken;
+import cide.gast.Property;
+import cide.gast.PropertyList;
+import cide.gparser.Token;
 
 public class functiontypeList extends GenASTNode {
   public functiontypeList(ArrayList<functiontype> functiontype, Token firstToken, Token lastToken) {

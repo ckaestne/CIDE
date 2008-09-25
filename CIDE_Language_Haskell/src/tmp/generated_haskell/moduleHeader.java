@@ -1,9 +1,11 @@
 package tmp.generated_haskell;
 
-import cide.gast.*;
-import cide.gparser.*;
-import cide.greferences.*;
-import java.util.*;
+import cide.gast.IASTNode;
+import cide.gast.IToken;
+import cide.gast.Property;
+import cide.gast.PropertyOne;
+import cide.gast.PropertyZeroOrOne;
+import cide.gparser.Token;
 
 public class moduleHeader extends GenASTNode {
   public moduleHeader(naam naam, exports exports, Token firstToken, Token lastToken) {

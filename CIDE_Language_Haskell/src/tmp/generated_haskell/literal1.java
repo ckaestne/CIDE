@@ -1,9 +1,11 @@
 package tmp.generated_haskell;
 
-import cide.gast.*;
-import cide.gparser.*;
-import cide.greferences.*;
-import java.util.*;
+import cide.gast.ASTStringNode;
+import cide.gast.IASTNode;
+import cide.gast.IToken;
+import cide.gast.Property;
+import cide.gast.PropertyOne;
+import cide.gparser.Token;
 
 public class literal1 extends literal {
   public literal1(ASTStringNode integer, Token firstToken, Token lastToken) {

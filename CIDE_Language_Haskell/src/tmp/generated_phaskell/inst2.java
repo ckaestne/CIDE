@@ -1,9 +1,13 @@
 package tmp.generated_phaskell;
 
-import cide.gast.*;
-import cide.gparser.*;
-import cide.greferences.*;
-import java.util.*;
+import java.util.ArrayList;
+
+import cide.gast.IASTNode;
+import cide.gast.IToken;
+import cide.gast.Property;
+import cide.gast.PropertyOne;
+import cide.gast.PropertyZeroOrMore;
+import cide.gparser.Token;
 
 public class inst2 extends inst {
   public inst2(gtycon gtycon1, ArrayList<tyvar> tyvar, Token firstToken, Token lastToken) {

@@ -1,9 +1,14 @@
 package tmp.generated_haskell;
 
-import cide.gast.*;
-import cide.gparser.*;
-import cide.greferences.*;
-import java.util.*;
+import java.util.ArrayList;
+
+import cide.gast.IASTNode;
+import cide.gast.IToken;
+import cide.gast.Property;
+import cide.gast.PropertyOne;
+import cide.gast.PropertyZeroOrMore;
+import cide.gast.PropertyZeroOrOne;
+import cide.gparser.Token;
 
 public class expr extends GenASTNode {
   public expr(exprMain exprMain, ArrayList<exprOperator> exprOperator, exprEnd exprEnd, Token firstToken, Token lastToken) {

@@ -1,9 +1,11 @@
 package tmp.generated_haskell;
 
-import cide.gast.*;
-import cide.gparser.*;
-import cide.greferences.*;
-import java.util.*;
+import cide.gast.IASTNode;
+import cide.gast.IToken;
+import cide.gast.Property;
+import cide.gast.PropertyOne;
+import cide.gast.PropertyZeroOrOne;
+import cide.gparser.Token;
 
 public class declaration3 extends declaration {
   public declaration3(varList varList, context context, functiontype functiontype, Token firstToken, Token lastToken) {

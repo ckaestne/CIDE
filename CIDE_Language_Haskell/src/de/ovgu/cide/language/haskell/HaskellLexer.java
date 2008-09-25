@@ -37,12 +37,29 @@ public class HaskellLexer extends HaskellParserTokenManager {
 			insertLayoutToken();
 		if (debugLevel >= 3)
 			tokens = rewriteLayoutToken(tokens);
+		fixNext();
 
 		tokenIterator = tokens.iterator();
 	}
 
+	private void fixNext() {
+		Token last = null;
+		for (Token t : tokens) {
+			if (last != null)
+				last.next = t;
+			last = t;
+		}
+
+	}
+
 	private void tokenizeStream() {
 		while (true) {
+			try {
+				input_stream.BeginToken();
+				input_stream.backup(1);
+			} catch (IOException e) {
+			}
+
 			if (specialTokens())
 				continue;
 			if (checkTextToken("module", MODULE))
@@ -113,7 +130,7 @@ public class HaskellLexer extends HaskellParserTokenManager {
 				continue;
 			if (checkSymbolToken("@", OTHER3, false))
 				continue;
-			if (checkSymbolToken("_", OTHER4, false))
+			if (checkTextToken("_", OTHER4))
 				continue;
 			if (checkSymbolToken("~", OTHER5, false))
 				continue;
@@ -245,9 +262,12 @@ public class HaskellLexer extends HaskellParserTokenManager {
 		String l = "" + first;
 
 		char c = getNext();
-		while (!(c == first && l.charAt(l.length() - 1) != '\\')) {
-			if (c == 0)
-				throw new TokenMgrError();
+		while (!(c == first && !escaped(l))) {
+			if (c == 0) {
+				System.out.println(debugPrintTokens());
+				throw new TokenMgrError(
+						"Reached EOF before String literal was closed: " + l, 0);
+			}
 			l += c;
 			c = getNext();
 		}
@@ -255,6 +275,20 @@ public class HaskellLexer extends HaskellParserTokenManager {
 
 		foundToken(l, first == '"' ? STRING_LITERAL : CHARACTER_LITERAL);
 		return true;
+	}
+
+	/**
+	 * counts the number of tailing backslashes. it escapes the following
+	 * character if there is an uneven number
+	 */
+	private boolean escaped(String string) {
+		boolean escaped = false;
+		int i = string.length() - 1;
+		while (i > 0 && string.charAt(i) == '\\') {
+			i--;
+			escaped = !escaped;
+		}
+		return escaped;
 	}
 
 	private boolean checkNumber() {
@@ -330,13 +364,14 @@ public class HaskellLexer extends HaskellParserTokenManager {
 	}
 
 	private boolean checkVariable() {
-		if (!Character.isLowerCase(peek()))
+		char c = peek();
+		if (!(Character.isLowerCase(c) || c == '_'))
 			return false;
 
 		String id = "" + getNext();
-		char c = getNext();
+		c = getNext();
 		while (Character.isLetter(c) || Character.isDigit(c) || c == '\''
-				|| c == '#') {
+				|| c == '#' || c == '_') {
 			id += c;
 			c = getNext();
 		}
@@ -352,7 +387,7 @@ public class HaskellLexer extends HaskellParserTokenManager {
 		String id = "" + getNext();
 		char c = getNext();
 		while (Character.isLetter(c) || Character.isDigit(c) || c == '\''
-				|| c == '#') {
+				|| c == '#' || c == '_') {
 			id += c;
 			c = getNext();
 		}
@@ -372,11 +407,12 @@ public class HaskellLexer extends HaskellParserTokenManager {
 			String comment = "--";
 			char c;
 			while ((c = getNext()) != 0) {
-				comment += c;
-				if (c == '\n' || (c == '\r' && peek() != '\n')) {
+				if (c == '\n' || c == '\r') {
+					backup(1);
 					foundSpecialToken(comment);
 					return true;
 				}
+				comment += c;
 			}
 			// EOF before line break
 			backup(comment.length());
@@ -557,6 +593,11 @@ public class HaskellLexer extends HaskellParserTokenManager {
 	}
 
 	public String debugPrintTokens() {
+		return debugPrintTokens(true);
+
+	}
+
+	public String debugPrintTokens(boolean nl) {
 		String result = "";
 		for (Token t : tokens) {
 			Token s = t.specialToken;
@@ -566,11 +607,17 @@ public class HaskellLexer extends HaskellParserTokenManager {
 			}
 			result += "[" + t.image + ":" + tokenImage[t.kind] + "]";
 		}
-		result = result.replace("\n", "\\n").replace("\r", "\\r");
+		if (nl)
+			result = result.replace("\n", "\\n").replace("\r", "\\r");
 		return result;
 	}
 
 	public String debugSerialize() {
+		return debugSerialize(true);
+
+	}
+
+	public String debugSerialize(boolean nl) {
 		String result = "";
 		for (Token t : tokens) {
 			Token s = t.specialToken;
@@ -581,7 +628,8 @@ public class HaskellLexer extends HaskellParserTokenManager {
 			if (t.kind != EOF)
 				result += t.image;
 		}
-		result = result.replace("\n", "\\n").replace("\r", "\\r");
+		if (nl)
+			result = result.replace("\n", "\\n").replace("\r", "\\r");
 		return result;
 	}
 
@@ -762,11 +810,11 @@ public class HaskellLexer extends HaskellParserTokenManager {
 	 * tokens as described in sec. 9.3
 	 */
 	private List<Token> rewriteLayoutToken(List<Token> input) {
-		System.out.println(debugSerialize());
-
+		assert !input.isEmpty();
 		input = new LinkedList<Token>(input);
 		List<Token> result = new LinkedList<Token>();
 		Stack<Integer> layoutContext = new Stack<Integer>();
+		Token eofToken = input.remove(input.size() - 1);
 
 		while (!input.isEmpty()) {
 			Token currentToken = input.get(0);
@@ -780,11 +828,11 @@ public class HaskellLexer extends HaskellParserTokenManager {
 				if (!layoutContext.isEmpty())
 					m = layoutContext.peek();
 				if (m == n) {
-					result.add(createExtraToken(";", SEMICOLON));
+					createExtraToken(result, ";", SEMICOLON);
 					input.remove(0);
 					continue;
 				} else if (n < m) {
-					result.add(createExtraToken("}", RIGHT_CURLY));
+					createExtraToken(result, "}", RIGHT_CURLY);
 					layoutContext.pop();
 					continue;
 				} else {
@@ -802,13 +850,13 @@ public class HaskellLexer extends HaskellParserTokenManager {
 				if (!layoutContext.isEmpty())
 					m = layoutContext.peek();
 				if (n > m) {
-					result.add(createExtraToken("{", LEFT_CURLY));
+					createExtraToken(result, "{", LEFT_CURLY);
 					input.remove(0);
 					layoutContext.push(n);
 					continue;
 				} else {
-					result.add(createExtraToken("{", LEFT_CURLY));
-					result.add(createExtraToken("}", RIGHT_CURLY));
+					createExtraToken(result, "{", LEFT_CURLY);
+					createExtraToken(result, "}", RIGHT_CURLY);
 					input.remove(0);
 					input.add(0, new LayoutTokenPointy(n));
 					continue;
@@ -847,21 +895,47 @@ public class HaskellLexer extends HaskellParserTokenManager {
 		while (!layoutContext.isEmpty()) {
 			int m = layoutContext.pop();
 			if (m != 0)
-				result.add(createExtraToken("}", RIGHT_CURLY));
+				createExtraToken(result, "}", RIGHT_CURLY);
 			else
 				throw new TokenMgrError(
 						"Layout error, closing brackets do not match (see Sec. 9.3, Note 6)",
 						0);
 		}
 
+		result.add(eofToken);
 		return result;
 	}
 
-	private static Token createExtraToken(String image, int kind) {
-		Token t = new Token();
+	/**
+	 * appends an extra token to the token list
+	 * 
+	 * @param tokenList
+	 * @return
+	 */
+	private static Token createExtraToken(List<Token> tokenList, String image,
+			int kind) {
+		Token t = new ExtraLayoutToken();
 		t.image = image;
 		t.kind = kind;
+
+		if (!tokenList.isEmpty()) {
+			Token lastToken = tokenList.get(tokenList.size() - 1);
+			t.beginColumn = t.endColumn = lastToken.endColumn;
+			t.beginLine = t.endLine = lastToken.endLine;
+			t.offset = lastToken.getEndOffset();
+			t.length = 0;
+
+			if (kind == RIGHT_CURLY && lastToken.kind == SEMICOLON
+					&& (lastToken instanceof ExtraLayoutToken))
+				tokenList.remove(tokenList.size() - 1);
+		}
+
+		tokenList.add(t);
 		return t;
+	}
+
+	private static class ExtraLayoutToken extends Token {
+
 	}
 
 }

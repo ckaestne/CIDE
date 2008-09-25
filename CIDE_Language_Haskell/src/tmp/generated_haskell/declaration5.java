@@ -1,9 +1,14 @@
 package tmp.generated_haskell;
 
-import cide.gast.*;
-import cide.gparser.*;
-import cide.greferences.*;
-import java.util.*;
+import java.util.ArrayList;
+
+import cide.gast.IASTNode;
+import cide.gast.IToken;
+import cide.gast.Property;
+import cide.gast.PropertyOne;
+import cide.gast.PropertyOneOrMore;
+import cide.gast.PropertyZeroOrOne;
+import cide.gparser.Token;
 
 public class declaration5 extends declaration {
   public declaration5(patr patr1, ArrayList<altExprAss> altExprAss1, whereDecls whereDecls3, Token firstToken, Token lastToken) {

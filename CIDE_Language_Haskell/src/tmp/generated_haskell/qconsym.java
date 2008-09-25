@@ -1,9 +1,12 @@
 package tmp.generated_haskell;
 
-import cide.gast.*;
-import cide.gparser.*;
-import cide.greferences.*;
-import java.util.*;
+import cide.gast.ASTStringNode;
+import cide.gast.IASTNode;
+import cide.gast.IToken;
+import cide.gast.Property;
+import cide.gast.PropertyOne;
+import cide.gast.PropertyZeroOrOne;
+import cide.gparser.Token;
 
 public class qconsym extends GenASTNode {
   public qconsym(ModuleNaamPrefix moduleNaamPrefix, ASTStringNode consym, Token firstToken, Token lastToken) {

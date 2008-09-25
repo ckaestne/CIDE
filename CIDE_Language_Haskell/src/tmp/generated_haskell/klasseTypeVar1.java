@@ -1,9 +1,14 @@
 package tmp.generated_haskell;
 
-import cide.gast.*;
-import cide.gparser.*;
-import cide.greferences.*;
-import java.util.*;
+import java.util.ArrayList;
+
+import cide.gast.ASTStringNode;
+import cide.gast.IASTNode;
+import cide.gast.IToken;
+import cide.gast.Property;
+import cide.gast.PropertyOne;
+import cide.gast.PropertyZeroOrMore;
+import cide.gparser.Token;
 
 public class klasseTypeVar1 extends klasseTypeVar {
   public klasseTypeVar1(ASTStringNode variable_id, ArrayList<type> type, Token firstToken, Token lastToken) {

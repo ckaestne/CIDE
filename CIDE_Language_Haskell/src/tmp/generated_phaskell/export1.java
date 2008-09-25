@@ -1,9 +1,10 @@
 package tmp.generated_phaskell;
 
-import cide.gast.*;
-import cide.gparser.*;
-import cide.greferences.*;
-import java.util.*;
+import cide.gast.IASTNode;
+import cide.gast.IToken;
+import cide.gast.Property;
+import cide.gast.PropertyOne;
+import cide.gparser.Token;
 
 public class export1 extends export {
   public export1(qvar qvar, Token firstToken, Token lastToken) {

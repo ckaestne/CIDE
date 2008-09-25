@@ -1,9 +1,12 @@
 package tmp.generated_phaskell;
 
-import cide.gast.*;
-import cide.gparser.*;
-import cide.greferences.*;
-import java.util.*;
+import java.util.ArrayList;
+
+import cide.gast.IASTNode;
+import cide.gast.IToken;
+import cide.gast.Property;
+import cide.gast.PropertyList;
+import cide.gparser.Token;
 
 public class cdeclsI extends GenASTNode {
   public cdeclsI(ArrayList<cdecl> cdecl, Token firstToken, Token lastToken) {

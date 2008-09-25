@@ -1,9 +1,7 @@
 package tmp.generated_haskell;
 
-import java.util.*;
-import cide.greferences.*;
-
-import cide.gast.*;
+import cide.greferences.IReferenceManager;
+import cide.greferences.ReferenceType;
 
 public class ReferenceManager implements IReferenceManager {
 	

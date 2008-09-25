@@ -1,9 +1,14 @@
 package tmp.generated_haskell;
 
-import cide.gast.*;
-import cide.gparser.*;
-import cide.greferences.*;
-import java.util.*;
+import java.util.ArrayList;
+
+import cide.gast.IASTNode;
+import cide.gast.IToken;
+import cide.gast.Property;
+import cide.gast.PropertyOne;
+import cide.gast.PropertyOneOrMore;
+import cide.gast.PropertyZeroOrOne;
+import cide.gparser.Token;
 
 public class classdecl extends definition {
   public classdecl(context context2, naam naam1, ArrayList<var> var, whereDecls whereDecls, Token firstToken, Token lastToken) {

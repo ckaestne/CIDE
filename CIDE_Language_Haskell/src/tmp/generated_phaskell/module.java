@@ -1,9 +1,13 @@
 package tmp.generated_phaskell;
 
-import cide.gast.*;
-import cide.gparser.*;
-import cide.greferences.*;
-import java.util.*;
+import cide.gast.ASTStringNode;
+import cide.gast.IASTNode;
+import cide.gast.ISourceFile;
+import cide.gast.IToken;
+import cide.gast.Property;
+import cide.gast.PropertyOne;
+import cide.gast.PropertyZeroOrOne;
+import cide.gparser.Token;
 
 public class module extends GenASTNode implements ISourceFile {
   public module(modid modid, exports exports, body body, ASTStringNode eof, Token firstToken, Token lastToken) {

@@ -1,9 +1,7 @@
 package de.ovgu.cide.language.haskell;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileReader;
-import java.io.InputStreamReader;
 
 import org.junit.Test;
 
@@ -11,27 +9,10 @@ import tmp.generated_haskell.HaskellParser;
 import tmp.generated_haskell.module;
 import cide.gparser.OffsetCharStream;
 import cide.gparser.ParseException;
+import cide.gparser.TokenMgrError;
 import cide.languages.ILanguagePrintVisitor;
-import de.ovgu.cide.language.haskell.HaskellLanguageExtension;
 
 public class TestFiles {
-
-	private HaskellParser parse(String string) {
-		ByteArrayInputStream a = new ByteArrayInputStream(string.getBytes());
-		InputStreamReader b = new InputStreamReader(a);
-		HaskellParser p = new HaskellParser(new HaskellLexer(new OffsetCharStream(b)));
-		return p;
-	}
-
-	// @Test
-	// public void testTest() throws FileNotFoundException, ParseException {
-	// HaskellParser p = new HaskellParser(new OffsetCharStream(
-	// new FileReader("test/fromviral/Pic.hs")));
-	// module u = p.module();
-	// SimplePrintVisitor v;
-	// u.accept(v = new SimplePrintVisitor());
-	// System.out.println(v.getResult());
-	// }
 
 	@Test
 	public void testArithOrig() throws Exception {
@@ -42,7 +23,7 @@ public class TestFiles {
 	public void testFGL() throws Exception {
 		parseFilesInFolder(new File("test/fgl-5.4.2"), true, ".block");
 	}
-	
+
 	@Test
 	public void testWSP() throws Exception {
 		parseFilesInFolder(new File("test/WSP"), true, ".hs");
@@ -57,21 +38,34 @@ public class TestFiles {
 				} else {
 					String name = file.getName();
 					int idx = name.lastIndexOf('.');
-					if (idx > 0 && (name.substring(idx).equals(fileextension)/*
-																				 * ||
-																				 * name.substring(
-																				 * idx).equals(".h")
-																				 */)) {
+					if (idx > 0
+							&& (name.substring(idx).equals(fileextension)/*
+																		 * ||
+																		 * name.
+																		 * substring
+																		 * (
+																		 * idx)
+																		 * .equals
+																		 * (
+																		 * ".h")
+																		 */)) {
 						try {
 							// System.out.println("parsing " + file);
-							HaskellParser p = new HaskellParser(
+							HaskellLexer lexer = new HaskellLexer(
 									new OffsetCharStream(new FileReader(file)));
+							// System.out.println(lexer.debugSerialize(false));
+							HaskellParser p = new HaskellParser(lexer);
 							module m = p.module();
 							ILanguagePrintVisitor pp = new HaskellLanguageExtension()
 									.getPrettyPrinter();
 							m.accept(pp);
-							System.out.println(pp.getResult());
+							// System.out.println(pp.getResult());
 						} catch (ParseException e) {
+							System.out.println("Attempted to parse " + file);
+							System.out.flush();
+							e.printStackTrace();
+							throw e;
+						} catch (TokenMgrError e) {
 							System.out.println("Attempted to parse " + file);
 							System.out.flush();
 							e.printStackTrace();

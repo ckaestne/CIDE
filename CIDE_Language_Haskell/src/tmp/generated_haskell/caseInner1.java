@@ -1,9 +1,11 @@
 package tmp.generated_haskell;
 
-import cide.gast.*;
-import cide.gparser.*;
-import cide.greferences.*;
-import java.util.*;
+import cide.gast.IASTNode;
+import cide.gast.IToken;
+import cide.gast.Property;
+import cide.gast.PropertyOne;
+import cide.gast.PropertyZeroOrOne;
+import cide.gparser.Token;
 
 public class caseInner1 extends caseInner {
   public caseInner1(patr patr, expr expr, whereDecls whereDecls, Token firstToken, Token lastToken) {

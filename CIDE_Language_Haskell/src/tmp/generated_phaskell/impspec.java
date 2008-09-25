@@ -1,9 +1,11 @@
 package tmp.generated_phaskell;
 
-import cide.gast.*;
-import cide.gparser.*;
-import cide.greferences.*;
-import java.util.*;
+import cide.gast.ASTTextNode;
+import cide.gast.IASTNode;
+import cide.gast.IToken;
+import cide.gast.Property;
+import cide.gast.PropertyZeroOrOne;
+import cide.gparser.Token;
 
 public class impspec extends GenASTNode {
   public impspec(ASTTextNode text367, imports imports, Token firstToken, Token lastToken) {

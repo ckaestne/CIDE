@@ -502,14 +502,14 @@ body:
 	| [definitions];
 
 moduleHeader: "module" naam [exports] "where" @!;
-exports: "(" [exportList]  ")";
+exports: "(" [exportList] [","<NONE>] ")";
 
 importDecl: "import" ["qualified"<NONE>] naam ["as" naam] [hiding];
 hiding: ["hiding"<NONE>] "(" [exportList] ")";
 
 //export
 
-exportList: &LI export ("," &LI export)*;
+exportList: &LI export (LL(2) "," &LI export)*;
 export:
 	LL("var()") var
 	| naam [ exportNaamParam]

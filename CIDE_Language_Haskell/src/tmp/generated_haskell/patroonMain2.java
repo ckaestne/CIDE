@@ -1,14 +1,17 @@
 package tmp.generated_haskell;
 
-import cide.gast.*;
-import cide.gparser.*;
-import cide.greferences.*;
-import java.util.*;
+import cide.gast.ASTTextNode;
+import cide.gast.IASTNode;
+import cide.gast.IToken;
+import cide.gast.Property;
+import cide.gast.PropertyOne;
+import cide.gast.PropertyZeroOrOne;
+import cide.gparser.Token;
 
 public class patroonMain2 extends patroonMain {
-  public patroonMain2(ASTTextNode text356, literal literal, Token firstToken, Token lastToken) {
+  public patroonMain2(ASTTextNode text7, literal literal, Token firstToken, Token lastToken) {
     super(new Property[] {
-      new PropertyZeroOrOne<ASTTextNode>("text356", text356),
+      new PropertyZeroOrOne<ASTTextNode>("text7", text7),
       new PropertyOne<literal>("literal", literal)
     }, firstToken, lastToken);
   }
@@ -18,8 +21,8 @@ public class patroonMain2 extends patroonMain {
   public IASTNode deepCopy() {
     return new patroonMain2(cloneProperties(),firstToken,lastToken);
   }
-  public ASTTextNode getText356() {
-    return ((PropertyZeroOrOne<ASTTextNode>)getProperty("text356")).getValue();
+  public ASTTextNode getText7() {
+    return ((PropertyZeroOrOne<ASTTextNode>)getProperty("text7")).getValue();
   }
   public literal getLiteral() {
     return ((PropertyOne<literal>)getProperty("literal")).getValue();

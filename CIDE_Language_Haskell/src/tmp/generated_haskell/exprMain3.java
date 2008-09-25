@@ -1,9 +1,13 @@
 package tmp.generated_haskell;
 
-import cide.gast.*;
-import cide.gparser.*;
-import cide.greferences.*;
-import java.util.*;
+import java.util.ArrayList;
+
+import cide.gast.IASTNode;
+import cide.gast.IToken;
+import cide.gast.Property;
+import cide.gast.PropertyOne;
+import cide.gast.PropertyOneOrMore;
+import cide.gparser.Token;
 
 public class exprMain3 extends exprMain {
   public exprMain3(ArrayList<patroon> patroon, expr expr1, Token firstToken, Token lastToken) {

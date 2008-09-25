@@ -1,9 +1,12 @@
 package tmp.generated_haskell;
 
-import cide.gast.*;
-import cide.gparser.*;
-import cide.greferences.*;
-import java.util.*;
+import cide.gast.ASTStringNode;
+import cide.gast.IASTNode;
+import cide.gast.IToken;
+import cide.gast.Property;
+import cide.gast.PropertyOne;
+import cide.gast.PropertyZeroOrOne;
+import cide.gparser.Token;
 
 public class qvarid extends GenASTNode {
   public qvarid(ModuleNaamPrefix moduleNaamPrefix, ASTStringNode variable_id, Token firstToken, Token lastToken) {

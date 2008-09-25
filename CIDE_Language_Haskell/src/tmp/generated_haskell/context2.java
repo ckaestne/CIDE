@@ -1,9 +1,9 @@
 package tmp.generated_haskell;
 
-import cide.gast.*;
-import cide.gparser.*;
-import cide.greferences.*;
-import java.util.*;
+import cide.gast.IASTNode;
+import cide.gast.IToken;
+import cide.gast.Property;
+import cide.gparser.Token;
 
 public class context2 extends context {
   public context2(Token firstToken, Token lastToken) {

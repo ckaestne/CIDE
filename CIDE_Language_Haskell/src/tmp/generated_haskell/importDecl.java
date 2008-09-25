@@ -1,14 +1,17 @@
 package tmp.generated_haskell;
 
-import cide.gast.*;
-import cide.gparser.*;
-import cide.greferences.*;
-import java.util.*;
+import cide.gast.ASTTextNode;
+import cide.gast.IASTNode;
+import cide.gast.IToken;
+import cide.gast.Property;
+import cide.gast.PropertyOne;
+import cide.gast.PropertyZeroOrOne;
+import cide.gparser.Token;
 
 public class importDecl extends GenASTNode {
-  public importDecl(ASTTextNode text351, naam naam, naam naam1, hiding hiding, Token firstToken, Token lastToken) {
+  public importDecl(ASTTextNode text2, naam naam, naam naam1, hiding hiding, Token firstToken, Token lastToken) {
     super(new Property[] {
-      new PropertyZeroOrOne<ASTTextNode>("text351", text351),
+      new PropertyZeroOrOne<ASTTextNode>("text2", text2),
       new PropertyOne<naam>("naam", naam),
       new PropertyZeroOrOne<naam>("naam1", naam1),
       new PropertyZeroOrOne<hiding>("hiding", hiding)
@@ -20,8 +23,8 @@ public class importDecl extends GenASTNode {
   public IASTNode deepCopy() {
     return new importDecl(cloneProperties(),firstToken,lastToken);
   }
-  public ASTTextNode getText351() {
-    return ((PropertyZeroOrOne<ASTTextNode>)getProperty("text351")).getValue();
+  public ASTTextNode getText2() {
+    return ((PropertyZeroOrOne<ASTTextNode>)getProperty("text2")).getValue();
   }
   public naam getNaam() {
     return ((PropertyOne<naam>)getProperty("naam")).getValue();

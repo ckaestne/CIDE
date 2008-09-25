@@ -18,7 +18,7 @@ public class HaskellLanguageExtension implements ILanguageExtension {
 		return new ILanguageParser(){
 
 			public ISourceFile getRoot() throws ParseException {
-				return new HaskellParser(new OffsetCharStream(inputStream)).module();
+				return new HaskellParser(new HaskellLexer(new OffsetCharStream(inputStream))).module();
 			}};
 	}
 

@@ -1,9 +1,11 @@
 package tmp.generated_haskell;
 
-import cide.gast.*;
-import cide.gparser.*;
-import cide.greferences.*;
-import java.util.*;
+import cide.gast.IASTNode;
+import cide.gast.IToken;
+import cide.gast.Property;
+import cide.gast.PropertyOne;
+import cide.gast.PropertyZeroOrOne;
+import cide.gparser.Token;
 
 public class qop3 extends qop {
   public qop3(ModuleNaamPrefix moduleNaamPrefix, otherOperators otherOperators, Token firstToken, Token lastToken) {

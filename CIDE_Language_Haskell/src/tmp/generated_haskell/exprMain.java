@@ -1,9 +1,8 @@
 package tmp.generated_haskell;
 
-import cide.gast.*;
-import cide.gparser.*;
-import cide.greferences.*;
-import java.util.*;
+import cide.gast.IToken;
+import cide.gast.Property;
+import cide.gparser.Token;
 
 public abstract class exprMain extends GenASTNode {
   protected exprMain(Property[] p, Token firstToken, Token lastToken) { super(p, firstToken, lastToken); }

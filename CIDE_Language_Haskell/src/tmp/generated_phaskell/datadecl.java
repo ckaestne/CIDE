@@ -1,9 +1,11 @@
 package tmp.generated_phaskell;
 
-import cide.gast.*;
-import cide.gparser.*;
-import cide.greferences.*;
-import java.util.*;
+import cide.gast.IASTNode;
+import cide.gast.IToken;
+import cide.gast.Property;
+import cide.gast.PropertyOne;
+import cide.gast.PropertyZeroOrOne;
+import cide.gparser.Token;
 
 public class datadecl extends topdecl {
   public datadecl(optContext optContext, simpletype simpletype1, constrs constrs, deriving deriving, Token firstToken, Token lastToken) {

@@ -1,9 +1,12 @@
 package tmp.generated_phaskell;
 
-import cide.gast.*;
-import cide.gparser.*;
-import cide.greferences.*;
-import java.util.*;
+import cide.gast.ASTTextNode;
+import cide.gast.IASTNode;
+import cide.gast.IToken;
+import cide.gast.Property;
+import cide.gast.PropertyOne;
+import cide.gast.PropertyZeroOrOne;
+import cide.gparser.Token;
 
 public class impdecl1 extends impdecl {
   public impdecl1(ASTTextNode text365, modid modid, modid modid1, impspec impspec, Token firstToken, Token lastToken) {

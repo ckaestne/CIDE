@@ -8,12 +8,10 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import cide.gparser.CharStream;
+import tmp.generated_haskell.HaskellParser;
 import cide.gparser.OffsetCharStream;
 import cide.gparser.Token;
 import cide.gparser.TokenMgrError;
-
-import tmp.generated_haskell.HaskellParser;
 
 public class HaskellLexerTest {
 
@@ -22,7 +20,7 @@ public class HaskellLexerTest {
 		String string = "abc";
 		ByteArrayInputStream a = new ByteArrayInputStream(string.getBytes());
 		InputStreamReader b = new InputStreamReader(a);
-		new HaskellParser(new HaskellLexer(new OffsetCharStream(b)));
+		new HaskellParser(new HaskellLexer(new OffsetCharStream(b),1));
 	}
 
 	@Test
@@ -127,6 +125,7 @@ public class HaskellLexerTest {
 	public void testConstrEtc() {
 		testFirstToken("A", HaskellLexer.CONSTRUCTOR_ID);
 		testFirstToken("Aaaa", HaskellLexer.CONSTRUCTOR_ID);
+		testFirstToken("A_", HaskellLexer.CONSTRUCTOR_ID);
 		testFirstToken("A1", HaskellLexer.CONSTRUCTOR_ID);
 		testFirstToken("A#a", HaskellLexer.CONSTRUCTOR_ID);
 		testFirstToken("Aa'aa1", HaskellLexer.CONSTRUCTOR_ID);
@@ -136,6 +135,9 @@ public class HaskellLexerTest {
 		testFirstToken("a1", HaskellLexer.VARIABLE_ID);
 		testFirstToken("a#a", HaskellLexer.VARIABLE_ID);
 		testFirstToken("aa'aa1", HaskellLexer.VARIABLE_ID);
+		testFirstToken("a'", HaskellLexer.VARIABLE_ID);
+		testFirstToken("a_", HaskellLexer.VARIABLE_ID);
+		testFirstToken("_a", HaskellLexer.VARIABLE_ID);
 
 		testFirstToken("1", HaskellLexer.INTEGER);
 		testFirstToken("11111111111", HaskellLexer.INTEGER);
@@ -153,11 +155,7 @@ public class HaskellLexerTest {
 		testFirstToken("\"ab'c\"", HaskellLexer.STRING_LITERAL);
 		testFirstToken("\"ab\\\"c\"", HaskellLexer.STRING_LITERAL);
 		testFirstToken("\"ab\\nc\"", HaskellLexer.STRING_LITERAL);
-		// try {
-		// testFirstToken("\"ab\nc\"", HaskellLexer.STRING_LITERAL);
-		// Assert.fail();
-		// } catch (TokenMgrError e) {
-		// }
+		testFirstToken("\"ab\\\\\"", HaskellLexer.STRING_LITERAL);
 		try {
 			testFirstToken("\"abc", HaskellLexer.STRING_LITERAL);
 			Assert.fail();
@@ -189,6 +187,14 @@ public class HaskellLexerTest {
 		testFirstToken("#@@@$%^*+./<=>?@\\^-~|", HaskellLexer.VARSYM);
 		testFirstToken(":!", HaskellLexer.CONSYM);
 		testFirstToken(":::-", HaskellLexer.CONSYM);
+	}
+	
+	@Test
+	public void testMiscRealCases() {
+		HaskellLexer lexer = createLexer("putStrLn \"Simple command line interpreter. Exit with empty input.\";\n           loop}}");
+		System.out.println(lexer.debugPrintTokens());
+		lexer.getNextToken();
+		Assert.assertEquals(HaskellLexer.STRING_LITERAL, lexer.getNextToken().kind);
 	}
 
 	protected void testFirstToken(String firstTokenImage, int tokenKind) {
@@ -230,7 +236,7 @@ public class HaskellLexerTest {
 		ByteArrayInputStream a = new ByteArrayInputStream(code.getBytes());
 		InputStreamReader b = new InputStreamReader(a);
 		HaskellLexer lexer = null;
-		lexer = new HaskellLexer(new OffsetCharStream(b));
+		lexer = new HaskellLexer(new OffsetCharStream(b),1);
 
 		return lexer;
 	}

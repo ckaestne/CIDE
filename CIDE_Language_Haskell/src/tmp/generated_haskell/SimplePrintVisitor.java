@@ -1,11 +1,13 @@
 package tmp.generated_haskell;
 
-import java.util.*;
-import cide.gast.*;
-
 import java.io.PrintStream;
+import java.util.Iterator;
 
-import cide.languages.*;
+import cide.gast.ASTStringNode;
+import cide.gast.ASTTextNode;
+import cide.gast.AbstractPrintVisitor;
+import cide.gast.IASTNode;
+import cide.languages.ILanguagePrintVisitor;
 
 public class SimplePrintVisitor extends AbstractPrintVisitor implements ILanguagePrintVisitor {
 	public SimplePrintVisitor(PrintStream out) {
@@ -105,6 +107,13 @@ public class SimplePrintVisitor extends AbstractPrintVisitor implements ILanguag
 					v.accept(this);
 				}
 			}
+			{
+				ASTTextNode v=n.getText1();
+				if (v!=null) {
+					printToken(",");
+					v.accept(this);
+				}
+			}
 			printToken(")");
 			return false;
 		}
@@ -112,7 +121,7 @@ public class SimplePrintVisitor extends AbstractPrintVisitor implements ILanguag
 			importDecl n = (importDecl)node;
 			printToken("import");
 			{
-				ASTTextNode v=n.getText351();
+				ASTTextNode v=n.getText2();
 				if (v!=null) {
 					printToken("qualified");
 					v.accept(this);
@@ -142,7 +151,7 @@ public class SimplePrintVisitor extends AbstractPrintVisitor implements ILanguag
 		if (node instanceof hiding) {
 			hiding n = (hiding)node;
 			{
-				ASTTextNode v=n.getText352();
+				ASTTextNode v=n.getText3();
 				if (v!=null) {
 					printToken("hiding");
 					v.accept(this);
@@ -1467,7 +1476,7 @@ public class SimplePrintVisitor extends AbstractPrintVisitor implements ILanguag
 		if (node instanceof patroonMain2) {
 			patroonMain2 n = (patroonMain2)node;
 			{
-				ASTTextNode v=n.getText356();
+				ASTTextNode v=n.getText7();
 				if (v!=null) {
 					printToken("-");
 					v.accept(this);

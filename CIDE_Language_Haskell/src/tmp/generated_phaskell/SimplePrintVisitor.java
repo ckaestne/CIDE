@@ -1,11 +1,13 @@
 package tmp.generated_phaskell;
 
-import java.util.*;
-import cide.gast.*;
-
 import java.io.PrintStream;
+import java.util.Iterator;
 
-import cide.languages.*;
+import cide.gast.ASTStringNode;
+import cide.gast.ASTTextNode;
+import cide.gast.AbstractPrintVisitor;
+import cide.gast.IASTNode;
+import cide.languages.ILanguagePrintVisitor;
 
 public class SimplePrintVisitor extends AbstractPrintVisitor implements ILanguagePrintVisitor {
 	public SimplePrintVisitor(PrintStream out) {

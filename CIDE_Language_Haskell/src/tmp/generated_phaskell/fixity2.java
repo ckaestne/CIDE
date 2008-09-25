@@ -1,9 +1,9 @@
 package tmp.generated_phaskell;
 
-import cide.gast.*;
-import cide.gparser.*;
-import cide.greferences.*;
-import java.util.*;
+import cide.gast.IASTNode;
+import cide.gast.IToken;
+import cide.gast.Property;
+import cide.gparser.Token;
 
 public class fixity2 extends fixity {
   public fixity2(Token firstToken, Token lastToken) {
