@@ -16,7 +16,6 @@ import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Display;
 
-import cide.gast.IASTNode;
 import cide.gast.ASTVisitor;
 import cide.gast.IASTNode;
 import cide.gparser.ParseException;

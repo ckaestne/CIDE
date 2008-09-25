@@ -8,7 +8,6 @@ import java.util.Set;
 
 import cide.gast.ASTColorInheritance;
 import cide.gast.IASTNode;
-import cide.gast.IASTNode;
 import coloredide.features.IFeature;
 import coloredide.features.source.ColoredSourceFile;
 

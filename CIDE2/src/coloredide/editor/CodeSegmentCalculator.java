@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.Stack;
 
-import cide.gast.IASTNode;
 import cide.gast.ASTVisitor;
 import cide.gast.IASTNode;
 import cide.gast.IASTVisitor;

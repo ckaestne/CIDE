@@ -12,8 +12,6 @@ import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 
-import com.sun.org.apache.bcel.internal.generic.FMUL;
-
 import coloredide.features.FeatureModelManager;
 import coloredide.features.FeatureModelNotFoundException;
 import coloredide.features.IFeature;

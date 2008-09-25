@@ -2,7 +2,6 @@ package coloredide.editor;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -14,10 +13,9 @@ import org.eclipse.jface.text.ITextHover;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.Region;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.ui.themes.ColorUtil;
 
-import cide.gast.IASTNode;
 import cide.gast.ASTVisitor;
+import cide.gast.IASTNode;
 import cide.gast.ISourceFile;
 import cide.gparser.ParseException;
 import coloredide.features.IFeature;

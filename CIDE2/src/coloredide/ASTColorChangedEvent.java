@@ -1,11 +1,8 @@
 package coloredide;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.EventObject;
-
-import org.eclipse.core.resources.IResource;
 
 import cide.gast.IASTNode;
 import coloredide.features.source.ColoredSourceFile;

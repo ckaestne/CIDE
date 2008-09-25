@@ -18,9 +18,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 
-import coloredide.CIDECorePlugin;
 import coloredide.features.FeatureModelManager;
-import coloredide.features.FeatureModelNotFoundException;
 import coloredide.features.IFeature;
 import coloredide.features.IFeatureModel;
 import coloredide.features.source.ColoredSourceFile;

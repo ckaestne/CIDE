@@ -14,7 +14,6 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 
 import coloredide.CIDECorePlugin;
-import coloredide.configuration.AbstractConfigurationPage;
 
 public class FeatureModelManager {
 

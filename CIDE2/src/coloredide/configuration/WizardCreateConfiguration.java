@@ -5,8 +5,6 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.wizard.Wizard;
 
 import coloredide.features.IFeatureModel;
-import coloredide.utils.ColorHelper;
-import coloredide.utils.SelectFeatureSetPage;
 
 public class WizardCreateConfiguration extends Wizard {
 

@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.eclipse.jface.action.Action;
 
-import cide.gast.IASTNode;
 import cide.gast.ASTVisitor;
+import cide.gast.IASTNode;
 import cide.gast.IASTVisitor;
 import coloredide.ASTColorChangedEvent;
 import coloredide.CIDECorePlugin;

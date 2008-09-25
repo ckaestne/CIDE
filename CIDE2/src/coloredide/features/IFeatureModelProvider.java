@@ -2,9 +2,6 @@ package coloredide.features;
 
 import org.eclipse.core.resources.IProject;
 
-import coloredide.ColorListChangedEvent;
-import coloredide.IColorChangeListener;
-
 /**
  * one feature model is required for every project. the provider creates such a
  * feature model for a given project. CIDE selects the appropriate provider for

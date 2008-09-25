@@ -10,7 +10,6 @@
  *******************************************************************************/
 package coloredide.utils;
 
-import cide.gast.IASTNode;
 import cide.gast.ASTVisitor;
 import cide.gast.IASTNode;
 

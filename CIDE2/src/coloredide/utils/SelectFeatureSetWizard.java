@@ -3,13 +3,9 @@ package coloredide.utils;
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.wizard.Wizard;
 
-import coloredide.features.FeatureModelManager;
-import coloredide.features.FeatureModelNotFoundException;
 import coloredide.features.IFeature;
-import coloredide.features.IFeatureModel;
 
 /**
  * wizard to select a subset from a given list of features. no validation

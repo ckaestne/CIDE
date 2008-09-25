@@ -6,8 +6,8 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocumentListener;
 
-import cide.gast.IASTNode;
 import cide.gast.ASTVisitor;
+import cide.gast.IASTNode;
 import cide.gast.ISourceFile;
 import cide.gparser.ParseException;
 import coloredide.editor.ColoredTextEditor;

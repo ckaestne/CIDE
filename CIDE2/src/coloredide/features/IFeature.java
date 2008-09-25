@@ -1,6 +1,5 @@
 package coloredide.features;
 
-import java.io.Serializable;
 import java.util.Set;
 
 import org.eclipse.swt.graphics.RGB;

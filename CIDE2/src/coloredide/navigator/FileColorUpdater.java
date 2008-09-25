@@ -3,7 +3,6 @@ package coloredide.navigator;
 import java.util.Collection;
 import java.util.Collections;
 
-import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IViewPart;

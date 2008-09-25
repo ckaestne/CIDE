@@ -1,8 +1,5 @@
 package coloredide.configuration;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.eclipse.jface.wizard.WizardPage;
@@ -13,8 +10,6 @@ import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableItem;
 
 import coloredide.features.IFeature;
 import coloredide.features.IFeatureModel;

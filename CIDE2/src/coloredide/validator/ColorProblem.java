@@ -7,8 +7,6 @@ import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 
-import com.sun.corba.se.impl.javax.rmi.CORBA.Util;
-
 import cide.greferences.IValidationRule;
 
 @SuppressWarnings("restriction")

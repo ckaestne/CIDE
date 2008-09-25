@@ -13,17 +13,13 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 
-import javax.xml.parsers.SAXParser;
-
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 
+import coloredide.features.Feature;
 import coloredide.features.IFeature;
 import coloredide.features.IFeatureModel;
-
-import coloredide.features.Feature;
 
 /**
  * general color manager. serializes to a file in the following format HashMap<String,<Set<Long>>>

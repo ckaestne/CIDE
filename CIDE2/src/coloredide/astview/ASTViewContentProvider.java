@@ -15,7 +15,6 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
 import cide.gast.IASTNode;
-import cide.gast.IASTNode;
 import cide.gast.Property;
 
 public class ASTViewContentProvider implements ITreeContentProvider {

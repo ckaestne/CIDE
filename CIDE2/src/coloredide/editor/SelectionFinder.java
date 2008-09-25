@@ -11,8 +11,8 @@ import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextSelection;
 
 import cide.gast.ASTColorInheritance;
-import cide.gast.IASTNode;
 import cide.gast.ASTVisitor;
+import cide.gast.IASTNode;
 
 class SelectionFinder extends ASTVisitor {
 

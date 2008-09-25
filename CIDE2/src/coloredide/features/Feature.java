@@ -1,7 +1,6 @@
 package coloredide.features;
 
 import java.io.IOException;
-import java.io.ObjectStreamException;
 import java.io.Serializable;
 
 import org.eclipse.swt.graphics.RGB;
