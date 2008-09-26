@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension
+         point="de.ovgu.cide.core.language">
+      <language 
+            class="de.ovgu.cide.language.jdt.JDTLanguageExtension"
+            fileExtensions=".java"
+            id="de.ovgu.cide.language.java15"
+            name="Java 1.6 (Eclipse JDT based) Language Extension">
+      </language>
+   </extension>
+   <extension
+         point="de.ovgu.cide.core.configurationMechanism">
+      <configurationMechanism
+            mechanism="de.ovgu.cide.configuration.jdt.JDTConfigurationMechanism">
+      </configurationMechanism>
+   </extension>
+
+</plugin>
