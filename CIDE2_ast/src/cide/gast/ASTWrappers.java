@@ -1,7 +1,5 @@
 package cide.gast;
 
-import java.util.HashSet;
-import java.util.Set;
 
 
 public class ASTWrappers {
