@@ -8,6 +8,7 @@ import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.jface.text.source.AnnotationModel;
 
+@SuppressWarnings(value={"restriction","unchecked"})
 public class InlineProjectionAnnotationModel extends AnnotationModel {
 
 	/**

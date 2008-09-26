@@ -23,6 +23,7 @@ import org.eclipse.jface.text.source.projection.AnnotationBag;
  *
  * @since 3.0
  */
+@SuppressWarnings("unchecked")
 class InlineProjectionSummary  {
 
 	private class Summarizer extends Thread {

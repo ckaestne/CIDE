@@ -7,6 +7,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.MenuManager;
 
+import coloredide.editor.ColoredEditorExtensions.IProjectionColoredEditor;
 import coloredide.features.IFeature;
 import coloredide.utils.ColorHelper;
 
@@ -14,9 +15,9 @@ public class ColorProjectionSubmenu extends MenuManager implements
 		IContributionItem {
 
 	public class ExpandAllAction extends Action {
-		private ColoredTextEditor editor;
+		private IProjectionColoredEditor editor;
 
-		public ExpandAllAction(ColoredTextEditor editor) {
+		public ExpandAllAction(IProjectionColoredEditor editor) {
 
 			super("Show all");
 			this.editor = editor;
@@ -29,9 +30,9 @@ public class ColorProjectionSubmenu extends MenuManager implements
 	}
 
 	public class CollapseAllAction extends Action {
-		private ColoredTextEditor editor;
+		private IProjectionColoredEditor editor;
 
-		public CollapseAllAction(ColoredTextEditor editor) {
+		public CollapseAllAction(IProjectionColoredEditor editor) {
 
 			super("Hide all");
 			this.editor = editor;
@@ -45,13 +46,13 @@ public class ColorProjectionSubmenu extends MenuManager implements
 
 	public class ToggleColorProjectionAction extends Action {
 
-		private ColoredTextEditor editor;
+		private IProjectionColoredEditor editor;
 
 		private IFeature feature;
 
 		private boolean wasExpanded;
 
-		public ToggleColorProjectionAction(ColoredTextEditor editor,
+		public ToggleColorProjectionAction(IProjectionColoredEditor editor,
 				IFeature feature, boolean isExpanded) {
 
 			super(feature.getName());
@@ -71,7 +72,7 @@ public class ColorProjectionSubmenu extends MenuManager implements
 
 	}
 
-	public ColorProjectionSubmenu(ColoredTextEditor editor,
+	public ColorProjectionSubmenu(IProjectionColoredEditor editor,
 			ToggleTextColorContext context) {
 
 		super("Projection");

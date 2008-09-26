@@ -9,6 +9,7 @@ Bundle-Localization: plugin
 Export-Package: coloredide,
  coloredide.astview.internal;x-internal:=true,
  coloredide.configuration;uses:="org.apache.tools.ant",
+ coloredide.editor,
  coloredide.features;
   uses:="coloredide,
    org.eclipse.core.runtime,

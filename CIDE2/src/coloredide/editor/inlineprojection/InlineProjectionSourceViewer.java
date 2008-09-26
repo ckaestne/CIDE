@@ -44,7 +44,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 
-@SuppressWarnings("restriction")
+@SuppressWarnings(value={"unchecked"})
 public class InlineProjectionSourceViewer extends ProjectionViewer implements
 		ITextViewerExtension5 {
 

@@ -126,11 +126,11 @@
          id="javaeditor"
          point="org.eclipse.ui.editors">
       <editor
-            name="Colored Source Editor"
+            name="Colored Text Editor"
             default="true"
             icon="icons/coloredj.gif"
             class="coloredide.editor.ColoredTextEditor"
-            id="coloredIDE.ColoredCompilationUnitEditor">
+            id="de.ovgu.cide.ColoredTextEditor">
          <contentTypeBinding contentTypeId="de.ovgu.cide.coloredFile"/>
       </editor>
      

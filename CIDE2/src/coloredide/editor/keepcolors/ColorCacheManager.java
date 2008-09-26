@@ -11,6 +11,7 @@ import cide.gast.IASTNode;
 import cide.gast.ISourceFile;
 import cide.gparser.ParseException;
 import coloredide.editor.ColoredTextEditor;
+import coloredide.editor.ColoredEditorExtensions.IColoredEditor;
 import coloredide.features.IFeature;
 import coloredide.features.source.ColoredSourceFile;
 import coloredide.features.source.SourceFileColorManager;
@@ -24,12 +25,12 @@ import coloredide.features.source.SourceFileColorManager;
  */
 public class ColorCacheManager implements IDocumentListener {
 
-	private final ColoredTextEditor editor;
+	private final IColoredEditor editor;
 	private ColorCache cache = null;
 
-	public ColorCacheManager(ColoredTextEditor coloredTextEditor) {
+	public ColorCacheManager(IColoredEditor coloredTextEditor) {
 		editor = coloredTextEditor;
-		editor.getSourceViewerI().getDocument().addDocumentListener(this);
+		editor.getSourceViewerR().getDocument().addDocumentListener(this);
 	}
 
 	void cacheAST() {

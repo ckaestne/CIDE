@@ -24,7 +24,7 @@ public class CodeSegment extends Position {
 		this.isHidden=isHidden;
 	}
 
-	int endPosition() {
+	public int endPosition() {
 		return getOffset() + getLength();
 	}
 
@@ -38,19 +38,19 @@ public class CodeSegment extends Position {
 		return result;
 	}
 
-	boolean isEmpty() {
+	public boolean isEmpty() {
 		return length == 0;
 	}
 
-	CodeSegment copy() {
+	public CodeSegment copy() {
 		return new CodeSegment(getOffset(), endPosition(), colors, isHidden);
 	}
 
-	void setEndPosition(int end) {
+	public void setEndPosition(int end) {
 		setLength(end - getOffset());
 	}
 
-	void moveStartPosition(int newStartpos) {
+	public void moveStartPosition(int newStartpos) {
 		// sets the start position without changing the end
 		setLength(getLength() + getOffset() - newStartpos);
 		setOffset(newStartpos);

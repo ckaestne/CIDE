@@ -16,6 +16,8 @@ import cide.gparser.ParseException;
 import cide.gparser.TokenMgrError;
 import cide.languages.ILanguageExtension;
 import cide.languages.ILanguageParser;
+import coloredide.features.FeatureModelManager;
+import coloredide.features.FeatureModelNotFoundException;
 import coloredide.features.IFeatureModel;
 import coloredide.languages.LanguageExtensionManager;
 import coloredide.languages.LanguageExtensionProxy;
@@ -95,7 +97,7 @@ public class ColoredSourceFile {
 		ISourceFile astRoot = null;
 		long start = System.currentTimeMillis();
 		ILanguageParser parser = language.getParser(coloredSourceFile
-				.getContents(),coloredSourceFile.getFullPath().toOSString());
+				.getContents(), coloredSourceFile.getFullPath().toOSString());
 		try {
 			astRoot = parser.getRoot();
 		} catch (TokenMgrError error) {
@@ -152,6 +154,13 @@ public class ColoredSourceFile {
 	// coloredSourceFile.getProject());
 	// return getColoredSourceFile(coloredSourceFile, fm);
 	// }
+
+	public static ColoredSourceFile getColoredSourceFile(IFile coloredSourceFile)
+			throws FeatureModelNotFoundException {
+		IFeatureModel featureModel = FeatureModelManager.getInstance()
+				.getFeatureModel(coloredSourceFile.getProject());
+		return getColoredSourceFile(coloredSourceFile, featureModel);
+	}
 
 	public static ColoredSourceFile getColoredSourceFile(
 			IFile coloredSourceFile, IFeatureModel featureModel) {

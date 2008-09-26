@@ -89,6 +89,7 @@ import coloredide.features.source.IASTRefreshListener;
 import coloredide.utils.EditorUtility;
 import coloredide.utils.NodeFinder;
 
+@SuppressWarnings("unchecked")
 public class ASTView extends ViewPart implements IShowInSource {
 
 	private class ASTViewSelectionProvider implements ISelectionProvider {
@@ -100,6 +101,7 @@ public class ASTView extends ViewPart implements IShowInSource {
 		}
 
 		public ISelection getSelection() {
+			@SuppressWarnings("unused")
 			IStructuredSelection selection = (IStructuredSelection) fViewer
 					.getSelection();
 			ArrayList externalSelection = new ArrayList();
