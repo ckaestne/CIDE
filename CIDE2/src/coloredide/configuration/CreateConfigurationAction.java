@@ -71,15 +71,15 @@ public class CreateConfigurationAction implements IObjectActionDelegate {
 		return null;
 	}
 
-	private IProject getSelectedJavaProject() {
-		if (selection instanceof IStructuredSelection) {
-			Object selected = ((IStructuredSelection) selection)
-					.getFirstElement();
-			if (selected instanceof IProject)
-				return (IProject) selected;
-		}
-		return null;
-	}
+//	private IProject getSelectedJavaProject() {
+//		if (selection instanceof IStructuredSelection) {
+//			Object selected = ((IStructuredSelection) selection)
+//					.getFirstElement();
+//			if (selected instanceof IProject)
+//				return (IProject) selected;
+//		}
+//		return null;
+//	}
 
 	public void selectionChanged(IAction action, ISelection selection) {
 		this.selection = selection;

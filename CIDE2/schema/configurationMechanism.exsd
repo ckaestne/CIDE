@@ -1,0 +1,102 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- Schema file written by PDE -->
+<schema targetNamespace="de.ovgu.cide.core" xmlns="http://www.w3.org/2001/XMLSchema">
+<annotation>
+      <appinfo>
+         <meta.schema plugin="de.ovgu.cide.core" id="configurationMechanism" name="CIDE Configuration Mechanism"/>
+      </appinfo>
+      <documentation>
+         This extension point allows to override CIDE&apos;s configuration/generation mechanism. Usually a configuration is created by AST transformations and rendering on the IASTNode interface. However, in some cases this might not be appropriate or sufficient. In these cases a custom configuration mechanism can be plugged in.
+      </documentation>
+   </annotation>
+
+   <element name="extension">
+      <annotation>
+         <appinfo>
+            <meta.element />
+         </appinfo>
+      </annotation>
+      <complexType>
+         <choice>
+            <element ref="configurationMechanism"/>
+         </choice>
+         <attribute name="point" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="id" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appinfo>
+                  <meta.attribute translatable="true"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="configurationMechanism">
+      <complexType>
+         <attribute name="mechanism" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appinfo>
+                  <meta.attribute kind="java" basedOn=":coloredide.configuration.IConfigurationMechanism"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <annotation>
+      <appinfo>
+         <meta.section type="since"/>
+      </appinfo>
+      <documentation>
+         CIDE2 1.3
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appinfo>
+         <meta.section type="examples"/>
+      </appinfo>
+      <documentation>
+         [Enter extension point usage example here.]
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appinfo>
+         <meta.section type="apiinfo"/>
+      </appinfo>
+      <documentation>
+         [Enter API information here.]
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appinfo>
+         <meta.section type="implementation"/>
+      </appinfo>
+      <documentation>
+         [Enter information about supplied implementation of this extension point.]
+      </documentation>
+   </annotation>
+
+
+</schema>

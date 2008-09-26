@@ -1,7 +1,6 @@
 package coloredide.configuration;
 
 import java.io.ByteArrayInputStream;
-import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.core.resources.IContainer;
@@ -71,8 +70,8 @@ public class CreateConfigurationJob extends WorkspaceJob {
 					true, new SubProgressMonitor(monitor, 0));
 		monitor.worked(1);
 
-			featureModel = FeatureModelManager.getInstance().getFeatureModelCore(
-					sourceProject);
+		featureModel = FeatureModelManager.getInstance().getFeatureModelCore(
+				sourceProject);
 
 		configureProject(sourceProject, targetProject, monitor);
 
@@ -207,17 +206,15 @@ public class CreateConfigurationJob extends WorkspaceJob {
 	}
 
 	private String configureSource(ColoredSourceFile sourceFile,
-			IProgressMonitor monitor) throws CoreException {
+			IProgressMonitor monitor) throws ConfigurationException {
 		if (monitor.isCanceled())
 			return "";
 		monitor.subTask("Generating " + sourceFile.getName());
 
 		try {
-			Set<IFeature> hiddenColors = new HashSet<IFeature>();
-			hiddenColors.addAll(sourceFile.getFeatureModel()
-					.getVisibleFeatures());
-			hiddenColors.removeAll(selectedFeatures);
-			return new ConfigureASTHelper().hideCode(sourceFile, hiddenColors);
+			IConfigurationMechanism mechanism = ConfigurationMechanismManager
+					.getInstance().getConfigurationMechanism(sourceFile);
+			return mechanism.configureFile(sourceFile, selectedFeatures);
 		} finally {
 			monitor.worked(1);
 		}

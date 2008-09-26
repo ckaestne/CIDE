@@ -6,7 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import cide.gast.ASTColorInheritance;
+import cide.gast.ASTWrappers;
 import cide.gast.IASTNode;
 import coloredide.features.IFeature;
 import coloredide.features.source.ColoredSourceFile;
@@ -64,7 +64,7 @@ public class TensorDerivative implements Derivative {
 			IASTNode parent = node.getParent();
 				
 			 while (parent != null
-					&& !ASTColorInheritance.inheritsColors(parent, lnode)){
+					&& !ASTWrappers.inheritsColors(parent, lnode)){
 				 lnode=parent;
 				 parent=parent.getParent();
 			 }

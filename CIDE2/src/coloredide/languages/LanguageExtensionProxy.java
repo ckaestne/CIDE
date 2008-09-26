@@ -7,7 +7,6 @@ import org.eclipse.core.runtime.IConfigurationElement;
 
 import cide.languages.ILanguageExtension;
 import cide.languages.ILanguageParser;
-import cide.languages.ILanguagePrintVisitor;
 import cide.languages.ILanguageValidator;
 
 public class LanguageExtensionProxy implements ILanguageExtension {
@@ -40,11 +39,11 @@ public class LanguageExtensionProxy implements ILanguageExtension {
 		return target.getParser(inputStream,filePath);
 	}
 
-	public ILanguagePrintVisitor getPrettyPrinter() {
-		if (target == null)
-			loadTarget();
-		return target.getPrettyPrinter();
-	}
+//	public ILanguagePrintVisitor getPrettyPrinter() {
+//		if (target == null)
+//			loadTarget();
+//		return target.getPrettyPrinter();
+//	}
 
 	private void loadTarget() {
 		try {
@@ -71,11 +70,11 @@ public class LanguageExtensionProxy implements ILanguageExtension {
 		return result;
 	}
 
-	public ILanguageValidator getValidator() {
-		if (target == null)
-			loadTarget();
-		return target.getValidator();
-	}
+//	public ILanguageValidator getValidator() {
+//		if (target == null)
+//			loadTarget();
+//		return target.getValidator();
+//	}
 
 	public String getName() {
 		return name;

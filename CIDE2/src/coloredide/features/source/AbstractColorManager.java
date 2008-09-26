@@ -22,13 +22,15 @@ import coloredide.features.IFeature;
 import coloredide.features.IFeatureModel;
 
 /**
- * general color manager. serializes to a file in the following format HashMap<String,<Set<Long>>>
+ * general color manager. serializes to a file in the following format
+ * HashMap<String,<Set<Long>>>
  * 
  * 
  * 
  * @author ckaestne
  * 
  */
+@SuppressWarnings("deprecation")
 abstract class AbstractColorManager {
 
 	private final IFile colorFile;
@@ -113,7 +115,6 @@ abstract class AbstractColorManager {
 	 * @throws IOException
 	 * @throws ClassNotFoundException
 	 */
-	@SuppressWarnings("deprecation")
 	private HashMap<String, Set<IFeature>> loadLegacySerialization(
 			ObjectInputStream out) throws IOException, ClassNotFoundException {
 
@@ -202,7 +203,6 @@ abstract class AbstractColorManager {
 	}
 
 	protected Set<IFeature> getOwnColors(String id) {
-		@SuppressWarnings("unused")
 		Set<IFeature> colors = id2colors.get(id);
 		HashSet<IFeature> result = new HashSet<IFeature>();
 		if (colors != null) {
@@ -339,5 +339,13 @@ abstract class AbstractColorManager {
 			result.addAll(v);
 		}
 		return result;
+	}
+
+	/**
+	 * to be used only for special access. usually use the higher level access
+	 * functions in concrete instances of the color manager.
+	 */
+	public Set<IFeature> getOwnColorsS(String id) {
+		return getOwnColors(id);
 	}
 }

@@ -3,6 +3,8 @@
 <plugin>
    <extension-point id="language" name="CIDE Language Extension" schema="schema/language.exsd"/>
    <extension-point id="featureModelProvider" name="Feature Model Provider" schema="schema/featureModelProvider.exsd"/>
+   <extension-point id="configurationMechanism" name="CIDE Configuration Mechanism" schema="schema/configurationMechanism.exsd"/>
+   <extension-point id="colorStorageProvider" name="CIDE Color Storage Provider" schema="schema/colorStorageProvider.exsd"/>
 
      <extension
          point="org.eclipse.ui.views">

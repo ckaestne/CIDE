@@ -6,7 +6,7 @@ import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
 
-import cide.gast.ASTColorInheritance;
+import cide.gast.ASTWrappers;
 import cide.gast.IASTNode;
 import coloredide.features.IFeature;
 
@@ -68,7 +68,7 @@ public class SourceFileColorManager extends AbstractColorManager {
 		IASTNode parent = node.getParent();
 		if (parent != null) {
 			if (parent.isOptional())
-				if (ASTColorInheritance.inheritsColors(parent, node))
+				if (ASTWrappers.inheritsColors(parent, node))
 					result.addAll(getOwnColors(parent));
 			result.addAll(getInheritedColors(parent));
 		}
@@ -85,4 +85,7 @@ public class SourceFileColorManager extends AbstractColorManager {
 		super.setColors(node.getId(), newColors);
 	}
 
+	public DirectoryColorManager getDirectoryColorManager(){
+		return directoryColorManager;
+	}
 }

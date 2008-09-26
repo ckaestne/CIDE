@@ -10,7 +10,7 @@ import java.util.Set;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextSelection;
 
-import cide.gast.ASTColorInheritance;
+import cide.gast.ASTWrappers;
 import cide.gast.ASTVisitor;
 import cide.gast.IASTNode;
 
@@ -52,7 +52,7 @@ class SelectionFinder extends ASTVisitor {
 				boolean hasColoredParent = selectedNodes.contains(node
 						.getParent());
 				boolean hasKnownParent = knownNodes.contains(node.getParent());
-				boolean noInherit = !ASTColorInheritance.inheritsColors(node
+				boolean noInherit = !ASTWrappers.inheritsColors(node
 						.getParent(), node);
 				if (!hasKnownParent || (noInherit && hasColoredParent)) {
 					selectedNodes.add(node);

@@ -1,4 +1,4 @@
-package coloredide.configuration;
+package coloredide.configuration.defaultconf;
 
 import java.util.Set;
 
@@ -8,7 +8,7 @@ import cide.gast.ASTVisitor;
 import cide.gast.IASTNode;
 import cide.gast.ISourceFile;
 import cide.gparser.ParseException;
-import cide.languages.ILanguagePrintVisitor;
+import coloredide.configuration.ConfigurationException;
 import coloredide.features.IFeature;
 import coloredide.features.source.ColoredSourceFile;
 import coloredide.features.source.SourceFileColorManager;
@@ -46,7 +46,7 @@ public class ConfigureASTHelper {
 	}
 
 	public String hideCode(ColoredSourceFile sourceFile,
-			Set<IFeature> hiddenColors) throws CoreException {
+			Set<IFeature> hiddenColors) throws ConfigurationException {
 		try {
 			ISourceFile origAst;
 			origAst = sourceFile.getAST();
@@ -55,15 +55,16 @@ public class ConfigureASTHelper {
 			ast.accept(new RemoveHiddenColorsVisitor(sourceFile
 					.getColorManager(), hiddenColors));
 
-			ILanguagePrintVisitor printer = sourceFile.getLanguageExtension()
-					.getPrettyPrinter();
-			ast.accept(printer);
-			return printer.getResult();
+			return ast.render();
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return "";
+		} catch (CoreException e) {
+			throw new ConfigurationException(e);
 		}
 	}
+
+	
 
 }
