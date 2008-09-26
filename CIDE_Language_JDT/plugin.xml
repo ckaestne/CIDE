@@ -16,5 +16,31 @@
             mechanism="de.ovgu.cide.configuration.jdt.JDTConfigurationMechanism">
       </configurationMechanism>
    </extension>
+   
+      <extension
+         id="javaeditor"
+         point="org.eclipse.ui.editors">
+      <editor
+            name="Colored Java Editor"
+            default="true"
+            icon="icons/coloredj.gif"
+            contributorClass="org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditorActionContributor"
+            class="de.ovgu.cide.language.jdt.editor.ColoredCompilationUnitEditor"
+            symbolicFontName="org.eclipse.jdt.ui.editors.textfont"
+            id="de.ovgu.cide.ColoredCompilationUnitEditor">
+            <contentTypeBinding
+               contentTypeId="org.eclipse.jdt.core.javaSource"
+            /> 
+      </editor>
+     
+   </extension> <extension
+         point="org.eclipse.jdt.ui.javaEditorTextHovers">
+      <hover
+            activate="true"
+            class="coloredide.editor.ColorInfoHover"
+            description="ColorInfoHoverDesc"
+            id="ColoredIDE.ColorInfoHover"
+            label="ColorInfoHover"/>
+   </extension>
 
 </plugin>

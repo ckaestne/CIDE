@@ -8,6 +8,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.jdt.core.dom.ASTNode;
 
 import coloredide.features.IFeature;
+import coloredide.features.source.ColoredSourceFile;
 import coloredide.features.source.SourceFileColorManager;
 import de.ovgu.cide.language.jdt.ASTID;
 
@@ -24,6 +25,10 @@ public class JDTColorManagerBridge {
 	public JDTColorManagerBridge(SourceFileColorManager colorManager, IFile file) {
 		this.originalColorManager = colorManager;
 		this.file = file;
+	}
+
+	public JDTColorManagerBridge(ColoredSourceFile source) {
+		this(source.getColorManager(), source.getResource());
 	}
 
 	private SourceFileColorManager originalColorManager;
