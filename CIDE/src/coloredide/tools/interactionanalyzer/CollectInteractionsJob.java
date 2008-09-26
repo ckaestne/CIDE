@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Map.Entry;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
@@ -20,6 +21,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 
+import coloredide.configuration.CodeSegment;
+import coloredide.configuration.CodeSegmentCalculator;
 import coloredide.features.Feature;
 import coloredide.features.source.IColoredJavaSourceFile;
 import coloredide.validator.ColoredSourceFileIteratorJob;
@@ -54,7 +57,14 @@ public class CollectInteractionsJob extends ColoredSourceFileIteratorJob {
 
 	public final Map<Derivative, Set<InteractionPosition>> derivatives = new HashMap<Derivative, Set<InteractionPosition>>();
 
+	public int overallAnnotationCount = 0;
+	public final Map<Feature, Integer> bytesPerFeature = new HashMap<Feature, Integer>();
+	public int bytesUncolored = 0;
+	public int bytesColored = 0;
+
 	private Tree tree;
+	private final static Set<Feature> NOCOLORS = Collections
+			.unmodifiableSet(new HashSet<Feature>());
 
 	public CollectInteractionsJob(IProject project, Tree resultTree) {
 		super(project, "Collecting Interactions",
@@ -86,6 +96,32 @@ public class CollectInteractionsJob extends ColoredSourceFileIteratorJob {
 			}
 
 		});
+		List<CodeSegment> segments = CodeSegmentCalculator.getCodeSegments(ast,
+				source.getColorManager());
+		processSegments(segments, ast.getLength());
+	}
+
+	private void processSegments(List<CodeSegment> segments, int documentLength) {
+		Set<Feature> currentColors = null;
+		for (CodeSegment seg : segments) {
+			if (currentColors != seg.getColors()) {
+				// two adjacent annotations are counted as a single annotation
+				overallAnnotationCount++;
+			}
+			currentColors = seg.getColors();
+			if (currentColors != null && currentColors.size() > 0) {
+				documentLength -= seg.getLength();
+				for (Feature color : currentColors){
+					int oldLength=0;
+					if (bytesPerFeature.get(color)!=null)oldLength=bytesPerFeature.get(color).intValue();
+					bytesPerFeature.put(color, oldLength
+							+ seg.getLength());
+				}
+				bytesColored += seg.getLength();
+			}
+
+		}
+		bytesUncolored += documentLength;
 	}
 
 	protected void finish() {
@@ -98,8 +134,34 @@ public class CollectInteractionsJob extends ColoredSourceFileIteratorJob {
 				printInteractionNumberDevelopment();
 				printDerivatives();
 				printAllOccurrences();
+				printMiscStats();
 			}
+
 		});
+	}
+
+	/**
+	 * prints statistics about overall number of interactions and annotated
+	 * lines of code (per feature and alltogether)
+	 */
+	private void printMiscStats() {
+		TreeItem misc = new TreeItem(tree, SWT.DEFAULT);
+		misc.setText("Size");
+
+		TreeItem annotations = new TreeItem(misc, SWT.DEFAULT);
+		annotations.setText("#Annotations: "+overallAnnotationCount);
+
+		TreeItem coloredBytes = new TreeItem(misc, SWT.DEFAULT);
+		coloredBytes.setText("#Colored Bytes: "+bytesColored);
+		TreeItem uncoloredBytes = new TreeItem(misc, SWT.DEFAULT);
+		uncoloredBytes.setText("#Uncolored Bytes: "+bytesUncolored);
+		for (Entry<Feature, Integer> e:bytesPerFeature.entrySet()){
+			
+			TreeItem featureBytes = new TreeItem(misc, SWT.DEFAULT);
+			featureBytes.setText(e.getKey().getName(projects[0])+": "+e.getValue());
+			
+		}
+			
 	}
 
 	/**

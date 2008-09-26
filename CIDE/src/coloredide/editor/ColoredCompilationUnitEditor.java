@@ -6,6 +6,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
+import org.eclipse.jdt.core.ITypeRoot;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.internal.ui.JavaPlugin;
@@ -67,7 +68,7 @@ public class ColoredCompilationUnitEditor extends CompilationUnitEditor {
 		}
 	}
 
-	public IJavaElement getInputJavaElement() {
+	public ITypeRoot getInputJavaElement() {
 		return super.getInputJavaElement();
 	}
 

@@ -19,6 +19,7 @@ import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.ISourceViewerExtension2;
 import org.eclipse.jface.text.source.LineRange;
 import org.eclipse.jface.text.source.projection.IProjectionPosition;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
 
 /**
@@ -147,7 +148,7 @@ class InlineProjectionAnnotationHover implements IAnnotationHover, IAnnotationHo
 
 		return new IInformationControlCreator() {
 			public IInformationControl createInformationControl(Shell parent) {
-				return new SourceViewerInformationControl(parent, JFaceResources.TEXT_FONT);
+				return new SourceViewerInformationControl(parent, true,SWT.NONE,JFaceResources.TEXT_FONT);
 			}
 		};
 	}

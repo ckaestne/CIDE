@@ -9,12 +9,13 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.internal.ui.JavaPlugin;
-import org.eclipse.jdt.internal.ui.javaeditor.ASTProvider;
 import org.eclipse.jdt.internal.ui.text.java.IJavaReconcilingListener;
+import org.eclipse.jdt.ui.SharedASTProvider;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextInputListener;
 import org.eclipse.jface.text.Position;
@@ -405,6 +406,7 @@ public class ColoredHighlightingReconciler implements IJavaReconcilingListener,
 	 */
 	private void scheduleJob() {
 		final IJavaElement element = fEditor.getInputJavaElement();
+		assert element instanceof ICompilationUnit;
 
 		synchronized (fJobLock) {
 			final Job oldJob = fJob;
@@ -427,8 +429,8 @@ public class ColoredHighlightingReconciler implements IJavaReconcilingListener,
 						if (monitor.isCanceled())
 							return Status.CANCEL_STATUS;
 						CompilationUnit ast = JavaPlugin.getDefault()
-								.getASTProvider().getAST(element,
-										ASTProvider.WAIT_YES, monitor);
+								.getASTProvider().getAST((ICompilationUnit)element,
+										SharedASTProvider.WAIT_YES, monitor);
 						reconciled(ast, false, monitor);
 						synchronized (fJobLock) {
 							// allow the job to be gc'ed

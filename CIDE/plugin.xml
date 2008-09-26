@@ -146,6 +146,12 @@
               id="coloride.exportProject"
               label="Export Project..."
               menubarPath="coloride.menu1/group1"/>
+           <action
+              class="coloredide.utils.ConvertColorFiles"
+              enablesFor="1"
+              id="coloride.convert"
+              label="Convert Annotations to CIDE2 Format..."
+              menubarPath="coloride.menu1/group1"/>
      </objectContribution>
      <objectContribution
            adaptable="true"

@@ -271,5 +271,14 @@ public class CompilationUnitColorManager extends AbstractColorManager implements
 	{
 		return source;
 	}
+
 	//>
+	
+	/**
+	 * visibility breach for temporary file format conversion. do not use otherwise
+	 * @return 
+	 */
+	public HashMap<ASTID, Set<Feature>> tmpnode2colors(){
+		return node2colors;
+	}
 }
