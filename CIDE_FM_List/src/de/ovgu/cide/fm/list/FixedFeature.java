@@ -4,9 +4,7 @@ import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.io.ObjectStreamException;
 import java.io.Serializable;
-import java.util.Set;
 
-import org.eclipse.core.resources.IProject;
 import org.eclipse.swt.graphics.RGB;
 
 public class FixedFeature implements Comparable<FixedFeature>, Serializable {

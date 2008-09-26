@@ -11,7 +11,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.WeakHashMap;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -19,8 +18,8 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.graphics.RGB;
 
+import coloredide.ChangeType;
 import coloredide.ColorListChangedEvent;
-import coloredide.ColorListChangedEvent.ChangeType;
 import coloredide.features.Feature;
 
 /**
@@ -31,9 +30,9 @@ import coloredide.features.Feature;
  * @author cKaestner
  * 
  */
+@SuppressWarnings("deprecation")
 public class FeatureNameManager {
 
-	private static final Map<IProject, FeatureNameManager> cache = new WeakHashMap<IProject, FeatureNameManager>();
 
 	private transient IProject project;
 
@@ -69,8 +68,7 @@ public class FeatureNameManager {
 	 * @param map
 	 * @param feature
 	 * @return
-	 */
-	@SuppressWarnings("deprecation")
+	 */	
 	private <T> T find(Map<?, T> map, FixedFeature feature) {
 		for (Map.Entry<?, T> entry : map.entrySet())
 			if (entry.getKey() instanceof FixedFeature)

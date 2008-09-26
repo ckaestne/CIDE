@@ -4,7 +4,6 @@ import org.eclipse.core.resources.IProject;
 
 import coloredide.features.FeatureModelNotFoundException;
 import coloredide.features.IFeatureModel;
-import coloredide.features.IFeatureModelChangeListener;
 import coloredide.features.IFeatureModelProvider;
 
 public class ListFMProvider implements IFeatureModelProvider {

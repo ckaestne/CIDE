@@ -1,15 +1,11 @@
 package de.ovgu.cide.fm.list;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.WeakHashMap;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
-import org.eclipse.swt.widgets.Display;
 
 import coloredide.utils.ColorHelper;
 

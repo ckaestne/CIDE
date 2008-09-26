@@ -4,7 +4,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.eclipse.core.resources.IProject;
 import org.eclipse.swt.graphics.RGB;
 
 import coloredide.features.IFeature;
