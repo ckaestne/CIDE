@@ -9,5 +9,6 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.resources,
  de.ovgu.cide.core,
  FeatureIDE_FM_Core,
- FeatureIDE_FM_UI
+ FeatureIDE_FM_UI,
+ org.eclipse.ui.ide;bundle-version="3.4.0"
 Bundle-ActivationPolicy: lazy

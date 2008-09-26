@@ -10,12 +10,25 @@
       </featureModelProvider>
    </extension>
    <extension
-         point="de.ovgu.cide.core.featureModelProvider">
-      <featureModelProvider
-            id="de.ovgu.cide.fm.guidsl"
-            name="guidsl Feature Model Connector"
-            provider="de.ovgu.cide.fm.guidsl.GuidslFMProvider">
-      </featureModelProvider>
-   </extension>
-
+        point="org.eclipse.ui.popupMenus">
+     <objectContribution
+           adaptable="false"
+           id="coloredide.projectContributions"
+           objectClass="org.eclipse.core.resources.IProject">
+        <menu
+              id="coloride.menu1"
+              label="CIDE"
+              path="additions">
+           <separator name="cideGroup"/>
+        </menu>
+       <action
+              class="de.ovgu.cide.fm.guidsl.EditFeatureModelAction"
+              enablesFor="1"
+              id="coloride.editFeatureNames"
+              label="Edit Features..."
+              menubarPath="coloride.menu1/cideGroup"/>
+      
+     </objectContribution>
+ 
+  </extension>
 </plugin>
