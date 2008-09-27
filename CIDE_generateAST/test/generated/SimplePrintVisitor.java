@@ -1,13 +1,15 @@
 package generated;
 
-import java.util.*;
-import cide.gast.*;
-
 import java.io.PrintStream;
+import java.util.Iterator;
 
-import cide.languages.*;
+import cide.gast.ASTNode;
+import cide.gast.ASTStringNode;
+import cide.gast.ASTTextNode;
+import cide.gast.AbstractPrintVisitor;
+import cide.gast.IASTNode;
 
-public class SimplePrintVisitor extends AbstractPrintVisitor implements ILanguagePrintVisitor {
+public class SimplePrintVisitor extends AbstractPrintVisitor {
 	public SimplePrintVisitor(PrintStream out) {
 		super(out);
 	}
