@@ -10,7 +10,6 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.jobs.Job;
 
 import coloredide.configuration.CreateConfigurationJob;
 import coloredide.features.IFeature;

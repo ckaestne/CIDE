@@ -1,6 +1,5 @@
 package de.ovgu.cide.storage.purevariants;
 
-import java.nio.MappedByteBuffer;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -12,8 +11,6 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 
-import coloredide.features.FeatureModelManager;
-import coloredide.features.FeatureModelNotFoundException;
 import coloredide.features.IFeature;
 import coloredide.features.IFeatureModel;
 import coloredide.features.source.IStorageProvider;
@@ -21,7 +18,6 @@ import coloredide.features.source.IStorageProvider;
 import com.ps.consul.eclipse.ui.mapping.MappedObject;
 import com.ps.consul.eclipse.ui.mapping.Mapping;
 import com.ps.consul.eclipse.ui.mapping.Rule;
-import com.ps.consul.eclipse.ui.mapping.Util;
 import com.ps.xml.ID;
 
 import de.ovgu.cide.fm.purevariants.PVFeatureModel;

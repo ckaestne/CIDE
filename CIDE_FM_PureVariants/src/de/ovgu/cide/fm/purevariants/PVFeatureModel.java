@@ -1,6 +1,5 @@
 package de.ovgu.cide.fm.purevariants;
 
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -10,13 +9,13 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.swt.widgets.Shell;
 
-import com.ps.consul.eclipse.ui.mapping.Mapping;
-import com.ps.consul.eclipse.ui.mapping.Rule;
-import com.ps.consul.eclipse.ui.mapping.Util;
-
 import coloredide.configuration.AbstractConfigurationPage;
 import coloredide.features.IFeature;
 import coloredide.features.IFeatureModel;
+
+import com.ps.consul.eclipse.ui.mapping.Mapping;
+import com.ps.consul.eclipse.ui.mapping.Rule;
+import com.ps.consul.eclipse.ui.mapping.Util;
 
 public class PVFeatureModel implements IFeatureModel {
 
