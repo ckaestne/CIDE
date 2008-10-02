@@ -5,7 +5,6 @@ import generated.Name;
 import generated.NameList;
 import generated.Parameter;
 import generated.ParameterList;
-import generated.SimplePrintVisitor;
 import generated.Type1;
 import generated.Type2;
 
@@ -120,9 +119,7 @@ public class TestGeneratedPrinter extends WhiteSpaceTest {
 	}
 
 	private void assertPrinterOutput(ASTNode node, String expectedString) {
-		SimplePrintVisitor v = new SimplePrintVisitor();
-		node.accept(v);
-		assertWhiteSpaceEqual(expectedString, v.getResult());
+		assertWhiteSpaceEqual(expectedString, node.render());
 	}
 
 }

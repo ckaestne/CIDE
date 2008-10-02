@@ -3,7 +3,6 @@ package cide.astgen.generated;
 import generated.MethodDeclaration;
 import generated.Parameter;
 import generated.ParameterList;
-import generated.SimplePrintVisitor;
 import generated.Type1;
 import generated.Type2;
 
@@ -58,6 +57,6 @@ public class TestGeneratedAST {
 	
 	@Test
 	public void testPrinter(){
-		generateAST().accept(new SimplePrintVisitor(System.out));
+		generateAST().render();
 	}
 }
