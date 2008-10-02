@@ -7,7 +7,7 @@ import org.eclipse.swt.graphics.RGB;
 
 import coloredide.features.IFeature;
 import coloredide.features.IFeatureWithID;
-import featureide_core.model.Feature;
+import featureide.fm.core.model.Feature;
 
 public class FeatureAdapter implements IFeatureWithID {
 

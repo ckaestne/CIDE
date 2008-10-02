@@ -13,12 +13,12 @@ import org.eclipse.swt.widgets.Control;
 
 import coloredide.configuration.AbstractConfigurationPage;
 import coloredide.features.IFeature;
-import featureide_core.model.Feature;
-import featureide_core.model.configuration.Configuration;
-import featureide_core.model.configuration.SelectableFeature;
-import featureide_core.model.configuration.Selection;
-import featureide_ui.editors.configuration.ConfigurationContentProvider;
-import featureide_ui.editors.configuration.ConfigurationLabelProvider;
+import featureide.fm.core.model.Feature;
+import featureide.fm.core.model.configuration.Configuration;
+import featureide.fm.core.model.configuration.SelectableFeature;
+import featureide.fm.core.model.configuration.Selection;
+import featureide.fm.ui.editors.configuration.ConfigurationContentProvider;
+import featureide.fm.ui.editors.configuration.ConfigurationLabelProvider;
 
 public class EquationEditorPage extends AbstractConfigurationPage {
 

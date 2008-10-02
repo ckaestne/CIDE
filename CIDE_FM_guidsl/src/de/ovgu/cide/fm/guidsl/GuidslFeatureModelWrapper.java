@@ -28,14 +28,14 @@ import coloredide.configuration.AbstractConfigurationPage;
 import coloredide.configuration.NonValidatingConfigurationListPage;
 import coloredide.features.AbstractFeatureModel;
 import coloredide.features.IFeature;
-import featureide_core.model.Feature;
-import featureide_core.model.FeatureModel;
-import featureide_core.model.GrammarFile;
-import featureide_core.model.configuration.Configuration;
-import featureide_core.model.configuration.Selection;
-import featureide_core.model.io.ModelWarning;
-import featureide_core.model.io.UnsupportedModelException;
-import featureide_core.model.io.guidsl.FeatureModelReader;
+import featureide.fm.core.model.Feature;
+import featureide.fm.core.model.FeatureModel;
+import featureide.fm.core.model.GrammarFile;
+import featureide.fm.core.model.configuration.Configuration;
+import featureide.fm.core.model.configuration.Selection;
+import featureide.fm.core.model.io.ModelWarning;
+import featureide.fm.core.model.io.UnsupportedModelException;
+import featureide.fm.core.model.io.guidsl.FeatureModelReader;
 
 /**
  * this class wraps a feature model from the FeatureIDE implementation.

@@ -16,7 +16,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.ide.IDE;
 
-import featureide_ui.editors.GrammarEditor;
+import featureide.fm.ui.editors.GrammarEditor;
 
 public class EditFeatureModelAction implements IObjectActionDelegate {
 

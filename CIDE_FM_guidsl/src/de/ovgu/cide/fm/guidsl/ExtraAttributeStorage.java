@@ -16,7 +16,7 @@ import org.eclipse.swt.graphics.RGB;
 
 import coloredide.ChangeType;
 import coloredide.utils.ColorHelper;
-import featureide_core.model.Feature;
+import featureide.fm.core.model.Feature;
 
 /**
  * stores all attributes except the feature's name. the name is used as key
