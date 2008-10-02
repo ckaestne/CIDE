@@ -42,8 +42,6 @@ public interface IFeatureModel {
 	 */
 	Set<IFeature> getVisibleFeatures();
 
-
-
 	/**
 	 * Page to select a valid configuration. If not specified a configuration is
 	 * selected without validation from all (visible and invisible) features.
@@ -60,4 +58,16 @@ public interface IFeatureModel {
 	AbstractConfigurationPage getConfigurationPage(String pageName);
 
 	boolean isValidSelection(Set<IFeature> selection);
+
+	/**
+	 * calls a dialog to create a new feature (or creates a new feature in any
+	 * other way).
+	 * 
+	 * may return the new feature, if possible. otherwise, if just some dialog
+	 * was opened this may also return null. callers must be aware that this
+	 * method will return null in most feature models
+	 * 
+	 * @return new feature or null
+	 */
+	IFeature createNewFeature();
 }

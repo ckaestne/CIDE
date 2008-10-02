@@ -6,10 +6,11 @@ import coloredide.features.IFeature;
 
 public class ToggleTextColorAction extends Action {
 
-	IFeature feature;
+	protected IFeature feature;
 	private ToggleTextColorContext context;
 
 	ToggleTextColorAction(ToggleTextColorContext context, IFeature feature) {
+		if (feature!=null)
 		this.setText(feature.getName());
 		this.setEnabled(context.isEnabled());
 		this.setChecked(context.isChecked(feature));

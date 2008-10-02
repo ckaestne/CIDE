@@ -184,6 +184,7 @@ public class ColoredEditorExtensions {
 				menu.add(new ToggleTextColorAction(context, feature));
 			}
 			menu.add(new ToggleAllFeatureSubmenu(context, fm.getFeatures()));
+			menu.add(new NewFeatureAction(context,fm));
 			
 			if (editor instanceof IProjectionColoredEditor)
 				menu.add(new ColorProjectionSubmenu((IProjectionColoredEditor)editor, context));
