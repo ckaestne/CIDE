@@ -15,5 +15,14 @@ Arith : PF_NoVars
 	| Bools
 	| Windows
 	| Linux
-	| Static_Lambdas ;
+	| Static_Lambdas
+	| Add
+	| Sub
+	| Mul
+	| Div
+	| And
+	| Or
+	| Neg
+	| Recip
+	| Not ;
 
