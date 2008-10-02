@@ -46,7 +46,7 @@ public class FileColorChangeListener implements IResourceChangeListener {
 			if (((delta.getKind() & (IResourceDelta.ADDED | IResourceDelta.REMOVED)) > 0)
 					|| ((delta.getFlags() & (IResourceDelta.CONTENT)) > 0))
 				if (delta.getResource().getName().equals(
-						DirectoryColorManager.DIRCOLOR_FILENAME)) {
+						DefaultStorageProvider.DIRCOLOR_FILENAME)) {
 					IContainer updatedFolder = delta.getResource().getParent();
 					if (updatedFolder != null)
 						folders.add(updatedFolder);

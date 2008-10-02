@@ -42,16 +42,7 @@ public interface IFeatureModel {
 	 */
 	Set<IFeature> getVisibleFeatures();
 
-	/**
-	 * returns a specific feature by a given ID which identifies this feature,
-	 * or null if no such feature exists
-	 * 
-	 * @see IFeature.getId
-	 * @param id
-	 *            unique featureid in this project
-	 * @return the feature or null if no such feature exists
-	 */
-	IFeature getFeature(long id);
+
 
 	/**
 	 * Page to select a valid configuration. If not specified a configuration is

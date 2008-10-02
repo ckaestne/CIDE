@@ -14,7 +14,6 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.runtime.Path;
 
 import coloredide.features.IFeature;
 import coloredide.features.IFeatureModel;
@@ -24,17 +23,14 @@ public class DirectoryColorManager extends AbstractColorManager {
 	private IContainer directory;
 
 	private static final String THIS_DIR = ".";
-	public static final String DIRCOLOR_FILENAME = ".dircolors";
 
-	protected DirectoryColorManager(IContainer directory,
-			IFeatureModel featureModel) {
-		super(getColorFile(directory), featureModel);
+	protected DirectoryColorManager(IStorageProvider storageProvider,
+			IContainer directory, IFeatureModel featureModel) {
+		super(storageProvider, directory.getProject(), directory, featureModel);
+		assert directory != null;
+
 		this.directory = directory;
 		FolderCacheManager.registerDirectoryColorManager(this);
-	}
-
-	protected static IFile getColorFile(IContainer directory) {
-		return directory.getFile(new Path(DIRCOLOR_FILENAME));
 	}
 
 	private static final WeakHashMap<IContainer, WeakReference<DirectoryColorManager>> dirCache = new WeakHashMap<IContainer, WeakReference<DirectoryColorManager>>();
@@ -70,7 +66,10 @@ public class DirectoryColorManager extends AbstractColorManager {
 		if (r != null)
 			cachedCJSF = r.get();
 		if (cachedCJSF == null) {
-			cachedCJSF = new DirectoryColorManager(directory, featureModel);
+
+			cachedCJSF = new DirectoryColorManager(StorageProviderManager
+					.getInstance().getStorageProvider(directory.getProject(),
+							featureModel), directory, featureModel);
 			r = new WeakReference<DirectoryColorManager>(cachedCJSF);
 			dirCache.put(directory, r);
 		}

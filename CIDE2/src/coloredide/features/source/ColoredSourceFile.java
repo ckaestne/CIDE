@@ -6,9 +6,7 @@ import java.util.List;
 import java.util.WeakHashMap;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
 
 import cide.gast.IASTNode;
 import cide.gast.ISourceFile;
@@ -24,8 +22,6 @@ import coloredide.languages.LanguageExtensionProxy;
 
 public class ColoredSourceFile {
 
-	protected final IFile colorFile;
-
 	protected final IFile coloredSourceFile;
 
 	protected final ILanguageExtension language;
@@ -36,6 +32,8 @@ public class ColoredSourceFile {
 
 	private final IFeatureModel featureModel;
 
+	private final IStorageProvider storageProvider;
+
 	private static final WeakHashMap<ISourceFile, ColoredSourceFile> ast2FileMap = new WeakHashMap<ISourceFile, ColoredSourceFile>();
 
 	private static final WeakHashMap<IFile, WeakReference<ColoredSourceFile>> fileCache = new WeakHashMap<IFile, WeakReference<ColoredSourceFile>>();
@@ -45,12 +43,17 @@ public class ColoredSourceFile {
 		this.coloredSourceFile = coloredSourceFile;
 		this.featureModel = featureModel;
 		this.language = findLanguageExtension(coloredSourceFile);
-		if (language != null)
-			this.colorFile = getColorFile(coloredSourceFile);
-		else {
-			colorFile = null;
+
+		this.storageProvider = StorageProviderManager.getInstance()
+				.getStorageProvider(coloredSourceFile.getProject(),
+						featureModel);
+		if (language == null)
 			errorLanguageExtensionNotFound(coloredSourceFile);
-		}
+		// if (language != null)
+		// this.colorFile = getColorFile(coloredSourceFile);
+		// else {
+		// colorFile = null;
+		// }
 	}
 
 	/**
@@ -122,21 +125,22 @@ public class ColoredSourceFile {
 	}
 
 	public int hashCode() {
-		return colorFile.hashCode();
+		return coloredSourceFile.hashCode();
 	}
 
 	public boolean equals(Object obj) {
 		if (!(obj instanceof ColoredSourceFile))
 			return false;
-		return colorFile.equals(((ColoredSourceFile) obj).colorFile);
+		return coloredSourceFile
+				.equals(((ColoredSourceFile) obj).coloredSourceFile);
 	}
 
 	public SourceFileColorManager getColorManager() {
 		assert isColored();
 		if (colorManager == null) {
-			colorManager = new SourceFileColorManager(colorFile, this,
-					DirectoryColorManager.getColoredDirectoryManagerS(colorFile
-							.getParent(), featureModel));
+			colorManager = new SourceFileColorManager(storageProvider, this,
+					DirectoryColorManager.getColoredDirectoryManagerS(
+							coloredSourceFile.getParent(), featureModel));
 		}
 		return colorManager;
 	}
@@ -173,11 +177,6 @@ public class ColoredSourceFile {
 			cache(cachedCJSF);
 		}
 		return cachedCJSF;
-	}
-
-	protected static IFile getColorFile(IFile javaFile) {
-		IPath colorFilePath = javaFile.getFullPath().addFileExtension("color");
-		return ResourcesPlugin.getWorkspace().getRoot().getFile(colorFilePath);
 	}
 
 	// public IProject getProject() {

@@ -9,7 +9,7 @@ import org.eclipse.core.resources.IProject;
 import coloredide.CIDECorePlugin;
 import coloredide.ColorListChangedEvent;
 
-public abstract class AbstractFeatureModel implements IFeatureModel {
+public abstract class AbstractFeatureModel implements IFeatureModelWithID {
 
 	protected IProject project;
 //	private final List<IFeatureModelChangeListener> listeners = new LinkedList<IFeatureModelChangeListener>();

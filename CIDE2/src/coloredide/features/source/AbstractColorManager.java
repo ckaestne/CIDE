@@ -1,23 +1,14 @@
 package coloredide.features.source;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 
-import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
 
-import coloredide.features.Feature;
 import coloredide.features.IFeature;
 import coloredide.features.IFeatureModel;
 
@@ -30,112 +21,28 @@ import coloredide.features.IFeatureModel;
  * @author ckaestne
  * 
  */
-@SuppressWarnings("deprecation")
+
 abstract class AbstractColorManager {
 
-	private final IFile colorFile;
+	private final IStorageProvider storageProvider;
 
-	private HashMap<String, Set<IFeature>> id2colors = null;
+	private Map<String, Set<IFeature>> id2colors = null;
+
+	private final IProject project;
+
+	private final Object resource;
 
 	protected final IFeatureModel featureModel;
 
-	public AbstractColorManager(IFile colorFile, IFeatureModel featureModel) {
+	public AbstractColorManager(IStorageProvider storageProvider,
+			IProject project, Object annotatedResource,
+			IFeatureModel featureModel) {
+		this.storageProvider = storageProvider;
+		this.project = project;
+		this.resource = annotatedResource;
 		this.featureModel = featureModel;
-		this.colorFile = colorFile;
-		if (!colorFile.exists() || !loadColorFile())
-			id2colors = new HashMap<String, Set<IFeature>>();
-	}
-
-	private final static long serialVersionUID = 2l;
-
-	private static final long LEGACY_SERIALIZED_VERSION = 1l;
-
-	private boolean loadColorFile() {
-		try {
-			if (!colorFile.exists())
-				return false;
-
-			InputStream is = colorFile.getContents(true);
-			ObjectInputStream out = new ObjectInputStream(is);
-			try {
-				long version = out.readLong();
-				if (version == LEGACY_SERIALIZED_VERSION)
-					id2colors = loadLegacySerialization(out);
-				else if (version != serialVersionUID)
-					return false;
-				else
-					id2colors = loadFeatureMap(out);
-				return true;
-			} finally {
-				out.close();
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
-		}
-	}
-
-	/**
-	 * the features themselfs are not serialized, only their IDs. this method
-	 * does the serialization
-	 * 
-	 * @param out
-	 * @return
-	 * @throws IOException
-	 * @throws ClassNotFoundException
-	 */
-	private HashMap<String, Set<IFeature>> loadFeatureMap(ObjectInputStream out)
-			throws IOException, ClassNotFoundException {
-		HashMap<String, Set<Long>> storedMap = (HashMap<String, Set<Long>>) out
-				.readObject();
-
-		HashMap<String, Set<IFeature>> result = new HashMap<String, Set<IFeature>>();
-		for (Map.Entry<String, Set<Long>> entry : storedMap.entrySet()) {
-			Set<Long> colorIds = entry.getValue();
-			if (!colorIds.isEmpty()) {
-				Set<IFeature> features = new HashSet<IFeature>();
-				for (long id : colorIds) {
-					IFeature feature = featureModel.getFeature(id);
-					if (feature != null)
-						features.add(feature);
-				}
-				if (!features.isEmpty())
-					result.put(entry.getKey(), features);
-			}
-		}
-		return result;
-	}
-
-	/**
-	 * old serialization, where a feature class was directly serialized. needed
-	 * to be able to load old files
-	 * 
-	 * @param out
-	 * @return
-	 * @throws IOException
-	 * @throws ClassNotFoundException
-	 */
-	private HashMap<String, Set<IFeature>> loadLegacySerialization(
-			ObjectInputStream out) throws IOException, ClassNotFoundException {
-
-		HashMap<String, Set<Feature>> storedMap = (HashMap<String, Set<Feature>>) out
-				.readObject();
-
-		HashMap<String, Set<IFeature>> result = new HashMap<String, Set<IFeature>>();
-		for (Map.Entry<String, Set<Feature>> entry : storedMap.entrySet()) {
-			Set<Feature> colorIds = entry.getValue();
-			if (!colorIds.isEmpty()) {
-				Set<IFeature> features = new HashSet<IFeature>();
-				for (Feature id : colorIds) {
-					IFeature feature = featureModel.getFeature(id.getId());
-					if (feature != null)
-						features.add(feature);
-				}
-				if (!features.isEmpty())
-					result.put(entry.getKey(), features);
-			}
-		}
-		return result;
+		id2colors = storageProvider.readAnnotations(project, annotatedResource,
+				featureModel);
 	}
 
 	private void save() {
@@ -147,59 +54,12 @@ abstract class AbstractColorManager {
 			return;
 
 		try {
-			saveColorFile(null);
-			changed = false;
+			if (storageProvider.storeAnnotations(project, resource, id2colors,
+					null))
+				changed = false;
 		} catch (CoreException e) {
 			e.printStackTrace();
 		}
-	}
-
-	public boolean saveColorFile(IProgressMonitor monitor) throws CoreException {
-		try {
-			if (!id2colors.isEmpty()) {
-				ByteArrayOutputStream b = new ByteArrayOutputStream();
-				ObjectOutputStream out = new ObjectOutputStream(b);
-				out.writeLong(serialVersionUID);
-				out.writeObject(getIdMap());
-				out.close();
-				ByteArrayInputStream source = new ByteArrayInputStream(b
-						.toByteArray());
-				if (!colorFile.exists())
-					colorFile.create(source, true, monitor);
-				else
-					colorFile.setContents(source, true, true, monitor);
-				// System.out.println("saving color file " + colorFile);
-			} else {
-				if (colorFile.exists())
-					colorFile.delete(true, monitor);
-			}
-			return true;
-		} catch (IOException e) {
-			e.printStackTrace();
-			return false;
-		}
-	}
-
-	/**
-	 * transforms the id2colors map into a form that is serializable with
-	 * standard API objects (Long instead of IFeature)
-	 * 
-	 * @return
-	 */
-	private Map<String, Set<Long>> getIdMap() {
-		HashMap<String, Set<Long>> result = new HashMap<String, Set<Long>>();
-		for (Map.Entry<String, Set<IFeature>> entry : id2colors.entrySet()) {
-			Set<IFeature> features = entry.getValue();
-			if (!features.isEmpty()) {
-				Set<Long> ids = new HashSet<Long>();
-				for (IFeature feature : features) {
-					ids.add(feature.getId());
-				}
-				if (!ids.isEmpty())
-					result.put(entry.getKey(), ids);
-			}
-		}
-		return result;
 	}
 
 	protected Set<IFeature> getOwnColors(String id) {
@@ -308,8 +168,8 @@ abstract class AbstractColorManager {
 	 */
 	public void setTemporaryMode(boolean enable) {
 		if (tempMode == true && enable == false)
-			if (!loadColorFile())
-				id2colors = new HashMap<String, Set<IFeature>>();
+			id2colors = storageProvider.readAnnotations(project, resource,
+					featureModel);
 		this.tempMode = enable;
 	}
 

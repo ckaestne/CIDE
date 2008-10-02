@@ -21,6 +21,7 @@ import coloredide.features.FeatureModelManager;
 import coloredide.features.IFeature;
 import coloredide.features.IFeatureModel;
 import coloredide.features.source.ColoredSourceFile;
+import coloredide.features.source.DefaultStorageProvider;
 import coloredide.features.source.DirectoryColorManager;
 
 public class CreateConfigurationJob extends WorkspaceJob {
@@ -129,7 +130,7 @@ public class CreateConfigurationJob extends WorkspaceJob {
 			return;
 		if ("colors".equals(file.getFileExtension()))
 			return;
-		if (DirectoryColorManager.DIRCOLOR_FILENAME.equals(file.getName()))
+		if (DefaultStorageProvider.DIRCOLOR_FILENAME.equals(file.getName()))
 			return;
 
 		// check whether the whole file is colored and should be removed

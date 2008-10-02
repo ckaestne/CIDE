@@ -11,20 +11,15 @@ import org.eclipse.swt.graphics.RGB;
  * 
  * do not compare features for identity, always use the equals function
  * 
+ * features themselves as they are provided by the FeatureModel do not have a
+ * certain format of IDs. most feature models and the default storage mechanism
+ * require IFeatureWithID that provide a unique ID for each feature.
+ * 
  * 
  * @author ckaestne
  * 
  */
 public interface IFeature extends Comparable<IFeature> {
-
-	/**
-	 * returns a fixed ID that is used for making features persistent. only this
-	 * feature-id is stored. the id must be unique for a feature inside a
-	 * project and must not change when renaming the feature
-	 * 
-	 * @return
-	 */
-	public long getId();
 
 	/**
 	 * returns the name of this feature
@@ -37,8 +32,8 @@ public interface IFeature extends Comparable<IFeature> {
 	 * sets the name of this feature. note: not all feature models support a
 	 * modification
 	 * 
-	 * @param name:
-	 *            new name
+	 * @param name
+	 *            : new name
 	 * @throws UnsupportedOperationException
 	 *             if not supported by the feature model
 	 */
@@ -61,8 +56,7 @@ public interface IFeature extends Comparable<IFeature> {
 	 * sets the color of this feature. note: not all feature models support a
 	 * modification
 	 * 
-	 * @param new
-	 *            color value
+	 * @param new color value
 	 * @throws UnsupportedOperationException
 	 *             if not supported by the feature model
 	 */

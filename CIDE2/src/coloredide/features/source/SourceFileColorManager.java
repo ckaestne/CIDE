@@ -4,8 +4,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.eclipse.core.resources.IFile;
-
 import cide.gast.ASTWrappers;
 import cide.gast.IASTNode;
 import coloredide.features.IFeature;
@@ -22,9 +20,11 @@ public class SourceFileColorManager extends AbstractColorManager {
 	private final DirectoryColorManager directoryColorManager;
 	private final ColoredSourceFile source;
 
-	public SourceFileColorManager(IFile colorFile, ColoredSourceFile source,
+	public SourceFileColorManager(IStorageProvider storageProvider,
+			ColoredSourceFile source,
 			DirectoryColorManager directoryColorManager) {
-		super(colorFile, source.getFeatureModel());
+		super(storageProvider, source.getResource().getProject(), source
+				.getResource(), source.getFeatureModel());
 		this.directoryColorManager = directoryColorManager;
 		this.source = source;
 	}
@@ -48,7 +48,9 @@ public class SourceFileColorManager extends AbstractColorManager {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see coloredide.features.source.ISourceFileColorProvider#getColors(cide.gast.IASTNode)
+	 * @see
+	 * coloredide.features.source.ISourceFileColorProvider#getColors(cide.gast
+	 * .IASTNode)
 	 */
 	public Set<IFeature> getColors(IASTNode node) {
 		Set<IFeature> result = new HashSet<IFeature>();
@@ -60,7 +62,9 @@ public class SourceFileColorManager extends AbstractColorManager {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see coloredide.features.source.ISourceFileColorProvider#getInheritedColors(cide.gast.IASTNode)
+	 * @see
+	 * coloredide.features.source.ISourceFileColorProvider#getInheritedColors
+	 * (cide.gast.IASTNode)
 	 */
 	public Set<IFeature> getInheritedColors(IASTNode node) {
 		Set<IFeature> result = new HashSet<IFeature>();
@@ -85,7 +89,7 @@ public class SourceFileColorManager extends AbstractColorManager {
 		super.setColors(node.getId(), newColors);
 	}
 
-	public DirectoryColorManager getDirectoryColorManager(){
+	public DirectoryColorManager getDirectoryColorManager() {
 		return directoryColorManager;
 	}
 }

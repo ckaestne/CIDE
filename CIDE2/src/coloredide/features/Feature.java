@@ -17,6 +17,7 @@ public class Feature implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	long id;
+	@SuppressWarnings("unused")
 	private RGB rgb;
 
 	public long getId() {
