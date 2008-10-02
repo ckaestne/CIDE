@@ -1,22 +1,17 @@
 package de.ovgu.cide.fm.purevariants;
 
-import java.io.IOException;
-
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
+import java.util.WeakHashMap;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
-import org.xml.sax.SAXException;
-
-import com.ps.consul.eclipse.core.model.pv.PVModel;
-import com.ps.consul.eclipse.ui.mapping.Mapping;
-import com.ps.consul.eclipse.ui.mapping.Util;
 
 import coloredide.features.FeatureModelNotFoundException;
 import coloredide.features.IFeatureModel;
 import coloredide.features.IFeatureModelProvider;
+
+import com.ps.consul.eclipse.ui.mapping.Mapping;
+import com.ps.consul.eclipse.ui.mapping.Util;
 
 public class PVFeatureModelProvider implements IFeatureModelProvider {
 
@@ -24,8 +19,14 @@ public class PVFeatureModelProvider implements IFeatureModelProvider {
 		// TODO Auto-generated constructor stub
 	}
 
+	private final WeakHashMap<IProject, PVFeatureModel> cache = new WeakHashMap<IProject, PVFeatureModel>();
+
 	public IFeatureModel getFeatureModel(IProject project)
 			throws FeatureModelNotFoundException {
+		PVFeatureModel fm = cache.get(project);
+		if (fm != null)
+			return fm;
+
 		String targetName = project.getName();
 		if (targetName.indexOf("_Variability") >= 0)
 			throw new FeatureModelNotFoundException(
@@ -55,15 +56,16 @@ public class PVFeatureModelProvider implements IFeatureModelProvider {
 			throw new FeatureModelNotFoundException(
 					"Config.vdm file not found in " + pvProjectName);
 
-		Mapping mapping =null;
+		Mapping mapping = null;
 		try {
-			 mapping = new Mapping(ccfm, vdm);
+			mapping = new Mapping(ccfm, vdm);
 		} catch (CoreException e) {
 			throw new FeatureModelNotFoundException("Cannot create PV Mapping");
 		}
 
-		
-		return new PVFeatureModel(mapping,project);
+		fm = new PVFeatureModel(mapping, project);
+		cache.put(project, fm);
+		return fm;
 	}
 
 }

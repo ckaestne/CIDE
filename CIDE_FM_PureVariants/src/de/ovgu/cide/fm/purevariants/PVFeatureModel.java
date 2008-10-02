@@ -28,8 +28,7 @@ public class PVFeatureModel implements IFeatureModel {
 	}
 
 	public AbstractConfigurationPage getConfigurationPage(String pageName) {
-		// TODO Auto-generated method stub
-		return null;
+		return new NoConfigurationPage(pageName,this);
 	}
 
 	public Set<IFeature> getFeatures() {
@@ -52,7 +51,7 @@ public class PVFeatureModel implements IFeatureModel {
 	private Set<IFeature> adaptRules(List<Rule> rules) {
 		HashSet<IFeature> result = new HashSet<IFeature>();
 		for (Rule rule : rules)
-			result.add(new RuleAdapter(rule));
+			result.add(new RuleAdapter(rule, mapping));
 		return result;
 	}
 
@@ -64,7 +63,7 @@ public class PVFeatureModel implements IFeatureModel {
 
 		try {
 			Rule rule = Util.makeNewRule(new Shell(), mapping, null, null);
-			return new RuleAdapter(rule);
+			return new RuleAdapter(rule, mapping);
 		} catch (CoreException e) {
 			e.printStackTrace();
 			return null;

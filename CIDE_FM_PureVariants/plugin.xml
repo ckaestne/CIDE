@@ -16,4 +16,10 @@
       </featureModelProvider>
      
    </extension>
+   <extension
+         point="com.ps.consul.eclipse.core.ServerPluginDirectories">
+      <plugindir
+            path="transformation/cidetransform">
+      </plugindir>
+   </extension>
 </plugin>

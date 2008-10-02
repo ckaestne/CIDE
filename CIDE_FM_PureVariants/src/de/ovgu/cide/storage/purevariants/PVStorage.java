@@ -44,7 +44,7 @@ public class PVStorage implements IStorageProvider {
 		for (Rule rule : mapping.getRules()) {
 			for (MappedObject mappedObject : rule.getMappedObjects()) {
 				if (mappedObject.getName().equals(resourceId)) {
-					readAnnotations(annotations, rule, mappedObject);
+					readAnnotations(annotations, rule, mappedObject, mapping);
 				}
 			}
 		}
@@ -53,8 +53,8 @@ public class PVStorage implements IStorageProvider {
 	}
 
 	private void readAnnotations(Map<String, Set<IFeature>> annotations,
-			Rule rule, MappedObject mappedObject) {
-		IFeature feature = new RuleAdapter(rule);
+			Rule rule, MappedObject mappedObject, Mapping mapping) {
+		IFeature feature = new RuleAdapter(rule, mapping);
 		Set<String> keys = deserialize(mappedObject.getAttributeValue(
 				"fragmentIds", null));
 		for (String key : keys)
@@ -75,7 +75,7 @@ public class PVStorage implements IStorageProvider {
 		Set<String> result = new HashSet<String>();
 		int p;
 		while ((p = attributeValue.indexOf('#')) >= 0) {
-			result.add(attributeValue.substring(0, p - 1));
+			result.add(attributeValue.substring(0, p ));
 			attributeValue = attributeValue.substring(p + 1);
 		}
 		return result;
@@ -84,22 +84,17 @@ public class PVStorage implements IStorageProvider {
 	public boolean storeAnnotations(IProject project, Object annotatedResource,
 			Map<String, Set<IFeature>> annotations, IProgressMonitor monitor)
 			throws CoreException {
-		// IFeatureModel featureModel;
-		// try {
-		// featureModel = FeatureModelManager.getInstance().getFeatureModel(
-		// project);
-		// } catch (FeatureModelNotFoundException e) {
-		// e.printStackTrace();
-		// return false;
-		// }
-		// assert featureModel instanceof PVFeatureModel;
 		String resourceId = getResourceId(annotatedResource);
 		Map<IFeature, Set<String>> transformedAnnotations = transformAnnotations(annotations);
 
+		Mapping mapping=null;
 		for (Entry<IFeature, Set<String>> entry : transformedAnnotations
 				.entrySet()) {
 			storeAnnotation(resourceId, entry.getKey(), entry.getValue());
+			mapping=((RuleAdapter)entry.getKey()).getMapping();
 		}
+		if (mapping!=null)
+			mapping.save();
 
 		return true;
 	}
@@ -116,13 +111,16 @@ public class PVStorage implements IStorageProvider {
 			throws CoreException {
 		Rule rule = ((RuleAdapter) key).getRule();
 
+		MappedObject targetObject = null;
 		for (MappedObject mappedObject : rule.getMappedObjects()) {
 			if (mappedObject.getName().equals(fileId))
-				rule.deleteMappedObject(mappedObject);
+				targetObject = mappedObject;
 		}
-		Map<String, String> attr = new HashMap<String, String>();
-		attr.put("fragmentIds", serialize(value));
-		rule.createMappedObject(Util.makeID(fileId), fileId, attr);
+		if (targetObject == null)
+			targetObject = rule.createMappedObject(new ID(), fileId,
+					new HashMap<String, String>());
+
+		targetObject.setAttributeValue("fragmentIds", serialize(value));
 	}
 
 	private String serialize(Set<String> value) {

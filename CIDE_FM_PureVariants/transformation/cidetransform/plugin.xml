@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin 
+  id="de.ovgu.cide.puretransformer" 
+  name="CIDE Client Transformation Module" 
+  version="1.0.0" 
+  provider-name="">
+  
+  <extension 
+    id="CIDE Client Module" 
+    name="CIDE Client Module" 
+    point="com.ps.consul.transformer.module">
+    
+    <module 
+      name="CIDE Client Module" 
+      version="1.0" 
+      include="/variant"
+      exclude=""
+      type="client"
+      id="de.ovgu.cide.configuration.purevariants">
+      
+      <description>CIDE generation process</description>
+      
+      <parameters>
+        <parameter name="Result" type="ps:string" optional="false">
+          <description>Result to return</description>
+          <values>
+            <value>ok</value>
+            <value>error</value>
+            <value>fatal</value>
+          </values>
+        </parameter>
+        <parameter name="Name" type="ps:string" optional="true">
+          <description>Some name</description>
+        </parameter> 
+
+      </parameters>
+    </module>
+    
+  </extension>
+
+</plugin>
