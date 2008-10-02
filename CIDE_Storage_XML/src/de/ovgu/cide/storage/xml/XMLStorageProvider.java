@@ -19,7 +19,6 @@ public class XMLStorageProvider implements IStorageProvider {
 	public XMLStorageProvider() {
 	}
 
-	@Override
 	public boolean isCompatible(IFeatureModel featureModel) {
 		return featureModel instanceof IFeatureModelWithID;
 	}
@@ -35,7 +34,6 @@ public class XMLStorageProvider implements IStorageProvider {
 		return cached;
 	}
 
-	@Override
 	public Map<String, Set<IFeature>> readAnnotations(IProject project,
 			Object annotatedResource, IFeatureModel featureModel) {
 		assert annotatedResource instanceof IResource;
@@ -47,7 +45,6 @@ public class XMLStorageProvider implements IStorageProvider {
 				(IFeatureModelWithID) featureModel);
 	}
 
-	@Override
 	public boolean storeAnnotations(IProject project, Object annotatedResource,
 			Map<String, Set<IFeature>> annotations, IProgressMonitor monitor)
 			throws CoreException {
