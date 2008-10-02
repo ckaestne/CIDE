@@ -21,16 +21,19 @@
       <description>CIDE generation process</description>
       
       <parameters>
-        <parameter name="Result" type="ps:string" optional="false">
+      <!--  <parameter name="Result" type="ps:string" optional="false">
           <description>Result to return</description>
           <values>
             <value>ok</value>
             <value>error</value>
             <value>fatal</value>
           </values>
-        </parameter>
-        <parameter name="Name" type="ps:string" optional="true">
-          <description>Some name</description>
+        </parameter>-->
+        <parameter name="CIDE_Input_Project" type="ps:string" optional="true">
+          <description>Input project with painted code. Name of the Eclipse project.</description>
+        </parameter> 
+        <parameter name="CIDE_Target_Project" type="ps:string" optional="false">
+          <description>Name of the target project that should be created in the workspace. If it exists it will be overwritten!</description>
         </parameter> 
 
       </parameters>

@@ -37,11 +37,11 @@ public class RuleAdapter implements IFeature {
 	}
 
 	public boolean canSetRGB() {
-		return true;
+		return mapping != null;
 	}
 
 	public boolean canSetVisible() {
-		return true;
+		return mapping != null;
 	}
 
 	public String getName() {
@@ -68,7 +68,8 @@ public class RuleAdapter implements IFeature {
 		rgb = color;
 		try {
 			rule.setAttributeValue("color", encodeColor(rgb));
-			mapping.save();
+			if (mapping != null)
+				mapping.save();
 		} catch (CoreException e) {
 			e.printStackTrace();
 		}
@@ -86,9 +87,9 @@ public class RuleAdapter implements IFeature {
 
 		if (firstComma > 0 && secondComma > 0 && secondComma > firstComma)
 			try {
-				int r = Integer.parseInt(colorStr.substring(0, firstComma ));
+				int r = Integer.parseInt(colorStr.substring(0, firstComma));
 				int g = Integer.parseInt(colorStr.substring(firstComma + 1,
-						secondComma ));
+						secondComma));
 				int b = Integer.parseInt(colorStr.substring(secondComma + 1));
 				rgb = new RGB(r, g, b);
 			} catch (Exception e) {
@@ -104,7 +105,8 @@ public class RuleAdapter implements IFeature {
 		this.visible = isVisible;
 		try {
 			rule.setAttributeValue("visible", visible ? "true" : "false");
-			mapping.save();
+			if (mapping != null)
+				mapping.save();
 		} catch (CoreException e) {
 			e.printStackTrace();
 		}

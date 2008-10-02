@@ -2,6 +2,7 @@ package de.ovgu.cide.fm.purevariants;
 
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -28,7 +29,7 @@ public class PVFeatureModel implements IFeatureModel {
 	}
 
 	public AbstractConfigurationPage getConfigurationPage(String pageName) {
-		return new NoConfigurationPage(pageName,this);
+		return new NoConfigurationPage(pageName, this);
 	}
 
 	public Set<IFeature> getFeatures() {
@@ -40,12 +41,12 @@ public class PVFeatureModel implements IFeatureModel {
 	}
 
 	public Set<IFeature> getVisibleFeatures() {
-		try {
-			return adaptRules(mapping.getRulesOfVariant());
-		} catch (CoreException e) {
-			e.printStackTrace();
-			return Collections.EMPTY_SET;
-		}
+		Set<IFeature> result = getFeatures();
+		for (Iterator<IFeature> iterator = result.iterator(); iterator
+				.hasNext();)
+			if (!iterator.next().isVisible())
+				iterator.remove();
+		return result;
 	}
 
 	private Set<IFeature> adaptRules(List<Rule> rules) {

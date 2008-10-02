@@ -19,7 +19,14 @@
    <extension
          point="com.ps.consul.eclipse.core.ServerPluginDirectories">
       <plugindir
-            path="transformation/cidetransform">
+            path="server">
       </plugindir>
+   </extension>
+   <extension
+         point="com.ps.consul.eclipse.core.ClientTransfomModule">
+      <clientmodule
+            class="de.ovgu.cide.configuration.purevariants.CIDETransformation"
+            module="de.ovgu.cide.configuration.purevariants">
+      </clientmodule>
    </extension>
 </plugin>
