@@ -49,10 +49,11 @@ public class ColoredEditorExtensions {
 
 		ISelectionProvider getSelectionProvider();
 	}
+
 	public static interface IProjectionColoredEditor extends IColoredEditor {
 
 		IProjectionColorManager getProjectionColorManager();
-		
+
 	}
 
 	private IColoredEditor editor;
@@ -92,7 +93,7 @@ public class ColoredEditorExtensions {
 
 		updateErrorPanel();
 	}
-	
+
 	public void markFileEdited() {
 		errClr = (LIGHTRED);
 		errMsg = ("File edited in editor. Colors disabled until file is saved again.");
@@ -169,25 +170,31 @@ public class ColoredEditorExtensions {
 
 		return result;
 	}
-	
+
 	public void fillContextMenu(IMenuManager menu) {
 		if (!editor.isDirty()) {
 			ColoredSourceFile sourceFile = editor.getSourceFile();
-			ToggleTextColorContext context = new ToggleTextColorContext(
-					sourceFile, editor.getSelectionProvider().getSelection());
+			if (sourceFile != null) {
+				ToggleTextColorContext context = new ToggleTextColorContext(
+						sourceFile, editor.getSelectionProvider()
+								.getSelection());
 
-			IFeatureModel fm = sourceFile.getFeatureModel();
-			List<IFeature> visibleFeatures = new ArrayList<IFeature>(fm
-					.getVisibleFeatures());
-			Collections.sort(visibleFeatures);
-			for (IFeature feature : visibleFeatures) {
-				menu.add(new ToggleTextColorAction(context, feature));
+				IFeatureModel fm = sourceFile.getFeatureModel();
+				List<IFeature> visibleFeatures = new ArrayList<IFeature>(fm
+						.getVisibleFeatures());
+				Collections.sort(visibleFeatures);
+				for (IFeature feature : visibleFeatures) {
+					menu.add(new ToggleTextColorAction(context, feature));
+				}
+				menu
+						.add(new ToggleAllFeatureSubmenu(context, fm
+								.getFeatures()));
+				menu.add(new NewFeatureAction(context, fm));
+
+				if (editor instanceof IProjectionColoredEditor)
+					menu.add(new ColorProjectionSubmenu(
+							(IProjectionColoredEditor) editor, context));
 			}
-			menu.add(new ToggleAllFeatureSubmenu(context, fm.getFeatures()));
-			menu.add(new NewFeatureAction(context,fm));
-			
-			if (editor instanceof IProjectionColoredEditor)
-				menu.add(new ColorProjectionSubmenu((IProjectionColoredEditor)editor, context));
 		}
 	}
 
