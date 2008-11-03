@@ -13,6 +13,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.swt.graphics.RGB;
 
 import coloredide.features.IFeature;
+import coloredide.features.IFeatureWithID;
 
 /**
  * this class can export an .colors file to a pair of model.m and model.colors
@@ -38,11 +39,12 @@ public class GuidslExport {
 			Map<Long, RGB> featureColors = new HashMap<Long, RGB>();
 			Map<Long, Boolean> featureVisibility = new HashMap<Long, Boolean>();
 			for (IFeature f : listModel.getFeatures()) {
-				String name=f.getName().replace(' ', '_');
-				grammarContent += "[" + name+ "] ";
-				featureIds.put(name, f.getId());
-				featureColors.put(f.getId(), f.getRGB());
-				featureVisibility.put(f.getId(), f.isVisible());
+				String name = f.getName().replace(' ', '_');
+				grammarContent += "[" + name + "] ";
+				featureIds.put(name, ((IFeatureWithID) f).getId());
+				featureColors.put(((IFeatureWithID) f).getId(), f.getRGB());
+				featureVisibility.put(((IFeatureWithID) f).getId(), f
+						.isVisible());
 			}
 			grammarContent += "::generatedSPL;";
 			grammarFile.create(new ByteArrayInputStream(grammarContent

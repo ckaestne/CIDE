@@ -7,6 +7,7 @@ import java.util.Set;
 import org.eclipse.swt.graphics.RGB;
 
 import coloredide.features.IFeature;
+import coloredide.features.IFeatureWithID;
 
 /**
  * adapts the old feature class to the new IFeature interface
@@ -14,7 +15,7 @@ import coloredide.features.IFeature;
  * @author ckaestne
  * 
  */
-public class FeatureAdapter implements IFeature {
+public class FeatureAdapter implements IFeatureWithID {
 
 	public FixedFeature feature;
 	private ListFeatureModel featureModel;
