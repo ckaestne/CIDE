@@ -1,18 +1,13 @@
 package de.ovgu.cide.language.capprox;
 
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
 
 import tmp.generated_capprox.CApproxParser;
-import tmp.generated_capprox.SimplePrintVisitor;
 import cide.gast.ISourceFile;
 import cide.gparser.OffsetCharStream;
 import cide.gparser.ParseException;
 import cide.languages.ILanguageExtension;
 import cide.languages.ILanguageParser;
-import cide.languages.ILanguagePrintVisitor;
-import cide.languages.ILanguageValidator;
 
 public class CApproxLanguageExtension implements ILanguageExtension {
 
@@ -30,20 +25,20 @@ public class CApproxLanguageExtension implements ILanguageExtension {
 			}
 		};
 	}
+//
+//	public ILanguagePrintVisitor getPrettyPrinter() {
+//		return new SimplePrintVisitor() {
+//			protected List<String> getNoSpaceAfterToken() {
+//				List<String> l = super.getNoSpaceAfterToken();
+//				if (!l.contains("#"))
+//					l.add("#");
+//				return l;
+//			}
+//		};
+//	}
 
-	public ILanguagePrintVisitor getPrettyPrinter() {
-		return new SimplePrintVisitor() {
-			protected List<String> getNoSpaceAfterToken() {
-				List<String> l = super.getNoSpaceAfterToken();
-				if (!l.contains("#"))
-					l.add("#");
-				return l;
-			}
-		};
-	}
-
-	public ILanguageValidator getValidator() {
-		// new AstgenTask
-		return null;
-	}
+//	public ILanguageValidator getValidator() {
+//		// new AstgenTask
+//		return null;
+//	}
 }
