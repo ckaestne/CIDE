@@ -87,4 +87,8 @@ public class ListFeatureModel extends AbstractFeatureModel {
 		return true;
 	}
 
+	public IFeature createNewFeature() {
+		return null;
+	}
+
 }
