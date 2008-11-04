@@ -6,7 +6,7 @@
       <language 
             class="de.ovgu.cide.language.jdt.JDTLanguageExtension"
             fileExtensions=".java"
-            id="de.ovgu.cide.language.java15"
+            id="de.ovgu.cide.language.jdt"
             name="Java 1.6 (Eclipse JDT based) Language Extension">
       </language>
    </extension>
