@@ -41,6 +41,20 @@ import coloredide.features.IFeatureWithID;
  */
 @SuppressWarnings("deprecation")
 public class DefaultStorageProvider implements IStorageProvider {
+
+	class DefaultStorageProviderProxy extends StorageProviderProxy {
+
+		public DefaultStorageProviderProxy() {
+			super();
+			name = "Default";
+			id = "default";
+		}
+
+		protected void loadTarget() {
+			target = DefaultStorageProvider.this;
+		}
+	}
+
 	protected static IFile getColorFile(IFile javaFile) {
 		IPath colorFilePath = javaFile.getFullPath().addFileExtension("color");
 		return ResourcesPlugin.getWorkspace().getRoot().getFile(colorFilePath);

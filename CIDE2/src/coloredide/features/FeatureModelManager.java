@@ -14,6 +14,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 
 import coloredide.CIDECorePlugin;
+import coloredide.preferences.PreferenceConstants;
 
 public class FeatureModelManager {
 
@@ -67,25 +68,42 @@ public class FeatureModelManager {
 		return Collections.unmodifiableList(cachedFeatureModelProviders);
 	}
 
+	/**
+	 * only one feature model provider may be active at at time (can be
+	 * configured in preferences). this returns the active one.
+	 * 
+	 * @return feature model provider or null if there is no active FMP
+	 *         configured or the active FMP is not available
+	 */
+	public FeatureModelProviderProxy getActiveFeatureModelProvider() {
+		String featureModelProviderId = CIDECorePlugin.getDefault()
+				.getPreferenceStore().getString(
+						PreferenceConstants.P_FEATUREMODELPROVIDER);
+		List<FeatureModelProviderProxy> providers = getFeatureModelProviders();
+		for (FeatureModelProviderProxy provider : providers)
+			if (provider.getId().equals(featureModelProviderId))
+				return provider;
+		return null;
+	}
+
 	private final WeakHashMap<IProject, IFeatureModel> featureModelCache = new WeakHashMap<IProject, IFeatureModel>();
 
 	public IFeatureModel getFeatureModel(IProject project)
 			throws FeatureModelNotFoundException {
-//		assert project != null && project.exists() && project.isOpen();
+		// assert project != null && project.exists() && project.isOpen();
 
 		IFeatureModel featureModel = featureModelCache.get(project);
 		if (featureModel == null) {
-			List<FeatureModelProviderProxy> providers = getFeatureModelProviders();
-			if (providers.size() == 0)
+			FeatureModelProviderProxy provider = getActiveFeatureModelProvider();
+			if (provider == null)
 				throw new FeatureModelNotFoundException(
 						"No feature model found.");
-			featureModel = providers.get(0).getFeatureModel(project);
+			featureModel = provider.getFeatureModel(project);
 			featureModelCache.put(project, featureModel);
 		}
 		return featureModel;
 	}
 
-	
 	/**
 	 * same as getFeatureModel, but throws a coreException in case of an error.
 	 * to be used in jobs

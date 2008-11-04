@@ -212,16 +212,16 @@ public class ColoredSourceFile {
 	private void errorLanguageExtensionNotFound(IFile input) {
 		System.err.println("No language extensions registered for file "
 				+ input.getName());
-		System.err.print("Known file extensions:");
+		System.err.print("Enabled file extensions:");
 		for (LanguageExtensionProxy le : LanguageExtensionManager.getInstance()
-				.getLanguageExtensions())
+				.getEnabledLanguageExtensions())
 			System.err.print(" " + le.printFileExtensions(" "));
 		System.err.println();
 	}
 
 	private static ILanguageExtension findLanguageExtension(IFile input) {
 		List<LanguageExtensionProxy> languageExtensions = LanguageExtensionManager
-				.getInstance().getLanguageExtensions();
+				.getInstance().getEnabledLanguageExtensions();
 		String targetFileExtension = "." + input.getFileExtension();
 		for (LanguageExtensionProxy le : languageExtensions) {
 			for (String fileExtension : le.getFileExtensions())

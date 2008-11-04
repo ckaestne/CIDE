@@ -7,7 +7,8 @@ import org.eclipse.core.runtime.IConfigurationElement;
 
 import cide.languages.ILanguageExtension;
 import cide.languages.ILanguageParser;
-import cide.languages.ILanguageValidator;
+import coloredide.CIDECorePlugin;
+import coloredide.preferences.PreferenceConstants;
 
 public class LanguageExtensionProxy implements ILanguageExtension {
 
@@ -36,14 +37,14 @@ public class LanguageExtensionProxy implements ILanguageExtension {
 	public ILanguageParser getParser(InputStream inputStream, String filePath) {
 		if (target == null)
 			loadTarget();
-		return target.getParser(inputStream,filePath);
+		return target.getParser(inputStream, filePath);
 	}
 
-//	public ILanguagePrintVisitor getPrettyPrinter() {
-//		if (target == null)
-//			loadTarget();
-//		return target.getPrettyPrinter();
-//	}
+	// public ILanguagePrintVisitor getPrettyPrinter() {
+	// if (target == null)
+	// loadTarget();
+	// return target.getPrettyPrinter();
+	// }
 
 	private void loadTarget() {
 		try {
@@ -70,11 +71,11 @@ public class LanguageExtensionProxy implements ILanguageExtension {
 		return result;
 	}
 
-//	public ILanguageValidator getValidator() {
-//		if (target == null)
-//			loadTarget();
-//		return target.getValidator();
-//	}
+	// public ILanguageValidator getValidator() {
+	// if (target == null)
+	// loadTarget();
+	// return target.getValidator();
+	// }
 
 	public String getName() {
 		return name;
@@ -82,5 +83,17 @@ public class LanguageExtensionProxy implements ILanguageExtension {
 
 	public String getId() {
 		return id;
+	}
+
+	/**
+	 * of the loaded language extensions only a certain set is enabled in the
+	 * user preferences. this method returns whether the given extension is
+	 * enabled.
+	 * 
+	 * @return
+	 */
+	public boolean isEnabled() {
+		return CIDECorePlugin.getDefault().getPreferenceStore().getBoolean(
+				PreferenceConstants.P_LANGPREFIX + getId());
 	}
 }

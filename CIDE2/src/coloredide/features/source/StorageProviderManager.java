@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.Platform;
@@ -28,8 +27,7 @@ public class StorageProviderManager {
 			if (provider.isCompatible(featureModel))
 				return provider;
 		}
-
-		return new DefaultStorageProvider();
+		return null;
 	}
 
 	private static StorageProviderManager instance;
@@ -43,12 +41,12 @@ public class StorageProviderManager {
 		return instance;
 	}
 
-	private List<IStorageProvider> storageProviders = null;
+	private List<StorageProviderProxy> storageProviders = null;
 
 	private void loadStorageProviders() {
 		if (storageProviders != null)
 			return;
-		storageProviders = new ArrayList<IStorageProvider>();
+		storageProviders = new ArrayList<StorageProviderProxy>();
 
 		IExtension[] extensions = Platform.getExtensionRegistry()
 				.getExtensionPoint(CIDECorePlugin.ID, "colorStorageProvider")
@@ -58,15 +56,12 @@ public class StorageProviderManager {
 					.getConfigurationElements();
 			for (IConfigurationElement configurationElement : configurationElements)
 				if (configurationElement.getName().equals("storageProvider"))
-					try {
-						IStorageProvider mechanism = (IStorageProvider) configurationElement
-								.createExecutableExtension("provider");
-						storageProviders.add(mechanism);
-					} catch (CoreException e) {
-						e.printStackTrace();
-					}
-
+					storageProviders.add(new StorageProviderProxy(
+							configurationElement));
 		}
+
+		storageProviders
+				.add(new DefaultStorageProvider().new DefaultStorageProviderProxy());
 	}
 
 	/**
@@ -74,7 +69,7 @@ public class StorageProviderManager {
 	 * 
 	 * @return
 	 */
-	public List<IStorageProvider> getStorageProviders() {
+	public List<StorageProviderProxy> getStorageProviders() {
 		loadStorageProviders();
 
 		return Collections.unmodifiableList(storageProviders);

@@ -46,7 +46,7 @@ public class SetColorPopup implements IWorkbenchWindowActionDelegate,
 	 * @see IWorkbenchWindowActionDelegate#run
 	 */
 	public void run(IAction action) {
-		IResource[] p;
+//		IResource[] p;
 
 		assert !resources.isEmpty();
 

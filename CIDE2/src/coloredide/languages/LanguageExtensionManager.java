@@ -45,7 +45,7 @@ public class LanguageExtensionManager {
 
 	private void debugPrintExtensions() {
 		for (LanguageExtensionProxy le : LanguageExtensionManager.getInstance()
-				.getLanguageExtensions())
+				.getAllLanguageExtensions())
 			System.out.println(le);
 	}
 
@@ -56,8 +56,38 @@ public class LanguageExtensionManager {
 		return new LanguageExtensionProxy(configurationElement);
 	}
 
-	public List<LanguageExtensionProxy> getLanguageExtensions() {
+	public List<LanguageExtensionProxy> getAllLanguageExtensions() {
 		loadLanguageExtensions();
 		return Collections.unmodifiableList(cachedLanguageExtensions);
+	}
+
+	/**
+	 * returns only those language extensions which are enabled in the user
+	 * preferences.
+	 * 
+	 * @return
+	 */
+	public List<LanguageExtensionProxy> getEnabledLanguageExtensions() {
+		loadLanguageExtensions();
+		List<LanguageExtensionProxy> result = new ArrayList<LanguageExtensionProxy>();
+		for (LanguageExtensionProxy lang : cachedLanguageExtensions)
+			if (lang.isEnabled())
+				result.add(lang);
+		return Collections.unmodifiableList(result);
+	}
+
+	/**
+	 * get a language extension by an id, independent of whether it is enabled
+	 * 
+	 * @param languageExtensionId
+	 * @return
+	 */
+	public LanguageExtensionProxy getLanguageExtensionById(
+			String languageExtensionId) {
+		for (LanguageExtensionProxy lang : getAllLanguageExtensions()) {
+			if (lang.getId().equals(languageExtensionId))
+				return lang;
+		}
+		return null;
 	}
 }

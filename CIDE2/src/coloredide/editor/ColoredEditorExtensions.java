@@ -157,9 +157,9 @@ public class ColoredEditorExtensions {
 	}
 
 	private String getSupportedLanguageExtensionsMsg() {
-		String result = "Installed language extensions: \n";
+		String result = "Enabled language extensions: \n";
 		List<LanguageExtensionProxy> extensions = LanguageExtensionManager
-				.getInstance().getLanguageExtensions();
+				.getInstance().getEnabledLanguageExtensions();
 		if (extensions.size() == 0)
 			result += "\tnone.";
 

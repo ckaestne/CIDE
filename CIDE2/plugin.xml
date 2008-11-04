@@ -292,4 +292,18 @@
              selected="true">
        </filter>
     </extension>
+    <extension
+          point="org.eclipse.ui.preferencePages">
+       <page
+             class="coloredide.preferences.PluginPreferencePage"
+             id="coloredide.preferences.PluginPreferencePage"
+             name="CIDE">
+       </page>
+    </extension>
+    <extension
+          point="org.eclipse.core.runtime.preferences">
+       <initializer
+             class="coloredide.preferences.PreferenceInitializer">
+       </initializer>
+    </extension>
 </plugin>
