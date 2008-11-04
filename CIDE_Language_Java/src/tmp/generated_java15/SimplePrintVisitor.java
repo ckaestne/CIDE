@@ -7,7 +7,7 @@ import java.io.PrintStream;
 
 import cide.languages.*;
 
-public class SimplePrintVisitor extends AbstractPrintVisitor implements ILanguagePrintVisitor {
+public class SimplePrintVisitor extends AbstractPrintVisitor {
 	public SimplePrintVisitor(PrintStream out) {
 		super(out);
 	}

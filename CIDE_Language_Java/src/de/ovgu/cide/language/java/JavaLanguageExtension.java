@@ -3,12 +3,10 @@ package de.ovgu.cide.language.java;
 import java.io.InputStream;
 
 import tmp.generated_java15.Java15Parser;
-import tmp.generated_java15.SimplePrintVisitor;
 import cide.gast.ISourceFile;
 import cide.gparser.ParseException;
 import cide.languages.ILanguageExtension;
 import cide.languages.ILanguageParser;
-import cide.languages.ILanguagePrintVisitor;
 import cide.languages.ILanguageValidator;
 
 public class JavaLanguageExtension implements ILanguageExtension {
@@ -27,9 +25,6 @@ public class JavaLanguageExtension implements ILanguageExtension {
 		};
 	}
 
-	public ILanguagePrintVisitor getPrettyPrinter() {
-		return new SimplePrintVisitor();
-	}
 
 	public ILanguageValidator getValidator() {
 		// TODO Auto-generated method stub
