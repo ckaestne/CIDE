@@ -2,15 +2,12 @@ package de.ovgu.cide.language.gcide;
 
 import java.io.InputStream;
 
-import tmp.generated_gcide.SimplePrintVisitor;
 import tmp.generated_gcide.SlimJJParser;
 import cide.gast.ISourceFile;
 import cide.gparser.OffsetCharStream;
 import cide.gparser.ParseException;
 import cide.languages.ILanguageExtension;
 import cide.languages.ILanguageParser;
-import cide.languages.ILanguagePrintVisitor;
-import cide.languages.ILanguageValidator;
 
 public class GCIDELanguageExtension implements ILanguageExtension {
 
@@ -28,12 +25,12 @@ public class GCIDELanguageExtension implements ILanguageExtension {
 		};
 	}
 
-	public ILanguagePrintVisitor getPrettyPrinter() {
+	/*public ILanguagePrintVisitor getPrettyPrinter() {
 		return new SimplePrintVisitor();
 	}
 
 	public ILanguageValidator getValidator() {
 		return null;//new GCIDEValidator();
-	}
+	}*/
 
 }
