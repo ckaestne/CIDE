@@ -1,25 +1,12 @@
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import org.junit.Assert;
 import org.junit.Test;
 
 import tmp.generated_cppapprox.CPPApproxParser;
-import tmp.generated_cppapprox.SimplePrintVisitor;
-
 import cide.gast.ASTNode;
 import cide.gparser.ParseException;
 
-import com.sun.org.apache.bcel.internal.classfile.ConstantCP;
-
-import de.ovgu.cide.language.cppapprox.CPPApproxLanguageExtension;
-
 public class CPPPrettyPrinterTest extends CPPApproxParserTester {
 
-	protected SimplePrintVisitor getPP() {
-		return (SimplePrintVisitor) new CPPApproxLanguageExtension()
-				.getPrettyPrinter();
-	}
 
 	@Test
 	public void testDoubleSymbols() throws ParseException {
@@ -36,8 +23,7 @@ public class CPPPrettyPrinterTest extends CPPApproxParserTester {
 		String stmt = "{\ni++;\n//test\ni++;\nj++;//test2\n}";
 		CPPApproxParser p = getParser(stmt);
 		ASTNode s = p.Block();
-		SimplePrintVisitor pp = getPP();
-		s.accept(pp);
+		s.render();
 		// System.out.println(pp.getResult());
 		// Assert.assertTrue(pp.getResult(),pp.getResult().contains(symbol));
 	}
@@ -47,8 +33,7 @@ public class CPPPrettyPrinterTest extends CPPApproxParserTester {
 		String stmt = "{\ni++;\n#ifdef x\ni++;\nj++;\n#endif\nx++;}";
 		CPPApproxParser p = getParser(stmt);
 		ASTNode s = p.Block();
-		SimplePrintVisitor pp = getPP();
-		s.accept(pp);
+		s.render();
 		// System.out.println(pp.getResult());
 
 		stmt = "        /*\n"
@@ -79,9 +64,7 @@ public class CPPPrettyPrinterTest extends CPPApproxParserTester {
 
 		p = getParser(stmt);
 		s = p.Function();
-		pp = getPP();
-		s.accept(pp);
-
+		s.render();
 		
 //		Assert.assertFalse(pp.getResult().matches("/endif/"));
 //		Assert.assertFalse( Pattern.matches("endif", pp.getResult()));
@@ -101,9 +84,8 @@ public class CPPPrettyPrinterTest extends CPPApproxParserTester {
 	public void testDefineSpaces() throws ParseException {
 		CPPApproxParser p = getParser("#define PAGE_BUFFER_MAX_SIZE (4*1024)\n");
 		ASTNode s = p.PPDefineStatement();
-		SimplePrintVisitor pp = getPP();
-		s.accept(pp);
-		Assert.assertTrue(pp.getResult(), pp.getResult().contains(
+		String r=s.render();
+		Assert.assertTrue(r, r.contains(
 				"PAGE_BUFFER_MAX_SIZE (4*1024)"));
 	}
 	
@@ -112,9 +94,8 @@ public class CPPPrettyPrinterTest extends CPPApproxParserTester {
 	private void checkSymbol(String stmt, String symbol) throws ParseException {
 		CPPApproxParser p = getParser(stmt);
 		ASTNode s = p.CodeUnit_InBlock();
-		SimplePrintVisitor pp = getPP();
-		s.accept(pp);
-		Assert.assertTrue(pp.getResult(), pp.getResult().contains(symbol));
+		String r=s.render();
+		Assert.assertTrue(r, r.contains(symbol));
 		// System.out.println(pp.getResult());
 	}
 

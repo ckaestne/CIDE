@@ -5,12 +5,11 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
-import com.sun.org.apache.bcel.internal.generic.IASTORE;
-
 import junit.framework.Assert;
 import tmp.generated_cppapprox.CPPApproxParser;
-import tmp.generated_cppapprox.SimplePrintVisitor;
-import cide.gast.*;
+import cide.gast.ASTVisitor;
+import cide.gast.IASTNode;
+import cide.gast.ISourceFile;
 import cide.gparser.OffsetCharStream;
 import cide.gparser.ParseException;
 
@@ -45,9 +44,7 @@ public class CPPApproxParserTester {
 	}
 
 	protected String printAST(ISourceFile ast) {
-		SimplePrintVisitor prettyPrinter = new SimplePrintVisitor();
-		ast.accept(prettyPrinter);
-		return prettyPrinter.getResult();
+		return ast.render();
 	}
 
 	protected ISourceFile parseAndCheck(String content) throws ParseException {
