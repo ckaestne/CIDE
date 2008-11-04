@@ -1,11 +1,9 @@
 package tmp.generated_phaskell;
 
-import cide.gast.ASTStringNode;
-import cide.gast.IASTNode;
-import cide.gast.IToken;
-import cide.gast.Property;
-import cide.gast.PropertyOne;
-import cide.gparser.Token;
+import cide.gast.*;
+import cide.gparser.*;
+import cide.greferences.*;
+import java.util.*;
 
 public class conP2 extends conP {
   public conP2(ASTStringNode consym, Token firstToken, Token lastToken) {

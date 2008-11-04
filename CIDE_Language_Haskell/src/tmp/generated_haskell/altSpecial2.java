@@ -1,10 +1,9 @@
 package tmp.generated_haskell;
 
-import cide.gast.IASTNode;
-import cide.gast.IToken;
-import cide.gast.Property;
-import cide.gast.PropertyOne;
-import cide.gparser.Token;
+import cide.gast.*;
+import cide.gparser.*;
+import cide.greferences.*;
+import java.util.*;
 
 public class altSpecial2 extends altSpecial {
   public altSpecial2(expr expr1, Token firstToken, Token lastToken) {

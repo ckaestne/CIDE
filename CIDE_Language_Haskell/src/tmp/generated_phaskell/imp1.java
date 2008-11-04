@@ -1,10 +1,9 @@
 package tmp.generated_phaskell;
 
-import cide.gast.IASTNode;
-import cide.gast.IToken;
-import cide.gast.Property;
-import cide.gast.PropertyOne;
-import cide.gparser.Token;
+import cide.gast.*;
+import cide.gparser.*;
+import cide.greferences.*;
+import java.util.*;
 
 public class imp1 extends imp {
   public imp1(var var, Token firstToken, Token lastToken) {

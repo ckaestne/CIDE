@@ -1,10 +1,9 @@
 package tmp.generated_haskell;
 
-import cide.gast.IASTNode;
-import cide.gast.IToken;
-import cide.gast.Property;
-import cide.gast.PropertyOne;
-import cide.gparser.Token;
+import cide.gast.*;
+import cide.gparser.*;
+import cide.greferences.*;
+import java.util.*;
 
 public class qvarop2 extends qvarop {
   public qvarop2(qvarsym qvarsym, Token firstToken, Token lastToken) {

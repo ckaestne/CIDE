@@ -1,16 +1,14 @@
 package tmp.generated_haskell;
 
-import cide.gast.ASTTextNode;
-import cide.gast.IASTNode;
-import cide.gast.IToken;
-import cide.gast.Property;
-import cide.gast.PropertyZeroOrOne;
-import cide.gparser.Token;
+import cide.gast.*;
+import cide.gparser.*;
+import cide.greferences.*;
+import java.util.*;
 
 public class hiding extends GenASTNode {
-  public hiding(ASTTextNode text3, exportList exportList, Token firstToken, Token lastToken) {
+  public hiding(ASTTextNode text353, exportList exportList, Token firstToken, Token lastToken) {
     super(new Property[] {
-      new PropertyZeroOrOne<ASTTextNode>("text3", text3),
+      new PropertyZeroOrOne<ASTTextNode>("text353", text353),
       new PropertyZeroOrOne<exportList>("exportList", exportList)
     }, firstToken, lastToken);
   }
@@ -20,8 +18,8 @@ public class hiding extends GenASTNode {
   public IASTNode deepCopy() {
     return new hiding(cloneProperties(),firstToken,lastToken);
   }
-  public ASTTextNode getText3() {
-    return ((PropertyZeroOrOne<ASTTextNode>)getProperty("text3")).getValue();
+  public ASTTextNode getText353() {
+    return ((PropertyZeroOrOne<ASTTextNode>)getProperty("text353")).getValue();
   }
   public exportList getExportList() {
     return ((PropertyZeroOrOne<exportList>)getProperty("exportList")).getValue();

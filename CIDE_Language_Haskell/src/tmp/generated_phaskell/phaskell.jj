@@ -493,11 +493,11 @@ qconid qconid() : {
 
 exports exports() : { 
 	exportsList exportsList = null;
-	ASTTextNode text363 = null;
+	ASTTextNode text364 = null;
 	Token firstToken=token;
 } { (
-	"(" [exportsList=exportsList()] ["," {text363=new ASTTextNode(",",new WToken(token));}] ")" 
-	{return new exports(exportsList, text363, firstToken.next,token);}
+	"(" [exportsList=exportsList()] ["," {text364=new ASTTextNode(",",new WToken(token));}] ")" 
+	{return new exports(exportsList, text364, firstToken.next,token);}
  ) }
 
 exportsList exportsList() : { 
@@ -639,25 +639,25 @@ impdecls impdecls() : {
  ) }
 
 impdecl impdecl() : { 
-	ASTTextNode text365 = null;
+	ASTTextNode text366 = null;
 	modid modid;
 	modid modid1 = null;
 	impspec impspec = null;
 	Token firstToken=token;
 } { (
-	"import" ["qualified" {text365=new ASTTextNode("qualified",new WToken(token));}] modid=modid() ["as" modid1=modid()] [impspec=impspec()] 
-	{return new impdecl1(text365, modid, modid1, impspec, firstToken.next,token);} |
+	"import" ["qualified" {text366=new ASTTextNode("qualified",new WToken(token));}] modid=modid() ["as" modid1=modid()] [impspec=impspec()] 
+	{return new impdecl1(text366, modid, modid1, impspec, firstToken.next,token);} |
 	 
 	{return new impdecl2(firstToken.next,token);}
  ) }
 
 impspec impspec() : { 
-	ASTTextNode text367 = null;
+	ASTTextNode text368 = null;
 	imports imports = null;
 	Token firstToken=token;
 } { (
-	["hiding" {text367=new ASTTextNode("hiding",new WToken(token));}] "(" [imports=imports()] ")" 
-	{return new impspec(text367, imports, firstToken.next,token);}
+	["hiding" {text368=new ASTTextNode("hiding",new WToken(token));}] "(" [imports=imports()] ")" 
+	{return new impspec(text368, imports, firstToken.next,token);}
  ) }
 
 imports imports() : { 

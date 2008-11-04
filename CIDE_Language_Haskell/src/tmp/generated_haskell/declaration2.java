@@ -1,14 +1,9 @@
 package tmp.generated_haskell;
 
-import java.util.ArrayList;
-
-import cide.gast.IASTNode;
-import cide.gast.IToken;
-import cide.gast.Property;
-import cide.gast.PropertyOne;
-import cide.gast.PropertyOneOrMore;
-import cide.gast.PropertyZeroOrOne;
-import cide.gparser.Token;
+import cide.gast.*;
+import cide.gparser.*;
+import cide.greferences.*;
+import java.util.*;
 
 public class declaration2 extends declaration {
   public declaration2(function function1, ArrayList<altExprAss> altExprAss, whereDecls whereDecls1, Token firstToken, Token lastToken) {

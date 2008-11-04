@@ -1,16 +1,14 @@
 package tmp.generated_phaskell;
 
-import cide.gast.ASTTextNode;
-import cide.gast.IASTNode;
-import cide.gast.IToken;
-import cide.gast.Property;
-import cide.gast.PropertyZeroOrOne;
-import cide.gparser.Token;
+import cide.gast.*;
+import cide.gparser.*;
+import cide.greferences.*;
+import java.util.*;
 
 public class impspec extends GenASTNode {
-  public impspec(ASTTextNode text367, imports imports, Token firstToken, Token lastToken) {
+  public impspec(ASTTextNode text368, imports imports, Token firstToken, Token lastToken) {
     super(new Property[] {
-      new PropertyZeroOrOne<ASTTextNode>("text367", text367),
+      new PropertyZeroOrOne<ASTTextNode>("text368", text368),
       new PropertyZeroOrOne<imports>("imports", imports)
     }, firstToken, lastToken);
   }
@@ -20,8 +18,8 @@ public class impspec extends GenASTNode {
   public IASTNode deepCopy() {
     return new impspec(cloneProperties(),firstToken,lastToken);
   }
-  public ASTTextNode getText367() {
-    return ((PropertyZeroOrOne<ASTTextNode>)getProperty("text367")).getValue();
+  public ASTTextNode getText368() {
+    return ((PropertyZeroOrOne<ASTTextNode>)getProperty("text368")).getValue();
   }
   public imports getImports() {
     return ((PropertyZeroOrOne<imports>)getProperty("imports")).getValue();

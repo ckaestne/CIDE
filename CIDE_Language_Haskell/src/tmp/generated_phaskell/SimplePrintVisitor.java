@@ -1,18 +1,18 @@
 package tmp.generated_phaskell;
 
+import java.util.*;
+import cide.gast.*;
+
 import java.io.PrintStream;
-import java.util.Iterator;
 
-import cide.gast.ASTStringNode;
-import cide.gast.ASTTextNode;
-import cide.gast.AbstractPrintVisitor;
-import cide.gast.IASTNode;
+import cide.languages.*;
 
-public class SimplePrintVisitor extends AbstractPrintVisitor {
-	public SimplePrintVisitor(PrintStream out) {
+/** package visibility. use only via ASTNode.render() **/
+class SimplePrintVisitor extends AbstractPrintVisitor {
+	SimplePrintVisitor(PrintStream out) {
 		super(out);
 	}
-	public SimplePrintVisitor() {
+	SimplePrintVisitor() {
 		super();
 	}
 	public boolean visit(IASTNode node) {
@@ -74,7 +74,7 @@ public class SimplePrintVisitor extends AbstractPrintVisitor {
 				}
 			}
 			{
-				ASTTextNode v=n.getText363();
+				ASTTextNode v=n.getText364();
 				if (v!=null) {
 					printToken(",");
 					v.accept(this);
@@ -318,7 +318,7 @@ public class SimplePrintVisitor extends AbstractPrintVisitor {
 			impdecl1 n = (impdecl1)node;
 			printToken("import");
 			{
-				ASTTextNode v=n.getText365();
+				ASTTextNode v=n.getText366();
 				if (v!=null) {
 					printToken("qualified");
 					v.accept(this);
@@ -352,7 +352,7 @@ public class SimplePrintVisitor extends AbstractPrintVisitor {
 		if (node instanceof impspec) {
 			impspec n = (impspec)node;
 			{
-				ASTTextNode v=n.getText367();
+				ASTTextNode v=n.getText368();
 				if (v!=null) {
 					printToken("hiding");
 					v.accept(this);

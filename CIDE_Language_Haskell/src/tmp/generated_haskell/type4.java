@@ -1,10 +1,9 @@
 package tmp.generated_haskell;
 
-import cide.gast.IASTNode;
-import cide.gast.IToken;
-import cide.gast.Property;
-import cide.gast.PropertyZeroOrOne;
-import cide.gparser.Token;
+import cide.gast.*;
+import cide.gparser.*;
+import cide.greferences.*;
+import java.util.*;
 
 public class type4 extends type {
   public type4(functiontypeList functiontypeList1, Token firstToken, Token lastToken) {

@@ -1,13 +1,9 @@
 package tmp.generated_haskell;
 
-import java.util.ArrayList;
-
-import cide.gast.IASTNode;
-import cide.gast.IToken;
-import cide.gast.Property;
-import cide.gast.PropertyOne;
-import cide.gast.PropertyOneOrMore;
-import cide.gparser.Token;
+import cide.gast.*;
+import cide.gparser.*;
+import cide.greferences.*;
+import java.util.*;
 
 public class constr2 extends constr {
   public constr2(ArrayList<type> type, operator operator, ArrayList<type> type1, Token firstToken, Token lastToken) {

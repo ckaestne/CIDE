@@ -1,11 +1,9 @@
 package tmp.generated_phaskell;
 
-import cide.gast.ASTStringNode;
-import cide.gast.IASTNode;
-import cide.gast.IToken;
-import cide.gast.Property;
-import cide.gast.PropertyOne;
-import cide.gparser.Token;
+import cide.gast.*;
+import cide.gparser.*;
+import cide.greferences.*;
+import java.util.*;
 
 public class funlhsL1 extends funlhsL {
   public funlhsL1(ASTStringNode variable_id, varop varop, Token firstToken, Token lastToken) {

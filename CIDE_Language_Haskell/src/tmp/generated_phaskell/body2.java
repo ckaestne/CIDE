@@ -1,10 +1,9 @@
 package tmp.generated_phaskell;
 
-import cide.gast.IASTNode;
-import cide.gast.IToken;
-import cide.gast.Property;
-import cide.gast.PropertyOne;
-import cide.gparser.Token;
+import cide.gast.*;
+import cide.gparser.*;
+import cide.greferences.*;
+import java.util.*;
 
 public class body2 extends body {
   public body2(topdecls topdecls1, Token firstToken, Token lastToken) {

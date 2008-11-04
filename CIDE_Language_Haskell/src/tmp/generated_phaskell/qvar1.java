@@ -1,10 +1,9 @@
 package tmp.generated_phaskell;
 
-import cide.gast.IASTNode;
-import cide.gast.IToken;
-import cide.gast.Property;
-import cide.gast.PropertyOne;
-import cide.gparser.Token;
+import cide.gast.*;
+import cide.gparser.*;
+import cide.greferences.*;
+import java.util.*;
 
 public class qvar1 extends qvar {
   public qvar1(qvarid qvarid, Token firstToken, Token lastToken) {

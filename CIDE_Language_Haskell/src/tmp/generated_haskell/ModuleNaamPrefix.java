@@ -1,14 +1,9 @@
 package tmp.generated_haskell;
 
-import java.util.ArrayList;
-
-import cide.gast.ASTStringNode;
-import cide.gast.IASTNode;
-import cide.gast.IToken;
-import cide.gast.Property;
-import cide.gast.PropertyOne;
-import cide.gast.PropertyZeroOrMore;
-import cide.gparser.Token;
+import cide.gast.*;
+import cide.gparser.*;
+import cide.greferences.*;
+import java.util.*;
 
 public class ModuleNaamPrefix extends GenASTNode {
   public ModuleNaamPrefix(ASTStringNode constructor_id, ArrayList<ASTStringNode> constructor_id1, Token firstToken, Token lastToken) {

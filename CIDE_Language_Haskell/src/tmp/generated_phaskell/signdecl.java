@@ -1,12 +1,9 @@
 package tmp.generated_phaskell;
 
-import cide.gast.ASTStringNode;
-import cide.gast.IASTNode;
-import cide.gast.IToken;
-import cide.gast.Property;
-import cide.gast.PropertyOne;
-import cide.gast.PropertyZeroOrOne;
-import cide.gparser.Token;
+import cide.gast.*;
+import cide.gparser.*;
+import cide.greferences.*;
+import java.util.*;
 
 public class signdecl extends GenASTNode {
   public signdecl(vars vars, ASTStringNode finduntilsemiorccb, Token firstToken, Token lastToken) {

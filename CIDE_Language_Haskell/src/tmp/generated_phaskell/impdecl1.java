@@ -1,17 +1,14 @@
 package tmp.generated_phaskell;
 
-import cide.gast.ASTTextNode;
-import cide.gast.IASTNode;
-import cide.gast.IToken;
-import cide.gast.Property;
-import cide.gast.PropertyOne;
-import cide.gast.PropertyZeroOrOne;
-import cide.gparser.Token;
+import cide.gast.*;
+import cide.gparser.*;
+import cide.greferences.*;
+import java.util.*;
 
 public class impdecl1 extends impdecl {
-  public impdecl1(ASTTextNode text365, modid modid, modid modid1, impspec impspec, Token firstToken, Token lastToken) {
+  public impdecl1(ASTTextNode text366, modid modid, modid modid1, impspec impspec, Token firstToken, Token lastToken) {
     super(new Property[] {
-      new PropertyZeroOrOne<ASTTextNode>("text365", text365),
+      new PropertyZeroOrOne<ASTTextNode>("text366", text366),
       new PropertyOne<modid>("modid", modid),
       new PropertyZeroOrOne<modid>("modid1", modid1),
       new PropertyZeroOrOne<impspec>("impspec", impspec)
@@ -23,8 +20,8 @@ public class impdecl1 extends impdecl {
   public IASTNode deepCopy() {
     return new impdecl1(cloneProperties(),firstToken,lastToken);
   }
-  public ASTTextNode getText365() {
-    return ((PropertyZeroOrOne<ASTTextNode>)getProperty("text365")).getValue();
+  public ASTTextNode getText366() {
+    return ((PropertyZeroOrOne<ASTTextNode>)getProperty("text366")).getValue();
   }
   public modid getModid() {
     return ((PropertyOne<modid>)getProperty("modid")).getValue();

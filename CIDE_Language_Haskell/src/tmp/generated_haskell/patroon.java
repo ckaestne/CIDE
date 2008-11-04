@@ -1,13 +1,9 @@
 package tmp.generated_haskell;
 
-import java.util.ArrayList;
-
-import cide.gast.IASTNode;
-import cide.gast.IToken;
-import cide.gast.Property;
-import cide.gast.PropertyOne;
-import cide.gast.PropertyZeroOrMore;
-import cide.gparser.Token;
+import cide.gast.*;
+import cide.gparser.*;
+import cide.greferences.*;
+import java.util.*;
 
 public class patroon extends GenASTNode {
   public patroon(ArrayList<patroonPrefix> patroonPrefix, patroonMain patroonMain, Token firstToken, Token lastToken) {

@@ -1,17 +1,15 @@
 package tmp.generated_phaskell;
 
-import cide.gast.ASTTextNode;
-import cide.gast.IASTNode;
-import cide.gast.IToken;
-import cide.gast.Property;
-import cide.gast.PropertyZeroOrOne;
-import cide.gparser.Token;
+import cide.gast.*;
+import cide.gparser.*;
+import cide.greferences.*;
+import java.util.*;
 
 public class exports extends GenASTNode {
-  public exports(exportsList exportsList, ASTTextNode text363, Token firstToken, Token lastToken) {
+  public exports(exportsList exportsList, ASTTextNode text364, Token firstToken, Token lastToken) {
     super(new Property[] {
       new PropertyZeroOrOne<exportsList>("exportsList", exportsList),
-      new PropertyZeroOrOne<ASTTextNode>("text363", text363)
+      new PropertyZeroOrOne<ASTTextNode>("text364", text364)
     }, firstToken, lastToken);
   }
   public exports(Property[] properties, IToken firstToken, IToken lastToken) {
@@ -23,7 +21,7 @@ public class exports extends GenASTNode {
   public exportsList getExportsList() {
     return ((PropertyZeroOrOne<exportsList>)getProperty("exportsList")).getValue();
   }
-  public ASTTextNode getText363() {
-    return ((PropertyZeroOrOne<ASTTextNode>)getProperty("text363")).getValue();
+  public ASTTextNode getText364() {
+    return ((PropertyZeroOrOne<ASTTextNode>)getProperty("text364")).getValue();
   }
 }

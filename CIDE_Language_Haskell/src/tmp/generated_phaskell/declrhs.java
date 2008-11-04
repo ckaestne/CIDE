@@ -1,11 +1,9 @@
 package tmp.generated_phaskell;
 
-import cide.gast.ASTStringNode;
-import cide.gast.IASTNode;
-import cide.gast.IToken;
-import cide.gast.Property;
-import cide.gast.PropertyZeroOrOne;
-import cide.gparser.Token;
+import cide.gast.*;
+import cide.gparser.*;
+import cide.greferences.*;
+import java.util.*;
 
 public class declrhs extends GenASTNode {
   public declrhs(ASTStringNode findnonstddeclrest, Token firstToken, Token lastToken) {
