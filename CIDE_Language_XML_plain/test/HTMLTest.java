@@ -1,7 +1,6 @@
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
-import tmp.generated_html.SimplePrintVisitor;
 import tmp.generated_html.HtmlParser;
 import cide.gast.ISourceFile;
 import cide.gparser.OffsetCharStream;
@@ -20,9 +19,7 @@ public class HTMLTest {
 		
 		ISourceFile r = new HtmlParser(new OffsetCharStream(
 				new FileInputStream("test/index.html"))).HtmlDocument();
-		SimplePrintVisitor v = new SimplePrintVisitor();
-		v.generateSpaces=false;
-		r.accept(v);
-		System.out.println(v.getResult());
+		
+		System.out.println(r.render());
 	}
 }
