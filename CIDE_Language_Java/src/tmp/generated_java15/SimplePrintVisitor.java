@@ -7,11 +7,12 @@ import java.io.PrintStream;
 
 import cide.languages.*;
 
-public class SimplePrintVisitor extends AbstractPrintVisitor {
-	public SimplePrintVisitor(PrintStream out) {
+/** package visibility. use only via ASTNode.render() **/
+class SimplePrintVisitor extends AbstractPrintVisitor {
+	SimplePrintVisitor(PrintStream out) {
 		super(out);
 	}
-	public SimplePrintVisitor() {
+	SimplePrintVisitor() {
 		super();
 	}
 	public boolean visit(IASTNode node) {
@@ -61,7 +62,7 @@ public class SimplePrintVisitor extends AbstractPrintVisitor {
 			ImportDeclaration n = (ImportDeclaration)node;
 			printToken("import");
 			{
-				ASTTextNode v=n.getText372();
+				ASTTextNode v=n.getText373();
 				if (v!=null) {
 					printToken("static");
 					v.accept(this);
@@ -74,7 +75,7 @@ public class SimplePrintVisitor extends AbstractPrintVisitor {
 				}
 			}
 			{
-				ASTTextNode v=n.getText373();
+				ASTTextNode v=n.getText374();
 				if (v!=null) {
 					v.accept(this);
 					printToken(".");
@@ -560,7 +561,7 @@ public class SimplePrintVisitor extends AbstractPrintVisitor {
 					v.accept(this);
 				}
 			}
-			for (ASTTextNode v : n.getText389()) {
+			for (ASTTextNode v : n.getText390()) {
 				printToken("[");
 				printToken("]");
 				v.accept(this);
@@ -597,7 +598,7 @@ public class SimplePrintVisitor extends AbstractPrintVisitor {
 				}
 			}
 			{
-				ASTTextNode v=n.getText390();
+				ASTTextNode v=n.getText391();
 				if (v!=null) {
 					printToken(",");
 					v.accept(this);
@@ -684,7 +685,7 @@ public class SimplePrintVisitor extends AbstractPrintVisitor {
 					v.accept(this);
 				}
 			}
-			for (ASTTextNode v : n.getText392()) {
+			for (ASTTextNode v : n.getText393()) {
 				printToken("[");
 				printToken("]");
 				v.accept(this);
@@ -718,7 +719,7 @@ public class SimplePrintVisitor extends AbstractPrintVisitor {
 		if (node instanceof FormalParameter) {
 			FormalParameter n = (FormalParameter)node;
 			{
-				ASTTextNode v=n.getText393();
+				ASTTextNode v=n.getText394();
 				if (v!=null) {
 					printToken("final");
 					v.accept(this);
@@ -731,7 +732,7 @@ public class SimplePrintVisitor extends AbstractPrintVisitor {
 				}
 			}
 			{
-				ASTTextNode v=n.getText394();
+				ASTTextNode v=n.getText395();
 				if (v!=null) {
 					printToken("...");
 					v.accept(this);
@@ -821,7 +822,7 @@ public class SimplePrintVisitor extends AbstractPrintVisitor {
 		if (node instanceof Initializer) {
 			Initializer n = (Initializer)node;
 			{
-				ASTTextNode v=n.getText395();
+				ASTTextNode v=n.getText396();
 				if (v!=null) {
 					printToken("static");
 					v.accept(this);
@@ -863,7 +864,7 @@ public class SimplePrintVisitor extends AbstractPrintVisitor {
 					v.accept(this);
 				}
 			}
-			for (ASTTextNode v : n.getText396()) {
+			for (ASTTextNode v : n.getText397()) {
 				printToken("[");
 				printToken("]");
 				v.accept(this);
@@ -878,7 +879,7 @@ public class SimplePrintVisitor extends AbstractPrintVisitor {
 					v.accept(this);
 				}
 			}
-			for (ASTTextNode v : n.getText397()) {
+			for (ASTTextNode v : n.getText398()) {
 				printToken("[");
 				printToken("]");
 				v.accept(this);
@@ -2113,7 +2114,7 @@ public class SimplePrintVisitor extends AbstractPrintVisitor {
 				v.accept(this);
 				printToken("]");
 			}
-			for (ASTTextNode v : n.getText448()) {
+			for (ASTTextNode v : n.getText449()) {
 				printToken("[");
 				printToken("]");
 				v.accept(this);
@@ -2122,7 +2123,7 @@ public class SimplePrintVisitor extends AbstractPrintVisitor {
 		}
 		if (node instanceof ArrayDimsAndInits2) {
 			ArrayDimsAndInits2 n = (ArrayDimsAndInits2)node;
-			for (ASTTextNode v : n.getText449()) {
+			for (ASTTextNode v : n.getText450()) {
 				printToken("[");
 				printToken("]");
 				v.accept(this);
@@ -2392,7 +2393,7 @@ public class SimplePrintVisitor extends AbstractPrintVisitor {
 		if (node instanceof LocalVariableDeclaration) {
 			LocalVariableDeclaration n = (LocalVariableDeclaration)node;
 			{
-				ASTTextNode v=n.getText450();
+				ASTTextNode v=n.getText451();
 				if (v!=null) {
 					printToken("final");
 					v.accept(this);
@@ -3001,7 +3002,7 @@ public class SimplePrintVisitor extends AbstractPrintVisitor {
 				v.accept(this);
 			}
 			{
-				ASTTextNode v=n.getText455();
+				ASTTextNode v=n.getText456();
 				if (v!=null) {
 					printToken(",");
 					v.accept(this);

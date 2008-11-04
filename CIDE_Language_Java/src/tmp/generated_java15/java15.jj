@@ -385,13 +385,13 @@ PackageDeclaration PackageDeclaration() : {
  ) }
 
 ImportDeclaration ImportDeclaration() : { 
-	ASTTextNode text372 = null;
-	Name name;
 	ASTTextNode text373 = null;
+	Name name;
+	ASTTextNode text374 = null;
 	Token firstToken=token;
 } { (
-	"import" ["static" {text372=new ASTTextNode("static",new WToken(token));}] name=Name() [{text373=new ASTTextNode(new String[]{".","*"},new WToken(token));} "." "*"] ";" 
-	{return new ImportDeclaration(text372, name, text373, firstToken.next,token);}
+	"import" ["static" {text373=new ASTTextNode("static",new WToken(token));}] name=Name() [{text374=new ASTTextNode(new String[]{".","*"},new WToken(token));} "." "*"] ";" 
+	{return new ImportDeclaration(text373, name, text374, firstToken.next,token);}
  ) }
 
 Modifiers Modifiers() : { 
@@ -633,12 +633,12 @@ VariableDeclarator VariableDeclarator() : {
 VariableDeclaratorId VariableDeclaratorId() : { 
 	Token t;
 	ASTStringNode identifier;
-	ASTTextNode text389;
-	ArrayList<ASTTextNode> text389List = new ArrayList<ASTTextNode>();
+	ASTTextNode text390;
+	ArrayList<ASTTextNode> text390List = new ArrayList<ASTTextNode>();
 	Token firstToken=token;
 } { (
-	t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} ("[" "]" {text389=new ASTTextNode(new String[]{"[","]"},new WToken(token));}{text389List.add(text389);})* 
-	{return new VariableDeclaratorId(identifier, text389List, firstToken.next,token);}
+	t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} ("[" "]" {text390=new ASTTextNode(new String[]{"[","]"},new WToken(token));}{text390List.add(text390);})* 
+	{return new VariableDeclaratorId(identifier, text390List, firstToken.next,token);}
  ) }
 
 VariableInitializer VariableInitializer() : { 
@@ -654,11 +654,11 @@ VariableInitializer VariableInitializer() : {
 
 ArrayInitializer ArrayInitializer() : { 
 	ArrayInitializerInternal arrayInitializerInternal = null;
-	ASTTextNode text390 = null;
+	ASTTextNode text391 = null;
 	Token firstToken=token;
 } { (
-	"{" [arrayInitializerInternal=ArrayInitializerInternal()] ["," {text390=new ASTTextNode(",",new WToken(token));}] "}" 
-	{return new ArrayInitializer(arrayInitializerInternal, text390, firstToken.next,token);}
+	"{" [arrayInitializerInternal=ArrayInitializerInternal()] ["," {text391=new ASTTextNode(",",new WToken(token));}] "}" 
+	{return new ArrayInitializer(arrayInitializerInternal, text391, firstToken.next,token);}
  ) }
 
 ArrayInitializerInternal ArrayInitializerInternal() : { 
@@ -697,12 +697,12 @@ MethodDeclarator MethodDeclarator() : {
 	Token t;
 	ASTStringNode identifier;
 	FormalParameters formalParameters;
-	ASTTextNode text392;
-	ArrayList<ASTTextNode> text392List = new ArrayList<ASTTextNode>();
+	ASTTextNode text393;
+	ArrayList<ASTTextNode> text393List = new ArrayList<ASTTextNode>();
 	Token firstToken=token;
 } { (
-	t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} formalParameters=FormalParameters() ("[" "]" {text392=new ASTTextNode(new String[]{"[","]"},new WToken(token));}{text392List.add(text392);})* 
-	{return new MethodDeclarator(identifier, formalParameters, text392List, firstToken.next,token);}
+	t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} formalParameters=FormalParameters() ("[" "]" {text393=new ASTTextNode(new String[]{"[","]"},new WToken(token));}{text393List.add(text393);})* 
+	{return new MethodDeclarator(identifier, formalParameters, text393List, firstToken.next,token);}
  ) }
 
 FormalParameters FormalParameters() : { 
@@ -725,14 +725,14 @@ FormalParametersInternal FormalParametersInternal() : {
  ) }
 
 FormalParameter FormalParameter() : { 
-	ASTTextNode text393 = null;
-	Type type;
 	ASTTextNode text394 = null;
+	Type type;
+	ASTTextNode text395 = null;
 	VariableDeclaratorId variableDeclaratorId;
 	Token firstToken=token;
 } { (
-	["final" {text393=new ASTTextNode("final",new WToken(token));}] type=Type() ["..." {text394=new ASTTextNode("...",new WToken(token));}] variableDeclaratorId=VariableDeclaratorId() 
-	{return new FormalParameter(text393, type, text394, variableDeclaratorId, firstToken.next,token);}
+	["final" {text394=new ASTTextNode("final",new WToken(token));}] type=Type() ["..." {text395=new ASTTextNode("...",new WToken(token));}] variableDeclaratorId=VariableDeclaratorId() 
+	{return new FormalParameter(text394, type, text395, variableDeclaratorId, firstToken.next,token);}
  ) }
 
 ConstructorDeclaration ConstructorDeclaration() : { 
@@ -763,12 +763,12 @@ ExplicitConstructorInvocation ExplicitConstructorInvocation() : {
  ) }
 
 Initializer Initializer() : { 
-	ASTTextNode text395 = null;
+	ASTTextNode text396 = null;
 	Block block;
 	Token firstToken=token;
 } { (
-	["static" {text395=new ASTTextNode("static",new WToken(token));}] block=Block() 
-	{return new Initializer(text395, block, firstToken.next,token);}
+	["static" {text396=new ASTTextNode("static",new WToken(token));}] block=Block() 
+	{return new Initializer(text396, block, firstToken.next,token);}
  ) }
 
 Type Type() : { 
@@ -784,17 +784,17 @@ Type Type() : {
 
 ReferenceTypeP ReferenceTypeP() : { 
 	PrimitiveType primitiveType;
-	ASTTextNode text396;
-	ArrayList<ASTTextNode> text396List = new ArrayList<ASTTextNode>();
-	ClassOrInterfaceType classOrInterfaceType;
 	ASTTextNode text397;
 	ArrayList<ASTTextNode> text397List = new ArrayList<ASTTextNode>();
+	ClassOrInterfaceType classOrInterfaceType;
+	ASTTextNode text398;
+	ArrayList<ASTTextNode> text398List = new ArrayList<ASTTextNode>();
 	Token firstToken=token;
 } { (
-	primitiveType=PrimitiveType() (LOOKAHEAD(2) "[" "]" {text396=new ASTTextNode(new String[]{"[","]"},new WToken(token));}{text396List.add(text396);})+ 
-	{return new ReferenceTypeP1(primitiveType, text396List, firstToken.next,token);} |
-	classOrInterfaceType=ClassOrInterfaceType() (LOOKAHEAD(2) "[" "]" {text397=new ASTTextNode(new String[]{"[","]"},new WToken(token));}{text397List.add(text397);})* 
-	{return new ReferenceTypeP2(classOrInterfaceType, text397List, firstToken.next,token);}
+	primitiveType=PrimitiveType() (LOOKAHEAD(2) "[" "]" {text397=new ASTTextNode(new String[]{"[","]"},new WToken(token));}{text397List.add(text397);})+ 
+	{return new ReferenceTypeP1(primitiveType, text397List, firstToken.next,token);} |
+	classOrInterfaceType=ClassOrInterfaceType() (LOOKAHEAD(2) "[" "]" {text398=new ASTTextNode(new String[]{"[","]"},new WToken(token));}{text398List.add(text398);})* 
+	{return new ReferenceTypeP2(classOrInterfaceType, text398List, firstToken.next,token);}
  ) }
 
 ClassOrInterfaceType ClassOrInterfaceType() : { 
@@ -1464,17 +1464,17 @@ ArrayDimsAndInits ArrayDimsAndInits() : {
 	Expression expression;
 	Expression expression1;
 	ArrayList<Expression> expression1List = new ArrayList<Expression>();
-	ASTTextNode text448;
-	ArrayList<ASTTextNode> text448List = new ArrayList<ASTTextNode>();
 	ASTTextNode text449;
 	ArrayList<ASTTextNode> text449List = new ArrayList<ASTTextNode>();
+	ASTTextNode text450;
+	ArrayList<ASTTextNode> text450List = new ArrayList<ASTTextNode>();
 	ArrayInitializer arrayInitializer;
 	Token firstToken=token;
 } { (
-	LOOKAHEAD(2) "[" expression=Expression() "]" (LOOKAHEAD(2) "[" expression1=Expression(){expression1List.add(expression1);} "]")* (LOOKAHEAD(2) "[" "]" {text448=new ASTTextNode(new String[]{"[","]"},new WToken(token));}{text448List.add(text448);})* 
-	{return new ArrayDimsAndInits1(expression, expression1List, text448List, firstToken.next,token);} |
-	("[" "]" {text449=new ASTTextNode(new String[]{"[","]"},new WToken(token));}{text449List.add(text449);})+ arrayInitializer=ArrayInitializer() 
-	{return new ArrayDimsAndInits2(text449List, arrayInitializer, firstToken.next,token);}
+	LOOKAHEAD(2) "[" expression=Expression() "]" (LOOKAHEAD(2) "[" expression1=Expression(){expression1List.add(expression1);} "]")* (LOOKAHEAD(2) "[" "]" {text449=new ASTTextNode(new String[]{"[","]"},new WToken(token));}{text449List.add(text449);})* 
+	{return new ArrayDimsAndInits1(expression, expression1List, text449List, firstToken.next,token);} |
+	("[" "]" {text450=new ASTTextNode(new String[]{"[","]"},new WToken(token));}{text450List.add(text450);})+ arrayInitializer=ArrayInitializer() 
+	{return new ArrayDimsAndInits2(text450List, arrayInitializer, firstToken.next,token);}
  ) }
 
 Statement Statement() : { 
@@ -1573,15 +1573,15 @@ BlockStatement BlockStatement() : {
  ) }
 
 LocalVariableDeclaration LocalVariableDeclaration() : { 
-	ASTTextNode text450 = null;
+	ASTTextNode text451 = null;
 	Type type;
 	VariableDeclarator variableDeclarator;
 	VariableDeclarator variableDeclarator1;
 	ArrayList<VariableDeclarator> variableDeclarator1List = new ArrayList<VariableDeclarator>();
 	Token firstToken=token;
 } { (
-	["final" {text450=new ASTTextNode("final",new WToken(token));}] type=Type() variableDeclarator=VariableDeclarator() ("," variableDeclarator1=VariableDeclarator(){variableDeclarator1List.add(variableDeclarator1);})* 
-	{return new LocalVariableDeclaration(text450, type, variableDeclarator, variableDeclarator1List, firstToken.next,token);}
+	["final" {text451=new ASTTextNode("final",new WToken(token));}] type=Type() variableDeclarator=VariableDeclarator() ("," variableDeclarator1=VariableDeclarator(){variableDeclarator1List.add(variableDeclarator1);})* 
+	{return new LocalVariableDeclaration(text451, type, variableDeclarator, variableDeclarator1List, firstToken.next,token);}
  ) }
 
 EmptyStatement EmptyStatement() : { 
@@ -1880,11 +1880,11 @@ MemberValueArrayInitializer MemberValueArrayInitializer() : {
 	MemberValue memberValue;
 	MemberValue memberValue1;
 	ArrayList<MemberValue> memberValue1List = new ArrayList<MemberValue>();
-	ASTTextNode text455 = null;
+	ASTTextNode text456 = null;
 	Token firstToken=token;
 } { (
-	"{" memberValue=MemberValue() (LOOKAHEAD(2) "," memberValue1=MemberValue(){memberValue1List.add(memberValue1);})* ["," {text455=new ASTTextNode(",",new WToken(token));}] "}" 
-	{return new MemberValueArrayInitializer(memberValue, memberValue1List, text455, firstToken.next,token);}
+	"{" memberValue=MemberValue() (LOOKAHEAD(2) "," memberValue1=MemberValue(){memberValue1List.add(memberValue1);})* ["," {text456=new ASTTextNode(",",new WToken(token));}] "}" 
+	{return new MemberValueArrayInitializer(memberValue, memberValue1List, text456, firstToken.next,token);}
  ) }
 
 AnnotationTypeDeclaration AnnotationTypeDeclaration() : { 

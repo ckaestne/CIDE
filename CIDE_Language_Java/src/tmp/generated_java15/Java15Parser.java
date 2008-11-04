@@ -134,15 +134,15 @@ public class Java15Parser implements Java15ParserConstants {
   }
 
   final public ImportDeclaration ImportDeclaration() throws ParseException {
-        ASTTextNode text372 = null;
-        Name name;
         ASTTextNode text373 = null;
+        Name name;
+        ASTTextNode text374 = null;
         Token firstToken=token;
     jj_consume_token(IMPORT);
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case STATIC:
       jj_consume_token(STATIC);
-                            text372=new ASTTextNode("static",new WToken(token));
+                            text373=new ASTTextNode("static",new WToken(token));
       break;
     default:
       jj_la1[3] = jj_gen;
@@ -151,7 +151,7 @@ public class Java15Parser implements Java15ParserConstants {
     name = Name();
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case DOT:
-                                                                                                 text373=new ASTTextNode(new String[]{".","*"},new WToken(token));
+                                                                                                 text374=new ASTTextNode(new String[]{".","*"},new WToken(token));
       jj_consume_token(DOT);
       jj_consume_token(STAR);
       break;
@@ -160,7 +160,7 @@ public class Java15Parser implements Java15ParserConstants {
       ;
     }
     jj_consume_token(SEMICOLON);
-         {if (true) return new ImportDeclaration(text372, name, text373, firstToken.next,token);}
+         {if (true) return new ImportDeclaration(text373, name, text374, firstToken.next,token);}
     throw new Error("Missing return statement in function");
   }
 
@@ -762,8 +762,8 @@ public class Java15Parser implements Java15ParserConstants {
   final public VariableDeclaratorId VariableDeclaratorId() throws ParseException {
         Token t;
         ASTStringNode identifier;
-        ASTTextNode text389;
-        ArrayList<ASTTextNode> text389List = new ArrayList<ASTTextNode>();
+        ASTTextNode text390;
+        ArrayList<ASTTextNode> text390List = new ArrayList<ASTTextNode>();
         Token firstToken=token;
     t = jj_consume_token(IDENTIFIER);
                        identifier=new ASTStringNode(t.toString(),new WToken(t));
@@ -779,10 +779,10 @@ public class Java15Parser implements Java15ParserConstants {
       }
       jj_consume_token(LBRACKET);
       jj_consume_token(RBRACKET);
-                                                                                            text389=new ASTTextNode(new String[]{"[","]"},new WToken(token));
-                                                                                                                                                               text389List.add(text389);
+                                                                                            text390=new ASTTextNode(new String[]{"[","]"},new WToken(token));
+                                                                                                                                                               text390List.add(text390);
     }
-         {if (true) return new VariableDeclaratorId(identifier, text389List, firstToken.next,token);}
+         {if (true) return new VariableDeclaratorId(identifier, text390List, firstToken.next,token);}
     throw new Error("Missing return statement in function");
   }
 
@@ -835,7 +835,7 @@ public class Java15Parser implements Java15ParserConstants {
 
   final public ArrayInitializer ArrayInitializer() throws ParseException {
         ArrayInitializerInternal arrayInitializerInternal = null;
-        ASTTextNode text390 = null;
+        ASTTextNode text391 = null;
         Token firstToken=token;
     jj_consume_token(LBRACE);
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -876,14 +876,14 @@ public class Java15Parser implements Java15ParserConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case COMMA:
       jj_consume_token(COMMA);
-                                                                        text390=new ASTTextNode(",",new WToken(token));
+                                                                        text391=new ASTTextNode(",",new WToken(token));
       break;
     default:
       jj_la1[30] = jj_gen;
       ;
     }
     jj_consume_token(RBRACE);
-         {if (true) return new ArrayInitializer(arrayInitializerInternal, text390, firstToken.next,token);}
+         {if (true) return new ArrayInitializer(arrayInitializerInternal, text391, firstToken.next,token);}
     throw new Error("Missing return statement in function");
   }
 
@@ -963,8 +963,8 @@ public class Java15Parser implements Java15ParserConstants {
         Token t;
         ASTStringNode identifier;
         FormalParameters formalParameters;
-        ASTTextNode text392;
-        ArrayList<ASTTextNode> text392List = new ArrayList<ASTTextNode>();
+        ASTTextNode text393;
+        ArrayList<ASTTextNode> text393List = new ArrayList<ASTTextNode>();
         Token firstToken=token;
     t = jj_consume_token(IDENTIFIER);
                        identifier=new ASTStringNode(t.toString(),new WToken(t));
@@ -981,10 +981,10 @@ public class Java15Parser implements Java15ParserConstants {
       }
       jj_consume_token(LBRACKET);
       jj_consume_token(RBRACKET);
-                                                                                                                                text392=new ASTTextNode(new String[]{"[","]"},new WToken(token));
-                                                                                                                                                                                                   text392List.add(text392);
+                                                                                                                                text393=new ASTTextNode(new String[]{"[","]"},new WToken(token));
+                                                                                                                                                                                                   text393List.add(text393);
     }
-         {if (true) return new MethodDeclarator(identifier, formalParameters, text392List, firstToken.next,token);}
+         {if (true) return new MethodDeclarator(identifier, formalParameters, text393List, firstToken.next,token);}
     throw new Error("Missing return statement in function");
   }
 
@@ -1041,15 +1041,15 @@ public class Java15Parser implements Java15ParserConstants {
   }
 
   final public FormalParameter FormalParameter() throws ParseException {
-        ASTTextNode text393 = null;
-        Type type;
         ASTTextNode text394 = null;
+        Type type;
+        ASTTextNode text395 = null;
         VariableDeclaratorId variableDeclaratorId;
         Token firstToken=token;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case FINAL:
       jj_consume_token(FINAL);
-                  text393=new ASTTextNode("final",new WToken(token));
+                  text394=new ASTTextNode("final",new WToken(token));
       break;
     default:
       jj_la1[37] = jj_gen;
@@ -1059,14 +1059,14 @@ public class Java15Parser implements Java15ParserConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case ELLIPSIS:
       jj_consume_token(ELLIPSIS);
-                                                                                            text394=new ASTTextNode("...",new WToken(token));
+                                                                                            text395=new ASTTextNode("...",new WToken(token));
       break;
     default:
       jj_la1[38] = jj_gen;
       ;
     }
     variableDeclaratorId = VariableDeclaratorId();
-         {if (true) return new FormalParameter(text393, type, text394, variableDeclaratorId, firstToken.next,token);}
+         {if (true) return new FormalParameter(text394, type, text395, variableDeclaratorId, firstToken.next,token);}
     throw new Error("Missing return statement in function");
   }
 
@@ -1217,20 +1217,20 @@ public class Java15Parser implements Java15ParserConstants {
   }
 
   final public Initializer Initializer() throws ParseException {
-        ASTTextNode text395 = null;
+        ASTTextNode text396 = null;
         Block block;
         Token firstToken=token;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case STATIC:
       jj_consume_token(STATIC);
-                   text395=new ASTTextNode("static",new WToken(token));
+                   text396=new ASTTextNode("static",new WToken(token));
       break;
     default:
       jj_la1[43] = jj_gen;
       ;
     }
     block = Block();
-         {if (true) return new Initializer(text395, block, firstToken.next,token);}
+         {if (true) return new Initializer(text396, block, firstToken.next,token);}
     throw new Error("Missing return statement in function");
   }
 
@@ -1265,11 +1265,11 @@ public class Java15Parser implements Java15ParserConstants {
 
   final public ReferenceTypeP ReferenceTypeP() throws ParseException {
         PrimitiveType primitiveType;
-        ASTTextNode text396;
-        ArrayList<ASTTextNode> text396List = new ArrayList<ASTTextNode>();
-        ClassOrInterfaceType classOrInterfaceType;
         ASTTextNode text397;
         ArrayList<ASTTextNode> text397List = new ArrayList<ASTTextNode>();
+        ClassOrInterfaceType classOrInterfaceType;
+        ASTTextNode text398;
+        ArrayList<ASTTextNode> text398List = new ArrayList<ASTTextNode>();
         Token firstToken=token;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case BOOLEAN:
@@ -1285,15 +1285,15 @@ public class Java15Parser implements Java15ParserConstants {
       while (true) {
         jj_consume_token(LBRACKET);
         jj_consume_token(RBRACKET);
-                                                             text396=new ASTTextNode(new String[]{"[","]"},new WToken(token));
-                                                                                                                                text396List.add(text396);
+                                                             text397=new ASTTextNode(new String[]{"[","]"},new WToken(token));
+                                                                                                                                text397List.add(text397);
         if (jj_2_15(2)) {
           ;
         } else {
           break label_17;
         }
       }
-         {if (true) return new ReferenceTypeP1(primitiveType, text396List, firstToken.next,token);}
+         {if (true) return new ReferenceTypeP1(primitiveType, text397List, firstToken.next,token);}
       break;
     case IDENTIFIER:
       classOrInterfaceType = ClassOrInterfaceType();
@@ -1306,10 +1306,10 @@ public class Java15Parser implements Java15ParserConstants {
         }
         jj_consume_token(LBRACKET);
         jj_consume_token(RBRACKET);
-                                                                           text397=new ASTTextNode(new String[]{"[","]"},new WToken(token));
-                                                                                                                                              text397List.add(text397);
+                                                                           text398=new ASTTextNode(new String[]{"[","]"},new WToken(token));
+                                                                                                                                              text398List.add(text398);
       }
-         {if (true) return new ReferenceTypeP2(classOrInterfaceType, text397List, firstToken.next,token);}
+         {if (true) return new ReferenceTypeP2(classOrInterfaceType, text398List, firstToken.next,token);}
       break;
     default:
       jj_la1[45] = jj_gen;
@@ -2793,10 +2793,10 @@ public class Java15Parser implements Java15ParserConstants {
         Expression expression;
         Expression expression1;
         ArrayList<Expression> expression1List = new ArrayList<Expression>();
-        ASTTextNode text448;
-        ArrayList<ASTTextNode> text448List = new ArrayList<ASTTextNode>();
         ASTTextNode text449;
         ArrayList<ASTTextNode> text449List = new ArrayList<ASTTextNode>();
+        ASTTextNode text450;
+        ArrayList<ASTTextNode> text450List = new ArrayList<ASTTextNode>();
         ArrayInitializer arrayInitializer;
         Token firstToken=token;
     if (jj_2_38(2)) {
@@ -2824,10 +2824,10 @@ public class Java15Parser implements Java15ParserConstants {
         }
         jj_consume_token(LBRACKET);
         jj_consume_token(RBRACKET);
-                                                                                                                                                                text448=new ASTTextNode(new String[]{"[","]"},new WToken(token));
-                                                                                                                                                                                                                                   text448List.add(text448);
+                                                                                                                                                                text449=new ASTTextNode(new String[]{"[","]"},new WToken(token));
+                                                                                                                                                                                                                                   text449List.add(text449);
       }
-         {if (true) return new ArrayDimsAndInits1(expression, expression1List, text448List, firstToken.next,token);}
+         {if (true) return new ArrayDimsAndInits1(expression, expression1List, text449List, firstToken.next,token);}
     } else {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case LBRACKET:
@@ -2835,8 +2835,8 @@ public class Java15Parser implements Java15ParserConstants {
         while (true) {
           jj_consume_token(LBRACKET);
           jj_consume_token(RBRACKET);
-                  text449=new ASTTextNode(new String[]{"[","]"},new WToken(token));
-                                                                                     text449List.add(text449);
+                  text450=new ASTTextNode(new String[]{"[","]"},new WToken(token));
+                                                                                     text450List.add(text450);
           switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
           case LBRACKET:
             ;
@@ -2847,7 +2847,7 @@ public class Java15Parser implements Java15ParserConstants {
           }
         }
         arrayInitializer = ArrayInitializer();
-         {if (true) return new ArrayDimsAndInits2(text449List, arrayInitializer, firstToken.next,token);}
+         {if (true) return new ArrayDimsAndInits2(text450List, arrayInitializer, firstToken.next,token);}
         break;
       default:
         jj_la1[91] = jj_gen;
@@ -3134,7 +3134,7 @@ public class Java15Parser implements Java15ParserConstants {
   }
 
   final public LocalVariableDeclaration LocalVariableDeclaration() throws ParseException {
-        ASTTextNode text450 = null;
+        ASTTextNode text451 = null;
         Type type;
         VariableDeclarator variableDeclarator;
         VariableDeclarator variableDeclarator1;
@@ -3143,7 +3143,7 @@ public class Java15Parser implements Java15ParserConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case FINAL:
       jj_consume_token(FINAL);
-                  text450=new ASTTextNode("final",new WToken(token));
+                  text451=new ASTTextNode("final",new WToken(token));
       break;
     default:
       jj_la1[96] = jj_gen;
@@ -3165,7 +3165,7 @@ public class Java15Parser implements Java15ParserConstants {
       variableDeclarator1 = VariableDeclarator();
                                                                                                                                                                           variableDeclarator1List.add(variableDeclarator1);
     }
-         {if (true) return new LocalVariableDeclaration(text450, type, variableDeclarator, variableDeclarator1List, firstToken.next,token);}
+         {if (true) return new LocalVariableDeclaration(text451, type, variableDeclarator, variableDeclarator1List, firstToken.next,token);}
     throw new Error("Missing return statement in function");
   }
 
@@ -4006,7 +4006,7 @@ public class Java15Parser implements Java15ParserConstants {
         MemberValue memberValue;
         MemberValue memberValue1;
         ArrayList<MemberValue> memberValue1List = new ArrayList<MemberValue>();
-        ASTTextNode text455 = null;
+        ASTTextNode text456 = null;
         Token firstToken=token;
     jj_consume_token(LBRACE);
     memberValue = MemberValue();
@@ -4024,14 +4024,14 @@ public class Java15Parser implements Java15ParserConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case COMMA:
       jj_consume_token(COMMA);
-                                                                                                                                text455=new ASTTextNode(",",new WToken(token));
+                                                                                                                                text456=new ASTTextNode(",",new WToken(token));
       break;
     default:
       jj_la1[120] = jj_gen;
       ;
     }
     jj_consume_token(RBRACE);
-         {if (true) return new MemberValueArrayInitializer(memberValue, memberValue1List, text455, firstToken.next,token);}
+         {if (true) return new MemberValueArrayInitializer(memberValue, memberValue1List, text456, firstToken.next,token);}
     throw new Error("Missing return statement in function");
   }
 

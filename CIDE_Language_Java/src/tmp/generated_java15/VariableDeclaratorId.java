@@ -6,10 +6,10 @@ import cide.greferences.*;
 import java.util.*;
 
 public class VariableDeclaratorId extends GenASTNode {
-  public VariableDeclaratorId(ASTStringNode identifier, ArrayList<ASTTextNode> text389, Token firstToken, Token lastToken) {
+  public VariableDeclaratorId(ASTStringNode identifier, ArrayList<ASTTextNode> text390, Token firstToken, Token lastToken) {
     super(new Property[] {
       new PropertyOne<ASTStringNode>("identifier", identifier),
-      new PropertyZeroOrMore<ASTTextNode>("text389", text389)
+      new PropertyZeroOrMore<ASTTextNode>("text390", text390)
     }, firstToken, lastToken);
   }
   public VariableDeclaratorId(Property[] properties, IToken firstToken, IToken lastToken) {
@@ -21,7 +21,7 @@ public class VariableDeclaratorId extends GenASTNode {
   public ASTStringNode getIdentifier() {
     return ((PropertyOne<ASTStringNode>)getProperty("identifier")).getValue();
   }
-  public ArrayList<ASTTextNode> getText389() {
-    return ((PropertyZeroOrMore<ASTTextNode>)getProperty("text389")).getValue();
+  public ArrayList<ASTTextNode> getText390() {
+    return ((PropertyZeroOrMore<ASTTextNode>)getProperty("text390")).getValue();
   }
 }

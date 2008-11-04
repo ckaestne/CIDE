@@ -6,9 +6,9 @@ import cide.greferences.*;
 import java.util.*;
 
 public class Initializer extends GenASTNode {
-  public Initializer(ASTTextNode text395, Block block, Token firstToken, Token lastToken) {
+  public Initializer(ASTTextNode text396, Block block, Token firstToken, Token lastToken) {
     super(new Property[] {
-      new PropertyZeroOrOne<ASTTextNode>("text395", text395),
+      new PropertyZeroOrOne<ASTTextNode>("text396", text396),
       new PropertyOne<Block>("block", block)
     }, firstToken, lastToken);
   }
@@ -18,8 +18,8 @@ public class Initializer extends GenASTNode {
   public IASTNode deepCopy() {
     return new Initializer(cloneProperties(),firstToken,lastToken);
   }
-  public ASTTextNode getText395() {
-    return ((PropertyZeroOrOne<ASTTextNode>)getProperty("text395")).getValue();
+  public ASTTextNode getText396() {
+    return ((PropertyZeroOrOne<ASTTextNode>)getProperty("text396")).getValue();
   }
   public Block getBlock() {
     return ((PropertyOne<Block>)getProperty("block")).getValue();
