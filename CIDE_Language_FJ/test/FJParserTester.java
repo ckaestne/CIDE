@@ -8,9 +8,8 @@ import java.io.IOException;
 
 import junit.framework.Assert;
 import tmp.generated_fj.FJParser;
-import tmp.generated_fj.SimplePrintVisitor;
-import cide.gast.IASTNode;
 import cide.gast.ASTVisitor;
+import cide.gast.IASTNode;
 import cide.gast.ISourceFile;
 import cide.gparser.OffsetCharStream;
 import cide.gparser.ParseException;
@@ -31,9 +30,7 @@ public class FJParserTester {
 	}
 
 	protected String printAST(ISourceFile ast) {
-		SimplePrintVisitor prettyPrinter = new SimplePrintVisitor();
-		ast.accept(prettyPrinter);
-		return prettyPrinter.getResult();
+		return ast.render();
 	}
 
 	protected ISourceFile parseAndCheck(String content) throws ParseException {
