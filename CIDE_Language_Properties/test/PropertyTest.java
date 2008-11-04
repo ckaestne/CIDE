@@ -2,7 +2,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
 import tmp.generated_property.PropertyParser;
-import tmp.generated_property.SimplePrintVisitor;
 import cide.gast.ISourceFile;
 import cide.gparser.OffsetCharStream;
 import cide.gparser.ParseException;
@@ -20,9 +19,7 @@ public class PropertyTest {
 		
 		ISourceFile r = new PropertyParser(new OffsetCharStream(
 				new FileInputStream("test/test.xml"))).Document();
-		SimplePrintVisitor v = new SimplePrintVisitor();
-		v.generateSpaces=false;
-		r.accept(v);
-		System.out.println(v.getResult());
+		
+		System.out.println(r.render());
 	}
 }
