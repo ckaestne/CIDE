@@ -26,13 +26,11 @@ import de.ovgu.cide.fm.purevariants.RuleAdapter;
 
 public class CIDETransformation implements IClientTransformModule {
 
-	@Override
 	public ClientTransformStatus done() {
 		System.out.println("done");
 		return ClientTransformStatus.STATUS_OK;
 	}
 
-	@Override
 	public ClientTransformStatus init(IPVVariantModel arg0, IPVModel[] models,
 			Map<String, String> defaultArgs, Map<String, String> params) {
 
@@ -80,7 +78,6 @@ public class CIDETransformation implements IClientTransformModule {
 		try {
 			ResourcesPlugin.getWorkspace().run(new IWorkspaceRunnable() {
 
-				@Override
 				public void run(IProgressMonitor monitor) throws CoreException {
 					job.runInWorkspace(monitor);
 				}
@@ -95,7 +92,6 @@ public class CIDETransformation implements IClientTransformModule {
 		return ClientTransformStatus.STATUS_OK;
 	}
 
-	@Override
 	public ClientTransformStatus work() {
 		System.out.println("work");
 		return ClientTransformStatus.STATUS_OK;

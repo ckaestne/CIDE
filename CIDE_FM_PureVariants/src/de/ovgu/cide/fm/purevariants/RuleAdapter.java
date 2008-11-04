@@ -112,7 +112,6 @@ public class RuleAdapter implements IFeature {
 		}
 	}
 
-	@Override
 	public int compareTo(IFeature o) {
 		return this.getName().compareTo(o.getName());
 	}
