@@ -2,7 +2,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
 import tmp.generated_antlr.AntLRParser;
-import tmp.generated_antlr.SimplePrintVisitor;
 import cide.gast.ISourceFile;
 import cide.gparser.OffsetCharStream;
 import cide.gparser.ParseException;
@@ -20,8 +19,7 @@ public class AntLRTest {
 		
 		ISourceFile r = new AntLRParser(new OffsetCharStream(
 				new FileInputStream("test/completeXXLQS002.g"))).Grammar();
-		SimplePrintVisitor v = new SimplePrintVisitor();
-		r.accept(v);
-		System.out.println(v.getResult());
+		
+		System.out.println(r.render());
 	}
 }

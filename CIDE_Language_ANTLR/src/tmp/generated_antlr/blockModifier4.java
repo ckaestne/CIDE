@@ -13,7 +13,7 @@ public class blockModifier4 extends blockModifier {
   public blockModifier4(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new blockModifier4(cloneProperties(),firstToken,lastToken);
   }
 }

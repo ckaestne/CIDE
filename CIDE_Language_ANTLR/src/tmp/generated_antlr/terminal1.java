@@ -14,7 +14,7 @@ public class terminal1 extends terminal {
   public terminal1(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new terminal1(cloneProperties(),firstToken,lastToken);
   }
   public ASTStringNode getChar_literal() {

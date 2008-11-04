@@ -13,7 +13,7 @@ public class ebnfSuffix3 extends ebnfSuffix {
   public ebnfSuffix3(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new ebnfSuffix3(cloneProperties(),firstToken,lastToken);
   }
 }

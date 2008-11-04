@@ -14,7 +14,7 @@ public class elementNoOptionSpec2 extends elementNoOptionSpec {
   public elementNoOptionSpec2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new elementNoOptionSpec2(cloneProperties(),firstToken,lastToken);
   }
   public ebnf getEbnf() {

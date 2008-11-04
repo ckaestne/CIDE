@@ -15,7 +15,7 @@ public class ebnf extends GenASTNode {
   public ebnf(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new ebnf(cloneProperties(),firstToken,lastToken);
   }
   public block getBlock() {

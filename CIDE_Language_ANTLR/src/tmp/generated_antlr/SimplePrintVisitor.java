@@ -7,14 +7,15 @@ import java.io.PrintStream;
 
 import cide.languages.*;
 
-public class SimplePrintVisitor extends AbstractPrintVisitor implements ILanguagePrintVisitor {
-	public SimplePrintVisitor(PrintStream out) {
+/** package visibility. use only via ASTNode.render() **/
+class SimplePrintVisitor extends AbstractPrintVisitor {
+	SimplePrintVisitor(PrintStream out) {
 		super(out);
 	}
-	public SimplePrintVisitor() {
+	SimplePrintVisitor() {
 		super();
 	}
-	public boolean visit(ASTNode node) {
+	public boolean visit(IASTNode node) {
 		if (node instanceof ASTStringNode){
 			printToken(((ASTStringNode)node).getValue());
 			return false;

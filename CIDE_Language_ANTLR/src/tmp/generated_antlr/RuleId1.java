@@ -14,7 +14,7 @@ public class RuleId1 extends RuleId {
   public RuleId1(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new RuleId1(cloneProperties(),firstToken,lastToken);
   }
   public ASTStringNode getToken_ref() {

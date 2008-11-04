@@ -14,7 +14,7 @@ public class notTerminal1 extends notTerminal {
   public notTerminal1(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new notTerminal1(cloneProperties(),firstToken,lastToken);
   }
   public ASTStringNode getChar_literal() {

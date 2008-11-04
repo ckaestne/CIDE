@@ -14,7 +14,7 @@ public class altRewrite extends GenASTNode {
   public altRewrite(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new altRewrite(cloneProperties(),firstToken,lastToken);
   }
   public ArrayList<elementNoOptionSpec> getElementNoOptionSpec() {

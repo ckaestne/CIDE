@@ -14,7 +14,7 @@ public class atom2 extends atom {
   public atom2(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new atom2(cloneProperties(),firstToken,lastToken);
   }
   public ASTStringNode getRule_ref() {

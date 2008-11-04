@@ -13,7 +13,7 @@ public class terminal4 extends terminal {
   public terminal4(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new terminal4(cloneProperties(),firstToken,lastToken);
   }
 }

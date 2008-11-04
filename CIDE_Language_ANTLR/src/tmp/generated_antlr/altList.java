@@ -14,7 +14,7 @@ public class altList extends GenASTNode {
   public altList(Property[] properties, IToken firstToken, IToken lastToken) {
     super(properties,firstToken,lastToken);
   }
-  public ASTNode deepCopy() {
+  public IASTNode deepCopy() {
     return new altList(cloneProperties(),firstToken,lastToken);
   }
   public ArrayList<altRewrite> getAltRewrite() {
