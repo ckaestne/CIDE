@@ -11,7 +11,6 @@ import tmp.generated_haskell.HaskellParser;
 import tmp.generated_haskell.module;
 import cide.gparser.OffsetCharStream;
 import cide.gparser.ParseException;
-import cide.languages.ILanguagePrintVisitor;
 
 public class TestLayoutFiles {
 
@@ -56,10 +55,7 @@ public class TestLayoutFiles {
 							System.out.println(lexer.debugSerialize(false));
 							HaskellParser p = new HaskellParser(lexer);
 							module m = p.module();
-							ILanguagePrintVisitor pp = new HaskellLanguageExtension()
-									.getPrettyPrinter();
-							m.accept(pp);
-							System.out.println(pp.getResult());
+							System.out.println(m.render());
 						} catch (ParseException e) {
 							System.out.println("Attempted to parse " + file);
 							System.out.flush();

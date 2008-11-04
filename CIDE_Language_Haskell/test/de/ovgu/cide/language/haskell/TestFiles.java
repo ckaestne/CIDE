@@ -10,7 +10,6 @@ import tmp.generated_haskell.module;
 import cide.gparser.OffsetCharStream;
 import cide.gparser.ParseException;
 import cide.gparser.TokenMgrError;
-import cide.languages.ILanguagePrintVisitor;
 
 public class TestFiles {
 
@@ -56,9 +55,7 @@ public class TestFiles {
 							// System.out.println(lexer.debugSerialize(false));
 							HaskellParser p = new HaskellParser(lexer);
 							module m = p.module();
-							ILanguagePrintVisitor pp = new HaskellLanguageExtension()
-									.getPrettyPrinter();
-							m.accept(pp);
+							m.render();
 							// System.out.println(pp.getResult());
 						} catch (ParseException e) {
 							System.out.println("Attempted to parse " + file);

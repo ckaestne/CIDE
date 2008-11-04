@@ -7,9 +7,8 @@ import cide.gast.ASTStringNode;
 import cide.gast.ASTTextNode;
 import cide.gast.AbstractPrintVisitor;
 import cide.gast.IASTNode;
-import cide.languages.ILanguagePrintVisitor;
 
-public class SimplePrintVisitor extends AbstractPrintVisitor implements ILanguagePrintVisitor {
+public class SimplePrintVisitor extends AbstractPrintVisitor  {
 	public SimplePrintVisitor(PrintStream out) {
 		super(out);
 	}
