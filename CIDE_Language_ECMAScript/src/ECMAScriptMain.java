@@ -2,7 +2,6 @@ import java.io.FileInputStream;
 import java.io.UnsupportedEncodingException;
 
 import tmp.generated_ecmascript.EcmaScriptParser;
-import tmp.generated_ecmascript.SimplePrintVisitor;
 import cide.gast.ASTNode;
 import cide.gparser.OffsetCharStream;
 import cide.gparser.ParseException;
@@ -37,9 +36,8 @@ public class ECMAScriptMain {
 		try {
 			if (parser != null) {
 				ASTNode n = parser.Program();
-				SimplePrintVisitor p = new SimplePrintVisitor();
-				n.accept(p);
-				System.out.println(p.getResult());
+				
+				System.out.println(n.render());
 				System.out
 						.println("EcmaScript parser:  EcmaScript program parsed successfully.");
 			}
