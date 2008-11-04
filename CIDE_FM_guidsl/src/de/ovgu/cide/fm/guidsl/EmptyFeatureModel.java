@@ -52,4 +52,8 @@ public class EmptyFeatureModel extends AbstractFeatureModel {
 		return false;
 	}
 
+	public IFeature createNewFeature() {
+		return null;
+	}
+
 }

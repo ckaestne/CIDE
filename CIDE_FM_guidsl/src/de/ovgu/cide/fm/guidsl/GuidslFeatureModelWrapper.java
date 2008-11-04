@@ -161,7 +161,7 @@ public class GuidslFeatureModelWrapper extends AbstractFeatureModel {
 
 		Set<IFeature> result = new HashSet<IFeature>(features.size());
 		for (Feature feature : features) {
-			if (!feature.isCompound())
+			if (!feature.isAbstract())
 				result.add(new FeatureAdapter(feature, this));
 		}
 
@@ -170,14 +170,13 @@ public class GuidslFeatureModelWrapper extends AbstractFeatureModel {
 
 	public void fireFeatureChanged(Feature feature, ChangeType type) {
 		fireFeatureModelChanged(new ColorListChangedEvent(this, project,
-				new Change(new FeatureAdapter(feature,
-						this), type)));
+				new Change(new FeatureAdapter(feature, this), type)));
 	}
 
 	public AbstractConfigurationPage getConfigurationPage(String pageName) {
 		try {
-//			Class.forName("");
-			return new EquationEditorPage(pageName,this); 
+			// Class.forName("");
+			return new EquationEditorPage(pageName, this);
 		} catch (NoClassDefFoundError e) {
 			return new NonValidatingConfigurationListPage(pageName, this);
 		}
@@ -185,10 +184,15 @@ public class GuidslFeatureModelWrapper extends AbstractFeatureModel {
 	}
 
 	public boolean isValidSelection(Set<IFeature> selection) {
-		Configuration conf = new Configuration(model,false);
-		for (IFeature feature:selection)
+		Configuration conf = new Configuration(model, false);
+		for (IFeature feature : selection)
 			conf.setManual(feature.getName(), Selection.SELECTED);
 		return conf.valid();
+	}
+
+	public IFeature createNewFeature() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
