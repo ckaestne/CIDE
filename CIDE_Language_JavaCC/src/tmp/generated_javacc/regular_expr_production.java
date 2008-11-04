@@ -6,12 +6,12 @@ import cide.greferences.*;
 import java.util.*;
 
 public class regular_expr_production extends GenASTNode {
-  public regular_expr_production(ArrayList<regexpr_spec> regexpr_spec, regular_expr_productionPrefix regular_expr_productionPrefix, regexpr_kind regexpr_kind, ASTTextNode text463, Token firstToken, Token lastToken) {
+  public regular_expr_production(ArrayList<regexpr_spec> regexpr_spec, regular_expr_productionPrefix regular_expr_productionPrefix, regexpr_kind regexpr_kind, ASTTextNode text464, Token firstToken, Token lastToken) {
     super(new Property[] {
       new PropertyList<regexpr_spec>("regexpr_spec", regexpr_spec),
       new PropertyZeroOrOne<regular_expr_productionPrefix>("regular_expr_productionPrefix", regular_expr_productionPrefix),
       new PropertyOne<regexpr_kind>("regexpr_kind", regexpr_kind),
-      new PropertyZeroOrOne<ASTTextNode>("text463", text463)
+      new PropertyZeroOrOne<ASTTextNode>("text464", text464)
     }, firstToken, lastToken);
   }
   public regular_expr_production(Property[] properties, IToken firstToken, IToken lastToken) {
@@ -29,7 +29,7 @@ public class regular_expr_production extends GenASTNode {
   public regexpr_kind getRegexpr_kind() {
     return ((PropertyOne<regexpr_kind>)getProperty("regexpr_kind")).getValue();
   }
-  public ASTTextNode getText463() {
-    return ((PropertyZeroOrOne<ASTTextNode>)getProperty("text463")).getValue();
+  public ASTTextNode getText464() {
+    return ((PropertyZeroOrOne<ASTTextNode>)getProperty("text464")).getValue();
   }
 }

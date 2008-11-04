@@ -6,10 +6,10 @@ import cide.greferences.*;
 import java.util.*;
 
 public class ArrayInitializer extends GenASTNode {
-  public ArrayInitializer(ArrayInitializerInternal arrayInitializerInternal, ASTTextNode text498, Token firstToken, Token lastToken) {
+  public ArrayInitializer(ArrayInitializerInternal arrayInitializerInternal, ASTTextNode text499, Token firstToken, Token lastToken) {
     super(new Property[] {
       new PropertyZeroOrOne<ArrayInitializerInternal>("arrayInitializerInternal", arrayInitializerInternal),
-      new PropertyZeroOrOne<ASTTextNode>("text498", text498)
+      new PropertyZeroOrOne<ASTTextNode>("text499", text499)
     }, firstToken, lastToken);
   }
   public ArrayInitializer(Property[] properties, IToken firstToken, IToken lastToken) {
@@ -21,7 +21,7 @@ public class ArrayInitializer extends GenASTNode {
   public ArrayInitializerInternal getArrayInitializerInternal() {
     return ((PropertyZeroOrOne<ArrayInitializerInternal>)getProperty("arrayInitializerInternal")).getValue();
   }
-  public ASTTextNode getText498() {
-    return ((PropertyZeroOrOne<ASTTextNode>)getProperty("text498")).getValue();
+  public ASTTextNode getText499() {
+    return ((PropertyZeroOrOne<ASTTextNode>)getProperty("text499")).getValue();
   }
 }

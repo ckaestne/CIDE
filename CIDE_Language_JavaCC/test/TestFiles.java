@@ -1,7 +1,6 @@
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.InputStreamReader;
 
 import org.junit.Test;
@@ -9,9 +8,7 @@ import org.junit.Test;
 import tmp.generated_javacc.JavaCCParser;
 import cide.gast.ISourceFile;
 import cide.gparser.OffsetCharStream;
-import cide.gparser.ParseException;
 import cide.languages.ILanguageParser;
-import cide.languages.ILanguagePrintVisitor;
 import de.ovgu.cide.language.javacc.JavaCCLanguageExtension;
 
 public class TestFiles {
@@ -57,10 +54,8 @@ public class TestFiles {
 							ILanguageParser p = new JavaCCLanguageExtension()
 									.getParser(new FileInputStream(file),file.getAbsolutePath());
 							ISourceFile m = p.getRoot();
-							ILanguagePrintVisitor pp = new JavaCCLanguageExtension()
-									.getPrettyPrinter();
-							m.accept(pp);
-							System.out.println(pp.getResult());
+							
+							System.out.println(m.render());
 						} catch (Throwable e) {
 							System.out.println("Attempted to parse " + file);
 							System.out.flush();

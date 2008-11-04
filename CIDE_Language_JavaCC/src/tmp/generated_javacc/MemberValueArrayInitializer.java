@@ -6,11 +6,11 @@ import cide.greferences.*;
 import java.util.*;
 
 public class MemberValueArrayInitializer extends GenASTNode {
-  public MemberValueArrayInitializer(MemberValue memberValue, ArrayList<MemberValue> memberValue1, ASTTextNode text563, Token firstToken, Token lastToken) {
+  public MemberValueArrayInitializer(MemberValue memberValue, ArrayList<MemberValue> memberValue1, ASTTextNode text564, Token firstToken, Token lastToken) {
     super(new Property[] {
       new PropertyOne<MemberValue>("memberValue", memberValue),
       new PropertyZeroOrMore<MemberValue>("memberValue1", memberValue1),
-      new PropertyZeroOrOne<ASTTextNode>("text563", text563)
+      new PropertyZeroOrOne<ASTTextNode>("text564", text564)
     }, firstToken, lastToken);
   }
   public MemberValueArrayInitializer(Property[] properties, IToken firstToken, IToken lastToken) {
@@ -25,7 +25,7 @@ public class MemberValueArrayInitializer extends GenASTNode {
   public ArrayList<MemberValue> getMemberValue1() {
     return ((PropertyZeroOrMore<MemberValue>)getProperty("memberValue1")).getValue();
   }
-  public ASTTextNode getText563() {
-    return ((PropertyZeroOrOne<ASTTextNode>)getProperty("text563")).getValue();
+  public ASTTextNode getText564() {
+    return ((PropertyZeroOrOne<ASTTextNode>)getProperty("text564")).getValue();
   }
 }

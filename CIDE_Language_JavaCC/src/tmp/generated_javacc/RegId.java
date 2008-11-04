@@ -6,9 +6,9 @@ import cide.greferences.*;
 import java.util.*;
 
 public class RegId extends GenASTNode {
-  public RegId(ASTTextNode text475, ASTStringNode identifier, Token firstToken, Token lastToken) {
+  public RegId(ASTTextNode text476, ASTStringNode identifier, Token firstToken, Token lastToken) {
     super(new Property[] {
-      new PropertyZeroOrOne<ASTTextNode>("text475", text475),
+      new PropertyZeroOrOne<ASTTextNode>("text476", text476),
       new PropertyOne<ASTStringNode>("identifier", identifier)
     }, firstToken, lastToken);
   }
@@ -18,8 +18,8 @@ public class RegId extends GenASTNode {
   public IASTNode deepCopy() {
     return new RegId(cloneProperties(),firstToken,lastToken);
   }
-  public ASTTextNode getText475() {
-    return ((PropertyZeroOrOne<ASTTextNode>)getProperty("text475")).getValue();
+  public ASTTextNode getText476() {
+    return ((PropertyZeroOrOne<ASTTextNode>)getProperty("text476")).getValue();
   }
   public ASTStringNode getIdentifier() {
     return ((PropertyOne<ASTStringNode>)getProperty("identifier")).getValue();

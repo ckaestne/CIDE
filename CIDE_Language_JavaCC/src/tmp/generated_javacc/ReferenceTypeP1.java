@@ -6,10 +6,10 @@ import cide.greferences.*;
 import java.util.*;
 
 public class ReferenceTypeP1 extends ReferenceTypeP {
-  public ReferenceTypeP1(PrimitiveType primitiveType, ArrayList<ASTTextNode> text504, Token firstToken, Token lastToken) {
+  public ReferenceTypeP1(PrimitiveType primitiveType, ArrayList<ASTTextNode> text505, Token firstToken, Token lastToken) {
     super(new Property[] {
       new PropertyOne<PrimitiveType>("primitiveType", primitiveType),
-      new PropertyOneOrMore<ASTTextNode>("text504", text504)
+      new PropertyOneOrMore<ASTTextNode>("text505", text505)
     }, firstToken, lastToken);
   }
   public ReferenceTypeP1(Property[] properties, IToken firstToken, IToken lastToken) {
@@ -21,7 +21,7 @@ public class ReferenceTypeP1 extends ReferenceTypeP {
   public PrimitiveType getPrimitiveType() {
     return ((PropertyOne<PrimitiveType>)getProperty("primitiveType")).getValue();
   }
-  public ArrayList<ASTTextNode> getText504() {
-    return ((PropertyOneOrMore<ASTTextNode>)getProperty("text504")).getValue();
+  public ArrayList<ASTTextNode> getText505() {
+    return ((PropertyOneOrMore<ASTTextNode>)getProperty("text505")).getValue();
   }
 }

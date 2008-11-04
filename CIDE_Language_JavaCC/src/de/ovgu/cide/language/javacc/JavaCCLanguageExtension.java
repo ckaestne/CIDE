@@ -3,14 +3,11 @@ package de.ovgu.cide.language.javacc;
 import java.io.InputStream;
 
 import tmp.generated_javacc.JavaCCParser;
-import tmp.generated_javacc.SimplePrintVisitor;
 import cide.gast.ISourceFile;
 import cide.gparser.OffsetCharStream;
 import cide.gparser.ParseException;
 import cide.languages.ILanguageExtension;
 import cide.languages.ILanguageParser;
-import cide.languages.ILanguagePrintVisitor;
-import cide.languages.ILanguageValidator;
 
 public class JavaCCLanguageExtension implements ILanguageExtension {
 
@@ -28,12 +25,12 @@ public class JavaCCLanguageExtension implements ILanguageExtension {
 		};
 	}
 
-	public ILanguagePrintVisitor getPrettyPrinter() {
-		return new SimplePrintVisitor();
-	}
-
-	public ILanguageValidator getValidator() {
-		return null;
-	}
+//	public ILanguagePrintVisitor getPrettyPrinter() {
+//		return new SimplePrintVisitor();
+//	}
+//
+//	public ILanguageValidator getValidator() {
+//		return null;
+//	}
 
 }

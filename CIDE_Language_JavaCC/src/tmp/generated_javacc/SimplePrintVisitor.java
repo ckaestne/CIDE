@@ -7,11 +7,12 @@ import java.io.PrintStream;
 
 import cide.languages.*;
 
-public class SimplePrintVisitor extends AbstractPrintVisitor implements ILanguagePrintVisitor {
-	public SimplePrintVisitor(PrintStream out) {
+/** package visibility. use only via ASTNode.render() **/
+class SimplePrintVisitor extends AbstractPrintVisitor {
+	SimplePrintVisitor(PrintStream out) {
 		super(out);
 	}
-	public SimplePrintVisitor() {
+	SimplePrintVisitor() {
 		super();
 	}
 	public boolean visit(IASTNode node) {
@@ -333,7 +334,7 @@ public class SimplePrintVisitor extends AbstractPrintVisitor implements ILanguag
 				}
 			}
 			{
-				ASTTextNode v=n.getText463();
+				ASTTextNode v=n.getText464();
 				if (v!=null) {
 					printToken("[");
 					printToken("IGNORE_CASE");
@@ -470,7 +471,7 @@ public class SimplePrintVisitor extends AbstractPrintVisitor implements ILanguag
 				}
 			}
 			{
-				ASTTextNode v=n.getText469();
+				ASTTextNode v=n.getText470();
 				if (v!=null) {
 					printToken(",");
 					v.accept(this);
@@ -483,7 +484,7 @@ public class SimplePrintVisitor extends AbstractPrintVisitor implements ILanguag
 				}
 			}
 			{
-				ASTTextNode v=n.getText470();
+				ASTTextNode v=n.getText471();
 				if (v!=null) {
 					printToken(",");
 					v.accept(this);
@@ -715,7 +716,7 @@ public class SimplePrintVisitor extends AbstractPrintVisitor implements ILanguag
 		if (node instanceof RegId) {
 			RegId n = (RegId)node;
 			{
-				ASTTextNode v=n.getText475();
+				ASTTextNode v=n.getText476();
 				if (v!=null) {
 					printToken("#");
 					v.accept(this);
@@ -846,7 +847,7 @@ public class SimplePrintVisitor extends AbstractPrintVisitor implements ILanguag
 		if (node instanceof character_list) {
 			character_list n = (character_list)node;
 			{
-				ASTTextNode v=n.getText479();
+				ASTTextNode v=n.getText480();
 				if (v!=null) {
 					printToken("~");
 					v.accept(this);
@@ -924,7 +925,7 @@ public class SimplePrintVisitor extends AbstractPrintVisitor implements ILanguag
 			ImportDeclaration n = (ImportDeclaration)node;
 			printToken("import");
 			{
-				ASTTextNode v=n.getText480();
+				ASTTextNode v=n.getText481();
 				if (v!=null) {
 					printToken("static");
 					v.accept(this);
@@ -937,7 +938,7 @@ public class SimplePrintVisitor extends AbstractPrintVisitor implements ILanguag
 				}
 			}
 			{
-				ASTTextNode v=n.getText481();
+				ASTTextNode v=n.getText482();
 				if (v!=null) {
 					v.accept(this);
 					printToken(".");
@@ -1423,7 +1424,7 @@ public class SimplePrintVisitor extends AbstractPrintVisitor implements ILanguag
 					v.accept(this);
 				}
 			}
-			for (ASTTextNode v : n.getText497()) {
+			for (ASTTextNode v : n.getText498()) {
 				printToken("[");
 				printToken("]");
 				v.accept(this);
@@ -1460,7 +1461,7 @@ public class SimplePrintVisitor extends AbstractPrintVisitor implements ILanguag
 				}
 			}
 			{
-				ASTTextNode v=n.getText498();
+				ASTTextNode v=n.getText499();
 				if (v!=null) {
 					printToken(",");
 					v.accept(this);
@@ -1547,7 +1548,7 @@ public class SimplePrintVisitor extends AbstractPrintVisitor implements ILanguag
 					v.accept(this);
 				}
 			}
-			for (ASTTextNode v : n.getText500()) {
+			for (ASTTextNode v : n.getText501()) {
 				printToken("[");
 				printToken("]");
 				v.accept(this);
@@ -1581,7 +1582,7 @@ public class SimplePrintVisitor extends AbstractPrintVisitor implements ILanguag
 		if (node instanceof FormalParameter) {
 			FormalParameter n = (FormalParameter)node;
 			{
-				ASTTextNode v=n.getText501();
+				ASTTextNode v=n.getText502();
 				if (v!=null) {
 					printToken("final");
 					v.accept(this);
@@ -1594,7 +1595,7 @@ public class SimplePrintVisitor extends AbstractPrintVisitor implements ILanguag
 				}
 			}
 			{
-				ASTTextNode v=n.getText502();
+				ASTTextNode v=n.getText503();
 				if (v!=null) {
 					printToken("...");
 					v.accept(this);
@@ -1684,7 +1685,7 @@ public class SimplePrintVisitor extends AbstractPrintVisitor implements ILanguag
 		if (node instanceof Initializer) {
 			Initializer n = (Initializer)node;
 			{
-				ASTTextNode v=n.getText503();
+				ASTTextNode v=n.getText504();
 				if (v!=null) {
 					printToken("static");
 					v.accept(this);
@@ -1726,7 +1727,7 @@ public class SimplePrintVisitor extends AbstractPrintVisitor implements ILanguag
 					v.accept(this);
 				}
 			}
-			for (ASTTextNode v : n.getText504()) {
+			for (ASTTextNode v : n.getText505()) {
 				printToken("[");
 				printToken("]");
 				v.accept(this);
@@ -1741,7 +1742,7 @@ public class SimplePrintVisitor extends AbstractPrintVisitor implements ILanguag
 					v.accept(this);
 				}
 			}
-			for (ASTTextNode v : n.getText505()) {
+			for (ASTTextNode v : n.getText506()) {
 				printToken("[");
 				printToken("]");
 				v.accept(this);
@@ -2976,7 +2977,7 @@ public class SimplePrintVisitor extends AbstractPrintVisitor implements ILanguag
 				v.accept(this);
 				printToken("]");
 			}
-			for (ASTTextNode v : n.getText556()) {
+			for (ASTTextNode v : n.getText557()) {
 				printToken("[");
 				printToken("]");
 				v.accept(this);
@@ -2985,7 +2986,7 @@ public class SimplePrintVisitor extends AbstractPrintVisitor implements ILanguag
 		}
 		if (node instanceof ArrayDimsAndInits2) {
 			ArrayDimsAndInits2 n = (ArrayDimsAndInits2)node;
-			for (ASTTextNode v : n.getText557()) {
+			for (ASTTextNode v : n.getText558()) {
 				printToken("[");
 				printToken("]");
 				v.accept(this);
@@ -3255,7 +3256,7 @@ public class SimplePrintVisitor extends AbstractPrintVisitor implements ILanguag
 		if (node instanceof LocalVariableDeclaration) {
 			LocalVariableDeclaration n = (LocalVariableDeclaration)node;
 			{
-				ASTTextNode v=n.getText558();
+				ASTTextNode v=n.getText559();
 				if (v!=null) {
 					printToken("final");
 					v.accept(this);
@@ -3868,7 +3869,7 @@ public class SimplePrintVisitor extends AbstractPrintVisitor implements ILanguag
 				v.accept(this);
 			}
 			{
-				ASTTextNode v=n.getText563();
+				ASTTextNode v=n.getText564();
 				if (v!=null) {
 					printToken(",");
 					v.accept(this);
