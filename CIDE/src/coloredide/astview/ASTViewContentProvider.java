@@ -56,6 +56,7 @@ import coloredide.astview.internal.JavaElement;
 import coloredide.astview.internal.NodeProperty;
 import coloredide.astview.internal.ProblemsProperty;
 
+@SuppressWarnings("unchecked")
 public class ASTViewContentProvider implements ITreeContentProvider {
 	
 	public static class RootCapsle{

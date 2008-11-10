@@ -5,7 +5,6 @@ Bundle-SymbolicName: coloride;singleton:=true
 Bundle-Version: 1.2.0
 Bundle-Activator: coloredide.ColoredIDEPlugin
 Bundle-Vendor: Christian Kästner
-Bundle-Localization: plugin
 Export-Package: coloredide;x-internal:=true,
  coloredide.astview.internal;x-internal:=true
 Require-Bundle: org.eclipse.core.runtime,
@@ -18,8 +17,6 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.jdt.core,
  org.eclipse.jdt.ui,
  org.junit4
-Eclipse-LazyStart: true
+Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
-Bundle-ClassPath: kodkod.jar,
- .,
- junit-4.3.jar
+Bundle-ClassPath: .

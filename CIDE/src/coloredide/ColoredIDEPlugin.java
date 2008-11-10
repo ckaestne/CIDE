@@ -29,6 +29,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -39,12 +40,12 @@ import coloredide.features.source.ASTRefreshListener;
 import coloredide.validator.ValidationManager;
 
 public class ColoredIDEPlugin extends AbstractUIPlugin {
-	
-	public static final String ID_ASTVIEW="coloredide.ASTView";
-	public static final String ID_PREVIEW="coloredide.previewview";
-	public static final String ID_INTERACTION="coloredide.InteractionsView";
-	public static final String ID_COLOREDEDITOR="coloredIDE.ColorEditor";
-	
+
+	public static final String ID_ASTVIEW = "coloredide.ASTView";
+	public static final String ID_PREVIEW = "coloredide.previewview";
+	public static final String ID_INTERACTION = "coloredide.InteractionsView";
+	public static final String ID_COLOREDEDITOR = "coloredIDE.ColorEditor";
+
 	public static final int AST_VERSION = AST.JLS3;
 
 	private static final long serialVersionUID = 8L;
@@ -93,13 +94,9 @@ public class ColoredIDEPlugin extends AbstractUIPlugin {
 		log(new Status(IStatus.ERROR, getPluginId(), IStatus.ERROR, message, e));
 	}
 
-	
-
-
 	private ValidationManager validator;
 
 	private ASTRefreshListener astRefreshListener;
-
 
 	protected boolean readStateFrom(File target) {
 		try {
@@ -120,21 +117,31 @@ public class ColoredIDEPlugin extends AbstractUIPlugin {
 		return false;
 	}
 
+	static class IncompatibleCideVersionsException extends Exception {
+		private static final long serialVersionUID = 1L;
+	}
+
 	@Override
 	public void start(BundleContext context) throws Exception {
+		// disable this plugin if CIDE2 is loaded
+		if (Platform.getBundle("de.ovgu.cide.core") != null)
+			throw new IncompatibleCideVersionsException();
+
 		super.start(context);
 
 		validator = new ValidationManager();
-		astRefreshListener=new ASTRefreshListener();
-		ResourcesPlugin.getWorkspace().addResourceChangeListener(astRefreshListener);
+		astRefreshListener = new ASTRefreshListener();
+		ResourcesPlugin.getWorkspace().addResourceChangeListener(
+				astRefreshListener);
 
 		if (!load())
 			initDefault();
 
 	}
-	
+
 	public void stop(BundleContext context) throws Exception {
-		ResourcesPlugin.getWorkspace().removeResourceChangeListener(astRefreshListener);
+		ResourcesPlugin.getWorkspace().removeResourceChangeListener(
+				astRefreshListener);
 		super.stop(context);
 	}
 
@@ -204,7 +211,8 @@ public class ColoredIDEPlugin extends AbstractUIPlugin {
 		public void saving(ISaveContext context) throws CoreException {
 			switch (context.getKind()) {
 			case ISaveContext.FULL_SAVE:
-				ColoredIDEPlugin myPluginInstance = ColoredIDEPlugin.getDefault();
+				ColoredIDEPlugin myPluginInstance = ColoredIDEPlugin
+						.getDefault();
 				// save the plug-in state
 				int saveNumber = context.getSaveNumber();
 				String saveFileName = "save-" + Integer.toString(saveNumber);
@@ -219,7 +227,7 @@ public class ColoredIDEPlugin extends AbstractUIPlugin {
 				break;
 			case ISaveContext.PROJECT_SAVE:
 				// get the project related to this save operation
-//				IProject project = context.getProject();
+				// IProject project = context.getProject();
 				// save its information, if necessary
 				break;
 			case ISaveContext.SNAPSHOT:

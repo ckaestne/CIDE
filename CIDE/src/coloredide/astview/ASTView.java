@@ -120,6 +120,7 @@ import coloredide.tools.interactionanalyzer.TensorDerivative;
 import coloredide.utils.EditorUtility;
 import coloredide.utils.NodeFinder;
 
+@SuppressWarnings("unchecked")
 public class ASTView extends ViewPart implements IShowInSource {
 
 	private class ASTViewSelectionProvider implements ISelectionProvider {
