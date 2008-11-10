@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <description url="http://wwwiti.cs.uni-magdeburg.de/iti_db/research/cide/update/">
+      CIDE Update Site
+   </description>
+   <feature url="features/de.ovgu.cide_old_1.2.1.jar" id="de.ovgu.cide_old" version="1.2.1">
+      <category name="CIDE (Old Java Version)"/>
+   </feature>
+   <feature url="features/de.ovgu.cide.core_2.0.1.jar" id="de.ovgu.cide.core" version="2.0.1">
+      <category name="CIDE (Current Version)"/>
+   </feature>
+   <feature url="features/de.ovgu.cide.guidsl_0.1.0.jar" id="de.ovgu.cide.guidsl" version="0.1.0">
+      <category name="CIDE (Current Version)"/>
+   </feature>
+   <feature url="features/de.ovgu.cide.jdt_0.1.0.jar" id="de.ovgu.cide.jdt" version="0.1.0">
+      <category name="CIDE (Current Version)"/>
+   </feature>
+   <feature url="features/de.ovgu.cide.purevariantsconnector_0.1.0.jar" id="de.ovgu.cide.purevariantsconnector" version="0.1.0">
+      <category name="CIDE (Current Version)"/>
+   </feature>
+   <category-def name="CIDE (Current Version)" label="CIDE (Current Version)">
+      <description>
+         Current version of CIDE
+      </description>
+   </category-def>
+   <category-def name="CIDE (Old Java Version)" label="CIDE (Old Java Version)">
+      <description>
+         Old version of CIDE, no longer maintained. However this version supports some features like type-checking or export to AHEAD which have not been migrated to the new version. Do not use old and new version at the same time.
+      </description>
+   </category-def>
+</site>
