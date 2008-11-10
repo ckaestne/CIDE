@@ -4,6 +4,8 @@
    <extension
          point="de.ovgu.cide.core.colorStorageProvider">
       <storageProvider
+            id="de.ovgu.cide.storage.xml"
+            name="XML Storage Provider"
             provider="de.ovgu.cide.storage.xml.XMLStorageProvider">
       </storageProvider>
    </extension>
