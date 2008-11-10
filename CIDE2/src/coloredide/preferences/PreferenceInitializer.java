@@ -1,12 +1,15 @@
 package coloredide.preferences;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.jface.preference.IPreferenceStore;
 
 import coloredide.CIDECorePlugin;
+import coloredide.features.FeatureModelManager;
+import coloredide.features.FeatureModelProviderProxy;
 import coloredide.languages.LanguageExtensionManager;
 import coloredide.languages.LanguageExtensionProxy;
 
@@ -39,11 +42,14 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 					+ language.getId(), languageEnabled);
 		}
 
-		
-		// store.setDefault(PreferenceConstants.P_BOOLEAN, true);
-		 store.setDefault(PreferenceConstants.P_FEATUREMODELPROVIDER, "de.ovgu.cide.fm.guidsl");
-		// store.setDefault(PreferenceConstants.P_STRING,
-		// "Default value");
+		String defaultModel = "de.ovgu.cide.fm.list";
+		List<FeatureModelProviderProxy> providers = FeatureModelManager
+				.getInstance().getFeatureModelProviders();
+		for (FeatureModelProviderProxy provider : providers)
+			if (provider.getId().equals("de.ovgu.cide.fm.guidsl"))
+				defaultModel = "de.ovgu.cide.fm.guidsl";
+		store.setDefault(PreferenceConstants.P_FEATUREMODELPROVIDER,
+				defaultModel);
 	}
 
 }
