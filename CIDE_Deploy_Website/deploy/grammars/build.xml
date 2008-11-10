@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+
+<project default="main" basedir=".">
+
+	<taskdef name="astgen" classname="cide.astgen.ant.AstgenTask" />
+	<taskdef name="jcc" classname="cide.astgen.ant.JavaCCTask" />
+
+	<target name="clean">
+		<delete>
+			<fileset dir="tmp/generated_capprox">
+				<include name="*.java" />
+				<include name="*.class" />
+			</fileset>
+		</delete>
+	</target>
+
+	<target name="main">
+		<antcall target="clean" />
+		<mkdir dir="tmp/generated_capprox" />
+		<astgen grammarFileName="capprox.gcide" targetDirectory="tmp/generated_capprox" targetPackage="tmp.generated_capprox" />
+		<jcc grammarFileName="tmp/generated_capprox/capprox.jj" targetDirectory="tmp/generated_capprox" />
+	</target>
+
+</project>

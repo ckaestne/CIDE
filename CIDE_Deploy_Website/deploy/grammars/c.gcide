@@ -1,0 +1,715 @@
+/*
+
+  C grammar defintion for use with JavaCC
+  Contributed by Doug South (dsouth@squirrel.com.au) 21/3/97
+
+  This parser assumes that the C source file has been preprocessed : all
+  #includes have been included and all macros have been expanded. I accomplish
+  this with "gcc -P -E <source file> > <output file>".
+
+  There is a problem with compiler specific types, such as __signed, __const,
+  __inline__, etc. These types can be added as typedef types before the parser
+  is run on a file. See main() for an example. I have also found a strange little
+  compiler specific "type" if you can call it that. It is __attribute__, but it
+  does not seem to be used as a type. I found that just deleting the __attribute__
+  and the following "offensive" code works.
+
+  This grammar also prints out all the types defined while parsing the file. This
+  is done via a call to printTypes() when the parser is complete. If you do not want
+  this, just comment out the printTypes() method call in the production rule
+  TranslationUnit(), which BTW is the root node for parsing a C source file.
+
+  I have not in anyway extensively tested this grammar, in fact it is barely tested,
+  but I imagine it is better to have a starting point for a C grammar other than from
+  scratch. It has not been optimized in anyway, my main aim was to get a parser that
+  works. Lookahead may not be optimum at choice points and may even be insufficient at
+  times. I choose to err on the side of not optimum if I made a choice at all.
+
+  If you use this grammar, I would appreciate hearing from you. I will try to maintain
+  this grammar to the best of my ability, but at this point in time, this is only a side
+  hobby (unless someone wants to pay me for doing JavaCC work!). In that regards, I am
+  interested in hearing bugs and comments.
+
+  TODO:
+
+    Insert the appropriate code to enable C source trees from this grammar.
+
+=============================================
+3/2/06: Modified by Tom Copeland
+- STRING_LITERAL now handles embedded escaped newlines, thanks to J.Chris Findlay for the patch
+- Works with JavaCC 4.0
+- Preprocessor directives are now simply SKIP'd, so no need to run C files through GCC first
+
+  */
+
+
+PARSER_BEGIN(CParser)
+
+package tmp.generated_c;
+
+import java.io.*;
+import java.util.*;
+import cide.gast.*;
+import cide.gparser.*;
+
+  public class CParser{
+
+    // Hastable for storing typedef types
+    private static Set types = new HashSet();
+
+    // Stack for determining when the parser
+    // is parsing a typdef definition.
+    private static Stack typedefParsingStack = new Stack();
+
+    // Returns true if the given string is
+    // a typedef type.
+    private static boolean isType(String type){
+   	  return types.contains(type);
+    }
+
+    // Add a typedef type to those already defined
+    private static void addType(String type){
+   	  types.add(type);
+    }
+
+    // Prints out all the types used in parsing the c source
+    private static void printTypes(){
+      for (Iterator i = types.iterator(); i.hasNext();) {
+        System.out.println(i.next());
+      }
+    }
+
+    // Run the parser
+    public static void main ( String args [ ] ) {
+      CParser parser ;
+
+  	  // Hack to include type "special types"
+	    types.add("__signed__");
+	    types.add("__const");
+	    types.add("__inline__");
+	    types.add("__signed");
+	      types.add("__int64");
+            types.add("__w64");
+
+      if(args.length == 0){
+        System.out.println("C Parser Version 0.1Alpha:  Reading from standard input . . .");
+        parser = new CParser(new OffsetCharStream(System.in));
+      }
+      else if(args.length == 1){
+        System.out.println("C Parser Version 0.1Alpha:  Reading from file " + args[0] + " . . ." );
+      try {
+        parser = new CParser(new OffsetCharStream(new java.io.FileInputStream(args[0])));
+      }
+      catch(java.io.FileNotFoundException e){
+        System.out.println("C Parser Version 0.1:  File " + args[0] + " not found.");
+        return ;
+        }
+      }
+      else {
+        System.out.println("C Parser Version 0.1Alpha:  Usage is one of:");
+        System.out.println("         java CParser < inputfile");
+        System.out.println("OR");
+        System.out.println("         java CParser inputfile");
+        return ;
+      }
+      try {
+        parser.TranslationUnit();
+        System.out.println("C Parser Version 0.1Alpha:  Java program parsed successfully.");
+      }
+      catch(ParseException e){
+        System.out.println("C Parser Version 0.1Alpha:  Encountered errors during parse.");
+        e.printStackTrace();
+      }
+    }
+    
+       public ISourceFile getRoot() throws ParseException {
+                return TranslationUnit();
+        }
+  }
+
+PARSER_END(CParser)
+
+SKIP : {
+ " "
+|  "\t"
+|  "\n"
+|  "\r"
+|  <"//" (~["\n","\r"])* ("\n" | "\r" | "\r\n")>
+|  <"/*" (~["*"])* "*" ("*" | ~["*","/"] (~["*"])* "*")* "/">
+| "#" : PREPROCESSOR_OUTPUT
+}
+
+<PREPROCESSOR_OUTPUT> SKIP:
+{
+     "\n" : DEFAULT
+}
+
+<PREPROCESSOR_OUTPUT> MORE:
+{
+ "\\\n"
+ |
+ "\\\r\n"
+ |
+ < ~[] >
+}
+
+
+TOKEN : {
+ <INTEGER_LITERAL: <DECIMAL_LITERAL> (["l","L"])? | <HEX_LITERAL> (["l","L"])? | <OCTAL_LITERAL> (["l","L"])?>
+|  <#DECIMAL_LITERAL: ["1"-"9"] (["0"-"9"])*>
+|  <#HEX_LITERAL: "0" ["x","X"] (["0"-"9","a"-"f","A"-"F"])+>
+|  <#OCTAL_LITERAL: "0" (["0"-"7"])*>
+|  <FLOATING_POINT_LITERAL: (["0"-"9"])+ "." (["0"-"9"])* (<EXPONENT>)? (["f","F","d","D"])? | "." (["0"-"9"])+ (<EXPONENT>)? (["f","F","d","D"])? | (["0"-"9"])+ <EXPONENT> (["f","F","d","D"])? | (["0"-"9"])+ (<EXPONENT>)? ["f","F","d","D"]>
+|  <#EXPONENT: ["e","E"] (["+","-"])? (["0"-"9"])+>
+|  <CHARACTER_LITERAL: "\'" (~["\'","\\","\n","\r"] | "\\" (["n","t","b","r","f","\\","\'","\""] | ["0"-"7"] (["0"-"7"])? | ["0"-"3"] ["0"-"7"] ["0"-"7"])) "\'">
+|  <STRING_LITERAL: "\"" ( ~["\"","\\","\n","\r"] | "\\" ( ["n","t","b","r","f","\\","\'","\""] | ["0"-"7"] (["0"-"7"])?  | ["0"-"3"] ["0"-"7"] ["0"-"7"] | ( ["\n","\r"] | "\r\n")))* "\"">
+}
+
+TOKEN : {
+	<CONTINUE: "continue"> |
+	<VOLATILE: "volatile"> |
+	<REGISTER: "register"> |
+	<UNSIGNED: "unsigned"> |
+	<TYPEDEF: "typedef"> |
+	<DFLT: "default"> |
+	<DOUBLE: "double"> |
+	<SIZEOF: "sizeof"> |
+	<SWITCH: "switch"> |
+	<RETURN: "return"> |
+	<EXTERN: "extern"> |
+	<STRUCT: "struct"> |
+	<STATIC: "static"> |
+	<SIGNED: "signed"> |
+	<WHILE: "while"> |
+	<BREAK: "break"> |
+	<UNION: "union"> |
+	<CONST: "const"> |
+	<FLOAT: "float"> |
+	<SHORT: "short"> |
+	<ELSE: "else"> |
+	<CASE: "case"> |
+	<LONG: "long"> |
+	<ENUM: "enum"> |
+	<AUTO: "auto"> |
+	<VOID: "void"> |
+	<CHAR: "char"> |
+	<GOTO: "goto"> |
+	<FOR: "for"> |
+	<INT: "int"> |
+	<IF: "if"> |
+	<DO: "do"> |
+	<EQ: "="> |
+	<ASSSTAR: "*="> |
+	<ASSSLASH: "/="> |
+	<ASSPERCENT: "%="> |
+	<ASSPLUS: "+="> |
+	<ASSMINUS: "-+"> |
+	<ASSSL: "<<="> |
+	<ASSSR: ">>="> |
+	<ASSAMP: "&="> |
+	<ASSTIL: "^="> |
+	<ASSOR: "|="> |
+	<EQEQ: "=="> |
+	<NOTEQ: "!="> |
+	<SL: "<"> |
+	<SR: ">"> |
+	<SLEQ: "<="> |
+	<SREQ: ">="> |
+	<SLSL: "<<"> |
+	<SRSR: ">>"> |
+	<PLUS: "+"> |
+	<MINUS: "-"> |
+	<PLUSPLUS: "++"> |
+	<MINUSMINUS: "--"> |
+	<STAR: "*"> |
+	<SLASH: "/"> |
+	<PERCENT: "%"> | 
+	<OR: "|"> |
+	<OROR: "||"> |
+	<NOT: "!"> |
+	<TILDE: "~"> |
+	<AND: "&"> |
+	<ANDAND: "&&"> | 
+	<COMMA: ","> 
+}
+
+TOKEN : {
+ <IDENTIFIER: <LETTER> (<LETTER> | <DIGIT>)*>
+|  <#LETTER: ["$","A"-"Z","_","a"-"z"]>
+|  <#DIGIT: ["0"-"9"]>
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+GRAMMARSTART
+
+TranslationUnit:
+	ExternalDeclaration
+	(ExternalDeclaration)*
+	JAVA("printTypes();")
+;
+
+ExternalDeclaration:
+	LOOK_AHEAD( "FunctionDefinition()" ) FunctionDefinition 
+	| Declaration
+;
+
+FunctionDefinition:
+	[LOOK_AHEAD("DeclarationSpecifiers()") DeclarationSpecifiers] Declarator [ DeclarationList ]
+	CompoundStatement
+;
+
+Declaration:
+	DeclarationSpecifiers [ InitDeclaratorList ] ";"
+;
+
+DeclarationList:
+	  LOOK_AHEAD("Declaration()") Declaration
+	( LOOK_AHEAD("Declaration()") Declaration )*
+;
+
+DeclarationSpecifiers:
+	  StorageClassSpecifier [ LOOK_AHEAD("DeclarationSpecifiers()")
+	        DeclarationSpecifiers ] |
+	  TypeSpecifier  [ LOOK_AHEAD("DeclarationSpecifiers()")
+	        DeclarationSpecifiers ] |
+	  TypeQualifier [ LOOK_AHEAD("DeclarationSpecifiers()")
+	        DeclarationSpecifiers ]
+;
+
+StorageClassSpecifier:
+	<AUTO> | <REGISTER> | <STATIC> | <EXTERN> | <TYPEDEF> JAVA("typedefParsingStack.push(Boolean.TRUE);")
+	
+;
+
+TypeSpecifier:
+	<VOID> | <CHAR> | <SHORT> | <INT> | <LONG> | <FLOAT> | <DOUBLE> | <SIGNED> |
+	  <UNSIGNED> | 
+	  StructOrUnionSpecifier | 
+	  EnumSpecifier | 
+	  LOOK_AHEAD( "{ isType(getToken(1).image) }" ) TypedefName 
+;
+
+TypeQualifier:
+	 <CONST> | <VOLATILE> 
+;
+
+StructOrUnionSpecifier:
+
+			JAVA("typedefParsingStack.push(Boolean.FALSE);")
+
+		StructOrUnion
+		StructOrUnionSpecifierInner
+
+		JAVA("typedefParsingStack.pop();")
+;
+
+StructOrUnionSpecifierInner:
+		LOOK_AHEAD(3) [ <IDENTIFIER> ] "{" StructDeclarationList "}" | 		
+		<IDENTIFIER>;
+
+StructOrUnion:
+	 <STRUCT> | <UNION> 
+;
+
+StructDeclarationList:
+	StructDeclaration
+	(StructDeclaration)*
+;
+
+InitDeclaratorList:
+	InitDeclarator ("," InitDeclarator)*
+	JAVA("if(!(typedefParsingStack.empty()) && ((Boolean)typedefParsingStack.peek()).booleanValue()){		   	typedefParsingStack.pop();	  }")
+;
+
+InitDeclarator:
+	Declarator [ "=" Initializer ]
+;
+
+StructDeclaration:
+	SpecifierQualifierList StructDeclaratorList ";"
+;
+
+SpecifierQualifierList:
+	  TypeSpecifier [ LOOK_AHEAD("SpecifierQualifierList()")
+	        SpecifierQualifierList ]
+|
+	  TypeQualifier [ LOOK_AHEAD("SpecifierQualifierList()")
+	        SpecifierQualifierList ]
+;
+
+StructDeclaratorList:
+	StructDeclarator ( "," StructDeclarator )*
+;
+
+StructDeclarator:
+	LOOK_AHEAD(3) Declarator 
+| 
+	[ Declarator ] ":" ConstantExpression 
+;
+
+EnumSpecifier:
+	<ENUM> EnumSpecifierInternal
+;
+
+EnumSpecifierInternal:
+	LOOK_AHEAD(3) [ <IDENTIFIER> ] "{" EnumeratorList "}" 
+| 
+	<IDENTIFIER>;
+
+EnumeratorList:
+	Enumerator ("," Enumerator)*
+;
+
+Enumerator:
+	<IDENTIFIER> [ "=" ConstantExpression ]
+;
+
+Declarator:
+	[ Pointer ] DirectDeclarator
+;
+
+DirectDeclarator : //{ Token t;}
+	DirectDeclaratorP1
+	( DirectDeclaratorP2 )*		
+;
+
+DirectDeclaratorP1:
+	<IDENTIFIER>
+	JAVA(" if(!(typedefParsingStack.empty()) && ((Boolean)typedefParsingStack.peek()).booleanValue()){				addType(t.image);	  }")
+|
+	 "(" Declarator ")"
+;
+
+DirectDeclaratorP2:
+	"[" [ ConstantExpression ] "]" 
+|
+    LOOK_AHEAD(5) "(" ParameterTypeList ")" 
+|
+    "(" [ IdentifierList ] ")"
+  ;
+
+Pointer:
+	"*" [ TypeQualifierList ] [ Pointer ]
+;
+
+TypeQualifierList:
+	TypeQualifier
+	(TypeQualifier)*
+;
+
+ParameterTypeList:
+	ParameterList ["," "."".""." <NONE>]
+;
+
+ParameterList:
+	ParameterDeclaration (LOOK_AHEAD(2) "," ParameterDeclaration)*
+;
+
+ParameterDeclaration:
+	DeclarationSpecifiers ParameterDeclarationInternal
+;
+
+ParameterDeclarationInternal:
+	LOOK_AHEAD("Declarator()") Declarator | 
+	[ AbstractDeclarator ]
+;
+
+IdentifierList:
+	<IDENTIFIER> ("," <IDENTIFIER>)*
+;
+
+Initializer:
+	AssignmentExpression |
+	  "{" InitializerList /* [","] */ "}"
+;
+
+InitializerList:
+	Initializer (LOOK_AHEAD(2) "," Initializer)*
+;
+
+TypeName:
+	SpecifierQualifierList [ AbstractDeclarator ]
+;
+
+AbstractDeclarator:
+	 LOOK_AHEAD(3) Pointer |
+	  [Pointer] DirectAbstractDeclarator 
+;
+
+DirectAbstractDeclarator:
+
+	DirectAbstractDeclaratorP1
+
+	  ( DirectAbstractDeclaratorP2 )*
+;
+
+DirectAbstractDeclaratorP1:
+				LOOK_AHEAD(2) "(" AbstractDeclarator ")" |
+	               "[" [ConstantExpression] "]" |
+	               "(" [ParameterTypeList] ")"
+	               ;
+
+DirectAbstractDeclaratorP2:
+"[" [ ConstantExpression ] "]" | "(" [ ParameterTypeList ] ")";
+
+TypedefName:
+	<IDENTIFIER>
+;
+
+Statement:
+	 LOOK_AHEAD(2) LabeledStatement |
+	  ExpressionStatement |
+	  CompoundStatement |
+	  SelectionStatement |
+	  IterationStatement |
+	  JumpStatement 
+;
+
+LabeledStatement:
+	 <IDENTIFIER> ":" Statement |
+	  <CASE> ConstantExpression ":" Statement |
+	  <DFLT> ":" Statement 
+;
+
+ExpressionStatement:
+	[ Expression ] ";"
+;
+
+CompoundStatement:
+	"{" [ LOOK_AHEAD("DeclarationList()") DeclarationList ]
+	    [ StatementList ]
+	"}"
+;
+
+StatementList:
+	Statement
+	(Statement)*
+;
+
+SelectionStatement:
+	 <IF> "(" Expression ")" Statement [ LOOK_AHEAD(2) "else" Statement ] |
+	  <SWITCH> "(" Expression ")" Statement 
+;
+
+IterationStatement:
+	 <WHILE> "(" Expression ")" Statement |
+	  <DO> Statement <WHILE> "(" Expression ")" ";" |
+	  <FOR> "(" [ Expression ] ";" [ Expression ] ";" [ Expression ] ")" Statement 
+;
+
+JumpStatement:
+	 <GOTO> <IDENTIFIER> ";" |
+	  <CONTINUE> ";" |
+	  <BREAK> ";" |
+	  <RETURN> [ Expression ] ";" 
+;
+
+Expression:
+	AssignmentExpression ( "," AssignmentExpression )*
+;
+
+AssignmentExpression:
+	  LOOK_AHEAD("UnaryExpression() AssignmentOperator()") UnaryExpression AssignmentOperator AssignmentExpression |	  
+	  LOOK_AHEAD(3) ConditionalExpression
+;
+
+AssignmentOperator:
+	<EQ> |
+	<ASSSTAR> |
+	<ASSSLASH> |
+	<ASSPERCENT> |
+	<ASSPLUS> |
+	<ASSMINUS> |
+	<ASSSL> |
+	<ASSSR> |
+	<ASSAMP> |
+	<ASSTIL> |
+	<ASSOR> 
+;
+
+ConditionalExpression:
+	LogicalORExpression [ ConditionalExpressionInternal ]
+;
+
+ConditionalExpressionInternal:
+	"?" Expression ":" ConditionalExpression
+;
+
+ConstantExpression:
+	ConditionalExpression
+;
+
+LogicalORExpression:
+	LogicalANDExpression [ "||" LogicalORExpression ]
+;
+
+LogicalANDExpression:
+	InclusiveORExpression [ "&&" LogicalANDExpression ]
+;
+
+InclusiveORExpression:
+	ExclusiveORExpression [ "|" InclusiveORExpression ]
+;
+
+ExclusiveORExpression:
+	ANDExpression [ "^" ExclusiveORExpression ]
+;
+
+ANDExpression:
+	EqualityExpression [ "&" ANDExpression ]
+;
+
+EqualityExpression:
+	RelationalExpression [ EqualityExpressionInt ]
+;
+
+EqualityExpressionInt: <EQEQ> EqualityExpression | <NOTEQ> EqualityExpression;
+
+RelationalExpression:
+	ShiftExpression [ RelationalExpressionInt ]
+;
+
+RelationalExpressionInt:
+	 "<" RelationalExpression | ">" RelationalExpression | "<=" RelationalExpression | ">="  RelationalExpression
+;
+
+ShiftExpression:
+	AdditiveExpression [ ShiftExpressionInt ]
+;
+
+ShiftExpressionInt:
+	 "<<" ShiftExpression | ">>" ShiftExpression
+;
+
+AdditiveExpression:
+	MultiplicativeExpression [ AdditiveExpressionInt ]
+;
+
+AdditiveExpressionInt:
+	"+" AdditiveExpression | "-"  AdditiveExpression
+;
+
+MultiplicativeExpression:
+	CastExpression [ MultiplicativeExpressionInt ]
+;
+
+MultiplicativeExpressionInt:
+	"*" MultiplicativeExpression | "/" MultiplicativeExpression | "%" MultiplicativeExpression
+;
+
+CastExpression:
+	 LOOK_AHEAD("\"(\" TypeName() \")\" CastExpression() ") "(" TypeName ")" CastExpression |
+	  UnaryExpression 
+;
+
+UnaryExpression:
+
+	 LOOK_AHEAD(3) PostfixExpression |
+	  "++" UnaryExpression |
+	  "--" UnaryExpression |
+	  UnaryOperator CastExpression |
+	  <SIZEOF> UnaryExpressionSizeOf
+;
+
+UnaryExpressionSizeOf:
+	LOOK_AHEAD("UnaryExpression()") UnaryExpression |
+ 	"(" TypeName ")";
+
+UnaryOperator:
+	 <AND> | <STAR> | <PLUS> | <MINUS> | <TILDE> | <NOT> 
+;
+
+PostfixExpression:
+	PrimaryExpression ( PostfixExpressionInternal )*
+;
+
+PostfixExpressionInternal:
+						"[" Expression "]" |
+	                      "(" [ LOOK_AHEAD("ArgumentExpressionList()") ArgumentExpressionList ] ")" |
+	  					  "." <IDENTIFIER> |
+	  					  "->" <IDENTIFIER> |
+	  					  <PLUSPLUS> |
+	  					  <MINUSMINUS>;
+
+PrimaryExpression:
+	 <IDENTIFIER> |
+	  Constant |
+	  "(" Expression ")" 
+;
+
+ArgumentExpressionList:
+	AssignmentExpression ( "," AssignmentExpression )*
+;
+
+Constant:
+ <INTEGER_LITERAL> | <FLOATING_POINT_LITERAL> | <CHARACTER_LITERAL> | <STRING_LITERAL>
+;
