@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="de.ovgu.cide.guidsl"
+      label="CIDE: GUIDSL Feature Model"
+      version="0.1.0"
+      provider-name="Christian Kaestner / University of Magdeburg">
+
+   <description url="http://www.fosd.de/cide">
+      Extension for CIDE with a more powerful feature model, based on the guidsl format. This includes the graphical tree editor from FeatureIDE.
+   </description>
+
+   <copyright>
+      Copyright (c) 2006-2008, Christian Kästner, University of Magdeburg, Germany
+All rights reserved.
+   </copyright>
+
+   <license>
+      CIDE is provided as a research prototype as is. Source code can
+be requested for research purposes by email.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+&quot;AS IS&quot; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT
+NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT
+SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
+OF THE POSSIBILITY OF SUCH DAMAGE.
+   </license>
+
+   <url>
+      <update label="CIDE Update Site" url="http://wwwiti.cs.uni-magdeburg.de/iti_db/research/cide/update/"/>
+      <discovery label="FeatureIDE" url="http://fosd.de/featureide"/>
+      <discovery label="guidsl Documentation" url="http://www.cs.utexas.edu/users/dsb/fopdocs/guidsl.html"/>
+   </url>
+
+   <requires>
+      <import feature="de.ovgu.cide.core" version="2.0.1" match="greaterOrEqual"/>
+      <import feature="org.eclipse.gef" version="3.4.0" match="greaterOrEqual"/>
+      <import feature="org.eclipse.jdt" version="3.4.0" match="greaterOrEqual"/>
+   </requires>
+
+   <plugin
+         id="de.ovgu.cide.fm.guidsl"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="FeatureIDE_FM_Core"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="FeatureIDE_FM_UI"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+</feature>
