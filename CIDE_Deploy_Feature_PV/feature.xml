@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="de.ovgu.cide.purevariantsconnector"
+      label="CIDE: pure::variants connector"
+      version="0.1.0"
+      provider-name="Christian Kaestner / University of Magdeburg">
+
+   <description url="http://www.fosd.de/cide">
+      Connector to integrate CIDE with pure::variants. Requires an up to date pure::variants version with the new Mapping API.
+   </description>
+
+   <copyright>
+      Copyright (c) 2006-2008, Christian Kästner, University of Magdeburg, Germany
+All rights reserved.
+   </copyright>
+
+   <license>
+      CIDE is provided as a research prototype as is. Source code can
+be requested for research purposes by email.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+&quot;AS IS&quot; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT
+NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT
+SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
+OF THE POSSIBILITY OF SUCH DAMAGE.
+   </license>
+
+   <url>
+      <update label="CIDE Update Site" url="http://wwwiti.cs.uni-magdeburg.de/iti_db/research/cide/update/"/>
+   </url>
+
+   <requires>
+      <import feature="de.ovgu.cide.core" version="2.0.1" match="greaterOrEqual"/>
+      <import plugin="com.ps.consul.eclipse.ui.mapping"/>
+      <import plugin="com.ps.consul.eclipse.core"/>
+      <import plugin="com.ps.consul.eclipse.ui"/>
+   </requires>
+
+   <plugin
+         id="de.ovgu.cide.fm.purevariants"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+</feature>
