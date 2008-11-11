@@ -5,7 +5,7 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/CIDE_generateAST"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/CIDE2_ast"/>
-	<classpathentry kind="var" path="ANT"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="var" path="ANT_HOME/lib/ant.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
