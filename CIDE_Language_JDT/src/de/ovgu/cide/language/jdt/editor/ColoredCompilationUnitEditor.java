@@ -18,14 +18,14 @@ import org.eclipse.jface.text.source.projection.ProjectionViewer;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 
-import coloredide.ColoredIDEImages;
-import coloredide.editor.ColoredEditorExtensions;
-import coloredide.editor.ColoredEditorExtensions.IProjectionColoredEditor;
-import coloredide.features.FeatureModelManager;
-import coloredide.features.FeatureModelNotFoundException;
-import coloredide.features.IFeatureModel;
-import coloredide.features.source.ColoredSourceFile;
+import de.ovgu.cide.ColoredIDEImages;
 import de.ovgu.cide.configuration.jdt.JDTColorManagerBridge;
+import de.ovgu.cide.editor.ColoredEditorExtensions;
+import de.ovgu.cide.editor.ColoredEditorExtensions.IProjectionColoredEditor;
+import de.ovgu.cide.features.FeatureModelManager;
+import de.ovgu.cide.features.FeatureModelNotFoundException;
+import de.ovgu.cide.features.IFeatureModel;
+import de.ovgu.cide.features.source.ColoredSourceFile;
 import de.ovgu.cide.language.jdt.editor.inlineprojection.InlineProjectionJavaViewer;
 import de.ovgu.cide.language.jdt.editor.inlineprojection.InlineProjectionSupport;
 

@@ -26,8 +26,8 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPartSite;
 
-import coloredide.editor.CodeSegment;
 import de.ovgu.cide.configuration.jdt.JDTColorManagerBridge;
+import de.ovgu.cide.editor.CodeSegment;
 import de.ovgu.cide.language.jdt.editor.inlineprojection.ColoredInlineProjectionAnnotation;
 import de.ovgu.cide.language.jdt.editor.inlineprojection.InlineProjectionAnnotationModel;
 import de.ovgu.cide.language.jdt.editor.inlineprojection.InlineProjectionJavaViewer;

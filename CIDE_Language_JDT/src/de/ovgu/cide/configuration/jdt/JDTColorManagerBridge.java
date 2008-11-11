@@ -7,9 +7,9 @@ import java.util.Set;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jdt.core.dom.ASTNode;
 
-import coloredide.features.IFeature;
-import coloredide.features.source.ColoredSourceFile;
-import coloredide.features.source.SourceFileColorManager;
+import de.ovgu.cide.features.IFeature;
+import de.ovgu.cide.features.source.ColoredSourceFile;
+import de.ovgu.cide.features.source.SourceFileColorManager;
 import de.ovgu.cide.language.jdt.ASTID;
 
 /**

@@ -12,8 +12,8 @@ import org.eclipse.jface.text.Region;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 
-import coloredide.editor.CodeSegment;
 import de.ovgu.cide.configuration.jdt.JDTColorManagerBridge;
+import de.ovgu.cide.editor.CodeSegment;
 
 @SuppressWarnings("restriction")
 public class ColoredHighlightingManager implements IPropertyChangeListener {

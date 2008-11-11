@@ -30,9 +30,9 @@ import org.eclipse.jface.text.Document;
 import org.eclipse.text.edits.MalformedTreeException;
 import org.eclipse.text.edits.TextEdit;
 
-import coloredide.configuration.ConfigurationException;
-import coloredide.features.IFeature;
-import coloredide.features.source.ColoredSourceFile;
+import de.ovgu.cide.configuration.ConfigurationException;
+import de.ovgu.cide.features.IFeature;
+import de.ovgu.cide.features.source.ColoredSourceFile;
 import de.ovgu.cide.language.jdt.JDTParserWrapper;
 
 public class DeleteHiddenNodesVisitor extends ASTVisitor {

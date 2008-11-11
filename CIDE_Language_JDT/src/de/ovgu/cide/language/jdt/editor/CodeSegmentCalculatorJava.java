@@ -10,9 +10,9 @@ import java.util.Stack;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ASTVisitor;
 
-import coloredide.editor.CodeSegment;
-import coloredide.features.IFeature;
 import de.ovgu.cide.configuration.jdt.JDTColorManagerBridge;
+import de.ovgu.cide.editor.CodeSegment;
+import de.ovgu.cide.features.IFeature;
 
 
 public class CodeSegmentCalculatorJava {

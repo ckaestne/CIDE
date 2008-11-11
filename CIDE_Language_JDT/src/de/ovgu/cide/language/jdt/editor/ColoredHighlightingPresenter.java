@@ -24,8 +24,8 @@ import org.eclipse.jface.text.TextPresentation;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.graphics.Color;
 
-import coloredide.editor.CodeSegment;
-import coloredide.utils.ColorHelper;
+import de.ovgu.cide.editor.CodeSegment;
+import de.ovgu.cide.utils.ColorHelper;
 
 @SuppressWarnings(value={"restriction","unchecked"})
 public class ColoredHighlightingPresenter implements ITextPresentationListener,

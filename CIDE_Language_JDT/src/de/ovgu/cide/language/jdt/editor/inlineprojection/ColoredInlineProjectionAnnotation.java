@@ -4,7 +4,7 @@ import java.util.Set;
 
 import org.eclipse.jface.text.Position;
 
-import coloredide.features.IFeature;
+import de.ovgu.cide.features.IFeature;
 
 
 

@@ -8,9 +8,9 @@ import java.util.Set;
 
 import org.eclipse.jface.text.source.Annotation;
 
-import coloredide.editor.IProjectionColorManager;
-import coloredide.features.IFeature;
-import coloredide.features.source.ColoredSourceFile;
+import de.ovgu.cide.editor.IProjectionColorManager;
+import de.ovgu.cide.features.IFeature;
+import de.ovgu.cide.features.source.ColoredSourceFile;
 import de.ovgu.cide.language.jdt.editor.inlineprojection.ColoredInlineProjectionAnnotation;
 import de.ovgu.cide.language.jdt.editor.inlineprojection.InlineProjectionAnnotationModel;
 import de.ovgu.cide.language.jdt.editor.inlineprojection.InlineProjectionJavaViewer;

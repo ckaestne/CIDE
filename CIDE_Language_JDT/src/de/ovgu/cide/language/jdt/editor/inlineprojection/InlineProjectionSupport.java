@@ -22,8 +22,8 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
 
-import coloredide.features.IFeature;
-import coloredide.utils.ColorHelper;
+import de.ovgu.cide.features.IFeature;
+import de.ovgu.cide.utils.ColorHelper;
 
 public class InlineProjectionSupport {
 
