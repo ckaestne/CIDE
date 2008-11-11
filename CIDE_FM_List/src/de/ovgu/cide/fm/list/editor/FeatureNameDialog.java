@@ -30,15 +30,15 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 
-import coloredide.ColoredIDEImages;
-import coloredide.features.IFeature;
-import coloredide.utils.ColorHelper;
-import coloredide.utils.SelectFeatureSetWizard;
+import de.ovgu.cide.ColoredIDEImages;
+import de.ovgu.cide.features.IFeature;
 import de.ovgu.cide.fm.list.FeatureAdapter;
 import de.ovgu.cide.fm.list.FeatureManager;
 import de.ovgu.cide.fm.list.FeatureNameManager;
 import de.ovgu.cide.fm.list.FixedFeature;
 import de.ovgu.cide.fm.list.ListFeatureModel;
+import de.ovgu.cide.utils.ColorHelper;
+import de.ovgu.cide.utils.SelectFeatureSetWizard;
 
 public class FeatureNameDialog extends Dialog {
 

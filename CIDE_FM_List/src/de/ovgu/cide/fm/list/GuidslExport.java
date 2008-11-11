@@ -12,8 +12,8 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.swt.graphics.RGB;
 
-import coloredide.features.IFeature;
-import coloredide.features.IFeatureWithID;
+import de.ovgu.cide.features.IFeature;
+import de.ovgu.cide.features.IFeatureWithID;
 
 /**
  * this class can export an .colors file to a pair of model.m and model.colors

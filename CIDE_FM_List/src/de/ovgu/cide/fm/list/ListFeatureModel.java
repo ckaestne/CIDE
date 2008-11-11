@@ -9,11 +9,11 @@ import java.util.WeakHashMap;
 
 import org.eclipse.core.resources.IProject;
 
-import coloredide.ColorListChangedEvent;
-import coloredide.configuration.AbstractConfigurationPage;
-import coloredide.configuration.NonValidatingConfigurationListPage;
-import coloredide.features.AbstractFeatureModel;
-import coloredide.features.IFeature;
+import de.ovgu.cide.ColorListChangedEvent;
+import de.ovgu.cide.configuration.AbstractConfigurationPage;
+import de.ovgu.cide.configuration.NonValidatingConfigurationListPage;
+import de.ovgu.cide.features.AbstractFeatureModel;
+import de.ovgu.cide.features.IFeature;
 
 /**
  * simple feature model of exact 50 features in a list. no further dependencies.

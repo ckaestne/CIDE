@@ -18,9 +18,9 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.graphics.RGB;
 
-import coloredide.ChangeType;
-import coloredide.ColorListChangedEvent;
-import coloredide.features.Feature;
+import de.ovgu.cide.ChangeType;
+import de.ovgu.cide.ColorListChangedEvent;
+import de.ovgu.cide.features.Feature;
 
 /**
  * one feature name manager per project. per project association of feature-id

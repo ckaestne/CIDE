@@ -7,7 +7,7 @@ import java.util.List;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.swt.graphics.RGB;
 
-import coloredide.utils.ColorHelper;
+import de.ovgu.cide.utils.ColorHelper;
 
 /**
  * provides a list of all features, defines features by ids and colors.

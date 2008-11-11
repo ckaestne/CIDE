@@ -6,7 +6,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.IAction;
 
-import coloredide.features.FeatureModelNotFoundException;
+import de.ovgu.cide.features.FeatureModelNotFoundException;
 import de.ovgu.cide.fm.list.GuidslExport;
 import de.ovgu.cide.fm.list.ListFMProvider;
 import de.ovgu.cide.fm.list.ListFeatureModel;

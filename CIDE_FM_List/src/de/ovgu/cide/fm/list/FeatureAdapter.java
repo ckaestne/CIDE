@@ -6,8 +6,8 @@ import java.util.Set;
 
 import org.eclipse.swt.graphics.RGB;
 
-import coloredide.features.IFeature;
-import coloredide.features.IFeatureWithID;
+import de.ovgu.cide.features.IFeature;
+import de.ovgu.cide.features.IFeatureWithID;
 
 /**
  * adapts the old feature class to the new IFeature interface
