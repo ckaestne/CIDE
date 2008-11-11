@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="de.ovgu.cide.core"
-      label="CIDE Core"
+      label="CIDE Core (Required)"
       version="2.0.1"
       provider-name="Christian Kaestner / University of Magdeburg">
 
    <description url="http://www.fosd.de/cide">
       The Colored Integrated Development Environment (CIDE) is a software product line tool for analyzing and decomposing legacy code. It follows the paradigm of virtual separation of concerns, i.e., developers do not physically extract the feature code, but just annotate code fragments inside the original code and use tool support for views and navigation. For annotation, background colors are used, so that code fragments belonging to a feature are shown with a background color; hence the name.  
 
-	  CIDE is a research project. It is used in various branches of software engineering research for feature-oriented development, e.g., granularity of feature extensions, safe composition, feature scoping, extractive SPL adoption model, language-independent feature-decomposition, feature interaction analysis, feature location/feature mining, feature modularity, and many more.
+   CIDE is a research project. It is used in various branches of software engineering research for feature-oriented development, e.g., granularity of feature extensions, safe composition, feature scoping, extractive SPL adoption model, language-independent feature-decomposition, feature interaction analysis, feature location/feature mining, feature modularity, and many more.
    </description>
 
    <copyright>
