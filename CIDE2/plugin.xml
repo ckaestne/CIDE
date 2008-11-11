@@ -12,7 +12,7 @@
             name="ASTView"
             icon="icons/view.gif"
             category="coloride"
-            class="coloredide.astview.ASTView"
+            class="de.ovgu.cide.astview.ASTView"
             id="coloredide.ASTView">
       </view>
       <category
@@ -20,7 +20,7 @@
             name="CIDE"/>
       <view
             category="coloride"
-            class="coloredide.tools.interactionanalyzer.InteractionsView"
+            class="de.ovgu.cide.tools.interactionanalyzer.InteractionsView"
             icon="icons/interaction.GIF"
             id="de.ovgu.cide.core.view.interactions"
             name="Feature Interactions">
@@ -28,7 +28,7 @@
       <view
             allowMultiple="true"
             category="coloride"
-            class="coloredide.tools.featureview.FeatureView"
+            class="de.ovgu.cide.tools.featureview.FeatureView"
             id="de.ovgu.cide.core.view.features"
             name="Feature List">
       </view>
@@ -57,14 +57,14 @@
            <separator name="colorGroup"/>
         </menu>
         <action
-              class="coloredide.validator.ForceValidationAction"
+              class="de.ovgu.cide.validator.ForceValidationAction"
               id="coloride.validator.ForceValidationAction"
               label="Force Full Validation"
               menubarPath="colorMenu/colorGroup"
               style="push"
               tooltip="Force color validation for full project "/>
         <action
-              class="coloredide.tools.interactionanalyzer.CollectInteractionsAction"
+              class="de.ovgu.cide.tools.interactionanalyzer.CollectInteractionsAction"
               id="menu_AstView.action4"
               label="Collect Interactions"
               menubarPath="colorMenu/colorGroup">
@@ -91,18 +91,18 @@
            <separator name="group2"/>
         </menu>
         <action
-              class="coloredide.configuration.CreateConfigurationAction"
+              class="de.ovgu.cide.configuration.CreateConfigurationAction"
               enablesFor="1"
               id="coloride.newAction"
               label="Generate Variant..."
               menubarPath="coloride.menu1/cideGroup"/>
                <action
-              class="coloredide.validator.ForceValidationAction"
+              class="de.ovgu.cide.validator.ForceValidationAction"
               id="AstView.action1"
               label="Force Full Validation"
               menubarPath="coloride.menu1/cideGroup"/>
                <action
-                     class="coloredide.tools.interactionanalyzer.CollectInteractionsAction"
+                     class="de.ovgu.cide.tools.interactionanalyzer.CollectInteractionsAction"
                      id="AstView.action4"
                      label="Collect Interactions"
                      menubarPath="coloride.menu1/gcideGroup">
@@ -113,7 +113,7 @@
            id="coloredide.resourceContributions"
            objectClass="org.eclipse.core.resources.IResource">
         <action
-              class="coloredide.navigator.SetColorPopup"
+              class="de.ovgu.cide.navigator.SetColorPopup"
               enablesFor="+"
               id="ColoredIDE.SetResourceColor"
               label="Set File/Directory Color"
@@ -129,7 +129,7 @@
             name="Colored Text Editor"
             default="true"
             icon="icons/coloredj.gif"
-            class="coloredide.editor.ColoredTextEditor"
+            class="de.ovgu.cide.editor.ColoredTextEditor"
             id="de.ovgu.cide.ColoredTextEditor">
          <contentTypeBinding contentTypeId="de.ovgu.cide.coloredFile"/>
       </editor>
@@ -138,7 +138,7 @@
    <extension
          point="org.eclipse.ui.perspectives">
       <perspective
-            class="coloredide.PerspectiveFactory"
+            class="de.ovgu.cide.PerspectiveFactory"
             icon="icons/interaction.GIF"
             id="ColoredIDE.perspective"
             name="CIDE"/>
@@ -167,9 +167,9 @@
           point="org.eclipse.ui.navigator.navigatorContent">
        <navigatorContent
              activeByDefault="true"
-             contentProvider="coloredide.navigator.ContentProvider"
+             contentProvider="de.ovgu.cide.navigator.ContentProvider"
              id="coloredide.navigatorContentColorProvider"
-             labelProvider="coloredide.navigator.ColoringProvider"
+             labelProvider="de.ovgu.cide.navigator.ColoringProvider"
              name="CIDE Color Provider"
              priority="high">
              <triggerPoints>
@@ -244,7 +244,7 @@
              id="CIDE2.viewerContribution1"
              targetID="coloredide.navigatorpopup">
           <action
-                class="coloredide.navigator.SetColorPopup"
+                class="de.ovgu.cide.navigator.SetColorPopup"
                 id="CIDE2.action1"
                 label="label">
           </action>
@@ -253,7 +253,7 @@
     <extension
           point="org.eclipse.ant.core.antTasks">
        <antTask
-             class="coloredide.configuration.ConfGenTask"
+             class="de.ovgu.cide.configuration.ConfGenTask"
              eclipseRuntime="true"
              headless="false"
              library="lib/antSupport.jar"
@@ -272,7 +272,7 @@
              id="de.ovgu.cide.ColorFilter"
              targetID="org.eclipse.ui.navigator.ProjectExplorer">
           <action
-                class="coloredide.colorfilter.EnableColorFilterAction"
+                class="de.ovgu.cide.colorfilter.EnableColorFilterAction"
                 enablesFor="*"
                 icon="icons/interaction.GIF"
                 id="de.ovgu.cide.ColorFilter.Button"
@@ -295,7 +295,7 @@
     <extension
           point="org.eclipse.ui.preferencePages">
        <page
-             class="coloredide.preferences.PluginPreferencePage"
+             class="de.ovgu.cide.preferences.PluginPreferencePage"
              id="coloredide.preferences.PluginPreferencePage"
              name="CIDE">
        </page>
@@ -303,7 +303,7 @@
     <extension
           point="org.eclipse.core.runtime.preferences">
        <initializer
-             class="coloredide.preferences.PreferenceInitializer">
+             class="de.ovgu.cide.preferences.PreferenceInitializer">
        </initializer>
     </extension>
 </plugin>

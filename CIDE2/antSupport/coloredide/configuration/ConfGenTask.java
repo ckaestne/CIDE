@@ -13,10 +13,11 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 
-import coloredide.features.FeatureModelManager;
-import coloredide.features.FeatureModelNotFoundException;
-import coloredide.features.IFeature;
-import coloredide.features.IFeatureModel;
+import de.ovgu.cide.configuration.CreateConfigurationJob;
+import de.ovgu.cide.features.FeatureModelManager;
+import de.ovgu.cide.features.FeatureModelNotFoundException;
+import de.ovgu.cide.features.IFeature;
+import de.ovgu.cide.features.IFeatureModel;
 
 /**
  * task to automate the generation of program variants from colored projects.

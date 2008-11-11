@@ -3,22 +3,22 @@ Bundle-ManifestVersion: 2
 Bundle-Name: CIDE Core
 Bundle-SymbolicName: de.ovgu.cide.core;singleton:=true
 Bundle-Version: 1.3.0
-Bundle-Activator: coloredide.CIDECorePlugin
+Bundle-Activator: de.ovgu.cide.CIDECorePlugin
 Bundle-Vendor: Christian Kaestner
 Bundle-Localization: plugin
-Export-Package: coloredide,
- coloredide.astview.internal;x-internal:=true,
- coloredide.configuration;uses:="org.apache.tools.ant",
- coloredide.editor,
- coloredide.features;
+Export-Package: de.ovgu.cide,
+ de.ovgu.cide.astview.internal;x-internal:=true,
+ de.ovgu.cide.configuration;uses:="org.apache.tools.ant",
+ de.ovgu.cide.editor,
+ de.ovgu.cide.features;
   uses:="coloredide,
    org.eclipse.core.runtime,
    coloredide.configuration,
    org.eclipse.core.resources,
    org.eclipse.swt.graphics",
- coloredide.features.source,
- coloredide.languages;uses:="org.eclipse.core.runtime,cide.languages",
- coloredide.utils;
+ de.ovgu.cide.features.source,
+ de.ovgu.cide.languages;uses:="org.eclipse.core.runtime,cide.languages",
+ de.ovgu.cide.utils;
   uses:="org.eclipse.jface.wizard,
    org.eclipse.ui.texteditor,
    org.eclipse.ui,
