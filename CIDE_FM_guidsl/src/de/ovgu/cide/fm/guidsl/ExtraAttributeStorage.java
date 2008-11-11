@@ -14,8 +14,8 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.swt.graphics.RGB;
 
-import coloredide.ChangeType;
-import coloredide.utils.ColorHelper;
+import de.ovgu.cide.ChangeType;
+import de.ovgu.cide.utils.ColorHelper;
 import featureide.fm.core.model.Feature;
 
 /**

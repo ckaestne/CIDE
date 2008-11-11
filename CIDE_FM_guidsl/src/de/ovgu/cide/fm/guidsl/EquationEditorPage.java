@@ -11,8 +11,8 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
-import coloredide.configuration.AbstractConfigurationPage;
-import coloredide.features.IFeature;
+import de.ovgu.cide.configuration.AbstractConfigurationPage;
+import de.ovgu.cide.features.IFeature;
 import featureide.fm.core.model.Feature;
 import featureide.fm.core.model.configuration.Configuration;
 import featureide.fm.core.model.configuration.SelectableFeature;

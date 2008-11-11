@@ -2,9 +2,9 @@ package de.ovgu.cide.fm.guidsl;
 
 import org.eclipse.core.resources.IProject;
 
-import coloredide.features.FeatureModelNotFoundException;
-import coloredide.features.IFeatureModel;
-import coloredide.features.IFeatureModelProvider;
+import de.ovgu.cide.features.FeatureModelNotFoundException;
+import de.ovgu.cide.features.IFeatureModel;
+import de.ovgu.cide.features.IFeatureModelProvider;
 
 /**
  * feature model provider, initializes the guidsl feature model for each project

@@ -7,9 +7,9 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
-import coloredide.configuration.AbstractConfigurationPage;
-import coloredide.features.AbstractFeatureModel;
-import coloredide.features.IFeature;
+import de.ovgu.cide.configuration.AbstractConfigurationPage;
+import de.ovgu.cide.features.AbstractFeatureModel;
+import de.ovgu.cide.features.IFeature;
 
 public class EmptyFeatureModel extends AbstractFeatureModel {
 

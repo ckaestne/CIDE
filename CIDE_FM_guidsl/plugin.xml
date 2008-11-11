@@ -25,7 +25,7 @@
               class="de.ovgu.cide.fm.guidsl.EditFeatureModelAction"
               enablesFor="1"
               id="coloride.editFeatureNames"
-              label="Edit Features..."
+              label="Edit Features... (guidsl)"
               menubarPath="coloride.menu1/cideGroup"/>
       
      </objectContribution>

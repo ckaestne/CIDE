@@ -5,8 +5,8 @@ import java.util.Set;
 
 import org.eclipse.swt.graphics.RGB;
 
-import coloredide.features.IFeature;
-import coloredide.features.IFeatureWithID;
+import de.ovgu.cide.features.IFeature;
+import de.ovgu.cide.features.IFeatureWithID;
 import featureide.fm.core.model.Feature;
 
 public class FeatureAdapter implements IFeatureWithID {
