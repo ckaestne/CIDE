@@ -9,13 +9,14 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.swt.widgets.Shell;
 
-import coloredide.configuration.AbstractConfigurationPage;
-import coloredide.features.IFeature;
-import coloredide.features.IFeatureModel;
 
 import com.ps.consul.eclipse.ui.mapping.Mapping;
 import com.ps.consul.eclipse.ui.mapping.Rule;
 import com.ps.consul.eclipse.ui.mapping.Util;
+
+import de.ovgu.cide.configuration.AbstractConfigurationPage;
+import de.ovgu.cide.features.IFeature;
+import de.ovgu.cide.features.IFeatureModel;
 
 public class PVFeatureModel implements IFeatureModel {
 

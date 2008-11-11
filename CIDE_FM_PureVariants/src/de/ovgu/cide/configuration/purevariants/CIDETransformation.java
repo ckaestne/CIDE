@@ -11,8 +11,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 
-import coloredide.configuration.CreateConfigurationJob;
-import coloredide.features.IFeature;
 
 import com.ps.consul.eclipse.core.model.IPVElement;
 import com.ps.consul.eclipse.core.model.IPVModel;
@@ -22,6 +20,8 @@ import com.ps.consul.eclipse.core.transform.ClientTransformStatus;
 import com.ps.consul.eclipse.core.transform.IClientTransformModule;
 import com.ps.consul.eclipse.ui.mapping.Rule;
 
+import de.ovgu.cide.configuration.CreateConfigurationJob;
+import de.ovgu.cide.features.IFeature;
 import de.ovgu.cide.fm.purevariants.RuleAdapter;
 
 public class CIDETransformation implements IClientTransformModule {

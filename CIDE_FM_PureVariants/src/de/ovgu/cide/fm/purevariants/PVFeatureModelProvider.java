@@ -6,12 +6,13 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 
-import coloredide.features.FeatureModelNotFoundException;
-import coloredide.features.IFeatureModel;
-import coloredide.features.IFeatureModelProvider;
 
 import com.ps.consul.eclipse.ui.mapping.Mapping;
 import com.ps.consul.eclipse.ui.mapping.Util;
+
+import de.ovgu.cide.features.FeatureModelNotFoundException;
+import de.ovgu.cide.features.IFeatureModel;
+import de.ovgu.cide.features.IFeatureModelProvider;
 
 public class PVFeatureModelProvider implements IFeatureModelProvider {
 

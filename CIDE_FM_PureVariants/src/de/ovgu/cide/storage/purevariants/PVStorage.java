@@ -11,15 +11,15 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 
-import coloredide.features.IFeature;
-import coloredide.features.IFeatureModel;
-import coloredide.features.source.IStorageProvider;
 
 import com.ps.consul.eclipse.ui.mapping.MappedObject;
 import com.ps.consul.eclipse.ui.mapping.Mapping;
 import com.ps.consul.eclipse.ui.mapping.Rule;
 import com.ps.xml.ID;
 
+import de.ovgu.cide.features.IFeature;
+import de.ovgu.cide.features.IFeatureModel;
+import de.ovgu.cide.features.source.IStorageProvider;
 import de.ovgu.cide.fm.purevariants.PVFeatureModel;
 import de.ovgu.cide.fm.purevariants.RuleAdapter;
 

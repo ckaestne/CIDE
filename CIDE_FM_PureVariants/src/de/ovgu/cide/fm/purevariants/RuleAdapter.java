@@ -6,11 +6,12 @@ import java.util.Set;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.swt.graphics.RGB;
 
-import coloredide.features.IFeature;
-import coloredide.utils.ColorHelper;
 
 import com.ps.consul.eclipse.ui.mapping.Mapping;
 import com.ps.consul.eclipse.ui.mapping.Rule;
+
+import de.ovgu.cide.features.IFeature;
+import de.ovgu.cide.utils.ColorHelper;
 
 public class RuleAdapter implements IFeature {
 

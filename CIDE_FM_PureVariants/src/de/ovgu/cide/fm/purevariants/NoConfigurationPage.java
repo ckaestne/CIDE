@@ -6,9 +6,9 @@ import java.util.Set;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
-import coloredide.configuration.AbstractConfigurationPage;
-import coloredide.features.IFeature;
-import coloredide.features.IFeatureModel;
+import de.ovgu.cide.configuration.AbstractConfigurationPage;
+import de.ovgu.cide.features.IFeature;
+import de.ovgu.cide.features.IFeatureModel;
 
 public class NoConfigurationPage extends AbstractConfigurationPage {
 
