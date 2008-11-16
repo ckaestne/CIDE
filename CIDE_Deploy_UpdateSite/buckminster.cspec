@@ -4,7 +4,6 @@
         <cs:dependency name="de.ovgu.cide.core" componentType="eclipse.feature"/>
         <cs:dependency name="de.ovgu.cide.guidsl" componentType="eclipse.feature"/>
         <cs:dependency name="de.ovgu.cide.jdt" componentType="eclipse.feature"/>
-        <cs:dependency name="de.ovgu.cide.purevariantsconnector" componentType="eclipse.feature"/>
         <cs:dependency name="de.ovgu.cide_old" componentType="eclipse.feature"/>
     </cs:dependencies>
     <cs:artifacts>
@@ -33,7 +32,6 @@
             <cs:attribute name="bundle.jars" component="de.ovgu.cide.core"/>
             <cs:attribute name="bundle.jars" component="de.ovgu.cide.guidsl"/>
             <cs:attribute name="bundle.jars" component="de.ovgu.cide.jdt"/>
-            <cs:attribute name="bundle.jars" optional="true" component="de.ovgu.cide.purevariantsconnector"/>
             <cs:attribute name="bundle.jars" component="de.ovgu.cide_old"/>
         </cs:private>
         <cs:private name="cide1">
@@ -43,13 +41,11 @@
             <cs:attribute name="feature.jars" component="de.ovgu.cide.core"/>
             <cs:attribute name="feature.jars" component="de.ovgu.cide.guidsl"/>
             <cs:attribute name="feature.jars" component="de.ovgu.cide.jdt"/>
-            <cs:attribute name="feature.jars" optional="true" component="de.ovgu.cide.purevariantsconnector"/>
         </cs:private>
         <cs:private name="feature.jars">
             <cs:attribute name="feature.jars" component="de.ovgu.cide.core"/>
             <cs:attribute name="feature.jars" component="de.ovgu.cide.guidsl"/>
             <cs:attribute name="feature.jars" component="de.ovgu.cide.jdt"/>
-            <cs:attribute name="feature.jars" optional="true" component="de.ovgu.cide.purevariantsconnector"/>
             <cs:attribute name="feature.jars" component="de.ovgu.cide_old"/>
         </cs:private>
     </cs:groups>
