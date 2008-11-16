@@ -2,9 +2,8 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: CIDE Language Plugin for Featherweight Java
 Bundle-SymbolicName: de.ovgu.cide.language.fj;singleton:=true
-Bundle-Version: 1.0.0
+Bundle-Version: 1.0.0.qualifier
 Export-Package: tmp.generated_fj
 Require-Bundle: de.ovgu.cide.ast,
  de.ovgu.cide.core
-Eclipse-LazyStart: true
 Bundle-Vendor: Christian Kaestner, University of Magdeburg
