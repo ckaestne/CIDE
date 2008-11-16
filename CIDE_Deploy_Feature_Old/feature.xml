@@ -2,11 +2,11 @@
 <feature
       id="de.ovgu.cide_old"
       label="CIDE (Old Java Version)"
-      version="1.2.1"
+      version="1.2.1.qualifier"
       provider-name="Christian Kaestner / University of Magdeburg">
 
    <description url="http://www.fosd.de/cide">
-Old version of CIDE, no longer maintained. However this version supports some features like type-checking or export to AHEAD which have not been migrated to the new version. Do not use old and new version at the same time.
+      Old version of CIDE, no longer maintained. However this version supports some features like type-checking or export to AHEAD which have not been migrated to the new version. Do not use old and new version at the same time.
 
 Do not install the old and the new CIDE versions in the same Eclipse installation. This feature is automatically deactivated if a newer release of CIDE is found.
    </description>
