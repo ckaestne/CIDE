@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<cs:cspec xmlns:cs="http://www.eclipse.org/buckminster/CSpec-1.0" name="de.ovgu.cide.updatesite" componentType="buckminster" version="1.0.0" versionType="OSGi">
+<cs:cspec xmlns:cs="http://www.eclipse.org/buckminster/CSpec-1.0" name="setde.ovgu.cide.updatesite" componentType="buckminster" version="1.0.0" versionType="OSGi">
     <cs:dependencies>
         <cs:dependency name="de.ovgu.cide.core" componentType="eclipse.feature"/>
         <cs:dependency name="de.ovgu.cide.guidsl" componentType="eclipse.feature"/>
@@ -21,9 +21,9 @@
                 <cs:property key="site.name" value="test.archivedsite"/>
             </cs:properties>
             <cs:prerequisites>
-                <cs:attribute name="site.template" alias="template"/>
-                <cs:attribute name="site.rootFiles" alias="rootFiles"/>
                 <cs:attribute name="bundle.jars" alias="plugins"/>
+                <cs:attribute name="site.rootFiles" alias="rootFiles"/>
+                <cs:attribute name="site.template" alias="template"/>
             </cs:prerequisites>
             <cs:products alias="action.output" base="site/"/>
         </cs:public>
@@ -33,7 +33,7 @@
             <cs:attribute name="bundle.jars" component="de.ovgu.cide.core"/>
             <cs:attribute name="bundle.jars" component="de.ovgu.cide.guidsl"/>
             <cs:attribute name="bundle.jars" component="de.ovgu.cide.jdt"/>
-            <cs:attribute name="bundle.jars" component="de.ovgu.cide.purevariantsconnector"/>
+            <cs:attribute name="bundle.jars" optional="true" component="de.ovgu.cide.purevariantsconnector"/>
             <cs:attribute name="bundle.jars" component="de.ovgu.cide_old"/>
         </cs:private>
         <cs:private name="cide1">
@@ -43,13 +43,13 @@
             <cs:attribute name="feature.jars" component="de.ovgu.cide.core"/>
             <cs:attribute name="feature.jars" component="de.ovgu.cide.guidsl"/>
             <cs:attribute name="feature.jars" component="de.ovgu.cide.jdt"/>
-            <cs:attribute name="feature.jars" component="de.ovgu.cide.purevariantsconnector"/>
+            <cs:attribute name="feature.jars" optional="true" component="de.ovgu.cide.purevariantsconnector"/>
         </cs:private>
         <cs:private name="feature.jars">
             <cs:attribute name="feature.jars" component="de.ovgu.cide.core"/>
             <cs:attribute name="feature.jars" component="de.ovgu.cide.guidsl"/>
             <cs:attribute name="feature.jars" component="de.ovgu.cide.jdt"/>
-            <cs:attribute name="feature.jars" component="de.ovgu.cide.purevariantsconnector"/>
+            <cs:attribute name="feature.jars" optional="true" component="de.ovgu.cide.purevariantsconnector"/>
             <cs:attribute name="feature.jars" component="de.ovgu.cide_old"/>
         </cs:private>
     </cs:groups>
