@@ -25,7 +25,10 @@ public class XMLLanguageExtension implements ILanguageExtension {
 		};
 		// return null;
 	}
-
+	public static final String LANGUAGE_EXTENSION_ID="de.ovgu.cide.language.xml";
+	public String getId() {
+		return LANGUAGE_EXTENSION_ID;
+	}
 //	public ILanguagePrintVisitor getPrettyPrinter() {
 //		SimplePrintVisitor v = new SimplePrintVisitor();
 //		v.generateSpaces=false;

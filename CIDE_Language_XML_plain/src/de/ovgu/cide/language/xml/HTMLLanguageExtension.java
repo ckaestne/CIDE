@@ -25,6 +25,11 @@ public class HTMLLanguageExtension implements ILanguageExtension {
 		};
 		// return null;
 	}
+	
+	public static final String LANGUAGE_EXTENSION_ID="de.ovgu.cide.language.html";
+	public String getId() {
+		return LANGUAGE_EXTENSION_ID;
+	}
 
 //	public ILanguagePrintVisitor getPrettyPrinter() {
 //		SimplePrintVisitor v = new SimplePrintVisitor();
