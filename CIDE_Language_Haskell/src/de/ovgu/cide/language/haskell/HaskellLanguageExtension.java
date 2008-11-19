@@ -8,20 +8,24 @@ import cide.gparser.OffsetCharStream;
 import cide.gparser.ParseException;
 import cide.languages.ILanguageExtension;
 import cide.languages.ILanguageParser;
-import cide.languages.ILanguageValidator;
 
 public class HaskellLanguageExtension implements ILanguageExtension {
 
-	public ILanguageParser getParser(final InputStream inputStream, String filename) {
-		return new ILanguageParser(){
+	public ILanguageParser getParser(final InputStream inputStream,
+			String filename) {
+		return new ILanguageParser() {
 
 			public ISourceFile getRoot() throws ParseException {
-				return new HaskellParser(new HaskellLexer(new OffsetCharStream(inputStream))).module();
-			}};
+				return new HaskellParser(new HaskellLexer(new OffsetCharStream(
+						inputStream))).module();
+			}
+		};
 	}
 
-	public ILanguageValidator getValidator() {
-		return null;
+	public static final String LANGUAGE_EXTENSION_ID = "de.ovgu.cide.language.haskell";
+
+	public String getId() {
+		return LANGUAGE_EXTENSION_ID;
 	}
 
 }
