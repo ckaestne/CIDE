@@ -15,7 +15,8 @@ public class GCIDELanguageExtension implements ILanguageExtension {
 		// TODO Auto-generated constructor stub
 	}
 
-	public ILanguageParser getParser(final InputStream inputStream, String filename) {
+	public ILanguageParser getParser(final InputStream inputStream,
+			String filename) {
 		return new ILanguageParser() {
 
 			public ISourceFile getRoot() throws ParseException {
@@ -25,12 +26,10 @@ public class GCIDELanguageExtension implements ILanguageExtension {
 		};
 	}
 
-	/*public ILanguagePrintVisitor getPrettyPrinter() {
-		return new SimplePrintVisitor();
-	}
+	public static final String LANGUAGE_EXTENSION_ID = "de.ovgu.cide.language.gcide";
 
-	public ILanguageValidator getValidator() {
-		return null;//new GCIDEValidator();
-	}*/
+	public String getId() {
+		return LANGUAGE_EXTENSION_ID;
+	}
 
 }
