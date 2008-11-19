@@ -116,7 +116,7 @@ public class PluginPreferencePage extends PreferencePage implements
 		featureModelEditor = new Combo(parent, SWT.READ_ONLY);
 		featureModelEditor.setItems(getFeatureModels(featureModelProviders));
 		featureModelEditor.addSelectionListener(updateListener);
-		
+
 		createRestartWarningLabel(parent);
 
 		// // storage providers
@@ -136,7 +136,8 @@ public class PluginPreferencePage extends PreferencePage implements
 		GridData gridData = new GridData();
 		gridData.horizontalSpan = 2;
 		Label languagesGroup = new Label(parent, SWT.NONE);
-		languagesGroup.setText("Changing the Feature Model Provider requires a restart of Eclipse.");
+		languagesGroup
+				.setText("Changing the Feature Model Provider requires a restart of Eclipse.");
 		languagesGroup.setLayoutData(gridData);
 	}
 

@@ -1,26 +1,25 @@
 package de.ovgu.cide.features;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.WeakHashMap;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 
 import de.ovgu.cide.CIDECorePlugin;
+import de.ovgu.cide.ExtensionPointManager;
 import de.ovgu.cide.preferences.PreferenceConstants;
 
-public class FeatureModelManager {
+public class FeatureModelManager extends
+		ExtensionPointManager<FeatureModelProviderProxy> {
 
 	private static FeatureModelManager instance;
 
 	private FeatureModelManager() {
+		super(CIDECorePlugin.ID, "featureModelProvider");
 	}
 
 	public static FeatureModelManager getInstance() {
@@ -29,43 +28,11 @@ public class FeatureModelManager {
 		return instance;
 	}
 
-	private List<FeatureModelProviderProxy> cachedFeatureModelProviders = null;
-
-	private void loadFeatureModelProvider() {
-		if (cachedFeatureModelProviders != null)
-			return;
-		cachedFeatureModelProviders = new ArrayList<FeatureModelProviderProxy>();
-		IExtension[] extensions = Platform.getExtensionRegistry()
-				.getExtensionPoint(CIDECorePlugin.ID, "featureModelProvider")
-				.getExtensions();
-		for (IExtension extension : extensions) {
-			IConfigurationElement[] configurationElements = extension
-					.getConfigurationElements();
-			for (IConfigurationElement configurationElement : configurationElements) {
-				FeatureModelProviderProxy proxy = parseExtension(configurationElement);
-				if (proxy != null)
-					cachedFeatureModelProviders.add(proxy);
-			}
-		}
-		debugPrintExtensions();
-	}
-
-	private void debugPrintExtensions() {
-		for (FeatureModelProviderProxy le : FeatureModelManager.getInstance()
-				.getFeatureModelProviders())
-			System.out.println(le);
-	}
-
-	private FeatureModelProviderProxy parseExtension(
+	protected FeatureModelProviderProxy parseExtension(
 			IConfigurationElement configurationElement) {
 		if (!configurationElement.getName().equals("featureModelProvider"))
 			return null;
 		return new FeatureModelProviderProxy(configurationElement);
-	}
-
-	public List<FeatureModelProviderProxy> getFeatureModelProviders() {
-		loadFeatureModelProvider();
-		return Collections.unmodifiableList(cachedFeatureModelProviders);
 	}
 
 	/**
@@ -79,7 +46,7 @@ public class FeatureModelManager {
 		String featureModelProviderId = CIDECorePlugin.getDefault()
 				.getPreferenceStore().getString(
 						PreferenceConstants.P_FEATUREMODELPROVIDER);
-		List<FeatureModelProviderProxy> providers = getFeatureModelProviders();
+		List<FeatureModelProviderProxy> providers = getProviders();
 		for (FeatureModelProviderProxy provider : providers)
 			if (provider.getId().equals(featureModelProviderId))
 				return provider;
@@ -123,5 +90,9 @@ public class FeatureModelManager {
 					CIDECorePlugin.ID, "Feature Model cannot be created", e));
 		}
 
+	}
+
+	public List<FeatureModelProviderProxy> getFeatureModelProviders() {
+		return getProviders();
 	}
 }

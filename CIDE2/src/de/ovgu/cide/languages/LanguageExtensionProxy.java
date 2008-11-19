@@ -50,6 +50,7 @@ public class LanguageExtensionProxy implements ILanguageExtension {
 		try {
 			target = (ILanguageExtension) configElement
 					.createExecutableExtension("class");
+			assert id.equals(target.getId()) : "Id of language extension does not match its declaration";
 		} catch (CoreException e) {
 			e.printStackTrace();
 		}
@@ -82,6 +83,8 @@ public class LanguageExtensionProxy implements ILanguageExtension {
 	}
 
 	public String getId() {
+		if (target != null)
+			return target.getId();
 		return id;
 	}
 

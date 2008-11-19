@@ -1,4 +1,4 @@
-package de.ovgu.cide.validator;
+package de.ovgu.cide.features.source;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +14,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
-abstract public class ColorSourceFileIteratorAction implements
+abstract public class ColoredSourceFileIteratorAction implements
 		IWorkbenchWindowActionDelegate, IObjectActionDelegate {
 
 	private final List<IProject> projects = new ArrayList<IProject>();

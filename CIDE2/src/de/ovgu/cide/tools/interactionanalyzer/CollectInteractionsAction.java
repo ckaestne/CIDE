@@ -4,9 +4,9 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.ui.IViewPart;
 
-import de.ovgu.cide.validator.ColorSourceFileIteratorAction;
+import de.ovgu.cide.features.source.ColoredSourceFileIteratorAction;
 
-public class CollectInteractionsAction extends ColorSourceFileIteratorAction {
+public class CollectInteractionsAction extends ColoredSourceFileIteratorAction {
 
 	protected WorkspaceJob createJob(IProject[] p) {
 		IViewPart view;

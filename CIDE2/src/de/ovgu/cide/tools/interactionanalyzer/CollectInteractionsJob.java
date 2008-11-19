@@ -22,7 +22,7 @@ import cide.gast.ISourceFile;
 import cide.gparser.ParseException;
 import de.ovgu.cide.features.IFeature;
 import de.ovgu.cide.features.source.ColoredSourceFile;
-import de.ovgu.cide.validator.ColoredSourceFileIteratorJob;
+import de.ovgu.cide.features.source.ColoredSourceFileIteratorJob;
 
 public class CollectInteractionsJob extends ColoredSourceFileIteratorJob {
 

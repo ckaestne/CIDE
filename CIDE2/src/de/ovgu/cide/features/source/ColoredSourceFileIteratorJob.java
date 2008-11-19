@@ -1,4 +1,4 @@
-package de.ovgu.cide.validator;
+package de.ovgu.cide.features.source;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +16,6 @@ import org.eclipse.core.runtime.SubProgressMonitor;
 
 import de.ovgu.cide.features.FeatureModelManager;
 import de.ovgu.cide.features.IFeatureModel;
-import de.ovgu.cide.features.source.ColoredSourceFile;
 
 public abstract class ColoredSourceFileIteratorJob extends WorkspaceJob {
 
