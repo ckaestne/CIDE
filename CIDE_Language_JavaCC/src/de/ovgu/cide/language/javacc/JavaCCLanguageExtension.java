@@ -15,7 +15,8 @@ public class JavaCCLanguageExtension implements ILanguageExtension {
 		// TODO Auto-generated constructor stub
 	}
 
-	public ILanguageParser getParser(final InputStream inputStream, String filename) {
+	public ILanguageParser getParser(final InputStream inputStream,
+			String filename) {
 		return new ILanguageParser() {
 
 			public ISourceFile getRoot() throws ParseException {
@@ -25,12 +26,10 @@ public class JavaCCLanguageExtension implements ILanguageExtension {
 		};
 	}
 
-//	public ILanguagePrintVisitor getPrettyPrinter() {
-//		return new SimplePrintVisitor();
-//	}
-//
-//	public ILanguageValidator getValidator() {
-//		return null;
-//	}
+	public static final String LANGUAGE_EXTENSION_ID = "de.ovgu.cide.language.javacc";
+
+	public String getId() {
+		return LANGUAGE_EXTENSION_ID;
+	}
 
 }
