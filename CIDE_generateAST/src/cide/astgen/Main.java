@@ -3,14 +3,12 @@ package cide.astgen;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.IOException;
 import java.io.PrintStream;
 
 import cide.astgen.nparser.ast.NGrammar;
 import cide.astgen.nparser.parser.ParseException;
 import cide.astgen.nparser.parser.SlimJJParser;
 import cide.astgen.nparser.visitor.ASTCreationVisitor;
-import cide.astgen.nparser.visitor.CreateReferenceManagerVisitor;
 import cide.astgen.nparser.visitor.CreateSimplePrintVisitorVisitor;
 import cide.astgen.nparser.visitor.JavaCCPrintVisitor;
 import cide.astgen.nparser.visitor.SlimPrintVisitor;
@@ -70,8 +68,8 @@ public class Main {
 		grammar.accept(new ASTCreationVisitor(targetDirectory, targetPackage));
 		grammar.accept(new CreateSimplePrintVisitorVisitor(targetDirectory,
 				targetPackage));
-		grammar.accept(new CreateReferenceManagerVisitor(targetDirectory,
-				targetPackage));
+//		grammar.accept(new CreateReferenceManagerVisitor(targetDirectory,
+//				targetPackage));
 		System.out.println("done.");
 	}
 

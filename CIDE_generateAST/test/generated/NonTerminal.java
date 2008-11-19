@@ -1,9 +1,11 @@
 package generated;
 
-import cide.gast.*;
-import cide.gparser.*;
-import cide.greferences.*;
-import java.util.*;
+import cide.gast.ASTNode;
+import cide.gast.ASTStringNode;
+import cide.gast.IToken;
+import cide.gast.Property;
+import cide.gast.PropertyOne;
+import cide.gparser.Token;
 
 public class NonTerminal extends GenASTNode {
   public NonTerminal(ASTStringNode identifier, Token firstToken, Token lastToken) {
@@ -20,7 +22,7 @@ public class NonTerminal extends GenASTNode {
   public ASTStringNode getIdentifier() {
     return ((PropertyOne<ASTStringNode>)getProperty("identifier")).getValue();
   }
-  public IReferenceType[] getReferenceTypes() {
-    return new IReferenceType[]{ ReferenceManager.production };
-  }
+//  public IReferenceType[] getReferenceTypes() {
+//    return new IReferenceType[]{ ReferenceManager.production };
+//  }
 }

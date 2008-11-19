@@ -98,27 +98,27 @@ public class ASTCreationVisitor extends NVisitor {
 				+ "(cloneProperties(),firstToken,lastToken);");
 		out.println("  }");
 		generateAccessMethods(units);
-		out.print(generateReferenceMethod(c));
+//		out.print(generateReferenceMethod(c));
 		return super.visit(c);
 	}
 
-	String generateReferenceMethod(NChoice c) {
-		List<String> references = c.collectAnnotationValues("Reference");
-		if (references.size() == 0)
-			return "";
-		String returnValue = "";
-		boolean first = true;
-		for (String refType : references) {
-			if (first)
-				first = false;
-			else
-				returnValue += ", ";
-			returnValue += "ReferenceManager."
-					+ CreateReferenceManagerVisitor.genName(refType);
-		}
-		return "  public IReferenceType[] getReferenceTypes() {\n    return new IReferenceType[]{ "
-				+ returnValue + " };\n  }\n";
-	}
+//	String generateReferenceMethod(NChoice c) {
+//		List<String> references = c.collectAnnotationValues("Reference");
+//		if (references.size() == 0)
+//			return "";
+//		String returnValue = "";
+//		boolean first = true;
+//		for (String refType : references) {
+//			if (first)
+//				first = false;
+//			else
+//				returnValue += ", ";
+//			returnValue += "ReferenceManager."
+//					+ CreateReferenceManagerVisitor.genName(refType);
+//		}
+//		return "  public IReferenceType[] getReferenceTypes() {\n    return new IReferenceType[]{ "
+//				+ returnValue + " };\n  }\n";
+//	}
 
 	private void generateAccessMethods(List<NAbstractValue> units) {
 		for (NAbstractValue unit : units) {
