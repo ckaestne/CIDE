@@ -1,39 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.2"?>
 <plugin>
-   <extension
-         point="de.ovgu.cide.core.featureModelProvider">
-      <featureModelProvider
-            id="de.ovgu.cide.fm.list"
-            name="Feature List Plugin"
-            provider="de.ovgu.cide.fm.list.ListFMProvider">
-      </featureModelProvider>
-   </extension>
-<extension
-        point="org.eclipse.ui.popupMenus">
-     <objectContribution
-           adaptable="false"
-           id="coloredide.projectContributions"
-           objectClass="org.eclipse.core.resources.IProject">
-        <menu
-              id="coloride.menu1"
-              label="CIDE"
-              path="additions">
-           <separator name="cideGroup"/>
-        </menu>
-       <action
-              class="de.ovgu.cide.fm.list.editor.EditFeatureModelAction"
-              enablesFor="1"
-              id="coloride.editFeatureNames"
-              label="Edit Features... (list)"
-              menubarPath="coloride.menu1/cideGroup"/>
-       <action
-              class="de.ovgu.cide.fm.list.editor.ExportFeatureModelAction"
-              enablesFor="1"
-              id="coloride.exportToGuidsl"
-              label="Export to GUIDSL Model... (list)"
-              menubarPath="coloride.menu1/cideGroup"/>
-     </objectContribution>
- 
-  </extension>
+	<extension point="de.ovgu.cide.core.featureModelProvider">
+		<featureModelProvider id="de.ovgu.cide.fm.list"
+			name="Feature List Plugin" provider="de.ovgu.cide.fm.list.ListFMProvider">
+		</featureModelProvider>
+	</extension>
+	<extension point="org.eclipse.ui.popupMenus">
+		<objectContribution adaptable="false"
+			id="coloredide.projectContributions" objectClass="org.eclipse.core.resources.IProject">
+			<menu id="coloride.menu1" label="CIDE" path="additions">
+				<separator name="cideGroup" />
+			</menu>
+			<action class="de.ovgu.cide.fm.list.editor.EditFeatureModelAction"
+				enablesFor="1" id="coloride.editFeatureNames" label="Edit Features... (list)"
+				menubarPath="coloride.menu1/cideGroup" />
+			<action class="de.ovgu.cide.fm.list.editor.ExportFeatureModelAction"
+				enablesFor="1" id="coloride.exportToGuidsl" label="Export to GUIDSL Model... (list)"
+				menubarPath="coloride.menu1/cideGroup" />
+		</objectContribution>
+
+	</extension>
+	<extension point="de.ovgu.cide.typing.evaluationStrategy">
+		<evaluationStrategy featureModelProvider="de.ovgu.cide.fm.list"
+			id="de.ovgu.cide.typing.evaluationstrategy.subsetstrategy" name="Subset Evaluation Strategy"
+			strategy="de.ovgu.cide.typing.list.SubsetStrategy">
+		</evaluationStrategy>
+	</extension>
 </plugin>

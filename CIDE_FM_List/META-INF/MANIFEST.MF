@@ -2,10 +2,12 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: CIDE (Parented) Feature List
 Bundle-SymbolicName: de.ovgu.cide.fm.list;singleton:=true
-Bundle-Version: 0.1.1
+Bundle-Version: 0.1.1.qualifier
 Bundle-Activator: de.ovgu.cide.fm.list.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.core.resources,
- de.ovgu.cide.core
+ de.ovgu.cide.core,
+ de.ovgu.cide.typing;bundle-version="0.1.0",
+ de.ovgu.cide.ast;bundle-version="1.0.2"
 Eclipse-LazyStart: true
