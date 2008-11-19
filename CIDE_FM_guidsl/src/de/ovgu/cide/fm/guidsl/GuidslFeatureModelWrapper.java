@@ -195,4 +195,12 @@ public class GuidslFeatureModelWrapper extends AbstractFeatureModel {
 		return null;
 	}
 
+	/**
+	 * to be used only internally in this plugin.
+	 * 
+	 * @return
+	 */
+	public FeatureModel getInternalModel() {
+		return model;
+	}
 }

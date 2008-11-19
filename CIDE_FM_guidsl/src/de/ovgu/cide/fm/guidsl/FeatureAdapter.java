@@ -88,4 +88,13 @@ public class FeatureAdapter implements IFeatureWithID {
 		return true;
 	}
 
+	/**
+	 * to be used only within this plugin!
+	 * 
+	 * @return
+	 */
+	public Feature getInternalFeature() {
+		return feature;
+	}
+
 }

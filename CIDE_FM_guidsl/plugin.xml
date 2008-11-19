@@ -31,4 +31,10 @@
      </objectContribution>
  
   </extension>
+    <extension point="de.ovgu.cide.typing.evaluationStrategy">
+		<evaluationStrategy featureModelProvider="de.ovgu.cide.fm.guidsl"
+			id="de.ovgu.cide.typing.evaluationstrategy.sat4jstrategy" name="Guidsl (sat4j) Evaluation Strategy"
+			strategy="de.ovgu.cide.typing.guidsl.SatEvaluationStrategy">
+		</evaluationStrategy>
+	</extension>
 </plugin>
