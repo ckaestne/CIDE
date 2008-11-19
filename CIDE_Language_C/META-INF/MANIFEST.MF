@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: CIDE Language Plugin for C
 Bundle-SymbolicName: de.ovgu.cide.language.c;singleton:=true
-Bundle-Version: 1.0.0
+Bundle-Version: 1.0.0.qualifier
 Export-Package: tmp.generated_c
 Require-Bundle: de.ovgu.cide.core,
  de.ovgu.cide.ast

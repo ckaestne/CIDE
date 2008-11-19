@@ -11,27 +11,26 @@ import cide.languages.ILanguageParser;
 
 public class CLanguageExtension implements ILanguageExtension {
 
-	private final static String[] EXTENSIONS = new String[] { ".c" ,".h"};
+	private final static String[] EXTENSIONS = new String[] { ".c", ".h" };
 
 	public String[] getFileExtensions() {
 		return EXTENSIONS;
 	}
 
-	public ILanguageParser getParser(final InputStream inputStream, String filename) {
+	public ILanguageParser getParser(final InputStream inputStream,
+			String filename) {
 		return new ILanguageParser() {
 			public ISourceFile getRoot() throws ParseException {
-				return new CParser(new OffsetCharStream(inputStream)).TranslationUnit();
+				return new CParser(new OffsetCharStream(inputStream))
+						.TranslationUnit();
 			}
 		};
 	}
 
-//	public ILanguagePrintVisitor getPrettyPrinter() {
-//		return new SimplePrintVisitor();
-//	}
+	public static final String LANGUAGE_EXTENSION_ID = "de.ovgu.cide.language.c";
 
-//	public ILanguageValidator getValidator() {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
+	public String getId() {
+		return LANGUAGE_EXTENSION_ID;
+	}
 
 }
