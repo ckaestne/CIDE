@@ -7,7 +7,6 @@ import cide.gast.ISourceFile;
 import cide.gparser.ParseException;
 import cide.languages.ILanguageExtension;
 import cide.languages.ILanguageParser;
-import cide.languages.ILanguageValidator;
 
 public class JavaLanguageExtension implements ILanguageExtension {
 
@@ -17,7 +16,8 @@ public class JavaLanguageExtension implements ILanguageExtension {
 		return EXTENSIONS;
 	}
 
-	public ILanguageParser getParser(final InputStream inputStream, String filename) {
+	public ILanguageParser getParser(final InputStream inputStream,
+			String filename) {
 		return new ILanguageParser() {
 			public ISourceFile getRoot() throws ParseException {
 				return new Java15Parser(inputStream).CompilationUnit();
@@ -25,10 +25,10 @@ public class JavaLanguageExtension implements ILanguageExtension {
 		};
 	}
 
+	public static final String LANGUAGE_EXTENSION_ID = "de.ovgu.cide.language.java";
 
-	public ILanguageValidator getValidator() {
-		// TODO Auto-generated method stub
-		return null;
+	public String getId() {
+		return LANGUAGE_EXTENSION_ID;
 	}
 
 }
