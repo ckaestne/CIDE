@@ -27,16 +27,10 @@ public class PropertyLanguageExtension implements ILanguageExtension {
 		// return null;
 	}
 
-//	public ILanguagePrintVisitor getPrettyPrinter() {
-//		SimplePrintVisitor v = new SimplePrintVisitor();
-//		v.generateSpaces=false;
-//		return v; 
-//
-//	}
-//
-//	public ILanguageValidator getValidator() {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
+	public static final String LANGUAGE_EXTENSION_ID="de.ovgu.cide.language.properties";
+	public String getId() {
+		return LANGUAGE_EXTENSION_ID;
+	}
+
 
 }
