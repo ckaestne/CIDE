@@ -16,12 +16,20 @@ public interface ILanguageExtension {
 	 */
 	ILanguageParser getParser(InputStream inputStream, String filePath);
 
-//	/**
-//	 * returns the language validator. the validator is an interface that
-//	 * provides all required information about validating the specific language,
-//	 * including a resolver for references.
-//	 * 
-//	 * @deprecated currently deactivated, waiting for major refactoring
-//	 */
-//	ILanguageValidator getValidator();
+	/**
+	 * returns the ID of the language extension
+	 * 
+	 * @return
+	 */
+	String getId();
+
+	// /**
+	// * returns the language validator. the validator is an interface that
+	// * provides all required information about validating the specific
+	// language,
+	// * including a resolver for references.
+	// *
+	// * @deprecated currently deactivated, waiting for major refactoring
+	// */
+	// ILanguageValidator getValidator();
 }

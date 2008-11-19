@@ -6,8 +6,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import cide.greferences.IReferenceType;
-
 public abstract class ASTNode implements IASTNode {
 
 	public class StartPositionSorter implements Comparator<IASTNode> {
@@ -182,18 +180,18 @@ public abstract class ASTNode implements IASTNode {
 		parentProperty.removeSubtree(this);
 	}
 
-	public boolean hasReferenceTypes() {
-		return getReferenceTypes().length > 0;
-	}
-
-	/**
-	 * returns all supported reference types for this choice.
-	 * 
-	 * @return array of reference types, possibly empty
-	 */
-	public IReferenceType[] getReferenceTypes() {
-		return new IReferenceType[0];
-	}
+	// public boolean hasReferenceTypes() {
+	// return getReferenceTypes().length > 0;
+	// }
+	//
+	// /**
+	// * returns all supported reference types for this choice.
+	// *
+	// * @return array of reference types, possibly empty
+	// */
+	// public IReferenceType[] getReferenceTypes() {
+	// return new IReferenceType[0];
+	// }
 
 	/**
 	 * prints the AST subtree to a string
@@ -204,6 +202,18 @@ public abstract class ASTNode implements IASTNode {
 
 	public String getDisplayName() {
 		return this.getClass().getSimpleName();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof IASTNode)
+			return getStartPosition() == ((IASTNode) obj).getStartPosition()
+					&& getLength() == ((IASTNode) obj).getLength();
+		return super.equals(obj);
+	}
+	@Override
+	public int hashCode() {
+		return getStartPosition();
 	}
 
 }
