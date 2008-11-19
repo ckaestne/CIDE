@@ -6,9 +6,18 @@
       <language
             class="de.ovgu.cide.language.bali.BaliLanguageExtension"
             fileExtensions=".b"
-            id="CIDE_Language_Bali.language1"
+            id="de.ovgu.cide.language.bali"
             name="Bali Language Extension">
       </language>
+   </extension>
+   <extension
+         point="de.ovgu.cide.typing.typingProvider">
+      <typingProvider
+            id="de.ovgu.cide.typing.bali"
+            languageId="de.ovgu.cide.language.bali"
+            name="Bali Annotation Typing"
+            provider="de.ovgu.cide.typing.bali.BaliTypingExtension">
+      </typingProvider>
    </extension>
 
 </plugin>

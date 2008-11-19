@@ -11,10 +11,6 @@ import cide.languages.ILanguageParser;
 
 public class BaliLanguageExtension implements ILanguageExtension {
 
-	public BaliLanguageExtension() {
-		// TODO Auto-generated constructor stub
-	}
-
 	public ILanguageParser getParser(final InputStream inputStream, String filename) {
 		return new ILanguageParser() {
 
@@ -25,14 +21,11 @@ public class BaliLanguageExtension implements ILanguageExtension {
 		};
 
 	}
-//
-//	public ILanguagePrintVisitor getPrettyPrinter() {
-//		return new SimplePrintVisitor();
-//	}
 
-//	public ILanguageValidator getValidator() {
-////		return new BaliValidator();
-//		return null;
-//	}
+	public static final String LANGUAGE_EXTENSION_ID="de.ovgu.cide.language.bali";
+	public String getId() {
+		return LANGUAGE_EXTENSION_ID;
+	}
+
 
 }
