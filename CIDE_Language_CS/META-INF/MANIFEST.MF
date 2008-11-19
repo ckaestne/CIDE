@@ -2,8 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: CIDE Language Plugin for C#
 Bundle-SymbolicName: de.ovgu.cide.language.cs;singleton:=true
-Bundle-Version: 1.0.0
+Bundle-Version: 1.0.0.qualifier
 Require-Bundle: de.ovgu.cide.ast,
  de.ovgu.cide.core
-Eclipse-LazyStart: false
 Bundle-Vendor: Christian Kaestner, University of Magdeburg
