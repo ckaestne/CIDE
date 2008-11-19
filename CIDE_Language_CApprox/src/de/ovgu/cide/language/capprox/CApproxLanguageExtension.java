@@ -17,7 +17,8 @@ public class CApproxLanguageExtension implements ILanguageExtension {
 		return EXTENSIONS;
 	}
 
-	public ILanguageParser getParser(final InputStream inputStream, String filename) {
+	public ILanguageParser getParser(final InputStream inputStream,
+			String filename) {
 		return new ILanguageParser() {
 			public ISourceFile getRoot() throws ParseException {
 				return new CApproxParser(new OffsetCharStream(inputStream))
@@ -25,20 +26,11 @@ public class CApproxLanguageExtension implements ILanguageExtension {
 			}
 		};
 	}
-//
-//	public ILanguagePrintVisitor getPrettyPrinter() {
-//		return new SimplePrintVisitor() {
-//			protected List<String> getNoSpaceAfterToken() {
-//				List<String> l = super.getNoSpaceAfterToken();
-//				if (!l.contains("#"))
-//					l.add("#");
-//				return l;
-//			}
-//		};
-//	}
 
-//	public ILanguageValidator getValidator() {
-//		// new AstgenTask
-//		return null;
-//	}
+	public static final String LANGUAGE_EXTENSION_ID = "de.ovgu.cide.language.capprox";
+
+	public String getId() {
+		return LANGUAGE_EXTENSION_ID;
+	}
+
 }
