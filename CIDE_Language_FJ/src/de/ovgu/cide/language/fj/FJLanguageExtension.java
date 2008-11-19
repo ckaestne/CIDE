@@ -11,13 +11,14 @@ import cide.languages.ILanguageParser;
 
 public class FJLanguageExtension implements ILanguageExtension {
 
-	private final static String[] EXTENSIONS = new String[] { ".c" ,".h"};
+	private final static String[] EXTENSIONS = new String[] { ".c", ".h" };
 
 	public String[] getFileExtensions() {
 		return EXTENSIONS;
 	}
 
-	public ILanguageParser getParser(final InputStream inputStream, String filename) {
+	public ILanguageParser getParser(final InputStream inputStream,
+			String filename) {
 		return new ILanguageParser() {
 			public ISourceFile getRoot() throws ParseException {
 				return new FJParser(new OffsetCharStream(inputStream)).Goal();
@@ -25,12 +26,10 @@ public class FJLanguageExtension implements ILanguageExtension {
 		};
 	}
 
-//	public ILanguagePrintVisitor getPrettyPrinter() {
-//		return new SimplePrintVisitor();
-//	}
-//
-//	public ILanguageValidator getValidator() {
-////		new AstgenTask
-//		return null;
-//	}
+	public static final String LANGUAGE_EXTENSION_ID = "de.ovgu.cide.language.fj";
+
+	public String getId() {
+		return LANGUAGE_EXTENSION_ID;
+	}
+
 }
