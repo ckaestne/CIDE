@@ -17,7 +17,8 @@ public class SimpleLanguageExtension implements ILanguageExtension {
 		return EXTENSIONS;
 	}
 
-	public ILanguageParser getParser(final InputStream inputStream, String filename) {
+	public ILanguageParser getParser(final InputStream inputStream,
+			String filename) {
 		return new ILanguageParser() {
 			public ISourceFile getRoot() throws ParseException {
 				return new JavaParser(new OffsetCharStream(inputStream))
@@ -26,13 +27,10 @@ public class SimpleLanguageExtension implements ILanguageExtension {
 		};
 	}
 
-//	public ILanguagePrintVisitor getPrettyPrinter() {
-//		return new SimplePrintVisitor();
-//	}
-//
-//	public ILanguageValidator getValidator() {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
+	public static final String LANGUAGE_EXTENSION_ID = "de.ovgu.cide.language.simple";
+
+	public String getId() {
+		return LANGUAGE_EXTENSION_ID;
+	}
 
 }
