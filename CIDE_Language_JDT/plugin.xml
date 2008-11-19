@@ -42,5 +42,14 @@
             id="ColoredIDE.ColorInfoHover"
             label="ColorInfoHover"/>
    </extension>
+                <extension
+                      point="de.ovgu.cide.typing.typingProvider">
+                   <typingProvider
+                         id="de.ovgu.cide.typing.jdt"
+                         languageId="de.ovgu.cide.language.jdt"
+                         name="Java Annotation Typing Checks"
+                         provider="de.ovgu.cide.typing.jdt.JDTTypingExtension">
+                   </typingProvider>
+                </extension>
 
 </plugin>

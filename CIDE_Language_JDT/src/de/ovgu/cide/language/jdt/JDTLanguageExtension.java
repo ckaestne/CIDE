@@ -22,7 +22,10 @@ public class JDTLanguageExtension implements ILanguageExtension {
 		return new JDTParserWrapper(file);
 	}
 
-	
+	public static final String LANGUAGE_EXTENSION_ID="de.ovgu.cide.language.jdt";
+	public String getId() {
+		return LANGUAGE_EXTENSION_ID;
+	}
 	
 
 }
