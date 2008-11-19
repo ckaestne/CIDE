@@ -1,9 +1,0 @@
-refines class Main {
-	protected void hook(int i, int j) {
-		try {
-			Super(int, int).hook(i, j);
-		} finally {
-			b(j);
-		}
-	}
-}

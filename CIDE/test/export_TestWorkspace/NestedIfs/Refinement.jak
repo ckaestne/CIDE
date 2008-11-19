@@ -1,8 +1,0 @@
-refines class Main {
-	protected void hook() {
-		if (true) {
-			a(2);
-		} else 
-			Super.hook();
-	}
-}

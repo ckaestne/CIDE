@@ -1,7 +1,0 @@
-class Main {
-	void foo() {
-	}
-
-	void a() {}
-	void b() {}
-}

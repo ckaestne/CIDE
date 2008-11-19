@@ -1,6 +1,0 @@
-class Main {
-	void foo(int i) {
-		a(i);
-		original(i);
-	}
-}

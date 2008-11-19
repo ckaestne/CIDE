@@ -1,6 +1,0 @@
-refines class Main {
-	protected void hook() {
-		r.i.byteValue();
-		Super.hook();
-	}
-}

@@ -1,3 +1,0 @@
-refines interface Main {
-	void foo();
-}

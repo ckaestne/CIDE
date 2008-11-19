@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<session version="1.0">
-<refactoring accessors="true" comment="Delete 2 element(s) from project &apos;MultipleWriteAccessProblem&apos;&#x0D;&#x0A;- Original project: &apos;MultipleWriteAccessProblem&apos;&#x0D;&#x0A;- Original elements:&#x0D;&#x0A;     Derivative.jak&#x0D;&#x0A;     Refinement2.jak" description="Delete elements" element1="Derivative.jak" element2="Refinement2.jak" elements="0" flags="589830" id="org.eclipse.jdt.ui.delete" resources="2" stamp="1199621411515" subPackages="false" version="1.0"/>
-</session>
