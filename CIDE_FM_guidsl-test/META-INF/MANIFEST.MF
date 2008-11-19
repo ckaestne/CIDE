@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: CIDE_FM_guidsl_test Fragment
+Bundle-SymbolicName: de.ovgu.cide.fm.guidsl-test
+Bundle-Version: 0.2.0
+Fragment-Host: de.ovgu.cide.fm.guidsl;bundle-version="0.2.0"
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Require-Bundle: org.junit4
