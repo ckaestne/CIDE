@@ -28,36 +28,6 @@ public class BaliTypingProvider extends AbstractFileBasedTypingProvider {
 
 	}
 
-	public void updateFile(Collection<ColoredSourceFile> files) {
-		Set<ITypingCheck> addedChecks = new HashSet<ITypingCheck>();
-		Set<ITypingCheck> obsoleteChecks = new HashSet<ITypingCheck>();
-
-		for (ColoredSourceFile file : files) {
-			Set<ITypingCheck> oldChecks = checks.get(file.getResource());
-			if (oldChecks == null)
-				oldChecks = new HashSet<ITypingCheck>();
-
-			if (file != null
-					&& file.isColored()
-					&& file.getLanguageExtension().getId()==BaliLanguageExtension.LANGUAGE_EXTENSION_ID) {
-				Set<ITypingCheck> newChecks = new FileChecker(file).run();
-
-				for (ITypingCheck old : oldChecks)
-					if (!newChecks.contains(old))
-						obsoleteChecks.add(old);
-				for (ITypingCheck newc : newChecks)
-					if (!oldChecks.contains(newc))
-						addedChecks.add(newc);
-				checks.put(file.getResource(), newChecks);
-			} else {
-				obsoleteChecks.addAll(oldChecks);
-				checks.remove(file.getResource());
-			}
-		}
-
-		fireTypingCheckChanged(addedChecks, obsoleteChecks);
-	}
-
 	/**
 	 * method object. use only like this: new FileChecker(file).run(), do not
 	 * reuse instance
@@ -132,7 +102,7 @@ public class BaliTypingProvider extends AbstractFileBasedTypingProvider {
 		}
 
 		private ISourceFile parse() throws CoreException, ParseException {
-			assert file.getLanguageExtension().getId()==BaliLanguageExtension.LANGUAGE_EXTENSION_ID;
+			assert file.getLanguageExtension().getId() == BaliLanguageExtension.LANGUAGE_EXTENSION_ID;
 
 			return file.getAST();
 		}
@@ -142,7 +112,21 @@ public class BaliTypingProvider extends AbstractFileBasedTypingProvider {
 	protected boolean matchFileForUpdate(ColoredSourceFile coloredSourceFile) {
 		return coloredSourceFile != null
 				&& coloredSourceFile.isColored()
-				&& coloredSourceFile.getLanguageExtension().getId()==BaliLanguageExtension.LANGUAGE_EXTENSION_ID;
+				&& coloredSourceFile.getLanguageExtension().getId().equals(
+						BaliLanguageExtension.LANGUAGE_EXTENSION_ID);
+	}
+
+	@Override
+	protected Set<ITypingCheck> checkFile(ColoredSourceFile file) {
+		return new FileChecker(file).run();
+	}
+
+	public void prepareReevaluation(Collection<ColoredSourceFile> files) {
+		// nothing to do
+	}
+
+	public void prepareReevaluationAll() {
+		// nothing to do
 	}
 
 }
