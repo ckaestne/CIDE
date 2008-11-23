@@ -43,15 +43,17 @@ public class JDTParserWrapper implements ILanguageParser {
 		if (compUnit == null)
 			throw new ParseException("Not a java file");
 
-		CompilationUnit root;
+		return parseCompilationUnit(compUnit);
+	}
+
+	public static CompilationUnit parseCompilationUnit(ICompilationUnit compUnit)
+			throws ParseException {
 
 		ASTParser parser = ASTParser.newParser(AST.JLS3);// TODO: find
-		// user-configured
-		// version
-		parser.setResolveBindings(false);
+		parser.setResolveBindings(true);
 		parser.setSource(compUnit);
-		parser.setStatementsRecovery(true);
-		root = (CompilationUnit) parser.createAST(null);
+		parser.setStatementsRecovery(false);
+		CompilationUnit root = (CompilationUnit) parser.createAST(null);
 		return root;
 	}
 

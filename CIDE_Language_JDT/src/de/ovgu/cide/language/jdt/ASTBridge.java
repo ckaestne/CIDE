@@ -3,6 +3,7 @@ package de.ovgu.cide.language.jdt;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ChildListPropertyDescriptor;
 import org.eclipse.jdt.core.dom.ChildPropertyDescriptor;
 import org.eclipse.jdt.core.dom.CompilationUnit;
@@ -11,7 +12,9 @@ import org.eclipse.jdt.core.dom.StructuralPropertyDescriptor;
 
 import cide.gast.ASTNode;
 import cide.gast.ASTTextNode;
+import cide.gast.ASTVisitor;
 import cide.gast.IASTNode;
+import cide.gast.IASTVisitor;
 import cide.gast.IToken;
 import cide.gast.Property;
 import cide.gast.PropertyOne;
@@ -38,7 +41,75 @@ public class ASTBridge {
 		return bridgeASTNode(e_root);
 	}
 
-	protected ASTNode bridgeASTNode(org.eclipse.jdt.core.dom.ASTNode e_node) {
+	/**
+	 * to bridge a single node from the outside the root is still required to
+	 * get the parents right. note, unless resolveAllSiblings is true, the
+	 * returned structure is not complete. parent nodes have only a single
+	 * property required to get here. only their ids are preserved to enable
+	 * color lookups, but not navigation
+	 * 
+	 * @param e_root
+	 * @param e_node
+	 * @return
+	 */
+	public IASTNode getASTNode(CompilationUnit e_root,
+			org.eclipse.jdt.core.dom.ASTNode e_node, boolean resolveAllSiblings) {
+		// fake inheritance by adding fake parent nodes with correct ID but
+		// without other children
+		if (!resolveAllSiblings) {
+			ASTNode result = bridgeASTNode(e_node);
+			bridgeFakeParentNodes(result, e_node);
+			return result;
+		}
+		// bridge the entire AST but retrieve the correct node
+		ASTNode c_root = bridgeASTNode(e_root);
+		BridgedASTFinder astFinder = new BridgedASTFinder(ASTID.id(e_node));
+		c_root.accept(astFinder);
+		return astFinder.node;
+	}
+
+	private static class BridgedASTFinder extends ASTVisitor {
+		BridgedASTFinder(String id) {
+			this.id = id;
+		}
+
+		final String id;
+		IASTNode node = null;
+
+		@Override
+		public boolean visit(IASTNode node) {
+			if (node.getId().equals(id)) {
+				this.node = node;
+				return false;
+			}
+			return super.visit(node);
+		}
+	}
+
+	private void bridgeFakeParentNodes(ASTNode c_node,
+			org.eclipse.jdt.core.dom.ASTNode e_node) {
+		while (e_node.getParent() != null) {
+			org.eclipse.jdt.core.dom.ASTNode e_parent = e_node.getParent();
+
+			IToken c_firstToken = new PosToken(e_parent.getStartPosition());
+			IToken c_lastToken = new PosToken(e_parent.getStartPosition()
+					+ e_node.getLength());
+
+			StructuralPropertyDescriptor e_prop = e_node.getLocationInParent();
+			List<Property> c_props = new ArrayList<Property>();
+
+			// fake a property with a single child
+			c_props.add(new PropertyZeroOrOne<ASTNode>(e_prop.getId(), c_node));
+
+			c_node = new UnifiedASTNode(getDisplayName(e_parent), ASTID
+					.id(e_parent), c_props, c_firstToken, c_lastToken);
+
+			e_node = e_parent;
+		}
+
+	}
+
+	private ASTNode bridgeASTNode(org.eclipse.jdt.core.dom.ASTNode e_node) {
 		IToken c_firstToken = new PosToken(e_node.getStartPosition());
 		IToken c_lastToken = new PosToken(e_node.getStartPosition()
 				+ e_node.getLength());
@@ -57,8 +128,8 @@ public class ASTBridge {
 				c_props.add(bridgeChildProperty(e_node,
 						(ChildPropertyDescriptor) e_prop));
 		}
-		return new UnifiedASTNode(getDisplayName(e_node),ASTID.id(e_node), c_props,
-				c_firstToken, c_lastToken);
+		return new UnifiedASTNode(getDisplayName(e_node), ASTID.id(e_node),
+				c_props, c_firstToken, c_lastToken);
 	}
 
 	private Property bridgeChildProperty(
