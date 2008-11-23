@@ -17,8 +17,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.WeakHashMap;
 
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.ISaveContext;
@@ -33,7 +36,6 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
-
 
 import com.sun.org.apache.xerces.internal.impl.validation.ValidationManager;
 
@@ -235,42 +237,53 @@ public class CIDECorePlugin extends AbstractUIPlugin {
 
 	}
 
-	private List<IColorChangeListener> listeners = null;
+	private List<WeakReference<IColorChangeListener>> listeners = null;
 
 	public void addColorChangeListener(IColorChangeListener listener) {
 		if (listeners == null)
-			listeners = new ArrayList<IColorChangeListener>();
-		listeners.add(listener);
+			listeners = new ArrayList<WeakReference<IColorChangeListener>>();
+		listeners.add(new WeakReference<IColorChangeListener>(listener));
 	}
 
 	public void removeColorChangeListener(IColorChangeListener listener) {
-		if (listeners != null)
-			listeners.remove(listener);
+		Iterator<WeakReference<IColorChangeListener>> iter = listeners
+				.iterator();
+		while (iter.hasNext()) {
+			WeakReference<IColorChangeListener> reference = iter.next();
+			IColorChangeListener referencedListener = reference.get();
+			if (referencedListener == null || referencedListener == listener)
+				iter.remove();
+		}
 	}
 
 	public void notifyListeners(ASTColorChangedEvent event) {
 		if (listeners != null)
-			for (IColorChangeListener listener : listeners) {
-				listener.astColorChanged(event);
+			for (WeakReference<IColorChangeListener> ref : listeners) {
+				IColorChangeListener listener = ref.get();
+				if (listener != null)
+					listener.astColorChanged(event);
 			}
 	}
 
 	public void notifyListeners(FileColorChangedEvent event) {
 		if (listeners != null)
-			for (IColorChangeListener listener : listeners) {
-				listener.fileColorChanged(event);
+			for (WeakReference<IColorChangeListener> ref : listeners) {
+				IColorChangeListener listener = ref.get();
+				if (listener != null)
+					listener.fileColorChanged(event);
 			}
 	}
 
 	public void notifyListeners(ColorListChangedEvent event) {
 		if (listeners != null)
-			for (IColorChangeListener listener : listeners) {
-				listener.colorListChanged(event);
+			for (WeakReference<IColorChangeListener> ref : listeners) {
+				IColorChangeListener listener = ref.get();
+				if (listener != null)
+					listener.colorListChanged(event);
 			}
 	}
 
 	public ValidationManager getValidator() {
-
 		return validator;
 	}
 }

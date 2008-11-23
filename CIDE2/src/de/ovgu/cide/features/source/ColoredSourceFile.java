@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.WeakHashMap;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 
 import cide.gast.IASTNode;
@@ -203,6 +204,10 @@ public class ColoredSourceFile {
 
 	public IFile getResource() {
 		return coloredSourceFile;
+	}
+
+	public IProject getProject() {
+		return getResource().getProject();
 	}
 
 	public ILanguageExtension getLanguageExtension() {
