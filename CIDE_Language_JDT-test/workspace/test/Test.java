@@ -1,0 +1,1 @@
+class Test { int i; public void foo() { i++; } }

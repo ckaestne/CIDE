@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: CIDE_Language_JDT_test Fragment
+Bundle-SymbolicName: de.ovgu.cide.language.jdt-test
+Bundle-Version: 0.1.0.qualifier
+Fragment-Host: de.ovgu.cide.language.jdt;bundle-version="0.1.0"
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Require-Bundle: org.junit4,
+ de.ovgu.cide.fm.list;bundle-version="0.1.1"
