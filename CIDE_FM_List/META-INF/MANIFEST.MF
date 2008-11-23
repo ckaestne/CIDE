@@ -11,3 +11,4 @@ Require-Bundle: org.eclipse.ui,
  de.ovgu.cide.typing;bundle-version="0.1.0",
  de.ovgu.cide.ast;bundle-version="1.0.2"
 Eclipse-LazyStart: true
+Export-Package: de.ovgu.cide.typing.list
