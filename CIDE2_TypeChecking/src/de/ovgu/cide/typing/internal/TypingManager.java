@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
@@ -38,9 +39,11 @@ import de.ovgu.cide.features.FeatureModelNotFoundException;
 import de.ovgu.cide.features.IFeatureModel;
 import de.ovgu.cide.features.source.ColoredSourceFile;
 import de.ovgu.cide.typing.internal.manager.EvaluationStrategyManager;
+import de.ovgu.cide.typing.internal.manager.TypingExtensionManager;
 import de.ovgu.cide.typing.model.IEvaluationStrategy;
 import de.ovgu.cide.typing.model.ITypingCheck;
 import de.ovgu.cide.typing.model.ITypingCheckListener;
+import de.ovgu.cide.typing.model.ITypingProvider;
 import de.ovgu.cide.typing.model.TypeCheckChangeEvent;
 
 public class TypingManager {
@@ -231,6 +234,11 @@ public class TypingManager {
 			@Override
 			public IStatus runInWorkspace(IProgressMonitor monitor)
 					throws CoreException {
+				List<ITypingProvider> typingProviders = TypingExtensionManager
+						.getInstance().getTypingProviders(project);
+				for (ITypingProvider typingProvider : typingProviders) {
+					typingProvider.prepareReevaluationAll();
+				}
 
 				// TODO currently pretty inefficient. should store association
 				// of checks to projects or files more directly
@@ -275,14 +283,27 @@ public class TypingManager {
 			public IStatus runInWorkspace(IProgressMonitor monitor)
 					throws CoreException {
 
-				// TODO currently pretty inefficient. should store association
+				Map<IProject, Collection<ColoredSourceFile>> groupedFiles = groupByProject(files);
+				for (Entry<IProject, Collection<ColoredSourceFile>> fileGroup : groupedFiles
+						.entrySet()) {
+
+					List<ITypingProvider> typingProviders = TypingExtensionManager
+							.getInstance().getTypingProviders(
+									fileGroup.getKey());
+					for (ITypingProvider typingProvider : typingProviders) {
+						typingProvider
+								.prepareReevaluation(fileGroup.getValue());
+					}
+
+				}
+				// TODO currently pretty inefficient. should store
+				// association
 				// of checks to projects or files more directly
 				for (ITypingCheck check : checks) {
 					if (files.contains(check.getFile()))
 						evaluateChecks(Collections.singleton(check), check
 								.getFile().getResource().getProject());
 				}
-
 				return Status.OK_STATUS;
 			}
 		};
@@ -333,6 +354,21 @@ public class TypingManager {
 		WorkspaceJob op = new TypecheckProjectJob(projects, this);
 		op.setUser(true);
 		op.schedule();
+	}
+
+	protected static Map<IProject, Collection<ColoredSourceFile>> groupByProject(
+			Collection<ColoredSourceFile> files) {
+		Map<IProject, Collection<ColoredSourceFile>> result = new HashMap<IProject, Collection<ColoredSourceFile>>();
+		for (ColoredSourceFile file : files) {
+			IProject project = file.getProject();
+			Collection<ColoredSourceFile> projectFiles = result.get(project);
+			if (projectFiles == null) {
+				projectFiles = new HashSet<ColoredSourceFile>();
+				result.put(project, projectFiles);
+			}
+			projectFiles.add(file);
+		}
+		return result;
 	}
 
 }

@@ -1,12 +1,10 @@
 package de.ovgu.cide.typing.model;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -71,11 +69,44 @@ public abstract class AbstractFileBasedTypingProvider extends
 		for (IFile oldFile : oldFiles)
 			if (!files.contains(oldFile))
 				obsoleteChecks.addAll(checks.remove(oldFile));
-		if (obsoleteChecks.size()>0)
+		if (obsoleteChecks.size() > 0)
 			fireTypingCheckChanged(Collections.EMPTY_SET, obsoleteChecks);
 
-		updateFile(files);
+		updateFileInternal(files);
 	}
+
+	public void updateFile(Collection<ColoredSourceFile> files) {
+		updateFileInternal(files);
+	}
+
+	protected void updateFileInternal(Collection<ColoredSourceFile> files) {
+		Set<ITypingCheck> addedChecks = new HashSet<ITypingCheck>();
+		Set<ITypingCheck> obsoleteChecks = new HashSet<ITypingCheck>();
+
+		for (ColoredSourceFile file : files) {
+			Set<ITypingCheck> oldChecks = checks.get(file.getResource());
+			if (oldChecks == null)
+				oldChecks = new HashSet<ITypingCheck>();
+			if (matchFileForUpdate(file)) {
+				Set<ITypingCheck> newChecks = checkFile(file);
+
+				for (ITypingCheck old : oldChecks)
+					if (!newChecks.contains(old))
+						obsoleteChecks.add(old);
+				for (ITypingCheck newc : newChecks)
+					if (!oldChecks.contains(newc))
+						addedChecks.add(newc);
+				checks.put(file.getResource(), newChecks);
+			} else {
+				obsoleteChecks.addAll(oldChecks);
+				checks.remove(file.getResource());
+			}
+		}
+
+		fireTypingCheckChanged(addedChecks, obsoleteChecks);
+	}
+
+	protected abstract Set<ITypingCheck> checkFile(ColoredSourceFile file);
 
 	/**
 	 * used in default implementation of updateAll. used to sort out which files

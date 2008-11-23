@@ -47,8 +47,8 @@ public interface ITypingProvider {
 	void removeTypingCheckListener(ITypingCheckListener listener);
 
 	/**
-	 * informs the typing provider that one or more files have changed. this
-	 * operation is blocking and should be run from a thread/job
+	 * informs the typing provider that the content of one or more files has
+	 * changed. this operation is blocking and should be run from a thread/job
 	 */
 	void updateFile(Collection<ColoredSourceFile> files);
 
@@ -57,4 +57,26 @@ public interface ITypingProvider {
 	 * is blocking and should be run from a thread/job
 	 */
 	void updateAll();
+
+	/**
+	 * called before the checks of one or more files are reevaluated. usually a
+	 * typing provider does not need to react. however, in some cases when the
+	 * evaluation of checks relies on cached values in the typing provider, this
+	 * gives the chance to update those caches.
+	 * 
+	 * blocking operation, should be run from a thread/schedule before
+	 * evaluation. no not perform asynchronous operations when implementing this
+	 * method, if the reevaluation depends on the results.
+	 * 
+	 * @param files
+	 *            files that are to be reevaluated
+	 */
+	void prepareReevaluation(Collection<ColoredSourceFile> files);
+
+	/**
+	 * same as prepareReevaluation(files) but for the entire project
+	 * 
+	 */
+	void prepareReevaluationAll();
+
 }
