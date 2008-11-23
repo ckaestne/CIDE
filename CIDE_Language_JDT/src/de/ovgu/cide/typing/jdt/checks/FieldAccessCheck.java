@@ -6,22 +6,22 @@ import cide.gast.IASTNode;
 import de.ovgu.cide.features.source.ColoredSourceFile;
 import de.ovgu.cide.typing.jdt.JDTTypingProvider;
 import de.ovgu.cide.typing.model.IEvaluationStrategy;
-import de.ovgu.cide.typing.model.ITypingCheck;
 
-public class FieldAccessCheck implements ITypingCheck {
+/**
+ * checks colors between a field and references to it
+ * 
+ * @author ckaestne
+ * 
+ */
+public class FieldAccessCheck extends AbstractJDTTypingCheck {
 
-	private final IASTNode source;
 	private final IVariableBinding targetField;
-	private final JDTTypingProvider typingProvider;
-	private final ColoredSourceFile file;
 
 	public FieldAccessCheck(ColoredSourceFile file,
 			JDTTypingProvider typingProvider, IASTNode source,
 			IVariableBinding target) {
-		this.file = file;
-		this.source = source;
+		super(file, typingProvider, source);
 		this.targetField = target;
-		this.typingProvider = typingProvider;
 	}
 
 	public boolean evaluate(IEvaluationStrategy strategy) {
@@ -35,20 +35,11 @@ public class FieldAccessCheck implements ITypingCheck {
 				+ targetField.getName();
 	}
 
-	public ColoredSourceFile getFile() {
-		return file;
-	}
-
+	
 	public String getProblemType() {
 		return "de.ovgu.cide.typing.jdt.fieldaccess";
 	}
 
-	public Severity getSeverity() {
-		return Severity.ERROR;
-	}
-
-	public IASTNode getSource() {
-		return source;
-	}
+	
 
 }

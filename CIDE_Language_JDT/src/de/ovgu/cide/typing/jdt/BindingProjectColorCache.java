@@ -152,7 +152,7 @@ public class BindingProjectColorCache implements Serializable {
 		return NOCOLORS;
 	}
 
-	Set<IFeature> getColors(IMethodBinding method) {
+	public Set<IFeature> getColors(IMethodBinding method) {
 		return getColors(method.getKey());
 	}
 
@@ -161,12 +161,12 @@ public class BindingProjectColorCache implements Serializable {
 	}
 
 	// colors for a parameter
-	Set<IFeature> getColors(IMethodBinding method, int paramIdx) {
+	public Set<IFeature> getColors(IMethodBinding method, int paramIdx) {
 		return getColors(getParamKey(method.getKey(), paramIdx));
 	}
 
 	// colors for a parameter
-	Set<IFeature> getColors(String methodKey, int paramIdx) {
+	public Set<IFeature> getColors(String methodKey, int paramIdx) {
 		return getColors(getParamKey(methodKey, paramIdx));
 	}
 
@@ -174,7 +174,7 @@ public class BindingProjectColorCache implements Serializable {
 		return methodKey + "/" + paramIdx;
 	}
 
-	Set<IFeature> getColors(ITypeBinding type) {
+	public Set<IFeature> getColors(ITypeBinding type) {
 		return getColors(type.getKey());
 
 	}
