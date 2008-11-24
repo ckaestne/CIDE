@@ -3,7 +3,6 @@ package de.ovgu.cide.typing.model;
 import java.util.Collection;
 import java.util.Set;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 
 import de.ovgu.cide.features.source.ColoredSourceFile;

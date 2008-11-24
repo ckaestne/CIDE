@@ -4,9 +4,11 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
+import java.util.Map.Entry;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -65,10 +67,14 @@ public abstract class AbstractFileBasedTypingProvider extends
 		}
 		// detect files that no longer exist but still have checks
 		Set<ITypingCheck> obsoleteChecks = new HashSet<ITypingCheck>();
-		Set<IFile> oldFiles = checks.keySet();
-		for (IFile oldFile : oldFiles)
-			if (!files.contains(oldFile))
-				obsoleteChecks.addAll(checks.remove(oldFile));
+		Iterator<Entry<IFile, Set<ITypingCheck>>> oldFiles = checks.entrySet()
+				.iterator();
+		while (oldFiles.hasNext()) {
+			Entry<IFile, Set<ITypingCheck>> entry = oldFiles.next();
+			if (!files.contains(entry.getKey()))
+				oldFiles.remove();
+			obsoleteChecks.addAll(entry.getValue());
+		}
 		if (obsoleteChecks.size() > 0)
 			fireTypingCheckChanged(Collections.EMPTY_SET, obsoleteChecks);
 
