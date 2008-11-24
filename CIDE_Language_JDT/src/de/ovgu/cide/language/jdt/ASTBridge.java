@@ -3,7 +3,6 @@ package de.ovgu.cide.language.jdt;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ChildListPropertyDescriptor;
 import org.eclipse.jdt.core.dom.ChildPropertyDescriptor;
 import org.eclipse.jdt.core.dom.CompilationUnit;
@@ -14,7 +13,6 @@ import cide.gast.ASTNode;
 import cide.gast.ASTTextNode;
 import cide.gast.ASTVisitor;
 import cide.gast.IASTNode;
-import cide.gast.IASTVisitor;
 import cide.gast.IToken;
 import cide.gast.Property;
 import cide.gast.PropertyOne;

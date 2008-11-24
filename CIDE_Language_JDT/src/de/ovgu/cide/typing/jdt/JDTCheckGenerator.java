@@ -6,11 +6,15 @@ import java.util.Set;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ASTVisitor;
 import org.eclipse.jdt.core.dom.ArrayType;
+import org.eclipse.jdt.core.dom.ClassInstanceCreation;
 import org.eclipse.jdt.core.dom.CompilationUnit;
+import org.eclipse.jdt.core.dom.ConstructorInvocation;
 import org.eclipse.jdt.core.dom.IBinding;
+import org.eclipse.jdt.core.dom.IMethodBinding;
 import org.eclipse.jdt.core.dom.ITypeBinding;
 import org.eclipse.jdt.core.dom.IVariableBinding;
 import org.eclipse.jdt.core.dom.ImportDeclaration;
+import org.eclipse.jdt.core.dom.MethodInvocation;
 import org.eclipse.jdt.core.dom.Name;
 import org.eclipse.jdt.core.dom.ParameterizedType;
 import org.eclipse.jdt.core.dom.PrimitiveType;
@@ -19,20 +23,22 @@ import org.eclipse.jdt.core.dom.QualifiedType;
 import org.eclipse.jdt.core.dom.SimpleName;
 import org.eclipse.jdt.core.dom.SimpleType;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
+import org.eclipse.jdt.core.dom.SuperConstructorInvocation;
+import org.eclipse.jdt.core.dom.SuperMethodInvocation;
 import org.eclipse.jdt.core.dom.Type;
 import org.eclipse.jdt.core.dom.VariableDeclaration;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 import org.eclipse.jdt.core.dom.WildcardType;
 
 import cide.gast.IASTNode;
-
-import de.ovgu.cide.features.Feature;
 import de.ovgu.cide.features.source.ColoredSourceFile;
 import de.ovgu.cide.language.jdt.ASTBridge;
 import de.ovgu.cide.typing.jdt.checks.FieldAccessCheck;
 import de.ovgu.cide.typing.jdt.checks.ImportTargetCheck;
 import de.ovgu.cide.typing.jdt.checks.LocalVariableReferenceCheck;
+import de.ovgu.cide.typing.jdt.checks.MethodInvocationCheck;
 import de.ovgu.cide.typing.jdt.checks.TypeImportedCheck;
+import de.ovgu.cide.typing.jdt.checks.TypeReferenceCheck;
 import de.ovgu.cide.typing.model.ITypingCheck;
 
 /**
@@ -41,17 +47,37 @@ import de.ovgu.cide.typing.model.ITypingCheck;
  * 
  * split into subclasses for different concerns
  * 
+ * TODO: overriding and parameters currently not implemented, several other
+ * checks from ASE paper maybe missing
+ * 
  * @author cKaestner
  * 
  */
 
-class JDTCheckGenerator extends JDTCheckGenerator_LocalVariables {
+class JDTCheckGenerator extends JDTCheckGenerator_TypeReferences {
 
 	public JDTCheckGenerator(ColoredSourceFile file,
 			JDTTypingProvider jdtTypingProvider, Set<ITypingCheck> checks) {
 		super(file, jdtTypingProvider, checks);
 	}
 
+}
+
+class JDTCheckGenerator_TypeReferences extends JDTCheckGenerator_LocalVariables {
+
+	public JDTCheckGenerator_TypeReferences(ColoredSourceFile file,
+			JDTTypingProvider jdtTypingProvider, Set<ITypingCheck> checks) {
+		super(file, jdtTypingProvider, checks);
+	}
+
+	@Override
+	public void visitType(Type node) {
+		ITypeBinding binding = node.resolveBinding();
+		if (binding != null)
+			checks.add(new TypeReferenceCheck(file, jdtTypingProvider,
+					bridge(node), binding));
+		super.visitType(node);
+	}
 }
 
 class JDTCheckGenerator_LocalVariables extends JDTCheckGenerator_Imports {
@@ -98,7 +124,7 @@ class JDTCheckGenerator_LocalVariables extends JDTCheckGenerator_Imports {
 	}
 }
 
-class JDTCheckGenerator_Imports extends JDTCheckGenerator_FieldAccess {
+class JDTCheckGenerator_Imports extends JDTCheckGenerator_Methods {
 
 	public JDTCheckGenerator_Imports(ColoredSourceFile file,
 			JDTTypingProvider jdtTypingProvider, Set<ITypingCheck> checks) {
@@ -144,6 +170,74 @@ class JDTCheckGenerator_Imports extends JDTCheckGenerator_FieldAccess {
 		}
 		super.visitType(node);
 	}
+}
+
+class JDTCheckGenerator_Methods extends JDTCheckGenerator_FieldAccess {
+	public JDTCheckGenerator_Methods(ColoredSourceFile file,
+			JDTTypingProvider jdtTypingProvider, Set<ITypingCheck> checks) {
+		super(file, jdtTypingProvider, checks);
+	}
+
+	@Override
+	public boolean visit(MethodInvocation node) {
+		IMethodBinding binding = node.resolveMethodBinding();
+		handleMethodCall(node, binding);
+
+		return super.visit(node);
+	}
+
+	@Override
+	public boolean visit(ConstructorInvocation node) {
+		IMethodBinding binding = node.resolveConstructorBinding();
+		handleMethodCall(node, binding);
+		return super.visit(node);
+	}
+
+	@Override
+	public boolean visit(ClassInstanceCreation node) {
+		IMethodBinding binding = node.resolveConstructorBinding();
+		handleMethodCall(node, binding);
+		return super.visit(node);
+	}
+
+	@Override
+	public boolean visit(SuperConstructorInvocation node) {
+		IMethodBinding binding = node.resolveConstructorBinding();
+		handleMethodCall(node, binding);
+		return super.visit(node);
+	}
+
+	@Override
+	public boolean visit(SuperMethodInvocation node) {
+		IMethodBinding binding = node.resolveMethodBinding();
+		handleMethodCall(node, binding);
+		return super.visit(node);
+	}
+
+	private void handleMethodCall(ASTNode node, IMethodBinding binding) {
+		if (binding != null) {
+			checks.add(new MethodInvocationCheck(file, jdtTypingProvider,
+					bridge(node), binding));
+
+		}
+	}
+
+	/*	*//**
+	 * util function
+	 * 
+	 * returns a super method or null of there is none
+	 */
+	/*
+	 * private static IMethod findOverriddenMethod(IMethod method) { try { IType
+	 * type = method.getDeclaringType(); ITypeHierarchy hierarchy =
+	 * type.newSupertypeHierarchy(null);
+	 * 
+	 * while ((type = hierarchy.getSuperclass(type)) != null) { IMethod[]
+	 * overriddenMethods = type.findMethods(method); if (overriddenMethods !=
+	 * null && overriddenMethods.length > 0) return overriddenMethods[0]; }
+	 * 
+	 * return null; } catch (JavaModelException e) { return null; } }
+	 */
 }
 
 class JDTCheckGenerator_FieldAccess extends JDTCheckGenerator_Base {

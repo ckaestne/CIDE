@@ -1,18 +1,10 @@
 package de.ovgu.cide.language.jdt;
 
 import java.io.PrintStream;
-import java.util.Iterator;
 
-import org.eclipse.jdt.core.dom.AST;
-import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 import org.eclipse.jdt.core.dom.AnnotationTypeDeclaration;
-import org.eclipse.jdt.core.dom.BodyDeclaration;
 import org.eclipse.jdt.core.dom.CompilationUnit;
-import org.eclipse.jdt.core.dom.ImportDeclaration;
-import org.eclipse.jdt.core.dom.Name;
-import org.eclipse.jdt.core.dom.Type;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
-import org.eclipse.jdt.core.dom.TypeParameter;
 
 import cide.gast.ASTStringNode;
 import cide.gast.ASTTextNode;
