@@ -14,10 +14,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.sat4j.specs.TimeoutException;
 
-import featureide.fm.core.model.Feature;
-import featureide.fm.core.model.FeatureModel;
-import featureide.fm.core.model.io.UnsupportedModelException;
-import featureide.fm.core.model.io.guidsl.FeatureModelReader;
+import featureide.fm.core.Feature;
+import featureide.fm.core.FeatureModel;
+import featureide.fm.core.io.UnsupportedModelException;
+import featureide.fm.core.io.guidsl.FeatureModelReader;
 
 public class FeatureModelTest {
 
@@ -45,7 +45,7 @@ public class FeatureModelTest {
 		IFile file = createModelFile(content);
 		FeatureModel model = new FeatureModel();
 		FeatureModelReader modelReader = new FeatureModelReader(model);
-		modelReader.loadFromFile(file);
+		modelReader.readFromFile(file);
 		return model;
 	}
 
