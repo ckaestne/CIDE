@@ -15,7 +15,6 @@ import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -28,14 +27,14 @@ import de.ovgu.cide.configuration.AbstractConfigurationPage;
 import de.ovgu.cide.configuration.NonValidatingConfigurationListPage;
 import de.ovgu.cide.features.AbstractFeatureModel;
 import de.ovgu.cide.features.IFeature;
-import featureide.fm.core.model.Feature;
-import featureide.fm.core.model.FeatureModel;
-import featureide.fm.core.model.GrammarFile;
-import featureide.fm.core.model.configuration.Configuration;
-import featureide.fm.core.model.configuration.Selection;
-import featureide.fm.core.model.io.ModelWarning;
-import featureide.fm.core.model.io.UnsupportedModelException;
-import featureide.fm.core.model.io.guidsl.FeatureModelReader;
+import featureide.fm.core.Feature;
+import featureide.fm.core.FeatureModel;
+import featureide.fm.core.GrammarFile;
+import featureide.fm.core.configuration.Configuration;
+import featureide.fm.core.configuration.Selection;
+import featureide.fm.core.io.ModelWarning;
+import featureide.fm.core.io.UnsupportedModelException;
+import featureide.fm.core.io.guidsl.FeatureModelReader;
 
 /**
  * this class wraps a feature model from the FeatureIDE implementation.
@@ -128,23 +127,19 @@ public class GuidslFeatureModelWrapper extends AbstractFeatureModel {
 	 * might be created if some errors occur.
 	 */
 	private void loadModel() {
+		grammarFile.deleteAllModelMarkers();
 		try {
-			grammarFile.deleteAllModelMarkers();
-			try {
-				FeatureModelReader modelReader = new FeatureModelReader(model);
-				modelReader.loadFromFile(grammarFile.getResource());
-				for (ModelWarning warning : modelReader.getWarnings())
-					grammarFile.createModelMarker(warning.message,
-							IMarker.SEVERITY_WARNING, warning.line);
-			} catch (IOException e) {
-				grammarFile.createModelMarker(e.getMessage(),
-						IMarker.SEVERITY_ERROR, 0);
-			} catch (UnsupportedModelException e) {
-				grammarFile.createModelMarker(e.getMessage(),
-						IMarker.SEVERITY_ERROR, e.lineNumber);
-			}
-		} catch (CoreException e) {
-			e.printStackTrace();
+			FeatureModelReader modelReader = new FeatureModelReader(model);
+			modelReader.readFromFile(grammarFile.getResource());
+			for (ModelWarning warning : modelReader.getWarnings())
+				grammarFile.createModelMarker(warning.message,
+						IMarker.SEVERITY_WARNING, warning.line);
+		} catch (IOException e) {
+			grammarFile.createModelMarker(e.getMessage(),
+					IMarker.SEVERITY_ERROR, 0);
+		} catch (UnsupportedModelException e) {
+			grammarFile.createModelMarker(e.getMessage(),
+					IMarker.SEVERITY_ERROR, e.lineNumber);
 		}
 	}
 

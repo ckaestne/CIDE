@@ -11,9 +11,8 @@ import de.ovgu.cide.fm.guidsl.EmptyFeatureModel;
 import de.ovgu.cide.fm.guidsl.FeatureAdapter;
 import de.ovgu.cide.fm.guidsl.GuidslFeatureModelWrapper;
 import de.ovgu.cide.typing.model.AbstractCachingEvaluationStrategy;
-import de.ovgu.cide.typing.model.IEvaluationStrategy;
-import featureide.fm.core.model.Feature;
-import featureide.fm.core.model.FeatureModel;
+import featureide.fm.core.Feature;
+import featureide.fm.core.FeatureModel;
 
 /**
  * evaluation strategy for the typechecker that delegates checks to the guidsl

@@ -16,7 +16,7 @@ import org.eclipse.swt.graphics.RGB;
 
 import de.ovgu.cide.ChangeType;
 import de.ovgu.cide.utils.ColorHelper;
-import featureide.fm.core.model.Feature;
+import featureide.fm.core.Feature;
 
 /**
  * stores all attributes except the feature's name. the name is used as key

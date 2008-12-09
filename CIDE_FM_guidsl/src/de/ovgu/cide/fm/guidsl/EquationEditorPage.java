@@ -13,10 +13,10 @@ import org.eclipse.swt.widgets.Control;
 
 import de.ovgu.cide.configuration.AbstractConfigurationPage;
 import de.ovgu.cide.features.IFeature;
-import featureide.fm.core.model.Feature;
-import featureide.fm.core.model.configuration.Configuration;
-import featureide.fm.core.model.configuration.SelectableFeature;
-import featureide.fm.core.model.configuration.Selection;
+import featureide.fm.core.Feature;
+import featureide.fm.core.configuration.Configuration;
+import featureide.fm.core.configuration.SelectableFeature;
+import featureide.fm.core.configuration.Selection;
 import featureide.fm.ui.editors.configuration.ConfigurationContentProvider;
 import featureide.fm.ui.editors.configuration.ConfigurationLabelProvider;
 
