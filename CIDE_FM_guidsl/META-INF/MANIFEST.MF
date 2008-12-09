@@ -11,5 +11,6 @@ Require-Bundle: org.eclipse.ui,
  FeatureIDE_FM_Core;bundle-version="2.2.0",
  FeatureIDE_FM_UI,
  org.eclipse.ui.ide;bundle-version="3.3.0",
- de.ovgu.cide.typing;bundle-version="0.1.0"
+ de.ovgu.cide.typing;bundle-version="0.1.0",
+ org.sat4j.core;bundle-version="2.0.0"
 Bundle-ActivationPolicy: lazy
