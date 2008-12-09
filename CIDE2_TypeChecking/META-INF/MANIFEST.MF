@@ -13,3 +13,4 @@ Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Import-Package: org.eclipse.core.resources
 Bundle-Vendor: Christian Kaestner
+Export-Package: de.ovgu.cide.typing.model
