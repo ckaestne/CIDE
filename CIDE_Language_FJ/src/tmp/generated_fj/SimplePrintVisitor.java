@@ -212,14 +212,13 @@ class SimplePrintVisitor extends AbstractPrintVisitor {
 		}
 		if (node instanceof FormalParameterList) {
 			FormalParameterList n = (FormalParameterList)node;
-			{
-				FormalParameter v=n.getFormalParameter();
-				if (v!=null) {
-					v.accept(this);
-				}
+			Iterator<FormalParameter> listElements = n.getFormalParameter().iterator();
+			if (listElements.hasNext()) {
+				listElements.next().accept(this);
 			}
-			for (FormalParameterRest v : n.getFormalParameterRest()) {
-				v.accept(this);
+			while (listElements.hasNext()) {
+				printToken(",");
+				listElements.next().accept(this);
 			}
 			return false;
 		}
@@ -233,17 +232,6 @@ class SimplePrintVisitor extends AbstractPrintVisitor {
 			}
 			{
 				ASTStringNode v=n.getIdentifier();
-				if (v!=null) {
-					v.accept(this);
-				}
-			}
-			return false;
-		}
-		if (node instanceof FormalParameterRest) {
-			FormalParameterRest n = (FormalParameterRest)node;
-			printToken(",");
-			{
-				FormalParameter v=n.getFormalParameter();
 				if (v!=null) {
 					v.accept(this);
 				}
@@ -578,25 +566,13 @@ class SimplePrintVisitor extends AbstractPrintVisitor {
 		}
 		if (node instanceof ExpressionList) {
 			ExpressionList n = (ExpressionList)node;
-			{
-				Expression v=n.getExpression();
-				if (v!=null) {
-					v.accept(this);
-				}
+			Iterator<Expression> listElements = n.getExpression().iterator();
+			if (listElements.hasNext()) {
+				listElements.next().accept(this);
 			}
-			for (ExpressionRest v : n.getExpressionRest()) {
-				v.accept(this);
-			}
-			return false;
-		}
-		if (node instanceof ExpressionRest) {
-			ExpressionRest n = (ExpressionRest)node;
-			printToken(",");
-			{
-				Expression v=n.getExpression();
-				if (v!=null) {
-					v.accept(this);
-				}
+			while (listElements.hasNext()) {
+				printToken(",");
+				listElements.next().accept(this);
 			}
 			return false;
 		}

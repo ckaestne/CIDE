@@ -297,12 +297,13 @@ BinaryOperator BinaryOperator() : {
 
 FormalParameterList FormalParameterList() : { 
 	FormalParameter formalParameter;
-	FormalParameterRest formalParameterRest;
-	ArrayList<FormalParameterRest> formalParameterRestList = new ArrayList<FormalParameterRest>();
+	ArrayList<FormalParameter> list0=new ArrayList<FormalParameter>();
+	FormalParameter formalParameter1;
+	ArrayList<FormalParameter> formalParameter1List = new ArrayList<FormalParameter>();
 	Token firstToken=token;
 } { (
-	formalParameter=FormalParameter() (formalParameterRest=FormalParameterRest(){formalParameterRestList.add(formalParameterRest);})* 
-	{return new FormalParameterList(formalParameter, formalParameterRestList, firstToken.next,token);}
+	formalParameter=FormalParameter(){list0.add(formalParameter);} ("," formalParameter1=FormalParameter(){list0.add(formalParameter1);})* 
+	{return new FormalParameterList(list0, firstToken.next,token);}
  ) }
 
 FormalParameter FormalParameter() : { 
@@ -313,14 +314,6 @@ FormalParameter FormalParameter() : {
 } { (
 	type=Type() t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} 
 	{return new FormalParameter(type, identifier, firstToken.next,token);}
- ) }
-
-FormalParameterRest FormalParameterRest() : { 
-	FormalParameter formalParameter;
-	Token firstToken=token;
-} { (
-	"," formalParameter=FormalParameter() 
-	{return new FormalParameterRest(formalParameter, firstToken.next,token);}
  ) }
 
 Type Type() : { 
@@ -504,19 +497,12 @@ NestedExpression NestedExpression() : {
 
 ExpressionList ExpressionList() : { 
 	Expression expression;
-	ExpressionRest expressionRest;
-	ArrayList<ExpressionRest> expressionRestList = new ArrayList<ExpressionRest>();
+	ArrayList<Expression> list0=new ArrayList<Expression>();
+	Expression expression1;
+	ArrayList<Expression> expression1List = new ArrayList<Expression>();
 	Token firstToken=token;
 } { (
-	expression=Expression() (expressionRest=ExpressionRest(){expressionRestList.add(expressionRest);})* 
-	{return new ExpressionList(expression, expressionRestList, firstToken.next,token);}
- ) }
-
-ExpressionRest ExpressionRest() : { 
-	Expression expression;
-	Token firstToken=token;
-} { (
-	"," expression=Expression() 
-	{return new ExpressionRest(expression, firstToken.next,token);}
+	expression=Expression(){list0.add(expression);} ("," expression1=Expression(){list0.add(expression1);})* 
+	{return new ExpressionList(list0, firstToken.next,token);}
  ) }
 

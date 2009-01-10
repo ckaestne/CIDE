@@ -285,10 +285,12 @@ public class FJParser implements FJParserConstants {
 
   final public FormalParameterList FormalParameterList() throws ParseException {
         FormalParameter formalParameter;
-        FormalParameterRest formalParameterRest;
-        ArrayList<FormalParameterRest> formalParameterRestList = new ArrayList<FormalParameterRest>();
+        ArrayList<FormalParameter> list0=new ArrayList<FormalParameter>();
+        FormalParameter formalParameter1;
+        ArrayList<FormalParameter> formalParameter1List = new ArrayList<FormalParameter>();
         Token firstToken=token;
     formalParameter = FormalParameter();
+                                          list0.add(formalParameter);
     label_4:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -299,10 +301,11 @@ public class FJParser implements FJParserConstants {
         jj_la1[7] = jj_gen;
         break label_4;
       }
-      formalParameterRest = FormalParameterRest();
-                                                                                     formalParameterRestList.add(formalParameterRest);
+      jj_consume_token(COMMA);
+      formalParameter1 = FormalParameter();
+                                                                                                               list0.add(formalParameter1);
     }
-         {if (true) return new FormalParameterList(formalParameter, formalParameterRestList, firstToken.next,token);}
+         {if (true) return new FormalParameterList(list0, firstToken.next,token);}
     throw new Error("Missing return statement in function");
   }
 
@@ -315,15 +318,6 @@ public class FJParser implements FJParserConstants {
     t = jj_consume_token(IDENTIFIER);
                                    identifier=new ASTStringNode(t.toString(),new WToken(t));
          {if (true) return new FormalParameter(type, identifier, firstToken.next,token);}
-    throw new Error("Missing return statement in function");
-  }
-
-  final public FormalParameterRest FormalParameterRest() throws ParseException {
-        FormalParameter formalParameter;
-        Token firstToken=token;
-    jj_consume_token(COMMA);
-    formalParameter = FormalParameter();
-         {if (true) return new FormalParameterRest(formalParameter, firstToken.next,token);}
     throw new Error("Missing return statement in function");
   }
 
@@ -659,10 +653,12 @@ public class FJParser implements FJParserConstants {
 
   final public ExpressionList ExpressionList() throws ParseException {
         Expression expression;
-        ExpressionRest expressionRest;
-        ArrayList<ExpressionRest> expressionRestList = new ArrayList<ExpressionRest>();
+        ArrayList<Expression> list0=new ArrayList<Expression>();
+        Expression expression1;
+        ArrayList<Expression> expression1List = new ArrayList<Expression>();
         Token firstToken=token;
     expression = Expression();
+                                list0.add(expression);
     label_7:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -673,19 +669,11 @@ public class FJParser implements FJParserConstants {
         jj_la1[19] = jj_gen;
         break label_7;
       }
-      expressionRest = ExpressionRest();
-                                                                 expressionRestList.add(expressionRest);
+      jj_consume_token(COMMA);
+      expression1 = Expression();
+                                                                                      list0.add(expression1);
     }
-         {if (true) return new ExpressionList(expression, expressionRestList, firstToken.next,token);}
-    throw new Error("Missing return statement in function");
-  }
-
-  final public ExpressionRest ExpressionRest() throws ParseException {
-        Expression expression;
-        Token firstToken=token;
-    jj_consume_token(COMMA);
-    expression = Expression();
-         {if (true) return new ExpressionRest(expression, firstToken.next,token);}
+         {if (true) return new ExpressionList(list0, firstToken.next,token);}
     throw new Error("Missing return statement in function");
   }
 
@@ -725,13 +713,24 @@ public class FJParser implements FJParserConstants {
   }
 
   final private boolean jj_3R_42() {
+    if (jj_scan_token(MINUS)) return true;
+    if (jj_3R_32()) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_41() {
     if (jj_scan_token(PLUS)) return true;
     if (jj_3R_32()) return true;
     return false;
   }
 
+  final private boolean jj_3_1() {
+    if (jj_3R_8()) return true;
+    return false;
+  }
+
   final private boolean jj_3R_33() {
-    if (jj_3R_36()) return true;
+    if (jj_3R_35()) return true;
     return false;
   }
 
@@ -742,27 +741,22 @@ public class FJParser implements FJParserConstants {
     return false;
   }
 
-  final private boolean jj_3R_39() {
-    if (jj_3R_43()) return true;
-    return false;
-  }
-
   final private boolean jj_3R_38() {
     if (jj_3R_42()) return true;
     return false;
   }
 
-  final private boolean jj_3_1() {
-    if (jj_3R_8()) return true;
+  final private boolean jj_3R_37() {
+    if (jj_3R_41()) return true;
     return false;
   }
 
-  final private boolean jj_3R_36() {
+  final private boolean jj_3R_35() {
     Token xsp;
     xsp = jj_scanpos;
-    if (jj_3R_38()) {
+    if (jj_3R_37()) {
     jj_scanpos = xsp;
-    if (jj_3R_39()) return true;
+    if (jj_3R_38()) return true;
     }
     return false;
   }
@@ -779,8 +773,9 @@ public class FJParser implements FJParserConstants {
     return false;
   }
 
-  final private boolean jj_3R_31() {
-    if (jj_3R_34()) return true;
+  final private boolean jj_3R_8() {
+    if (jj_3R_13()) return true;
+    if (jj_scan_token(IDENTIFIER)) return true;
     return false;
   }
 
@@ -801,12 +796,6 @@ public class FJParser implements FJParserConstants {
 
   final private boolean jj_3_5() {
     if (jj_3R_12()) return true;
-    return false;
-  }
-
-  final private boolean jj_3R_8() {
-    if (jj_3R_13()) return true;
-    if (jj_scan_token(IDENTIFIER)) return true;
     return false;
   }
 
@@ -863,8 +852,8 @@ public class FJParser implements FJParserConstants {
     return false;
   }
 
-  final private boolean jj_3R_35() {
-    if (jj_3R_37()) return true;
+  final private boolean jj_3R_34() {
+    if (jj_3R_36()) return true;
     return false;
   }
 
@@ -893,12 +882,6 @@ public class FJParser implements FJParserConstants {
     return false;
   }
 
-  final private boolean jj_3R_34() {
-    if (jj_scan_token(COMMA)) return true;
-    if (jj_3R_30()) return true;
-    return false;
-  }
-
   final private boolean jj_3R_25() {
     if (jj_3R_30()) return true;
     Token xsp;
@@ -909,7 +892,7 @@ public class FJParser implements FJParserConstants {
     return false;
   }
 
-  final private boolean jj_3R_45() {
+  final private boolean jj_3R_44() {
     if (jj_scan_token(SLASH)) return true;
     if (jj_3R_17()) return true;
     return false;
@@ -922,14 +905,14 @@ public class FJParser implements FJParserConstants {
     return false;
   }
 
-  final private boolean jj_3R_44() {
+  final private boolean jj_3R_43() {
     if (jj_scan_token(STAR)) return true;
     if (jj_3R_17()) return true;
     return false;
   }
 
-  final private boolean jj_3R_41() {
-    if (jj_3R_45()) return true;
+  final private boolean jj_3R_40() {
+    if (jj_3R_44()) return true;
     return false;
   }
 
@@ -941,17 +924,17 @@ public class FJParser implements FJParserConstants {
     return false;
   }
 
-  final private boolean jj_3R_40() {
-    if (jj_3R_44()) return true;
+  final private boolean jj_3R_39() {
+    if (jj_3R_43()) return true;
     return false;
   }
 
-  final private boolean jj_3R_37() {
+  final private boolean jj_3R_36() {
     Token xsp;
     xsp = jj_scanpos;
-    if (jj_3R_40()) {
+    if (jj_3R_39()) {
     jj_scanpos = xsp;
-    if (jj_3R_41()) return true;
+    if (jj_3R_40()) return true;
     }
     return false;
   }
@@ -982,7 +965,7 @@ public class FJParser implements FJParserConstants {
     Token xsp;
     while (true) {
       xsp = jj_scanpos;
-      if (jj_3R_35()) { jj_scanpos = xsp; break; }
+      if (jj_3R_34()) { jj_scanpos = xsp; break; }
     }
     return false;
   }
@@ -999,6 +982,12 @@ public class FJParser implements FJParserConstants {
 
   final private boolean jj_3R_21() {
     if (jj_3R_11()) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_31() {
+    if (jj_scan_token(COMMA)) return true;
+    if (jj_3R_30()) return true;
     return false;
   }
 
@@ -1020,12 +1009,6 @@ public class FJParser implements FJParserConstants {
 
   final private boolean jj_3R_15() {
     if (jj_3R_25()) return true;
-    return false;
-  }
-
-  final private boolean jj_3R_43() {
-    if (jj_scan_token(MINUS)) return true;
-    if (jj_3R_32()) return true;
     return false;
   }
 

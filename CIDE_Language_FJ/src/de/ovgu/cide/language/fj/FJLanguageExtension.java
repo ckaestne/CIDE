@@ -11,7 +11,7 @@ import cide.languages.ILanguageParser;
 
 public class FJLanguageExtension implements ILanguageExtension {
 
-	private final static String[] EXTENSIONS = new String[] { ".c", ".h" };
+	private final static String[] EXTENSIONS = new String[] { ".fj" };
 
 	public String[] getFileExtensions() {
 		return EXTENSIONS;

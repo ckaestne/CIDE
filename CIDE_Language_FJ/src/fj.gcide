@@ -238,13 +238,10 @@ BinaryOperator :
 	| "/";
 
 FormalParameterList : 
-	FormalParameter ( FormalParameterRest )*;
+	&LI FormalParameter ("," &LI FormalParameter)*;
 
 FormalParameter : 
 	Type <IDENTIFIER>;
-	
-FormalParameterRest : 
-	"," FormalParameter;
 	
 Type : 
 	"int"
@@ -286,6 +283,4 @@ CastExpression : "(" Type ")" PrimaryExpression;
 
 NestedExpression : "(" Expression ")";
 
-ExpressionList : Expression ( ExpressionRest )*;
-
-ExpressionRest : "," Expression;
+ExpressionList : &LI Expression ("," &LI Expression)*;

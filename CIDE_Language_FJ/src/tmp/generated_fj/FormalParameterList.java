@@ -6,10 +6,9 @@ import cide.greferences.*;
 import java.util.*;
 
 public class FormalParameterList extends GenASTNode {
-  public FormalParameterList(FormalParameter formalParameter, ArrayList<FormalParameterRest> formalParameterRest, Token firstToken, Token lastToken) {
+  public FormalParameterList(ArrayList<FormalParameter> formalParameter, Token firstToken, Token lastToken) {
     super(new Property[] {
-      new PropertyOne<FormalParameter>("formalParameter", formalParameter),
-      new PropertyZeroOrMore<FormalParameterRest>("formalParameterRest", formalParameterRest)
+      new PropertyList<FormalParameter>("formalParameter", formalParameter)
     }, firstToken, lastToken);
   }
   public FormalParameterList(Property[] properties, IToken firstToken, IToken lastToken) {
@@ -18,10 +17,7 @@ public class FormalParameterList extends GenASTNode {
   public IASTNode deepCopy() {
     return new FormalParameterList(cloneProperties(),firstToken,lastToken);
   }
-  public FormalParameter getFormalParameter() {
-    return ((PropertyOne<FormalParameter>)getProperty("formalParameter")).getValue();
-  }
-  public ArrayList<FormalParameterRest> getFormalParameterRest() {
-    return ((PropertyZeroOrMore<FormalParameterRest>)getProperty("formalParameterRest")).getValue();
+  public ArrayList<FormalParameter> getFormalParameter() {
+    return ((PropertyList<FormalParameter>)getProperty("formalParameter")).getValue();
   }
 }
