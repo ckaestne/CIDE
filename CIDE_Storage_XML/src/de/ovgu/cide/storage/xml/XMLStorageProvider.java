@@ -9,10 +9,10 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 
-import coloredide.features.IFeature;
-import coloredide.features.IFeatureModel;
-import coloredide.features.IFeatureModelWithID;
-import coloredide.features.source.IStorageProvider;
+import de.ovgu.cide.features.IFeature;
+import de.ovgu.cide.features.IFeatureModel;
+import de.ovgu.cide.features.IFeatureModelWithID;
+import de.ovgu.cide.features.source.IStorageProvider;
 
 public class XMLStorageProvider implements IStorageProvider {
 
