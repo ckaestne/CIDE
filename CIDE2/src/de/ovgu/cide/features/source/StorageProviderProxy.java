@@ -1,5 +1,6 @@
 package de.ovgu.cide.features.source;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -8,6 +9,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
 
+import de.ovgu.cide.af.Alternative;
 import de.ovgu.cide.features.IFeature;
 import de.ovgu.cide.features.IFeatureModel;
 
@@ -27,12 +29,23 @@ public class StorageProviderProxy implements IStorageProvider {
 	}
 
 	public boolean storeAnnotations(IProject project, Object annotatedResource,
-			Map<String, Set<IFeature>> annotations, IProgressMonitor monitor)
+			Map<String, Set<IFeature>> annotations, Map<String, List<String>> parentIDs, IProgressMonitor monitor)
 			throws CoreException {
 		if (target == null)
 			loadTarget();
-		return target.storeAnnotations(project, annotatedResource, annotations,
-				monitor);
+		return target.storeAnnotations(project, annotatedResource, annotations, parentIDs, monitor);
+	}
+	
+	public boolean activateAlternative(IProject project, Object annotatedResource, String astID, String altID) {
+		if (target == null)
+			loadTarget();
+		return target.activateAlternative(project, annotatedResource, astID, altID);
+	}
+	
+	public boolean storeNewAlternative(IProject project, Object annotatedResource, Alternative alternative) {
+		if (target == null)
+			loadTarget();
+		return target.storeNewAlternative(project, annotatedResource, alternative);
 	}
 
 	private IConfigurationElement configElement;

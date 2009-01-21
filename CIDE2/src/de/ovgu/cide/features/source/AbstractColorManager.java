@@ -2,6 +2,7 @@ package de.ovgu.cide.features.source;
 
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
@@ -9,18 +10,9 @@ import java.util.Stack;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 
+import de.ovgu.cide.af.Alternative;
 import de.ovgu.cide.features.IFeature;
 import de.ovgu.cide.features.IFeatureModel;
-
-/**
- * general color manager. serializes to a file in the following format
- * HashMap<String,<Set<Long>>>
- * 
- * 
- * 
- * @author ckaestne
- * 
- */
 
 abstract class AbstractColorManager {
 
@@ -44,7 +36,7 @@ abstract class AbstractColorManager {
 		id2colors = storageProvider.readAnnotations(project, annotatedResource,
 				featureModel);
 	}
-
+	
 	private void save() {
 		if (tempMode)
 			return;
@@ -54,12 +46,15 @@ abstract class AbstractColorManager {
 			return;
 
 		try {
-			if (storageProvider.storeAnnotations(project, resource, id2colors,
-					null))
+			if (storageProvider.storeAnnotations(project, resource, id2colors, getID2parentIDs(), null))
 				changed = false;
 		} catch (CoreException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	protected Map<String, List<String>> getID2parentIDs() {
+		return null;
 	}
 
 	protected Set<IFeature> getOwnColors(String id) {
@@ -91,6 +86,7 @@ abstract class AbstractColorManager {
 			id2colors.put(id, colors);
 		}
 		boolean success = colors.add(color);
+		
 		changed |= success;
 		save();
 		return success;
@@ -101,11 +97,26 @@ abstract class AbstractColorManager {
 		boolean success = false;
 		if (colors != null) {
 			success |= colors.remove(color);
-			if (colors.isEmpty())
-				id2colors.remove(id);
+
+			// Achtung: Auch wenn  colors  hier leer ist, darf der Eintrag nicht aus  id2colors  geloescht werden,
+			//          weil beim Abspeichern der Annotationen sonst vergessen werden kann, dass die Faerbung
+			//          aufgehoben wurde.
+			
 		}
 		changed |= success;
 		save();
+		return success;
+	}
+	
+	protected boolean activateAlternative(String id, String altID) {
+		boolean success = storageProvider.activateAlternative(project, resource, id, altID);
+		changed |= success;
+		return success;
+	}
+	
+	protected boolean createAlternative(Alternative alternative) {
+		boolean success = storageProvider.storeNewAlternative(project, resource, alternative);
+		changed |= success;
 		return success;
 	}
 
@@ -145,7 +156,11 @@ abstract class AbstractColorManager {
 		Set<IFeature> colors = id2colors.get(id);
 		boolean success = colors != null && colors.size() > 0;
 		if (colors != null)
-			id2colors.remove(id);
+			id2colors.put(id, new HashSet<IFeature>());
+		
+			// Achtung: Der Eintrag darf nicht aus  id2colors  geloescht werden, weil beim Abspeichern der Annotationen 
+			//          sonst vergessen werden kann, dass die Faerbung aufgehoben wurde.
+			
 		changed |= success;
 		save();
 		return success;

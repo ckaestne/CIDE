@@ -1,24 +1,24 @@
 package de.ovgu.cide.features.source;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import cide.gast.ASTWrappers;
 import cide.gast.IASTNode;
+import de.ovgu.cide.af.Alternative;
 import de.ovgu.cide.features.IFeature;
 
-/**
- * serializable color manager that represents the colors of one individual .java
- * file.
- * 
- * @author cKaestner
- * 
- */
 public class SourceFileColorManager extends AbstractColorManager {
 
 	private final DirectoryColorManager directoryColorManager;
 	private final ColoredSourceFile source;
+	
+	private Map<String, List<String>> id2parentIDs;
 
 	public SourceFileColorManager(IStorageProvider storageProvider,
 			ColoredSourceFile source,
@@ -27,6 +27,13 @@ public class SourceFileColorManager extends AbstractColorManager {
 				.getResource(), source.getFeatureModel());
 		this.directoryColorManager = directoryColorManager;
 		this.source = source;
+		
+		id2parentIDs = new HashMap<String, List<String>>();
+	}
+	
+	@Override
+	protected Map<String, List<String>> getID2parentIDs() {
+		return id2parentIDs;
 	}
 
 	public Set<IFeature> getOwnColors(IASTNode node) {
@@ -34,6 +41,10 @@ public class SourceFileColorManager extends AbstractColorManager {
 	}
 
 	public boolean addColor(IASTNode node, IFeature color) {
+		if (node == null)
+			return false;
+		updateID2parentIDs(node);
+		
 		return super.addColor(node.getId(), color);
 	}
 
@@ -43,6 +54,18 @@ public class SourceFileColorManager extends AbstractColorManager {
 
 	public boolean hasColor(IASTNode node, IFeature color) {
 		return super.hasColor(node.getId(), color);
+	}
+	
+	public boolean activateAlternative(IASTNode node, String altID) {
+		return super.activateAlternative(node.getId(), altID);
+	}
+	
+	public boolean createAlternative(IASTNode node, Set<IFeature> features, String altID) {
+		if (node == null)
+			return false;
+		
+		updateID2parentIDs(node);		
+		return super.createAlternative(new Alternative(altID, node.getId(), id2parentIDs.get(node.getId()), features, node.render()));
 	}
 
 	/*
@@ -86,10 +109,24 @@ public class SourceFileColorManager extends AbstractColorManager {
 	}
 
 	public void setColors(IASTNode node, Set<IFeature> newColors) {
+		updateID2parentIDs(node);
 		super.setColors(node.getId(), newColors);
 	}
 
 	public DirectoryColorManager getDirectoryColorManager() {
 		return directoryColorManager;
+	}
+	
+	private void updateID2parentIDs(IASTNode node) {
+		if (node == null)
+			return;
+		
+		LinkedList<String> parentIDs = new LinkedList<String>();
+		IASTNode parentNode = node;
+		while ((parentNode = parentNode.getParent()) != null) {
+			if ((parentNode.getId() != null) && (parentNode.getId().length() > 0))
+				parentIDs.addFirst(parentNode.getId());
+		}
+		id2parentIDs.put(node.getId(), parentIDs);
 	}
 }

@@ -7,6 +7,7 @@ Bundle-Activator: de.ovgu.cide.CIDECorePlugin
 Bundle-Vendor: Christian Kaestner
 Bundle-Localization: plugin
 Export-Package: de.ovgu.cide,
+ de.ovgu.cide.af,
  de.ovgu.cide.astview.internal;x-internal:=true,
  de.ovgu.cide.configuration;uses:="org.apache.tools.ant",
  de.ovgu.cide.editor,

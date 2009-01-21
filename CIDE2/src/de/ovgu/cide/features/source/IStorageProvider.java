@@ -1,5 +1,6 @@
 package de.ovgu.cide.features.source;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -7,6 +8,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 
+import de.ovgu.cide.af.Alternative;
 import de.ovgu.cide.features.IFeature;
 import de.ovgu.cide.features.IFeatureModel;
 
@@ -16,14 +18,10 @@ public interface IStorageProvider {
 	 * stores the annotation map to a disk, database, external program or
 	 * whatever
 	 * 
-	 * @param annotatedResource
-	 *            usually IFile or IFolder that is annotated
-	 * @param annotations
-	 *            map with all annotations
 	 * @return whether storage has been successful
 	 */
-	boolean storeAnnotations(IProject project, Object annotatedResource,
-			Map<String, Set<IFeature>> annotations, IProgressMonitor monitor)
+	boolean storeAnnotations(IProject project, Object annotatedResource, Map<String, Set<IFeature>> annotations, 
+			Map<String, List<String>> parentIDs, IProgressMonitor monitor)
 			throws CoreException;
 
 	/**
@@ -36,6 +34,13 @@ public interface IStorageProvider {
 	 */
 	Map<String, Set<IFeature>> readAnnotations(IProject project,
 			Object annotatedResource, IFeatureModel featureModel);
+	
+	/**
+	 * stores the given alternative
+	 * 
+	 * @return whether storage has been successful
+	 */
+	boolean storeNewAlternative(IProject project, Object annotatedResource, Alternative alternative);
 
 	/**
 	 * returns whether this storage manager can be used with the given feature
@@ -45,4 +50,14 @@ public interface IStorageProvider {
 	 * @return
 	 */
 	boolean isCompatible(IFeatureModel featureModel);
+	
+	/**
+	 * TODO MRO
+	 * @param project
+	 * @param annotatedResource
+	 * @param astID
+	 * @param altID
+	 * @return
+	 */
+	boolean activateAlternative(IProject project, Object annotatedResource, String astID, String altID);
 }

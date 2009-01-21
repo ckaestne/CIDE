@@ -8,6 +8,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -20,6 +21,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 
+import de.ovgu.cide.af.Alternative;
 import de.ovgu.cide.features.Feature;
 import de.ovgu.cide.features.FeatureModelNotFoundException;
 import de.ovgu.cide.features.IFeature;
@@ -118,8 +120,8 @@ public class DefaultStorageProvider implements IStorageProvider {
 		return new HashMap<String, Set<IFeature>>();
 	}
 
-	public boolean storeAnnotations(IProject project, Object annotatedResource,
-			Map<String, Set<IFeature>> annotations, IProgressMonitor monitor)
+	public boolean storeAnnotations(IProject project, Object annotatedResource, Map<String, Set<IFeature>> annotations, 
+			Map<String, List<String>> parentIDs, IProgressMonitor monitor)
 			throws CoreException {
 		assert annotatedResource instanceof IFile
 				|| annotatedResource instanceof IContainer;
@@ -250,5 +252,14 @@ public class DefaultStorageProvider implements IStorageProvider {
 
 	public boolean isCompatible(IFeatureModel featureModel) {
 		return featureModel instanceof IFeatureModelWithID;
+	}
+	
+	public boolean activateAlternative(IProject project, Object annotatedResource, String astID, String altID) {
+		return false;
+	}
+
+	@Override
+	public boolean storeNewAlternative(IProject project, Object annotatedResource, Alternative alternative) {
+		return false;
 	}
 }

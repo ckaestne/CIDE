@@ -48,7 +48,7 @@ class SelectionFinder extends ASTVisitor {
 		if (node.getStartPosition() >= offset
 				&& (node.getStartPosition() + node.getLength()) <= (offset + length)) {
 
-			if (node.isOptional()) {
+			if (!optionalOnly || node.isOptional()) {
 				boolean hasColoredParent = selectedNodes.contains(node
 						.getParent());
 				boolean hasKnownParent = knownNodes.contains(node.getParent());
