@@ -1,5 +1,6 @@
 package de.ovgu.cide.storage.xml;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.WeakHashMap;
@@ -9,6 +10,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 
+import de.ovgu.cide.af.Alternative;
 import de.ovgu.cide.features.IFeature;
 import de.ovgu.cide.features.IFeatureModel;
 import de.ovgu.cide.features.IFeatureModelWithID;
@@ -41,18 +43,31 @@ public class XMLStorageProvider implements IStorageProvider {
 		String path = ((IResource) annotatedResource).getProjectRelativePath()
 				.toPortableString();
 
-		return getProjectStorage(project).read(path,
+		return getProjectStorage(project).readAnnotations(path,
 				(IFeatureModelWithID) featureModel);
 	}
 
-	public boolean storeAnnotations(IProject project, Object annotatedResource,
-			Map<String, Set<IFeature>> annotations, IProgressMonitor monitor)
+	public boolean storeAnnotations(IProject project, Object annotatedResource, Map<String, Set<IFeature>> annotations, 
+			Map<String, List<String>> parentIDs, IProgressMonitor monitor)
 			throws CoreException {
 		assert annotatedResource instanceof IResource;
 		String path = ((IResource) annotatedResource).getProjectRelativePath()
 				.toPortableString();
 
-		return getProjectStorage(project).store(path, annotations);
+		return getProjectStorage(project).storeAnnotations(path, annotations, parentIDs);
+	}
+	
+	public boolean storeNewAlternative(IProject project, Object annotatedResource, Alternative alternative) {
+		assert annotatedResource instanceof IResource;
+		String path = ((IResource) annotatedResource).getProjectRelativePath().toPortableString();
+		
+		return getProjectStorage(project).storeNewAlternative(path, alternative);
 	}
 
+	public boolean activateAlternative(IProject project, Object annotatedResource, String astID, String altID) {
+		assert annotatedResource instanceof IResource;
+		String path = ((IResource) annotatedResource).getProjectRelativePath().toPortableString();
+
+		return getProjectStorage(project).activateAlternative(path, astID, altID);
+	}
 }
