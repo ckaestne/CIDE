@@ -43,7 +43,7 @@ public class EquationEditorPage extends AbstractConfigurationPage {
 		viewer.setContentProvider(new ConfigurationContentProvider());
 		try {
 			Class<?> c = Class
-					.forName("featureide_ui.editors.configuration.ConfigurationLabelProvider");
+					.forName("featureide.fm.ui.editors.configuration.ConfigurationLabelProvider");
 			System.out.println(c);
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
