@@ -24,7 +24,6 @@ import javax.xml.transform.stream.StreamResult;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
-import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -45,6 +44,7 @@ public class ProjectStorage {
 	private final IFile xmlIFile;
 	private final File xmlFile;
 	private Document dom;
+	HashMap<Alternative, Element> alternative2node;
 	
 	/**
 	 * Standard-ID fuer eine Alternative
@@ -234,7 +234,7 @@ public class ProjectStorage {
 	 * 
 	 * Achtung: die Liste von Vorgaenger-IDs muss wie in storeAnnotation() top-down sortiert sein!
 	 */
-	public boolean storeNewAlternative(String path, Alternative alternative) {
+	public boolean storeNewAlternative(String path, Alternative alternative, String oldText) {
 		if (alternative == null)
 			return false;
 		
@@ -242,7 +242,6 @@ public class ProjectStorage {
 		List<String> parentIDs = alternative.entityParentIDs;
 		String altID = alternative.altID;
 		Set<IFeature> features = alternative.features;
-		String text = alternative.text;
 		
 		Element featureAnnotationsElement = findFeatureAnnotationsElement(path);
 		
@@ -262,12 +261,13 @@ public class ProjectStorage {
 			activeAlternative = (Element) createAnnotationNode(astID, featureAnnotationsElement, parentIDs, altID).getChildNodes().item(0);
 		} else {
 			// Aktive Alternative gefunden: deaktiviere sie und erzeuge eine neue, aktive Alternative
-			deactivateAlternative(activeAlternative);
+			toggleActivation(activeAlternative, false);
+			setTextContext(activeAlternative, oldText);
 			activeAlternative = createAlternativeNode(activeAlternative.getParentNode(), altID);
 		}
 		
-		activeAlternative.setTextContent(text);				// Text der Alternative setzen
-		createFeatureNodes(features, activeAlternative);	// Feature-Annotationen hinzufuegen
+		if ((features != null) && (features.size() > 0))
+			createFeatureNodes(features, activeAlternative);	// Feature-Annotationen hinzufuegen
 		
 		// XML-Datei schreiben
 		try {
@@ -285,12 +285,96 @@ public class ProjectStorage {
 		
 		return true;
 	}
+	
+	public Map<String, List<Alternative>> getAlternatives(String path, List<String> ids) {
+		if ((ids == null) || (ids.size() < 1))
+			return null;
+		
+		Element featureAnnotationsElement = findFeatureAnnotationsElement(path);
+		if (featureAnnotationsElement == null)
+			return null;
+		
+		if (alternative2node == null)
+			alternative2node = new HashMap<Alternative, Element>();
+		
+		NodeList annotations = featureAnnotationsElement.getElementsByTagName("annotation");
+		Map<String, List<Alternative>> result = new HashMap<String, List<Alternative>>();
+		for (int i = 0; i < annotations.getLength(); ++i) {
+			Element annotation = (Element) annotations.item(i);
+			String astid = annotation.getAttributes().getNamedItem("astid").getNodeValue();
+			if (ids.contains(astid)) {
+				NodeList alternatives = annotation.getChildNodes();
+				
+				List<Alternative> altList = null;
+				if (alternatives.getLength() > 0) {
+					if (result.containsKey(astid)) 
+						altList = result.get(astid);
+					else {
+						altList = new LinkedList<Alternative>();
+						result.put(astid, altList);
+					}
+				}
+				
+				for (int j = 0; j < alternatives.getLength(); ++j) {
+					Element alternative = (Element) alternatives.item(j);
+					if (alternative.getNodeName().equals("alternative") && parentIsActive(alternative)) {
+						Alternative alt = buildAlternative(alternative).setEntityID(astid);
+						altList.add(alt);
+						alternative2node.put(alt, alternative);
+					}
+				}
+			}
+		}
+		
+		return result;
+	}
+	
+	private boolean parentIsActive(Element alternative) {
+		if (alternative == null)
+			return false;
+		
+		Node parent = alternative.getParentNode().getParentNode();
+		if (parent != null) {
+			if (parent.getNodeName().equals("featureannotations"))
+				return true;
+			if (parent.getNodeName().equals("alternative")) {
+				return parent.getAttributes().getNamedItem("isActive").getNodeValue().equals("true");
+			}
+		}
+		
+		return false;
+	}
+	
+	private Alternative buildAlternative(Element alternative) {
+		if (alternative == null)
+			return null;
+		
+		return (new Alternative(alternative.getAttribute("altid"), null, null, null)).setActive(alternative.getAttribute("isActive").equals("true"))
+																					 .setText(getText(alternative));
+	}
+	
+	private String getText(Element alternative) {
+		if (alternative == null)
+			return null;
+		
+		NodeList childNodes = alternative.getChildNodes();
+		for (int i = 0; i < childNodes.getLength(); ++i) {
+			Node node = childNodes.item(i);
+			if (node.getNodeName().equals("text")) {
+				return node.getTextContent();
+			}
+		}
+		
+		return null;
+	}
 
 	/**
-	 * Deaktiviert die Alternative hinter dem gegebenen Element. Alle Kindknoten werden auch deaktiviert.
-	 * @param element	Zu deaktivierendes Element
+	 * (De)aktiviert die Alternative hinter dem gegebenen Element. Bei der Deaktivierung werden auch alle Kindknoten deaktiviert.
+	 * Bei der Aktivierung wird immer nur die erste Kind-Alternative aktiviert.
+	 * 
+	 * @param element	Zu (de)aktivierendes Element
 	 */
-	private void deactivateAlternative(Element element) {
+	private void toggleActivation(Element element, boolean isActive) {
 		if (element == null)
 			return;
 		
@@ -298,66 +382,69 @@ public class ProjectStorage {
 		for (int i = 0; i < childNodes.getLength(); ++i) {
 			Node childNode = childNodes.item(i);
 			if (childNode.getNodeType() == Node.ELEMENT_NODE)
-				deactivateAlternative((Element) childNodes.item(i));
+				toggleActivation((Element) childNodes.item(i), isActive);
+			
+			// Beim Aktivieren immer nur die erste Alternative aktivieren
+			if (isActive && childNode.getNodeName().equals("alternative"))
+				break;
 		}
 		
 		if (element.getNodeName().equals("alternative"))
-			element.setAttribute("isActive", "false");
+			element.setAttribute("isActive", isActive ? "true" : "false");
 	}
 	
-	/**
-	 * TODO MRO
-	 * @param path
-	 * @param astID
-	 * @param altID
-	 * @return
-	 */
-	public boolean activateAlternative(String path, String astID, String altID) {
-		Element featureAnnotationsElement = findFeatureAnnotationsElement(path);
+	private void setTextContext(Element alternative, String text) {
+		if ((alternative == null) || (text == null))
+			return;
 		
-		if (featureAnnotationsElement != null) {
-			NodeList annotations = featureAnnotationsElement.getChildNodes();
-			
-			for (int i = 0; i < annotations.getLength(); ++i) {
-				Node annotation = annotations.item(i);
-				
-				if (annotation.getNodeName().equals("annotation") && annotation.getAttributes().getNamedItem("astid").getNodeValue().equals(astID)) {
-					NodeList alternatives = annotation.getChildNodes();
-					
-					for (int j = 0; j < alternatives.getLength(); ++j) {
-						Node alternative = alternatives.item(j);
-						
-						if (alternative.getNodeName().equals("alternative")) {
-							Attr isActiveAttr = dom.createAttribute("isActive");
-							alternative.getAttributes().setNamedItem(isActiveAttr);
-							
-							if (alternative.getAttributes().getNamedItem("altid").getNodeValue().equals(altID)) {
-								isActiveAttr.setNodeValue("true");
-							} else {
-								isActiveAttr.setNodeValue("false");
-							}
-						}
-					}
-					
-					try {
-						serializeDom();
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (TransformerException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (CoreException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					
-					return true;
-				}
+		NodeList childNodes = alternative.getChildNodes();
+		Element textElement = null;
+		for (int i = 0; i < childNodes.getLength(); ++i) {
+			Node node = childNodes.item(i);
+			if (node.getNodeName().equals("text")) {
+				textElement = (Element) node;
+				break;
 			}
 		}
 		
-		return false;
+		if (textElement == null) {
+			textElement = dom.createElement("text");
+			alternative.appendChild(textElement);
+		}
+		
+		textElement.setTextContent(text);
+	}
+	
+	public boolean activateAlternative(String path, Alternative alternative, String oldText) {
+		if (alternative == null)
+			return false;
+		Element featureAnnotationsElement = findFeatureAnnotationsElement(path);
+		
+		if (featureAnnotationsElement != null) {
+			Element activeAlternative = findActiveAlternative(featureAnnotationsElement, alternative.entityID);
+			
+			if (activeAlternative != null) {
+				setTextContext(activeAlternative, oldText);
+				toggleActivation(activeAlternative, false);
+			}
+			toggleActivation(alternative2node.get(alternative), true);
+		} else
+			return false;
+		
+		try {
+			serializeDom();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (TransformerException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (CoreException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return true;
 	}
 	
 	/**
@@ -434,10 +521,22 @@ public class ProjectStorage {
 		if ((features == null) || (parentNode == null))
 			return;
 		
+		List<String> featureIDs = new LinkedList<String>();
 		for (IFeature feature : features) {
-			Element featureElement = dom.createElement("feature");
 			assert feature instanceof IFeatureWithID;
-			featureElement.setAttribute("fid", Long.toString(((IFeatureWithID) feature).getId()));
+			featureIDs.add(Long.toString(((IFeatureWithID) feature).getId()));
+		}
+		
+		createFeatureNodes(featureIDs, parentNode);
+	}
+	
+	private void createFeatureNodes(List<String> featureIDs, Node parentNode) {
+		if ((featureIDs == null) || (parentNode == null))
+			return;
+		
+		for (String featureID : featureIDs) {
+			Element featureElement = dom.createElement("feature");
+			featureElement.setAttribute("fid", featureID);
 			parentNode.appendChild(featureElement);
 		}
 	}
@@ -469,7 +568,9 @@ public class ProjectStorage {
 			
 			if (annotation.getNodeName().equals("annotation") 
 					&& annotation.getAttributes().getNamedItem("astid").getNodeValue().equals(astID)) {
-				return findActiveAlternative(annotation);
+				Element result = findActiveAlternative(annotation);
+				if (result != null)
+					return result;
 			}
 		}
 		
