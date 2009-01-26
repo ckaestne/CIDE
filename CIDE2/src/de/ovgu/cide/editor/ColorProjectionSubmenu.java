@@ -73,7 +73,7 @@ public class ColorProjectionSubmenu extends MenuManager implements
 	}
 
 	public ColorProjectionSubmenu(IProjectionColoredEditor editor,
-			ToggleTextColorContext context) {
+			SelectionActionsContext context) {
 
 		super("Projection");
 		Set<IFeature> expandedColors = editor.getProjectionColorManager()

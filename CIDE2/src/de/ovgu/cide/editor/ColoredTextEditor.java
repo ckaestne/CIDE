@@ -151,16 +151,20 @@ public class ColoredTextEditor extends AbstractDecoratedTextEditor implements
 	public InlineProjectionSourceViewer getSourceViewerI() {
 		return (InlineProjectionSourceViewer) getSourceViewer();
 	}
+	
+	public IDocument getDocument() {
+		return getSourceViewer().getDocument();
+	}
 
 	public void astColorChanged(ASTColorChangedEvent event) {
 		IDocument doc = getSourceViewer().getDocument();
+		
 		if (event.getColoredSourceFile() != getSourceFile())
 			return;
 
 		if (!(getSourceViewer() instanceof ITextViewerExtension2))
 			getSourceViewer().invalidateTextPresentation();
 		else {
-
 			int offset = doc.getLength();
 			int endOffset = 0;
 			for (IASTNode node : event.getAffectedNodes()) {
@@ -231,11 +235,9 @@ public class ColoredTextEditor extends AbstractDecoratedTextEditor implements
 
 	public void markCoreException(CoreException e) {
 		editorExtension.markCoreException(e);
-
 	}
 
 	public void markParseException(Throwable e) {
 		editorExtension.markParseException(e);
 	}
-
 }

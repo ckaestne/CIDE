@@ -15,6 +15,7 @@ import cide.gparser.ParseException;
 import cide.gparser.TokenMgrError;
 import cide.languages.ILanguageExtension;
 import cide.languages.ILanguageParser;
+import de.ovgu.cide.af.AlternativeFeatureManager;
 import de.ovgu.cide.features.FeatureModelManager;
 import de.ovgu.cide.features.FeatureModelNotFoundException;
 import de.ovgu.cide.features.IFeatureModel;
@@ -30,6 +31,8 @@ public class ColoredSourceFile {
 	protected WeakReference<ISourceFile> astRef = null;
 
 	protected SourceFileColorManager colorManager = null;
+	
+	protected AlternativeFeatureManager altFeatureManager = null;
 
 	private final IFeatureModel featureModel;
 
@@ -144,6 +147,13 @@ public class ColoredSourceFile {
 							coloredSourceFile.getParent(), featureModel));
 		}
 		return colorManager;
+	}
+	
+	public AlternativeFeatureManager getAltFeatureManager() {
+		if (altFeatureManager == null) {
+			altFeatureManager = new AlternativeFeatureManager(this);
+		}
+		return altFeatureManager;
 	}
 
 	private static void cache(ColoredSourceFile sourceFile) {

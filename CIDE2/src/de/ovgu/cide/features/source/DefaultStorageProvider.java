@@ -165,6 +165,7 @@ public class DefaultStorageProvider implements IStorageProvider {
 	 * @throws ClassNotFoundException
 	 * @throws FeatureModelNotFoundException
 	 */
+	@SuppressWarnings("unchecked")
 	private HashMap<String, Set<IFeature>> loadFeatureMap(
 			ObjectInputStream out, IFeatureModelWithID featureModel)
 			throws IOException, ClassNotFoundException {
@@ -200,6 +201,7 @@ public class DefaultStorageProvider implements IStorageProvider {
 	 * @throws ClassNotFoundException
 	 * @throws FeatureModelNotFoundException
 	 */
+	@SuppressWarnings("unchecked")
 	private HashMap<String, Set<IFeature>> loadLegacySerialization(
 			ObjectInputStream out, IFeatureModelWithID featureModel)
 			throws IOException, ClassNotFoundException {
@@ -254,12 +256,17 @@ public class DefaultStorageProvider implements IStorageProvider {
 		return featureModel instanceof IFeatureModelWithID;
 	}
 	
-	public boolean activateAlternative(IProject project, Object annotatedResource, String astID, String altID) {
+	public boolean activateAlternative(IProject project, Object annotatedResource, Alternative alternative, String oldText) {
 		return false;
 	}
 
 	@Override
-	public boolean storeNewAlternative(IProject project, Object annotatedResource, Alternative alternative) {
+	public boolean storeNewAlternative(IProject project, Object annotatedResource, Alternative alternative, String oldText) {
 		return false;
+	}
+
+	@Override
+	public Map<String, List<Alternative>> getAlternatives(IProject project, Object annotatedResource, List<String> ids) {
+		return null;
 	}
 }

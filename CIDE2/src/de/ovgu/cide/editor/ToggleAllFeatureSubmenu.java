@@ -12,7 +12,7 @@ import de.ovgu.cide.features.IFeature;
 public class ToggleAllFeatureSubmenu extends MenuManager implements
 		IContributionItem {
 
-	public ToggleAllFeatureSubmenu(ToggleTextColorContext context,
+	public ToggleAllFeatureSubmenu(SelectionActionsContext context,
 			Collection<IFeature> features) {
 
 		super("All features");

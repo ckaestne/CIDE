@@ -33,8 +33,8 @@ abstract class AbstractColorManager {
 		this.project = project;
 		this.resource = annotatedResource;
 		this.featureModel = featureModel;
-		id2colors = storageProvider.readAnnotations(project, annotatedResource,
-				featureModel);
+		
+		updateColors();
 	}
 	
 	private void save() {
@@ -108,16 +108,35 @@ abstract class AbstractColorManager {
 		return success;
 	}
 	
-	protected boolean activateAlternative(String id, String altID) {
-		boolean success = storageProvider.activateAlternative(project, resource, id, altID);
-		changed |= success;
+	public Map<String, List<Alternative>> getAlternatives(List<String> ids) {
+		return storageProvider.getAlternatives(project, resource, ids);
+	}
+	
+	protected boolean activateAlternative(Alternative alternative, String oldText) {
+		boolean success = storageProvider.activateAlternative(project, resource, alternative, oldText);
+		
+		// TODO MRO: Graumsam uneffizient! Wir muessen nicht alle Annotationen neu von der Platte lesen,
+		//           sondern nur die der neuen Alternative (davon aber alle Kinder!).
+		updateColors();
+		
 		return success;
 	}
 	
-	protected boolean createAlternative(Alternative alternative) {
-		boolean success = storageProvider.storeNewAlternative(project, resource, alternative);
-		changed |= success;
+	protected boolean createAlternative(Alternative alternative, String oldText) {
+		if (alternative == null)
+			return false;
+		
+		boolean success = storageProvider.storeNewAlternative(project, resource, alternative, oldText);
+		
+		// TODO MRO: Graumsam uneffizient! Wir muessen nicht alle Annotationen neu von der Platte lesen,
+		//           sondern nur die der neuen Alternative (davon aber alle Kinder!).
+		updateColors();
+		
 		return success;
+	}
+	
+	private void updateColors() {
+		id2colors = storageProvider.readAnnotations(project, resource, featureModel);
 	}
 
 	protected boolean hasColor(String id, IFeature color) {
@@ -131,6 +150,7 @@ abstract class AbstractColorManager {
 	private Stack<Boolean> changeStack = null;
 
 	private boolean tempMode;
+	private boolean lastTempMode;
 
 	public void beginBatch() {
 		if (batch > 0) {
@@ -183,12 +203,18 @@ abstract class AbstractColorManager {
 	 */
 	public void setTemporaryMode(boolean enable) {
 		if (tempMode == true && enable == false)
-			id2colors = storageProvider.readAnnotations(project, resource,
-					featureModel);
+			id2colors = storageProvider.readAnnotations(project, resource, featureModel);
+		this.lastTempMode = this.tempMode;
 		this.tempMode = enable;
+	}
+	
+	public void resetTemporaryMode() {
+		setTemporaryMode(lastTempMode);
 	}
 
 	protected void setColors(String id, Set<IFeature> newColors) {
+		if (newColors == null)
+			newColors = new HashSet<IFeature>();
 		Set<IFeature> previousColors = id2colors.get(id);
 		id2colors.put(id, new HashSet<IFeature>(newColors));
 		boolean success = previousColors == null

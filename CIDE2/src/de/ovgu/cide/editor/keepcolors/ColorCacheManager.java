@@ -10,7 +10,6 @@ import cide.gast.ASTVisitor;
 import cide.gast.IASTNode;
 import cide.gast.ISourceFile;
 import cide.gparser.ParseException;
-import de.ovgu.cide.editor.ColoredTextEditor;
 import de.ovgu.cide.editor.ColoredEditorExtensions.IColoredEditor;
 import de.ovgu.cide.features.IFeature;
 import de.ovgu.cide.features.source.ColoredSourceFile;
@@ -27,9 +26,14 @@ public class ColorCacheManager implements IDocumentListener {
 
 	private final IColoredEditor editor;
 	private ColorCache cache = null;
+	
+	private boolean isActive;
+	private boolean lastIsActive;
 
 	public ColorCacheManager(IColoredEditor coloredTextEditor) {
 		editor = coloredTextEditor;
+		isActive = true;
+		lastIsActive = true;
 		editor.getSourceViewerR().getDocument().addDocumentListener(this);
 	}
 
@@ -62,7 +66,7 @@ public class ColorCacheManager implements IDocumentListener {
 		// nothing cached?
 		if (cache == null)
 			return;
-
+		
 		ColoredSourceFile source = editor.getSourceFile();
 		final SourceFileColorManager colorManager = source.getColorManager();
 		colorManager.beginBatch();
@@ -91,17 +95,28 @@ public class ColorCacheManager implements IDocumentListener {
 		}
 		colorManager.endBatch();
 	}
+	
+	public void deactivate() {
+		lastIsActive = isActive;
+		isActive = false;
+	}
+	
+	public void restoreActivation() {
+		boolean tmp = isActive;
+		isActive = lastIsActive;
+		lastIsActive = tmp;
+	}
 
 	public void documentAboutToBeChanged(DocumentEvent event) {
-		if (cache == null) {
+		if (isActive && (cache == null)) {
 			System.out.println("caching AST");
 			cacheAST();
 		}
 	}
 
 	public void documentChanged(DocumentEvent event) {
-		if (cache != null && event!=null) 
+		if (isActive && (cache != null) && (event != null)) {
 			cache.modifiedText(event.fText, event.fOffset, event.fLength);
+		}
 	}
-
 }

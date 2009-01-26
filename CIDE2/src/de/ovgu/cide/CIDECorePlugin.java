@@ -21,7 +21,6 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.WeakHashMap;
 
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.ISaveContext;

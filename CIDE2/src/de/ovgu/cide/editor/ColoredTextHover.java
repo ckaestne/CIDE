@@ -33,7 +33,7 @@ import de.ovgu.cide.utils.ColorHelper;
  * editors
  * 
  * complexity is due to the fact that multiple nodes can be selected and only
- * the common colors are shown. similar mechanism as in ToggleTextColorContext
+ * the common colors are shown. similar mechanism as in SelectionActionsContext
  * 
  * 
  * @author ckaestne

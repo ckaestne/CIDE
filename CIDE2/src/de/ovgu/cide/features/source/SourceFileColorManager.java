@@ -10,6 +10,8 @@ import java.util.Set;
 
 import cide.gast.ASTWrappers;
 import cide.gast.IASTNode;
+import de.ovgu.cide.ASTColorChangedEvent;
+import de.ovgu.cide.CIDECorePlugin;
 import de.ovgu.cide.af.Alternative;
 import de.ovgu.cide.features.IFeature;
 
@@ -47,8 +49,26 @@ public class SourceFileColorManager extends AbstractColorManager {
 		
 		return super.addColor(node.getId(), color);
 	}
+	
+	public boolean toggleColor(List<IASTNode> nodes, IFeature color, boolean addColor) {
+		if ((nodes == null) || (nodes.isEmpty()))
+			return false;
+		
+		boolean result = true;
+		this.beginBatch();
+		for (IASTNode node : nodes) {
+			result &= addColor ? addColor(node, color) : removeColor(node, color);
+		}
+		this.endBatch();
+		
+		CIDECorePlugin.getDefault().notifyListeners(new ASTColorChangedEvent(this, nodes, source));
+		return result;
+	}
 
 	public boolean removeColor(IASTNode node, IFeature color) {
+		if (node == null)
+			return false;
+		
 		return super.removeColor(node.getId(), color);
 	}
 
@@ -56,16 +76,16 @@ public class SourceFileColorManager extends AbstractColorManager {
 		return super.hasColor(node.getId(), color);
 	}
 	
-	public boolean activateAlternative(IASTNode node, String altID) {
-		return super.activateAlternative(node.getId(), altID);
+	public boolean activateAlternative(Alternative alternative, String oldText) {
+		return super.activateAlternative(alternative, oldText);
 	}
 	
-	public boolean createAlternative(IASTNode node, Set<IFeature> features, String altID) {
+	public boolean createAlternative(IASTNode node, String altID) {
 		if (node == null)
 			return false;
 		
-		updateID2parentIDs(node);		
-		return super.createAlternative(new Alternative(altID, node.getId(), id2parentIDs.get(node.getId()), features, node.render()));
+		updateID2parentIDs(node);
+		return super.createAlternative(new Alternative(altID, node.getId(), id2parentIDs.get(node.getId()), null), node.render().trim());
 	}
 
 	/*

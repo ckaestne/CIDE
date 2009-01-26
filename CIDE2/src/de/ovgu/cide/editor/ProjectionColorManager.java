@@ -16,7 +16,6 @@ import de.ovgu.cide.features.IFeature;
 import de.ovgu.cide.features.IFeatureModel;
 import de.ovgu.cide.features.source.ColoredSourceFile;
 
-@SuppressWarnings("restriction")
 public class ProjectionColorManager implements IProjectionColorManager {
 
 	private final IProjectionColoredEditor editor;
@@ -71,6 +70,7 @@ public class ProjectionColorManager implements IProjectionColorManager {
 		updateProjectionAnnotations();
 	}
 
+	@SuppressWarnings("unchecked")
 	protected void updateProjectionAnnotations() {
 		InlineProjectionSourceViewer viewer = (InlineProjectionSourceViewer) editor
 				.getSourceViewerR();

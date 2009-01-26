@@ -36,16 +36,23 @@ public class StorageProviderProxy implements IStorageProvider {
 		return target.storeAnnotations(project, annotatedResource, annotations, parentIDs, monitor);
 	}
 	
-	public boolean activateAlternative(IProject project, Object annotatedResource, String astID, String altID) {
+	public boolean activateAlternative(IProject project, Object annotatedResource, Alternative alternative, String oldText) {
 		if (target == null)
 			loadTarget();
-		return target.activateAlternative(project, annotatedResource, astID, altID);
+		return target.activateAlternative(project, annotatedResource, alternative, oldText);
 	}
 	
-	public boolean storeNewAlternative(IProject project, Object annotatedResource, Alternative alternative) {
+	public boolean storeNewAlternative(IProject project, Object annotatedResource, Alternative alternative, String oldText) {
 		if (target == null)
 			loadTarget();
-		return target.storeNewAlternative(project, annotatedResource, alternative);
+		return target.storeNewAlternative(project, annotatedResource, alternative, oldText);
+	}
+	
+	@Override
+	public Map<String, List<Alternative>> getAlternatives(IProject project, Object annotatedResource, List<String> ids) {
+		if (target == null)
+			loadTarget();
+		return target.getAlternatives(project, annotatedResource, ids);
 	}
 
 	private IConfigurationElement configElement;
@@ -84,5 +91,4 @@ public class StorageProviderProxy implements IStorageProvider {
 	public String getId() {
 		return id;
 	}
-
 }

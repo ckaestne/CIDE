@@ -7,7 +7,10 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.swt.SWT;
@@ -48,12 +51,14 @@ public class ColoredEditorExtensions {
 		ISourceViewer getSourceViewerR();
 
 		ISelectionProvider getSelectionProvider();
+		
+		IDocument getDocument();
+		
+		void doSave(IProgressMonitor progressMonitor);
 	}
 
 	public static interface IProjectionColoredEditor extends IColoredEditor {
-
 		IProjectionColorManager getProjectionColorManager();
-
 	}
 
 	private IColoredEditor editor;
@@ -170,30 +175,39 @@ public class ColoredEditorExtensions {
 
 		return result;
 	}
-
+	
+	public IDocument getDocument() {
+		return editor.getDocument();
+	}
+	
 	public void fillContextMenu(IMenuManager menu) {
 		if (!editor.isDirty()) {
 			ColoredSourceFile sourceFile = editor.getSourceFile();
+			
 			if (sourceFile != null) {
-				ToggleTextColorContext context = new ToggleTextColorContext(
-						sourceFile, editor.getSelectionProvider()
-								.getSelection());
-
+				SelectionActionsContext context = new SelectionActionsContext(sourceFile, editor.getSelectionProvider().getSelection(), this);
 				IFeatureModel fm = sourceFile.getFeatureModel();
-				List<IFeature> visibleFeatures = new ArrayList<IFeature>(fm
-						.getVisibleFeatures());
+				
+				List<IFeature> visibleFeatures = new ArrayList<IFeature>(fm.getVisibleFeatures());
 				Collections.sort(visibleFeatures);
+				
 				for (IFeature feature : visibleFeatures) {
 					menu.add(new ToggleTextColorAction(context, feature));
 				}
-				menu
-						.add(new ToggleAllFeatureSubmenu(context, fm
-								.getFeatures()));
+				
+				menu.add(new ToggleAllFeatureSubmenu(context, fm.getFeatures()));
 				menu.add(new NewFeatureAction(context, fm));
 
 				if (editor instanceof IProjectionColoredEditor)
-					menu.add(new ColorProjectionSubmenu(
-							(IProjectionColoredEditor) editor, context));
+					menu.add(new ColorProjectionSubmenu((IProjectionColoredEditor) editor, context));
+				
+				if (context.anyNodesSelected()) {
+					MenuManager mm = new MenuManager("Alternative code");
+					menu.add(mm);
+
+					mm.add(new CreateAlternativeAction(context));
+					mm.add(new SwitchAlternativeSubmenu(context));
+				}
 			}
 		}
 	}
@@ -209,9 +223,21 @@ public class ColoredEditorExtensions {
 
 		parent.layout();
 	}
+	
+	public ColorCacheManager getColorCacheManager() {
+		return keepColorManager;
+	}
 
 	public void initKeepColorManager() {
 		keepColorManager = new ColorCacheManager(editor);
+	}
+	
+	public void invalidateTextPresentation() {
+		editor.getSourceViewerR().invalidateTextPresentation();
+	}
+	
+	public void save() {
+		editor.doSave(null);
 	}
 
 	public void afterSave(boolean wasDirty) {
@@ -222,5 +248,4 @@ public class ColoredEditorExtensions {
 			// update the AST views
 		}
 	}
-
 }
