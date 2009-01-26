@@ -1,0 +1,1724 @@
+// -*- java -*-
+// Copyright  Corporation for National Research Initiatives
+
+options
+{
+    // only non-defaults are given here.
+    STATIC = false;                          // multiple parsers
+    COMMON_TOKEN_ACTION = true;              // CommonTokenAction(Token)
+//    DEBUG_PARSER = true;
+//    DEBUG_TOKEN_MANAGER = true;
+    USER_CHAR_STREAM = true;
+    UNICODE_INPUT = true;
+}
+
+
+PARSER_BEGIN(PythonParser)
+package tmp.generated_python;
+import java.io.*;
+import java.util.*;
+import cide.gast.*;
+import cide.gparser.*;
+
+public class PythonParser
+{
+  
+}
+
+
+PARSER_END(PythonParser)
+
+TOKEN_MGR_DECLS:
+{
+    int indentation[] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+    int level = 0;
+    int dedents = 0;
+    int parens = 0;
+    int indent;
+
+    boolean expect_indent = false;
+
+    boolean compound = false;
+
+    public boolean single_input = false;
+
+    // parsing of partial sentence (interactive) mode
+    public boolean partial = false;
+    // control whether empty new lines on EOF force sentence closing NEWLINE even if indent
+    // is expected,i.e. classic behavior at jython prompt (different from codeop behavior)
+    public boolean stdprompt = false;
+
+    public boolean generator_allowed = true;
+
+    static Token addDedent(Token previous) {
+        Token t = new Token();
+        t.kind = DEDENT;
+        t.beginLine = previous.beginLine;
+        t.endLine = previous.endLine;
+        t.beginColumn = previous.beginColumn;
+        t.endColumn = previous.endColumn;
+        t.offset=previous.offset;
+        t.length=previous.length;
+        t.image = "<DEDENT>";
+        t.specialToken = null;
+        t.next = null;
+        previous.next = t;
+        return t;
+    }
+
+    void CommonTokenAction(Token t) {
+        /*
+           if not partial: EOF is expanded to token sequences comprising
+               if single_input: [NEWLINE] necessary DEDENT NEWLINE (afterward EOF)
+               otherwise      : [NEWLINE] necessary DEDENT EOF
+           if partial: EOF expansion happens only if EOF preceded by empty line (etc),
+           i.e. lexer is in MAYBE_FORCE_NEWLINE_IF_EOF state
+        */
+        if (t.kind == EOF) {
+            // System.out.println("EOF: "+single_input+", "+curLexState+", "+level);
+            if (!partial || curLexState == MAYBE_FORCE_NEWLINE_IF_EOF) {
+                if (curLexState == DEFAULT) {
+                    t.kind = NEWLINE;
+                }
+                else {
+                    t.kind = DEDENT;
+                    if (level >= 0) level -= 1;
+                }
+                while (level >= 0) {
+                    level--;
+                    t = addDedent(t);
+                }
+                if (!single_input) {
+                    t.kind = EOF;
+                    t.image = "<EOF>";
+                } else {
+                    t.kind = NEWLINE;
+                    t.image = "<FORCENL>";
+                    single_input = false;
+                }
+            }
+        } else if (t.kind == YIELD) {
+            if (!generator_allowed) {
+                t.kind = NAME;
+            }
+        }
+    }
+
+    void indenting(int ind) {
+        indent = ind;
+        if (indent == indentation[level])
+            SwitchTo(INDENTATION_UNCHANGED);
+        else
+            SwitchTo(INDENTING);
+    }
+}
+
+
+SKIP :
+{
+    <SPACE: " ">
+|   "\t"
+|   "\014"
+|   <CONTINUATION: ("\\") ("\r\n"|"\n"|"\r")>
+|   <NEWLINE1: ("\r\n"|"\n"|"\r")>
+        {
+            if (parens == 0) {
+                indent = 0;
+                input_stream.backup(1);
+                if (level == 0)
+                    SwitchTo(FORCE_NEWLINE1);
+                else
+                    SwitchTo(FORCE_NEWLINE2);
+            }
+        }
+}
+
+
+<FORCE_NEWLINE1> TOKEN :
+{ <NEWLINE: ("\n" | "\r")> : INDENTATION_UNCHANGED }
+
+
+<FORCE_NEWLINE2> TOKEN :
+{ <NEWLINE2: ("\n" | "\r")> { matchedToken.kind = NEWLINE; }: INDENTING }
+
+
+// causes expected warning
+<MAYBE_FORCE_NEWLINE_IF_EOF> SKIP :
+{
+    <""> { indenting(0); }
+}
+
+<INDENTING, INDENTATION_UNCHANGED> SKIP :
+{
+    "\t"
+        { indenting((indent/8+1)*8); }
+|   " "
+        { indenting(indent+1); }
+|   "\014"
+        { indenting(0); }
+|   <CRLF1: ("\r\n" | "\n" | "\r")>
+        {
+            //System.out.println("empty line");
+            // if partial single_input (interactive) mode,
+            // empty line (indent==0), and no parens open
+            // or indentetion expected (if stdprompt == true, ovveride last cond)
+            // consider forcing sentence closing NEWLINE if EOF
+            if (partial && single_input && indent == 0 &&
+                           parens == 0  && (stdprompt || !expect_indent)) {
+                //System.out.println("force newline");
+                //backup a character!
+                // - input_stream.backup(1); -
+                SwitchTo(MAYBE_FORCE_NEWLINE_IF_EOF);
+            }
+            else
+                indenting(0);
+        }
+}
+
+
+<INDENTATION_UNCHANGED> SKIP :
+{
+    <""> : DEFAULT
+}
+
+
+<INDENTING> TOKEN :
+{
+    <DEDENT: "">
+        {
+            if (indent > indentation[level]) {
+                level++;
+                indentation[level] = indent;
+                matchedToken.kind=INDENT;
+                matchedToken.image = "<INDENT>";
+            }
+            else if (level > 0) {
+                Token t = matchedToken;
+                level -= 1;
+                while (level > 0 && indent < indentation[level]) {
+                    level--;
+                    t = addDedent(t);
+                }
+                if (indent != indentation[level]) {
+                    throw new TokenMgrError("inconsistent dedent",0);//TODO
+                }
+                t.next = null;
+            }
+        } : DEFAULT
+}
+
+
+<UNREACHABLE> TOKEN :
+{
+    < INDENT:"<INDENT>">
+//|     < DEDENT:"<DEDENT>">
+}
+
+
+<DEFAULT> SPECIAL_TOKEN: /* COMMENTS */
+{
+    <TRAILING_COMMENT: "#" (~["\n","\r"])* >
+}
+
+<INDENTING, INDENTATION_UNCHANGED> SPECIAL_TOKEN: /* COMMENTS */
+{
+    <SINGLE_LINE_COMMENT: "#" (~["\n","\r"])* ("\r\n" | "\n" | "\r")> {
+        indenting(0);
+    }
+}
+
+
+TOKEN : /* SEPARATORS */
+{
+    < LPAREN: "(" > {parens++;}
+|   < RPAREN: ")" > {parens--;}
+|   < LBRACE: "{" > {parens++;}
+|   < RBRACE: "}" > {parens--;}
+|   < LBRACKET: "[" > {parens++;}
+|   < RBRACKET: "]" > {parens--;}
+|   < SEMICOLON: ";" >
+|   < COMMA: "," >
+|   < DOT: "." >
+|   < COLON: ":" >
+}
+
+
+TOKEN : /* OPERATORS */
+{
+    < PLUS: "+" >
+|   < MINUS: "-" >
+|   < MULTIPLY: "*" >
+|   < DIVIDE: "/" >
+|   < FLOORDIVIDE: "//" >
+|   < POWER: "**" >
+|   < LSHIFT: "<<" >
+|   < RSHIFT: ">>" >
+|   < MODULO: "%" >
+|   < NOT: "~" >
+|   < XOR: "^" >
+|   < OR: "|" >
+|   < AND: "&" >
+|   < EQUAL: "=" >
+|   < GREATER: ">" >
+|   < LESS: "<" >
+|   < EQEQUAL: "==" >
+|   < EQLESS: "<=" >
+|   < EQGREATER: ">=" >
+|   < LESSGREATER: "<>" >
+|   < NOTEQUAL: "!=" >
+|   < PLUSEQ: "+=" >
+|   < MINUSEQ: "-=" >
+|   < MULTIPLYEQ: "*=" >
+|   < DIVIDEEQ: "/=" >
+|   < FLOORDIVIDEEQ: "//=" >
+|   < MODULOEQ: "%=" >
+|   < ANDEQ: "&=" >
+|   < OREQ: "|=" >
+|   < XOREQ: "^=" >
+|   < LSHIFTEQ: "<<=" >
+|   < RSHIFTEQ: ">>=" >
+|   < POWEREQ: "**=" >
+}
+
+TOKEN : /* KEYWORDS */
+{
+    < OR_BOOL: "or" >
+|   < AND_BOOL: "and" >
+|   < NOT_BOOL: "not" >
+|   < IS: "is" >
+|   < IN: "in" >
+|   < LAMBDA: "lambda" >
+|   < IF: "if" >
+|   < ELSE: "else" >
+|   < ELIF: "elif" >
+|   < WHILE: "while" >
+|   < FOR: "for" >
+|   < TRY: "try" >
+|   < EXCEPT: "except" >
+|   < DEF: "def" >
+|   < CLASS: "class" >
+|   < FINALLY: "finally" >
+|   < PRINT: "print" >
+|   < PASS: "pass" >
+|   < BREAK: "break" >
+|   < CONTINUE: "continue" >
+|   < RETURN: "return" >
+|   < YIELD: "yield" >
+|   < IMPORT: "import" >
+|   < FROM: "from" >
+|   < DEL: "del" >
+|   < RAISE: "raise" >
+|   < GLOBAL: "global" >
+|   < EXEC: "exec" >
+|   < ASSERT: "assert" >
+|   < AS: "as" >
+}
+
+
+TOKEN : /* Python identifiers */
+{
+    < NAME: <LETTER> ( <LETTER> | <DIGIT>)* >
+|   < #LETTER: ["_","a"-"z","A"-"Z"] >
+}
+
+
+TOKEN : /* Numeric literals */
+{
+    < DECNUMBER:
+        ["1"-"9"] (["0"-"9"])* (["l", "L"])?
+      | "0"
+      >
+|   < HEXNUMBER: "0" ["x","X"] (["0"-"9","a"-"f","A"-"F"])+ (["l","L"])? >
+|   < OCTNUMBER: "0" (["0"-"7"])* (["l","L"])? >
+|
+    < FLOAT:
+        (["0"-"9"])+ "." (["0"-"9"])* (<EXPONENT>)?
+      | "." (["0"-"9"])+ (<EXPONENT>)?
+      | (["0"-"9"])+ <EXPONENT>
+      >
+|   < COMPLEX: (<DECNUMBER> | <FLOAT> | "0" <DECNUMBER> ) ["j", "J"]>
+|   < #EXPONENT: ["e","E"] (["+","-"])? (["0"-"9"])+ >
+|   < #DIGIT: ["0" - "9"] >
+}
+
+/*TOKEN : { <STRING: (["r", "R"])? ["'", "\"", "'''", "\"\"\""] >
+    {
+        int nquotes = matchedToken.image.length() > 2 ? 3 : 1;
+        char quote = matchedToken.image.charAt(matchedToken.image.length()-1);
+
+    }
+}*/
+
+
+MORE : /* Strings */
+{
+    < (["u", "U"]) (["r", "R"])? "'" > :  IN_USTRING11
+|   < (["u", "U"]) (["r", "R"])? "\"" > :  IN_USTRING21
+|   < (["u", "U"]) (["r", "R"])? "'''" > :  IN_USTRING13
+|   < (["u", "U"]) (["r", "R"])? "\"\"\"" > :  IN_USTRING23
+|   < (["r", "R"])? "'" > :  IN_STRING11
+|   < (["r", "R"])? "\"" > :  IN_STRING21
+|   < (["r", "R"])? "'''" > :  IN_STRING13
+|   < (["r", "R"])? "\"\"\"" > :  IN_STRING23
+}
+
+<IN_STRING11> TOKEN : { <SINGLE_STRING: "'"> {
+    matchedToken.image = image.toString(); } : DEFAULT}
+<IN_STRING21> TOKEN : { <SINGLE_STRING2: "\""> {
+    matchedToken.image = image.toString(); } : DEFAULT}
+<IN_STRING13> TOKEN : { <TRIPLE_STRING: "'''"> {
+    matchedToken.image = image.toString(); } : DEFAULT}
+<IN_STRING23> TOKEN : { <TRIPLE_STRING2: "\"\"\""> {
+    matchedToken.image = image.toString(); } : DEFAULT}
+
+<IN_USTRING11> TOKEN : { <SINGLE_USTRING: "'"> {
+    matchedToken.image = image.toString(); } : DEFAULT}
+<IN_USTRING21> TOKEN : { <SINGLE_USTRING2: "\""> {
+    matchedToken.image = image.toString(); } : DEFAULT}
+<IN_USTRING13> TOKEN : { <TRIPLE_USTRING: "'''"> {
+    matchedToken.image = image.toString(); } : DEFAULT}
+<IN_USTRING23> TOKEN : { <TRIPLE_USTRING2: "\"\"\""> {
+    matchedToken.image = image.toString(); } : DEFAULT}
+
+<IN_STRING11> MORE:
+{
+    <"\\\r\n">           { image.setLength(image.length()-3); } : IN_STRING1NLC
+|   <("\\" ("\n"|"\r"))> { image.setLength(image.length()-2); } : IN_STRING1NLC
+}
+
+<IN_STRING21> MORE:
+{
+    <"\\\r\n">           { image.setLength(image.length()-3); } : IN_STRING2NLC
+|   <("\\" ("\n"|"\r"))> { image.setLength(image.length()-2); } : IN_STRING2NLC
+}
+
+<IN_USTRING11> MORE:
+{
+    <"\\\r\n">           { image.setLength(image.length()-3); } : IN_USTRING1NLC
+|   <("\\" ("\n"|"\r"))> { image.setLength(image.length()-2); } : IN_USTRING1NLC
+}
+
+<IN_USTRING21> MORE:
+{
+    <"\\\r\n">           { image.setLength(image.length()-3); } : IN_USTRING2NLC
+|   <("\\" ("\n"|"\r"))> { image.setLength(image.length()-2); } : IN_USTRING2NLC
+}
+
+<IN_STRING1NLC> MORE:
+{
+ <""> : IN_STRING11
+}
+
+<IN_STRING2NLC> MORE:
+{
+ <""> : IN_STRING21
+}
+
+<IN_USTRING1NLC> MORE:
+{
+ <""> : IN_USTRING11
+}
+
+<IN_USTRING2NLC> MORE:
+{
+ <""> : IN_USTRING21
+}
+
+<IN_STRING11, IN_USTRING11> MORE: { <("\\" ("\\"|"'")) | ~["\n","\r"]> }
+<IN_STRING21, IN_USTRING21> MORE: { <("\\" ("\\"|"\"")) | ~["\n","\r"]> }
+
+<IN_STRING13, IN_STRING23, IN_USTRING13, IN_USTRING23> MORE:
+{
+    <"\r\n"> {
+        int l = image.length();
+        image.setLength(l-1);
+        image.setCharAt(l-2, '\n');
+    }
+|   <"\n">
+|   <"\r"> { image.setCharAt(image.length()-1, '\n'); }
+|   <~["\n","\r"]>
+|   <"\\" ~["\n","\r"]>
+}
+file_input file_input() : { 
+	newlineOrStmt newlineOrStmt;
+	ArrayList<newlineOrStmt> newlineOrStmtList = new ArrayList<newlineOrStmt>();
+	Token t;
+	ASTStringNode eof;
+	Token firstToken=token;
+} { (
+	(newlineOrStmt=newlineOrStmt(){newlineOrStmtList.add(newlineOrStmt);})* t=<EOF>{eof=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new file_input(newlineOrStmtList, eof, firstToken.next,token);}
+ ) }
+
+newlineOrStmt newlineOrStmt() : { 
+	Token t;
+	ASTStringNode newline;
+	stmt stmt;
+	Token firstToken=token;
+} { (
+	t=<NEWLINE>{newline=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new newlineOrStmt1(newline, firstToken.next,token);} |
+	stmt=stmt() 
+	{return new newlineOrStmt2(stmt, firstToken.next,token);}
+ ) }
+
+funcdef funcdef() : { 
+	AnyName anyName;
+	parameters parameters;
+	suite suite;
+	Token firstToken=token;
+} { (
+	"def" anyName=AnyName() parameters=parameters() ":" suite=suite() 
+	{return new funcdef(anyName, parameters, suite, firstToken.next,token);}
+ ) }
+
+parameters parameters() : { 
+	varargslist varargslist = null;
+	Token firstToken=token;
+} { (
+	"(" [varargslist=varargslist()] ")" 
+	{return new parameters(varargslist, firstToken.next,token);}
+ ) }
+
+varargslist varargslist() : { 
+	defaultarg defaultarg;
+	defaultarg defaultarg1;
+	ArrayList<defaultarg> defaultarg1List = new ArrayList<defaultarg>();
+	ExtraArgList extraArgList = null;
+	ExtraKeywordList extraKeywordList = null;
+	ASTTextNode text1 = null;
+	ExtraArgList extraArgList1;
+	ExtraKeywordList extraKeywordList1 = null;
+	ExtraKeywordList extraKeywordList2;
+	Token firstToken=token;
+} { (
+	defaultarg=defaultarg() (LOOKAHEAD(2) "," defaultarg1=defaultarg(){defaultarg1List.add(defaultarg1);})* [LOOKAHEAD(3) "," extraArgList=ExtraArgList()] [LOOKAHEAD(2) "," extraKeywordList=ExtraKeywordList()] ["," {text1=new ASTTextNode(",",new WToken(token));}] 
+	{return new varargslist1(defaultarg, defaultarg1List, extraArgList, extraKeywordList, text1, firstToken.next,token);} |
+	LOOKAHEAD(2) extraArgList1=ExtraArgList() ["," extraKeywordList1=ExtraKeywordList()] 
+	{return new varargslist2(extraArgList1, extraKeywordList1, firstToken.next,token);} |
+	extraKeywordList2=ExtraKeywordList() 
+	{return new varargslist3(extraKeywordList2, firstToken.next,token);}
+ ) }
+
+ExtraArgList ExtraArgList() : { 
+	Name name;
+	Token firstToken=token;
+} { (
+	"*" name=Name() 
+	{return new ExtraArgList(name, firstToken.next,token);}
+ ) }
+
+ExtraKeywordList ExtraKeywordList() : { 
+	power power;
+	Name name;
+	Token firstToken=token;
+} { (
+	power=power() name=Name() 
+	{return new ExtraKeywordList(power, name, firstToken.next,token);}
+ ) }
+
+defaultarg defaultarg() : { 
+	fpdef fpdef;
+	test test = null;
+	Token firstToken=token;
+} { (
+	fpdef=fpdef() ["=" test=test()] 
+	{return new defaultarg(fpdef, test, firstToken.next,token);}
+ ) }
+
+fpdef fpdef() : { 
+	Name name;
+	fplist fplist;
+	Token firstToken=token;
+} { (
+	name=Name() 
+	{return new fpdef1(name, firstToken.next,token);} |
+	"(" fplist=fplist() ")" 
+	{return new fpdef2(fplist, firstToken.next,token);}
+ ) }
+
+fplist fplist() : { 
+	fpdef fpdef;
+	fpdef fpdef1;
+	ArrayList<fpdef> fpdef1List = new ArrayList<fpdef>();
+	ASTTextNode text2 = null;
+	Token firstToken=token;
+} { (
+	fpdef=fpdef() (LOOKAHEAD(2) "," fpdef1=fpdef(){fpdef1List.add(fpdef1);})* ["," {text2=new ASTTextNode(",",new WToken(token));}] 
+	{return new fplist(fpdef, fpdef1List, text2, firstToken.next,token);}
+ ) }
+
+stmt stmt() : { 
+	simple_stmt simple_stmt;
+	compound_stmt compound_stmt;
+	Token firstToken=token;
+} { (
+	simple_stmt=simple_stmt() 
+	{return new stmt1(simple_stmt, firstToken.next,token);} |
+	compound_stmt=compound_stmt() 
+	{return new stmt2(compound_stmt, firstToken.next,token);}
+ ) }
+
+simple_stmt simple_stmt() : { 
+	small_stmt small_stmt;
+	small_stmt small_stmt1;
+	ArrayList<small_stmt> small_stmt1List = new ArrayList<small_stmt>();
+	ASTTextNode text3 = null;
+	Token t;
+	ASTStringNode newline;
+	Token firstToken=token;
+} { (
+	small_stmt=small_stmt() (LOOKAHEAD(2) ";" small_stmt1=small_stmt(){small_stmt1List.add(small_stmt1);})* [";" {text3=new ASTTextNode(";",new WToken(token));}] t=<NEWLINE>{newline=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new simple_stmt(small_stmt, small_stmt1List, text3, newline, firstToken.next,token);}
+ ) }
+
+small_stmt small_stmt() : { 
+	expr_stmt expr_stmt;
+	print_stmt print_stmt;
+	del_stmt del_stmt;
+	pass_stmt pass_stmt;
+	flow_stmt flow_stmt;
+	import_stmt import_stmt;
+	global_stmt global_stmt;
+	exec_stmt exec_stmt;
+	assert_stmt assert_stmt;
+	Token firstToken=token;
+} { (
+	expr_stmt=expr_stmt() 
+	{return new small_stmt1(expr_stmt, firstToken.next,token);} |
+	print_stmt=print_stmt() 
+	{return new small_stmt2(print_stmt, firstToken.next,token);} |
+	del_stmt=del_stmt() 
+	{return new small_stmt3(del_stmt, firstToken.next,token);} |
+	pass_stmt=pass_stmt() 
+	{return new small_stmt4(pass_stmt, firstToken.next,token);} |
+	flow_stmt=flow_stmt() 
+	{return new small_stmt5(flow_stmt, firstToken.next,token);} |
+	import_stmt=import_stmt() 
+	{return new small_stmt6(import_stmt, firstToken.next,token);} |
+	global_stmt=global_stmt() 
+	{return new small_stmt7(global_stmt, firstToken.next,token);} |
+	exec_stmt=exec_stmt() 
+	{return new small_stmt8(exec_stmt, firstToken.next,token);} |
+	assert_stmt=assert_stmt() 
+	{return new small_stmt9(assert_stmt, firstToken.next,token);}
+ ) }
+
+expr_stmt expr_stmt() : { 
+	SmartTestList smartTestList;
+	expr_stmtEnd expr_stmtEnd;
+	Token firstToken=token;
+} { (
+	smartTestList=SmartTestList() expr_stmtEnd=expr_stmtEnd() 
+	{return new expr_stmt(smartTestList, expr_stmtEnd, firstToken.next,token);}
+ ) }
+
+expr_stmtEnd expr_stmtEnd() : { 
+	Token t;
+	ASTStringNode pluseq;
+	SmartTestList smartTestList;
+	ASTStringNode minuseq;
+	SmartTestList smartTestList1;
+	ASTStringNode multiplyeq;
+	SmartTestList smartTestList2;
+	ASTStringNode divideeq;
+	SmartTestList smartTestList3;
+	ASTStringNode floordivideeq;
+	SmartTestList smartTestList4;
+	ASTStringNode moduloeq;
+	SmartTestList smartTestList5;
+	ASTStringNode andeq;
+	SmartTestList smartTestList6;
+	ASTStringNode oreq;
+	SmartTestList smartTestList7;
+	ASTStringNode xoreq;
+	SmartTestList smartTestList8;
+	ASTStringNode lshifteq;
+	SmartTestList smartTestList9;
+	ASTStringNode rshifteq;
+	SmartTestList smartTestList10;
+	ASTStringNode powereq;
+	SmartTestList smartTestList11;
+	SmartTestList smartTestList12;
+	ArrayList<SmartTestList> smartTestList12List = new ArrayList<SmartTestList>();
+	Token firstToken=token;
+} { (
+	t=<PLUSEQ>{pluseq=new ASTStringNode(t.toString(),new WToken(t));} smartTestList=SmartTestList() 
+	{return new expr_stmtEnd1(pluseq, smartTestList, firstToken.next,token);} |
+	t=<MINUSEQ>{minuseq=new ASTStringNode(t.toString(),new WToken(t));} smartTestList1=SmartTestList() 
+	{return new expr_stmtEnd2(minuseq, smartTestList1, firstToken.next,token);} |
+	t=<MULTIPLYEQ>{multiplyeq=new ASTStringNode(t.toString(),new WToken(t));} smartTestList2=SmartTestList() 
+	{return new expr_stmtEnd3(multiplyeq, smartTestList2, firstToken.next,token);} |
+	t=<DIVIDEEQ>{divideeq=new ASTStringNode(t.toString(),new WToken(t));} smartTestList3=SmartTestList() 
+	{return new expr_stmtEnd4(divideeq, smartTestList3, firstToken.next,token);} |
+	t=<FLOORDIVIDEEQ>{floordivideeq=new ASTStringNode(t.toString(),new WToken(t));} smartTestList4=SmartTestList() 
+	{return new expr_stmtEnd5(floordivideeq, smartTestList4, firstToken.next,token);} |
+	t=<MODULOEQ>{moduloeq=new ASTStringNode(t.toString(),new WToken(t));} smartTestList5=SmartTestList() 
+	{return new expr_stmtEnd6(moduloeq, smartTestList5, firstToken.next,token);} |
+	t=<ANDEQ>{andeq=new ASTStringNode(t.toString(),new WToken(t));} smartTestList6=SmartTestList() 
+	{return new expr_stmtEnd7(andeq, smartTestList6, firstToken.next,token);} |
+	t=<OREQ>{oreq=new ASTStringNode(t.toString(),new WToken(t));} smartTestList7=SmartTestList() 
+	{return new expr_stmtEnd8(oreq, smartTestList7, firstToken.next,token);} |
+	t=<XOREQ>{xoreq=new ASTStringNode(t.toString(),new WToken(t));} smartTestList8=SmartTestList() 
+	{return new expr_stmtEnd9(xoreq, smartTestList8, firstToken.next,token);} |
+	t=<LSHIFTEQ>{lshifteq=new ASTStringNode(t.toString(),new WToken(t));} smartTestList9=SmartTestList() 
+	{return new expr_stmtEnd10(lshifteq, smartTestList9, firstToken.next,token);} |
+	t=<RSHIFTEQ>{rshifteq=new ASTStringNode(t.toString(),new WToken(t));} smartTestList10=SmartTestList() 
+	{return new expr_stmtEnd11(rshifteq, smartTestList10, firstToken.next,token);} |
+	t=<POWEREQ>{powereq=new ASTStringNode(t.toString(),new WToken(t));} smartTestList11=SmartTestList() 
+	{return new expr_stmtEnd12(powereq, smartTestList11, firstToken.next,token);} |
+	("=" smartTestList12=SmartTestList(){smartTestList12List.add(smartTestList12);})* 
+	{return new expr_stmtEnd13(smartTestList12List, firstToken.next,token);}
+ ) }
+
+print_stmt print_stmt() : { 
+	Token t;
+	ASTStringNode print;
+	ASTStringNode rshift;
+	test test;
+	print_stmtEndP print_stmtEndP = null;
+	ASTStringNode print1;
+	print_stmtEndA print_stmtEndA;
+	ASTStringNode print2;
+	Token firstToken=token;
+} { (
+	LOOKAHEAD(2) t=<PRINT>{print=new ASTStringNode(t.toString(),new WToken(t));} t=<RSHIFT>{rshift=new ASTStringNode(t.toString(),new WToken(t));} test=test() [print_stmtEndP=print_stmtEndP()] 
+	{return new print_stmt1(print, rshift, test, print_stmtEndP, firstToken.next,token);} |
+	LOOKAHEAD(2) t=<PRINT>{print1=new ASTStringNode(t.toString(),new WToken(t));} print_stmtEndA=print_stmtEndA() 
+	{return new print_stmt2(print1, print_stmtEndA, firstToken.next,token);} |
+	t=<PRINT>{print2=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new print_stmt3(print2, firstToken.next,token);}
+ ) }
+
+print_stmtEndP print_stmtEndP() : { 
+	test test;
+	ArrayList<test> testList = new ArrayList<test>();
+	ASTTextNode text4 = null;
+	Token firstToken=token;
+} { (
+	(LOOKAHEAD(2) "," test=test(){testList.add(test);})+ ["," {text4=new ASTTextNode(",",new WToken(token));}] 
+	{return new print_stmtEndP(testList, text4, firstToken.next,token);}
+ ) }
+
+print_stmtEndA print_stmtEndA() : { 
+	test test;
+	test test1;
+	ArrayList<test> test1List = new ArrayList<test>();
+	ASTTextNode text5 = null;
+	Token firstToken=token;
+} { (
+	test=test() (LOOKAHEAD(2) "," test1=test(){test1List.add(test1);})* ["," {text5=new ASTTextNode(",",new WToken(token));}] 
+	{return new print_stmtEndA(test, test1List, text5, firstToken.next,token);}
+ ) }
+
+del_stmt del_stmt() : { 
+	Token t;
+	ASTStringNode del;
+	exprlist exprlist;
+	Token firstToken=token;
+} { (
+	t=<DEL>{del=new ASTStringNode(t.toString(),new WToken(t));} exprlist=exprlist() 
+	{return new del_stmt(del, exprlist, firstToken.next,token);}
+ ) }
+
+pass_stmt pass_stmt() : { 
+	Token t;
+	ASTStringNode pass;
+	Token firstToken=token;
+} { (
+	t=<PASS>{pass=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new pass_stmt(pass, firstToken.next,token);}
+ ) }
+
+flow_stmt flow_stmt() : { 
+	Token t;
+	ASTStringNode break_kw;
+	ASTStringNode continue_kw;
+	return_stmt return_stmt;
+	yield_stmt yield_stmt;
+	raise_stmt raise_stmt;
+	Token firstToken=token;
+} { (
+	t=<BREAK>{break_kw=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new flow_stmt1(break_kw, firstToken.next,token);} |
+	t=<CONTINUE>{continue_kw=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new flow_stmt2(continue_kw, firstToken.next,token);} |
+	return_stmt=return_stmt() 
+	{return new flow_stmt3(return_stmt, firstToken.next,token);} |
+	yield_stmt=yield_stmt() 
+	{return new flow_stmt4(yield_stmt, firstToken.next,token);} |
+	raise_stmt=raise_stmt() 
+	{return new flow_stmt5(raise_stmt, firstToken.next,token);}
+ ) }
+
+return_stmt return_stmt() : { 
+	Token t;
+	ASTStringNode return_kw;
+	SmartTestList smartTestList = null;
+	Token firstToken=token;
+} { (
+	t=<RETURN>{return_kw=new ASTStringNode(t.toString(),new WToken(t));} [smartTestList=SmartTestList()] 
+	{return new return_stmt(return_kw, smartTestList, firstToken.next,token);}
+ ) }
+
+yield_stmt yield_stmt() : { 
+	Token t;
+	ASTStringNode yield;
+	SmartTestList smartTestList;
+	Token firstToken=token;
+} { (
+	t=<YIELD>{yield=new ASTStringNode(t.toString(),new WToken(t));} smartTestList=SmartTestList() 
+	{return new yield_stmt(yield, smartTestList, firstToken.next,token);}
+ ) }
+
+raise_stmt raise_stmt() : { 
+	Token t;
+	ASTStringNode raise;
+	raise_stmt_end raise_stmt_end = null;
+	Token firstToken=token;
+} { (
+	t=<RAISE>{raise=new ASTStringNode(t.toString(),new WToken(t));} [raise_stmt_end=raise_stmt_end()] 
+	{return new raise_stmt(raise, raise_stmt_end, firstToken.next,token);}
+ ) }
+
+raise_stmt_end raise_stmt_end() : { 
+	test test;
+	testcommatest testcommatest = null;
+	Token firstToken=token;
+} { (
+	test=test() ["," testcommatest=testcommatest()] 
+	{return new raise_stmt_end(test, testcommatest, firstToken.next,token);}
+ ) }
+
+testcommatest testcommatest() : { 
+	test test;
+	test test1 = null;
+	Token firstToken=token;
+} { (
+	test=test() ["," test1=test()] 
+	{return new testcommatest(test, test1, firstToken.next,token);}
+ ) }
+
+import_stmt import_stmt() : { 
+	Token t;
+	ASTStringNode import_kw;
+	Import import_KW;
+	ASTStringNode from;
+	ImportFrom importFrom;
+	Token firstToken=token;
+} { (
+	t=<IMPORT>{import_kw=new ASTStringNode(t.toString(),new WToken(t));} import_KW=Import() 
+	{return new import_stmt1(import_kw, import_KW, firstToken.next,token);} |
+	t=<FROM>{from=new ASTStringNode(t.toString(),new WToken(t));} importFrom=ImportFrom() 
+	{return new import_stmt2(from, importFrom, firstToken.next,token);}
+ ) }
+
+Import Import() : { 
+	dotted_as_name dotted_as_name;
+	dotted_as_name dotted_as_name1;
+	ArrayList<dotted_as_name> dotted_as_name1List = new ArrayList<dotted_as_name>();
+	Token firstToken=token;
+} { (
+	dotted_as_name=dotted_as_name() ("," dotted_as_name1=dotted_as_name(){dotted_as_name1List.add(dotted_as_name1);})* 
+	{return new Import(dotted_as_name, dotted_as_name1List, firstToken.next,token);}
+ ) }
+
+ImportFrom ImportFrom() : { 
+	dotted_name dotted_name;
+	Token t;
+	ASTStringNode import_kw;
+	ImportFromEnd importFromEnd;
+	Token firstToken=token;
+} { (
+	dotted_name=dotted_name() t=<IMPORT>{import_kw=new ASTStringNode(t.toString(),new WToken(t));} importFromEnd=ImportFromEnd() 
+	{return new ImportFrom(dotted_name, import_kw, importFromEnd, firstToken.next,token);}
+ ) }
+
+ImportFromEnd ImportFromEnd() : { 
+	import_as_name import_as_name;
+	import_as_name import_as_name1;
+	ArrayList<import_as_name> import_as_name1List = new ArrayList<import_as_name>();
+	Token firstToken=token;
+} { (
+	"*"  
+	{return new ImportFromEnd1(firstToken.next,token);} |
+	import_as_name=import_as_name() ("," import_as_name1=import_as_name(){import_as_name1List.add(import_as_name1);})* 
+	{return new ImportFromEnd2(import_as_name, import_as_name1List, firstToken.next,token);}
+ ) }
+
+dotted_as_name dotted_as_name() : { 
+	dotted_name dotted_name;
+	Name name = null;
+	Token firstToken=token;
+} { (
+	dotted_name=dotted_name() ["as" name=Name()] 
+	{return new dotted_as_name(dotted_name, name, firstToken.next,token);}
+ ) }
+
+dotted_name dotted_name() : { 
+	AnyName anyName;
+	AnyName anyName1;
+	ArrayList<AnyName> anyName1List = new ArrayList<AnyName>();
+	Token firstToken=token;
+} { (
+	anyName=AnyName() ("." anyName1=AnyName(){anyName1List.add(anyName1);})* 
+	{return new dotted_name(anyName, anyName1List, firstToken.next,token);}
+ ) }
+
+import_as_name import_as_name() : { 
+	AnyName anyName;
+	Name name = null;
+	Token firstToken=token;
+} { (
+	anyName=AnyName() ["as" name=Name()] 
+	{return new import_as_name(anyName, name, firstToken.next,token);}
+ ) }
+
+global_stmt global_stmt() : { 
+	Token t;
+	ASTStringNode global;
+	Name name;
+	Name name1;
+	ArrayList<Name> name1List = new ArrayList<Name>();
+	Token firstToken=token;
+} { (
+	t=<GLOBAL>{global=new ASTStringNode(t.toString(),new WToken(t));} name=Name() ("," name1=Name(){name1List.add(name1);})* 
+	{return new global_stmt(global, name, name1List, firstToken.next,token);}
+ ) }
+
+exec_stmt exec_stmt() : { 
+	expr expr;
+	exec_stmt_end exec_stmt_end = null;
+	Token firstToken=token;
+} { (
+	"exec" expr=expr() ["in" exec_stmt_end=exec_stmt_end()] 
+	{return new exec_stmt(expr, exec_stmt_end, firstToken.next,token);}
+ ) }
+
+exec_stmt_end exec_stmt_end() : { 
+	test test;
+	test test1 = null;
+	Token firstToken=token;
+} { (
+	test=test() ["," test1=test()] 
+	{return new exec_stmt_end(test, test1, firstToken.next,token);}
+ ) }
+
+assert_stmt assert_stmt() : { 
+	test test;
+	test test1 = null;
+	Token firstToken=token;
+} { (
+	"assert" test=test() ["," test1=test()] 
+	{return new assert_stmt(test, test1, firstToken.next,token);}
+ ) }
+
+compound_stmt compound_stmt() : { 
+	if_stmt if_stmt;
+	while_stmt while_stmt;
+	for_stmt for_stmt;
+	try_stmt try_stmt;
+	funcdef funcdef;
+	classdef classdef;
+	Token firstToken=token;
+} { (
+	if_stmt=if_stmt() 
+	{return new compound_stmt1(if_stmt, firstToken.next,token);} |
+	while_stmt=while_stmt() 
+	{return new compound_stmt2(while_stmt, firstToken.next,token);} |
+	for_stmt=for_stmt() 
+	{return new compound_stmt3(for_stmt, firstToken.next,token);} |
+	try_stmt=try_stmt() 
+	{return new compound_stmt4(try_stmt, firstToken.next,token);} |
+	funcdef=funcdef() 
+	{return new compound_stmt5(funcdef, firstToken.next,token);} |
+	classdef=classdef() 
+	{return new compound_stmt6(classdef, firstToken.next,token);}
+ ) }
+
+if_stmt if_stmt() : { 
+	test test;
+	suite suite;
+	elif_stmt elif_stmt;
+	ArrayList<elif_stmt> elif_stmtList = new ArrayList<elif_stmt>();
+	suite suite1 = null;
+	Token firstToken=token;
+} { (
+	"if" test=test() ":" suite=suite() (elif_stmt=elif_stmt(){elif_stmtList.add(elif_stmt);})* ["else" ":" suite1=suite()] 
+	{return new if_stmt(test, suite, elif_stmtList, suite1, firstToken.next,token);}
+ ) }
+
+elif_stmt elif_stmt() : { 
+	test test;
+	suite suite;
+	Token firstToken=token;
+} { (
+	"elif" test=test() ":" suite=suite() 
+	{return new elif_stmt(test, suite, firstToken.next,token);}
+ ) }
+
+while_stmt while_stmt() : { 
+	test test;
+	suite suite;
+	suite suite1 = null;
+	Token firstToken=token;
+} { (
+	"while" test=test() ":" suite=suite() ["else" ":" suite1=suite()] 
+	{return new while_stmt(test, suite, suite1, firstToken.next,token);}
+ ) }
+
+for_stmt for_stmt() : { 
+	exprlist exprlist;
+	SmartTestList smartTestList;
+	suite suite;
+	suite suite1 = null;
+	Token firstToken=token;
+} { (
+	"for" exprlist=exprlist() "in" smartTestList=SmartTestList() ":" suite=suite() ["else" ":" suite1=suite()] 
+	{return new for_stmt(exprlist, smartTestList, suite, suite1, firstToken.next,token);}
+ ) }
+
+try_stmt try_stmt() : { 
+	suite suite;
+	tryEnd tryEnd;
+	Token firstToken=token;
+} { (
+	"try" ":" suite=suite() tryEnd=tryEnd() 
+	{return new try_stmt(suite, tryEnd, firstToken.next,token);}
+ ) }
+
+tryEnd tryEnd() : { 
+	except_clause except_clause;
+	ArrayList<except_clause> except_clauseList = new ArrayList<except_clause>();
+	suite suite = null;
+	suite suite1;
+	Token firstToken=token;
+} { (
+	(except_clause=except_clause(){except_clauseList.add(except_clause);})+ ["else" ":" suite=suite()] 
+	{return new tryEnd1(except_clauseList, suite, firstToken.next,token);} |
+	"finally" ":" suite1=suite() 
+	{return new tryEnd2(suite1, firstToken.next,token);}
+ ) }
+
+except_clause except_clause() : { 
+	testcommatest testcommatest = null;
+	suite suite;
+	Token firstToken=token;
+} { (
+	"except" [testcommatest=testcommatest()] ":" suite=suite() 
+	{return new except_clause(testcommatest, suite, firstToken.next,token);}
+ ) }
+
+suite suite() : { 
+	simple_stmt simple_stmt;
+	Token t;
+	ASTStringNode newline;
+	ASTStringNode indent;
+	stmt stmt;
+	ArrayList<stmt> stmtList = new ArrayList<stmt>();
+	ASTStringNode dedent;
+	Token firstToken=token;
+} { (
+	simple_stmt=simple_stmt() 
+	{return new suite1(simple_stmt, firstToken.next,token);} |
+	t=<NEWLINE>{newline=new ASTStringNode(t.toString(),new WToken(t));}  {token_source.expect_indent = true;} t=<INDENT>{indent=new ASTStringNode(t.toString(),new WToken(t));}  {token_source.expect_indent = false;} (stmt=stmt(){stmtList.add(stmt);})+ t=<DEDENT>{dedent=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new suite2(newline, indent, stmtList, dedent, firstToken.next,token);}
+ ) }
+
+test test() : { 
+	lambdef lambdef;
+	and_test and_test;
+	and_test and_test1;
+	ArrayList<and_test> and_test1List = new ArrayList<and_test>();
+	Token firstToken=token;
+} { (
+	lambdef=lambdef() 
+	{return new test1(lambdef, firstToken.next,token);} |
+	and_test=and_test() ("or" and_test1=and_test(){and_test1List.add(and_test1);})* 
+	{return new test2(and_test, and_test1List, firstToken.next,token);}
+ ) }
+
+and_test and_test() : { 
+	not_test not_test;
+	not_test not_test1;
+	ArrayList<not_test> not_test1List = new ArrayList<not_test>();
+	Token firstToken=token;
+} { (
+	not_test=not_test() ("and" not_test1=not_test(){not_test1List.add(not_test1);})* 
+	{return new and_test(not_test, not_test1List, firstToken.next,token);}
+ ) }
+
+not_test not_test() : { 
+	not_test not_test;
+	comparison comparison;
+	Token firstToken=token;
+} { (
+	"not" not_test=not_test() 
+	{return new not_test1(not_test, firstToken.next,token);} |
+	comparison=comparison() 
+	{return new not_test2(comparison, firstToken.next,token);}
+ ) }
+
+comparison comparison() : { 
+	expr expr;
+	compEnd compEnd;
+	ArrayList<compEnd> compEndList = new ArrayList<compEnd>();
+	Token firstToken=token;
+} { (
+	expr=expr() (compEnd=compEnd(){compEndList.add(compEnd);})* 
+	{return new comparison(expr, compEndList, firstToken.next,token);}
+ ) }
+
+compEnd compEnd() : { 
+	comp_op comp_op;
+	expr expr;
+	Token firstToken=token;
+} { (
+	comp_op=comp_op() expr=expr() 
+	{return new compEnd(comp_op, expr, firstToken.next,token);}
+ ) }
+
+comp_op comp_op() : { 
+	Token t;
+	ASTStringNode less;
+	ASTStringNode greater;
+	ASTStringNode eqequal;
+	ASTStringNode eqgreater;
+	ASTStringNode eqless;
+	ASTStringNode lessgreater;
+	ASTStringNode notequal;
+	ASTStringNode in;
+	ASTStringNode in1;
+	ASTStringNode is;
+	ASTStringNode is1;
+	Token firstToken=token;
+} { (
+	t=<LESS>{less=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new comp_op1(less, firstToken.next,token);} |
+	t=<GREATER>{greater=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new comp_op2(greater, firstToken.next,token);} |
+	t=<EQEQUAL>{eqequal=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new comp_op3(eqequal, firstToken.next,token);} |
+	t=<EQGREATER>{eqgreater=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new comp_op4(eqgreater, firstToken.next,token);} |
+	t=<EQLESS>{eqless=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new comp_op5(eqless, firstToken.next,token);} |
+	t=<LESSGREATER>{lessgreater=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new comp_op6(lessgreater, firstToken.next,token);} |
+	t=<NOTEQUAL>{notequal=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new comp_op7(notequal, firstToken.next,token);} |
+	t=<IN>{in=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new comp_op8(in, firstToken.next,token);} |
+	"not" t=<IN>{in1=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new comp_op9(in1, firstToken.next,token);} |
+	LOOKAHEAD(2) t=<IS>{is=new ASTStringNode(t.toString(),new WToken(t));} "not" 
+	{return new comp_op10(is, firstToken.next,token);} |
+	t=<IS>{is1=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new comp_op11(is1, firstToken.next,token);}
+ ) }
+
+expr expr() : { 
+	xor_expr xor_expr;
+	xor_expr xor_expr1;
+	ArrayList<xor_expr> xor_expr1List = new ArrayList<xor_expr>();
+	Token firstToken=token;
+} { (
+	xor_expr=xor_expr() ("|" xor_expr1=xor_expr(){xor_expr1List.add(xor_expr1);})* 
+	{return new expr(xor_expr, xor_expr1List, firstToken.next,token);}
+ ) }
+
+xor_expr xor_expr() : { 
+	and_expr and_expr;
+	and_expr and_expr1;
+	ArrayList<and_expr> and_expr1List = new ArrayList<and_expr>();
+	Token firstToken=token;
+} { (
+	and_expr=and_expr() ("^" and_expr1=and_expr(){and_expr1List.add(and_expr1);})* 
+	{return new xor_expr(and_expr, and_expr1List, firstToken.next,token);}
+ ) }
+
+and_expr and_expr() : { 
+	shift_expr shift_expr;
+	shift_expr shift_expr1;
+	ArrayList<shift_expr> shift_expr1List = new ArrayList<shift_expr>();
+	Token firstToken=token;
+} { (
+	shift_expr=shift_expr() ("&" shift_expr1=shift_expr(){shift_expr1List.add(shift_expr1);})* 
+	{return new and_expr(shift_expr, shift_expr1List, firstToken.next,token);}
+ ) }
+
+shift_expr shift_expr() : { 
+	arith_expr arith_expr;
+	shift_exprEnd shift_exprEnd;
+	ArrayList<shift_exprEnd> shift_exprEndList = new ArrayList<shift_exprEnd>();
+	Token firstToken=token;
+} { (
+	arith_expr=arith_expr() (shift_exprEnd=shift_exprEnd(){shift_exprEndList.add(shift_exprEnd);})* 
+	{return new shift_expr(arith_expr, shift_exprEndList, firstToken.next,token);}
+ ) }
+
+shift_exprEnd shift_exprEnd() : { 
+	arith_expr arith_expr;
+	arith_expr arith_expr1;
+	Token firstToken=token;
+} { (
+	"<<" arith_expr=arith_expr() 
+	{return new shift_exprEnd1(arith_expr, firstToken.next,token);} |
+	">>" arith_expr1=arith_expr() 
+	{return new shift_exprEnd2(arith_expr1, firstToken.next,token);}
+ ) }
+
+arith_expr arith_expr() : { 
+	term term;
+	arith_exprEnd arith_exprEnd;
+	ArrayList<arith_exprEnd> arith_exprEndList = new ArrayList<arith_exprEnd>();
+	Token firstToken=token;
+} { (
+	term=term() (arith_exprEnd=arith_exprEnd(){arith_exprEndList.add(arith_exprEnd);})* 
+	{return new arith_expr(term, arith_exprEndList, firstToken.next,token);}
+ ) }
+
+arith_exprEnd arith_exprEnd() : { 
+	Token t;
+	ASTStringNode plus;
+	term term;
+	ASTStringNode minus;
+	term term1;
+	Token firstToken=token;
+} { (
+	t=<PLUS>{plus=new ASTStringNode(t.toString(),new WToken(t));} term=term() 
+	{return new arith_exprEnd1(plus, term, firstToken.next,token);} |
+	t=<MINUS>{minus=new ASTStringNode(t.toString(),new WToken(t));} term1=term() 
+	{return new arith_exprEnd2(minus, term1, firstToken.next,token);}
+ ) }
+
+term term() : { 
+	factor factor;
+	termEnd termEnd;
+	ArrayList<termEnd> termEndList = new ArrayList<termEnd>();
+	Token firstToken=token;
+} { (
+	factor=factor() (termEnd=termEnd(){termEndList.add(termEnd);})* 
+	{return new term(factor, termEndList, firstToken.next,token);}
+ ) }
+
+termEnd termEnd() : { 
+	factor factor;
+	Token t;
+	ASTStringNode divide;
+	factor factor1;
+	ASTStringNode floordivide;
+	factor factor2;
+	ASTStringNode modulo;
+	factor factor3;
+	Token firstToken=token;
+} { (
+	"*" factor=factor() 
+	{return new termEnd1(factor, firstToken.next,token);} |
+	t=<DIVIDE>{divide=new ASTStringNode(t.toString(),new WToken(t));} factor1=factor() 
+	{return new termEnd2(divide, factor1, firstToken.next,token);} |
+	t=<FLOORDIVIDE>{floordivide=new ASTStringNode(t.toString(),new WToken(t));} factor2=factor() 
+	{return new termEnd3(floordivide, factor2, firstToken.next,token);} |
+	t=<MODULO>{modulo=new ASTStringNode(t.toString(),new WToken(t));} factor3=factor() 
+	{return new termEnd4(modulo, factor3, firstToken.next,token);}
+ ) }
+
+factor factor() : { 
+	Token t;
+	ASTStringNode plus;
+	factor factor;
+	ASTStringNode minus;
+	factor factor1;
+	ASTStringNode not;
+	factor factor2;
+	powerfactor powerfactor;
+	Token firstToken=token;
+} { (
+	t=<PLUS>{plus=new ASTStringNode(t.toString(),new WToken(t));} factor=factor() 
+	{return new factor1(plus, factor, firstToken.next,token);} |
+	t=<MINUS>{minus=new ASTStringNode(t.toString(),new WToken(t));} factor1=factor() 
+	{return new factor2(minus, factor1, firstToken.next,token);} |
+	t=<NOT>{not=new ASTStringNode(t.toString(),new WToken(t));} factor2=factor() 
+	{return new factor3(not, factor2, firstToken.next,token);} |
+	powerfactor=powerfactor() 
+	{return new factor4(powerfactor, firstToken.next,token);}
+ ) }
+
+powerfactor powerfactor() : { 
+	atomtrailer atomtrailer;
+	factor factor;
+	ArrayList<factor> factorList = new ArrayList<factor>();
+	Token firstToken=token;
+} { (
+	atomtrailer=atomtrailer() (LOOKAHEAD(2) "**" factor=factor(){factorList.add(factor);})* 
+	{return new powerfactor(atomtrailer, factorList, firstToken.next,token);}
+ ) }
+
+atomtrailer atomtrailer() : { 
+	atom atom;
+	atomtrailerEnd atomtrailerEnd;
+	ArrayList<atomtrailerEnd> atomtrailerEndList = new ArrayList<atomtrailerEnd>();
+	Token firstToken=token;
+} { (
+	atom=atom() (atomtrailerEnd=atomtrailerEnd(){atomtrailerEndList.add(atomtrailerEnd);})* 
+	{return new atomtrailer(atom, atomtrailerEndList, firstToken.next,token);}
+ ) }
+
+atomtrailerEnd atomtrailerEnd() : { 
+	arglist arglist;
+	subscriptlist subscriptlist;
+	Token t;
+	ASTStringNode dot;
+	AnyName anyName;
+	Token firstToken=token;
+} { (
+	LOOKAHEAD(2) "(" ")"  
+	{return new atomtrailerEnd1(firstToken.next,token);} |
+	"(" arglist=arglist() ")" 
+	{return new atomtrailerEnd2(arglist, firstToken.next,token);} |
+	"[" subscriptlist=subscriptlist() "]" 
+	{return new atomtrailerEnd3(subscriptlist, firstToken.next,token);} |
+	t=<DOT>{dot=new ASTStringNode(t.toString(),new WToken(t));} anyName=AnyName() 
+	{return new atomtrailerEnd4(dot, anyName, firstToken.next,token);}
+ ) }
+
+atom atom() : { 
+	SmartTestList smartTestList = null;
+	Token t;
+	ASTStringNode lbracket;
+	listmaker listmaker = null;
+	dictmaker dictmaker = null;
+	SmartTestList smartTestList1;
+	Name name;
+	Number number;
+	StringNode stringNode;
+	StringNode stringNode1;
+	ArrayList<StringNode> stringNode1List = new ArrayList<StringNode>();
+	Token firstToken=token;
+} { (
+	LOOKAHEAD(2) "(" ")"  
+	{return new atom1(firstToken.next,token);} |
+	"(" [smartTestList=SmartTestList()] ")" 
+	{return new atom2(smartTestList, firstToken.next,token);} |
+	t=<LBRACKET>{lbracket=new ASTStringNode(t.toString(),new WToken(t));} [listmaker=listmaker()] "]" 
+	{return new atom3(lbracket, listmaker, firstToken.next,token);} |
+	"{" [dictmaker=dictmaker()] "}" 
+	{return new atom4(dictmaker, firstToken.next,token);} |
+	"`" smartTestList1=SmartTestList() "`" 
+	{return new atom5(smartTestList1, firstToken.next,token);} |
+	name=Name() 
+	{return new atom6(name, firstToken.next,token);} |
+	number=Number() 
+	{return new atom7(number, firstToken.next,token);} |
+	stringNode=StringNode() (stringNode1=StringNode(){stringNode1List.add(stringNode1);})* 
+	{return new atom8(stringNode, stringNode1List, firstToken.next,token);}
+ ) }
+
+lambdef lambdef() : { 
+	Token t;
+	ASTStringNode lambda;
+	varargslist varargslist = null;
+	test test;
+	Token firstToken=token;
+} { (
+	t=<LAMBDA>{lambda=new ASTStringNode(t.toString(),new WToken(t));} [varargslist=varargslist()] ":" test=test() 
+	{return new lambdef(lambda, varargslist, test, firstToken.next,token);}
+ ) }
+
+subscriptlist subscriptlist() : { 
+	subscript subscript;
+	subscript subscript1;
+	ArrayList<subscript> subscript1List = new ArrayList<subscript>();
+	ASTTextNode text9 = null;
+	Token firstToken=token;
+} { (
+	subscript=subscript() (LOOKAHEAD(2) "," subscript1=subscript(){subscript1List.add(subscript1);})* ["," {text9=new ASTTextNode(",",new WToken(token));}] 
+	{return new subscriptlist(subscript, subscript1List, text9, firstToken.next,token);}
+ ) }
+
+subscript subscript() : { 
+	Token t;
+	ASTStringNode dot;
+	ASTStringNode dot1;
+	ASTStringNode dot2;
+	test test;
+	slice slice = null;
+	slice slice1;
+	Token firstToken=token;
+} { (
+	t=<DOT>{dot=new ASTStringNode(t.toString(),new WToken(t));} t=<DOT>{dot1=new ASTStringNode(t.toString(),new WToken(t));} t=<DOT>{dot2=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new subscript1(dot, dot1, dot2, firstToken.next,token);} |
+	test=test() [slice=slice()] 
+	{return new subscript2(test, slice, firstToken.next,token);} |
+	slice1=slice() 
+	{return new subscript3(slice1, firstToken.next,token);}
+ ) }
+
+slice slice() : { 
+	ct ct;
+	ct ct1 = null;
+	Token firstToken=token;
+} { (
+	ct=ct() [ct1=ct()] 
+	{return new slice(ct, ct1, firstToken.next,token);}
+ ) }
+
+ct ct() : { 
+	test test = null;
+	Token firstToken=token;
+} { (
+	":" [test=test()] 
+	{return new ct(test, firstToken.next,token);}
+ ) }
+
+exprlist exprlist() : { 
+	expr expr;
+	expr expr1;
+	ArrayList<expr> expr1List = new ArrayList<expr>();
+	ASTTextNode text10 = null;
+	Token firstToken=token;
+} { (
+	expr=expr() (LOOKAHEAD(2) "," expr1=expr(){expr1List.add(expr1);})* ["," {text10=new ASTTextNode(",",new WToken(token));}] 
+	{return new exprlist(expr, expr1List, text10, firstToken.next,token);}
+ ) }
+
+SmartTestList SmartTestList() : { 
+	test test;
+	test test1;
+	ArrayList<test> test1List = new ArrayList<test>();
+	ASTTextNode text11 = null;
+	Token firstToken=token;
+} { (
+	test=test() (LOOKAHEAD(2) "," test1=test(){test1List.add(test1);})* ["," {text11=new ASTTextNode(",",new WToken(token));}] 
+	{return new SmartTestList(test, test1List, text11, firstToken.next,token);}
+ ) }
+
+testlist testlist() : { 
+	test test;
+	test test1;
+	ArrayList<test> test1List = new ArrayList<test>();
+	ASTTextNode text12 = null;
+	Token firstToken=token;
+} { (
+	test=test() (LOOKAHEAD(2) "," test1=test(){test1List.add(test1);})* ["," {text12=new ASTTextNode(",",new WToken(token));}] 
+	{return new testlist(test, test1List, text12, firstToken.next,token);}
+ ) }
+
+dictmaker dictmaker() : { 
+	test test;
+	test test1;
+	dictInt dictInt;
+	ArrayList<dictInt> dictIntList = new ArrayList<dictInt>();
+	ASTTextNode text13 = null;
+	Token firstToken=token;
+} { (
+	test=test() ":" test1=test() (LOOKAHEAD(2) dictInt=dictInt(){dictIntList.add(dictInt);})* ["," {text13=new ASTTextNode(",",new WToken(token));}] 
+	{return new dictmaker(test, test1, dictIntList, text13, firstToken.next,token);}
+ ) }
+
+dictInt dictInt() : { 
+	test test;
+	test test1;
+	Token firstToken=token;
+} { (
+	"," test=test() ":" test1=test() 
+	{return new dictInt(test, test1, firstToken.next,token);}
+ ) }
+
+listmaker listmaker() : { 
+	test test;
+	listmakerEnd listmakerEnd;
+	Token firstToken=token;
+} { (
+	test=test() listmakerEnd=listmakerEnd() 
+	{return new listmaker(test, listmakerEnd, firstToken.next,token);}
+ ) }
+
+listmakerEnd listmakerEnd() : { 
+	list_for list_for;
+	ArrayList<list_for> list_forList = new ArrayList<list_for>();
+	test test;
+	ArrayList<test> testList = new ArrayList<test>();
+	ASTTextNode text14 = null;
+	Token firstToken=token;
+} { (
+	(list_for=list_for(){list_forList.add(list_for);})+ 
+	{return new listmakerEnd1(list_forList, firstToken.next,token);} |
+	(LOOKAHEAD(2) "," test=test(){testList.add(test);})* ["," {text14=new ASTTextNode(",",new WToken(token));}] 
+	{return new listmakerEnd2(testList, text14, firstToken.next,token);}
+ ) }
+
+list_for list_for() : { 
+	exprlist exprlist;
+	SmartTestList smartTestList;
+	list_if list_if;
+	ArrayList<list_if> list_ifList = new ArrayList<list_if>();
+	Token firstToken=token;
+} { (
+	"for" exprlist=exprlist() "in" smartTestList=SmartTestList() (list_if=list_if(){list_ifList.add(list_if);})* 
+	{return new list_for(exprlist, smartTestList, list_ifList, firstToken.next,token);}
+ ) }
+
+list_if list_if() : { 
+	test test;
+	Token firstToken=token;
+} { (
+	"if" test=test() 
+	{return new list_if(test, firstToken.next,token);}
+ ) }
+
+classdef classdef() : { 
+	Name name;
+	testlist testlist = null;
+	suite suite;
+	Token firstToken=token;
+} { (
+	"class" name=Name() ["(" testlist=testlist() ")"] ":" suite=suite() 
+	{return new classdef(name, testlist, suite, firstToken.next,token);}
+ ) }
+
+arglist arglist() : { 
+	normalargs normalargs;
+	arglist1End arglist1End = null;
+	arglist1EndEnd arglist1EndEnd = null;
+	Token firstToken=token;
+} { (
+	normalargs=normalargs() [arglist1End=arglist1End()] 
+	{return new arglist1(normalargs, arglist1End, firstToken.next,token);} |
+	[LOOKAHEAD(2) arglist1EndEnd=arglist1EndEnd()] 
+	{return new arglist2(arglist1EndEnd, firstToken.next,token);}
+ ) }
+
+arglist1End arglist1End() : { 
+	arglist1EndEnd arglist1EndEnd = null;
+	Token firstToken=token;
+} { (
+	"," [LOOKAHEAD(2) arglist1EndEnd=arglist1EndEnd()] 
+	{return new arglist1End(arglist1EndEnd, firstToken.next,token);}
+ ) }
+
+arglist1EndEnd arglist1EndEnd() : { 
+	ExtraArgValueList extraArgValueList;
+	ExtraKeywordValueList extraKeywordValueList = null;
+	ExtraKeywordValueList extraKeywordValueList1;
+	Token firstToken=token;
+} { (
+	LOOKAHEAD(2) extraArgValueList=ExtraArgValueList() ["," extraKeywordValueList=ExtraKeywordValueList()] 
+	{return new arglist1EndEnd1(extraArgValueList, extraKeywordValueList, firstToken.next,token);} |
+	extraKeywordValueList1=ExtraKeywordValueList() 
+	{return new arglist1EndEnd2(extraKeywordValueList1, firstToken.next,token);}
+ ) }
+
+normalargs normalargs() : { 
+	argument argument;
+	argument argument1;
+	ArrayList<argument> argument1List = new ArrayList<argument>();
+	Token firstToken=token;
+} { (
+	argument=argument() (LOOKAHEAD(2) "," argument1=argument(){argument1List.add(argument1);})* 
+	{return new normalargs(argument, argument1List, firstToken.next,token);}
+ ) }
+
+ExtraArgValueList ExtraArgValueList() : { 
+	test test;
+	Token firstToken=token;
+} { (
+	"*" test=test() 
+	{return new ExtraArgValueList(test, firstToken.next,token);}
+ ) }
+
+ExtraKeywordValueList ExtraKeywordValueList() : { 
+	power power;
+	test test;
+	Token firstToken=token;
+} { (
+	power=power() test=test() 
+	{return new ExtraKeywordValueList(power, test, firstToken.next,token);}
+ ) }
+
+power power() : { 
+	Token firstToken=token;
+} { (
+	"**"  
+	{return new power1(firstToken.next,token);} |
+	"*" "*"  
+	{return new power2(firstToken.next,token);}
+ ) }
+
+argument argument() : { 
+	AnyName anyName = null;
+	test test;
+	Token firstToken=token;
+} { (
+	[LOOKAHEAD(2) anyName=AnyName() "="] test=test() 
+	{return new argument(anyName, test, firstToken.next,token);}
+ ) }
+
+Number Number() : { 
+	Token t;
+	ASTStringNode hexnumber;
+	ASTStringNode octnumber;
+	ASTStringNode decnumber;
+	ASTStringNode float_kw;
+	ASTStringNode complex;
+	Token firstToken=token;
+} { (
+	t=<HEXNUMBER>{hexnumber=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new Number1(hexnumber, firstToken.next,token);} |
+	t=<OCTNUMBER>{octnumber=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new Number2(octnumber, firstToken.next,token);} |
+	t=<DECNUMBER>{decnumber=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new Number3(decnumber, firstToken.next,token);} |
+	t=<FLOAT>{float_kw=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new Number4(float_kw, firstToken.next,token);} |
+	t=<COMPLEX>{complex=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new Number5(complex, firstToken.next,token);}
+ ) }
+
+Complex Complex() : { 
+	Token t;
+	ASTStringNode float_kw;
+	Token firstToken=token;
+} { (
+	t=<FLOAT>{float_kw=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new Complex(float_kw, firstToken.next,token);}
+ ) }
+
+Name Name() : { 
+	Token t;
+	ASTStringNode name;
+	ASTStringNode as;
+	Token firstToken=token;
+} { (
+	t=<NAME>{name=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new Name1(name, firstToken.next,token);} |
+	t=<AS>{as=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new Name2(as, firstToken.next,token);}
+ ) }
+
+StringNode StringNode() : { 
+	Token t;
+	ASTStringNode single_string;
+	ASTStringNode single_string2;
+	ASTStringNode triple_string;
+	ASTStringNode triple_string2;
+	ASTStringNode single_ustring;
+	ASTStringNode single_ustring2;
+	ASTStringNode triple_ustring;
+	ASTStringNode triple_ustring2;
+	Token firstToken=token;
+} { (
+	t=<SINGLE_STRING>{single_string=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new StringNode1(single_string, firstToken.next,token);} |
+	t=<SINGLE_STRING2>{single_string2=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new StringNode2(single_string2, firstToken.next,token);} |
+	t=<TRIPLE_STRING>{triple_string=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new StringNode3(triple_string, firstToken.next,token);} |
+	t=<TRIPLE_STRING2>{triple_string2=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new StringNode4(triple_string2, firstToken.next,token);} |
+	t=<SINGLE_USTRING>{single_ustring=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new StringNode5(single_ustring, firstToken.next,token);} |
+	t=<SINGLE_USTRING2>{single_ustring2=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new StringNode6(single_ustring2, firstToken.next,token);} |
+	t=<TRIPLE_USTRING>{triple_ustring=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new StringNode7(triple_ustring, firstToken.next,token);} |
+	t=<TRIPLE_USTRING2>{triple_ustring2=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new StringNode8(triple_ustring2, firstToken.next,token);}
+ ) }
+
+AnyName AnyName() : { 
+	Token t;
+	ASTStringNode name;
+	ASTStringNode is;
+	ASTStringNode in;
+	ASTStringNode lambda;
+	ASTStringNode if_kw;
+	ASTStringNode else_kw;
+	ASTStringNode elif;
+	ASTStringNode while_kw;
+	ASTStringNode for_kw;
+	ASTStringNode try_kw;
+	ASTStringNode except;
+	ASTStringNode def;
+	ASTStringNode class_kw;
+	ASTStringNode finally_kw;
+	ASTStringNode print;
+	ASTStringNode pass;
+	ASTStringNode break_kw;
+	ASTStringNode continue_kw;
+	ASTStringNode return_kw;
+	ASTStringNode yield;
+	ASTStringNode import_kw;
+	ASTStringNode from;
+	ASTStringNode del;
+	ASTStringNode raise;
+	ASTStringNode global;
+	ASTStringNode exec;
+	ASTStringNode assert_kw;
+	ASTStringNode as;
+	Token firstToken=token;
+} { (
+	t=<NAME>{name=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new AnyName1(name, firstToken.next,token);} |
+	"or"  
+	{return new AnyName2(firstToken.next,token);} |
+	"and"  
+	{return new AnyName3(firstToken.next,token);} |
+	"not"  
+	{return new AnyName4(firstToken.next,token);} |
+	t=<IS>{is=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new AnyName5(is, firstToken.next,token);} |
+	t=<IN>{in=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new AnyName6(in, firstToken.next,token);} |
+	t=<LAMBDA>{lambda=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new AnyName7(lambda, firstToken.next,token);} |
+	t=<IF>{if_kw=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new AnyName8(if_kw, firstToken.next,token);} |
+	t=<ELSE>{else_kw=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new AnyName9(else_kw, firstToken.next,token);} |
+	t=<ELIF>{elif=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new AnyName10(elif, firstToken.next,token);} |
+	t=<WHILE>{while_kw=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new AnyName11(while_kw, firstToken.next,token);} |
+	t=<FOR>{for_kw=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new AnyName12(for_kw, firstToken.next,token);} |
+	t=<TRY>{try_kw=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new AnyName13(try_kw, firstToken.next,token);} |
+	t=<EXCEPT>{except=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new AnyName14(except, firstToken.next,token);} |
+	t=<DEF>{def=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new AnyName15(def, firstToken.next,token);} |
+	t=<CLASS>{class_kw=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new AnyName16(class_kw, firstToken.next,token);} |
+	t=<FINALLY>{finally_kw=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new AnyName17(finally_kw, firstToken.next,token);} |
+	t=<PRINT>{print=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new AnyName18(print, firstToken.next,token);} |
+	t=<PASS>{pass=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new AnyName19(pass, firstToken.next,token);} |
+	t=<BREAK>{break_kw=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new AnyName20(break_kw, firstToken.next,token);} |
+	t=<CONTINUE>{continue_kw=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new AnyName21(continue_kw, firstToken.next,token);} |
+	t=<RETURN>{return_kw=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new AnyName22(return_kw, firstToken.next,token);} |
+	t=<YIELD>{yield=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new AnyName23(yield, firstToken.next,token);} |
+	t=<IMPORT>{import_kw=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new AnyName24(import_kw, firstToken.next,token);} |
+	t=<FROM>{from=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new AnyName25(from, firstToken.next,token);} |
+	t=<DEL>{del=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new AnyName26(del, firstToken.next,token);} |
+	t=<RAISE>{raise=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new AnyName27(raise, firstToken.next,token);} |
+	t=<GLOBAL>{global=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new AnyName28(global, firstToken.next,token);} |
+	t=<EXEC>{exec=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new AnyName29(exec, firstToken.next,token);} |
+	t=<ASSERT>{assert_kw=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new AnyName30(assert_kw, firstToken.next,token);} |
+	t=<AS>{as=new ASTStringNode(t.toString(),new WToken(t));} 
+	{return new AnyName31(as, firstToken.next,token);}
+ ) }
+
