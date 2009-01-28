@@ -35,4 +35,6 @@ public interface IASTNode {
 	public String render();
 
 	public void remove();
+	
+	public List<IASTNode> getChildren();
 }

@@ -77,7 +77,7 @@ public abstract class ASTNode implements IASTNode {
 	 * 
 	 * @return
 	 */
-	private List<IASTNode> getChildren() {
+	public List<IASTNode> getChildren() {
 		if (childrenCache == null) {
 			List<IASTNode> children = new ArrayList<IASTNode>();
 
