@@ -36,16 +36,16 @@ public class StorageProviderProxy implements IStorageProvider {
 		return target.storeAnnotations(project, annotatedResource, annotations, parentIDs, monitor);
 	}
 	
-	public boolean activateAlternative(IProject project, Object annotatedResource, Alternative alternative, String oldText) {
+	public boolean activateAlternative(IProject project, Object annotatedResource, Alternative alternative, Map<String, String> id2oldText) {
 		if (target == null)
 			loadTarget();
-		return target.activateAlternative(project, annotatedResource, alternative, oldText);
+		return target.activateAlternative(project, annotatedResource, alternative, id2oldText);
 	}
 	
-	public boolean storeNewAlternative(IProject project, Object annotatedResource, Alternative alternative, String oldText) {
+	public boolean storeNewAlternative(IProject project, Object annotatedResource, Alternative alternative, Map<String, String> id2oldText) {
 		if (target == null)
 			loadTarget();
-		return target.storeNewAlternative(project, annotatedResource, alternative, oldText);
+		return target.storeNewAlternative(project, annotatedResource, alternative, id2oldText);
 	}
 	
 	@Override

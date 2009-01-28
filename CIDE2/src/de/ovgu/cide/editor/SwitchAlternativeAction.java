@@ -4,6 +4,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.ITextSelection;
 
+import cide.gast.IASTNode;
 import de.ovgu.cide.af.Alternative;
 import de.ovgu.cide.editor.keepcolors.ColorCacheManager;
 
@@ -11,10 +12,12 @@ public class SwitchAlternativeAction extends Action {
 
 	private Alternative alternative;
 	private SelectionActionsContext context;
+	private IASTNode selectedNode;
 	
-	public SwitchAlternativeAction(SelectionActionsContext context, Alternative alternative) {
+	public SwitchAlternativeAction(SelectionActionsContext context, Alternative alternative, IASTNode selectedNode) {
 		this.alternative = alternative;
 		this.context = context;
+		this.selectedNode = selectedNode;
 		
 		this.setChecked(alternative.isActive);
 		this.setDescription("Switch to alternative >" + alternative.altID + "<");
@@ -25,9 +28,7 @@ public class SwitchAlternativeAction extends Action {
 	
 	@Override
 	public void run() {
-		ITextSelection selection = context.getTextSelection();
-		String oldText = selection.getText();
-		
+		ITextSelection selection = context.getTextSelection();		
 		ColoredEditorExtensions editorExtensions = context.getEditorExtensions();
 		ColorCacheManager colorCacheManager = editorExtensions.getColorCacheManager();
 		
@@ -41,7 +42,7 @@ public class SwitchAlternativeAction extends Action {
 		}
 		
 		editorExtensions.save();
-		context.getSourceFile().getAltFeatureManager().activateAlternative(alternative, oldText, context.getSelectedNodes());
+		context.getSourceFile().getAltFeatureManager().activateAlternative(alternative, selectedNode);
 		
 		// CIDECorePlugin.notifyListeners() funktioniert nicht richtig, wenn man am Ende des Dokuments eine Alternative
 		// einsetzt, die kuerzer ist als der urspruengliche Text. Grund dafuer scheint zu sein, dass man nur die AST-Knoten

@@ -76,8 +76,8 @@ public class SourceFileColorManager extends AbstractColorManager {
 		return super.hasColor(node.getId(), color);
 	}
 	
-	public boolean activateAlternative(Alternative alternative, String oldText) {
-		return super.activateAlternative(alternative, oldText);
+	public boolean activateAlternative(Alternative alternative, IASTNode node) {
+		return super.activateAlternative(alternative, createID2Text(node));
 	}
 	
 	public boolean createAlternative(IASTNode node, String altID) {
@@ -85,7 +85,7 @@ public class SourceFileColorManager extends AbstractColorManager {
 			return false;
 		
 		updateID2parentIDs(node);
-		return super.createAlternative(new Alternative(altID, node.getId(), id2parentIDs.get(node.getId()), null), node.render().trim());
+		return super.createAlternative(new Alternative(altID, node.getId(), id2parentIDs.get(node.getId()), null), createID2Text(node));
 	}
 
 	/*
@@ -148,5 +148,23 @@ public class SourceFileColorManager extends AbstractColorManager {
 				parentIDs.addFirst(parentNode.getId());
 		}
 		id2parentIDs.put(node.getId(), parentIDs);
+	}
+	
+	private Map<String, String> createID2Text(IASTNode node) {
+		if (node == null)
+			return null;
+		
+		Map<String, String> result = new HashMap<String, String>();
+		result.put(node.getId(), node.render().trim());
+		
+		if ((node.getChildren() != null) && (node.getChildren().size() > 0)) {
+			for (IASTNode child : node.getChildren()) {
+				Map<String, String> childMap = createID2Text(child);
+				if (childMap != null)
+					result.putAll(childMap);
+			}
+		}
+		
+		return result;
 	}
 }

@@ -38,26 +38,43 @@ public class AlternativeFeatureManager {
 		}
 	}
 	
-	private void updateAlternativeList(IASTNode node, boolean recursive) {
-		if (node == null)
+	private void updateAlternativeList(List<IASTNode> nodes, boolean recursive) {
+		if ((nodes == null) || nodes.isEmpty())
 			return;
 		
 		final List<String> astIDs = new LinkedList<String>();
-		if (!recursive)
-			astIDs.add(node.getId());
-		else {
-			node.accept(new ASTVisitor() {
-				@Override
-				public boolean visit(IASTNode node) {
+		
+		for (IASTNode node : nodes) {
+			if (node == null)
+				continue;
+			if (!recursive) {
+				if (!astIDs.contains(node.getId()))
 					astIDs.add(node.getId());
-					return true;
-				}
-			});
+			}
+			else {
+				node.accept(new ASTVisitor() {
+					@Override
+					public boolean visit(IASTNode node) {
+						if (!astIDs.contains(node.getId()))
+							astIDs.add(node.getId());
+						return true;
+					}
+				});
+			}
 		}
 		
 		if (id2alternatives == null)
 			id2alternatives = new HashMap<String, List<Alternative>>();
 		mergeAlternatives(coloredSourceFile.getColorManager().getAlternatives(astIDs));
+	}
+	
+	private void updateAlternativeList(IASTNode node, boolean recursive) {
+		if (node == null)
+			return;
+		
+		List<IASTNode> nodes = new LinkedList<IASTNode>();
+		nodes.add(node);
+		updateAlternativeList(nodes, recursive);
 	}
 	
 	public List<Alternative> getAlternatives(String id) {
@@ -70,20 +87,19 @@ public class AlternativeFeatureManager {
 		if ((nodes == null) || nodes.isEmpty())
 			return;
 		
-		// TODO MRO:
-		//    - auf textSelection umstellen, um Layout zu erhalten?
-		//    - nodes.get(0)?
-		coloredSourceFile.getColorManager().createAlternative(nodes.get(0), altID);
+		for (IASTNode node : nodes) {
+			if (node != null)
+				coloredSourceFile.getColorManager().createAlternative(node, altID);
+		}
+		
 		CIDECorePlugin.getDefault().notifyListeners(new ASTColorChangedEvent(this, nodes, coloredSourceFile));
-		updateAlternativeList(nodes.get(0), true);
+		updateAlternativeList(nodes, true);
 	}
 	
-	public void activateAlternative(Alternative alternative, String oldText, List<IASTNode> nodes) {
-		// TODO MRO:
-		//    - nodes.get(0)?
-		coloredSourceFile.getColorManager().activateAlternative(alternative, oldText);
-		CIDECorePlugin.getDefault().notifyListeners(new ASTColorChangedEvent(this, nodes, coloredSourceFile));
-		updateAlternativeList(nodes.get(0), true);
+	public void activateAlternative(Alternative alternative, IASTNode node) {
+		coloredSourceFile.getColorManager().activateAlternative(alternative, node);
+		CIDECorePlugin.getDefault().notifyListeners(new ASTColorChangedEvent(this, node, coloredSourceFile));
+		updateAlternativeList(node, true);
 	}
 	
 //	private Set<IFeature> getFeatures(long[] ids, IFeatureModelWithID fm) {

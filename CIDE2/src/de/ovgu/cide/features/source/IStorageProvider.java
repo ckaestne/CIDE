@@ -40,7 +40,7 @@ public interface IStorageProvider {
 	 * 
 	 * @return whether storage has been successful
 	 */
-	boolean storeNewAlternative(IProject project, Object annotatedResource, Alternative alternative, String oldText);
+	boolean storeNewAlternative(IProject project, Object annotatedResource, Alternative alternative, Map<String, String> id2oldText);
 	
 	Map<String, List<Alternative>> getAlternatives(IProject project, Object annotatedResource, List<String> ids);
 
@@ -61,5 +61,5 @@ public interface IStorageProvider {
 	 * @param altID
 	 * @return
 	 */
-	boolean activateAlternative(IProject project, Object annotatedResource, Alternative alternative, String oldText);
+	boolean activateAlternative(IProject project, Object annotatedResource, Alternative alternative, Map<String, String> id2oldText);
 }

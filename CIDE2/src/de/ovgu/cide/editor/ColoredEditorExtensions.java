@@ -185,28 +185,32 @@ public class ColoredEditorExtensions {
 			ColoredSourceFile sourceFile = editor.getSourceFile();
 			
 			if (sourceFile != null) {
-				SelectionActionsContext context = new SelectionActionsContext(sourceFile, editor.getSelectionProvider().getSelection(), this);
+				SelectionActionsContext contextOptional = 
+					new SelectionActionsContext(sourceFile, editor.getSelectionProvider().getSelection(), this, true);
 				IFeatureModel fm = sourceFile.getFeatureModel();
 				
 				List<IFeature> visibleFeatures = new ArrayList<IFeature>(fm.getVisibleFeatures());
 				Collections.sort(visibleFeatures);
 				
 				for (IFeature feature : visibleFeatures) {
-					menu.add(new ToggleTextColorAction(context, feature));
+					menu.add(new ToggleTextColorAction(contextOptional, feature));
 				}
 				
-				menu.add(new ToggleAllFeatureSubmenu(context, fm.getFeatures()));
-				menu.add(new NewFeatureAction(context, fm));
+				menu.add(new ToggleAllFeatureSubmenu(contextOptional, fm.getFeatures()));
+				menu.add(new NewFeatureAction(contextOptional, fm));
 
 				if (editor instanceof IProjectionColoredEditor)
-					menu.add(new ColorProjectionSubmenu((IProjectionColoredEditor) editor, context));
+					menu.add(new ColorProjectionSubmenu((IProjectionColoredEditor) editor, contextOptional));
 				
-				if (context.anyNodesSelected()) {
+				SelectionActionsContext contextNonOptional = 
+					new SelectionActionsContext(sourceFile, editor.getSelectionProvider().getSelection(), this, false);
+				
+				if (contextNonOptional.anyNodesSelected()) {
 					MenuManager mm = new MenuManager("Alternative code");
 					menu.add(mm);
 
-					mm.add(new CreateAlternativeAction(context));
-					mm.add(new SwitchAlternativeSubmenu(context));
+					mm.add(new CreateAlternativeAction(contextNonOptional));
+					mm.add(new SwitchAlternativeSubmenu(contextNonOptional));
 				}
 			}
 		}

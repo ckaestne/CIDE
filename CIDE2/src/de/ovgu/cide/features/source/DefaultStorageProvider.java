@@ -256,12 +256,12 @@ public class DefaultStorageProvider implements IStorageProvider {
 		return featureModel instanceof IFeatureModelWithID;
 	}
 	
-	public boolean activateAlternative(IProject project, Object annotatedResource, Alternative alternative, String oldText) {
+	public boolean activateAlternative(IProject project, Object annotatedResource, Alternative alternative, Map<String, String> id2oldText) {
 		return false;
 	}
 
 	@Override
-	public boolean storeNewAlternative(IProject project, Object annotatedResource, Alternative alternative, String oldText) {
+	public boolean storeNewAlternative(IProject project, Object annotatedResource, Alternative alternative, Map<String, String> id2oldText) {
 		return false;
 	}
 

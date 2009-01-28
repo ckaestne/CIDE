@@ -112,8 +112,8 @@ abstract class AbstractColorManager {
 		return storageProvider.getAlternatives(project, resource, ids);
 	}
 	
-	protected boolean activateAlternative(Alternative alternative, String oldText) {
-		boolean success = storageProvider.activateAlternative(project, resource, alternative, oldText);
+	protected boolean activateAlternative(Alternative alternative, Map<String, String> id2oldText) {
+		boolean success = storageProvider.activateAlternative(project, resource, alternative, id2oldText);
 		
 		// TODO MRO: Graumsam uneffizient! Wir muessen nicht alle Annotationen neu von der Platte lesen,
 		//           sondern nur die der neuen Alternative (davon aber alle Kinder!).
@@ -122,11 +122,11 @@ abstract class AbstractColorManager {
 		return success;
 	}
 	
-	protected boolean createAlternative(Alternative alternative, String oldText) {
+	protected boolean createAlternative(Alternative alternative, Map<String, String> id2oldText) {
 		if (alternative == null)
 			return false;
 		
-		boolean success = storageProvider.storeNewAlternative(project, resource, alternative, oldText);
+		boolean success = storageProvider.storeNewAlternative(project, resource, alternative, id2oldText);
 		
 		// TODO MRO: Graumsam uneffizient! Wir muessen nicht alle Annotationen neu von der Platte lesen,
 		//           sondern nur die der neuen Alternative (davon aber alle Kinder!).

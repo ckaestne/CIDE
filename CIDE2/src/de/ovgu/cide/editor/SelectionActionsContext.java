@@ -22,6 +22,11 @@ public class SelectionActionsContext {
 	private ColoredEditorExtensions editorExtensions;
 	
 	public SelectionActionsContext(ColoredSourceFile sourceFile, ISelection selection, ColoredEditorExtensions editorExtensions) {
+		this(sourceFile, selection, editorExtensions, true);
+	}
+	
+	public SelectionActionsContext(ColoredSourceFile sourceFile, ISelection selection, ColoredEditorExtensions editorExtensions,
+								   boolean optionalNodesOnly) {
 		if ((sourceFile == null) || !(selection instanceof ITextSelection))
 			return;
 		
@@ -31,7 +36,8 @@ public class SelectionActionsContext {
 			return;
 		this.editorExtensions = editorExtensions;
 
-		updateSelectedASTs();
+		updateSelectedASTs(optionalNodesOnly);
+
 	}
 
 	boolean anyNodesSelected() {
@@ -51,7 +57,7 @@ public class SelectionActionsContext {
 		return true;
 	}
 
-	private void updateSelectedASTs() {
+	private void updateSelectedASTs(boolean optionalNodesOnly) {
 		try {
 			selectedNodes.clear();
 			ISourceFile ast = sourceFile.getAST();
