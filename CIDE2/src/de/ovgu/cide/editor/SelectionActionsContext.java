@@ -62,7 +62,7 @@ public class SelectionActionsContext {
 			selectedNodes.clear();
 			ISourceFile ast = sourceFile.getAST();
 			
-			SelectionFinder selectionFinder = new SelectionFinder(selectedNodes, textSelection, true);
+			SelectionFinder selectionFinder = new SelectionFinder(selectedNodes, textSelection, optionalNodesOnly);
 			ast.accept(selectionFinder);
 			allSelectedNodes = selectionFinder.getAllSelectedNodes();			
 		} catch (Exception e) { }
