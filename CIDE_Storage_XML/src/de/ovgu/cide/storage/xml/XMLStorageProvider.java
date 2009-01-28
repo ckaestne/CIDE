@@ -57,11 +57,11 @@ public class XMLStorageProvider implements IStorageProvider {
 		return getProjectStorage(project).storeAnnotations(path, annotations, parentIDs);
 	}
 	
-	public boolean storeNewAlternative(IProject project, Object annotatedResource, Alternative alternative, String oldText) {
+	public boolean storeNewAlternative(IProject project, Object annotatedResource, Alternative alternative, Map<String, String> id2oldText) {
 		assert annotatedResource instanceof IResource;
 		String path = ((IResource) annotatedResource).getProjectRelativePath().toPortableString();
 		
-		return getProjectStorage(project).storeNewAlternative(path, alternative, oldText);
+		return getProjectStorage(project).storeNewAlternative(path, alternative, id2oldText);
 	}
 	
 	@Override
@@ -72,10 +72,10 @@ public class XMLStorageProvider implements IStorageProvider {
 		return getProjectStorage(project).getAlternatives(path, ids);
 	}
 
-	public boolean activateAlternative(IProject project, Object annotatedResource, Alternative alternative, String oldText) {
+	public boolean activateAlternative(IProject project, Object annotatedResource, Alternative alternative, Map<String, String> id2oldText) {
 		assert annotatedResource instanceof IResource;
 		String path = ((IResource) annotatedResource).getProjectRelativePath().toPortableString();
 
-		return getProjectStorage(project).activateAlternative(path, alternative, oldText);
+		return getProjectStorage(project).activateAlternative(path, alternative, id2oldText);
 	}
 }

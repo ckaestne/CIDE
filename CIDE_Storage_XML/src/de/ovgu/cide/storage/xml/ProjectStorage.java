@@ -234,7 +234,7 @@ public class ProjectStorage {
 	 * 
 	 * Achtung: die Liste von Vorgaenger-IDs muss wie in storeAnnotation() top-down sortiert sein!
 	 */
-	public boolean storeNewAlternative(String path, Alternative alternative, String oldText) {
+	public boolean storeNewAlternative(String path, Alternative alternative, Map<String, String> id2oldText) {
 		if (alternative == null)
 			return false;
 		
@@ -251,7 +251,7 @@ public class ProjectStorage {
 			featureAnnotationsElement.setAttribute("id", path);
 		}
 		
-		// Suche nach einer aktiven Alternative
+		// Suche nach der aktiven Alternative
 		Element activeAlternative = findActiveAlternative(featureAnnotationsElement, astID);
 		
 		if (activeAlternative == null) {
@@ -260,9 +260,20 @@ public class ProjectStorage {
 			// bestehenden Entitaet angelegt werden koennen. Wir unterstuetzen es trotzdem :-)
 			activeAlternative = (Element) createAnnotationNode(astID, featureAnnotationsElement, parentIDs, altID).getChildNodes().item(0);
 		} else {
-			// Aktive Alternative gefunden: deaktiviere sie und erzeuge eine neue, aktive Alternative
-			toggleActivation(activeAlternative, false);
-			setTextContext(activeAlternative, oldText);
+			// Aktive Alternative gefunden:
+			// Texte auch der aktiven Kinder aktualisieren, Alternative deaktivieren und eine neue, aktive Alternative erzeugen
+			
+			if (id2oldText != null) {
+				setTextContext(activeAlternative, id2oldText.remove(astID));
+				
+				for (Entry<String, String> entry : id2oldText.entrySet()) {
+					Element childAlternative = findActiveAlternative(activeAlternative, entry.getKey());
+					if (childAlternative != null)
+						setTextContext(childAlternative, entry.getValue());
+				}
+			}
+			
+			toggleActivation((Element) activeAlternative.getParentNode(), false);
 			activeAlternative = createAlternativeNode(activeAlternative.getParentNode(), altID);
 		}
 		
@@ -270,6 +281,56 @@ public class ProjectStorage {
 			createFeatureNodes(features, activeAlternative);	// Feature-Annotationen hinzufuegen
 		
 		// XML-Datei schreiben
+		try {
+			serializeDom();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (TransformerException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (CoreException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return true;
+	}
+	
+	public boolean activateAlternative(String path, Alternative alternative, Map<String, String> id2oldText) {
+		if (alternative == null)
+			return false;
+		Element featureAnnotationsElement = findFeatureAnnotationsElement(path);
+		
+		if (featureAnnotationsElement != null) {
+			Element activeAlternative = findActiveAlternative(featureAnnotationsElement, alternative.entityID);
+			Element newAlternativeNode = alternative2node.get(alternative);
+			
+			if (activeAlternative != null) {
+				if (id2oldText != null) {
+					setTextContext(activeAlternative, id2oldText.remove(alternative.entityID));
+					
+					for (Entry<String, String> entry : id2oldText.entrySet()) {
+						Element childAlternative = findActiveAlternative(activeAlternative, entry.getKey());
+						if (childAlternative != null)
+							setTextContext(childAlternative, entry.getValue());
+					}
+				}
+				
+				Node parent = activeAlternative.getParentNode();
+				NodeList allAlternatives = parent.getChildNodes();
+				
+				for (int i = 0; i < allAlternatives.getLength(); ++i) {
+					Element element = (Element) allAlternatives.item(i);
+					if (!element.equals(newAlternativeNode))
+						toggleActivation(element, false);
+				}
+			}
+			
+			toggleActivation(newAlternativeNode, true);
+		} else
+			return false;
+		
 		try {
 			serializeDom();
 		} catch (IOException e) {
@@ -349,8 +410,8 @@ public class ProjectStorage {
 		if (alternative == null)
 			return null;
 		
-		return (new Alternative(alternative.getAttribute("altid"), null, null, null)).setActive(alternative.getAttribute("isActive").equals("true"))
-																					 .setText(getText(alternative));
+		return (new Alternative(alternative.getAttribute("altid"), null, null, null))
+					.setActive(alternative.getAttribute("isActive").equals("true")).setText(getText(alternative));
 	}
 	
 	private String getText(Element alternative) {
@@ -370,9 +431,10 @@ public class ProjectStorage {
 
 	/**
 	 * (De)aktiviert die Alternative hinter dem gegebenen Element. Bei der Deaktivierung werden auch alle Kindknoten deaktiviert.
-	 * Bei der Aktivierung wird immer nur die erste Kind-Alternative aktiviert.
+	 * Bei der Aktivierung wird nur diejenige Kind-Alternative aktiviert, für die wasActive == "true" gilt.
 	 * 
 	 * @param element	Zu (de)aktivierendes Element
+	 * @param isActive	Indikator: Element soll aktiviert werden
 	 */
 	private void toggleActivation(Element element, boolean isActive) {
 		if (element == null)
@@ -381,16 +443,37 @@ public class ProjectStorage {
 		NodeList childNodes = element.getChildNodes();
 		for (int i = 0; i < childNodes.getLength(); ++i) {
 			Node childNode = childNodes.item(i);
-			if (childNode.getNodeType() == Node.ELEMENT_NODE)
-				toggleActivation((Element) childNodes.item(i), isActive);
-			
-			// Beim Aktivieren immer nur die erste Alternative aktivieren
-			if (isActive && childNode.getNodeName().equals("alternative"))
-				break;
+			if (childNode.getNodeType() == Node.ELEMENT_NODE) {
+				if (isActive)
+					reactivate((Element) childNode);
+				else
+					toggleActivation((Element) childNode, isActive);
+			}
 		}
 		
-		if (element.getNodeName().equals("alternative"))
+		if (element.getNodeName().equals("alternative")) {
+			boolean wasActive = element.getAttribute("isActive").equals("true");
 			element.setAttribute("isActive", isActive ? "true" : "false");
+			element.setAttribute("wasActive", wasActive ? "true" : "false");
+		}
+	}
+	
+	private void reactivate(Element element) {
+		if (element == null)
+			return;
+		
+		NodeList childNodes = element.getChildNodes();
+		for (int i = 0; i < childNodes.getLength(); ++i) {
+			Node childNode = childNodes.item(i);
+			if (childNode.getNodeType() == Node.ELEMENT_NODE)
+				reactivate((Element) childNode);
+		}
+		
+		if (element.getNodeName().equals("alternative") && element.getAttribute("wasActive").equals("true")) {
+			boolean wasActive = element.getAttribute("isActive").equals("true");
+			element.setAttribute("isActive", "true");
+			element.setAttribute("wasActive", wasActive ? "true" : "false");
+		}
 	}
 	
 	private void setTextContext(Element alternative, String text) {
@@ -413,38 +496,6 @@ public class ProjectStorage {
 		}
 		
 		textElement.setTextContent(text);
-	}
-	
-	public boolean activateAlternative(String path, Alternative alternative, String oldText) {
-		if (alternative == null)
-			return false;
-		Element featureAnnotationsElement = findFeatureAnnotationsElement(path);
-		
-		if (featureAnnotationsElement != null) {
-			Element activeAlternative = findActiveAlternative(featureAnnotationsElement, alternative.entityID);
-			
-			if (activeAlternative != null) {
-				setTextContext(activeAlternative, oldText);
-				toggleActivation(activeAlternative, false);
-			}
-			toggleActivation(alternative2node.get(alternative), true);
-		} else
-			return false;
-		
-		try {
-			serializeDom();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (TransformerException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (CoreException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		return true;
 	}
 	
 	/**
