@@ -86,4 +86,8 @@ public class SourceFileAdapter implements ISourceFile {
 		ast.remove();
 	}
 
+	@Override
+	public List<IASTNode> getChildren() {
+		return ast.getChildren();
+	}
 }
