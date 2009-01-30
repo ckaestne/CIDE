@@ -302,7 +302,7 @@ Grammar Grammar() : {
 	ASTStringNode eof;
 	Token firstToken=token;
 } { (
-	t=findIntroductionBlock(){findintroductionblock=new ASTStringNode(t.toString(),new WToken(t));} (production=Production(){productionList.add(production);})* t=<EOF>{eof=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=findIntroductionBlock(){findintroductionblock=new ASTStringNode(t.image,new WToken(t));} (production=Production(){productionList.add(production);})* t=<EOF>{eof=new ASTStringNode(t.image,new WToken(t));} 
 	{return new Grammar(findintroductionblock, productionList, eof, firstToken.next,token);}
  ) }
 
@@ -315,7 +315,7 @@ Production Production() : {
 	ArrayList<Choice> choice1List = new ArrayList<Choice>();
 	Token firstToken=token;
 } { (
-	t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} ":" choice=Choice(){list0.add(choice);} ("|" choice1=Choice(){list0.add(choice1);})* ";" 
+	t=<IDENTIFIER>{identifier=new ASTStringNode(t.image,new WToken(t));} ":" choice=Choice(){list0.add(choice);} ("|" choice1=Choice(){list0.add(choice1);})* ";" 
 	{return new Production(list0, identifier, firstToken.next,token);}
  ) }
 
@@ -328,7 +328,7 @@ Choice Choice() : {
 	ASTStringNode identifier = null;
 	Token firstToken=token;
 } { (
-	(text=Text(){textList.add(text);})* (multAndText=MultAndText(){multAndTextList.add(multAndText);})+ ["::" t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));}] 
+	(text=Text(){textList.add(text);})* (multAndText=MultAndText(){multAndTextList.add(multAndText);})+ ["::" t=<IDENTIFIER>{identifier=new ASTStringNode(t.image,new WToken(t));}] 
 	{return new Choice(textList, multAndTextList, identifier, firstToken.next,token);}
  ) }
 
@@ -407,7 +407,7 @@ OptionalWithDefault OptionalWithDefault() : {
 	ASTStringNode string_literal;
 	Token firstToken=token;
 } { (
-	"OPTIONAL" "(" unit=Unit() "," t=<STRING_LITERAL>{string_literal=new ASTStringNode(t.toString(),new WToken(t));} ")" 
+	"OPTIONAL" "(" unit=Unit() "," t=<STRING_LITERAL>{string_literal=new ASTStringNode(t.image,new WToken(t));} ")" 
 	{return new OptionalWithDefault(unit, string_literal, firstToken.next,token);}
  ) }
 
@@ -436,7 +436,7 @@ NonTerminal NonTerminal() : {
 	ASTStringNode identifier1 = null;
 	Token firstToken=token;
 } { (
-	t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} [LOOKAHEAD(3) "{" t=<IDENTIFIER>{identifier1=new ASTStringNode(t.toString(),new WToken(t));} "}"] 
+	t=<IDENTIFIER>{identifier=new ASTStringNode(t.image,new WToken(t));} [LOOKAHEAD(3) "{" t=<IDENTIFIER>{identifier1=new ASTStringNode(t.image,new WToken(t));} "}"] 
 	{return new NonTerminal(identifier, identifier1, firstToken.next,token);}
  ) }
 
@@ -446,9 +446,9 @@ Ident Ident() : {
 	ASTStringNode identifier1;
 	Token firstToken=token;
 } { (
-	"JAVATOKEN" "(" t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} ")" 
+	"JAVATOKEN" "(" t=<IDENTIFIER>{identifier=new ASTStringNode(t.image,new WToken(t));} ")" 
 	{return new Ident1(identifier, firstToken.next,token);} |
-	"<" t=<IDENTIFIER>{identifier1=new ASTStringNode(t.toString(),new WToken(t));} ">" 
+	"<" t=<IDENTIFIER>{identifier1=new ASTStringNode(t.image,new WToken(t));} ">" 
 	{return new Ident2(identifier1, firstToken.next,token);}
  ) }
 
@@ -464,7 +464,7 @@ Text Text() : {
 	{return new Text1(lookahead, firstToken.next,token);} |
 	java=Java() 
 	{return new Text2(java, firstToken.next,token);} |
-	t=<STRING_LITERAL>{string_literal=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<STRING_LITERAL>{string_literal=new ASTStringNode(t.image,new WToken(t));} 
 	{return new Text3(string_literal, firstToken.next,token);} |
 	layoutHint=LayoutHint() 
 	{return new Text4(layoutHint, firstToken.next,token);}
@@ -494,9 +494,9 @@ LookaheadBody LookaheadBody() : {
 	ASTStringNode string_literal;
 	Token firstToken=token;
 } { (
-	t=<INTEGER_LITERAL>{integer_literal=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<INTEGER_LITERAL>{integer_literal=new ASTStringNode(t.image,new WToken(t));} 
 	{return new LookaheadBody1(integer_literal, firstToken.next,token);} |
-	t=<STRING_LITERAL>{string_literal=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<STRING_LITERAL>{string_literal=new ASTStringNode(t.image,new WToken(t));} 
 	{return new LookaheadBody2(string_literal, firstToken.next,token);}
  ) }
 
@@ -505,7 +505,7 @@ Java Java() : {
 	ASTStringNode string_literal;
 	Token firstToken=token;
 } { (
-	"JAVA" "(" t=<STRING_LITERAL>{string_literal=new ASTStringNode(t.toString(),new WToken(t));} ")" 
+	"JAVA" "(" t=<STRING_LITERAL>{string_literal=new ASTStringNode(t.image,new WToken(t));} ")" 
 	{return new Java(string_literal, firstToken.next,token);}
  ) }
 

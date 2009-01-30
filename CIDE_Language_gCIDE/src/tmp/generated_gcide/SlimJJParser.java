@@ -111,7 +111,7 @@ public class SlimJJParser implements SlimJJParserConstants {
         ASTStringNode eof;
         Token firstToken=token;
     t = findIntroductionBlock();
-                                  findintroductionblock=new ASTStringNode(t.toString(),new WToken(t));
+                                  findintroductionblock=new ASTStringNode(t.image,new WToken(t));
     label_1:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -123,10 +123,10 @@ public class SlimJJParser implements SlimJJParserConstants {
         break label_1;
       }
       production = Production();
-                                                                                                                                 productionList.add(production);
+                                                                                                                            productionList.add(production);
     }
     t = jj_consume_token(0);
-                                                                                                                                                                            eof=new ASTStringNode(t.toString(),new WToken(t));
+                                                                                                                                                                       eof=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new Grammar(findintroductionblock, productionList, eof, firstToken.next,token);}
     throw new Error("Missing return statement in function");
   }
@@ -140,10 +140,10 @@ public class SlimJJParser implements SlimJJParserConstants {
         ArrayList<Choice> choice1List = new ArrayList<Choice>();
         Token firstToken=token;
     t = jj_consume_token(IDENTIFIER);
-                       identifier=new ASTStringNode(t.toString(),new WToken(t));
+                       identifier=new ASTStringNode(t.image,new WToken(t));
     jj_consume_token(COLON);
     choice = Choice();
-                                                                                                      list0.add(choice);
+                                                                                                 list0.add(choice);
     label_2:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -156,7 +156,7 @@ public class SlimJJParser implements SlimJJParserConstants {
       }
       jj_consume_token(BIT_OR);
       choice1 = Choice();
-                                                                                                                                                list0.add(choice1);
+                                                                                                                                           list0.add(choice1);
     }
     jj_consume_token(SEMICOLON);
          {if (true) return new Production(list0, identifier, firstToken.next,token);}
@@ -209,7 +209,7 @@ public class SlimJJParser implements SlimJJParserConstants {
     case 129:
       jj_consume_token(129);
       t = jj_consume_token(IDENTIFIER);
-                                                                                                                                 identifier=new ASTStringNode(t.toString(),new WToken(t));
+                                                                                                                                 identifier=new ASTStringNode(t.image,new WToken(t));
       break;
     default:
       jj_la1[4] = jj_gen;
@@ -437,7 +437,7 @@ public class SlimJJParser implements SlimJJParserConstants {
     unit = Unit();
     jj_consume_token(COMMA);
     t = jj_consume_token(STRING_LITERAL);
-                                                          string_literal=new ASTStringNode(t.toString(),new WToken(t));
+                                                          string_literal=new ASTStringNode(t.image,new WToken(t));
     jj_consume_token(RPAREN);
          {if (true) return new OptionalWithDefault(unit, string_literal, firstToken.next,token);}
     throw new Error("Missing return statement in function");
@@ -480,11 +480,11 @@ public class SlimJJParser implements SlimJJParserConstants {
         ASTStringNode identifier1 = null;
         Token firstToken=token;
     t = jj_consume_token(IDENTIFIER);
-                       identifier=new ASTStringNode(t.toString(),new WToken(t));
+                       identifier=new ASTStringNode(t.image,new WToken(t));
     if (jj_2_4(3)) {
       jj_consume_token(LBRACE);
       t = jj_consume_token(IDENTIFIER);
-                                                                                                                   identifier1=new ASTStringNode(t.toString(),new WToken(t));
+                                                                                                              identifier1=new ASTStringNode(t.image,new WToken(t));
       jj_consume_token(RBRACE);
     } else {
       ;
@@ -503,14 +503,14 @@ public class SlimJJParser implements SlimJJParserConstants {
       jj_consume_token(_JAVATOKEN);
       jj_consume_token(LPAREN);
       t = jj_consume_token(IDENTIFIER);
-                                       identifier=new ASTStringNode(t.toString(),new WToken(t));
+                                       identifier=new ASTStringNode(t.image,new WToken(t));
       jj_consume_token(RPAREN);
          {if (true) return new Ident1(identifier, firstToken.next,token);}
       break;
     case LT:
       jj_consume_token(LT);
       t = jj_consume_token(IDENTIFIER);
-                           identifier1=new ASTStringNode(t.toString(),new WToken(t));
+                           identifier1=new ASTStringNode(t.image,new WToken(t));
       jj_consume_token(GT);
          {if (true) return new Ident2(identifier1, firstToken.next,token);}
       break;
@@ -540,7 +540,7 @@ public class SlimJJParser implements SlimJJParserConstants {
       break;
     case STRING_LITERAL:
       t = jj_consume_token(STRING_LITERAL);
-                           string_literal=new ASTStringNode(t.toString(),new WToken(t));
+                           string_literal=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new Text3(string_literal, firstToken.next,token);}
       break;
     case AT:
@@ -611,12 +611,12 @@ public class SlimJJParser implements SlimJJParserConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case INTEGER_LITERAL:
       t = jj_consume_token(INTEGER_LITERAL);
-                            integer_literal=new ASTStringNode(t.toString(),new WToken(t));
+                            integer_literal=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new LookaheadBody1(integer_literal, firstToken.next,token);}
       break;
     case STRING_LITERAL:
       t = jj_consume_token(STRING_LITERAL);
-                           string_literal=new ASTStringNode(t.toString(),new WToken(t));
+                           string_literal=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new LookaheadBody2(string_literal, firstToken.next,token);}
       break;
     default:
@@ -634,7 +634,7 @@ public class SlimJJParser implements SlimJJParserConstants {
     jj_consume_token(_JAVA);
     jj_consume_token(LPAREN);
     t = jj_consume_token(STRING_LITERAL);
-                                      string_literal=new ASTStringNode(t.toString(),new WToken(t));
+                                      string_literal=new ASTStringNode(t.image,new WToken(t));
     jj_consume_token(RPAREN);
          {if (true) return new Java(string_literal, firstToken.next,token);}
     throw new Error("Missing return statement in function");
@@ -863,13 +863,6 @@ public class SlimJJParser implements SlimJJParserConstants {
     return false;
   }
 
-  final private boolean jj_3_4() {
-    if (jj_scan_token(LBRACE)) return true;
-    if (jj_scan_token(IDENTIFIER)) return true;
-    if (jj_scan_token(RBRACE)) return true;
-    return false;
-  }
-
   final private boolean jj_3R_12() {
     if (jj_scan_token(LPAREN)) return true;
     Token xsp;
@@ -899,6 +892,13 @@ public class SlimJJParser implements SlimJJParserConstants {
 
   final private boolean jj_3_3() {
     if (jj_3R_14()) return true;
+    return false;
+  }
+
+  final private boolean jj_3_4() {
+    if (jj_scan_token(LBRACE)) return true;
+    if (jj_scan_token(IDENTIFIER)) return true;
+    if (jj_scan_token(RBRACE)) return true;
     return false;
   }
 

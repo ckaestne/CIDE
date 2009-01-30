@@ -9,7 +9,7 @@ import cide.languages.*;
 
 /** package visibility. use only via ASTNode.render() **/
 public class SimplePrintVisitor extends AbstractPrintVisitor {
-	SimplePrintVisitor(PrintStream out) {
+	public SimplePrintVisitor(PrintStream out) {
 		super(out);
 	}
 	public SimplePrintVisitor() {
