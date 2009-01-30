@@ -4153,6 +4153,7 @@ protected Token jjFillToken()
          t.image = image.toString();
       t.beginLine = t.endLine = input_stream.getBeginLine();
       t.beginColumn = t.endColumn = input_stream.getBeginColumn();
+   t.length = t.image.length();
    }
    else
    {
@@ -4164,7 +4165,6 @@ protected Token jjFillToken()
       t.endColumn = input_stream.getEndColumn();
    }
    t.offset = input_stream.getOffset();
-   t.length = input_stream.getLength();
    return t;
 }
 

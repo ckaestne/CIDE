@@ -1186,7 +1186,7 @@ Program Program() : {
 	ASTStringNode eof;
 	Token firstToken=token;
 } { (
-	[sourceElements=SourceElements()] t=<EOF>{eof=new ASTStringNode(t.toString(),new WToken(t));} 
+	[sourceElements=SourceElements()] t=<EOF>{eof=new ASTStringNode(t.image,new WToken(t));} 
 	{return new Program(sourceElements, eof, firstToken.next,token);}
  ) }
 
@@ -1222,17 +1222,17 @@ Literal Literal() : {
 	ASTStringNode regular_expression_literal;
 	Token firstToken=token;
 } { (
-	t=<DECIMAL_LITERAL>{decimal_literal=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<DECIMAL_LITERAL>{decimal_literal=new ASTStringNode(t.image,new WToken(t));} 
 	{return new Literal1(decimal_literal, firstToken.next,token);} |
-	t=<HEX_INTEGER_LITERAL>{hex_integer_literal=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<HEX_INTEGER_LITERAL>{hex_integer_literal=new ASTStringNode(t.image,new WToken(t));} 
 	{return new Literal2(hex_integer_literal, firstToken.next,token);} |
-	t=<STRING_LITERAL>{string_literal=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<STRING_LITERAL>{string_literal=new ASTStringNode(t.image,new WToken(t));} 
 	{return new Literal3(string_literal, firstToken.next,token);} |
-	t=<BOOLEAN_LITERAL>{boolean_literal=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<BOOLEAN_LITERAL>{boolean_literal=new ASTStringNode(t.image,new WToken(t));} 
 	{return new Literal4(boolean_literal, firstToken.next,token);} |
-	t=<NULL_LITERAL>{null_literal=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<NULL_LITERAL>{null_literal=new ASTStringNode(t.image,new WToken(t));} 
 	{return new Literal5(null_literal, firstToken.next,token);} |
-	t=<REGULAR_EXPRESSION_LITERAL>{regular_expression_literal=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<REGULAR_EXPRESSION_LITERAL>{regular_expression_literal=new ASTStringNode(t.image,new WToken(t));} 
 	{return new Literal6(regular_expression_literal, firstToken.next,token);}
  ) }
 
@@ -1241,7 +1241,7 @@ Identifier Identifier() : {
 	ASTStringNode identifier_name;
 	Token firstToken=token;
 } { (
-	t=<IDENTIFIER_NAME>{identifier_name=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<IDENTIFIER_NAME>{identifier_name=new ASTStringNode(t.image,new WToken(t));} 
 	{return new Identifier(identifier_name, firstToken.next,token);}
  ) }
 
@@ -1335,9 +1335,9 @@ PropertyName PropertyName() : {
 } { (
 	identifier=Identifier() 
 	{return new PropertyName1(identifier, firstToken.next,token);} |
-	t=<STRING_LITERAL>{string_literal=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<STRING_LITERAL>{string_literal=new ASTStringNode(t.image,new WToken(t));} 
 	{return new PropertyName2(string_literal, firstToken.next,token);} |
-	t=<DECIMAL_LITERAL>{decimal_literal=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<DECIMAL_LITERAL>{decimal_literal=new ASTStringNode(t.image,new WToken(t));} 
 	{return new PropertyName3(decimal_literal, firstToken.next,token);}
  ) }
 
@@ -1570,7 +1570,7 @@ MultiplicativeOperator MultiplicativeOperator() : {
 } { (
 	"*"  
 	{return new MultiplicativeOperator1(firstToken.next,token);} |
-	t=<SLASH>{slash=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<SLASH>{slash=new ASTStringNode(t.image,new WToken(t));} 
 	{return new MultiplicativeOperator2(slash, firstToken.next,token);} |
 	"%"  
 	{return new MultiplicativeOperator3(firstToken.next,token);}
@@ -1926,7 +1926,7 @@ AssignmentOperator AssignmentOperator() : {
 	{return new AssignmentOperator1(firstToken.next,token);} |
 	"*="  
 	{return new AssignmentOperator2(firstToken.next,token);} |
-	t=<SLASHASSIGN>{slashassign=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<SLASHASSIGN>{slashassign=new ASTStringNode(t.image,new WToken(t));} 
 	{return new AssignmentOperator3(slashassign, firstToken.next,token);} |
 	"%="  
 	{return new AssignmentOperator4(firstToken.next,token);} |
@@ -2384,7 +2384,7 @@ Name Name() : {
 	ArrayList<ASTStringNode> identifier_name1List = new ArrayList<ASTStringNode>();
 	Token firstToken=token;
 } { (
-	t=<IDENTIFIER_NAME>{identifier_name=new ASTStringNode(t.toString(),new WToken(t));} (LOOKAHEAD(2) "." t=<IDENTIFIER_NAME>{identifier_name1=new ASTStringNode(t.toString(),new WToken(t));}{identifier_name1List.add(identifier_name1);})* 
+	t=<IDENTIFIER_NAME>{identifier_name=new ASTStringNode(t.image,new WToken(t));} (LOOKAHEAD(2) "." t=<IDENTIFIER_NAME>{identifier_name1=new ASTStringNode(t.image,new WToken(t));}{identifier_name1List.add(identifier_name1);})* 
 	{return new Name(identifier_name, identifier_name1List, firstToken.next,token);}
  ) }
 
@@ -2414,7 +2414,7 @@ JScriptVarDeclaration JScriptVarDeclaration() : {
 	Initialiser initialiser = null;
 	Token firstToken=token;
 } { (
-	identifier=Identifier() ":" t=<IDENTIFIER_NAME>{identifier_name=new ASTStringNode(t.toString(),new WToken(t));} [initialiser=Initialiser()] 
+	identifier=Identifier() ":" t=<IDENTIFIER_NAME>{identifier_name=new ASTStringNode(t.image,new WToken(t));} [initialiser=Initialiser()] 
 	{return new JScriptVarDeclaration(identifier, identifier_name, initialiser, firstToken.next,token);}
  ) }
 

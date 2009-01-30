@@ -57,7 +57,7 @@ public class EcmaScriptParser implements EcmaScriptParserConstants {
       ;
     }
     t = jj_consume_token(0);
-                                                  eof=new ASTStringNode(t.toString(),new WToken(t));
+                                                  eof=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new Program(sourceElements, eof, firstToken.next,token);}
     throw new Error("Missing return statement in function");
   }
@@ -121,32 +121,32 @@ public class EcmaScriptParser implements EcmaScriptParserConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case DECIMAL_LITERAL:
       t = jj_consume_token(DECIMAL_LITERAL);
-                            decimal_literal=new ASTStringNode(t.toString(),new WToken(t));
+                            decimal_literal=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new Literal1(decimal_literal, firstToken.next,token);}
       break;
     case HEX_INTEGER_LITERAL:
       t = jj_consume_token(HEX_INTEGER_LITERAL);
-                                hex_integer_literal=new ASTStringNode(t.toString(),new WToken(t));
+                                hex_integer_literal=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new Literal2(hex_integer_literal, firstToken.next,token);}
       break;
     case STRING_LITERAL:
       t = jj_consume_token(STRING_LITERAL);
-                           string_literal=new ASTStringNode(t.toString(),new WToken(t));
+                           string_literal=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new Literal3(string_literal, firstToken.next,token);}
       break;
     case BOOLEAN_LITERAL:
       t = jj_consume_token(BOOLEAN_LITERAL);
-                            boolean_literal=new ASTStringNode(t.toString(),new WToken(t));
+                            boolean_literal=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new Literal4(boolean_literal, firstToken.next,token);}
       break;
     case NULL_LITERAL:
       t = jj_consume_token(NULL_LITERAL);
-                         null_literal=new ASTStringNode(t.toString(),new WToken(t));
+                         null_literal=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new Literal5(null_literal, firstToken.next,token);}
       break;
     case REGULAR_EXPRESSION_LITERAL:
       t = jj_consume_token(REGULAR_EXPRESSION_LITERAL);
-                                       regular_expression_literal=new ASTStringNode(t.toString(),new WToken(t));
+                                       regular_expression_literal=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new Literal6(regular_expression_literal, firstToken.next,token);}
       break;
     default:
@@ -162,7 +162,7 @@ public class EcmaScriptParser implements EcmaScriptParserConstants {
         ASTStringNode identifier_name;
         Token firstToken=token;
     t = jj_consume_token(IDENTIFIER_NAME);
-                            identifier_name=new ASTStringNode(t.toString(),new WToken(t));
+                            identifier_name=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new Identifier(identifier_name, firstToken.next,token);}
     throw new Error("Missing return statement in function");
   }
@@ -386,12 +386,12 @@ public class EcmaScriptParser implements EcmaScriptParserConstants {
       break;
     case STRING_LITERAL:
       t = jj_consume_token(STRING_LITERAL);
-                           string_literal=new ASTStringNode(t.toString(),new WToken(t));
+                           string_literal=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new PropertyName2(string_literal, firstToken.next,token);}
       break;
     case DECIMAL_LITERAL:
       t = jj_consume_token(DECIMAL_LITERAL);
-                            decimal_literal=new ASTStringNode(t.toString(),new WToken(t));
+                            decimal_literal=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new PropertyName3(decimal_literal, firstToken.next,token);}
       break;
     default:
@@ -966,7 +966,7 @@ public class EcmaScriptParser implements EcmaScriptParserConstants {
       break;
     case SLASH:
       t = jj_consume_token(SLASH);
-                  slash=new ASTStringNode(t.toString(),new WToken(t));
+                  slash=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new MultiplicativeOperator2(slash, firstToken.next,token);}
       break;
     case REM:
@@ -1739,7 +1739,7 @@ public class EcmaScriptParser implements EcmaScriptParserConstants {
       break;
     case SLASHASSIGN:
       t = jj_consume_token(SLASHASSIGN);
-                        slashassign=new ASTStringNode(t.toString(),new WToken(t));
+                        slashassign=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new AssignmentOperator3(slashassign, firstToken.next,token);}
       break;
     case REMASSIGN:
@@ -3102,7 +3102,7 @@ public class EcmaScriptParser implements EcmaScriptParserConstants {
         ArrayList<ASTStringNode> identifier_name1List = new ArrayList<ASTStringNode>();
         Token firstToken=token;
     t = jj_consume_token(IDENTIFIER_NAME);
-                            identifier_name=new ASTStringNode(t.toString(),new WToken(t));
+                            identifier_name=new ASTStringNode(t.image,new WToken(t));
     label_37:
     while (true) {
       if (jj_2_27(2)) {
@@ -3112,8 +3112,8 @@ public class EcmaScriptParser implements EcmaScriptParserConstants {
       }
       jj_consume_token(DOT);
       t = jj_consume_token(IDENTIFIER_NAME);
-                                                                                                                                  identifier_name1=new ASTStringNode(t.toString(),new WToken(t));
-                                                                                                                                                                                                   identifier_name1List.add(identifier_name1);
+                                                                                                                             identifier_name1=new ASTStringNode(t.image,new WToken(t));
+                                                                                                                                                                                         identifier_name1List.add(identifier_name1);
     }
          {if (true) return new Name(identifier_name, identifier_name1List, firstToken.next,token);}
     throw new Error("Missing return statement in function");
@@ -3168,7 +3168,7 @@ public class EcmaScriptParser implements EcmaScriptParserConstants {
     identifier = Identifier();
     jj_consume_token(COLON);
     t = jj_consume_token(IDENTIFIER_NAME);
-                                                        identifier_name=new ASTStringNode(t.toString(),new WToken(t));
+                                                        identifier_name=new ASTStringNode(t.image,new WToken(t));
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case ASSIGN:
       initialiser = Initialiser();
@@ -5014,11 +5014,6 @@ public class EcmaScriptParser implements EcmaScriptParserConstants {
     return false;
   }
 
-  final private boolean jj_3R_237() {
-    if (jj_3R_119()) return true;
-    return false;
-  }
-
   final private boolean jj_3R_184() {
     if (jj_3R_216()) return true;
     Token xsp;
@@ -5031,6 +5026,11 @@ public class EcmaScriptParser implements EcmaScriptParserConstants {
 
   final private boolean jj_3R_235() {
     if (jj_3R_250()) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_237() {
+    if (jj_3R_119()) return true;
     return false;
   }
 
@@ -5107,12 +5107,6 @@ public class EcmaScriptParser implements EcmaScriptParserConstants {
     return false;
   }
 
-  final private boolean jj_3_27() {
-    if (jj_scan_token(DOT)) return true;
-    if (jj_scan_token(IDENTIFIER_NAME)) return true;
-    return false;
-  }
-
   final private boolean jj_3R_307() {
     if (jj_scan_token(INTANCE_OF)) return true;
     return false;
@@ -5120,6 +5114,12 @@ public class EcmaScriptParser implements EcmaScriptParserConstants {
 
   final private boolean jj_3R_306() {
     if (jj_scan_token(GE)) return true;
+    return false;
+  }
+
+  final private boolean jj_3_27() {
+    if (jj_scan_token(DOT)) return true;
+    if (jj_scan_token(IDENTIFIER_NAME)) return true;
     return false;
   }
 
