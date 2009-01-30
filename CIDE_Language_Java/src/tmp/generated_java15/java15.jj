@@ -372,7 +372,7 @@ CompilationUnit CompilationUnit() : {
 	ASTStringNode eof;
 	Token firstToken=token;
 } { (
-	[packageDeclaration=PackageDeclaration()] (importDeclaration=ImportDeclaration(){importDeclarationList.add(importDeclaration);})* (typeDeclaration=TypeDeclaration(){typeDeclarationList.add(typeDeclaration);})* t=<EOF>{eof=new ASTStringNode(t.toString(),new WToken(t));} 
+	[packageDeclaration=PackageDeclaration()] (importDeclaration=ImportDeclaration(){importDeclarationList.add(importDeclaration);})* (typeDeclaration=TypeDeclaration(){typeDeclarationList.add(typeDeclaration);})* t=<EOF>{eof=new ASTStringNode(t.image,new WToken(t));} 
 	{return new CompilationUnit(packageDeclaration, importDeclarationList, typeDeclarationList, eof, firstToken.next,token);}
  ) }
 
@@ -462,7 +462,7 @@ ClassOrInterfaceDeclaration ClassOrInterfaceDeclaration() : {
 	ClassOrInterfaceBody classOrInterfaceBody;
 	Token firstToken=token;
 } { (
-	classOrInterface=ClassOrInterface() t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} [typeParameters=TypeParameters()] [extendsList=ExtendsList()] [implementsList=ImplementsList()] classOrInterfaceBody=ClassOrInterfaceBody() 
+	classOrInterface=ClassOrInterface() t=<IDENTIFIER>{identifier=new ASTStringNode(t.image,new WToken(t));} [typeParameters=TypeParameters()] [extendsList=ExtendsList()] [implementsList=ImplementsList()] classOrInterfaceBody=ClassOrInterfaceBody() 
 	{return new ClassOrInterfaceDeclaration(classOrInterface, identifier, typeParameters, extendsList, implementsList, classOrInterfaceBody, firstToken.next,token);}
  ) }
 
@@ -504,7 +504,7 @@ EnumDeclaration EnumDeclaration() : {
 	EnumBody enumBody;
 	Token firstToken=token;
 } { (
-	"enum" t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} [implementsList=ImplementsList()] enumBody=EnumBody() 
+	"enum" t=<IDENTIFIER>{identifier=new ASTStringNode(t.image,new WToken(t));} [implementsList=ImplementsList()] enumBody=EnumBody() 
 	{return new EnumDeclaration(identifier, implementsList, enumBody, firstToken.next,token);}
  ) }
 
@@ -536,7 +536,7 @@ EnumConstant EnumConstant() : {
 	ClassOrInterfaceBody classOrInterfaceBody = null;
 	Token firstToken=token;
 } { (
-	t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} [arguments=Arguments()] [classOrInterfaceBody=ClassOrInterfaceBody()] 
+	t=<IDENTIFIER>{identifier=new ASTStringNode(t.image,new WToken(t));} [arguments=Arguments()] [classOrInterfaceBody=ClassOrInterfaceBody()] 
 	{return new EnumConstant(identifier, arguments, classOrInterfaceBody, firstToken.next,token);}
  ) }
 
@@ -557,7 +557,7 @@ TypeParameter TypeParameter() : {
 	TypeBound typeBound = null;
 	Token firstToken=token;
 } { (
-	t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} [typeBound=TypeBound()] 
+	t=<IDENTIFIER>{identifier=new ASTStringNode(t.image,new WToken(t));} [typeBound=TypeBound()] 
 	{return new TypeParameter(identifier, typeBound, firstToken.next,token);}
  ) }
 
@@ -637,7 +637,7 @@ VariableDeclaratorId VariableDeclaratorId() : {
 	ArrayList<ASTTextNode> text390List = new ArrayList<ASTTextNode>();
 	Token firstToken=token;
 } { (
-	t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} ("[" "]" {text390=new ASTTextNode(new String[]{"[","]"},new WToken(token));}{text390List.add(text390);})* 
+	t=<IDENTIFIER>{identifier=new ASTStringNode(t.image,new WToken(t));} ("[" "]" {text390=new ASTTextNode(new String[]{"[","]"},new WToken(token));}{text390List.add(text390);})* 
 	{return new VariableDeclaratorId(identifier, text390List, firstToken.next,token);}
  ) }
 
@@ -701,7 +701,7 @@ MethodDeclarator MethodDeclarator() : {
 	ArrayList<ASTTextNode> text393List = new ArrayList<ASTTextNode>();
 	Token firstToken=token;
 } { (
-	t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} formalParameters=FormalParameters() ("[" "]" {text393=new ASTTextNode(new String[]{"[","]"},new WToken(token));}{text393List.add(text393);})* 
+	t=<IDENTIFIER>{identifier=new ASTStringNode(t.image,new WToken(t));} formalParameters=FormalParameters() ("[" "]" {text393=new ASTTextNode(new String[]{"[","]"},new WToken(token));}{text393List.add(text393);})* 
 	{return new MethodDeclarator(identifier, formalParameters, text393List, firstToken.next,token);}
  ) }
 
@@ -746,7 +746,7 @@ ConstructorDeclaration ConstructorDeclaration() : {
 	ArrayList<BlockStatement> blockStatementList = new ArrayList<BlockStatement>();
 	Token firstToken=token;
 } { (
-	[typeParameters=TypeParameters()] t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} formalParameters=FormalParameters() ["throws" nameList=NameList()] "{" [LOOKAHEAD(ExplicitConstructorInvocation()) explicitConstructorInvocation=ExplicitConstructorInvocation()] (blockStatement=BlockStatement(){blockStatementList.add(blockStatement);})* "}" 
+	[typeParameters=TypeParameters()] t=<IDENTIFIER>{identifier=new ASTStringNode(t.image,new WToken(t));} formalParameters=FormalParameters() ["throws" nameList=NameList()] "{" [LOOKAHEAD(ExplicitConstructorInvocation()) explicitConstructorInvocation=ExplicitConstructorInvocation()] (blockStatement=BlockStatement(){blockStatementList.add(blockStatement);})* "}" 
 	{return new ConstructorDeclaration(typeParameters, identifier, formalParameters, nameList, explicitConstructorInvocation, blockStatementList, firstToken.next,token);}
  ) }
 
@@ -805,7 +805,7 @@ ClassOrInterfaceType ClassOrInterfaceType() : {
 	ArrayList<ClassOrInterfaceTypeIntern> classOrInterfaceTypeInternList = new ArrayList<ClassOrInterfaceTypeIntern>();
 	Token firstToken=token;
 } { (
-	t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} [LOOKAHEAD(2) typeArguments=TypeArguments()] (LOOKAHEAD(2) classOrInterfaceTypeIntern=ClassOrInterfaceTypeIntern(){classOrInterfaceTypeInternList.add(classOrInterfaceTypeIntern);})* 
+	t=<IDENTIFIER>{identifier=new ASTStringNode(t.image,new WToken(t));} [LOOKAHEAD(2) typeArguments=TypeArguments()] (LOOKAHEAD(2) classOrInterfaceTypeIntern=ClassOrInterfaceTypeIntern(){classOrInterfaceTypeInternList.add(classOrInterfaceTypeIntern);})* 
 	{return new ClassOrInterfaceType(identifier, typeArguments, classOrInterfaceTypeInternList, firstToken.next,token);}
  ) }
 
@@ -815,7 +815,7 @@ ClassOrInterfaceTypeIntern ClassOrInterfaceTypeIntern() : {
 	TypeArguments typeArguments = null;
 	Token firstToken=token;
 } { (
-	"." t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} [LOOKAHEAD(2) typeArguments=TypeArguments()] 
+	"." t=<IDENTIFIER>{identifier=new ASTStringNode(t.image,new WToken(t));} [LOOKAHEAD(2) typeArguments=TypeArguments()] 
 	{return new ClassOrInterfaceTypeIntern(identifier, typeArguments, firstToken.next,token);}
  ) }
 
@@ -889,7 +889,7 @@ Name Name() : {
 	ArrayList<ASTStringNode> identifier1List = new ArrayList<ASTStringNode>();
 	Token firstToken=token;
 } { (
-	t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} (LOOKAHEAD(2) "." t=<IDENTIFIER>{identifier1=new ASTStringNode(t.toString(),new WToken(t));}{identifier1List.add(identifier1);})* 
+	t=<IDENTIFIER>{identifier=new ASTStringNode(t.image,new WToken(t));} (LOOKAHEAD(2) "." t=<IDENTIFIER>{identifier1=new ASTStringNode(t.image,new WToken(t));}{identifier1List.add(identifier1);})* 
 	{return new Name(identifier, identifier1List, firstToken.next,token);}
  ) }
 
@@ -1270,7 +1270,7 @@ CastLAOp CastLAOp() : {
 	{return new CastLAOp5(firstToken.next,token);} |
 	"new"  
 	{return new CastLAOp6(firstToken.next,token);} |
-	t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<IDENTIFIER>{identifier=new ASTStringNode(t.image,new WToken(t));} 
 	{return new CastLAOp7(identifier, firstToken.next,token);} |
 	literal=Literal() 
 	{return new CastLAOp8(literal, firstToken.next,token);}
@@ -1323,7 +1323,7 @@ MemberSelector MemberSelector() : {
 	ASTStringNode identifier;
 	Token firstToken=token;
 } { (
-	"." typeArguments=TypeArguments() t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} 
+	"." typeArguments=TypeArguments() t=<IDENTIFIER>{identifier=new ASTStringNode(t.image,new WToken(t));} 
 	{return new MemberSelector(typeArguments, identifier, firstToken.next,token);}
  ) }
 
@@ -1341,7 +1341,7 @@ PrimaryPrefix PrimaryPrefix() : {
 	{return new PrimaryPrefix1(literal, firstToken.next,token);} |
 	"this"  
 	{return new PrimaryPrefix2(firstToken.next,token);} |
-	"super" "." t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} 
+	"super" "." t=<IDENTIFIER>{identifier=new ASTStringNode(t.image,new WToken(t));} 
 	{return new PrimaryPrefix3(identifier, firstToken.next,token);} |
 	"(" expression=Expression() ")" 
 	{return new PrimaryPrefix4(expression, firstToken.next,token);} |
@@ -1370,7 +1370,7 @@ PrimarySuffix PrimarySuffix() : {
 	{return new PrimarySuffix3(memberSelector, firstToken.next,token);} |
 	"[" expression=Expression() "]" 
 	{return new PrimarySuffix4(expression, firstToken.next,token);} |
-	"." t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} 
+	"." t=<IDENTIFIER>{identifier=new ASTStringNode(t.image,new WToken(t));} 
 	{return new PrimarySuffix5(identifier, firstToken.next,token);} |
 	arguments=Arguments() 
 	{return new PrimarySuffix6(arguments, firstToken.next,token);}
@@ -1386,13 +1386,13 @@ Literal Literal() : {
 	NullLiteral nullLiteral;
 	Token firstToken=token;
 } { (
-	t=<INTEGER_LITERAL>{integer_literal=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<INTEGER_LITERAL>{integer_literal=new ASTStringNode(t.image,new WToken(t));} 
 	{return new Literal1(integer_literal, firstToken.next,token);} |
-	t=<FLOATING_POINT_LITERAL>{floating_point_literal=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<FLOATING_POINT_LITERAL>{floating_point_literal=new ASTStringNode(t.image,new WToken(t));} 
 	{return new Literal2(floating_point_literal, firstToken.next,token);} |
-	t=<CHARACTER_LITERAL>{character_literal=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<CHARACTER_LITERAL>{character_literal=new ASTStringNode(t.image,new WToken(t));} 
 	{return new Literal3(character_literal, firstToken.next,token);} |
-	t=<STRING_LITERAL>{string_literal=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<STRING_LITERAL>{string_literal=new ASTStringNode(t.image,new WToken(t));} 
 	{return new Literal4(string_literal, firstToken.next,token);} |
 	booleanLiteral=BooleanLiteral() 
 	{return new Literal5(booleanLiteral, firstToken.next,token);} |
@@ -1545,7 +1545,7 @@ LabeledStatement LabeledStatement() : {
 	Statement statement;
 	Token firstToken=token;
 } { (
-	t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} ":" statement=Statement() 
+	t=<IDENTIFIER>{identifier=new ASTStringNode(t.image,new WToken(t));} ":" statement=Statement() 
 	{return new LabeledStatement(identifier, statement, firstToken.next,token);}
  ) }
 
@@ -1696,7 +1696,7 @@ ForStatementInternal ForStatementInternal() : {
 	ForUpdate forUpdate = null;
 	Token firstToken=token;
 } { (
-	LOOKAHEAD(Type() <IDENTIFIER> ":") type=Type() t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} ":" expression=Expression() 
+	LOOKAHEAD(Type() <IDENTIFIER> ":") type=Type() t=<IDENTIFIER>{identifier=new ASTStringNode(t.image,new WToken(t));} ":" expression=Expression() 
 	{return new ForStatementInternal1(type, identifier, expression, firstToken.next,token);} |
 	[forInit=ForInit()] ";" [expression1=Expression()] ";" [forUpdate=ForUpdate()] 
 	{return new ForStatementInternal2(forInit, expression1, forUpdate, firstToken.next,token);}
@@ -1736,7 +1736,7 @@ BreakStatement BreakStatement() : {
 	ASTStringNode identifier = null;
 	Token firstToken=token;
 } { (
-	"break" [t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));}] ";" 
+	"break" [t=<IDENTIFIER>{identifier=new ASTStringNode(t.image,new WToken(t));}] ";" 
 	{return new BreakStatement(identifier, firstToken.next,token);}
  ) }
 
@@ -1745,7 +1745,7 @@ ContinueStatement ContinueStatement() : {
 	ASTStringNode identifier = null;
 	Token firstToken=token;
 } { (
-	"continue" [t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));}] ";" 
+	"continue" [t=<IDENTIFIER>{identifier=new ASTStringNode(t.image,new WToken(t));}] ";" 
 	{return new ContinueStatement(identifier, firstToken.next,token);}
  ) }
 
@@ -1858,7 +1858,7 @@ MemberValuePair MemberValuePair() : {
 	MemberValue memberValue;
 	Token firstToken=token;
 } { (
-	t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} "=" memberValue=MemberValue() 
+	t=<IDENTIFIER>{identifier=new ASTStringNode(t.image,new WToken(t));} "=" memberValue=MemberValue() 
 	{return new MemberValuePair(identifier, memberValue, firstToken.next,token);}
  ) }
 
@@ -1893,7 +1893,7 @@ AnnotationTypeDeclaration AnnotationTypeDeclaration() : {
 	AnnotationTypeBody annotationTypeBody;
 	Token firstToken=token;
 } { (
-	"@" "interface" t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} annotationTypeBody=AnnotationTypeBody() 
+	"@" "interface" t=<IDENTIFIER>{identifier=new ASTStringNode(t.image,new WToken(t));} annotationTypeBody=AnnotationTypeBody() 
 	{return new AnnotationTypeDeclaration(identifier, annotationTypeBody, firstToken.next,token);}
  ) }
 
@@ -1922,7 +1922,7 @@ AnnotationTypeMemberDeclaration AnnotationTypeMemberDeclaration() : {
 	FieldDeclaration fieldDeclaration;
 	Token firstToken=token;
 } { (
-	LOOKAHEAD(Modifiers() Type() <IDENTIFIER> "(") modifiers=Modifiers() type=Type() t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} "(" ")" [defaultValue=DefaultValue()] ";" 
+	LOOKAHEAD(Modifiers() Type() <IDENTIFIER> "(") modifiers=Modifiers() type=Type() t=<IDENTIFIER>{identifier=new ASTStringNode(t.image,new WToken(t));} "(" ")" [defaultValue=DefaultValue()] ";" 
 	{return new AnnotationTypeMemberDeclaration1(modifiers, type, identifier, defaultValue, firstToken.next,token);} |
 	LOOKAHEAD(1) modifiers1=Modifiers() classOrInterfaceDeclaration=ClassOrInterfaceDeclaration() 
 	{return new AnnotationTypeMemberDeclaration2(modifiers1, classOrInterfaceDeclaration, firstToken.next,token);} |

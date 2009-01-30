@@ -118,7 +118,7 @@ public class Java15Parser implements Java15ParserConstants {
                                                                                                                                                                              typeDeclarationList.add(typeDeclaration);
     }
     t = jj_consume_token(0);
-                                                                                                                                                                                                                                  eof=new ASTStringNode(t.toString(),new WToken(t));
+                                                                                                                                                                                                                                  eof=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new CompilationUnit(packageDeclaration, importDeclarationList, typeDeclarationList, eof, firstToken.next,token);}
     throw new Error("Missing return statement in function");
   }
@@ -302,7 +302,7 @@ public class Java15Parser implements Java15ParserConstants {
         Token firstToken=token;
     classOrInterface = ClassOrInterface();
     t = jj_consume_token(IDENTIFIER);
-                                                           identifier=new ASTStringNode(t.toString(),new WToken(t));
+                                                           identifier=new ASTStringNode(t.image,new WToken(t));
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case LT:
       typeParameters = TypeParameters();
@@ -413,7 +413,7 @@ public class Java15Parser implements Java15ParserConstants {
         Token firstToken=token;
     jj_consume_token(ENUM);
     t = jj_consume_token(IDENTIFIER);
-                              identifier=new ASTStringNode(t.toString(),new WToken(t));
+                              identifier=new ASTStringNode(t.image,new WToken(t));
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case IMPLEMENTS:
       implementsList = ImplementsList();
@@ -520,7 +520,7 @@ public class Java15Parser implements Java15ParserConstants {
         ClassOrInterfaceBody classOrInterfaceBody = null;
         Token firstToken=token;
     t = jj_consume_token(IDENTIFIER);
-                       identifier=new ASTStringNode(t.toString(),new WToken(t));
+                       identifier=new ASTStringNode(t.image,new WToken(t));
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case LPAREN:
       arguments = Arguments();
@@ -575,7 +575,7 @@ public class Java15Parser implements Java15ParserConstants {
         TypeBound typeBound = null;
         Token firstToken=token;
     t = jj_consume_token(IDENTIFIER);
-                       identifier=new ASTStringNode(t.toString(),new WToken(t));
+                       identifier=new ASTStringNode(t.image,new WToken(t));
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case EXTENDS:
       typeBound = TypeBound();
@@ -766,7 +766,7 @@ public class Java15Parser implements Java15ParserConstants {
         ArrayList<ASTTextNode> text390List = new ArrayList<ASTTextNode>();
         Token firstToken=token;
     t = jj_consume_token(IDENTIFIER);
-                       identifier=new ASTStringNode(t.toString(),new WToken(t));
+                       identifier=new ASTStringNode(t.image,new WToken(t));
     label_12:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -779,8 +779,8 @@ public class Java15Parser implements Java15ParserConstants {
       }
       jj_consume_token(LBRACKET);
       jj_consume_token(RBRACKET);
-                                                                                            text390=new ASTTextNode(new String[]{"[","]"},new WToken(token));
-                                                                                                                                                               text390List.add(text390);
+                                                                                       text390=new ASTTextNode(new String[]{"[","]"},new WToken(token));
+                                                                                                                                                          text390List.add(text390);
     }
          {if (true) return new VariableDeclaratorId(identifier, text390List, firstToken.next,token);}
     throw new Error("Missing return statement in function");
@@ -967,7 +967,7 @@ public class Java15Parser implements Java15ParserConstants {
         ArrayList<ASTTextNode> text393List = new ArrayList<ASTTextNode>();
         Token firstToken=token;
     t = jj_consume_token(IDENTIFIER);
-                       identifier=new ASTStringNode(t.toString(),new WToken(t));
+                       identifier=new ASTStringNode(t.image,new WToken(t));
     formalParameters = FormalParameters();
     label_14:
     while (true) {
@@ -981,8 +981,8 @@ public class Java15Parser implements Java15ParserConstants {
       }
       jj_consume_token(LBRACKET);
       jj_consume_token(RBRACKET);
-                                                                                                                                text393=new ASTTextNode(new String[]{"[","]"},new WToken(token));
-                                                                                                                                                                                                   text393List.add(text393);
+                                                                                                                           text393=new ASTTextNode(new String[]{"[","]"},new WToken(token));
+                                                                                                                                                                                              text393List.add(text393);
     }
          {if (true) return new MethodDeclarator(identifier, formalParameters, text393List, firstToken.next,token);}
     throw new Error("Missing return statement in function");
@@ -1089,7 +1089,7 @@ public class Java15Parser implements Java15ParserConstants {
       ;
     }
     t = jj_consume_token(IDENTIFIER);
-                                                         identifier=new ASTStringNode(t.toString(),new WToken(t));
+                                                         identifier=new ASTStringNode(t.image,new WToken(t));
     formalParameters = FormalParameters();
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case THROWS:
@@ -1156,7 +1156,7 @@ public class Java15Parser implements Java15ParserConstants {
         break label_16;
       }
       blockStatement = BlockStatement();
-                                                                                                                                                                                                                                                                                                                                       blockStatementList.add(blockStatement);
+                                                                                                                                                                                                                                                                                                                                  blockStatementList.add(blockStatement);
     }
     jj_consume_token(RBRACE);
          {if (true) return new ConstructorDeclaration(typeParameters, identifier, formalParameters, nameList, explicitConstructorInvocation, blockStatementList, firstToken.next,token);}
@@ -1327,7 +1327,7 @@ public class Java15Parser implements Java15ParserConstants {
         ArrayList<ClassOrInterfaceTypeIntern> classOrInterfaceTypeInternList = new ArrayList<ClassOrInterfaceTypeIntern>();
         Token firstToken=token;
     t = jj_consume_token(IDENTIFIER);
-                       identifier=new ASTStringNode(t.toString(),new WToken(t));
+                       identifier=new ASTStringNode(t.image,new WToken(t));
     if (jj_2_17(2)) {
       typeArguments = TypeArguments();
     } else {
@@ -1341,7 +1341,7 @@ public class Java15Parser implements Java15ParserConstants {
         break label_19;
       }
       classOrInterfaceTypeIntern = ClassOrInterfaceTypeIntern();
-                                                                                                                                                                                                     classOrInterfaceTypeInternList.add(classOrInterfaceTypeIntern);
+                                                                                                                                                                                                classOrInterfaceTypeInternList.add(classOrInterfaceTypeIntern);
     }
          {if (true) return new ClassOrInterfaceType(identifier, typeArguments, classOrInterfaceTypeInternList, firstToken.next,token);}
     throw new Error("Missing return statement in function");
@@ -1354,7 +1354,7 @@ public class Java15Parser implements Java15ParserConstants {
         Token firstToken=token;
     jj_consume_token(DOT);
     t = jj_consume_token(IDENTIFIER);
-                           identifier=new ASTStringNode(t.toString(),new WToken(t));
+                           identifier=new ASTStringNode(t.image,new WToken(t));
     if (jj_2_19(2)) {
       typeArguments = TypeArguments();
     } else {
@@ -1529,7 +1529,7 @@ public class Java15Parser implements Java15ParserConstants {
         ArrayList<ASTStringNode> identifier1List = new ArrayList<ASTStringNode>();
         Token firstToken=token;
     t = jj_consume_token(IDENTIFIER);
-                       identifier=new ASTStringNode(t.toString(),new WToken(t));
+                       identifier=new ASTStringNode(t.image,new WToken(t));
     label_21:
     while (true) {
       if (jj_2_20(2)) {
@@ -1539,8 +1539,8 @@ public class Java15Parser implements Java15ParserConstants {
       }
       jj_consume_token(DOT);
       t = jj_consume_token(IDENTIFIER);
-                                                                                                                   identifier1=new ASTStringNode(t.toString(),new WToken(t));
-                                                                                                                                                                               identifier1List.add(identifier1);
+                                                                                                              identifier1=new ASTStringNode(t.image,new WToken(t));
+                                                                                                                                                                     identifier1List.add(identifier1);
     }
          {if (true) return new Name(identifier, identifier1List, firstToken.next,token);}
     throw new Error("Missing return statement in function");
@@ -2351,7 +2351,7 @@ public class Java15Parser implements Java15ParserConstants {
       break;
     case IDENTIFIER:
       t = jj_consume_token(IDENTIFIER);
-                       identifier=new ASTStringNode(t.toString(),new WToken(t));
+                       identifier=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new CastLAOp7(identifier, firstToken.next,token);}
       break;
     case FALSE:
@@ -2467,7 +2467,7 @@ public class Java15Parser implements Java15ParserConstants {
     jj_consume_token(DOT);
     typeArguments = TypeArguments();
     t = jj_consume_token(IDENTIFIER);
-                                                         identifier=new ASTStringNode(t.toString(),new WToken(t));
+                                                         identifier=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new MemberSelector(typeArguments, identifier, firstToken.next,token);}
     throw new Error("Missing return statement in function");
   }
@@ -2500,7 +2500,7 @@ public class Java15Parser implements Java15ParserConstants {
       jj_consume_token(SUPER);
       jj_consume_token(DOT);
       t = jj_consume_token(IDENTIFIER);
-                                   identifier=new ASTStringNode(t.toString(),new WToken(t));
+                                   identifier=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new PrimaryPrefix3(identifier, firstToken.next,token);}
       break;
     case LPAREN:
@@ -2566,7 +2566,7 @@ public class Java15Parser implements Java15ParserConstants {
       case DOT:
         jj_consume_token(DOT);
         t = jj_consume_token(IDENTIFIER);
-                           identifier=new ASTStringNode(t.toString(),new WToken(t));
+                           identifier=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new PrimarySuffix5(identifier, firstToken.next,token);}
         break;
       case LPAREN:
@@ -2594,22 +2594,22 @@ public class Java15Parser implements Java15ParserConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case INTEGER_LITERAL:
       t = jj_consume_token(INTEGER_LITERAL);
-                            integer_literal=new ASTStringNode(t.toString(),new WToken(t));
+                            integer_literal=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new Literal1(integer_literal, firstToken.next,token);}
       break;
     case FLOATING_POINT_LITERAL:
       t = jj_consume_token(FLOATING_POINT_LITERAL);
-                                   floating_point_literal=new ASTStringNode(t.toString(),new WToken(t));
+                                   floating_point_literal=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new Literal2(floating_point_literal, firstToken.next,token);}
       break;
     case CHARACTER_LITERAL:
       t = jj_consume_token(CHARACTER_LITERAL);
-                              character_literal=new ASTStringNode(t.toString(),new WToken(t));
+                              character_literal=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new Literal3(character_literal, firstToken.next,token);}
       break;
     case STRING_LITERAL:
       t = jj_consume_token(STRING_LITERAL);
-                           string_literal=new ASTStringNode(t.toString(),new WToken(t));
+                           string_literal=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new Literal4(string_literal, firstToken.next,token);}
       break;
     case FALSE:
@@ -2999,7 +2999,7 @@ public class Java15Parser implements Java15ParserConstants {
         Statement statement;
         Token firstToken=token;
     t = jj_consume_token(IDENTIFIER);
-                       identifier=new ASTStringNode(t.toString(),new WToken(t));
+                       identifier=new ASTStringNode(t.image,new WToken(t));
     jj_consume_token(COLON);
     statement = Statement();
          {if (true) return new LabeledStatement(identifier, statement, firstToken.next,token);}
@@ -3471,7 +3471,7 @@ public class Java15Parser implements Java15ParserConstants {
     if (jj_2_41(2147483647)) {
       type = Type();
       t = jj_consume_token(IDENTIFIER);
-                                                                      identifier=new ASTStringNode(t.toString(),new WToken(t));
+                                                                      identifier=new ASTStringNode(t.image,new WToken(t));
       jj_consume_token(COLON);
       expression = Expression();
          {if (true) return new ForStatementInternal1(type, identifier, expression, firstToken.next,token);}
@@ -3694,7 +3694,7 @@ public class Java15Parser implements Java15ParserConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case IDENTIFIER:
       t = jj_consume_token(IDENTIFIER);
-                                identifier=new ASTStringNode(t.toString(),new WToken(t));
+                                identifier=new ASTStringNode(t.image,new WToken(t));
       break;
     default:
       jj_la1[111] = jj_gen;
@@ -3713,7 +3713,7 @@ public class Java15Parser implements Java15ParserConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case IDENTIFIER:
       t = jj_consume_token(IDENTIFIER);
-                                   identifier=new ASTStringNode(t.toString(),new WToken(t));
+                                   identifier=new ASTStringNode(t.image,new WToken(t));
       break;
     default:
       jj_la1[112] = jj_gen;
@@ -3943,7 +3943,7 @@ public class Java15Parser implements Java15ParserConstants {
         MemberValue memberValue;
         Token firstToken=token;
     t = jj_consume_token(IDENTIFIER);
-                       identifier=new ASTStringNode(t.toString(),new WToken(t));
+                       identifier=new ASTStringNode(t.image,new WToken(t));
     jj_consume_token(ASSIGN);
     memberValue = MemberValue();
          {if (true) return new MemberValuePair(identifier, memberValue, firstToken.next,token);}
@@ -4043,7 +4043,7 @@ public class Java15Parser implements Java15ParserConstants {
     jj_consume_token(AT);
     jj_consume_token(INTERFACE);
     t = jj_consume_token(IDENTIFIER);
-                                       identifier=new ASTStringNode(t.toString(),new WToken(t));
+                                       identifier=new ASTStringNode(t.image,new WToken(t));
     annotationTypeBody = AnnotationTypeBody();
          {if (true) return new AnnotationTypeDeclaration(identifier, annotationTypeBody, firstToken.next,token);}
     throw new Error("Missing return statement in function");
@@ -4115,7 +4115,7 @@ public class Java15Parser implements Java15ParserConstants {
       modifiers = Modifiers();
       type = Type();
       t = jj_consume_token(IDENTIFIER);
-                                                                                                        identifier=new ASTStringNode(t.toString(),new WToken(t));
+                                                                                                        identifier=new ASTStringNode(t.image,new WToken(t));
       jj_consume_token(LPAREN);
       jj_consume_token(RPAREN);
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -4745,12 +4745,6 @@ public class Java15Parser implements Java15ParserConstants {
     return false;
   }
 
-  final private boolean jj_3R_356() {
-    if (jj_scan_token(LBRACKET)) return true;
-    if (jj_scan_token(RBRACKET)) return true;
-    return false;
-  }
-
   final private boolean jj_3R_292() {
     if (jj_3R_299()) return true;
     return false;
@@ -4759,6 +4753,12 @@ public class Java15Parser implements Java15ParserConstants {
   final private boolean jj_3_10() {
     if (jj_scan_token(COMMA)) return true;
     if (jj_3R_57()) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_356() {
+    if (jj_scan_token(LBRACKET)) return true;
+    if (jj_scan_token(RBRACKET)) return true;
     return false;
   }
 
@@ -5026,16 +5026,6 @@ public class Java15Parser implements Java15ParserConstants {
     return false;
   }
 
-  final private boolean jj_3R_352() {
-    if (jj_3R_299()) return true;
-    return false;
-  }
-
-  final private boolean jj_3R_323() {
-    if (jj_3R_337()) return true;
-    return false;
-  }
-
   final private boolean jj_3R_343() {
     if (jj_scan_token(IDENTIFIER)) return true;
     Token xsp;
@@ -5043,11 +5033,6 @@ public class Java15Parser implements Java15ParserConstants {
       xsp = jj_scanpos;
       if (jj_3R_356()) { jj_scanpos = xsp; break; }
     }
-    return false;
-  }
-
-  final private boolean jj_3R_171() {
-    if (jj_3R_192()) return true;
     return false;
   }
 
@@ -5061,8 +5046,23 @@ public class Java15Parser implements Java15ParserConstants {
     return false;
   }
 
+  final private boolean jj_3R_352() {
+    if (jj_3R_299()) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_323() {
+    if (jj_3R_337()) return true;
+    return false;
+  }
+
   final private boolean jj_3R_198() {
     if (jj_3R_212()) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_171() {
+    if (jj_3R_192()) return true;
     return false;
   }
 
@@ -5164,11 +5164,6 @@ public class Java15Parser implements Java15ParserConstants {
     return false;
   }
 
-  final private boolean jj_3R_351() {
-    if (jj_3R_60()) return true;
-    return false;
-  }
-
   final private boolean jj_3_7() {
     if (jj_3R_47()) return true;
     Token xsp;
@@ -5191,8 +5186,8 @@ public class Java15Parser implements Java15ParserConstants {
     return false;
   }
 
-  final private boolean jj_3R_322() {
-    if (jj_3R_336()) return true;
+  final private boolean jj_3R_351() {
+    if (jj_3R_60()) return true;
     return false;
   }
 
@@ -5221,6 +5216,11 @@ public class Java15Parser implements Java15ParserConstants {
   final private boolean jj_3R_112() {
     if (jj_scan_token(DOT)) return true;
     if (jj_scan_token(IDENTIFIER)) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_322() {
+    if (jj_3R_336()) return true;
     return false;
   }
 
@@ -5331,11 +5331,6 @@ public class Java15Parser implements Java15ParserConstants {
     return false;
   }
 
-  final private boolean jj_3R_324() {
-    if (jj_3R_337()) return true;
-    return false;
-  }
-
   final private boolean jj_3R_350() {
     if (jj_scan_token(COMMA)) return true;
     if (jj_3R_134()) return true;
@@ -5344,6 +5339,11 @@ public class Java15Parser implements Java15ParserConstants {
 
   final private boolean jj_3R_132() {
     if (jj_3R_75()) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_324() {
+    if (jj_3R_337()) return true;
     return false;
   }
 
@@ -5389,11 +5389,6 @@ public class Java15Parser implements Java15ParserConstants {
     return false;
   }
 
-  final private boolean jj_3R_321() {
-    if (jj_3R_83()) return true;
-    return false;
-  }
-
   final private boolean jj_3R_127() {
     if (jj_scan_token(THIS)) return true;
     return false;
@@ -5418,6 +5413,11 @@ public class Java15Parser implements Java15ParserConstants {
 
   final private boolean jj_3R_126() {
     if (jj_3R_172()) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_321() {
+    if (jj_3R_83()) return true;
     return false;
   }
 
@@ -6464,11 +6464,6 @@ public class Java15Parser implements Java15ParserConstants {
     return false;
   }
 
-  final private boolean jj_3R_330() {
-    if (jj_3R_170()) return true;
-    return false;
-  }
-
   final private boolean jj_3R_262() {
     if (jj_3R_275()) return true;
     if (jj_3R_237()) return true;
@@ -6478,6 +6473,11 @@ public class Java15Parser implements Java15ParserConstants {
   final private boolean jj_3R_98() {
     if (jj_scan_token(SC_OR)) return true;
     if (jj_3R_97()) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_330() {
+    if (jj_3R_170()) return true;
     return false;
   }
 
@@ -6640,12 +6640,6 @@ public class Java15Parser implements Java15ParserConstants {
     return false;
   }
 
-  final private boolean jj_3_20() {
-    if (jj_scan_token(DOT)) return true;
-    if (jj_scan_token(IDENTIFIER)) return true;
-    return false;
-  }
-
   final private boolean jj_3R_252() {
     if (jj_scan_token(BREAK)) return true;
     Token xsp;
@@ -6661,6 +6655,12 @@ public class Java15Parser implements Java15ParserConstants {
     if (jj_3R_73()) return true;
     if (jj_scan_token(COLON)) return true;
     if (jj_3R_73()) return true;
+    return false;
+  }
+
+  final private boolean jj_3_20() {
+    if (jj_scan_token(DOT)) return true;
+    if (jj_scan_token(IDENTIFIER)) return true;
     return false;
   }
 
@@ -6771,11 +6771,6 @@ public class Java15Parser implements Java15ParserConstants {
     return false;
   }
 
-  final private boolean jj_3_11() {
-    if (jj_3R_58()) return true;
-    return false;
-  }
-
   final private boolean jj_3R_391() {
     Token xsp;
     xsp = jj_scanpos;
@@ -6825,6 +6820,11 @@ public class Java15Parser implements Java15ParserConstants {
     return false;
   }
 
+  final private boolean jj_3_11() {
+    if (jj_3R_58()) return true;
+    return false;
+  }
+
   final private boolean jj_3R_364() {
     if (jj_scan_token(COMMA)) return true;
     if (jj_3R_331()) return true;
@@ -6849,18 +6849,8 @@ public class Java15Parser implements Java15ParserConstants {
     return false;
   }
 
-  final private boolean jj_3R_329() {
-    if (jj_3R_58()) return true;
-    return false;
-  }
-
   final private boolean jj_3R_137() {
     if (jj_scan_token(ASSIGN)) return true;
-    return false;
-  }
-
-  final private boolean jj_3_18() {
-    if (jj_3R_63()) return true;
     return false;
   }
 
@@ -6871,6 +6861,11 @@ public class Java15Parser implements Java15ParserConstants {
     jj_scanpos = xsp;
     if (jj_3R_376()) return true;
     }
+    return false;
+  }
+
+  final private boolean jj_3R_329() {
+    if (jj_3R_58()) return true;
     return false;
   }
 
@@ -6911,6 +6906,11 @@ public class Java15Parser implements Java15ParserConstants {
     }
     }
     }
+    return false;
+  }
+
+  final private boolean jj_3_18() {
+    if (jj_3R_63()) return true;
     return false;
   }
 
@@ -6968,17 +6968,17 @@ public class Java15Parser implements Java15ParserConstants {
     return false;
   }
 
-  final private boolean jj_3_19() {
-    if (jj_3R_62()) return true;
-    return false;
-  }
-
   final private boolean jj_3R_249() {
     if (jj_scan_token(WHILE)) return true;
     if (jj_scan_token(LPAREN)) return true;
     if (jj_3R_73()) return true;
     if (jj_scan_token(RPAREN)) return true;
     if (jj_3R_209()) return true;
+    return false;
+  }
+
+  final private boolean jj_3_19() {
+    if (jj_3R_62()) return true;
     return false;
   }
 
@@ -7010,11 +7010,6 @@ public class Java15Parser implements Java15ParserConstants {
     return false;
   }
 
-  final private boolean jj_3_17() {
-    if (jj_3R_62()) return true;
-    return false;
-  }
-
   final private boolean jj_3R_390() {
     if (jj_scan_token(_DEFAULT)) return true;
     if (jj_scan_token(COLON)) return true;
@@ -7035,6 +7030,11 @@ public class Java15Parser implements Java15ParserConstants {
 
   final private boolean jj_3R_114() {
     if (jj_scan_token(VOID)) return true;
+    return false;
+  }
+
+  final private boolean jj_3_17() {
+    if (jj_3R_62()) return true;
     return false;
   }
 
@@ -7312,12 +7312,6 @@ public class Java15Parser implements Java15ParserConstants {
     return false;
   }
 
-  final private boolean jj_3R_345() {
-    if (jj_scan_token(LBRACKET)) return true;
-    if (jj_scan_token(RBRACKET)) return true;
-    return false;
-  }
-
   final private boolean jj_3R_63() {
     if (jj_scan_token(DOT)) return true;
     if (jj_scan_token(IDENTIFIER)) return true;
@@ -7342,6 +7336,12 @@ public class Java15Parser implements Java15ParserConstants {
       xsp = jj_scanpos;
       if (jj_3R_364()) { jj_scanpos = xsp; break; }
     }
+    return false;
+  }
+
+  final private boolean jj_3R_345() {
+    if (jj_scan_token(LBRACKET)) return true;
+    if (jj_scan_token(RBRACKET)) return true;
     return false;
   }
 
