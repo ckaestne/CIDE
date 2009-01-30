@@ -37,7 +37,7 @@ public class AntLRParser implements AntLRParserConstants {
                                                    ruleList.add(rule);
     }
     t = jj_consume_token(0);
-                                                                                  eof=new ASTStringNode(t.toString(),new WToken(t));
+                                                                                  eof=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new Grammar(ruleId, ruleList, eof, firstToken.next,token);}
     throw new Error("Missing return statement in function");
   }
@@ -219,7 +219,7 @@ public class AntLRParser implements AntLRParserConstants {
       break;
     case RULE_REF:
       t = jj_consume_token(RULE_REF);
-                     rule_ref=new ASTStringNode(t.toString(),new WToken(t));
+                     rule_ref=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new atom2(rule_ref, firstToken.next,token);}
       break;
     default:
@@ -291,17 +291,17 @@ public class AntLRParser implements AntLRParserConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case CHAR_LITERAL:
       t = jj_consume_token(CHAR_LITERAL);
-                         char_literal=new ASTStringNode(t.toString(),new WToken(t));
+                         char_literal=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new terminal1(char_literal, firstToken.next,token);}
       break;
     case TOKEN_REF:
       t = jj_consume_token(TOKEN_REF);
-                      token_ref=new ASTStringNode(t.toString(),new WToken(t));
+                      token_ref=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new terminal2(token_ref, firstToken.next,token);}
       break;
     case STRING_LITERAL:
       t = jj_consume_token(STRING_LITERAL);
-                           string_literal=new ASTStringNode(t.toString(),new WToken(t));
+                           string_literal=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new terminal3(string_literal, firstToken.next,token);}
       break;
     case DOT:
@@ -329,17 +329,17 @@ public class AntLRParser implements AntLRParserConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case CHAR_LITERAL:
       t = jj_consume_token(CHAR_LITERAL);
-                         char_literal=new ASTStringNode(t.toString(),new WToken(t));
+                         char_literal=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new notTerminal1(char_literal, firstToken.next,token);}
       break;
     case TOKEN_REF:
       t = jj_consume_token(TOKEN_REF);
-                      token_ref=new ASTStringNode(t.toString(),new WToken(t));
+                      token_ref=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new notTerminal2(token_ref, firstToken.next,token);}
       break;
     case STRING_LITERAL:
       t = jj_consume_token(STRING_LITERAL);
-                           string_literal=new ASTStringNode(t.toString(),new WToken(t));
+                           string_literal=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new notTerminal3(string_literal, firstToken.next,token);}
       break;
     default:
@@ -381,12 +381,12 @@ public class AntLRParser implements AntLRParserConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case TOKEN_REF:
       t = jj_consume_token(TOKEN_REF);
-                      token_ref=new ASTStringNode(t.toString(),new WToken(t));
+                      token_ref=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new RuleId1(token_ref, firstToken.next,token);}
       break;
     case RULE_REF:
       t = jj_consume_token(RULE_REF);
-                     rule_ref=new ASTStringNode(t.toString(),new WToken(t));
+                     rule_ref=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new RuleId2(rule_ref, firstToken.next,token);}
       break;
     default:

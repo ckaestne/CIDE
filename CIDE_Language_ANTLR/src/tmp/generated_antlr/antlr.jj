@@ -97,7 +97,7 @@ Grammar Grammar() : {
 	ASTStringNode eof;
 	Token firstToken=token;
 } { (
-	"grammar" ruleId=RuleId() ";" (rule=Rule(){ruleList.add(rule);})* t=<EOF>{eof=new ASTStringNode(t.toString(),new WToken(t));} 
+	"grammar" ruleId=RuleId() ";" (rule=Rule(){ruleList.add(rule);})* t=<EOF>{eof=new ASTStringNode(t.image,new WToken(t));} 
 	{return new Grammar(ruleId, ruleList, eof, firstToken.next,token);}
  ) }
 
@@ -173,7 +173,7 @@ atom atom() : {
 } { (
 	terminal=terminal() 
 	{return new atom1(terminal, firstToken.next,token);} |
-	t=<RULE_REF>{rule_ref=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<RULE_REF>{rule_ref=new ASTStringNode(t.image,new WToken(t));} 
 	{return new atom2(rule_ref, firstToken.next,token);}
  ) }
 
@@ -208,11 +208,11 @@ terminal terminal() : {
 	ASTStringNode string_literal;
 	Token firstToken=token;
 } { (
-	t=<CHAR_LITERAL>{char_literal=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<CHAR_LITERAL>{char_literal=new ASTStringNode(t.image,new WToken(t));} 
 	{return new terminal1(char_literal, firstToken.next,token);} |
-	t=<TOKEN_REF>{token_ref=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<TOKEN_REF>{token_ref=new ASTStringNode(t.image,new WToken(t));} 
 	{return new terminal2(token_ref, firstToken.next,token);} |
-	t=<STRING_LITERAL>{string_literal=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<STRING_LITERAL>{string_literal=new ASTStringNode(t.image,new WToken(t));} 
 	{return new terminal3(string_literal, firstToken.next,token);} |
 	"."  
 	{return new terminal4(firstToken.next,token);} |
@@ -227,11 +227,11 @@ notTerminal notTerminal() : {
 	ASTStringNode string_literal;
 	Token firstToken=token;
 } { (
-	t=<CHAR_LITERAL>{char_literal=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<CHAR_LITERAL>{char_literal=new ASTStringNode(t.image,new WToken(t));} 
 	{return new notTerminal1(char_literal, firstToken.next,token);} |
-	t=<TOKEN_REF>{token_ref=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<TOKEN_REF>{token_ref=new ASTStringNode(t.image,new WToken(t));} 
 	{return new notTerminal2(token_ref, firstToken.next,token);} |
-	t=<STRING_LITERAL>{string_literal=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<STRING_LITERAL>{string_literal=new ASTStringNode(t.image,new WToken(t));} 
 	{return new notTerminal3(string_literal, firstToken.next,token);}
  ) }
 
@@ -252,9 +252,9 @@ RuleId RuleId() : {
 	ASTStringNode rule_ref;
 	Token firstToken=token;
 } { (
-	t=<TOKEN_REF>{token_ref=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<TOKEN_REF>{token_ref=new ASTStringNode(t.image,new WToken(t));} 
 	{return new RuleId1(token_ref, firstToken.next,token);} |
-	t=<RULE_REF>{rule_ref=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<RULE_REF>{rule_ref=new ASTStringNode(t.image,new WToken(t));} 
 	{return new RuleId2(rule_ref, firstToken.next,token);}
  ) }
 
