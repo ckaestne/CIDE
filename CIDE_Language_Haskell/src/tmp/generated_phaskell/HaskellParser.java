@@ -304,7 +304,7 @@ import cide.gparser.*;
     jj_consume_token(WHERE);
     body = body();
     t = jj_consume_token(0);
-                                                                               eof=new ASTStringNode(t.toString(),new WToken(t));
+                                                                               eof=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new module(modid, exports, body, eof, firstToken.next,token);}
     throw new Error("Missing return statement in function");
   }
@@ -314,7 +314,7 @@ import cide.gparser.*;
         ASTStringNode constructor_id;
         Token firstToken=token;
     t = jj_consume_token(CONSTRUCTOR_ID);
-                           constructor_id=new ASTStringNode(t.toString(),new WToken(t));
+                           constructor_id=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new qconid(constructor_id, firstToken.next,token);}
     throw new Error("Missing return statement in function");
   }
@@ -417,7 +417,7 @@ import cide.gparser.*;
     if (jj_2_2(2)) {
       jj_consume_token(LEFT_PAREN);
       t = jj_consume_token(VARSYM);
-                                    varsym=new ASTStringNode(t.toString(),new WToken(t));
+                                    varsym=new ASTStringNode(t.image,new WToken(t));
       jj_consume_token(RIGHT_PAREN);
          {if (true) return new details1(varsym, firstToken.next,token);}
     } else {
@@ -487,12 +487,12 @@ import cide.gparser.*;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case VARIABLE_ID:
       t = jj_consume_token(VARIABLE_ID);
-                        variable_id=new ASTStringNode(t.toString(),new WToken(t));
+                        variable_id=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new cname1(variable_id, firstToken.next,token);}
       break;
     case CONSTRUCTOR_ID:
       t = jj_consume_token(CONSTRUCTOR_ID);
-                           constructor_id=new ASTStringNode(t.toString(),new WToken(t));
+                           constructor_id=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new cname2(constructor_id, firstToken.next,token);}
       break;
     default:
@@ -531,7 +531,7 @@ import cide.gparser.*;
         ASTStringNode variable_id;
         Token firstToken=token;
     t = jj_consume_token(VARIABLE_ID);
-                        variable_id=new ASTStringNode(t.toString(),new WToken(t));
+                        variable_id=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new qvarid(variable_id, firstToken.next,token);}
     throw new Error("Missing return statement in function");
   }
@@ -541,7 +541,7 @@ import cide.gparser.*;
         ASTStringNode varsym;
         Token firstToken=token;
     t = jj_consume_token(VARSYM);
-                   varsym=new ASTStringNode(t.toString(),new WToken(t));
+                   varsym=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new qvarsym(varsym, firstToken.next,token);}
     throw new Error("Missing return statement in function");
   }
@@ -559,7 +559,7 @@ import cide.gparser.*;
         ASTStringNode constructor_id;
         Token firstToken=token;
     t = jj_consume_token(CONSTRUCTOR_ID);
-                           constructor_id=new ASTStringNode(t.toString(),new WToken(t));
+                           constructor_id=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new conid(constructor_id, firstToken.next,token);}
     throw new Error("Missing return statement in function");
   }
@@ -918,7 +918,7 @@ import cide.gparser.*;
     jj_consume_token(EQUALS);
     if (isNot(SEMICOLON,RIGHT_CURLY)) {
       t = findNonstddeclRest();
-                                                                              findnonstddeclrest=new ASTStringNode(t.toString(),new WToken(t));
+                                                                              findnonstddeclrest=new ASTStringNode(t.image,new WToken(t));
     } else {
       ;
     }
@@ -945,7 +945,7 @@ import cide.gparser.*;
         Token firstToken=token;
     jj_consume_token(DERIVING);
     t = findNonstddeclRest();
-                                          findnonstddeclrest=new ASTStringNode(t.toString(),new WToken(t));
+                                          findnonstddeclrest=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new deriving(findnonstddeclrest, firstToken.next,token);}
     throw new Error("Missing return statement in function");
   }
@@ -984,7 +984,7 @@ import cide.gparser.*;
     conP = conP();
     if (isNot(SEMICOLON,ALT,RIGHT_CURLY,DERIVING)) {
       t = findConRest();
-                                                                                            findconrest=new ASTStringNode(t.toString(),new WToken(t));
+                                                                                            findconrest=new ASTStringNode(t.image,new WToken(t));
     } else {
       ;
     }
@@ -1101,7 +1101,7 @@ import cide.gparser.*;
         Token firstToken=token;
     if (isNot(SEMICOLON,CONTEXT_ARROW)) {
       t = findUntilSemiOrContextArrow();
-                                                                                     finduntilsemiorcontextarrow=new ASTStringNode(t.toString(),new WToken(t));
+                                                                                     finduntilsemiorcontextarrow=new ASTStringNode(t.image,new WToken(t));
     } else {
       ;
     }
@@ -1115,10 +1115,10 @@ import cide.gparser.*;
         ASTStringNode finduntilequals = null;
         Token firstToken=token;
     t = jj_consume_token(CONSTRUCTOR_ID);
-                           constructor_id=new ASTStringNode(t.toString(),new WToken(t));
+                           constructor_id=new ASTStringNode(t.image,new WToken(t));
     if (isNot(EQUALS)) {
       t = findUntilEquals();
-                                                                                                                                          finduntilequals=new ASTStringNode(t.toString(),new WToken(t));
+                                                                                                                                     finduntilequals=new ASTStringNode(t.image,new WToken(t));
     } else {
       ;
     }
@@ -1131,7 +1131,7 @@ import cide.gparser.*;
         ASTStringNode findnonstddeclrest;
         Token firstToken=token;
     t = findNonstddeclRest();
-                               findnonstddeclrest=new ASTStringNode(t.toString(),new WToken(t));
+                               findnonstddeclrest=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new nonstddecl(findnonstddeclrest, firstToken.next,token);}
     throw new Error("Missing return statement in function");
   }
@@ -1156,7 +1156,7 @@ import cide.gparser.*;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case INTEGER:
       t = jj_consume_token(INTEGER);
-                                     integer=new ASTStringNode(t.toString(),new WToken(t));
+                                     integer=new ASTStringNode(t.image,new WToken(t));
       break;
     default:
       jj_la1[30] = jj_gen;
@@ -1225,7 +1225,7 @@ import cide.gparser.*;
     jj_consume_token(OFTYPE);
     if (isNot(SEMICOLON,RIGHT_CURLY)) {
       t = findUntilSemiOrCCB();
-                                                                                           finduntilsemiorccb=new ASTStringNode(t.toString(),new WToken(t));
+                                                                                           finduntilsemiorccb=new ASTStringNode(t.image,new WToken(t));
     } else {
       ;
     }
@@ -1267,13 +1267,13 @@ import cide.gparser.*;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case VARIABLE_ID:
       t = jj_consume_token(VARIABLE_ID);
-                        variable_id=new ASTStringNode(t.toString(),new WToken(t));
+                        variable_id=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new var1(variable_id, firstToken.next,token);}
       break;
     case LEFT_PAREN:
       jj_consume_token(LEFT_PAREN);
       t = jj_consume_token(VARSYM);
-                       varsym=new ASTStringNode(t.toString(),new WToken(t));
+                       varsym=new ASTStringNode(t.image,new WToken(t));
       jj_consume_token(RIGHT_PAREN);
          {if (true) return new var2(varsym, firstToken.next,token);}
       break;
@@ -1293,13 +1293,13 @@ import cide.gparser.*;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case CONSTRUCTOR_ID:
       t = jj_consume_token(CONSTRUCTOR_ID);
-                           constructor_id=new ASTStringNode(t.toString(),new WToken(t));
+                           constructor_id=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new conP1(constructor_id, firstToken.next,token);}
       break;
     case LEFT_PAREN:
       jj_consume_token(LEFT_PAREN);
       t = jj_consume_token(CONSYM);
-                       consym=new ASTStringNode(t.toString(),new WToken(t));
+                       consym=new ASTStringNode(t.image,new WToken(t));
       jj_consume_token(RIGHT_PAREN);
          {if (true) return new conP2(consym, firstToken.next,token);}
       break;
@@ -1316,7 +1316,7 @@ import cide.gparser.*;
         ASTStringNode variable_id;
         Token firstToken=token;
     t = jj_consume_token(VARIABLE_ID);
-                        variable_id=new ASTStringNode(t.toString(),new WToken(t));
+                        variable_id=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new tyvar(variable_id, firstToken.next,token);}
     throw new Error("Missing return statement in function");
   }
@@ -1343,7 +1343,7 @@ import cide.gparser.*;
         Token firstToken=token;
     if (jj_2_9(2147483647)) {
       t = jj_consume_token(VARIABLE_ID);
-                                                         variable_id=new ASTStringNode(t.toString(),new WToken(t));
+                                                         variable_id=new ASTStringNode(t.image,new WToken(t));
       varop = varop();
          {if (true) return new funlhsL1(variable_id, varop, firstToken.next,token);}
     } else {
@@ -1376,7 +1376,7 @@ import cide.gparser.*;
       jj_la1[37] = jj_gen;
       if (isNot(SEMICOLON,EQUALS)) {
         t = findUntilSemiOrEquals();
-                                                                       finduntilsemiorequals=new ASTStringNode(t.toString(),new WToken(t));
+                                                                       finduntilsemiorequals=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new funlhsR2(finduntilsemiorequals, firstToken.next,token);}
       } else {
         jj_consume_token(-1);
@@ -1394,13 +1394,13 @@ import cide.gparser.*;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case VARSYM:
       t = jj_consume_token(VARSYM);
-                   varsym=new ASTStringNode(t.toString(),new WToken(t));
+                   varsym=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new varop1(varsym, firstToken.next,token);}
       break;
     case INFIX_QUOTE:
       jj_consume_token(INFIX_QUOTE);
       t = jj_consume_token(VARIABLE_ID);
-                            variable_id=new ASTStringNode(t.toString(),new WToken(t));
+                            variable_id=new ASTStringNode(t.image,new WToken(t));
       jj_consume_token(INFIX_QUOTE);
          {if (true) return new varop2(variable_id, firstToken.next,token);}
       break;
@@ -1420,13 +1420,13 @@ import cide.gparser.*;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case CONSYM:
       t = jj_consume_token(CONSYM);
-                   consym=new ASTStringNode(t.toString(),new WToken(t));
+                   consym=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new conop1(consym, firstToken.next,token);}
       break;
     case INFIX_QUOTE:
       jj_consume_token(INFIX_QUOTE);
       t = jj_consume_token(CONSTRUCTOR_ID);
-                               constructor_id=new ASTStringNode(t.toString(),new WToken(t));
+                               constructor_id=new ASTStringNode(t.image,new WToken(t));
       jj_consume_token(INFIX_QUOTE);
          {if (true) return new conop2(constructor_id, firstToken.next,token);}
       break;
@@ -1468,7 +1468,7 @@ import cide.gparser.*;
     jj_consume_token(LEFT_CURLY);
     if (isNot(RIGHT_CURLY)) {
       t = findBlockContent();
-                                                                  findblockcontent=new ASTStringNode(t.toString(),new WToken(t));
+                                                                  findblockcontent=new ASTStringNode(t.image,new WToken(t));
     } else {
       ;
     }
@@ -1484,7 +1484,7 @@ import cide.gparser.*;
     jj_consume_token(LEFT_PAREN);
     if (isNot(RIGHT_PAREN)) {
       t = findListContent();
-                                                                 findlistcontent=new ASTStringNode(t.toString(),new WToken(t));
+                                                                 findlistcontent=new ASTStringNode(t.image,new WToken(t));
     } else {
       ;
     }

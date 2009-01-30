@@ -804,11 +804,11 @@ declaration declaration() : {
 	{return new declaration4(patr, expr1, whereDecls2, firstToken.next,token);} |
 	LOOKAHEAD(patr() "|") patr1=patr() (altExprAss1=altExprAss(){altExprAss1List.add(altExprAss1);})+ [whereDecls3=whereDecls()] 
 	{return new declaration5(patr1, altExprAss1List, whereDecls3, firstToken.next,token);} |
-	"infix" [t=<INTEGER>{integer=new ASTStringNode(t.toString(),new WToken(t));}] operatorList=operatorList() 
+	"infix" [t=<INTEGER>{integer=new ASTStringNode(t.image,new WToken(t));}] operatorList=operatorList() 
 	{return new declaration6(integer, operatorList, firstToken.next,token);} |
-	"infixl" [t=<INTEGER>{integer1=new ASTStringNode(t.toString(),new WToken(t));}] operatorList1=operatorList() 
+	"infixl" [t=<INTEGER>{integer1=new ASTStringNode(t.image,new WToken(t));}] operatorList1=operatorList() 
 	{return new declaration7(integer1, operatorList1, firstToken.next,token);} |
-	"infixr" [t=<INTEGER>{integer2=new ASTStringNode(t.toString(),new WToken(t));}] operatorList2=operatorList() 
+	"infixr" [t=<INTEGER>{integer2=new ASTStringNode(t.image,new WToken(t));}] operatorList2=operatorList() 
 	{return new declaration8(integer2, operatorList2, firstToken.next,token);}
  ) }
 
@@ -1094,7 +1094,7 @@ patrMain patrMain() : {
 } { (
 	LOOKAHEAD(naam() patroon()) naam=naam() (LOOKAHEAD(1) patroon=patroon(){patroonList.add(patroon);})+ 
 	{return new patrMain1(naam, patroonList, firstToken.next,token);} |
-	LOOKAHEAD(var() "+" <INTEGER>) var=var() "+" t=<INTEGER>{integer=new ASTStringNode(t.toString(),new WToken(t));} 
+	LOOKAHEAD(var() "+" <INTEGER>) var=var() "+" t=<INTEGER>{integer=new ASTStringNode(t.image,new WToken(t));} 
 	{return new patrMain2(var, integer, firstToken.next,token);} |
 	patroon1=patroon() 
 	{return new patrMain3(patroon1, firstToken.next,token);}
@@ -1189,7 +1189,7 @@ type type() : {
 } { (
 	LOOKAHEAD(naam()) naam=naam() 
 	{return new type1(naam, firstToken.next,token);} |
-	t=<VARIABLE_ID>{variable_id=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<VARIABLE_ID>{variable_id=new ASTStringNode(t.image,new WToken(t));} 
 	{return new type2(variable_id, firstToken.next,token);} |
 	"(" [functiontypeList=functiontypeList()] ")" 
 	{return new type3(functiontypeList, firstToken.next,token);} |
@@ -1264,9 +1264,9 @@ klasseTypeVar klasseTypeVar() : {
 	ASTStringNode variable_id1;
 	Token firstToken=token;
 } { (
-	"(" t=<VARIABLE_ID>{variable_id=new ASTStringNode(t.toString(),new WToken(t));} (type=type(){typeList.add(type);})* ")" 
+	"(" t=<VARIABLE_ID>{variable_id=new ASTStringNode(t.image,new WToken(t));} (type=type(){typeList.add(type);})* ")" 
 	{return new klasseTypeVar1(variable_id, typeList, firstToken.next,token);} |
-	t=<VARIABLE_ID>{variable_id1=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<VARIABLE_ID>{variable_id1=new ASTStringNode(t.image,new WToken(t));} 
 	{return new klasseTypeVar2(variable_id1, firstToken.next,token);}
  ) }
 
@@ -1296,7 +1296,7 @@ varMain varMain() : {
 	varsym varsym;
 	Token firstToken=token;
 } { (
-	t=<VARIABLE_ID>{variable_id=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<VARIABLE_ID>{variable_id=new ASTStringNode(t.image,new WToken(t));} 
 	{return new varMain1(variable_id, firstToken.next,token);} |
 	"(" varsym=varsym() ")" 
 	{return new varMain2(varsym, firstToken.next,token);}
@@ -1388,7 +1388,7 @@ varop varop() : {
 } { (
 	varsym=varsym() 
 	{return new varop1(varsym, firstToken.next,token);} |
-	"`" t=<VARIABLE_ID>{variable_id=new ASTStringNode(t.toString(),new WToken(t));} "`" 
+	"`" t=<VARIABLE_ID>{variable_id=new ASTStringNode(t.image,new WToken(t));} "`" 
 	{return new varop2(variable_id, firstToken.next,token);}
  ) }
 
@@ -1409,9 +1409,9 @@ conop conop() : {
 	ASTStringNode constructor_id;
 	Token firstToken=token;
 } { (
-	t=<CONSYM>{consym=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<CONSYM>{consym=new ASTStringNode(t.image,new WToken(t));} 
 	{return new conop1(consym, firstToken.next,token);} |
-	"`" t=<CONSTRUCTOR_ID>{constructor_id=new ASTStringNode(t.toString(),new WToken(t));} "`" 
+	"`" t=<CONSTRUCTOR_ID>{constructor_id=new ASTStringNode(t.image,new WToken(t));} "`" 
 	{return new conop2(constructor_id, firstToken.next,token);}
  ) }
 
@@ -1441,7 +1441,7 @@ qvarid qvarid() : {
 	ASTStringNode variable_id;
 	Token firstToken=token;
 } { (
-	[LOOKAHEAD(ModuleNaamPrefix()) moduleNaamPrefix=ModuleNaamPrefix()] t=<VARIABLE_ID>{variable_id=new ASTStringNode(t.toString(),new WToken(t));} 
+	[LOOKAHEAD(ModuleNaamPrefix()) moduleNaamPrefix=ModuleNaamPrefix()] t=<VARIABLE_ID>{variable_id=new ASTStringNode(t.image,new WToken(t));} 
 	{return new qvarid(moduleNaamPrefix, variable_id, firstToken.next,token);}
  ) }
 
@@ -1451,7 +1451,7 @@ qconsym qconsym() : {
 	ASTStringNode consym;
 	Token firstToken=token;
 } { (
-	[LOOKAHEAD(ModuleNaamPrefix()) moduleNaamPrefix=ModuleNaamPrefix()] t=<CONSYM>{consym=new ASTStringNode(t.toString(),new WToken(t));} 
+	[LOOKAHEAD(ModuleNaamPrefix()) moduleNaamPrefix=ModuleNaamPrefix()] t=<CONSYM>{consym=new ASTStringNode(t.image,new WToken(t));} 
 	{return new qconsym(moduleNaamPrefix, consym, firstToken.next,token);}
  ) }
 
@@ -1461,7 +1461,7 @@ qconid qconid() : {
 	ASTStringNode constructor_id;
 	Token firstToken=token;
 } { (
-	[LOOKAHEAD(ModuleNaamPrefix()) moduleNaamPrefix=ModuleNaamPrefix()] t=<CONSTRUCTOR_ID>{constructor_id=new ASTStringNode(t.toString(),new WToken(t));} 
+	[LOOKAHEAD(ModuleNaamPrefix()) moduleNaamPrefix=ModuleNaamPrefix()] t=<CONSTRUCTOR_ID>{constructor_id=new ASTStringNode(t.image,new WToken(t));} 
 	{return new qconid(moduleNaamPrefix, constructor_id, firstToken.next,token);}
  ) }
 
@@ -1481,7 +1481,7 @@ varsym varsym() : {
 	otherOperators otherOperators;
 	Token firstToken=token;
 } { (
-	t=<VARSYM>{varsym=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<VARSYM>{varsym=new ASTStringNode(t.image,new WToken(t));} 
 	{return new varsym1(varsym, firstToken.next,token);} |
 	otherOperators=otherOperators() 
 	{return new varsym2(otherOperators, firstToken.next,token);}
@@ -1494,7 +1494,7 @@ ModuleNaamPrefix ModuleNaamPrefix() : {
 	ArrayList<ASTStringNode> constructor_id1List = new ArrayList<ASTStringNode>();
 	Token firstToken=token;
 } { (
-	t=<CONSTRUCTOR_ID>{constructor_id=new ASTStringNode(t.toString(),new WToken(t));} "." (LOOKAHEAD(<CONSTRUCTOR_ID> ".") t=<CONSTRUCTOR_ID>{constructor_id1=new ASTStringNode(t.toString(),new WToken(t));}{constructor_id1List.add(constructor_id1);} ".")* 
+	t=<CONSTRUCTOR_ID>{constructor_id=new ASTStringNode(t.image,new WToken(t));} "." (LOOKAHEAD(<CONSTRUCTOR_ID> ".") t=<CONSTRUCTOR_ID>{constructor_id1=new ASTStringNode(t.image,new WToken(t));}{constructor_id1List.add(constructor_id1);} ".")* 
 	{return new ModuleNaamPrefix(constructor_id, constructor_id1List, firstToken.next,token);}
  ) }
 
@@ -1519,13 +1519,13 @@ literal literal() : {
 	ASTStringNode string_literal;
 	Token firstToken=token;
 } { (
-	t=<INTEGER>{integer=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<INTEGER>{integer=new ASTStringNode(t.image,new WToken(t));} 
 	{return new literal1(integer, firstToken.next,token);} |
-	t=<FLOAT>{float_kw=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<FLOAT>{float_kw=new ASTStringNode(t.image,new WToken(t));} 
 	{return new literal2(float_kw, firstToken.next,token);} |
-	t=<CHARACTER_LITERAL>{character_literal=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<CHARACTER_LITERAL>{character_literal=new ASTStringNode(t.image,new WToken(t));} 
 	{return new literal3(character_literal, firstToken.next,token);} |
-	t=<STRING_LITERAL>{string_literal=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<STRING_LITERAL>{string_literal=new ASTStringNode(t.image,new WToken(t));} 
 	{return new literal4(string_literal, firstToken.next,token);}
  ) }
 

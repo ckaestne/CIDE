@@ -1233,7 +1233,7 @@ import cide.gparser.*;
         switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
         case INTEGER:
           t = jj_consume_token(INTEGER);
-                             integer=new ASTStringNode(t.toString(),new WToken(t));
+                             integer=new ASTStringNode(t.image,new WToken(t));
           break;
         default:
           jj_la1[42] = jj_gen;
@@ -1247,7 +1247,7 @@ import cide.gparser.*;
         switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
         case INTEGER:
           t = jj_consume_token(INTEGER);
-                              integer1=new ASTStringNode(t.toString(),new WToken(t));
+                              integer1=new ASTStringNode(t.image,new WToken(t));
           break;
         default:
           jj_la1[43] = jj_gen;
@@ -1261,7 +1261,7 @@ import cide.gparser.*;
         switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
         case INTEGER:
           t = jj_consume_token(INTEGER);
-                              integer2=new ASTStringNode(t.toString(),new WToken(t));
+                              integer2=new ASTStringNode(t.image,new WToken(t));
           break;
         default:
           jj_la1[44] = jj_gen;
@@ -2137,7 +2137,7 @@ import cide.gparser.*;
       var = var();
       jj_consume_token(OTHER8);
       t = jj_consume_token(INTEGER);
-                                                                 integer=new ASTStringNode(t.toString(),new WToken(t));
+                                                                 integer=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new patrMain2(var, integer, firstToken.next,token);}
     } else {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -2420,7 +2420,7 @@ import cide.gparser.*;
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case VARIABLE_ID:
         t = jj_consume_token(VARIABLE_ID);
-                        variable_id=new ASTStringNode(t.toString(),new WToken(t));
+                        variable_id=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new type2(variable_id, firstToken.next,token);}
         break;
       case LEFT_PAREN:
@@ -2623,7 +2623,7 @@ import cide.gparser.*;
     case LEFT_PAREN:
       jj_consume_token(LEFT_PAREN);
       t = jj_consume_token(VARIABLE_ID);
-                            variable_id=new ASTStringNode(t.toString(),new WToken(t));
+                            variable_id=new ASTStringNode(t.image,new WToken(t));
       label_38:
       while (true) {
         switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -2639,14 +2639,14 @@ import cide.gparser.*;
           break label_38;
         }
         type = type();
-                                                                                                     typeList.add(type);
+                                                                                                typeList.add(type);
       }
       jj_consume_token(RIGHT_PAREN);
          {if (true) return new klasseTypeVar1(variable_id, typeList, firstToken.next,token);}
       break;
     case VARIABLE_ID:
       t = jj_consume_token(VARIABLE_ID);
-                        variable_id1=new ASTStringNode(t.toString(),new WToken(t));
+                        variable_id1=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new klasseTypeVar2(variable_id1, firstToken.next,token);}
       break;
     default:
@@ -2705,7 +2705,7 @@ import cide.gparser.*;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case VARIABLE_ID:
       t = jj_consume_token(VARIABLE_ID);
-                        variable_id=new ASTStringNode(t.toString(),new WToken(t));
+                        variable_id=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new varMain1(variable_id, firstToken.next,token);}
       break;
     case LEFT_PAREN:
@@ -2897,7 +2897,7 @@ import cide.gparser.*;
     case INFIX_QUOTE:
       jj_consume_token(INFIX_QUOTE);
       t = jj_consume_token(VARIABLE_ID);
-                            variable_id=new ASTStringNode(t.toString(),new WToken(t));
+                            variable_id=new ASTStringNode(t.image,new WToken(t));
       jj_consume_token(INFIX_QUOTE);
          {if (true) return new varop2(variable_id, firstToken.next,token);}
       break;
@@ -2945,13 +2945,13 @@ import cide.gparser.*;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case CONSYM:
       t = jj_consume_token(CONSYM);
-                   consym=new ASTStringNode(t.toString(),new WToken(t));
+                   consym=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new conop1(consym, firstToken.next,token);}
       break;
     case INFIX_QUOTE:
       jj_consume_token(INFIX_QUOTE);
       t = jj_consume_token(CONSTRUCTOR_ID);
-                               constructor_id=new ASTStringNode(t.toString(),new WToken(t));
+                               constructor_id=new ASTStringNode(t.image,new WToken(t));
       jj_consume_token(INFIX_QUOTE);
          {if (true) return new conop2(constructor_id, firstToken.next,token);}
       break;
@@ -3013,7 +3013,7 @@ import cide.gparser.*;
       ;
     }
     t = jj_consume_token(VARIABLE_ID);
-                                                                                            variable_id=new ASTStringNode(t.toString(),new WToken(t));
+                                                                                            variable_id=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new qvarid(moduleNaamPrefix, variable_id, firstToken.next,token);}
     throw new Error("Missing return statement in function");
   }
@@ -3029,7 +3029,7 @@ import cide.gparser.*;
       ;
     }
     t = jj_consume_token(CONSYM);
-                                                                                       consym=new ASTStringNode(t.toString(),new WToken(t));
+                                                                                       consym=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new qconsym(moduleNaamPrefix, consym, firstToken.next,token);}
     throw new Error("Missing return statement in function");
   }
@@ -3045,7 +3045,7 @@ import cide.gparser.*;
       ;
     }
     t = jj_consume_token(CONSTRUCTOR_ID);
-                                                                                               constructor_id=new ASTStringNode(t.toString(),new WToken(t));
+                                                                                               constructor_id=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new qconid(moduleNaamPrefix, constructor_id, firstToken.next,token);}
     throw new Error("Missing return statement in function");
   }
@@ -3079,7 +3079,7 @@ import cide.gparser.*;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case VARSYM:
       t = jj_consume_token(VARSYM);
-                   varsym=new ASTStringNode(t.toString(),new WToken(t));
+                   varsym=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new varsym1(varsym, firstToken.next,token);}
       break;
     case OTHER1:
@@ -3104,7 +3104,7 @@ import cide.gparser.*;
         ArrayList<ASTStringNode> constructor_id1List = new ArrayList<ASTStringNode>();
         Token firstToken=token;
     t = jj_consume_token(CONSTRUCTOR_ID);
-                           constructor_id=new ASTStringNode(t.toString(),new WToken(t));
+                           constructor_id=new ASTStringNode(t.image,new WToken(t));
     jj_consume_token(OTHER1);
     label_42:
     while (true) {
@@ -3114,8 +3114,8 @@ import cide.gparser.*;
         break label_42;
       }
       t = jj_consume_token(CONSTRUCTOR_ID);
-                                                                                                                                                  constructor_id1=new ASTStringNode(t.toString(),new WToken(t));
-                                                                                                                                                                                                                  constructor_id1List.add(constructor_id1);
+                                                                                                                                             constructor_id1=new ASTStringNode(t.image,new WToken(t));
+                                                                                                                                                                                                        constructor_id1List.add(constructor_id1);
       jj_consume_token(OTHER1);
     }
          {if (true) return new ModuleNaamPrefix(constructor_id, constructor_id1List, firstToken.next,token);}
@@ -3159,22 +3159,22 @@ import cide.gparser.*;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case INTEGER:
       t = jj_consume_token(INTEGER);
-                    integer=new ASTStringNode(t.toString(),new WToken(t));
+                    integer=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new literal1(integer, firstToken.next,token);}
       break;
     case FLOAT:
       t = jj_consume_token(FLOAT);
-                  float_kw=new ASTStringNode(t.toString(),new WToken(t));
+                  float_kw=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new literal2(float_kw, firstToken.next,token);}
       break;
     case CHARACTER_LITERAL:
       t = jj_consume_token(CHARACTER_LITERAL);
-                              character_literal=new ASTStringNode(t.toString(),new WToken(t));
+                              character_literal=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new literal3(character_literal, firstToken.next,token);}
       break;
     case STRING_LITERAL:
       t = jj_consume_token(STRING_LITERAL);
-                           string_literal=new ASTStringNode(t.toString(),new WToken(t));
+                           string_literal=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new literal4(string_literal, firstToken.next,token);}
       break;
     default:
@@ -4342,11 +4342,6 @@ import cide.gparser.*;
     return false;
   }
 
-  final private boolean jj_3R_184() {
-    if (jj_3R_48()) return true;
-    return false;
-  }
-
   final private boolean jj_3R_56() {
     if (jj_3R_50()) return true;
     if (jj_3R_55()) return true;
@@ -4361,6 +4356,11 @@ import cide.gparser.*;
 
   final private boolean jj_3R_50() {
     if (jj_3R_79()) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_184() {
+    if (jj_3R_48()) return true;
     return false;
   }
 
@@ -5098,12 +5098,6 @@ import cide.gparser.*;
     return false;
   }
 
-  final private boolean jj_3R_99() {
-    if (jj_scan_token(CONSTRUCTOR_ID)) return true;
-    if (jj_scan_token(OTHER1)) return true;
-    return false;
-  }
-
   final private boolean jj_3_40() {
     if (jj_3R_46()) return true;
     return false;
@@ -5152,6 +5146,12 @@ import cide.gparser.*;
     xsp = jj_scanpos;
     if (jj_3R_110()) jj_scanpos = xsp;
     if (jj_scan_token(RIGHT_HPAREN)) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_99() {
+    if (jj_scan_token(CONSTRUCTOR_ID)) return true;
+    if (jj_scan_token(OTHER1)) return true;
     return false;
   }
 
