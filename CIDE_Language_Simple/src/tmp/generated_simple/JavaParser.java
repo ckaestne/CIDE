@@ -34,7 +34,7 @@ public class JavaParser implements JavaParserConstants {
                                            typeDeclarationList.add(typeDeclaration);
     }
     t = jj_consume_token(0);
-                                                                                                eof=new ASTStringNode(t.toString(),new WToken(t));
+                                                                                                eof=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new CompilationUnit(typeDeclarationList, eof, firstToken.next,token);}
     throw new Error("Missing return statement in function");
   }
@@ -64,7 +64,7 @@ public class JavaParser implements JavaParserConstants {
         ASTStringNode identifier;
         Token firstToken=token;
     t = jj_consume_token(IDENTIFIER);
-                       identifier=new ASTStringNode(t.toString(),new WToken(t));
+                       identifier=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new Name(identifier, firstToken.next,token);}
     throw new Error("Missing return statement in function");
   }
@@ -260,7 +260,7 @@ public class JavaParser implements JavaParserConstants {
         ASTStringNode integer_literal;
         Token firstToken=token;
     t = jj_consume_token(INTEGER_LITERAL);
-                            integer_literal=new ASTStringNode(t.toString(),new WToken(t));
+                            integer_literal=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new UnaryExpression(integer_literal, firstToken.next,token);}
     throw new Error("Missing return statement in function");
   }

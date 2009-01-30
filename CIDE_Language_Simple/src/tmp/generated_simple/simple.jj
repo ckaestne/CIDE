@@ -315,7 +315,7 @@ CompilationUnit CompilationUnit() : {
 	ASTStringNode eof;
 	Token firstToken=token;
 } { (
-	(typeDeclaration=TypeDeclaration(){typeDeclarationList.add(typeDeclaration);})* t=<EOF>{eof=new ASTStringNode(t.toString(),new WToken(t));} 
+	(typeDeclaration=TypeDeclaration(){typeDeclarationList.add(typeDeclaration);})* t=<EOF>{eof=new ASTStringNode(t.image,new WToken(t));} 
 	{return new CompilationUnit(typeDeclarationList, eof, firstToken.next,token);}
  ) }
 
@@ -334,7 +334,7 @@ Name Name() : {
 	ASTStringNode identifier;
 	Token firstToken=token;
 } { (
-	t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<IDENTIFIER>{identifier=new ASTStringNode(t.image,new WToken(t));} 
 	{return new Name(identifier, firstToken.next,token);}
  ) }
 
@@ -444,7 +444,7 @@ UnaryExpression UnaryExpression() : {
 	ASTStringNode integer_literal;
 	Token firstToken=token;
 } { (
-	t=<INTEGER_LITERAL>{integer_literal=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<INTEGER_LITERAL>{integer_literal=new ASTStringNode(t.image,new WToken(t));} 
 	{return new UnaryExpression(integer_literal, firstToken.next,token);}
  ) }
 

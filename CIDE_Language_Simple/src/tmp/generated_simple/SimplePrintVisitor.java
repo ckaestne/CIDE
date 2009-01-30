@@ -8,11 +8,11 @@ import java.io.PrintStream;
 import cide.languages.*;
 
 /** package visibility. use only via ASTNode.render() **/
-class SimplePrintVisitor extends AbstractPrintVisitor {
-	SimplePrintVisitor(PrintStream out) {
+public class SimplePrintVisitor extends AbstractPrintVisitor {
+	public SimplePrintVisitor(PrintStream out) {
 		super(out);
 	}
-	SimplePrintVisitor() {
+	public SimplePrintVisitor() {
 		super();
 	}
 	public boolean visit(IASTNode node) {
