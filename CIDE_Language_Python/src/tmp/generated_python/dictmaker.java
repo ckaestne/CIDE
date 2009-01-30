@@ -6,12 +6,12 @@ import cide.greferences.*;
 import java.util.*;
 
 public class dictmaker extends GenASTNode {
-  public dictmaker(test test, test test1, ArrayList<dictInt> dictInt, ASTTextNode text13, Token firstToken, Token lastToken) {
+  public dictmaker(test test, test test1, ArrayList<dictInt> dictInt, ASTTextNode text590, Token firstToken, Token lastToken) {
     super(new Property[] {
       new PropertyOne<test>("test", test),
       new PropertyOne<test>("test1", test1),
       new PropertyZeroOrMore<dictInt>("dictInt", dictInt),
-      new PropertyZeroOrOne<ASTTextNode>("text13", text13)
+      new PropertyZeroOrOne<ASTTextNode>("text590", text590)
     }, firstToken, lastToken);
   }
   public dictmaker(Property[] properties, IToken firstToken, IToken lastToken) {
@@ -29,7 +29,7 @@ public class dictmaker extends GenASTNode {
   public ArrayList<dictInt> getDictInt() {
     return ((PropertyZeroOrMore<dictInt>)getProperty("dictInt")).getValue();
   }
-  public ASTTextNode getText13() {
-    return ((PropertyZeroOrOne<ASTTextNode>)getProperty("text13")).getValue();
+  public ASTTextNode getText590() {
+    return ((PropertyZeroOrOne<ASTTextNode>)getProperty("text590")).getValue();
   }
 }

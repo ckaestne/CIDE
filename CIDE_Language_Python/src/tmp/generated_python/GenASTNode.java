@@ -5,6 +5,7 @@ import cide.gparser.*;
 import cide.greferences.*;
 import java.util.*;
 
+import de.ovgu.cide.language.python.PythonPrinter;
 public abstract class GenASTNode extends ASTNode {
   public GenASTNode(Property[] p, Token firstToken, Token lastToken) {
     		super(p, 
@@ -19,7 +20,7 @@ public abstract class GenASTNode extends ASTNode {
         + "-" + (this.getStartPosition() + this.getLength());
   }
   public String render() {
-    SimplePrintVisitor v=new SimplePrintVisitor();
+    PythonPrinter v=new PythonPrinter();
     accept(v);
     return v.getResult();
   }

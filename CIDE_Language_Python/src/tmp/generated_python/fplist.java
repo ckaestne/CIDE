@@ -6,11 +6,11 @@ import cide.greferences.*;
 import java.util.*;
 
 public class fplist extends GenASTNode {
-  public fplist(fpdef fpdef, ArrayList<fpdef> fpdef1, ASTTextNode text2, Token firstToken, Token lastToken) {
+  public fplist(fpdef fpdef, ArrayList<fpdef> fpdef1, ASTTextNode text579, Token firstToken, Token lastToken) {
     super(new Property[] {
       new PropertyOne<fpdef>("fpdef", fpdef),
       new PropertyZeroOrMore<fpdef>("fpdef1", fpdef1),
-      new PropertyZeroOrOne<ASTTextNode>("text2", text2)
+      new PropertyZeroOrOne<ASTTextNode>("text579", text579)
     }, firstToken, lastToken);
   }
   public fplist(Property[] properties, IToken firstToken, IToken lastToken) {
@@ -25,7 +25,7 @@ public class fplist extends GenASTNode {
   public ArrayList<fpdef> getFpdef1() {
     return ((PropertyZeroOrMore<fpdef>)getProperty("fpdef1")).getValue();
   }
-  public ASTTextNode getText2() {
-    return ((PropertyZeroOrOne<ASTTextNode>)getProperty("text2")).getValue();
+  public ASTTextNode getText579() {
+    return ((PropertyZeroOrOne<ASTTextNode>)getProperty("text579")).getValue();
   }
 }

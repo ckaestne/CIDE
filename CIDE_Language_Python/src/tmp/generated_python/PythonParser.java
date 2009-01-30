@@ -70,7 +70,7 @@ public class PythonParser implements PythonParserConstants {
                                        newlineOrStmtList.add(newlineOrStmt);
     }
     t = jj_consume_token(0);
-                                                                                        eof=new ASTStringNode(t.toString(),new WToken(t));
+                                                                                        eof=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new file_input(newlineOrStmtList, eof, firstToken.next,token);}
     throw new Error("Missing return statement in function");
   }
@@ -83,7 +83,7 @@ public class PythonParser implements PythonParserConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case NEWLINE:
       t = jj_consume_token(NEWLINE);
-                    newline=new ASTStringNode(t.toString(),new WToken(t));
+                    newline=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new newlineOrStmt1(newline, firstToken.next,token);}
       break;
     case LPAREN:
@@ -181,7 +181,7 @@ public class PythonParser implements PythonParserConstants {
         ArrayList<defaultarg> defaultarg1List = new ArrayList<defaultarg>();
         ExtraArgList extraArgList = null;
         ExtraKeywordList extraKeywordList = null;
-        ASTTextNode text1 = null;
+        ASTTextNode text578 = null;
         ExtraArgList extraArgList1;
         ExtraKeywordList extraKeywordList1 = null;
         ExtraKeywordList extraKeywordList2;
@@ -217,13 +217,13 @@ public class PythonParser implements PythonParserConstants {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case COMMA:
         jj_consume_token(COMMA);
-                                                                                                                                                                                                                            text1=new ASTTextNode(",",new WToken(token));
+                                                                                                                                                                                                                            text578=new ASTTextNode(",",new WToken(token));
         break;
       default:
         jj_la1[3] = jj_gen;
         ;
       }
-         {if (true) return new varargslist1(defaultarg, defaultarg1List, extraArgList, extraKeywordList, text1, firstToken.next,token);}
+         {if (true) return new varargslist1(defaultarg, defaultarg1List, extraArgList, extraKeywordList, text578, firstToken.next,token);}
       break;
     default:
       jj_la1[5] = jj_gen;
@@ -321,7 +321,7 @@ public class PythonParser implements PythonParserConstants {
         fpdef fpdef;
         fpdef fpdef1;
         ArrayList<fpdef> fpdef1List = new ArrayList<fpdef>();
-        ASTTextNode text2 = null;
+        ASTTextNode text579 = null;
         Token firstToken=token;
     fpdef = fpdef();
     label_3:
@@ -338,13 +338,13 @@ public class PythonParser implements PythonParserConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case COMMA:
       jj_consume_token(COMMA);
-                                                                                        text2=new ASTTextNode(",",new WToken(token));
+                                                                                        text579=new ASTTextNode(",",new WToken(token));
       break;
     default:
       jj_la1[9] = jj_gen;
       ;
     }
-         {if (true) return new fplist(fpdef, fpdef1List, text2, firstToken.next,token);}
+         {if (true) return new fplist(fpdef, fpdef1List, text579, firstToken.next,token);}
     throw new Error("Missing return statement in function");
   }
 
@@ -414,7 +414,7 @@ public class PythonParser implements PythonParserConstants {
         small_stmt small_stmt;
         small_stmt small_stmt1;
         ArrayList<small_stmt> small_stmt1List = new ArrayList<small_stmt>();
-        ASTTextNode text3 = null;
+        ASTTextNode text580 = null;
         Token t;
         ASTStringNode newline;
         Token firstToken=token;
@@ -433,15 +433,15 @@ public class PythonParser implements PythonParserConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case SEMICOLON:
       jj_consume_token(SEMICOLON);
-                                                                                                                      text3=new ASTTextNode(";",new WToken(token));
+                                                                                                                      text580=new ASTTextNode(";",new WToken(token));
       break;
     default:
       jj_la1[11] = jj_gen;
       ;
     }
     t = jj_consume_token(NEWLINE);
-                                                                                                                                                                                  newline=new ASTStringNode(t.toString(),new WToken(t));
-         {if (true) return new simple_stmt(small_stmt, small_stmt1List, text3, newline, firstToken.next,token);}
+                                                                                                                                                                                    newline=new ASTStringNode(t.image,new WToken(t));
+         {if (true) return new simple_stmt(small_stmt, small_stmt1List, text580, newline, firstToken.next,token);}
     throw new Error("Missing return statement in function");
   }
 
@@ -571,73 +571,73 @@ public class PythonParser implements PythonParserConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case PLUSEQ:
       t = jj_consume_token(PLUSEQ);
-                   pluseq=new ASTStringNode(t.toString(),new WToken(t));
+                   pluseq=new ASTStringNode(t.image,new WToken(t));
       smartTestList = SmartTestList();
          {if (true) return new expr_stmtEnd1(pluseq, smartTestList, firstToken.next,token);}
       break;
     case MINUSEQ:
       t = jj_consume_token(MINUSEQ);
-                    minuseq=new ASTStringNode(t.toString(),new WToken(t));
+                    minuseq=new ASTStringNode(t.image,new WToken(t));
       smartTestList1 = SmartTestList();
          {if (true) return new expr_stmtEnd2(minuseq, smartTestList1, firstToken.next,token);}
       break;
     case MULTIPLYEQ:
       t = jj_consume_token(MULTIPLYEQ);
-                       multiplyeq=new ASTStringNode(t.toString(),new WToken(t));
+                       multiplyeq=new ASTStringNode(t.image,new WToken(t));
       smartTestList2 = SmartTestList();
          {if (true) return new expr_stmtEnd3(multiplyeq, smartTestList2, firstToken.next,token);}
       break;
     case DIVIDEEQ:
       t = jj_consume_token(DIVIDEEQ);
-                     divideeq=new ASTStringNode(t.toString(),new WToken(t));
+                     divideeq=new ASTStringNode(t.image,new WToken(t));
       smartTestList3 = SmartTestList();
          {if (true) return new expr_stmtEnd4(divideeq, smartTestList3, firstToken.next,token);}
       break;
     case FLOORDIVIDEEQ:
       t = jj_consume_token(FLOORDIVIDEEQ);
-                          floordivideeq=new ASTStringNode(t.toString(),new WToken(t));
+                          floordivideeq=new ASTStringNode(t.image,new WToken(t));
       smartTestList4 = SmartTestList();
          {if (true) return new expr_stmtEnd5(floordivideeq, smartTestList4, firstToken.next,token);}
       break;
     case MODULOEQ:
       t = jj_consume_token(MODULOEQ);
-                     moduloeq=new ASTStringNode(t.toString(),new WToken(t));
+                     moduloeq=new ASTStringNode(t.image,new WToken(t));
       smartTestList5 = SmartTestList();
          {if (true) return new expr_stmtEnd6(moduloeq, smartTestList5, firstToken.next,token);}
       break;
     case ANDEQ:
       t = jj_consume_token(ANDEQ);
-                  andeq=new ASTStringNode(t.toString(),new WToken(t));
+                  andeq=new ASTStringNode(t.image,new WToken(t));
       smartTestList6 = SmartTestList();
          {if (true) return new expr_stmtEnd7(andeq, smartTestList6, firstToken.next,token);}
       break;
     case OREQ:
       t = jj_consume_token(OREQ);
-                 oreq=new ASTStringNode(t.toString(),new WToken(t));
+                 oreq=new ASTStringNode(t.image,new WToken(t));
       smartTestList7 = SmartTestList();
          {if (true) return new expr_stmtEnd8(oreq, smartTestList7, firstToken.next,token);}
       break;
     case XOREQ:
       t = jj_consume_token(XOREQ);
-                  xoreq=new ASTStringNode(t.toString(),new WToken(t));
+                  xoreq=new ASTStringNode(t.image,new WToken(t));
       smartTestList8 = SmartTestList();
          {if (true) return new expr_stmtEnd9(xoreq, smartTestList8, firstToken.next,token);}
       break;
     case LSHIFTEQ:
       t = jj_consume_token(LSHIFTEQ);
-                     lshifteq=new ASTStringNode(t.toString(),new WToken(t));
+                     lshifteq=new ASTStringNode(t.image,new WToken(t));
       smartTestList9 = SmartTestList();
          {if (true) return new expr_stmtEnd10(lshifteq, smartTestList9, firstToken.next,token);}
       break;
     case RSHIFTEQ:
       t = jj_consume_token(RSHIFTEQ);
-                     rshifteq=new ASTStringNode(t.toString(),new WToken(t));
+                     rshifteq=new ASTStringNode(t.image,new WToken(t));
       smartTestList10 = SmartTestList();
          {if (true) return new expr_stmtEnd11(rshifteq, smartTestList10, firstToken.next,token);}
       break;
     case POWEREQ:
       t = jj_consume_token(POWEREQ);
-                    powereq=new ASTStringNode(t.toString(),new WToken(t));
+                    powereq=new ASTStringNode(t.image,new WToken(t));
       smartTestList11 = SmartTestList();
          {if (true) return new expr_stmtEnd12(powereq, smartTestList11, firstToken.next,token);}
       break;
@@ -674,9 +674,9 @@ public class PythonParser implements PythonParserConstants {
         Token firstToken=token;
     if (jj_2_7(2)) {
       t = jj_consume_token(PRINT);
-                               print=new ASTStringNode(t.toString(),new WToken(t));
+                               print=new ASTStringNode(t.image,new WToken(t));
       t = jj_consume_token(RSHIFT);
-                                                                                                rshift=new ASTStringNode(t.toString(),new WToken(t));
+                                                                                           rshift=new ASTStringNode(t.image,new WToken(t));
       test = test();
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case COMMA:
@@ -689,14 +689,14 @@ public class PythonParser implements PythonParserConstants {
          {if (true) return new print_stmt1(print, rshift, test, print_stmtEndP, firstToken.next,token);}
     } else if (jj_2_8(2)) {
       t = jj_consume_token(PRINT);
-                               print1=new ASTStringNode(t.toString(),new WToken(t));
+                               print1=new ASTStringNode(t.image,new WToken(t));
       print_stmtEndA = print_stmtEndA();
          {if (true) return new print_stmt2(print1, print_stmtEndA, firstToken.next,token);}
     } else {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case PRINT:
         t = jj_consume_token(PRINT);
-                  print2=new ASTStringNode(t.toString(),new WToken(t));
+                  print2=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new print_stmt3(print2, firstToken.next,token);}
         break;
       default:
@@ -711,7 +711,7 @@ public class PythonParser implements PythonParserConstants {
   final public print_stmtEndP print_stmtEndP() throws ParseException {
         test test;
         ArrayList<test> testList = new ArrayList<test>();
-        ASTTextNode text4 = null;
+        ASTTextNode text581 = null;
         Token firstToken=token;
     label_6:
     while (true) {
@@ -727,13 +727,13 @@ public class PythonParser implements PythonParserConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case COMMA:
       jj_consume_token(COMMA);
-                                                                   text4=new ASTTextNode(",",new WToken(token));
+                                                                   text581=new ASTTextNode(",",new WToken(token));
       break;
     default:
       jj_la1[17] = jj_gen;
       ;
     }
-         {if (true) return new print_stmtEndP(testList, text4, firstToken.next,token);}
+         {if (true) return new print_stmtEndP(testList, text581, firstToken.next,token);}
     throw new Error("Missing return statement in function");
   }
 
@@ -741,7 +741,7 @@ public class PythonParser implements PythonParserConstants {
         test test;
         test test1;
         ArrayList<test> test1List = new ArrayList<test>();
-        ASTTextNode text5 = null;
+        ASTTextNode text582 = null;
         Token firstToken=token;
     test = test();
     label_7:
@@ -758,13 +758,13 @@ public class PythonParser implements PythonParserConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case COMMA:
       jj_consume_token(COMMA);
-                                                                                  text5=new ASTTextNode(",",new WToken(token));
+                                                                                  text582=new ASTTextNode(",",new WToken(token));
       break;
     default:
       jj_la1[18] = jj_gen;
       ;
     }
-         {if (true) return new print_stmtEndA(test, test1List, text5, firstToken.next,token);}
+         {if (true) return new print_stmtEndA(test, test1List, text582, firstToken.next,token);}
     throw new Error("Missing return statement in function");
   }
 
@@ -774,7 +774,7 @@ public class PythonParser implements PythonParserConstants {
         exprlist exprlist;
         Token firstToken=token;
     t = jj_consume_token(DEL);
-                del=new ASTStringNode(t.toString(),new WToken(t));
+                del=new ASTStringNode(t.image,new WToken(t));
     exprlist = exprlist();
          {if (true) return new del_stmt(del, exprlist, firstToken.next,token);}
     throw new Error("Missing return statement in function");
@@ -785,7 +785,7 @@ public class PythonParser implements PythonParserConstants {
         ASTStringNode pass;
         Token firstToken=token;
     t = jj_consume_token(PASS);
-                 pass=new ASTStringNode(t.toString(),new WToken(t));
+                 pass=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new pass_stmt(pass, firstToken.next,token);}
     throw new Error("Missing return statement in function");
   }
@@ -801,12 +801,12 @@ public class PythonParser implements PythonParserConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case BREAK:
       t = jj_consume_token(BREAK);
-                  break_kw=new ASTStringNode(t.toString(),new WToken(t));
+                  break_kw=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new flow_stmt1(break_kw, firstToken.next,token);}
       break;
     case CONTINUE:
       t = jj_consume_token(CONTINUE);
-                     continue_kw=new ASTStringNode(t.toString(),new WToken(t));
+                     continue_kw=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new flow_stmt2(continue_kw, firstToken.next,token);}
       break;
     case RETURN:
@@ -835,7 +835,7 @@ public class PythonParser implements PythonParserConstants {
         SmartTestList smartTestList = null;
         Token firstToken=token;
     t = jj_consume_token(RETURN);
-                   return_kw=new ASTStringNode(t.toString(),new WToken(t));
+                   return_kw=new ASTStringNode(t.image,new WToken(t));
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case LPAREN:
     case LBRACE:
@@ -877,7 +877,7 @@ public class PythonParser implements PythonParserConstants {
         SmartTestList smartTestList;
         Token firstToken=token;
     t = jj_consume_token(YIELD);
-                  yield=new ASTStringNode(t.toString(),new WToken(t));
+                  yield=new ASTStringNode(t.image,new WToken(t));
     smartTestList = SmartTestList();
          {if (true) return new yield_stmt(yield, smartTestList, firstToken.next,token);}
     throw new Error("Missing return statement in function");
@@ -889,7 +889,7 @@ public class PythonParser implements PythonParserConstants {
         raise_stmt_end raise_stmt_end = null;
         Token firstToken=token;
     t = jj_consume_token(RAISE);
-                  raise=new ASTStringNode(t.toString(),new WToken(t));
+                  raise=new ASTStringNode(t.image,new WToken(t));
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case LPAREN:
     case LBRACE:
@@ -971,13 +971,13 @@ public class PythonParser implements PythonParserConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case IMPORT:
       t = jj_consume_token(IMPORT);
-                   import_kw=new ASTStringNode(t.toString(),new WToken(t));
+                   import_kw=new ASTStringNode(t.image,new WToken(t));
       import_KW = Import();
          {if (true) return new import_stmt1(import_kw, import_KW, firstToken.next,token);}
       break;
     case FROM:
       t = jj_consume_token(FROM);
-                 from=new ASTStringNode(t.toString(),new WToken(t));
+                 from=new ASTStringNode(t.image,new WToken(t));
       importFrom = ImportFrom();
          {if (true) return new import_stmt2(from, importFrom, firstToken.next,token);}
       break;
@@ -1021,7 +1021,7 @@ public class PythonParser implements PythonParserConstants {
         Token firstToken=token;
     dotted_name = dotted_name();
     t = jj_consume_token(IMPORT);
-                                             import_kw=new ASTStringNode(t.toString(),new WToken(t));
+                                             import_kw=new ASTStringNode(t.image,new WToken(t));
     importFromEnd = ImportFromEnd();
          {if (true) return new ImportFrom(dotted_name, import_kw, importFromEnd, firstToken.next,token);}
     throw new Error("Missing return statement in function");
@@ -1161,7 +1161,7 @@ public class PythonParser implements PythonParserConstants {
         ArrayList<Name> name1List = new ArrayList<Name>();
         Token firstToken=token;
     t = jj_consume_token(GLOBAL);
-                   global=new ASTStringNode(t.toString(),new WToken(t));
+                   global=new ASTStringNode(t.image,new WToken(t));
     name = Name();
     label_11:
     while (true) {
@@ -1175,7 +1175,7 @@ public class PythonParser implements PythonParserConstants {
       }
       jj_consume_token(COMMA);
       name1 = Name();
-                                                                                                        name1List.add(name1);
+                                                                                                   name1List.add(name1);
     }
          {if (true) return new global_stmt(global, name, name1List, firstToken.next,token);}
     throw new Error("Missing return statement in function");
@@ -1530,15 +1530,15 @@ public class PythonParser implements PythonParserConstants {
       break;
     case NEWLINE:
       t = jj_consume_token(NEWLINE);
-                    newline=new ASTStringNode(t.toString(),new WToken(t));
-                                                                              token_source.expect_indent = true;
+                    newline=new ASTStringNode(t.image,new WToken(t));
+                                                                         token_source.expect_indent = true;
       t = jj_consume_token(INDENT);
-                                                                                                                             indent=new ASTStringNode(t.toString(),new WToken(t));
-                                                                                                                                                                                      token_source.expect_indent = false;
+                                                                                                                        indent=new ASTStringNode(t.image,new WToken(t));
+                                                                                                                                                                            token_source.expect_indent = false;
       label_14:
       while (true) {
         stmt = stmt();
-                                                                                                                                                                                                                                        stmtList.add(stmt);
+                                                                                                                                                                                                                              stmtList.add(stmt);
         switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
         case LPAREN:
         case LBRACE:
@@ -1591,7 +1591,7 @@ public class PythonParser implements PythonParserConstants {
         }
       }
       t = jj_consume_token(DEDENT);
-                                                                                                                                                                                                                                                                          dedent=new ASTStringNode(t.toString(),new WToken(t));
+                                                                                                                                                                                                                                                                dedent=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new suite2(newline, indent, stmtList, dedent, firstToken.next,token);}
       break;
     default:
@@ -1787,62 +1787,62 @@ public class PythonParser implements PythonParserConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case LESS:
       t = jj_consume_token(LESS);
-                 less=new ASTStringNode(t.toString(),new WToken(t));
+                 less=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new comp_op1(less, firstToken.next,token);}
       break;
     case GREATER:
       t = jj_consume_token(GREATER);
-                    greater=new ASTStringNode(t.toString(),new WToken(t));
+                    greater=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new comp_op2(greater, firstToken.next,token);}
       break;
     case EQEQUAL:
       t = jj_consume_token(EQEQUAL);
-                    eqequal=new ASTStringNode(t.toString(),new WToken(t));
+                    eqequal=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new comp_op3(eqequal, firstToken.next,token);}
       break;
     case EQGREATER:
       t = jj_consume_token(EQGREATER);
-                      eqgreater=new ASTStringNode(t.toString(),new WToken(t));
+                      eqgreater=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new comp_op4(eqgreater, firstToken.next,token);}
       break;
     case EQLESS:
       t = jj_consume_token(EQLESS);
-                   eqless=new ASTStringNode(t.toString(),new WToken(t));
+                   eqless=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new comp_op5(eqless, firstToken.next,token);}
       break;
     case LESSGREATER:
       t = jj_consume_token(LESSGREATER);
-                        lessgreater=new ASTStringNode(t.toString(),new WToken(t));
+                        lessgreater=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new comp_op6(lessgreater, firstToken.next,token);}
       break;
     case NOTEQUAL:
       t = jj_consume_token(NOTEQUAL);
-                     notequal=new ASTStringNode(t.toString(),new WToken(t));
+                     notequal=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new comp_op7(notequal, firstToken.next,token);}
       break;
     case IN:
       t = jj_consume_token(IN);
-               in=new ASTStringNode(t.toString(),new WToken(t));
+               in=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new comp_op8(in, firstToken.next,token);}
       break;
     case NOT_BOOL:
       jj_consume_token(NOT_BOOL);
       t = jj_consume_token(IN);
-                     in1=new ASTStringNode(t.toString(),new WToken(t));
+                     in1=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new comp_op9(in1, firstToken.next,token);}
       break;
     default:
       jj_la1[51] = jj_gen;
       if (jj_2_11(2)) {
         t = jj_consume_token(IS);
-                            is=new ASTStringNode(t.toString(),new WToken(t));
+                            is=new ASTStringNode(t.image,new WToken(t));
         jj_consume_token(NOT_BOOL);
          {if (true) return new comp_op10(is, firstToken.next,token);}
       } else {
         switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
         case IS:
           t = jj_consume_token(IS);
-               is1=new ASTStringNode(t.toString(),new WToken(t));
+               is1=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new comp_op11(is1, firstToken.next,token);}
           break;
         default:
@@ -2008,13 +2008,13 @@ public class PythonParser implements PythonParserConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case PLUS:
       t = jj_consume_token(PLUS);
-                 plus=new ASTStringNode(t.toString(),new WToken(t));
+                 plus=new ASTStringNode(t.image,new WToken(t));
       term = term();
          {if (true) return new arith_exprEnd1(plus, term, firstToken.next,token);}
       break;
     case MINUS:
       t = jj_consume_token(MINUS);
-                  minus=new ASTStringNode(t.toString(),new WToken(t));
+                  minus=new ASTStringNode(t.image,new WToken(t));
       term1 = term();
          {if (true) return new arith_exprEnd2(minus, term1, firstToken.next,token);}
       break;
@@ -2070,19 +2070,19 @@ public class PythonParser implements PythonParserConstants {
       break;
     case DIVIDE:
       t = jj_consume_token(DIVIDE);
-                   divide=new ASTStringNode(t.toString(),new WToken(t));
+                   divide=new ASTStringNode(t.image,new WToken(t));
       factor1 = factor();
          {if (true) return new termEnd2(divide, factor1, firstToken.next,token);}
       break;
     case FLOORDIVIDE:
       t = jj_consume_token(FLOORDIVIDE);
-                        floordivide=new ASTStringNode(t.toString(),new WToken(t));
+                        floordivide=new ASTStringNode(t.image,new WToken(t));
       factor2 = factor();
          {if (true) return new termEnd3(floordivide, factor2, firstToken.next,token);}
       break;
     case MODULO:
       t = jj_consume_token(MODULO);
-                   modulo=new ASTStringNode(t.toString(),new WToken(t));
+                   modulo=new ASTStringNode(t.image,new WToken(t));
       factor3 = factor();
          {if (true) return new termEnd4(modulo, factor3, firstToken.next,token);}
       break;
@@ -2107,19 +2107,19 @@ public class PythonParser implements PythonParserConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case PLUS:
       t = jj_consume_token(PLUS);
-                 plus=new ASTStringNode(t.toString(),new WToken(t));
+                 plus=new ASTStringNode(t.image,new WToken(t));
       factor = factor();
          {if (true) return new factor1(plus, factor, firstToken.next,token);}
       break;
     case MINUS:
       t = jj_consume_token(MINUS);
-                  minus=new ASTStringNode(t.toString(),new WToken(t));
+                  minus=new ASTStringNode(t.image,new WToken(t));
       factor1 = factor();
          {if (true) return new factor2(minus, factor1, firstToken.next,token);}
       break;
     case NOT:
       t = jj_consume_token(NOT);
-                not=new ASTStringNode(t.toString(),new WToken(t));
+                not=new ASTStringNode(t.image,new WToken(t));
       factor2 = factor();
          {if (true) return new factor3(not, factor2, firstToken.next,token);}
       break;
@@ -2226,7 +2226,7 @@ public class PythonParser implements PythonParserConstants {
         break;
       case DOT:
         t = jj_consume_token(DOT);
-                dot=new ASTStringNode(t.toString(),new WToken(t));
+                dot=new ASTStringNode(t.image,new WToken(t));
         anyName = AnyName();
          {if (true) return new atomtrailerEnd4(dot, anyName, firstToken.next,token);}
         break;
@@ -2296,7 +2296,7 @@ public class PythonParser implements PythonParserConstants {
         break;
       case LBRACKET:
         t = jj_consume_token(LBRACKET);
-                     lbracket=new ASTStringNode(t.toString(),new WToken(t));
+                     lbracket=new ASTStringNode(t.image,new WToken(t));
         switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
         case LPAREN:
         case LBRACE:
@@ -2433,7 +2433,7 @@ public class PythonParser implements PythonParserConstants {
         test test;
         Token firstToken=token;
     t = jj_consume_token(LAMBDA);
-                   lambda=new ASTStringNode(t.toString(),new WToken(t));
+                   lambda=new ASTStringNode(t.image,new WToken(t));
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case LPAREN:
     case MULTIPLY:
@@ -2456,7 +2456,7 @@ public class PythonParser implements PythonParserConstants {
         subscript subscript;
         subscript subscript1;
         ArrayList<subscript> subscript1List = new ArrayList<subscript>();
-        ASTTextNode text9 = null;
+        ASTTextNode text586 = null;
         Token firstToken=token;
     subscript = subscript();
     label_27:
@@ -2473,13 +2473,13 @@ public class PythonParser implements PythonParserConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case COMMA:
       jj_consume_token(COMMA);
-                                                                                                                text9=new ASTTextNode(",",new WToken(token));
+                                                                                                                text586=new ASTTextNode(",",new WToken(token));
       break;
     default:
       jj_la1[71] = jj_gen;
       ;
     }
-         {if (true) return new subscriptlist(subscript, subscript1List, text9, firstToken.next,token);}
+         {if (true) return new subscriptlist(subscript, subscript1List, text586, firstToken.next,token);}
     throw new Error("Missing return statement in function");
   }
 
@@ -2495,11 +2495,11 @@ public class PythonParser implements PythonParserConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case DOT:
       t = jj_consume_token(DOT);
-                dot=new ASTStringNode(t.toString(),new WToken(t));
+                dot=new ASTStringNode(t.image,new WToken(t));
       t = jj_consume_token(DOT);
-                                                                            dot1=new ASTStringNode(t.toString(),new WToken(t));
+                                                                       dot1=new ASTStringNode(t.image,new WToken(t));
       t = jj_consume_token(DOT);
-                                                                                                                                         dot2=new ASTStringNode(t.toString(),new WToken(t));
+                                                                                                                               dot2=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new subscript1(dot, dot1, dot2, firstToken.next,token);}
       break;
     case LPAREN:
@@ -2609,7 +2609,7 @@ public class PythonParser implements PythonParserConstants {
         expr expr;
         expr expr1;
         ArrayList<expr> expr1List = new ArrayList<expr>();
-        ASTTextNode text10 = null;
+        ASTTextNode text587 = null;
         Token firstToken=token;
     expr = expr();
     label_28:
@@ -2626,13 +2626,13 @@ public class PythonParser implements PythonParserConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case COMMA:
       jj_consume_token(COMMA);
-                                                                                  text10=new ASTTextNode(",",new WToken(token));
+                                                                                  text587=new ASTTextNode(",",new WToken(token));
       break;
     default:
       jj_la1[76] = jj_gen;
       ;
     }
-         {if (true) return new exprlist(expr, expr1List, text10, firstToken.next,token);}
+         {if (true) return new exprlist(expr, expr1List, text587, firstToken.next,token);}
     throw new Error("Missing return statement in function");
   }
 
@@ -2640,7 +2640,7 @@ public class PythonParser implements PythonParserConstants {
         test test;
         test test1;
         ArrayList<test> test1List = new ArrayList<test>();
-        ASTTextNode text11 = null;
+        ASTTextNode text588 = null;
         Token firstToken=token;
     test = test();
     label_29:
@@ -2657,13 +2657,13 @@ public class PythonParser implements PythonParserConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case COMMA:
       jj_consume_token(COMMA);
-                                                                                  text11=new ASTTextNode(",",new WToken(token));
+                                                                                  text588=new ASTTextNode(",",new WToken(token));
       break;
     default:
       jj_la1[77] = jj_gen;
       ;
     }
-         {if (true) return new SmartTestList(test, test1List, text11, firstToken.next,token);}
+         {if (true) return new SmartTestList(test, test1List, text588, firstToken.next,token);}
     throw new Error("Missing return statement in function");
   }
 
@@ -2671,7 +2671,7 @@ public class PythonParser implements PythonParserConstants {
         test test;
         test test1;
         ArrayList<test> test1List = new ArrayList<test>();
-        ASTTextNode text12 = null;
+        ASTTextNode text589 = null;
         Token firstToken=token;
     test = test();
     label_30:
@@ -2688,13 +2688,13 @@ public class PythonParser implements PythonParserConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case COMMA:
       jj_consume_token(COMMA);
-                                                                                  text12=new ASTTextNode(",",new WToken(token));
+                                                                                  text589=new ASTTextNode(",",new WToken(token));
       break;
     default:
       jj_la1[78] = jj_gen;
       ;
     }
-         {if (true) return new testlist(test, test1List, text12, firstToken.next,token);}
+         {if (true) return new testlist(test, test1List, text589, firstToken.next,token);}
     throw new Error("Missing return statement in function");
   }
 
@@ -2703,7 +2703,7 @@ public class PythonParser implements PythonParserConstants {
         test test1;
         dictInt dictInt;
         ArrayList<dictInt> dictIntList = new ArrayList<dictInt>();
-        ASTTextNode text13 = null;
+        ASTTextNode text590 = null;
         Token firstToken=token;
     test = test();
     jj_consume_token(COLON);
@@ -2721,13 +2721,13 @@ public class PythonParser implements PythonParserConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case COMMA:
       jj_consume_token(COMMA);
-                                                                                                        text13=new ASTTextNode(",",new WToken(token));
+                                                                                                        text590=new ASTTextNode(",",new WToken(token));
       break;
     default:
       jj_la1[79] = jj_gen;
       ;
     }
-         {if (true) return new dictmaker(test, test1, dictIntList, text13, firstToken.next,token);}
+         {if (true) return new dictmaker(test, test1, dictIntList, text590, firstToken.next,token);}
     throw new Error("Missing return statement in function");
   }
 
@@ -2758,7 +2758,7 @@ public class PythonParser implements PythonParserConstants {
         ArrayList<list_for> list_forList = new ArrayList<list_for>();
         test test;
         ArrayList<test> testList = new ArrayList<test>();
-        ASTTextNode text14 = null;
+        ASTTextNode text591 = null;
         Token firstToken=token;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case FOR:
@@ -2793,13 +2793,13 @@ public class PythonParser implements PythonParserConstants {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case COMMA:
         jj_consume_token(COMMA);
-                                                                   text14=new ASTTextNode(",",new WToken(token));
+                                                                   text591=new ASTTextNode(",",new WToken(token));
         break;
       default:
         jj_la1[81] = jj_gen;
         ;
       }
-         {if (true) return new listmakerEnd2(testList, text14, firstToken.next,token);}
+         {if (true) return new listmakerEnd2(testList, text591, firstToken.next,token);}
     }
     throw new Error("Missing return statement in function");
   }
@@ -3075,27 +3075,27 @@ public class PythonParser implements PythonParserConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case HEXNUMBER:
       t = jj_consume_token(HEXNUMBER);
-                      hexnumber=new ASTStringNode(t.toString(),new WToken(t));
+                      hexnumber=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new Number1(hexnumber, firstToken.next,token);}
       break;
     case OCTNUMBER:
       t = jj_consume_token(OCTNUMBER);
-                      octnumber=new ASTStringNode(t.toString(),new WToken(t));
+                      octnumber=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new Number2(octnumber, firstToken.next,token);}
       break;
     case DECNUMBER:
       t = jj_consume_token(DECNUMBER);
-                      decnumber=new ASTStringNode(t.toString(),new WToken(t));
+                      decnumber=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new Number3(decnumber, firstToken.next,token);}
       break;
     case FLOAT:
       t = jj_consume_token(FLOAT);
-                  float_kw=new ASTStringNode(t.toString(),new WToken(t));
+                  float_kw=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new Number4(float_kw, firstToken.next,token);}
       break;
     case COMPLEX:
       t = jj_consume_token(COMPLEX);
-                    complex=new ASTStringNode(t.toString(),new WToken(t));
+                    complex=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new Number5(complex, firstToken.next,token);}
       break;
     default:
@@ -3111,7 +3111,7 @@ public class PythonParser implements PythonParserConstants {
         ASTStringNode float_kw;
         Token firstToken=token;
     t = jj_consume_token(FLOAT);
-                  float_kw=new ASTStringNode(t.toString(),new WToken(t));
+                  float_kw=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new Complex(float_kw, firstToken.next,token);}
     throw new Error("Missing return statement in function");
   }
@@ -3124,12 +3124,12 @@ public class PythonParser implements PythonParserConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case NAME:
       t = jj_consume_token(NAME);
-                 name=new ASTStringNode(t.toString(),new WToken(t));
+                 name=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new Name1(name, firstToken.next,token);}
       break;
     case AS:
       t = jj_consume_token(AS);
-               as=new ASTStringNode(t.toString(),new WToken(t));
+               as=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new Name2(as, firstToken.next,token);}
       break;
     default:
@@ -3154,42 +3154,42 @@ public class PythonParser implements PythonParserConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case SINGLE_STRING:
       t = jj_consume_token(SINGLE_STRING);
-                          single_string=new ASTStringNode(t.toString(),new WToken(t));
+                          single_string=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new StringNode1(single_string, firstToken.next,token);}
       break;
     case SINGLE_STRING2:
       t = jj_consume_token(SINGLE_STRING2);
-                           single_string2=new ASTStringNode(t.toString(),new WToken(t));
+                           single_string2=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new StringNode2(single_string2, firstToken.next,token);}
       break;
     case TRIPLE_STRING:
       t = jj_consume_token(TRIPLE_STRING);
-                          triple_string=new ASTStringNode(t.toString(),new WToken(t));
+                          triple_string=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new StringNode3(triple_string, firstToken.next,token);}
       break;
     case TRIPLE_STRING2:
       t = jj_consume_token(TRIPLE_STRING2);
-                           triple_string2=new ASTStringNode(t.toString(),new WToken(t));
+                           triple_string2=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new StringNode4(triple_string2, firstToken.next,token);}
       break;
     case SINGLE_USTRING:
       t = jj_consume_token(SINGLE_USTRING);
-                           single_ustring=new ASTStringNode(t.toString(),new WToken(t));
+                           single_ustring=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new StringNode5(single_ustring, firstToken.next,token);}
       break;
     case SINGLE_USTRING2:
       t = jj_consume_token(SINGLE_USTRING2);
-                            single_ustring2=new ASTStringNode(t.toString(),new WToken(t));
+                            single_ustring2=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new StringNode6(single_ustring2, firstToken.next,token);}
       break;
     case TRIPLE_USTRING:
       t = jj_consume_token(TRIPLE_USTRING);
-                           triple_ustring=new ASTStringNode(t.toString(),new WToken(t));
+                           triple_ustring=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new StringNode7(triple_ustring, firstToken.next,token);}
       break;
     case TRIPLE_USTRING2:
       t = jj_consume_token(TRIPLE_USTRING2);
-                            triple_ustring2=new ASTStringNode(t.toString(),new WToken(t));
+                            triple_ustring2=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new StringNode8(triple_ustring2, firstToken.next,token);}
       break;
     default:
@@ -3234,7 +3234,7 @@ public class PythonParser implements PythonParserConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case NAME:
       t = jj_consume_token(NAME);
-                 name=new ASTStringNode(t.toString(),new WToken(t));
+                 name=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new AnyName1(name, firstToken.next,token);}
       break;
     case OR_BOOL:
@@ -3251,137 +3251,137 @@ public class PythonParser implements PythonParserConstants {
       break;
     case IS:
       t = jj_consume_token(IS);
-               is=new ASTStringNode(t.toString(),new WToken(t));
+               is=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new AnyName5(is, firstToken.next,token);}
       break;
     case IN:
       t = jj_consume_token(IN);
-               in=new ASTStringNode(t.toString(),new WToken(t));
+               in=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new AnyName6(in, firstToken.next,token);}
       break;
     case LAMBDA:
       t = jj_consume_token(LAMBDA);
-                   lambda=new ASTStringNode(t.toString(),new WToken(t));
+                   lambda=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new AnyName7(lambda, firstToken.next,token);}
       break;
     case IF:
       t = jj_consume_token(IF);
-               if_kw=new ASTStringNode(t.toString(),new WToken(t));
+               if_kw=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new AnyName8(if_kw, firstToken.next,token);}
       break;
     case ELSE:
       t = jj_consume_token(ELSE);
-                 else_kw=new ASTStringNode(t.toString(),new WToken(t));
+                 else_kw=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new AnyName9(else_kw, firstToken.next,token);}
       break;
     case ELIF:
       t = jj_consume_token(ELIF);
-                 elif=new ASTStringNode(t.toString(),new WToken(t));
+                 elif=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new AnyName10(elif, firstToken.next,token);}
       break;
     case WHILE:
       t = jj_consume_token(WHILE);
-                  while_kw=new ASTStringNode(t.toString(),new WToken(t));
+                  while_kw=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new AnyName11(while_kw, firstToken.next,token);}
       break;
     case FOR:
       t = jj_consume_token(FOR);
-                for_kw=new ASTStringNode(t.toString(),new WToken(t));
+                for_kw=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new AnyName12(for_kw, firstToken.next,token);}
       break;
     case TRY:
       t = jj_consume_token(TRY);
-                try_kw=new ASTStringNode(t.toString(),new WToken(t));
+                try_kw=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new AnyName13(try_kw, firstToken.next,token);}
       break;
     case EXCEPT:
       t = jj_consume_token(EXCEPT);
-                   except=new ASTStringNode(t.toString(),new WToken(t));
+                   except=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new AnyName14(except, firstToken.next,token);}
       break;
     case DEF:
       t = jj_consume_token(DEF);
-                def=new ASTStringNode(t.toString(),new WToken(t));
+                def=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new AnyName15(def, firstToken.next,token);}
       break;
     case CLASS:
       t = jj_consume_token(CLASS);
-                  class_kw=new ASTStringNode(t.toString(),new WToken(t));
+                  class_kw=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new AnyName16(class_kw, firstToken.next,token);}
       break;
     case FINALLY:
       t = jj_consume_token(FINALLY);
-                    finally_kw=new ASTStringNode(t.toString(),new WToken(t));
+                    finally_kw=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new AnyName17(finally_kw, firstToken.next,token);}
       break;
     case PRINT:
       t = jj_consume_token(PRINT);
-                  print=new ASTStringNode(t.toString(),new WToken(t));
+                  print=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new AnyName18(print, firstToken.next,token);}
       break;
     case PASS:
       t = jj_consume_token(PASS);
-                 pass=new ASTStringNode(t.toString(),new WToken(t));
+                 pass=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new AnyName19(pass, firstToken.next,token);}
       break;
     case BREAK:
       t = jj_consume_token(BREAK);
-                  break_kw=new ASTStringNode(t.toString(),new WToken(t));
+                  break_kw=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new AnyName20(break_kw, firstToken.next,token);}
       break;
     case CONTINUE:
       t = jj_consume_token(CONTINUE);
-                     continue_kw=new ASTStringNode(t.toString(),new WToken(t));
+                     continue_kw=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new AnyName21(continue_kw, firstToken.next,token);}
       break;
     case RETURN:
       t = jj_consume_token(RETURN);
-                   return_kw=new ASTStringNode(t.toString(),new WToken(t));
+                   return_kw=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new AnyName22(return_kw, firstToken.next,token);}
       break;
     case YIELD:
       t = jj_consume_token(YIELD);
-                  yield=new ASTStringNode(t.toString(),new WToken(t));
+                  yield=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new AnyName23(yield, firstToken.next,token);}
       break;
     case IMPORT:
       t = jj_consume_token(IMPORT);
-                   import_kw=new ASTStringNode(t.toString(),new WToken(t));
+                   import_kw=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new AnyName24(import_kw, firstToken.next,token);}
       break;
     case FROM:
       t = jj_consume_token(FROM);
-                 from=new ASTStringNode(t.toString(),new WToken(t));
+                 from=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new AnyName25(from, firstToken.next,token);}
       break;
     case DEL:
       t = jj_consume_token(DEL);
-                del=new ASTStringNode(t.toString(),new WToken(t));
+                del=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new AnyName26(del, firstToken.next,token);}
       break;
     case RAISE:
       t = jj_consume_token(RAISE);
-                  raise=new ASTStringNode(t.toString(),new WToken(t));
+                  raise=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new AnyName27(raise, firstToken.next,token);}
       break;
     case GLOBAL:
       t = jj_consume_token(GLOBAL);
-                   global=new ASTStringNode(t.toString(),new WToken(t));
+                   global=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new AnyName28(global, firstToken.next,token);}
       break;
     case EXEC:
       t = jj_consume_token(EXEC);
-                 exec=new ASTStringNode(t.toString(),new WToken(t));
+                 exec=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new AnyName29(exec, firstToken.next,token);}
       break;
     case ASSERT:
       t = jj_consume_token(ASSERT);
-                   assert_kw=new ASTStringNode(t.toString(),new WToken(t));
+                   assert_kw=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new AnyName30(assert_kw, firstToken.next,token);}
       break;
     case AS:
       t = jj_consume_token(AS);
-               as=new ASTStringNode(t.toString(),new WToken(t));
+               as=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new AnyName31(as, firstToken.next,token);}
       break;
     default:
@@ -3565,17 +3565,6 @@ public class PythonParser implements PythonParserConstants {
     try { return !jj_3_25(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(24, xla); }
-  }
-
-  final private boolean jj_3R_138() {
-    if (jj_scan_token(RETURN)) return true;
-    return false;
-  }
-
-  final private boolean jj_3R_48() {
-    if (jj_scan_token(MULTIPLY)) return true;
-    if (jj_3R_42()) return true;
-    return false;
   }
 
   final private boolean jj_3R_131() {
@@ -3983,14 +3972,14 @@ public class PythonParser implements PythonParserConstants {
     return false;
   }
 
-  final private boolean jj_3R_100() {
-    if (jj_scan_token(DEL)) return true;
-    return false;
-  }
-
   final private boolean jj_3_5() {
     if (jj_scan_token(COMMA)) return true;
     if (jj_3R_39()) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_100() {
+    if (jj_scan_token(DEL)) return true;
     return false;
   }
 
@@ -4636,6 +4625,17 @@ public class PythonParser implements PythonParserConstants {
 
   final private boolean jj_3R_123() {
     if (jj_3R_137()) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_138() {
+    if (jj_scan_token(RETURN)) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_48() {
+    if (jj_scan_token(MULTIPLY)) return true;
+    if (jj_3R_42()) return true;
     return false;
   }
 

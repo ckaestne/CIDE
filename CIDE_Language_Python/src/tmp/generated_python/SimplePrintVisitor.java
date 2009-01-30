@@ -8,11 +8,11 @@ import java.io.PrintStream;
 import cide.languages.*;
 
 /** package visibility. use only via ASTNode.render() **/
-class SimplePrintVisitor extends AbstractPrintVisitor {
-	SimplePrintVisitor(PrintStream out) {
+public class SimplePrintVisitor extends AbstractPrintVisitor {
+	public SimplePrintVisitor(PrintStream out) {
 		super(out);
 	}
-	SimplePrintVisitor() {
+	public SimplePrintVisitor() {
 		super();
 	}
 	public boolean visit(IASTNode node) {
@@ -119,7 +119,7 @@ class SimplePrintVisitor extends AbstractPrintVisitor {
 				}
 			}
 			{
-				ASTTextNode v=n.getText1();
+				ASTTextNode v=n.getText578();
 				if (v!=null) {
 					printToken(",");
 					v.accept(this);
@@ -233,7 +233,7 @@ class SimplePrintVisitor extends AbstractPrintVisitor {
 				v.accept(this);
 			}
 			{
-				ASTTextNode v=n.getText2();
+				ASTTextNode v=n.getText579();
 				if (v!=null) {
 					printToken(",");
 					v.accept(this);
@@ -274,7 +274,7 @@ class SimplePrintVisitor extends AbstractPrintVisitor {
 				v.accept(this);
 			}
 			{
-				ASTTextNode v=n.getText3();
+				ASTTextNode v=n.getText580();
 				if (v!=null) {
 					printToken(";");
 					v.accept(this);
@@ -655,7 +655,7 @@ class SimplePrintVisitor extends AbstractPrintVisitor {
 				v.accept(this);
 			}
 			{
-				ASTTextNode v=n.getText4();
+				ASTTextNode v=n.getText581();
 				if (v!=null) {
 					printToken(",");
 					v.accept(this);
@@ -676,7 +676,7 @@ class SimplePrintVisitor extends AbstractPrintVisitor {
 				v.accept(this);
 			}
 			{
-				ASTTextNode v=n.getText5();
+				ASTTextNode v=n.getText582();
 				if (v!=null) {
 					printToken(",");
 					v.accept(this);
@@ -1291,6 +1291,7 @@ class SimplePrintVisitor extends AbstractPrintVisitor {
 		}
 		if (node instanceof suite2) {
 			suite2 n = (suite2)node;
+			hintIncIndent();
 			{
 				ASTStringNode v=n.getNewline();
 				if (v!=null) {
@@ -1312,6 +1313,7 @@ class SimplePrintVisitor extends AbstractPrintVisitor {
 					v.accept(this);
 				}
 			}
+			hintDecIndent();
 			return false;
 		}
 		if (node instanceof test1) {
@@ -1967,7 +1969,7 @@ class SimplePrintVisitor extends AbstractPrintVisitor {
 				v.accept(this);
 			}
 			{
-				ASTTextNode v=n.getText9();
+				ASTTextNode v=n.getText586();
 				if (v!=null) {
 					printToken(",");
 					v.accept(this);
@@ -2063,7 +2065,7 @@ class SimplePrintVisitor extends AbstractPrintVisitor {
 				v.accept(this);
 			}
 			{
-				ASTTextNode v=n.getText10();
+				ASTTextNode v=n.getText587();
 				if (v!=null) {
 					printToken(",");
 					v.accept(this);
@@ -2084,7 +2086,7 @@ class SimplePrintVisitor extends AbstractPrintVisitor {
 				v.accept(this);
 			}
 			{
-				ASTTextNode v=n.getText11();
+				ASTTextNode v=n.getText588();
 				if (v!=null) {
 					printToken(",");
 					v.accept(this);
@@ -2105,7 +2107,7 @@ class SimplePrintVisitor extends AbstractPrintVisitor {
 				v.accept(this);
 			}
 			{
-				ASTTextNode v=n.getText12();
+				ASTTextNode v=n.getText589();
 				if (v!=null) {
 					printToken(",");
 					v.accept(this);
@@ -2132,7 +2134,7 @@ class SimplePrintVisitor extends AbstractPrintVisitor {
 				v.accept(this);
 			}
 			{
-				ASTTextNode v=n.getText13();
+				ASTTextNode v=n.getText590();
 				if (v!=null) {
 					printToken(",");
 					v.accept(this);
@@ -2188,7 +2190,7 @@ class SimplePrintVisitor extends AbstractPrintVisitor {
 				v.accept(this);
 			}
 			{
-				ASTTextNode v=n.getText14();
+				ASTTextNode v=n.getText591();
 				if (v!=null) {
 					printToken(",");
 					v.accept(this);

@@ -6,13 +6,13 @@ import cide.greferences.*;
 import java.util.*;
 
 public class varargslist1 extends varargslist {
-  public varargslist1(defaultarg defaultarg, ArrayList<defaultarg> defaultarg1, ExtraArgList extraArgList, ExtraKeywordList extraKeywordList, ASTTextNode text1, Token firstToken, Token lastToken) {
+  public varargslist1(defaultarg defaultarg, ArrayList<defaultarg> defaultarg1, ExtraArgList extraArgList, ExtraKeywordList extraKeywordList, ASTTextNode text578, Token firstToken, Token lastToken) {
     super(new Property[] {
       new PropertyOne<defaultarg>("defaultarg", defaultarg),
       new PropertyZeroOrMore<defaultarg>("defaultarg1", defaultarg1),
       new PropertyZeroOrOne<ExtraArgList>("extraArgList", extraArgList),
       new PropertyZeroOrOne<ExtraKeywordList>("extraKeywordList", extraKeywordList),
-      new PropertyZeroOrOne<ASTTextNode>("text1", text1)
+      new PropertyZeroOrOne<ASTTextNode>("text578", text578)
     }, firstToken, lastToken);
   }
   public varargslist1(Property[] properties, IToken firstToken, IToken lastToken) {
@@ -33,7 +33,7 @@ public class varargslist1 extends varargslist {
   public ExtraKeywordList getExtraKeywordList() {
     return ((PropertyZeroOrOne<ExtraKeywordList>)getProperty("extraKeywordList")).getValue();
   }
-  public ASTTextNode getText1() {
-    return ((PropertyZeroOrOne<ASTTextNode>)getProperty("text1")).getValue();
+  public ASTTextNode getText578() {
+    return ((PropertyZeroOrOne<ASTTextNode>)getProperty("text578")).getValue();
   }
 }

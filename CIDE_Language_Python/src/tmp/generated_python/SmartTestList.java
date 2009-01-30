@@ -6,11 +6,11 @@ import cide.greferences.*;
 import java.util.*;
 
 public class SmartTestList extends GenASTNode {
-  public SmartTestList(test test, ArrayList<test> test1, ASTTextNode text11, Token firstToken, Token lastToken) {
+  public SmartTestList(test test, ArrayList<test> test1, ASTTextNode text588, Token firstToken, Token lastToken) {
     super(new Property[] {
       new PropertyOne<test>("test", test),
       new PropertyZeroOrMore<test>("test1", test1),
-      new PropertyZeroOrOne<ASTTextNode>("text11", text11)
+      new PropertyZeroOrOne<ASTTextNode>("text588", text588)
     }, firstToken, lastToken);
   }
   public SmartTestList(Property[] properties, IToken firstToken, IToken lastToken) {
@@ -25,7 +25,7 @@ public class SmartTestList extends GenASTNode {
   public ArrayList<test> getTest1() {
     return ((PropertyZeroOrMore<test>)getProperty("test1")).getValue();
   }
-  public ASTTextNode getText11() {
-    return ((PropertyZeroOrOne<ASTTextNode>)getProperty("text11")).getValue();
+  public ASTTextNode getText588() {
+    return ((PropertyZeroOrOne<ASTTextNode>)getProperty("text588")).getValue();
   }
 }

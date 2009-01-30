@@ -6,11 +6,11 @@ import cide.greferences.*;
 import java.util.*;
 
 public class testlist extends GenASTNode {
-  public testlist(test test, ArrayList<test> test1, ASTTextNode text12, Token firstToken, Token lastToken) {
+  public testlist(test test, ArrayList<test> test1, ASTTextNode text589, Token firstToken, Token lastToken) {
     super(new Property[] {
       new PropertyOne<test>("test", test),
       new PropertyZeroOrMore<test>("test1", test1),
-      new PropertyZeroOrOne<ASTTextNode>("text12", text12)
+      new PropertyZeroOrOne<ASTTextNode>("text589", text589)
     }, firstToken, lastToken);
   }
   public testlist(Property[] properties, IToken firstToken, IToken lastToken) {
@@ -25,7 +25,7 @@ public class testlist extends GenASTNode {
   public ArrayList<test> getTest1() {
     return ((PropertyZeroOrMore<test>)getProperty("test1")).getValue();
   }
-  public ASTTextNode getText12() {
-    return ((PropertyZeroOrOne<ASTTextNode>)getProperty("text12")).getValue();
+  public ASTTextNode getText589() {
+    return ((PropertyZeroOrOne<ASTTextNode>)getProperty("text589")).getValue();
   }
 }

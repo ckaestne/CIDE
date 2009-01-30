@@ -6,10 +6,10 @@ import cide.greferences.*;
 import java.util.*;
 
 public class listmakerEnd2 extends listmakerEnd {
-  public listmakerEnd2(ArrayList<test> test, ASTTextNode text14, Token firstToken, Token lastToken) {
+  public listmakerEnd2(ArrayList<test> test, ASTTextNode text591, Token firstToken, Token lastToken) {
     super(new Property[] {
       new PropertyZeroOrMore<test>("test", test),
-      new PropertyZeroOrOne<ASTTextNode>("text14", text14)
+      new PropertyZeroOrOne<ASTTextNode>("text591", text591)
     }, firstToken, lastToken);
   }
   public listmakerEnd2(Property[] properties, IToken firstToken, IToken lastToken) {
@@ -21,7 +21,7 @@ public class listmakerEnd2 extends listmakerEnd {
   public ArrayList<test> getTest() {
     return ((PropertyZeroOrMore<test>)getProperty("test")).getValue();
   }
-  public ASTTextNode getText14() {
-    return ((PropertyZeroOrOne<ASTTextNode>)getProperty("text14")).getValue();
+  public ASTTextNode getText591() {
+    return ((PropertyZeroOrOne<ASTTextNode>)getProperty("text591")).getValue();
   }
 }

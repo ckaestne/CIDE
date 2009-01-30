@@ -6,11 +6,11 @@ import cide.greferences.*;
 import java.util.*;
 
 public class subscriptlist extends GenASTNode {
-  public subscriptlist(subscript subscript, ArrayList<subscript> subscript1, ASTTextNode text9, Token firstToken, Token lastToken) {
+  public subscriptlist(subscript subscript, ArrayList<subscript> subscript1, ASTTextNode text586, Token firstToken, Token lastToken) {
     super(new Property[] {
       new PropertyOne<subscript>("subscript", subscript),
       new PropertyZeroOrMore<subscript>("subscript1", subscript1),
-      new PropertyZeroOrOne<ASTTextNode>("text9", text9)
+      new PropertyZeroOrOne<ASTTextNode>("text586", text586)
     }, firstToken, lastToken);
   }
   public subscriptlist(Property[] properties, IToken firstToken, IToken lastToken) {
@@ -25,7 +25,7 @@ public class subscriptlist extends GenASTNode {
   public ArrayList<subscript> getSubscript1() {
     return ((PropertyZeroOrMore<subscript>)getProperty("subscript1")).getValue();
   }
-  public ASTTextNode getText9() {
-    return ((PropertyZeroOrOne<ASTTextNode>)getProperty("text9")).getValue();
+  public ASTTextNode getText586() {
+    return ((PropertyZeroOrOne<ASTTextNode>)getProperty("text586")).getValue();
   }
 }

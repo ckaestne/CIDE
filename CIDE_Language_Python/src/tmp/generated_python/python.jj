@@ -58,8 +58,8 @@ TOKEN_MGR_DECLS:
         t.beginColumn = previous.beginColumn;
         t.endColumn = previous.endColumn;
         t.offset=previous.offset;
-        t.length=previous.length;
-        t.image = "<DEDENT>";
+        t.length=0;
+        t.image = "";
         t.specialToken = null;
         t.next = null;
         previous.next = t;
@@ -82,6 +82,7 @@ TOKEN_MGR_DECLS:
                 }
                 else {
                     t.kind = DEDENT;
+                    t.length=0;
                     if (level >= 0) level -= 1;
                 }
                 while (level >= 0) {
@@ -190,7 +191,9 @@ SKIP :
                 level++;
                 indentation[level] = indent;
                 matchedToken.kind=INDENT;
-                matchedToken.image = "<INDENT>";
+                matchedToken.image = "";
+                //for (int i=0;i<indent;i++) matchedToken.image+=" ";
+                matchedToken.length=0;
             }
             else if (level > 0) {
                 Token t = matchedToken;
@@ -446,7 +449,7 @@ file_input file_input() : {
 	ASTStringNode eof;
 	Token firstToken=token;
 } { (
-	(newlineOrStmt=newlineOrStmt(){newlineOrStmtList.add(newlineOrStmt);})* t=<EOF>{eof=new ASTStringNode(t.toString(),new WToken(t));} 
+	(newlineOrStmt=newlineOrStmt(){newlineOrStmtList.add(newlineOrStmt);})* t=<EOF>{eof=new ASTStringNode(t.image,new WToken(t));} 
 	{return new file_input(newlineOrStmtList, eof, firstToken.next,token);}
  ) }
 
@@ -456,7 +459,7 @@ newlineOrStmt newlineOrStmt() : {
 	stmt stmt;
 	Token firstToken=token;
 } { (
-	t=<NEWLINE>{newline=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<NEWLINE>{newline=new ASTStringNode(t.image,new WToken(t));} 
 	{return new newlineOrStmt1(newline, firstToken.next,token);} |
 	stmt=stmt() 
 	{return new newlineOrStmt2(stmt, firstToken.next,token);}
@@ -486,14 +489,14 @@ varargslist varargslist() : {
 	ArrayList<defaultarg> defaultarg1List = new ArrayList<defaultarg>();
 	ExtraArgList extraArgList = null;
 	ExtraKeywordList extraKeywordList = null;
-	ASTTextNode text1 = null;
+	ASTTextNode text578 = null;
 	ExtraArgList extraArgList1;
 	ExtraKeywordList extraKeywordList1 = null;
 	ExtraKeywordList extraKeywordList2;
 	Token firstToken=token;
 } { (
-	defaultarg=defaultarg() (LOOKAHEAD(2) "," defaultarg1=defaultarg(){defaultarg1List.add(defaultarg1);})* [LOOKAHEAD(3) "," extraArgList=ExtraArgList()] [LOOKAHEAD(2) "," extraKeywordList=ExtraKeywordList()] ["," {text1=new ASTTextNode(",",new WToken(token));}] 
-	{return new varargslist1(defaultarg, defaultarg1List, extraArgList, extraKeywordList, text1, firstToken.next,token);} |
+	defaultarg=defaultarg() (LOOKAHEAD(2) "," defaultarg1=defaultarg(){defaultarg1List.add(defaultarg1);})* [LOOKAHEAD(3) "," extraArgList=ExtraArgList()] [LOOKAHEAD(2) "," extraKeywordList=ExtraKeywordList()] ["," {text578=new ASTTextNode(",",new WToken(token));}] 
+	{return new varargslist1(defaultarg, defaultarg1List, extraArgList, extraKeywordList, text578, firstToken.next,token);} |
 	LOOKAHEAD(2) extraArgList1=ExtraArgList() ["," extraKeywordList1=ExtraKeywordList()] 
 	{return new varargslist2(extraArgList1, extraKeywordList1, firstToken.next,token);} |
 	extraKeywordList2=ExtraKeywordList() 
@@ -541,11 +544,11 @@ fplist fplist() : {
 	fpdef fpdef;
 	fpdef fpdef1;
 	ArrayList<fpdef> fpdef1List = new ArrayList<fpdef>();
-	ASTTextNode text2 = null;
+	ASTTextNode text579 = null;
 	Token firstToken=token;
 } { (
-	fpdef=fpdef() (LOOKAHEAD(2) "," fpdef1=fpdef(){fpdef1List.add(fpdef1);})* ["," {text2=new ASTTextNode(",",new WToken(token));}] 
-	{return new fplist(fpdef, fpdef1List, text2, firstToken.next,token);}
+	fpdef=fpdef() (LOOKAHEAD(2) "," fpdef1=fpdef(){fpdef1List.add(fpdef1);})* ["," {text579=new ASTTextNode(",",new WToken(token));}] 
+	{return new fplist(fpdef, fpdef1List, text579, firstToken.next,token);}
  ) }
 
 stmt stmt() : { 
@@ -563,13 +566,13 @@ simple_stmt simple_stmt() : {
 	small_stmt small_stmt;
 	small_stmt small_stmt1;
 	ArrayList<small_stmt> small_stmt1List = new ArrayList<small_stmt>();
-	ASTTextNode text3 = null;
+	ASTTextNode text580 = null;
 	Token t;
 	ASTStringNode newline;
 	Token firstToken=token;
 } { (
-	small_stmt=small_stmt() (LOOKAHEAD(2) ";" small_stmt1=small_stmt(){small_stmt1List.add(small_stmt1);})* [";" {text3=new ASTTextNode(";",new WToken(token));}] t=<NEWLINE>{newline=new ASTStringNode(t.toString(),new WToken(t));} 
-	{return new simple_stmt(small_stmt, small_stmt1List, text3, newline, firstToken.next,token);}
+	small_stmt=small_stmt() (LOOKAHEAD(2) ";" small_stmt1=small_stmt(){small_stmt1List.add(small_stmt1);})* [";" {text580=new ASTTextNode(";",new WToken(token));}] t=<NEWLINE>{newline=new ASTStringNode(t.image,new WToken(t));} 
+	{return new simple_stmt(small_stmt, small_stmt1List, text580, newline, firstToken.next,token);}
  ) }
 
 small_stmt small_stmt() : { 
@@ -643,29 +646,29 @@ expr_stmtEnd expr_stmtEnd() : {
 	ArrayList<SmartTestList> smartTestList12List = new ArrayList<SmartTestList>();
 	Token firstToken=token;
 } { (
-	t=<PLUSEQ>{pluseq=new ASTStringNode(t.toString(),new WToken(t));} smartTestList=SmartTestList() 
+	t=<PLUSEQ>{pluseq=new ASTStringNode(t.image,new WToken(t));} smartTestList=SmartTestList() 
 	{return new expr_stmtEnd1(pluseq, smartTestList, firstToken.next,token);} |
-	t=<MINUSEQ>{minuseq=new ASTStringNode(t.toString(),new WToken(t));} smartTestList1=SmartTestList() 
+	t=<MINUSEQ>{minuseq=new ASTStringNode(t.image,new WToken(t));} smartTestList1=SmartTestList() 
 	{return new expr_stmtEnd2(minuseq, smartTestList1, firstToken.next,token);} |
-	t=<MULTIPLYEQ>{multiplyeq=new ASTStringNode(t.toString(),new WToken(t));} smartTestList2=SmartTestList() 
+	t=<MULTIPLYEQ>{multiplyeq=new ASTStringNode(t.image,new WToken(t));} smartTestList2=SmartTestList() 
 	{return new expr_stmtEnd3(multiplyeq, smartTestList2, firstToken.next,token);} |
-	t=<DIVIDEEQ>{divideeq=new ASTStringNode(t.toString(),new WToken(t));} smartTestList3=SmartTestList() 
+	t=<DIVIDEEQ>{divideeq=new ASTStringNode(t.image,new WToken(t));} smartTestList3=SmartTestList() 
 	{return new expr_stmtEnd4(divideeq, smartTestList3, firstToken.next,token);} |
-	t=<FLOORDIVIDEEQ>{floordivideeq=new ASTStringNode(t.toString(),new WToken(t));} smartTestList4=SmartTestList() 
+	t=<FLOORDIVIDEEQ>{floordivideeq=new ASTStringNode(t.image,new WToken(t));} smartTestList4=SmartTestList() 
 	{return new expr_stmtEnd5(floordivideeq, smartTestList4, firstToken.next,token);} |
-	t=<MODULOEQ>{moduloeq=new ASTStringNode(t.toString(),new WToken(t));} smartTestList5=SmartTestList() 
+	t=<MODULOEQ>{moduloeq=new ASTStringNode(t.image,new WToken(t));} smartTestList5=SmartTestList() 
 	{return new expr_stmtEnd6(moduloeq, smartTestList5, firstToken.next,token);} |
-	t=<ANDEQ>{andeq=new ASTStringNode(t.toString(),new WToken(t));} smartTestList6=SmartTestList() 
+	t=<ANDEQ>{andeq=new ASTStringNode(t.image,new WToken(t));} smartTestList6=SmartTestList() 
 	{return new expr_stmtEnd7(andeq, smartTestList6, firstToken.next,token);} |
-	t=<OREQ>{oreq=new ASTStringNode(t.toString(),new WToken(t));} smartTestList7=SmartTestList() 
+	t=<OREQ>{oreq=new ASTStringNode(t.image,new WToken(t));} smartTestList7=SmartTestList() 
 	{return new expr_stmtEnd8(oreq, smartTestList7, firstToken.next,token);} |
-	t=<XOREQ>{xoreq=new ASTStringNode(t.toString(),new WToken(t));} smartTestList8=SmartTestList() 
+	t=<XOREQ>{xoreq=new ASTStringNode(t.image,new WToken(t));} smartTestList8=SmartTestList() 
 	{return new expr_stmtEnd9(xoreq, smartTestList8, firstToken.next,token);} |
-	t=<LSHIFTEQ>{lshifteq=new ASTStringNode(t.toString(),new WToken(t));} smartTestList9=SmartTestList() 
+	t=<LSHIFTEQ>{lshifteq=new ASTStringNode(t.image,new WToken(t));} smartTestList9=SmartTestList() 
 	{return new expr_stmtEnd10(lshifteq, smartTestList9, firstToken.next,token);} |
-	t=<RSHIFTEQ>{rshifteq=new ASTStringNode(t.toString(),new WToken(t));} smartTestList10=SmartTestList() 
+	t=<RSHIFTEQ>{rshifteq=new ASTStringNode(t.image,new WToken(t));} smartTestList10=SmartTestList() 
 	{return new expr_stmtEnd11(rshifteq, smartTestList10, firstToken.next,token);} |
-	t=<POWEREQ>{powereq=new ASTStringNode(t.toString(),new WToken(t));} smartTestList11=SmartTestList() 
+	t=<POWEREQ>{powereq=new ASTStringNode(t.image,new WToken(t));} smartTestList11=SmartTestList() 
 	{return new expr_stmtEnd12(powereq, smartTestList11, firstToken.next,token);} |
 	("=" smartTestList12=SmartTestList(){smartTestList12List.add(smartTestList12);})* 
 	{return new expr_stmtEnd13(smartTestList12List, firstToken.next,token);}
@@ -682,33 +685,33 @@ print_stmt print_stmt() : {
 	ASTStringNode print2;
 	Token firstToken=token;
 } { (
-	LOOKAHEAD(2) t=<PRINT>{print=new ASTStringNode(t.toString(),new WToken(t));} t=<RSHIFT>{rshift=new ASTStringNode(t.toString(),new WToken(t));} test=test() [print_stmtEndP=print_stmtEndP()] 
+	LOOKAHEAD(2) t=<PRINT>{print=new ASTStringNode(t.image,new WToken(t));} t=<RSHIFT>{rshift=new ASTStringNode(t.image,new WToken(t));} test=test() [print_stmtEndP=print_stmtEndP()] 
 	{return new print_stmt1(print, rshift, test, print_stmtEndP, firstToken.next,token);} |
-	LOOKAHEAD(2) t=<PRINT>{print1=new ASTStringNode(t.toString(),new WToken(t));} print_stmtEndA=print_stmtEndA() 
+	LOOKAHEAD(2) t=<PRINT>{print1=new ASTStringNode(t.image,new WToken(t));} print_stmtEndA=print_stmtEndA() 
 	{return new print_stmt2(print1, print_stmtEndA, firstToken.next,token);} |
-	t=<PRINT>{print2=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<PRINT>{print2=new ASTStringNode(t.image,new WToken(t));} 
 	{return new print_stmt3(print2, firstToken.next,token);}
  ) }
 
 print_stmtEndP print_stmtEndP() : { 
 	test test;
 	ArrayList<test> testList = new ArrayList<test>();
-	ASTTextNode text4 = null;
+	ASTTextNode text581 = null;
 	Token firstToken=token;
 } { (
-	(LOOKAHEAD(2) "," test=test(){testList.add(test);})+ ["," {text4=new ASTTextNode(",",new WToken(token));}] 
-	{return new print_stmtEndP(testList, text4, firstToken.next,token);}
+	(LOOKAHEAD(2) "," test=test(){testList.add(test);})+ ["," {text581=new ASTTextNode(",",new WToken(token));}] 
+	{return new print_stmtEndP(testList, text581, firstToken.next,token);}
  ) }
 
 print_stmtEndA print_stmtEndA() : { 
 	test test;
 	test test1;
 	ArrayList<test> test1List = new ArrayList<test>();
-	ASTTextNode text5 = null;
+	ASTTextNode text582 = null;
 	Token firstToken=token;
 } { (
-	test=test() (LOOKAHEAD(2) "," test1=test(){test1List.add(test1);})* ["," {text5=new ASTTextNode(",",new WToken(token));}] 
-	{return new print_stmtEndA(test, test1List, text5, firstToken.next,token);}
+	test=test() (LOOKAHEAD(2) "," test1=test(){test1List.add(test1);})* ["," {text582=new ASTTextNode(",",new WToken(token));}] 
+	{return new print_stmtEndA(test, test1List, text582, firstToken.next,token);}
  ) }
 
 del_stmt del_stmt() : { 
@@ -717,7 +720,7 @@ del_stmt del_stmt() : {
 	exprlist exprlist;
 	Token firstToken=token;
 } { (
-	t=<DEL>{del=new ASTStringNode(t.toString(),new WToken(t));} exprlist=exprlist() 
+	t=<DEL>{del=new ASTStringNode(t.image,new WToken(t));} exprlist=exprlist() 
 	{return new del_stmt(del, exprlist, firstToken.next,token);}
  ) }
 
@@ -726,7 +729,7 @@ pass_stmt pass_stmt() : {
 	ASTStringNode pass;
 	Token firstToken=token;
 } { (
-	t=<PASS>{pass=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<PASS>{pass=new ASTStringNode(t.image,new WToken(t));} 
 	{return new pass_stmt(pass, firstToken.next,token);}
  ) }
 
@@ -739,9 +742,9 @@ flow_stmt flow_stmt() : {
 	raise_stmt raise_stmt;
 	Token firstToken=token;
 } { (
-	t=<BREAK>{break_kw=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<BREAK>{break_kw=new ASTStringNode(t.image,new WToken(t));} 
 	{return new flow_stmt1(break_kw, firstToken.next,token);} |
-	t=<CONTINUE>{continue_kw=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<CONTINUE>{continue_kw=new ASTStringNode(t.image,new WToken(t));} 
 	{return new flow_stmt2(continue_kw, firstToken.next,token);} |
 	return_stmt=return_stmt() 
 	{return new flow_stmt3(return_stmt, firstToken.next,token);} |
@@ -757,7 +760,7 @@ return_stmt return_stmt() : {
 	SmartTestList smartTestList = null;
 	Token firstToken=token;
 } { (
-	t=<RETURN>{return_kw=new ASTStringNode(t.toString(),new WToken(t));} [smartTestList=SmartTestList()] 
+	t=<RETURN>{return_kw=new ASTStringNode(t.image,new WToken(t));} [smartTestList=SmartTestList()] 
 	{return new return_stmt(return_kw, smartTestList, firstToken.next,token);}
  ) }
 
@@ -767,7 +770,7 @@ yield_stmt yield_stmt() : {
 	SmartTestList smartTestList;
 	Token firstToken=token;
 } { (
-	t=<YIELD>{yield=new ASTStringNode(t.toString(),new WToken(t));} smartTestList=SmartTestList() 
+	t=<YIELD>{yield=new ASTStringNode(t.image,new WToken(t));} smartTestList=SmartTestList() 
 	{return new yield_stmt(yield, smartTestList, firstToken.next,token);}
  ) }
 
@@ -777,7 +780,7 @@ raise_stmt raise_stmt() : {
 	raise_stmt_end raise_stmt_end = null;
 	Token firstToken=token;
 } { (
-	t=<RAISE>{raise=new ASTStringNode(t.toString(),new WToken(t));} [raise_stmt_end=raise_stmt_end()] 
+	t=<RAISE>{raise=new ASTStringNode(t.image,new WToken(t));} [raise_stmt_end=raise_stmt_end()] 
 	{return new raise_stmt(raise, raise_stmt_end, firstToken.next,token);}
  ) }
 
@@ -807,9 +810,9 @@ import_stmt import_stmt() : {
 	ImportFrom importFrom;
 	Token firstToken=token;
 } { (
-	t=<IMPORT>{import_kw=new ASTStringNode(t.toString(),new WToken(t));} import_KW=Import() 
+	t=<IMPORT>{import_kw=new ASTStringNode(t.image,new WToken(t));} import_KW=Import() 
 	{return new import_stmt1(import_kw, import_KW, firstToken.next,token);} |
-	t=<FROM>{from=new ASTStringNode(t.toString(),new WToken(t));} importFrom=ImportFrom() 
+	t=<FROM>{from=new ASTStringNode(t.image,new WToken(t));} importFrom=ImportFrom() 
 	{return new import_stmt2(from, importFrom, firstToken.next,token);}
  ) }
 
@@ -830,7 +833,7 @@ ImportFrom ImportFrom() : {
 	ImportFromEnd importFromEnd;
 	Token firstToken=token;
 } { (
-	dotted_name=dotted_name() t=<IMPORT>{import_kw=new ASTStringNode(t.toString(),new WToken(t));} importFromEnd=ImportFromEnd() 
+	dotted_name=dotted_name() t=<IMPORT>{import_kw=new ASTStringNode(t.image,new WToken(t));} importFromEnd=ImportFromEnd() 
 	{return new ImportFrom(dotted_name, import_kw, importFromEnd, firstToken.next,token);}
  ) }
 
@@ -882,7 +885,7 @@ global_stmt global_stmt() : {
 	ArrayList<Name> name1List = new ArrayList<Name>();
 	Token firstToken=token;
 } { (
-	t=<GLOBAL>{global=new ASTStringNode(t.toString(),new WToken(t));} name=Name() ("," name1=Name(){name1List.add(name1);})* 
+	t=<GLOBAL>{global=new ASTStringNode(t.image,new WToken(t));} name=Name() ("," name1=Name(){name1List.add(name1);})* 
 	{return new global_stmt(global, name, name1List, firstToken.next,token);}
  ) }
 
@@ -1021,7 +1024,7 @@ suite suite() : {
 } { (
 	simple_stmt=simple_stmt() 
 	{return new suite1(simple_stmt, firstToken.next,token);} |
-	t=<NEWLINE>{newline=new ASTStringNode(t.toString(),new WToken(t));}  {token_source.expect_indent = true;} t=<INDENT>{indent=new ASTStringNode(t.toString(),new WToken(t));}  {token_source.expect_indent = false;} (stmt=stmt(){stmtList.add(stmt);})+ t=<DEDENT>{dedent=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<NEWLINE>{newline=new ASTStringNode(t.image,new WToken(t));}  {token_source.expect_indent = true;} t=<INDENT>{indent=new ASTStringNode(t.image,new WToken(t));}  {token_source.expect_indent = false;} (stmt=stmt(){stmtList.add(stmt);})+ t=<DEDENT>{dedent=new ASTStringNode(t.image,new WToken(t));} 
 	{return new suite2(newline, indent, stmtList, dedent, firstToken.next,token);}
  ) }
 
@@ -1093,27 +1096,27 @@ comp_op comp_op() : {
 	ASTStringNode is1;
 	Token firstToken=token;
 } { (
-	t=<LESS>{less=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<LESS>{less=new ASTStringNode(t.image,new WToken(t));} 
 	{return new comp_op1(less, firstToken.next,token);} |
-	t=<GREATER>{greater=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<GREATER>{greater=new ASTStringNode(t.image,new WToken(t));} 
 	{return new comp_op2(greater, firstToken.next,token);} |
-	t=<EQEQUAL>{eqequal=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<EQEQUAL>{eqequal=new ASTStringNode(t.image,new WToken(t));} 
 	{return new comp_op3(eqequal, firstToken.next,token);} |
-	t=<EQGREATER>{eqgreater=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<EQGREATER>{eqgreater=new ASTStringNode(t.image,new WToken(t));} 
 	{return new comp_op4(eqgreater, firstToken.next,token);} |
-	t=<EQLESS>{eqless=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<EQLESS>{eqless=new ASTStringNode(t.image,new WToken(t));} 
 	{return new comp_op5(eqless, firstToken.next,token);} |
-	t=<LESSGREATER>{lessgreater=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<LESSGREATER>{lessgreater=new ASTStringNode(t.image,new WToken(t));} 
 	{return new comp_op6(lessgreater, firstToken.next,token);} |
-	t=<NOTEQUAL>{notequal=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<NOTEQUAL>{notequal=new ASTStringNode(t.image,new WToken(t));} 
 	{return new comp_op7(notequal, firstToken.next,token);} |
-	t=<IN>{in=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<IN>{in=new ASTStringNode(t.image,new WToken(t));} 
 	{return new comp_op8(in, firstToken.next,token);} |
-	"not" t=<IN>{in1=new ASTStringNode(t.toString(),new WToken(t));} 
+	"not" t=<IN>{in1=new ASTStringNode(t.image,new WToken(t));} 
 	{return new comp_op9(in1, firstToken.next,token);} |
-	LOOKAHEAD(2) t=<IS>{is=new ASTStringNode(t.toString(),new WToken(t));} "not" 
+	LOOKAHEAD(2) t=<IS>{is=new ASTStringNode(t.image,new WToken(t));} "not" 
 	{return new comp_op10(is, firstToken.next,token);} |
-	t=<IS>{is1=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<IS>{is1=new ASTStringNode(t.image,new WToken(t));} 
 	{return new comp_op11(is1, firstToken.next,token);}
  ) }
 
@@ -1186,9 +1189,9 @@ arith_exprEnd arith_exprEnd() : {
 	term term1;
 	Token firstToken=token;
 } { (
-	t=<PLUS>{plus=new ASTStringNode(t.toString(),new WToken(t));} term=term() 
+	t=<PLUS>{plus=new ASTStringNode(t.image,new WToken(t));} term=term() 
 	{return new arith_exprEnd1(plus, term, firstToken.next,token);} |
-	t=<MINUS>{minus=new ASTStringNode(t.toString(),new WToken(t));} term1=term() 
+	t=<MINUS>{minus=new ASTStringNode(t.image,new WToken(t));} term1=term() 
 	{return new arith_exprEnd2(minus, term1, firstToken.next,token);}
  ) }
 
@@ -1215,11 +1218,11 @@ termEnd termEnd() : {
 } { (
 	"*" factor=factor() 
 	{return new termEnd1(factor, firstToken.next,token);} |
-	t=<DIVIDE>{divide=new ASTStringNode(t.toString(),new WToken(t));} factor1=factor() 
+	t=<DIVIDE>{divide=new ASTStringNode(t.image,new WToken(t));} factor1=factor() 
 	{return new termEnd2(divide, factor1, firstToken.next,token);} |
-	t=<FLOORDIVIDE>{floordivide=new ASTStringNode(t.toString(),new WToken(t));} factor2=factor() 
+	t=<FLOORDIVIDE>{floordivide=new ASTStringNode(t.image,new WToken(t));} factor2=factor() 
 	{return new termEnd3(floordivide, factor2, firstToken.next,token);} |
-	t=<MODULO>{modulo=new ASTStringNode(t.toString(),new WToken(t));} factor3=factor() 
+	t=<MODULO>{modulo=new ASTStringNode(t.image,new WToken(t));} factor3=factor() 
 	{return new termEnd4(modulo, factor3, firstToken.next,token);}
  ) }
 
@@ -1234,11 +1237,11 @@ factor factor() : {
 	powerfactor powerfactor;
 	Token firstToken=token;
 } { (
-	t=<PLUS>{plus=new ASTStringNode(t.toString(),new WToken(t));} factor=factor() 
+	t=<PLUS>{plus=new ASTStringNode(t.image,new WToken(t));} factor=factor() 
 	{return new factor1(plus, factor, firstToken.next,token);} |
-	t=<MINUS>{minus=new ASTStringNode(t.toString(),new WToken(t));} factor1=factor() 
+	t=<MINUS>{minus=new ASTStringNode(t.image,new WToken(t));} factor1=factor() 
 	{return new factor2(minus, factor1, firstToken.next,token);} |
-	t=<NOT>{not=new ASTStringNode(t.toString(),new WToken(t));} factor2=factor() 
+	t=<NOT>{not=new ASTStringNode(t.image,new WToken(t));} factor2=factor() 
 	{return new factor3(not, factor2, firstToken.next,token);} |
 	powerfactor=powerfactor() 
 	{return new factor4(powerfactor, firstToken.next,token);}
@@ -1278,7 +1281,7 @@ atomtrailerEnd atomtrailerEnd() : {
 	{return new atomtrailerEnd2(arglist, firstToken.next,token);} |
 	"[" subscriptlist=subscriptlist() "]" 
 	{return new atomtrailerEnd3(subscriptlist, firstToken.next,token);} |
-	t=<DOT>{dot=new ASTStringNode(t.toString(),new WToken(t));} anyName=AnyName() 
+	t=<DOT>{dot=new ASTStringNode(t.image,new WToken(t));} anyName=AnyName() 
 	{return new atomtrailerEnd4(dot, anyName, firstToken.next,token);}
  ) }
 
@@ -1300,7 +1303,7 @@ atom atom() : {
 	{return new atom1(firstToken.next,token);} |
 	"(" [smartTestList=SmartTestList()] ")" 
 	{return new atom2(smartTestList, firstToken.next,token);} |
-	t=<LBRACKET>{lbracket=new ASTStringNode(t.toString(),new WToken(t));} [listmaker=listmaker()] "]" 
+	t=<LBRACKET>{lbracket=new ASTStringNode(t.image,new WToken(t));} [listmaker=listmaker()] "]" 
 	{return new atom3(lbracket, listmaker, firstToken.next,token);} |
 	"{" [dictmaker=dictmaker()] "}" 
 	{return new atom4(dictmaker, firstToken.next,token);} |
@@ -1321,7 +1324,7 @@ lambdef lambdef() : {
 	test test;
 	Token firstToken=token;
 } { (
-	t=<LAMBDA>{lambda=new ASTStringNode(t.toString(),new WToken(t));} [varargslist=varargslist()] ":" test=test() 
+	t=<LAMBDA>{lambda=new ASTStringNode(t.image,new WToken(t));} [varargslist=varargslist()] ":" test=test() 
 	{return new lambdef(lambda, varargslist, test, firstToken.next,token);}
  ) }
 
@@ -1329,11 +1332,11 @@ subscriptlist subscriptlist() : {
 	subscript subscript;
 	subscript subscript1;
 	ArrayList<subscript> subscript1List = new ArrayList<subscript>();
-	ASTTextNode text9 = null;
+	ASTTextNode text586 = null;
 	Token firstToken=token;
 } { (
-	subscript=subscript() (LOOKAHEAD(2) "," subscript1=subscript(){subscript1List.add(subscript1);})* ["," {text9=new ASTTextNode(",",new WToken(token));}] 
-	{return new subscriptlist(subscript, subscript1List, text9, firstToken.next,token);}
+	subscript=subscript() (LOOKAHEAD(2) "," subscript1=subscript(){subscript1List.add(subscript1);})* ["," {text586=new ASTTextNode(",",new WToken(token));}] 
+	{return new subscriptlist(subscript, subscript1List, text586, firstToken.next,token);}
  ) }
 
 subscript subscript() : { 
@@ -1346,7 +1349,7 @@ subscript subscript() : {
 	slice slice1;
 	Token firstToken=token;
 } { (
-	t=<DOT>{dot=new ASTStringNode(t.toString(),new WToken(t));} t=<DOT>{dot1=new ASTStringNode(t.toString(),new WToken(t));} t=<DOT>{dot2=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<DOT>{dot=new ASTStringNode(t.image,new WToken(t));} t=<DOT>{dot1=new ASTStringNode(t.image,new WToken(t));} t=<DOT>{dot2=new ASTStringNode(t.image,new WToken(t));} 
 	{return new subscript1(dot, dot1, dot2, firstToken.next,token);} |
 	test=test() [slice=slice()] 
 	{return new subscript2(test, slice, firstToken.next,token);} |
@@ -1375,33 +1378,33 @@ exprlist exprlist() : {
 	expr expr;
 	expr expr1;
 	ArrayList<expr> expr1List = new ArrayList<expr>();
-	ASTTextNode text10 = null;
+	ASTTextNode text587 = null;
 	Token firstToken=token;
 } { (
-	expr=expr() (LOOKAHEAD(2) "," expr1=expr(){expr1List.add(expr1);})* ["," {text10=new ASTTextNode(",",new WToken(token));}] 
-	{return new exprlist(expr, expr1List, text10, firstToken.next,token);}
+	expr=expr() (LOOKAHEAD(2) "," expr1=expr(){expr1List.add(expr1);})* ["," {text587=new ASTTextNode(",",new WToken(token));}] 
+	{return new exprlist(expr, expr1List, text587, firstToken.next,token);}
  ) }
 
 SmartTestList SmartTestList() : { 
 	test test;
 	test test1;
 	ArrayList<test> test1List = new ArrayList<test>();
-	ASTTextNode text11 = null;
+	ASTTextNode text588 = null;
 	Token firstToken=token;
 } { (
-	test=test() (LOOKAHEAD(2) "," test1=test(){test1List.add(test1);})* ["," {text11=new ASTTextNode(",",new WToken(token));}] 
-	{return new SmartTestList(test, test1List, text11, firstToken.next,token);}
+	test=test() (LOOKAHEAD(2) "," test1=test(){test1List.add(test1);})* ["," {text588=new ASTTextNode(",",new WToken(token));}] 
+	{return new SmartTestList(test, test1List, text588, firstToken.next,token);}
  ) }
 
 testlist testlist() : { 
 	test test;
 	test test1;
 	ArrayList<test> test1List = new ArrayList<test>();
-	ASTTextNode text12 = null;
+	ASTTextNode text589 = null;
 	Token firstToken=token;
 } { (
-	test=test() (LOOKAHEAD(2) "," test1=test(){test1List.add(test1);})* ["," {text12=new ASTTextNode(",",new WToken(token));}] 
-	{return new testlist(test, test1List, text12, firstToken.next,token);}
+	test=test() (LOOKAHEAD(2) "," test1=test(){test1List.add(test1);})* ["," {text589=new ASTTextNode(",",new WToken(token));}] 
+	{return new testlist(test, test1List, text589, firstToken.next,token);}
  ) }
 
 dictmaker dictmaker() : { 
@@ -1409,11 +1412,11 @@ dictmaker dictmaker() : {
 	test test1;
 	dictInt dictInt;
 	ArrayList<dictInt> dictIntList = new ArrayList<dictInt>();
-	ASTTextNode text13 = null;
+	ASTTextNode text590 = null;
 	Token firstToken=token;
 } { (
-	test=test() ":" test1=test() (LOOKAHEAD(2) dictInt=dictInt(){dictIntList.add(dictInt);})* ["," {text13=new ASTTextNode(",",new WToken(token));}] 
-	{return new dictmaker(test, test1, dictIntList, text13, firstToken.next,token);}
+	test=test() ":" test1=test() (LOOKAHEAD(2) dictInt=dictInt(){dictIntList.add(dictInt);})* ["," {text590=new ASTTextNode(",",new WToken(token));}] 
+	{return new dictmaker(test, test1, dictIntList, text590, firstToken.next,token);}
  ) }
 
 dictInt dictInt() : { 
@@ -1439,13 +1442,13 @@ listmakerEnd listmakerEnd() : {
 	ArrayList<list_for> list_forList = new ArrayList<list_for>();
 	test test;
 	ArrayList<test> testList = new ArrayList<test>();
-	ASTTextNode text14 = null;
+	ASTTextNode text591 = null;
 	Token firstToken=token;
 } { (
 	(list_for=list_for(){list_forList.add(list_for);})+ 
 	{return new listmakerEnd1(list_forList, firstToken.next,token);} |
-	(LOOKAHEAD(2) "," test=test(){testList.add(test);})* ["," {text14=new ASTTextNode(",",new WToken(token));}] 
-	{return new listmakerEnd2(testList, text14, firstToken.next,token);}
+	(LOOKAHEAD(2) "," test=test(){testList.add(test);})* ["," {text591=new ASTTextNode(",",new WToken(token));}] 
+	{return new listmakerEnd2(testList, text591, firstToken.next,token);}
  ) }
 
 list_for list_for() : { 
@@ -1563,15 +1566,15 @@ Number Number() : {
 	ASTStringNode complex;
 	Token firstToken=token;
 } { (
-	t=<HEXNUMBER>{hexnumber=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<HEXNUMBER>{hexnumber=new ASTStringNode(t.image,new WToken(t));} 
 	{return new Number1(hexnumber, firstToken.next,token);} |
-	t=<OCTNUMBER>{octnumber=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<OCTNUMBER>{octnumber=new ASTStringNode(t.image,new WToken(t));} 
 	{return new Number2(octnumber, firstToken.next,token);} |
-	t=<DECNUMBER>{decnumber=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<DECNUMBER>{decnumber=new ASTStringNode(t.image,new WToken(t));} 
 	{return new Number3(decnumber, firstToken.next,token);} |
-	t=<FLOAT>{float_kw=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<FLOAT>{float_kw=new ASTStringNode(t.image,new WToken(t));} 
 	{return new Number4(float_kw, firstToken.next,token);} |
-	t=<COMPLEX>{complex=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<COMPLEX>{complex=new ASTStringNode(t.image,new WToken(t));} 
 	{return new Number5(complex, firstToken.next,token);}
  ) }
 
@@ -1580,7 +1583,7 @@ Complex Complex() : {
 	ASTStringNode float_kw;
 	Token firstToken=token;
 } { (
-	t=<FLOAT>{float_kw=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<FLOAT>{float_kw=new ASTStringNode(t.image,new WToken(t));} 
 	{return new Complex(float_kw, firstToken.next,token);}
  ) }
 
@@ -1590,9 +1593,9 @@ Name Name() : {
 	ASTStringNode as;
 	Token firstToken=token;
 } { (
-	t=<NAME>{name=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<NAME>{name=new ASTStringNode(t.image,new WToken(t));} 
 	{return new Name1(name, firstToken.next,token);} |
-	t=<AS>{as=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<AS>{as=new ASTStringNode(t.image,new WToken(t));} 
 	{return new Name2(as, firstToken.next,token);}
  ) }
 
@@ -1608,21 +1611,21 @@ StringNode StringNode() : {
 	ASTStringNode triple_ustring2;
 	Token firstToken=token;
 } { (
-	t=<SINGLE_STRING>{single_string=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<SINGLE_STRING>{single_string=new ASTStringNode(t.image,new WToken(t));} 
 	{return new StringNode1(single_string, firstToken.next,token);} |
-	t=<SINGLE_STRING2>{single_string2=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<SINGLE_STRING2>{single_string2=new ASTStringNode(t.image,new WToken(t));} 
 	{return new StringNode2(single_string2, firstToken.next,token);} |
-	t=<TRIPLE_STRING>{triple_string=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<TRIPLE_STRING>{triple_string=new ASTStringNode(t.image,new WToken(t));} 
 	{return new StringNode3(triple_string, firstToken.next,token);} |
-	t=<TRIPLE_STRING2>{triple_string2=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<TRIPLE_STRING2>{triple_string2=new ASTStringNode(t.image,new WToken(t));} 
 	{return new StringNode4(triple_string2, firstToken.next,token);} |
-	t=<SINGLE_USTRING>{single_ustring=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<SINGLE_USTRING>{single_ustring=new ASTStringNode(t.image,new WToken(t));} 
 	{return new StringNode5(single_ustring, firstToken.next,token);} |
-	t=<SINGLE_USTRING2>{single_ustring2=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<SINGLE_USTRING2>{single_ustring2=new ASTStringNode(t.image,new WToken(t));} 
 	{return new StringNode6(single_ustring2, firstToken.next,token);} |
-	t=<TRIPLE_USTRING>{triple_ustring=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<TRIPLE_USTRING>{triple_ustring=new ASTStringNode(t.image,new WToken(t));} 
 	{return new StringNode7(triple_ustring, firstToken.next,token);} |
-	t=<TRIPLE_USTRING2>{triple_ustring2=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<TRIPLE_USTRING2>{triple_ustring2=new ASTStringNode(t.image,new WToken(t));} 
 	{return new StringNode8(triple_ustring2, firstToken.next,token);}
  ) }
 
@@ -1658,7 +1661,7 @@ AnyName AnyName() : {
 	ASTStringNode as;
 	Token firstToken=token;
 } { (
-	t=<NAME>{name=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<NAME>{name=new ASTStringNode(t.image,new WToken(t));} 
 	{return new AnyName1(name, firstToken.next,token);} |
 	"or"  
 	{return new AnyName2(firstToken.next,token);} |
@@ -1666,59 +1669,59 @@ AnyName AnyName() : {
 	{return new AnyName3(firstToken.next,token);} |
 	"not"  
 	{return new AnyName4(firstToken.next,token);} |
-	t=<IS>{is=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<IS>{is=new ASTStringNode(t.image,new WToken(t));} 
 	{return new AnyName5(is, firstToken.next,token);} |
-	t=<IN>{in=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<IN>{in=new ASTStringNode(t.image,new WToken(t));} 
 	{return new AnyName6(in, firstToken.next,token);} |
-	t=<LAMBDA>{lambda=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<LAMBDA>{lambda=new ASTStringNode(t.image,new WToken(t));} 
 	{return new AnyName7(lambda, firstToken.next,token);} |
-	t=<IF>{if_kw=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<IF>{if_kw=new ASTStringNode(t.image,new WToken(t));} 
 	{return new AnyName8(if_kw, firstToken.next,token);} |
-	t=<ELSE>{else_kw=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<ELSE>{else_kw=new ASTStringNode(t.image,new WToken(t));} 
 	{return new AnyName9(else_kw, firstToken.next,token);} |
-	t=<ELIF>{elif=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<ELIF>{elif=new ASTStringNode(t.image,new WToken(t));} 
 	{return new AnyName10(elif, firstToken.next,token);} |
-	t=<WHILE>{while_kw=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<WHILE>{while_kw=new ASTStringNode(t.image,new WToken(t));} 
 	{return new AnyName11(while_kw, firstToken.next,token);} |
-	t=<FOR>{for_kw=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<FOR>{for_kw=new ASTStringNode(t.image,new WToken(t));} 
 	{return new AnyName12(for_kw, firstToken.next,token);} |
-	t=<TRY>{try_kw=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<TRY>{try_kw=new ASTStringNode(t.image,new WToken(t));} 
 	{return new AnyName13(try_kw, firstToken.next,token);} |
-	t=<EXCEPT>{except=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<EXCEPT>{except=new ASTStringNode(t.image,new WToken(t));} 
 	{return new AnyName14(except, firstToken.next,token);} |
-	t=<DEF>{def=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<DEF>{def=new ASTStringNode(t.image,new WToken(t));} 
 	{return new AnyName15(def, firstToken.next,token);} |
-	t=<CLASS>{class_kw=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<CLASS>{class_kw=new ASTStringNode(t.image,new WToken(t));} 
 	{return new AnyName16(class_kw, firstToken.next,token);} |
-	t=<FINALLY>{finally_kw=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<FINALLY>{finally_kw=new ASTStringNode(t.image,new WToken(t));} 
 	{return new AnyName17(finally_kw, firstToken.next,token);} |
-	t=<PRINT>{print=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<PRINT>{print=new ASTStringNode(t.image,new WToken(t));} 
 	{return new AnyName18(print, firstToken.next,token);} |
-	t=<PASS>{pass=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<PASS>{pass=new ASTStringNode(t.image,new WToken(t));} 
 	{return new AnyName19(pass, firstToken.next,token);} |
-	t=<BREAK>{break_kw=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<BREAK>{break_kw=new ASTStringNode(t.image,new WToken(t));} 
 	{return new AnyName20(break_kw, firstToken.next,token);} |
-	t=<CONTINUE>{continue_kw=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<CONTINUE>{continue_kw=new ASTStringNode(t.image,new WToken(t));} 
 	{return new AnyName21(continue_kw, firstToken.next,token);} |
-	t=<RETURN>{return_kw=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<RETURN>{return_kw=new ASTStringNode(t.image,new WToken(t));} 
 	{return new AnyName22(return_kw, firstToken.next,token);} |
-	t=<YIELD>{yield=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<YIELD>{yield=new ASTStringNode(t.image,new WToken(t));} 
 	{return new AnyName23(yield, firstToken.next,token);} |
-	t=<IMPORT>{import_kw=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<IMPORT>{import_kw=new ASTStringNode(t.image,new WToken(t));} 
 	{return new AnyName24(import_kw, firstToken.next,token);} |
-	t=<FROM>{from=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<FROM>{from=new ASTStringNode(t.image,new WToken(t));} 
 	{return new AnyName25(from, firstToken.next,token);} |
-	t=<DEL>{del=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<DEL>{del=new ASTStringNode(t.image,new WToken(t));} 
 	{return new AnyName26(del, firstToken.next,token);} |
-	t=<RAISE>{raise=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<RAISE>{raise=new ASTStringNode(t.image,new WToken(t));} 
 	{return new AnyName27(raise, firstToken.next,token);} |
-	t=<GLOBAL>{global=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<GLOBAL>{global=new ASTStringNode(t.image,new WToken(t));} 
 	{return new AnyName28(global, firstToken.next,token);} |
-	t=<EXEC>{exec=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<EXEC>{exec=new ASTStringNode(t.image,new WToken(t));} 
 	{return new AnyName29(exec, firstToken.next,token);} |
-	t=<ASSERT>{assert_kw=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<ASSERT>{assert_kw=new ASTStringNode(t.image,new WToken(t));} 
 	{return new AnyName30(assert_kw, firstToken.next,token);} |
-	t=<AS>{as=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<AS>{as=new ASTStringNode(t.image,new WToken(t));} 
 	{return new AnyName31(as, firstToken.next,token);}
  ) }
 

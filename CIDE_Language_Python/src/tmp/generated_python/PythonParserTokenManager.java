@@ -35,8 +35,8 @@ public class PythonParserTokenManager implements PythonParserConstants
         t.beginColumn = previous.beginColumn;
         t.endColumn = previous.endColumn;
         t.offset=previous.offset;
-        t.length=previous.length;
-        t.image = "<DEDENT>";
+        t.length=0;
+        t.image = "";
         t.specialToken = null;
         t.next = null;
         previous.next = t;
@@ -59,6 +59,7 @@ public class PythonParserTokenManager implements PythonParserConstants
                 }
                 else {
                     t.kind = DEDENT;
+                    t.length=0;
                     if (level >= 0) level -= 1;
                 }
                 while (level >= 0) {
@@ -3382,6 +3383,7 @@ protected Token jjFillToken()
          t.image = image.toString();
       t.beginLine = t.endLine = input_stream.getBeginLine();
       t.beginColumn = t.endColumn = input_stream.getBeginColumn();
+   t.length = t.image.length();
    }
    else
    {
@@ -3393,7 +3395,6 @@ protected Token jjFillToken()
       t.endColumn = input_stream.getEndColumn();
    }
    t.offset = input_stream.getOffset();
-   t.length = input_stream.getLength();
    return t;
 }
 
@@ -3792,7 +3793,9 @@ void TokenLexicalActions(Token matchedToken)
                 level++;
                 indentation[level] = indent;
                 matchedToken.kind=INDENT;
-                matchedToken.image = "<INDENT>";
+                matchedToken.image = "";
+                //for (int i=0;i<indent;i++) matchedToken.image+=" ";
+                matchedToken.length=0;
             }
             else if (level > 0) {
                 Token t = matchedToken;
