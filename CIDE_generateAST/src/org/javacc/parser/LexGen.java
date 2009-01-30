@@ -832,6 +832,7 @@ public class LexGen extends JavaCCGlobals implements JavaCCParserConstants {
 						.println("      t.beginColumn = t.endColumn = input_stream.getBeginColumn();");
 			}
 
+			ostr.println("   t.length = t.image.length();");
 			ostr.println("   }");
 			ostr.println("   else");
 			ostr.println("   {");
@@ -864,9 +865,9 @@ public class LexGen extends JavaCCGlobals implements JavaCCParserConstants {
 				ostr.println("   t.endColumn = input_stream.getEndColumn();");
 			}
 
+			ostr.println("   t.length = input_stream.getLength();");
 		}
 		ostr.println("   t.offset = input_stream.getOffset();");
-		ostr.println("   t.length = input_stream.getLength();");
 		   
 		ostr.println("   return t;");
 		ostr.println("}");

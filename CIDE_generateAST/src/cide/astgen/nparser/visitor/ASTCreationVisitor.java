@@ -10,6 +10,7 @@ import java.util.List;
 import cide.astgen.nparser.ast.NAbstractValue;
 import cide.astgen.nparser.ast.NChoice;
 import cide.astgen.nparser.ast.NNonTerminal;
+import cide.astgen.nparser.ast.NPrinterBlock;
 import cide.astgen.nparser.ast.NProduction;
 import cide.astgen.nparser.ast.NTextOnly;
 import cide.astgen.nparser.ast.NAbstractValue.Type;
@@ -27,18 +28,20 @@ public class ASTCreationVisitor extends NVisitor {
 	public ASTCreationVisitor(File targetDirectory, String targetPackage) {
 		this.targetDirectory = targetDirectory;
 		this.targetPackage = targetPackage;
-		createGenASTNode();
 	}
 
-	private void createGenASTNode() {
+	@Override
+	public boolean visit(NPrinterBlock t) {
 		out = getOutputFile("GenASTNode");
 		printPackage(out);
+		if (t.printerPackage != null)
+			out.println("import " + t.printerPackage + ";");
 		out.println("public abstract class GenASTNode extends ASTNode {");
 		out
 				.println("  public GenASTNode(Property[] p, Token firstToken, Token lastToken) {\n"
-						+ "    		super(p, \n" +
-								"    		    		(lastToken.next == firstToken ? new NoToken(firstToken.offset) : new WToken(firstToken)), \n" +
-								"    		    		(lastToken.next == firstToken ? new NoToken(firstToken.offset)	: new WToken(lastToken)));");
+						+ "    		super(p, \n"
+						+ "    		    		(lastToken.next == firstToken ? new NoToken(firstToken.offset) : new WToken(firstToken)), \n"
+						+ "    		    		(lastToken.next == firstToken ? new NoToken(firstToken.offset)	: new WToken(lastToken)));");
 		out.println("  }");
 		out
 				.println("  public GenASTNode(Property[] p, IToken firstToken, IToken lastToken) {\n"
@@ -49,10 +52,10 @@ public class ASTCreationVisitor extends NVisitor {
 						+ "    return this.getClass().getSimpleName() + \" \" + this.getStartPosition()\n"
 						+ "        + \"-\" + (this.getStartPosition() + this.getLength());\n"
 						+ "  }");
-		out.println("  public String render() {\n"
-				+ "    SimplePrintVisitor v=new SimplePrintVisitor();\n"
-				+ "    accept(v);\n" + "    return v.getResult();\n" + "  }\n"
-				+ "}");
+		out.println("  public String render() {\n" + "    " + t.printerClass
+				+ " v=new " + t.printerClass + "();\n" + "    accept(v);\n"
+				+ "    return v.getResult();\n" + "  }\n" + "}");
+		return false;
 	}
 
 	@Override
@@ -98,27 +101,28 @@ public class ASTCreationVisitor extends NVisitor {
 				+ "(cloneProperties(),firstToken,lastToken);");
 		out.println("  }");
 		generateAccessMethods(units);
-//		out.print(generateReferenceMethod(c));
+		// out.print(generateReferenceMethod(c));
 		return super.visit(c);
 	}
 
-//	String generateReferenceMethod(NChoice c) {
-//		List<String> references = c.collectAnnotationValues("Reference");
-//		if (references.size() == 0)
-//			return "";
-//		String returnValue = "";
-//		boolean first = true;
-//		for (String refType : references) {
-//			if (first)
-//				first = false;
-//			else
-//				returnValue += ", ";
-//			returnValue += "ReferenceManager."
-//					+ CreateReferenceManagerVisitor.genName(refType);
-//		}
-//		return "  public IReferenceType[] getReferenceTypes() {\n    return new IReferenceType[]{ "
-//				+ returnValue + " };\n  }\n";
-//	}
+	// String generateReferenceMethod(NChoice c) {
+	// List<String> references = c.collectAnnotationValues("Reference");
+	// if (references.size() == 0)
+	// return "";
+	// String returnValue = "";
+	// boolean first = true;
+	// for (String refType : references) {
+	// if (first)
+	// first = false;
+	// else
+	// returnValue += ", ";
+	// returnValue += "ReferenceManager."
+	// + CreateReferenceManagerVisitor.genName(refType);
+	// }
+	// return
+	// "  public IReferenceType[] getReferenceTypes() {\n    return new IReferenceType[]{ "
+	// + returnValue + " };\n  }\n";
+	// }
 
 	private void generateAccessMethods(List<NAbstractValue> units) {
 		for (NAbstractValue unit : units) {

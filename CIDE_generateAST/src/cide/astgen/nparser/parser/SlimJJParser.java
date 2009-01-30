@@ -80,9 +80,19 @@ public class SlimJJParser implements SlimJJParserConstants {
   final public NGrammar Grammar() throws ParseException {
   NGrammar result;
   NProduction p;
+  NPrinterBlock pb;
   Token t;
     t = findIntroductionBlock();
     result = new NGrammar(t.toString());
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case PRINTER:
+      pb = PrinterBlock();
+                      result.setPrinterBlock(pb);
+      break;
+    default:
+      jj_la1[0] = jj_gen;
+      ;
+    }
     label_1:
     while (true) {
       p = Production(result);
@@ -93,7 +103,7 @@ public class SlimJJParser implements SlimJJParserConstants {
         ;
         break;
       default:
-        jj_la1[0] = jj_gen;
+        jj_la1[1] = jj_gen;
         break label_1;
       }
     }
@@ -115,7 +125,7 @@ public class SlimJJParser implements SlimJJParserConstants {
         ;
         break;
       default:
-        jj_la1[1] = jj_gen;
+        jj_la1[2] = jj_gen;
         break label_2;
       }
       a = Annotation();
@@ -133,7 +143,7 @@ public class SlimJJParser implements SlimJJParserConstants {
         ;
         break;
       default:
-        jj_la1[2] = jj_gen;
+        jj_la1[3] = jj_gen;
         break label_3;
       }
       jj_consume_token(BIT_OR);
@@ -175,7 +185,7 @@ public class SlimJJParser implements SlimJJParserConstants {
           ;
           break;
         default:
-          jj_la1[3] = jj_gen;
+          jj_la1[4] = jj_gen;
           break label_5;
         }
         i = Text();
@@ -194,7 +204,7 @@ public class SlimJJParser implements SlimJJParserConstants {
           ;
           break;
         default:
-          jj_la1[4] = jj_gen;
+          jj_la1[5] = jj_gen;
           break label_6;
         }
         PostText(m.outerPostTokens);
@@ -208,11 +218,11 @@ public class SlimJJParser implements SlimJJParserConstants {
         case LBRACKET:
         case LT:
         case IDENTIFIER:
-        case 131:
+        case 132:
           ;
           break;
         default:
-          jj_la1[5] = jj_gen;
+          jj_la1[6] = jj_gen;
           break label_7;
         }
         m = Mult(result);
@@ -228,20 +238,20 @@ public class SlimJJParser implements SlimJJParserConstants {
             ;
             break;
           default:
-            jj_la1[6] = jj_gen;
+            jj_la1[7] = jj_gen;
             break label_8;
           }
           PostText(m.outerPostTokens);
         }
       }
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case 130:
-        jj_consume_token(130);
+      case 131:
+        jj_consume_token(131);
         t = jj_consume_token(IDENTIFIER);
             result.optName = t.toString();
         break;
       default:
-        jj_la1[7] = jj_gen;
+        jj_la1[8] = jj_gen;
         ;
       }
            {if (true) return result;}
@@ -259,7 +269,7 @@ public class SlimJJParser implements SlimJJParserConstants {
             {if (true) return result;}
         break;
       default:
-        jj_la1[8] = jj_gen;
+        jj_la1[9] = jj_gen;
         jj_consume_token(-1);
         throw new ParseException();
       }
@@ -289,7 +299,7 @@ public class SlimJJParser implements SlimJJParserConstants {
       case JAVATOKEN:
       case LT:
       case IDENTIFIER:
-      case 131:
+      case 132:
         u = Unit(choice, Type.ONE);
                              {if (true) return u;}
         break;
@@ -298,7 +308,7 @@ public class SlimJJParser implements SlimJJParserConstants {
                                   {if (true) return u;}
         break;
       default:
-        jj_la1[9] = jj_gen;
+        jj_la1[10] = jj_gen;
         jj_consume_token(-1);
         throw new ParseException();
       }
@@ -322,7 +332,7 @@ public class SlimJJParser implements SlimJJParserConstants {
         ;
         break;
       default:
-        jj_la1[10] = jj_gen;
+        jj_la1[11] = jj_gen;
         break label_9;
       }
       i = Text();
@@ -341,7 +351,7 @@ public class SlimJJParser implements SlimJJParserConstants {
         ;
         break;
       default:
-        jj_la1[11] = jj_gen;
+        jj_la1[12] = jj_gen;
         break label_10;
       }
       PostText(u.innerPostTokens);
@@ -368,7 +378,7 @@ public class SlimJJParser implements SlimJJParserConstants {
         ;
         break;
       default:
-        jj_la1[12] = jj_gen;
+        jj_la1[13] = jj_gen;
         break label_11;
       }
       i = Text();
@@ -387,7 +397,7 @@ public class SlimJJParser implements SlimJJParserConstants {
         ;
         break;
       default:
-        jj_la1[13] = jj_gen;
+        jj_la1[14] = jj_gen;
         break label_12;
       }
       PostText(u.innerPostTokens);
@@ -416,7 +426,7 @@ public class SlimJJParser implements SlimJJParserConstants {
           ;
           break;
         default:
-          jj_la1[14] = jj_gen;
+          jj_la1[15] = jj_gen;
           break label_13;
         }
         i = Text();
@@ -435,7 +445,7 @@ public class SlimJJParser implements SlimJJParserConstants {
           ;
           break;
         default:
-          jj_la1[15] = jj_gen;
+          jj_la1[16] = jj_gen;
           break label_14;
         }
         PostText(u.innerPostTokens);
@@ -456,7 +466,7 @@ public class SlimJJParser implements SlimJJParserConstants {
           ;
           break;
         default:
-          jj_la1[16] = jj_gen;
+          jj_la1[17] = jj_gen;
           break label_15;
         }
         i = Text();
@@ -475,7 +485,7 @@ public class SlimJJParser implements SlimJJParserConstants {
           ;
           break;
         default:
-          jj_la1[17] = jj_gen;
+          jj_la1[18] = jj_gen;
           break label_16;
         }
         PostText(u.innerPostTokens);
@@ -485,7 +495,7 @@ public class SlimJJParser implements SlimJJParserConstants {
    {if (true) return u;}
       break;
     default:
-      jj_la1[18] = jj_gen;
+      jj_la1[19] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -517,11 +527,11 @@ public class SlimJJParser implements SlimJJParserConstants {
   NAbstractValue r;
   String a=null;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-    case 131:
+    case 132:
       a = ASTGeneratorAnnotation();
       break;
     default:
-      jj_la1[19] = jj_gen;
+      jj_la1[20] = jj_gen;
       ;
     }
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -533,7 +543,7 @@ public class SlimJJParser implements SlimJJParserConstants {
       r = Ident(choice, type);
       break;
     default:
-      jj_la1[20] = jj_gen;
+      jj_la1[21] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -577,7 +587,7 @@ public class SlimJJParser implements SlimJJParserConstants {
                 else {if (true) return new NValue(choice, type, i.toString());}
       break;
     default:
-      jj_la1[21] = jj_gen;
+      jj_la1[22] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -606,7 +616,7 @@ public class SlimJJParser implements SlimJJParserConstants {
                             {if (true) return s;}
       break;
     default:
-      jj_la1[22] = jj_gen;
+      jj_la1[23] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -635,7 +645,7 @@ public class SlimJJParser implements SlimJJParserConstants {
                            list.add(s);
       break;
     default:
-      jj_la1[23] = jj_gen;
+      jj_la1[24] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -650,7 +660,7 @@ public class SlimJJParser implements SlimJJParserConstants {
                     result+="+";
       break;
     default:
-      jj_la1[24] = jj_gen;
+      jj_la1[25] = jj_gen;
       ;
     }
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -659,7 +669,7 @@ public class SlimJJParser implements SlimJJParserConstants {
                 result+="-";
       break;
     default:
-      jj_la1[25] = jj_gen;
+      jj_la1[26] = jj_gen;
       ;
     }
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -668,7 +678,7 @@ public class SlimJJParser implements SlimJJParserConstants {
                 result+="n";
       break;
     default:
-      jj_la1[26] = jj_gen;
+      jj_la1[27] = jj_gen;
       ;
     }
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -677,7 +687,7 @@ public class SlimJJParser implements SlimJJParserConstants {
                 result+="s";
       break;
     default:
-      jj_la1[27] = jj_gen;
+      jj_la1[28] = jj_gen;
       ;
     }
          {if (true) return result;}
@@ -696,7 +706,7 @@ public class SlimJJParser implements SlimJJParserConstants {
         a = MarkerAnnotation();
         break;
       default:
-        jj_la1[28] = jj_gen;
+        jj_la1[29] = jj_gen;
         jj_consume_token(-1);
         throw new ParseException();
       }
@@ -716,7 +726,7 @@ public class SlimJJParser implements SlimJJParserConstants {
       MemberValuePairs(a);
       break;
     default:
-      jj_la1[29] = jj_gen;
+      jj_la1[30] = jj_gen;
       ;
     }
     jj_consume_token(RPAREN);
@@ -752,7 +762,7 @@ public class SlimJJParser implements SlimJJParserConstants {
         ;
         break;
       default:
-        jj_la1[30] = jj_gen;
+        jj_la1[31] = jj_gen;
         break label_17;
       }
       jj_consume_token(COMMA);
@@ -780,7 +790,7 @@ public class SlimJJParser implements SlimJJParserConstants {
          {if (true) return v.toString();}
       break;
     default:
-      jj_la1[31] = jj_gen;
+      jj_la1[32] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -788,7 +798,7 @@ public class SlimJJParser implements SlimJJParserConstants {
   }
 
   final public String ASTGeneratorAnnotation() throws ParseException {
-    jj_consume_token(131);
+    jj_consume_token(132);
          {if (true) return "&LI";}
     throw new Error("Missing return statement in function");
   }
@@ -803,7 +813,7 @@ public class SlimJJParser implements SlimJJParserConstants {
       jj_consume_token(LL);
       break;
     default:
-      jj_la1[32] = jj_gen;
+      jj_la1[33] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -816,7 +826,7 @@ public class SlimJJParser implements SlimJJParserConstants {
       i = jj_consume_token(STRING_LITERAL);
       break;
     default:
-      jj_la1[33] = jj_gen;
+      jj_la1[34] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -835,109 +845,92 @@ public class SlimJJParser implements SlimJJParserConstants {
     throw new Error("Missing return statement in function");
   }
 
-  final private boolean jj_2_1(int xla) {
+  final public NPrinterBlock PrinterBlock() throws ParseException {
+                                Token node, pkg=null;
+    jj_consume_token(PRINTER);
+    node = jj_consume_token(STRING_LITERAL);
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case STRING_LITERAL:
+      pkg = jj_consume_token(STRING_LITERAL);
+      break;
+    default:
+      jj_la1[35] = jj_gen;
+      ;
+    }
+    jj_consume_token(SEMICOLON);
+                                                                   {if (true) return new NPrinterBlock(node,pkg);}
+    throw new Error("Missing return statement in function");
+  }
+
+  private boolean jj_2_1(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_1(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(0, xla); }
   }
 
-  final private boolean jj_2_2(int xla) {
+  private boolean jj_2_2(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_2(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(1, xla); }
   }
 
-  final private boolean jj_2_3(int xla) {
+  private boolean jj_2_3(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_3(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(2, xla); }
   }
 
-  final private boolean jj_2_4(int xla) {
+  private boolean jj_2_4(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_4(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(3, xla); }
   }
 
-  final private boolean jj_2_5(int xla) {
+  private boolean jj_2_5(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_5(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(4, xla); }
   }
 
-  final private boolean jj_2_6(int xla) {
+  private boolean jj_2_6(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_6(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(5, xla); }
   }
 
-  final private boolean jj_2_7(int xla) {
+  private boolean jj_2_7(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_7(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(6, xla); }
   }
 
-  final private boolean jj_2_8(int xla) {
+  private boolean jj_2_8(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_8(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(7, xla); }
   }
 
-  final private boolean jj_2_9(int xla) {
+  private boolean jj_2_9(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_9(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(8, xla); }
   }
 
-  final private boolean jj_3R_65() {
-    if (jj_3R_59()) return true;
-    return false;
-  }
-
-  final private boolean jj_3R_54() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3R_65()) {
-    jj_scanpos = xsp;
-    if (jj_3R_66()) {
-    jj_scanpos = xsp;
-    if (jj_3R_67()) {
-    jj_scanpos = xsp;
-    if (jj_3R_68()) return true;
-    }
-    }
-    }
-    return false;
-  }
-
-  final private boolean jj_3R_60() {
-    if (jj_scan_token(JAVA)) return true;
-    if (jj_scan_token(LPAREN)) return true;
-    if (jj_scan_token(STRING_LITERAL)) return true;
-    if (jj_scan_token(RPAREN)) return true;
-    return false;
-  }
-
-  final private boolean jj_3R_58() {
-    if (jj_3R_54()) return true;
-    return false;
-  }
-
-  final private boolean jj_3R_57() {
+  private boolean jj_3R_57() {
     if (jj_3R_29()) return true;
     return false;
   }
 
-  final private boolean jj_3R_42() {
+  private boolean jj_3R_42() {
     if (jj_scan_token(LPAREN)) return true;
     Token xsp;
     while (true) {
@@ -954,17 +947,17 @@ public class SlimJJParser implements SlimJJParserConstants {
     return false;
   }
 
-  final private boolean jj_3R_49() {
+  private boolean jj_3R_49() {
     if (jj_3R_61()) return true;
     return false;
   }
 
-  final private boolean jj_3R_56() {
+  private boolean jj_3R_56() {
     if (jj_3R_54()) return true;
     return false;
   }
 
-  final private boolean jj_3R_59() {
+  private boolean jj_3R_59() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_scan_token(67)) {
@@ -973,35 +966,35 @@ public class SlimJJParser implements SlimJJParserConstants {
     }
     if (jj_scan_token(LPAREN)) return true;
     xsp = jj_scanpos;
-    if (jj_scan_token(72)) {
+    if (jj_scan_token(73)) {
     jj_scanpos = xsp;
-    if (jj_scan_token(79)) return true;
+    if (jj_scan_token(80)) return true;
     }
     if (jj_scan_token(RPAREN)) return true;
     return false;
   }
 
-  final private boolean jj_3_1() {
+  private boolean jj_3_1() {
     if (jj_3R_18()) return true;
     return false;
   }
 
-  final private boolean jj_3R_62() {
-    if (jj_scan_token(131)) return true;
+  private boolean jj_3R_62() {
+    if (jj_scan_token(132)) return true;
     return false;
   }
 
-  final private boolean jj_3R_55() {
+  private boolean jj_3R_55() {
     if (jj_3R_29()) return true;
     return false;
   }
 
-  final private boolean jj_3R_48() {
+  private boolean jj_3R_48() {
     if (jj_scan_token(STRING_LITERAL)) return true;
     return false;
   }
 
-  final private boolean jj_3R_41() {
+  private boolean jj_3R_41() {
     if (jj_scan_token(LBRACKET)) return true;
     Token xsp;
     while (true) {
@@ -1017,12 +1010,12 @@ public class SlimJJParser implements SlimJJParserConstants {
     return false;
   }
 
-  final private boolean jj_3R_47() {
+  private boolean jj_3R_47() {
     if (jj_3R_60()) return true;
     return false;
   }
 
-  final private boolean jj_3R_24() {
+  private boolean jj_3R_24() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_3R_41()) {
@@ -1032,12 +1025,12 @@ public class SlimJJParser implements SlimJJParserConstants {
     return false;
   }
 
-  final private boolean jj_3R_46() {
+  private boolean jj_3R_46() {
     if (jj_3R_59()) return true;
     return false;
   }
 
-  final private boolean jj_3R_29() {
+  private boolean jj_3R_29() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_3R_46()) {
@@ -1053,14 +1046,14 @@ public class SlimJJParser implements SlimJJParserConstants {
     return false;
   }
 
-  final private boolean jj_3R_74() {
+  private boolean jj_3R_74() {
     if (jj_scan_token(LT)) return true;
     if (jj_scan_token(IDENTIFIER)) return true;
     if (jj_scan_token(GT)) return true;
     return false;
   }
 
-  final private boolean jj_3R_73() {
+  private boolean jj_3R_73() {
     if (jj_scan_token(JAVATOKEN)) return true;
     if (jj_scan_token(LPAREN)) return true;
     if (jj_scan_token(IDENTIFIER)) return true;
@@ -1068,23 +1061,23 @@ public class SlimJJParser implements SlimJJParserConstants {
     return false;
   }
 
-  final private boolean jj_3R_40() {
+  private boolean jj_3R_40() {
     if (jj_3R_54()) return true;
     return false;
   }
 
-  final private boolean jj_3R_25() {
+  private boolean jj_3R_25() {
     if (jj_scan_token(IDENTIFIER)) return true;
     if (jj_scan_token(ASSIGN)) return true;
     return false;
   }
 
-  final private boolean jj_3R_39() {
+  private boolean jj_3R_39() {
     if (jj_3R_29()) return true;
     return false;
   }
 
-  final private boolean jj_3R_22() {
+  private boolean jj_3R_22() {
     if (jj_scan_token(LPAREN)) return true;
     Token xsp;
     while (true) {
@@ -1101,7 +1094,7 @@ public class SlimJJParser implements SlimJJParserConstants {
     return false;
   }
 
-  final private boolean jj_3R_64() {
+  private boolean jj_3R_64() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_3R_73()) {
@@ -1111,30 +1104,30 @@ public class SlimJJParser implements SlimJJParserConstants {
     return false;
   }
 
-  final private boolean jj_3R_38() {
+  private boolean jj_3R_38() {
     if (jj_3R_54()) return true;
     return false;
   }
 
-  final private boolean jj_3R_44() {
+  private boolean jj_3R_44() {
     if (jj_scan_token(AT)) return true;
     if (jj_scan_token(IDENTIFIER)) return true;
     return false;
   }
 
-  final private boolean jj_3R_36() {
+  private boolean jj_3R_36() {
     if (jj_3R_29()) return true;
     return false;
   }
 
-  final private boolean jj_3_7() {
+  private boolean jj_3_7() {
     if (jj_scan_token(LBRACE)) return true;
     if (jj_scan_token(IDENTIFIER)) return true;
     if (jj_scan_token(RBRACE)) return true;
     return false;
   }
 
-  final private boolean jj_3R_21() {
+  private boolean jj_3R_21() {
     if (jj_scan_token(LPAREN)) return true;
     Token xsp;
     while (true) {
@@ -1151,18 +1144,18 @@ public class SlimJJParser implements SlimJJParserConstants {
     return false;
   }
 
-  final private boolean jj_3R_45() {
+  private boolean jj_3R_45() {
     if (jj_scan_token(AT)) return true;
     if (jj_scan_token(IDENTIFIER)) return true;
     return false;
   }
 
-  final private boolean jj_3_6() {
+  private boolean jj_3_6() {
     if (jj_3R_24()) return true;
     return false;
   }
 
-  final private boolean jj_3R_63() {
+  private boolean jj_3R_63() {
     if (jj_scan_token(IDENTIFIER)) return true;
     Token xsp;
     xsp = jj_scanpos;
@@ -1170,19 +1163,19 @@ public class SlimJJParser implements SlimJJParserConstants {
     return false;
   }
 
-  final private boolean jj_3_9() {
+  private boolean jj_3_9() {
     if (jj_scan_token(AT)) return true;
     if (jj_scan_token(IDENTIFIER)) return true;
     if (jj_scan_token(LPAREN)) return true;
     return false;
   }
 
-  final private boolean jj_3_5() {
+  private boolean jj_3_5() {
     if (jj_3R_23()) return true;
     return false;
   }
 
-  final private boolean jj_3_8() {
+  private boolean jj_3_8() {
     if (jj_scan_token(AT)) return true;
     if (jj_scan_token(IDENTIFIER)) return true;
     if (jj_scan_token(LPAREN)) return true;
@@ -1190,83 +1183,83 @@ public class SlimJJParser implements SlimJJParserConstants {
     xsp = jj_scanpos;
     if (jj_3R_25()) {
     jj_scanpos = xsp;
-    if (jj_scan_token(81)) return true;
+    if (jj_scan_token(82)) return true;
     }
     return false;
   }
 
-  final private boolean jj_3_4() {
+  private boolean jj_3_4() {
     if (jj_3R_22()) return true;
     return false;
   }
 
-  final private boolean jj_3R_43() {
+  private boolean jj_3R_43() {
     if (jj_scan_token(AT)) return true;
     if (jj_scan_token(IDENTIFIER)) return true;
     return false;
   }
 
-  final private boolean jj_3_3() {
+  private boolean jj_3_3() {
     if (jj_3R_21()) return true;
     return false;
   }
 
-  final private boolean jj_3R_35() {
+  private boolean jj_3R_35() {
     if (jj_3R_50()) return true;
     return false;
   }
 
-  final private boolean jj_3R_53() {
+  private boolean jj_3R_53() {
     if (jj_3R_64()) return true;
     return false;
   }
 
-  final private boolean jj_3R_34() {
+  private boolean jj_3R_34() {
     if (jj_3R_37()) return true;
     return false;
   }
 
-  final private boolean jj_3R_52() {
+  private boolean jj_3R_52() {
     if (jj_3R_63()) return true;
     return false;
   }
 
-  final private boolean jj_3R_33() {
-    if (jj_3R_24()) return true;
-    return false;
-  }
-
-  final private boolean jj_3R_28() {
+  private boolean jj_3R_28() {
     if (jj_3R_45()) return true;
     return false;
   }
 
-  final private boolean jj_3R_32() {
+  private boolean jj_3R_33() {
+    if (jj_3R_24()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_32() {
     if (jj_3R_23()) return true;
     return false;
   }
 
-  final private boolean jj_3R_27() {
+  private boolean jj_3R_27() {
     if (jj_3R_44()) return true;
     return false;
   }
 
-  final private boolean jj_3R_31() {
+  private boolean jj_3R_31() {
     if (jj_3R_22()) return true;
     return false;
   }
 
-  final private boolean jj_3R_26() {
+  private boolean jj_3R_26() {
     if (jj_3R_43()) return true;
     return false;
   }
 
-  final private boolean jj_3R_51() {
+  private boolean jj_3R_51() {
     if (jj_3R_62()) return true;
     return false;
   }
 
-  final private boolean jj_3R_20() {
+  private boolean jj_3R_20() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_3R_30()) {
@@ -1288,12 +1281,12 @@ public class SlimJJParser implements SlimJJParserConstants {
     return false;
   }
 
-  final private boolean jj_3R_30() {
+  private boolean jj_3R_30() {
     if (jj_3R_21()) return true;
     return false;
   }
 
-  final private boolean jj_3R_37() {
+  private boolean jj_3R_37() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_3R_51()) jj_scanpos = xsp;
@@ -1305,7 +1298,7 @@ public class SlimJJParser implements SlimJJParserConstants {
     return false;
   }
 
-  final private boolean jj_3R_18() {
+  private boolean jj_3R_18() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_3R_26()) {
@@ -1318,38 +1311,38 @@ public class SlimJJParser implements SlimJJParserConstants {
     return false;
   }
 
-  final private boolean jj_3R_69() {
+  private boolean jj_3R_69() {
     if (jj_scan_token(PLUS)) return true;
     return false;
   }
 
-  final private boolean jj_3R_72() {
+  private boolean jj_3R_72() {
     if (jj_scan_token(TILDE)) return true;
     return false;
   }
 
-  final private boolean jj_3R_71() {
+  private boolean jj_3R_71() {
     if (jj_scan_token(BANG)) return true;
     return false;
   }
 
-  final private boolean jj_3R_70() {
+  private boolean jj_3R_70() {
     if (jj_scan_token(MINUS)) return true;
     return false;
   }
 
-  final private boolean jj_3R_23() {
+  private boolean jj_3R_23() {
     if (jj_3R_37()) return true;
     if (jj_scan_token(BANG)) return true;
     return false;
   }
 
-  final private boolean jj_3R_19() {
+  private boolean jj_3R_19() {
     if (jj_3R_29()) return true;
     return false;
   }
 
-  final private boolean jj_3_2() {
+  private boolean jj_3_2() {
     Token xsp;
     while (true) {
       xsp = jj_scanpos;
@@ -1359,7 +1352,7 @@ public class SlimJJParser implements SlimJJParserConstants {
     return false;
   }
 
-  final private boolean jj_3R_61() {
+  private boolean jj_3R_61() {
     if (jj_scan_token(AT)) return true;
     Token xsp;
     xsp = jj_scanpos;
@@ -1373,12 +1366,12 @@ public class SlimJJParser implements SlimJJParserConstants {
     return false;
   }
 
-  final private boolean jj_3R_68() {
+  private boolean jj_3R_68() {
     if (jj_3R_61()) return true;
     return false;
   }
 
-  final private boolean jj_3R_50() {
+  private boolean jj_3R_50() {
     if (jj_scan_token(OPTIONAL)) return true;
     if (jj_scan_token(LPAREN)) return true;
     if (jj_3R_37()) return true;
@@ -1388,122 +1381,166 @@ public class SlimJJParser implements SlimJJParserConstants {
     return false;
   }
 
-  final private boolean jj_3R_67() {
+  private boolean jj_3R_67() {
     if (jj_scan_token(STRING_LITERAL)) return true;
     return false;
   }
 
-  final private boolean jj_3R_66() {
+  private boolean jj_3R_66() {
     if (jj_3R_60()) return true;
     return false;
   }
 
+  private boolean jj_3R_65() {
+    if (jj_3R_59()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_54() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_65()) {
+    jj_scanpos = xsp;
+    if (jj_3R_66()) {
+    jj_scanpos = xsp;
+    if (jj_3R_67()) {
+    jj_scanpos = xsp;
+    if (jj_3R_68()) return true;
+    }
+    }
+    }
+    return false;
+  }
+
+  private boolean jj_3R_60() {
+    if (jj_scan_token(JAVA)) return true;
+    if (jj_scan_token(LPAREN)) return true;
+    if (jj_scan_token(STRING_LITERAL)) return true;
+    if (jj_scan_token(RPAREN)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_58() {
+    if (jj_3R_54()) return true;
+    return false;
+  }
+
+  /** Generated Token Manager. */
   public SlimJJParserTokenManager token_source;
   SimpleCharStream jj_input_stream;
-  public Token token, jj_nt;
+  /** Current token. */
+  public Token token;
+  /** Next token. */
+  public Token jj_nt;
   private int jj_ntk;
   private Token jj_scanpos, jj_lastpos;
   private int jj_la;
-  public boolean lookingAhead = false;
-  private boolean jj_semLA;
   private int jj_gen;
-  final private int[] jj_la1 = new int[34];
+  final private int[] jj_la1 = new int[36];
   static private int[] jj_la1_0;
   static private int[] jj_la1_1;
   static private int[] jj_la1_2;
   static private int[] jj_la1_3;
   static private int[] jj_la1_4;
   static {
-      jj_la1_0();
-      jj_la1_1();
-      jj_la1_2();
-      jj_la1_3();
-      jj_la1_4();
+      jj_la1_init_0();
+      jj_la1_init_1();
+      jj_la1_init_2();
+      jj_la1_init_3();
+      jj_la1_init_4();
    }
-   private static void jj_la1_0() {
-      jj_la1_0 = new int[] {0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,};
+   private static void jj_la1_init_0() {
+      jj_la1_0 = new int[] {0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,};
    }
-   private static void jj_la1_1() {
-      jj_la1_1 = new int[] {0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,};
+   private static void jj_la1_init_1() {
+      jj_la1_1 = new int[] {0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,};
    }
-   private static void jj_la1_2() {
-      jj_la1_2 = new int[] {0x2000000,0x2000000,0x0,0x2008058,0x2008058,0x81100a0,0x2008058,0x0,0x2008058,0x80000a0,0x2008058,0x2008058,0x2008058,0x2008058,0x2008058,0x2008058,0x2008058,0x2008058,0x110000,0x0,0x8000080,0x8000080,0x2008058,0x2008058,0x0,0x0,0x20000000,0x40000000,0x2000000,0x0,0x800000,0x8100,0x18,0x8100,};
+   private static void jj_la1_init_2() {
+      jj_la1_2 = new int[] {0x100,0x4000000,0x4000000,0x0,0x4010058,0x4010058,0x102200a0,0x4010058,0x0,0x4010058,0x100000a0,0x4010058,0x4010058,0x4010058,0x4010058,0x4010058,0x4010058,0x4010058,0x4010058,0x220000,0x0,0x10000080,0x10000080,0x4010058,0x4010058,0x0,0x0,0x40000000,0x80000000,0x4000000,0x0,0x1000000,0x10200,0x18,0x10200,0x10000,};
    }
-   private static void jj_la1_3() {
-      jj_la1_3 = new int[] {0x40000000,0x0,0x4000,0x0,0x0,0x40000000,0x0,0x0,0x0,0x40000000,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x40000000,0x0,0x0,0x0,0x200,0x400,0x0,0x0,0x0,0x40000000,0x0,0x0,0x0,0x0,};
+   private static void jj_la1_init_3() {
+      jj_la1_3 = new int[] {0x0,0x80000000,0x0,0x8000,0x0,0x0,0x80000000,0x0,0x0,0x0,0x80000000,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x80000000,0x0,0x0,0x0,0x400,0x800,0x0,0x0,0x0,0x80000000,0x0,0x0,0x0,0x0,0x0,};
    }
-   private static void jj_la1_4() {
-      jj_la1_4 = new int[] {0x0,0x0,0x0,0x0,0x0,0x8,0x0,0x4,0x0,0x8,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x8,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,};
+   private static void jj_la1_init_4() {
+      jj_la1_4 = new int[] {0x0,0x0,0x0,0x0,0x0,0x0,0x10,0x0,0x8,0x0,0x10,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x10,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,};
    }
   final private JJCalls[] jj_2_rtns = new JJCalls[9];
   private boolean jj_rescan = false;
   private int jj_gc = 0;
 
+  /** Constructor with InputStream. */
   public SlimJJParser(java.io.InputStream stream) {
      this(stream, null);
   }
+  /** Constructor with InputStream and supplied encoding */
   public SlimJJParser(java.io.InputStream stream, String encoding) {
     try { jj_input_stream = new SimpleCharStream(stream, encoding, 1, 1); } catch(java.io.UnsupportedEncodingException e) { throw new RuntimeException(e); }
     token_source = new SlimJJParserTokenManager(jj_input_stream);
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 34; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 36; i++) jj_la1[i] = -1;
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
+  /** Reinitialise. */
   public void ReInit(java.io.InputStream stream) {
      ReInit(stream, null);
   }
+  /** Reinitialise. */
   public void ReInit(java.io.InputStream stream, String encoding) {
     try { jj_input_stream.ReInit(stream, encoding, 1, 1); } catch(java.io.UnsupportedEncodingException e) { throw new RuntimeException(e); }
     token_source.ReInit(jj_input_stream);
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 34; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 36; i++) jj_la1[i] = -1;
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
+  /** Constructor. */
   public SlimJJParser(java.io.Reader stream) {
     jj_input_stream = new SimpleCharStream(stream, 1, 1);
     token_source = new SlimJJParserTokenManager(jj_input_stream);
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 34; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 36; i++) jj_la1[i] = -1;
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
+  /** Reinitialise. */
   public void ReInit(java.io.Reader stream) {
     jj_input_stream.ReInit(stream, 1, 1);
     token_source.ReInit(jj_input_stream);
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 34; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 36; i++) jj_la1[i] = -1;
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
+  /** Constructor with generated Token Manager. */
   public SlimJJParser(SlimJJParserTokenManager tm) {
     token_source = tm;
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 34; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 36; i++) jj_la1[i] = -1;
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
+  /** Reinitialise. */
   public void ReInit(SlimJJParserTokenManager tm) {
     token_source = tm;
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 34; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 36; i++) jj_la1[i] = -1;
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
-  final private Token jj_consume_token(int kind) throws ParseException {
+  private Token jj_consume_token(int kind) throws ParseException {
     Token oldToken;
     if ((oldToken = token).next != null) token = token.next;
     else token = token.next = token_source.getNextToken();
@@ -1529,7 +1566,7 @@ public class SlimJJParser implements SlimJJParserConstants {
 
   static private final class LookaheadSuccess extends java.lang.Error { }
   final private LookaheadSuccess jj_ls = new LookaheadSuccess();
-  final private boolean jj_scan_token(int kind) {
+  private boolean jj_scan_token(int kind) {
     if (jj_scanpos == jj_lastpos) {
       jj_la--;
       if (jj_scanpos.next == null) {
@@ -1550,6 +1587,8 @@ public class SlimJJParser implements SlimJJParserConstants {
     return false;
   }
 
+
+/** Get the next Token. */
   final public Token getNextToken() {
     if (token.next != null) token = token.next;
     else token = token.next = token_source.getNextToken();
@@ -1558,8 +1597,9 @@ public class SlimJJParser implements SlimJJParserConstants {
     return token;
   }
 
+/** Get the specific Token. */
   final public Token getToken(int index) {
-    Token t = lookingAhead ? jj_scanpos : token;
+    Token t = token;
     for (int i = 0; i < index; i++) {
       if (t.next != null) t = t.next;
       else t = t.next = token_source.getNextToken();
@@ -1567,14 +1607,14 @@ public class SlimJJParser implements SlimJJParserConstants {
     return t;
   }
 
-  final private int jj_ntk() {
+  private int jj_ntk() {
     if ((jj_nt=token.next) == null)
       return (jj_ntk = (token.next=token_source.getNextToken()).kind);
     else
       return (jj_ntk = jj_nt.kind);
   }
 
-  private java.util.Vector jj_expentries = new java.util.Vector();
+  private java.util.List jj_expentries = new java.util.ArrayList();
   private int[] jj_expentry;
   private int jj_kind = -1;
   private int[] jj_lasttokens = new int[100];
@@ -1589,33 +1629,31 @@ public class SlimJJParser implements SlimJJParserConstants {
       for (int i = 0; i < jj_endpos; i++) {
         jj_expentry[i] = jj_lasttokens[i];
       }
-      boolean exists = false;
-      for (java.util.Enumeration e = jj_expentries.elements(); e.hasMoreElements();) {
-        int[] oldentry = (int[])(e.nextElement());
+      jj_entries_loop: for (java.util.Iterator it = jj_expentries.iterator(); it.hasNext();) {
+        int[] oldentry = (int[])(it.next());
         if (oldentry.length == jj_expentry.length) {
-          exists = true;
           for (int i = 0; i < jj_expentry.length; i++) {
             if (oldentry[i] != jj_expentry[i]) {
-              exists = false;
-              break;
+              continue jj_entries_loop;
             }
           }
-          if (exists) break;
+          jj_expentries.add(jj_expentry);
+          break jj_entries_loop;
         }
       }
-      if (!exists) jj_expentries.addElement(jj_expentry);
       if (pos != 0) jj_lasttokens[(jj_endpos = pos) - 1] = kind;
     }
   }
 
+  /** Generate ParseException. */
   public ParseException generateParseException() {
-    jj_expentries.removeAllElements();
-    boolean[] la1tokens = new boolean[132];
+    jj_expentries.clear();
+    boolean[] la1tokens = new boolean[133];
     if (jj_kind >= 0) {
       la1tokens[jj_kind] = true;
       jj_kind = -1;
     }
-    for (int i = 0; i < 34; i++) {
+    for (int i = 0; i < 36; i++) {
       if (jj_la1[i] == jj_gen) {
         for (int j = 0; j < 32; j++) {
           if ((jj_la1_0[i] & (1<<j)) != 0) {
@@ -1636,11 +1674,11 @@ public class SlimJJParser implements SlimJJParserConstants {
         }
       }
     }
-    for (int i = 0; i < 132; i++) {
+    for (int i = 0; i < 133; i++) {
       if (la1tokens[i]) {
         jj_expentry = new int[1];
         jj_expentry[0] = i;
-        jj_expentries.addElement(jj_expentry);
+        jj_expentries.add(jj_expentry);
       }
     }
     jj_endpos = 0;
@@ -1648,18 +1686,20 @@ public class SlimJJParser implements SlimJJParserConstants {
     jj_add_error_token(0, 0);
     int[][] exptokseq = new int[jj_expentries.size()][];
     for (int i = 0; i < jj_expentries.size(); i++) {
-      exptokseq[i] = (int[])jj_expentries.elementAt(i);
+      exptokseq[i] = (int[])jj_expentries.get(i);
     }
     return new ParseException(token, exptokseq, tokenImage);
   }
 
+  /** Enable tracing. */
   final public void enable_tracing() {
   }
 
+  /** Disable tracing. */
   final public void disable_tracing() {
   }
 
-  final private void jj_rescan_token() {
+  private void jj_rescan_token() {
     jj_rescan = true;
     for (int i = 0; i < 9; i++) {
     try {
@@ -1686,7 +1726,7 @@ public class SlimJJParser implements SlimJJParserConstants {
     jj_rescan = false;
   }
 
-  final private void jj_save(int index, int xla) {
+  private void jj_save(int index, int xla) {
     JJCalls p = jj_2_rtns[index];
     while (p.gen > jj_gen) {
       if (p.next == null) { p = p.next = new JJCalls(); break; }

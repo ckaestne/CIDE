@@ -10,6 +10,7 @@ import com.sun.corba.se.pept.transport.Acceptor;
 public class NGrammar {
 	final public List<NProduction> productions;
 	private String introduction;
+	private NPrinterBlock printerBlock = new NPrinterBlock();
 
 	public NGrammar(List<NProduction> productions) {
 		this.productions = productions;
@@ -21,6 +22,8 @@ public class NGrammar {
 	}
 
 	public void accept(NVisitor visitor) {
+		visitor.visit(printerBlock);
+		visitor.postVisit(printerBlock);
 		if (visitor.visit(this))
 			for (NProduction p : productions)
 				p.accept(visitor);
@@ -42,7 +45,12 @@ public class NGrammar {
 	public String toString() {
 		String r = "";
 		for (NProduction k : productions)
-			r += k.toString()+"\n\n";
+			r += k.toString() + "\n\n";
 		return r;
 	}
+
+	public void setPrinterBlock(NPrinterBlock pb) {
+		this.printerBlock = pb;
+	}
+
 }

@@ -150,12 +150,12 @@ public class CreateSimplePrintVisitorVisitor extends NCreateFileVisitor {
 		println("import cide.languages.*;\n", 0);
 		println(
 				"/** package visibility. use only via ASTNode.render() **/\n" +
-				"class SimplePrintVisitor extends AbstractPrintVisitor {",
+				"public class SimplePrintVisitor extends AbstractPrintVisitor {",
 				0);
-		println("SimplePrintVisitor(PrintStream out) {", 1);
+		println("public SimplePrintVisitor(PrintStream out) {", 1);
 		println("super(out);", 2);
 		println("}", 1);
-		println("SimplePrintVisitor() {", 1);
+		println("public SimplePrintVisitor() {", 1);
 		println("super();", 2);
 		println("}", 1);
 		println("public boolean visit(IASTNode node) {", 1);

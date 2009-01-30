@@ -3,6 +3,7 @@ package cide.astgen.nparser.visitor;
 import cide.astgen.nparser.ast.NChoice;
 import cide.astgen.nparser.ast.NGrammar;
 import cide.astgen.nparser.ast.NNonTerminal;
+import cide.astgen.nparser.ast.NPrinterBlock;
 import cide.astgen.nparser.ast.NProduction;
 import cide.astgen.nparser.ast.NTextOnly;
 import cide.astgen.nparser.ast.NValue;
@@ -32,6 +33,10 @@ public class NVisitor {
 		return true;
 	}
 
+	public boolean visit(NPrinterBlock t) {
+		return true;
+	}
+
 	public void postVisit(NGrammar g) {
 	}
 
@@ -49,4 +54,8 @@ public class NVisitor {
 
 	public void postVisit(NTextOnly g) {
 	}
+
+	public void postVisit(NPrinterBlock g) {
+	}
+
 }

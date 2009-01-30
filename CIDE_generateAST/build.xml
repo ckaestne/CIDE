@@ -4,7 +4,7 @@
 	<taskdef name="astgen" classname="cide.astgen.ant.AstgenTask" />
 	<taskdef name="jcc" classname="cide.astgen.ant.JavaCCTask" />
 
-	<target name="alllanguages" depends="antlr,bali,c,capprox,cppapprox,cs,ecmascript,fj,gcide,haskell,phaskell,java15,javacc,properties,simple,html,xml"/>
+	<target name="alllanguages" depends="antlr,bali,c,capprox,cppapprox,cs,ecmascript,fj,gcide,haskell,phaskell,java15,javacc,properties,simple,html,xml,python"/>
 
 	<target name="antlr">
 		<antcall target="createlang">
@@ -107,6 +107,13 @@
 		<antcall target="createlang">
 			<param name="language" value="html" />
 			<param name="directory" value="${basedir}\..\CIDE_Language_XML_Plain\src" />
+		</antcall>
+	</target>
+	
+	<target name="python">
+		<antcall target="createlang">
+			<param name="language" value="python" />
+			<param name="directory" value="${basedir}\..\CIDE_Language_Python\src" />
 		</antcall>
 	</target>
 	<!-- <target name="xhtml">

@@ -239,7 +239,7 @@ public class JavaCCPrintVisitor extends NVisitor {
 		if (t instanceof NValue) {
 			out.print("t=" + t.getName());
 			out.print("{" + t.genVariablePlainName()
-					+ "=new ASTStringNode(t.toString(),new WToken(t));}");
+					+ "=new ASTStringNode(t.image,new WToken(t));}");
 		}
 		if ((t instanceof NTextOnly) && (t.type != Type.ONE)) {
 			out.print("{" + t.genVariablePlainName() + "=new ASTTextNode("
