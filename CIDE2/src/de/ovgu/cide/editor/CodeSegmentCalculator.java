@@ -35,6 +35,8 @@ public class CodeSegmentCalculator {
 
 				if (node == null)
 					return true;
+				if (node.getLength()==0)
+					return true;
 
 				while (stack.peek().endPosition() <= node.getStartPosition())
 					list.add(stack.pop());
