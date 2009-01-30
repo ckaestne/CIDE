@@ -45,7 +45,7 @@ public class XMLParser implements XMLParserConstants {
       jj_la1[0] = jj_gen;
       if (getToken(1).image.trim().equals("")) {
         t = jj_consume_token(PCDATA);
-                                                                    pcdata=new ASTStringNode(t.toString(),new WToken(t));
+                                                                    pcdata=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new Misc2(pcdata, firstToken.next,token);}
       } else {
         switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -69,7 +69,7 @@ public class XMLParser implements XMLParserConstants {
         Token firstToken=token;
     jj_consume_token(PI_START);
     t = jj_consume_token(PI_END);
-                        pi_end=new ASTStringNode(t.toString(),new WToken(t));
+                        pi_end=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new PI(pi_end, firstToken.next,token);}
     throw new Error("Missing return statement in function");
   }
@@ -123,7 +123,7 @@ public class XMLParser implements XMLParserConstants {
         Token firstToken=token;
     jj_consume_token(CDSTART);
     t = jj_consume_token(CDEND);
-                              cdend=new ASTStringNode(t.toString(),new WToken(t));
+                              cdend=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new CDSect(cdend, firstToken.next,token);}
     throw new Error("Missing return statement in function");
   }
@@ -134,7 +134,7 @@ public class XMLParser implements XMLParserConstants {
         Token firstToken=token;
     jj_consume_token(COMMENT_START);
     t = jj_consume_token(COMMENT_END);
-                               comment_end=new ASTStringNode(t.toString(),new WToken(t));
+                               comment_end=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new Comment(comment_end, firstToken.next,token);}
     throw new Error("Missing return statement in function");
   }
@@ -189,7 +189,7 @@ public class XMLParser implements XMLParserConstants {
         Token firstToken=token;
     jj_consume_token(SELEMENT_START);
     t = jj_consume_token(ELEMENT_ID);
-                           element_id=new ASTStringNode(t.toString(),new WToken(t));
+                           element_id=new ASTStringNode(t.image,new WToken(t));
     label_5:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -201,7 +201,7 @@ public class XMLParser implements XMLParserConstants {
         break label_5;
       }
       attribute = Attribute();
-                                                                                                             attributeList.add(attribute);
+                                                                                                        attributeList.add(attribute);
     }
     jj_consume_token(SLASHEND);
          {if (true) return new EmptyElemTag(element_id, attributeList, firstToken.next,token);}
@@ -216,7 +216,7 @@ public class XMLParser implements XMLParserConstants {
         Token firstToken=token;
     jj_consume_token(SELEMENT_START);
     t = jj_consume_token(ELEMENT_ID);
-                           element_id=new ASTStringNode(t.toString(),new WToken(t));
+                           element_id=new ASTStringNode(t.image,new WToken(t));
     label_6:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -228,7 +228,7 @@ public class XMLParser implements XMLParserConstants {
         break label_6;
       }
       attribute = Attribute();
-                                                                                                             attributeList.add(attribute);
+                                                                                                        attributeList.add(attribute);
     }
     jj_consume_token(ELEMENT_END);
          {if (true) return new STag(element_id, attributeList, firstToken.next,token);}
@@ -241,10 +241,10 @@ public class XMLParser implements XMLParserConstants {
         ASTStringNode attr_val;
         Token firstToken=token;
     t = jj_consume_token(ATTR_NAME);
-                      attr_name=new ASTStringNode(t.toString(),new WToken(t));
+                      attr_name=new ASTStringNode(t.image,new WToken(t));
     jj_consume_token(ATTR_EQ);
     t = jj_consume_token(ATTR_VAL);
-                                                                                                       attr_val=new ASTStringNode(t.toString(),new WToken(t));
+                                                                                                  attr_val=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new Attribute(attr_name, attr_val, firstToken.next,token);}
     throw new Error("Missing return statement in function");
   }
@@ -255,7 +255,7 @@ public class XMLParser implements XMLParserConstants {
         Token firstToken=token;
     jj_consume_token(EELEMENT_START);
     t = jj_consume_token(ELEMENT_ID);
-                            element_id=new ASTStringNode(t.toString(),new WToken(t));
+                            element_id=new ASTStringNode(t.image,new WToken(t));
     jj_consume_token(ELEMENT_END);
          {if (true) return new ETag(element_id, firstToken.next,token);}
     throw new Error("Missing return statement in function");
@@ -283,7 +283,7 @@ public class XMLParser implements XMLParserConstants {
       break;
     case PCDATA:
       t = jj_consume_token(PCDATA);
-                   pcdata=new ASTStringNode(t.toString(),new WToken(t));
+                   pcdata=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new Content4(pcdata, firstToken.next,token);}
       break;
     default:

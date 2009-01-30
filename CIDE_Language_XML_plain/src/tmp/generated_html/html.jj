@@ -156,7 +156,7 @@ HtmlDocument HtmlDocument() : {
 	ASTStringNode eof;
 	Token firstToken=token;
 } { (
-	elementSequence=ElementSequence() t=<EOF>{eof=new ASTStringNode(t.toString(),new WToken(t));} 
+	elementSequence=ElementSequence() t=<EOF>{eof=new ASTStringNode(t.image,new WToken(t));} 
 	{return new HtmlDocument(elementSequence, eof, firstToken.next,token);}
  ) }
 
@@ -191,15 +191,15 @@ Element Element() : {
 	{return new Element3(commentTag, firstToken.next,token);} |
 	declTag=DeclTag() 
 	{return new Element4(declTag, firstToken.next,token);} |
-	LOOKAHEAD(2) t=<TAG_START>{tag_start=new ASTStringNode(t.toString(),new WToken(t));} t=<LST_ERROR>{lst_error=new ASTStringNode(t.toString(),new WToken(t));} 
+	LOOKAHEAD(2) t=<TAG_START>{tag_start=new ASTStringNode(t.image,new WToken(t));} t=<LST_ERROR>{lst_error=new ASTStringNode(t.image,new WToken(t));} 
 	{return new Element5(tag_start, lst_error, firstToken.next,token);} |
-	t=<PCDATA>{pcdata=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<PCDATA>{pcdata=new ASTStringNode(t.image,new WToken(t));} 
 	{return new Element6(pcdata, firstToken.next,token);} |
-	t=<PCDATA_QS>{pcdata_qs=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<PCDATA_QS>{pcdata_qs=new ASTStringNode(t.image,new WToken(t));} 
 	{return new Element7(pcdata_qs, firstToken.next,token);} |
-	t=<PCDATA_Q>{pcdata_q=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<PCDATA_Q>{pcdata_q=new ASTStringNode(t.image,new WToken(t));} 
 	{return new Element8(pcdata_q, firstToken.next,token);} |
-	t=<EOL>{eol=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<EOL>{eol=new ASTStringNode(t.image,new WToken(t));} 
 	{return new Element9(eol, firstToken.next,token);}
  ) }
 
@@ -209,7 +209,7 @@ Attribute Attribute() : {
 	ASTStringNode attr_val = null;
 	Token firstToken=token;
 } { (
-	t=<ATTR_NAME>{attr_name=new ASTStringNode(t.toString(),new WToken(t));} [<ATTR_EQ> t=<ATTR_VAL>{attr_val=new ASTStringNode(t.toString(),new WToken(t));}] 
+	t=<ATTR_NAME>{attr_name=new ASTStringNode(t.image,new WToken(t));} [<ATTR_EQ> t=<ATTR_VAL>{attr_val=new ASTStringNode(t.image,new WToken(t));}] 
 	{return new Attribute(attr_name, attr_val, firstToken.next,token);}
  ) }
 
@@ -229,7 +229,7 @@ Tag Tag() : {
 	ASTStringNode slash = null;
 	Token firstToken=token;
 } { (
-	"<" t=<TAG_NAME>{tag_name=new ASTStringNode(t.toString(),new WToken(t));} attributeList=AttributeList() [t=<SLASH>{slash=new ASTStringNode(t.toString(),new WToken(t));}] <TAG_END> 
+	"<" t=<TAG_NAME>{tag_name=new ASTStringNode(t.image,new WToken(t));} attributeList=AttributeList() [t=<SLASH>{slash=new ASTStringNode(t.image,new WToken(t));}] <TAG_END> 
 	{return new Tag(tag_name, attributeList, slash, firstToken.next,token);}
  ) }
 
@@ -238,7 +238,7 @@ EndTag EndTag() : {
 	ASTStringNode tag_name;
 	Token firstToken=token;
 } { (
-	"</" t=<TAG_NAME>{tag_name=new ASTStringNode(t.toString(),new WToken(t));} <TAG_END> 
+	"</" t=<TAG_NAME>{tag_name=new ASTStringNode(t.image,new WToken(t));} <TAG_END> 
 	{return new EndTag(tag_name, firstToken.next,token);}
  ) }
 
@@ -259,11 +259,11 @@ CommentContent CommentContent() : {
 	ASTStringNode comment_word;
 	Token firstToken=token;
 } { (
-	t=<DASH>{dash=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<DASH>{dash=new ASTStringNode(t.image,new WToken(t));} 
 	{return new CommentContent1(dash, firstToken.next,token);} |
-	t=<COMMENT_EOL>{comment_eol=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<COMMENT_EOL>{comment_eol=new ASTStringNode(t.image,new WToken(t));} 
 	{return new CommentContent2(comment_eol, firstToken.next,token);} |
-	t=<COMMENT_WORD>{comment_word=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<COMMENT_WORD>{comment_word=new ASTStringNode(t.image,new WToken(t));} 
 	{return new CommentContent3(comment_word, firstToken.next,token);}
  ) }
 
@@ -273,9 +273,9 @@ CommentEnd CommentEnd() : {
 	ASTStringNode comment_end;
 	Token firstToken=token;
 } { (
-	t=<EOF>{eof=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<EOF>{eof=new ASTStringNode(t.image,new WToken(t));} 
 	{return new CommentEnd1(eof, firstToken.next,token);} |
-	t=<COMMENT_END>{comment_end=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<COMMENT_END>{comment_end=new ASTStringNode(t.image,new WToken(t));} 
 	{return new CommentEnd2(comment_end, firstToken.next,token);}
  ) }
 
@@ -284,7 +284,7 @@ DeclTag DeclTag() : {
 	ASTStringNode decl_any;
 	Token firstToken=token;
 } { (
-	"<!" t=<DECL_ANY>{decl_any=new ASTStringNode(t.toString(),new WToken(t));} <DECL_END> 
+	"<!" t=<DECL_ANY>{decl_any=new ASTStringNode(t.image,new WToken(t));} <DECL_END> 
 	{return new DeclTag(decl_any, firstToken.next,token);}
  ) }
 

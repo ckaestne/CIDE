@@ -15,7 +15,7 @@ public class HtmlParser implements HtmlParserConstants {
         Token firstToken=token;
     elementSequence = ElementSequence();
     t = jj_consume_token(0);
-                                                  eof=new ASTStringNode(t.toString(),new WToken(t));
+                                                  eof=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new HtmlDocument(elementSequence, eof, firstToken.next,token);}
     throw new Error("Missing return statement in function");
   }
@@ -82,30 +82,30 @@ public class HtmlParser implements HtmlParserConstants {
         jj_la1[1] = jj_gen;
         if (jj_2_2(2)) {
           t = jj_consume_token(TAG_START);
-                                   tag_start=new ASTStringNode(t.toString(),new WToken(t));
+                                   tag_start=new ASTStringNode(t.image,new WToken(t));
           t = jj_consume_token(LST_ERROR);
-                                                                                                           lst_error=new ASTStringNode(t.toString(),new WToken(t));
+                                                                                                      lst_error=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new Element5(tag_start, lst_error, firstToken.next,token);}
         } else {
           switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
           case PCDATA:
             t = jj_consume_token(PCDATA);
-                   pcdata=new ASTStringNode(t.toString(),new WToken(t));
+                   pcdata=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new Element6(pcdata, firstToken.next,token);}
             break;
           case PCDATA_QS:
             t = jj_consume_token(PCDATA_QS);
-                      pcdata_qs=new ASTStringNode(t.toString(),new WToken(t));
+                      pcdata_qs=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new Element7(pcdata_qs, firstToken.next,token);}
             break;
           case PCDATA_Q:
             t = jj_consume_token(PCDATA_Q);
-                     pcdata_q=new ASTStringNode(t.toString(),new WToken(t));
+                     pcdata_q=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new Element8(pcdata_q, firstToken.next,token);}
             break;
           case EOL:
             t = jj_consume_token(EOL);
-                eol=new ASTStringNode(t.toString(),new WToken(t));
+                eol=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new Element9(eol, firstToken.next,token);}
             break;
           default:
@@ -125,12 +125,12 @@ public class HtmlParser implements HtmlParserConstants {
         ASTStringNode attr_val = null;
         Token firstToken=token;
     t = jj_consume_token(ATTR_NAME);
-                      attr_name=new ASTStringNode(t.toString(),new WToken(t));
+                      attr_name=new ASTStringNode(t.image,new WToken(t));
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case ATTR_EQ:
       jj_consume_token(ATTR_EQ);
       t = jj_consume_token(ATTR_VAL);
-                                                                                                        attr_val=new ASTStringNode(t.toString(),new WToken(t));
+                                                                                                   attr_val=new ASTStringNode(t.image,new WToken(t));
       break;
     default:
       jj_la1[3] = jj_gen;
@@ -169,12 +169,12 @@ public class HtmlParser implements HtmlParserConstants {
         Token firstToken=token;
     jj_consume_token(TAG_START);
     t = jj_consume_token(TAG_NAME);
-                         tag_name=new ASTStringNode(t.toString(),new WToken(t));
+                         tag_name=new ASTStringNode(t.image,new WToken(t));
     attributeList = AttributeList();
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case SLASH:
       t = jj_consume_token(SLASH);
-                                                                                                                           slash=new ASTStringNode(t.toString(),new WToken(t));
+                                                                                                                      slash=new ASTStringNode(t.image,new WToken(t));
       break;
     default:
       jj_la1[5] = jj_gen;
@@ -191,7 +191,7 @@ public class HtmlParser implements HtmlParserConstants {
         Token firstToken=token;
     jj_consume_token(ENDTAG_START);
     t = jj_consume_token(TAG_NAME);
-                          tag_name=new ASTStringNode(t.toString(),new WToken(t));
+                          tag_name=new ASTStringNode(t.image,new WToken(t));
     jj_consume_token(TAG_END);
          {if (true) return new EndTag(tag_name, firstToken.next,token);}
     throw new Error("Missing return statement in function");
@@ -232,17 +232,17 @@ public class HtmlParser implements HtmlParserConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case DASH:
       t = jj_consume_token(DASH);
-                 dash=new ASTStringNode(t.toString(),new WToken(t));
+                 dash=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new CommentContent1(dash, firstToken.next,token);}
       break;
     case COMMENT_EOL:
       t = jj_consume_token(COMMENT_EOL);
-                        comment_eol=new ASTStringNode(t.toString(),new WToken(t));
+                        comment_eol=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new CommentContent2(comment_eol, firstToken.next,token);}
       break;
     case COMMENT_WORD:
       t = jj_consume_token(COMMENT_WORD);
-                         comment_word=new ASTStringNode(t.toString(),new WToken(t));
+                         comment_word=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new CommentContent3(comment_word, firstToken.next,token);}
       break;
     default:
@@ -261,12 +261,12 @@ public class HtmlParser implements HtmlParserConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case 0:
       t = jj_consume_token(0);
-                eof=new ASTStringNode(t.toString(),new WToken(t));
+                eof=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new CommentEnd1(eof, firstToken.next,token);}
       break;
     case COMMENT_END:
       t = jj_consume_token(COMMENT_END);
-                        comment_end=new ASTStringNode(t.toString(),new WToken(t));
+                        comment_end=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new CommentEnd2(comment_end, firstToken.next,token);}
       break;
     default:
@@ -283,7 +283,7 @@ public class HtmlParser implements HtmlParserConstants {
         Token firstToken=token;
     jj_consume_token(DECL_START);
     t = jj_consume_token(DECL_ANY);
-                          decl_any=new ASTStringNode(t.toString(),new WToken(t));
+                          decl_any=new ASTStringNode(t.image,new WToken(t));
     jj_consume_token(DECL_END);
          {if (true) return new DeclTag(decl_any, firstToken.next,token);}
     throw new Error("Missing return statement in function");

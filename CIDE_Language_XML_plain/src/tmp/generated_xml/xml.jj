@@ -103,7 +103,7 @@ Misc Misc() : {
 } { (
 	comment=Comment() 
 	{return new Misc1(comment, firstToken.next,token);} |
-	LOOKAHEAD({getToken(1).image.trim().equals("")}) t=<PCDATA>{pcdata=new ASTStringNode(t.toString(),new WToken(t));} 
+	LOOKAHEAD({getToken(1).image.trim().equals("")}) t=<PCDATA>{pcdata=new ASTStringNode(t.image,new WToken(t));} 
 	{return new Misc2(pcdata, firstToken.next,token);} |
 	pI=PI() 
 	{return new Misc3(pI, firstToken.next,token);}
@@ -114,7 +114,7 @@ PI PI() : {
 	ASTStringNode pi_end;
 	Token firstToken=token;
 } { (
-	"<?" t=<PI_END>{pi_end=new ASTStringNode(t.toString(),new WToken(t));} 
+	"<?" t=<PI_END>{pi_end=new ASTStringNode(t.image,new WToken(t));} 
 	{return new PI(pi_end, firstToken.next,token);}
  ) }
 
@@ -142,7 +142,7 @@ CDSect CDSect() : {
 	ASTStringNode cdend;
 	Token firstToken=token;
 } { (
-	"<![CDATA[" t=<CDEND>{cdend=new ASTStringNode(t.toString(),new WToken(t));} 
+	"<![CDATA[" t=<CDEND>{cdend=new ASTStringNode(t.image,new WToken(t));} 
 	{return new CDSect(cdend, firstToken.next,token);}
  ) }
 
@@ -151,7 +151,7 @@ Comment Comment() : {
 	ASTStringNode comment_end;
 	Token firstToken=token;
 } { (
-	"<!--" t=<COMMENT_END>{comment_end=new ASTStringNode(t.toString(),new WToken(t));} 
+	"<!--" t=<COMMENT_END>{comment_end=new ASTStringNode(t.image,new WToken(t));} 
 	{return new Comment(comment_end, firstToken.next,token);}
  ) }
 
@@ -176,7 +176,7 @@ EmptyElemTag EmptyElemTag() : {
 	ArrayList<Attribute> attributeList = new ArrayList<Attribute>();
 	Token firstToken=token;
 } { (
-	"<" t=<ELEMENT_ID>{element_id=new ASTStringNode(t.toString(),new WToken(t));} (attribute=Attribute(){attributeList.add(attribute);})* <SLASHEND> 
+	"<" t=<ELEMENT_ID>{element_id=new ASTStringNode(t.image,new WToken(t));} (attribute=Attribute(){attributeList.add(attribute);})* <SLASHEND> 
 	{return new EmptyElemTag(element_id, attributeList, firstToken.next,token);}
  ) }
 
@@ -187,7 +187,7 @@ STag STag() : {
 	ArrayList<Attribute> attributeList = new ArrayList<Attribute>();
 	Token firstToken=token;
 } { (
-	"<" t=<ELEMENT_ID>{element_id=new ASTStringNode(t.toString(),new WToken(t));} (attribute=Attribute(){attributeList.add(attribute);})* <ELEMENT_END> 
+	"<" t=<ELEMENT_ID>{element_id=new ASTStringNode(t.image,new WToken(t));} (attribute=Attribute(){attributeList.add(attribute);})* <ELEMENT_END> 
 	{return new STag(element_id, attributeList, firstToken.next,token);}
  ) }
 
@@ -197,7 +197,7 @@ Attribute Attribute() : {
 	ASTStringNode attr_val;
 	Token firstToken=token;
 } { (
-	t=<ATTR_NAME>{attr_name=new ASTStringNode(t.toString(),new WToken(t));} <ATTR_EQ> t=<ATTR_VAL>{attr_val=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<ATTR_NAME>{attr_name=new ASTStringNode(t.image,new WToken(t));} <ATTR_EQ> t=<ATTR_VAL>{attr_val=new ASTStringNode(t.image,new WToken(t));} 
 	{return new Attribute(attr_name, attr_val, firstToken.next,token);}
  ) }
 
@@ -206,7 +206,7 @@ ETag ETag() : {
 	ASTStringNode element_id;
 	Token firstToken=token;
 } { (
-	"</" t=<ELEMENT_ID>{element_id=new ASTStringNode(t.toString(),new WToken(t));} <ELEMENT_END> 
+	"</" t=<ELEMENT_ID>{element_id=new ASTStringNode(t.image,new WToken(t));} <ELEMENT_END> 
 	{return new ETag(element_id, firstToken.next,token);}
  ) }
 
@@ -224,7 +224,7 @@ Content Content() : {
 	{return new Content2(comment, firstToken.next,token);} |
 	cDSect=CDSect() 
 	{return new Content3(cDSect, firstToken.next,token);} |
-	t=<PCDATA>{pcdata=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<PCDATA>{pcdata=new ASTStringNode(t.image,new WToken(t));} 
 	{return new Content4(pcdata, firstToken.next,token);}
  ) }
 
