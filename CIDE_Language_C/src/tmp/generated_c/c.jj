@@ -315,15 +315,15 @@ StorageClassSpecifier StorageClassSpecifier() : {
 	ASTStringNode typedef;
 	Token firstToken=token;
 } { (
-	t=<AUTO>{auto=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<AUTO>{auto=new ASTStringNode(t.image,new WToken(t));} 
 	{return new StorageClassSpecifier1(auto, firstToken.next,token);} |
-	t=<REGISTER>{register=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<REGISTER>{register=new ASTStringNode(t.image,new WToken(t));} 
 	{return new StorageClassSpecifier2(register, firstToken.next,token);} |
-	t=<STATIC>{static_kw=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<STATIC>{static_kw=new ASTStringNode(t.image,new WToken(t));} 
 	{return new StorageClassSpecifier3(static_kw, firstToken.next,token);} |
-	t=<EXTERN>{extern=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<EXTERN>{extern=new ASTStringNode(t.image,new WToken(t));} 
 	{return new StorageClassSpecifier4(extern, firstToken.next,token);} |
-	t=<TYPEDEF>{typedef=new ASTStringNode(t.toString(),new WToken(t));}  {typedefParsingStack.push(Boolean.TRUE);} 
+	t=<TYPEDEF>{typedef=new ASTStringNode(t.image,new WToken(t));}  {typedefParsingStack.push(Boolean.TRUE);} 
 	{return new StorageClassSpecifier5(typedef, firstToken.next,token);}
  ) }
 
@@ -343,23 +343,23 @@ TypeSpecifier TypeSpecifier() : {
 	TypedefName typedefName;
 	Token firstToken=token;
 } { (
-	t=<VOID>{void_kw=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<VOID>{void_kw=new ASTStringNode(t.image,new WToken(t));} 
 	{return new TypeSpecifier1(void_kw, firstToken.next,token);} |
-	t=<CHAR>{char_kw=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<CHAR>{char_kw=new ASTStringNode(t.image,new WToken(t));} 
 	{return new TypeSpecifier2(char_kw, firstToken.next,token);} |
-	t=<SHORT>{short_kw=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<SHORT>{short_kw=new ASTStringNode(t.image,new WToken(t));} 
 	{return new TypeSpecifier3(short_kw, firstToken.next,token);} |
-	t=<INT>{int_kw=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<INT>{int_kw=new ASTStringNode(t.image,new WToken(t));} 
 	{return new TypeSpecifier4(int_kw, firstToken.next,token);} |
-	t=<LONG>{long_kw=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<LONG>{long_kw=new ASTStringNode(t.image,new WToken(t));} 
 	{return new TypeSpecifier5(long_kw, firstToken.next,token);} |
-	t=<FLOAT>{float_kw=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<FLOAT>{float_kw=new ASTStringNode(t.image,new WToken(t));} 
 	{return new TypeSpecifier6(float_kw, firstToken.next,token);} |
-	t=<DOUBLE>{double_kw=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<DOUBLE>{double_kw=new ASTStringNode(t.image,new WToken(t));} 
 	{return new TypeSpecifier7(double_kw, firstToken.next,token);} |
-	t=<SIGNED>{signed=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<SIGNED>{signed=new ASTStringNode(t.image,new WToken(t));} 
 	{return new TypeSpecifier8(signed, firstToken.next,token);} |
-	t=<UNSIGNED>{unsigned=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<UNSIGNED>{unsigned=new ASTStringNode(t.image,new WToken(t));} 
 	{return new TypeSpecifier9(unsigned, firstToken.next,token);} |
 	structOrUnionSpecifier=StructOrUnionSpecifier() 
 	{return new TypeSpecifier10(structOrUnionSpecifier, firstToken.next,token);} |
@@ -375,9 +375,9 @@ TypeQualifier TypeQualifier() : {
 	ASTStringNode volatile_kw;
 	Token firstToken=token;
 } { (
-	t=<CONST>{const_kw=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<CONST>{const_kw=new ASTStringNode(t.image,new WToken(t));} 
 	{return new TypeQualifier1(const_kw, firstToken.next,token);} |
-	t=<VOLATILE>{volatile_kw=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<VOLATILE>{volatile_kw=new ASTStringNode(t.image,new WToken(t));} 
 	{return new TypeQualifier2(volatile_kw, firstToken.next,token);}
  ) }
 
@@ -397,9 +397,9 @@ StructOrUnionSpecifierInner StructOrUnionSpecifierInner() : {
 	ASTStringNode identifier1;
 	Token firstToken=token;
 } { (
-	LOOKAHEAD(3) [t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));}] "{" structDeclarationList=StructDeclarationList() "}" 
+	LOOKAHEAD(3) [t=<IDENTIFIER>{identifier=new ASTStringNode(t.image,new WToken(t));}] "{" structDeclarationList=StructDeclarationList() "}" 
 	{return new StructOrUnionSpecifierInner1(identifier, structDeclarationList, firstToken.next,token);} |
-	t=<IDENTIFIER>{identifier1=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<IDENTIFIER>{identifier1=new ASTStringNode(t.image,new WToken(t));} 
 	{return new StructOrUnionSpecifierInner2(identifier1, firstToken.next,token);}
  ) }
 
@@ -409,9 +409,9 @@ StructOrUnion StructOrUnion() : {
 	ASTStringNode union;
 	Token firstToken=token;
 } { (
-	t=<STRUCT>{struct=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<STRUCT>{struct=new ASTStringNode(t.image,new WToken(t));} 
 	{return new StructOrUnion1(struct, firstToken.next,token);} |
-	t=<UNION>{union=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<UNION>{union=new ASTStringNode(t.image,new WToken(t));} 
 	{return new StructOrUnion2(union, firstToken.next,token);}
  ) }
 
@@ -494,7 +494,7 @@ EnumSpecifier EnumSpecifier() : {
 	EnumSpecifierInternal enumSpecifierInternal;
 	Token firstToken=token;
 } { (
-	t=<ENUM>{enum_kw=new ASTStringNode(t.toString(),new WToken(t));} enumSpecifierInternal=EnumSpecifierInternal() 
+	t=<ENUM>{enum_kw=new ASTStringNode(t.image,new WToken(t));} enumSpecifierInternal=EnumSpecifierInternal() 
 	{return new EnumSpecifier(enum_kw, enumSpecifierInternal, firstToken.next,token);}
  ) }
 
@@ -505,9 +505,9 @@ EnumSpecifierInternal EnumSpecifierInternal() : {
 	ASTStringNode identifier1;
 	Token firstToken=token;
 } { (
-	LOOKAHEAD(3) [t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));}] "{" enumeratorList=EnumeratorList() "}" 
+	LOOKAHEAD(3) [t=<IDENTIFIER>{identifier=new ASTStringNode(t.image,new WToken(t));}] "{" enumeratorList=EnumeratorList() "}" 
 	{return new EnumSpecifierInternal1(identifier, enumeratorList, firstToken.next,token);} |
-	t=<IDENTIFIER>{identifier1=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<IDENTIFIER>{identifier1=new ASTStringNode(t.image,new WToken(t));} 
 	{return new EnumSpecifierInternal2(identifier1, firstToken.next,token);}
  ) }
 
@@ -527,7 +527,7 @@ Enumerator Enumerator() : {
 	ConstantExpression constantExpression = null;
 	Token firstToken=token;
 } { (
-	t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} ["=" constantExpression=ConstantExpression()] 
+	t=<IDENTIFIER>{identifier=new ASTStringNode(t.image,new WToken(t));} ["=" constantExpression=ConstantExpression()] 
 	{return new Enumerator(identifier, constantExpression, firstToken.next,token);}
  ) }
 
@@ -556,7 +556,7 @@ DirectDeclaratorP1 DirectDeclaratorP1() : {
 	Declarator declarator;
 	Token firstToken=token;
 } { (
-	t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));}  { if(!(typedefParsingStack.empty()) && ((Boolean)typedefParsingStack.peek()).booleanValue()){				addType(t.image);	  }} 
+	t=<IDENTIFIER>{identifier=new ASTStringNode(t.image,new WToken(t));}  { if(!(typedefParsingStack.empty()) && ((Boolean)typedefParsingStack.peek()).booleanValue()){				addType(t.image);	  }} 
 	{return new DirectDeclaratorP11(identifier, firstToken.next,token);} |
 	"(" declarator=Declarator() ")" 
 	{return new DirectDeclaratorP12(declarator, firstToken.next,token);}
@@ -641,7 +641,7 @@ IdentifierList IdentifierList() : {
 	ArrayList<ASTStringNode> identifier1List = new ArrayList<ASTStringNode>();
 	Token firstToken=token;
 } { (
-	t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} ("," t=<IDENTIFIER>{identifier1=new ASTStringNode(t.toString(),new WToken(t));}{identifier1List.add(identifier1);})* 
+	t=<IDENTIFIER>{identifier=new ASTStringNode(t.image,new WToken(t));} ("," t=<IDENTIFIER>{identifier1=new ASTStringNode(t.image,new WToken(t));}{identifier1List.add(identifier1);})* 
 	{return new IdentifierList(identifier, identifier1List, firstToken.next,token);}
  ) }
 
@@ -727,7 +727,7 @@ TypedefName TypedefName() : {
 	ASTStringNode identifier;
 	Token firstToken=token;
 } { (
-	t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<IDENTIFIER>{identifier=new ASTStringNode(t.image,new WToken(t));} 
 	{return new TypedefName(identifier, firstToken.next,token);}
  ) }
 
@@ -765,11 +765,11 @@ LabeledStatement LabeledStatement() : {
 	Statement statement2;
 	Token firstToken=token;
 } { (
-	t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} ":" statement=Statement() 
+	t=<IDENTIFIER>{identifier=new ASTStringNode(t.image,new WToken(t));} ":" statement=Statement() 
 	{return new LabeledStatement1(identifier, statement, firstToken.next,token);} |
-	t=<CASE>{case_kw=new ASTStringNode(t.toString(),new WToken(t));} constantExpression=ConstantExpression() ":" statement1=Statement() 
+	t=<CASE>{case_kw=new ASTStringNode(t.image,new WToken(t));} constantExpression=ConstantExpression() ":" statement1=Statement() 
 	{return new LabeledStatement2(case_kw, constantExpression, statement1, firstToken.next,token);} |
-	t=<DFLT>{dflt=new ASTStringNode(t.toString(),new WToken(t));} ":" statement2=Statement() 
+	t=<DFLT>{dflt=new ASTStringNode(t.image,new WToken(t));} ":" statement2=Statement() 
 	{return new LabeledStatement3(dflt, statement2, firstToken.next,token);}
  ) }
 
@@ -811,9 +811,9 @@ SelectionStatement SelectionStatement() : {
 	Statement statement2;
 	Token firstToken=token;
 } { (
-	t=<IF>{if_kw=new ASTStringNode(t.toString(),new WToken(t));} "(" expression=Expression() ")" statement=Statement() [LOOKAHEAD(2) "else" statement1=Statement()] 
+	t=<IF>{if_kw=new ASTStringNode(t.image,new WToken(t));} "(" expression=Expression() ")" statement=Statement() [LOOKAHEAD(2) "else" statement1=Statement()] 
 	{return new SelectionStatement1(if_kw, expression, statement, statement1, firstToken.next,token);} |
-	t=<SWITCH>{switch_kw=new ASTStringNode(t.toString(),new WToken(t));} "(" expression1=Expression() ")" statement2=Statement() 
+	t=<SWITCH>{switch_kw=new ASTStringNode(t.image,new WToken(t));} "(" expression1=Expression() ")" statement2=Statement() 
 	{return new SelectionStatement2(switch_kw, expression1, statement2, firstToken.next,token);}
  ) }
 
@@ -833,11 +833,11 @@ IterationStatement IterationStatement() : {
 	Statement statement2;
 	Token firstToken=token;
 } { (
-	t=<WHILE>{while_kw=new ASTStringNode(t.toString(),new WToken(t));} "(" expression=Expression() ")" statement=Statement() 
+	t=<WHILE>{while_kw=new ASTStringNode(t.image,new WToken(t));} "(" expression=Expression() ")" statement=Statement() 
 	{return new IterationStatement1(while_kw, expression, statement, firstToken.next,token);} |
-	t=<DO>{do_kw=new ASTStringNode(t.toString(),new WToken(t));} statement1=Statement() t=<WHILE>{while_kw1=new ASTStringNode(t.toString(),new WToken(t));} "(" expression1=Expression() ")" ";" 
+	t=<DO>{do_kw=new ASTStringNode(t.image,new WToken(t));} statement1=Statement() t=<WHILE>{while_kw1=new ASTStringNode(t.image,new WToken(t));} "(" expression1=Expression() ")" ";" 
 	{return new IterationStatement2(do_kw, statement1, while_kw1, expression1, firstToken.next,token);} |
-	t=<FOR>{for_kw=new ASTStringNode(t.toString(),new WToken(t));} "(" [expression2=Expression()] ";" [expression3=Expression()] ";" [expression4=Expression()] ")" statement2=Statement() 
+	t=<FOR>{for_kw=new ASTStringNode(t.image,new WToken(t));} "(" [expression2=Expression()] ";" [expression3=Expression()] ";" [expression4=Expression()] ")" statement2=Statement() 
 	{return new IterationStatement3(for_kw, expression2, expression3, expression4, statement2, firstToken.next,token);}
  ) }
 
@@ -851,13 +851,13 @@ JumpStatement JumpStatement() : {
 	Expression expression = null;
 	Token firstToken=token;
 } { (
-	t=<GOTO>{goto_kw=new ASTStringNode(t.toString(),new WToken(t));} t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} ";" 
+	t=<GOTO>{goto_kw=new ASTStringNode(t.image,new WToken(t));} t=<IDENTIFIER>{identifier=new ASTStringNode(t.image,new WToken(t));} ";" 
 	{return new JumpStatement1(goto_kw, identifier, firstToken.next,token);} |
-	t=<CONTINUE>{continue_kw=new ASTStringNode(t.toString(),new WToken(t));} ";" 
+	t=<CONTINUE>{continue_kw=new ASTStringNode(t.image,new WToken(t));} ";" 
 	{return new JumpStatement2(continue_kw, firstToken.next,token);} |
-	t=<BREAK>{break_kw=new ASTStringNode(t.toString(),new WToken(t));} ";" 
+	t=<BREAK>{break_kw=new ASTStringNode(t.image,new WToken(t));} ";" 
 	{return new JumpStatement3(break_kw, firstToken.next,token);} |
-	t=<RETURN>{return_kw=new ASTStringNode(t.toString(),new WToken(t));} [expression=Expression()] ";" 
+	t=<RETURN>{return_kw=new ASTStringNode(t.image,new WToken(t));} [expression=Expression()] ";" 
 	{return new JumpStatement4(return_kw, expression, firstToken.next,token);}
  ) }
 
@@ -899,27 +899,27 @@ AssignmentOperator AssignmentOperator() : {
 	ASTStringNode assor;
 	Token firstToken=token;
 } { (
-	t=<EQ>{eq=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<EQ>{eq=new ASTStringNode(t.image,new WToken(t));} 
 	{return new AssignmentOperator1(eq, firstToken.next,token);} |
-	t=<ASSSTAR>{assstar=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<ASSSTAR>{assstar=new ASTStringNode(t.image,new WToken(t));} 
 	{return new AssignmentOperator2(assstar, firstToken.next,token);} |
-	t=<ASSSLASH>{assslash=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<ASSSLASH>{assslash=new ASTStringNode(t.image,new WToken(t));} 
 	{return new AssignmentOperator3(assslash, firstToken.next,token);} |
-	t=<ASSPERCENT>{asspercent=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<ASSPERCENT>{asspercent=new ASTStringNode(t.image,new WToken(t));} 
 	{return new AssignmentOperator4(asspercent, firstToken.next,token);} |
-	t=<ASSPLUS>{assplus=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<ASSPLUS>{assplus=new ASTStringNode(t.image,new WToken(t));} 
 	{return new AssignmentOperator5(assplus, firstToken.next,token);} |
-	t=<ASSMINUS>{assminus=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<ASSMINUS>{assminus=new ASTStringNode(t.image,new WToken(t));} 
 	{return new AssignmentOperator6(assminus, firstToken.next,token);} |
-	t=<ASSSL>{asssl=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<ASSSL>{asssl=new ASTStringNode(t.image,new WToken(t));} 
 	{return new AssignmentOperator7(asssl, firstToken.next,token);} |
-	t=<ASSSR>{asssr=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<ASSSR>{asssr=new ASTStringNode(t.image,new WToken(t));} 
 	{return new AssignmentOperator8(asssr, firstToken.next,token);} |
-	t=<ASSAMP>{assamp=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<ASSAMP>{assamp=new ASTStringNode(t.image,new WToken(t));} 
 	{return new AssignmentOperator9(assamp, firstToken.next,token);} |
-	t=<ASSTIL>{asstil=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<ASSTIL>{asstil=new ASTStringNode(t.image,new WToken(t));} 
 	{return new AssignmentOperator10(asstil, firstToken.next,token);} |
-	t=<ASSOR>{assor=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<ASSOR>{assor=new ASTStringNode(t.image,new WToken(t));} 
 	{return new AssignmentOperator11(assor, firstToken.next,token);}
  ) }
 
@@ -1011,9 +1011,9 @@ EqualityExpressionInt EqualityExpressionInt() : {
 	EqualityExpression equalityExpression1;
 	Token firstToken=token;
 } { (
-	t=<EQEQ>{eqeq=new ASTStringNode(t.toString(),new WToken(t));} equalityExpression=EqualityExpression() 
+	t=<EQEQ>{eqeq=new ASTStringNode(t.image,new WToken(t));} equalityExpression=EqualityExpression() 
 	{return new EqualityExpressionInt1(eqeq, equalityExpression, firstToken.next,token);} |
-	t=<NOTEQ>{noteq=new ASTStringNode(t.toString(),new WToken(t));} equalityExpression1=EqualityExpression() 
+	t=<NOTEQ>{noteq=new ASTStringNode(t.image,new WToken(t));} equalityExpression1=EqualityExpression() 
 	{return new EqualityExpressionInt2(noteq, equalityExpression1, firstToken.next,token);}
  ) }
 
@@ -1137,7 +1137,7 @@ UnaryExpression UnaryExpression() : {
 	{return new UnaryExpression3(unaryExpression1, firstToken.next,token);} |
 	unaryOperator=UnaryOperator() castExpression=CastExpression() 
 	{return new UnaryExpression4(unaryOperator, castExpression, firstToken.next,token);} |
-	t=<SIZEOF>{sizeof=new ASTStringNode(t.toString(),new WToken(t));} unaryExpressionSizeOf=UnaryExpressionSizeOf() 
+	t=<SIZEOF>{sizeof=new ASTStringNode(t.image,new WToken(t));} unaryExpressionSizeOf=UnaryExpressionSizeOf() 
 	{return new UnaryExpression5(sizeof, unaryExpressionSizeOf, firstToken.next,token);}
  ) }
 
@@ -1162,17 +1162,17 @@ UnaryOperator UnaryOperator() : {
 	ASTStringNode not;
 	Token firstToken=token;
 } { (
-	t=<AND>{and=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<AND>{and=new ASTStringNode(t.image,new WToken(t));} 
 	{return new UnaryOperator1(and, firstToken.next,token);} |
-	t=<STAR>{star=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<STAR>{star=new ASTStringNode(t.image,new WToken(t));} 
 	{return new UnaryOperator2(star, firstToken.next,token);} |
-	t=<PLUS>{plus=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<PLUS>{plus=new ASTStringNode(t.image,new WToken(t));} 
 	{return new UnaryOperator3(plus, firstToken.next,token);} |
-	t=<MINUS>{minus=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<MINUS>{minus=new ASTStringNode(t.image,new WToken(t));} 
 	{return new UnaryOperator4(minus, firstToken.next,token);} |
-	t=<TILDE>{tilde=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<TILDE>{tilde=new ASTStringNode(t.image,new WToken(t));} 
 	{return new UnaryOperator5(tilde, firstToken.next,token);} |
-	t=<NOT>{not=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<NOT>{not=new ASTStringNode(t.image,new WToken(t));} 
 	{return new UnaryOperator6(not, firstToken.next,token);}
  ) }
 
@@ -1200,13 +1200,13 @@ PostfixExpressionInternal PostfixExpressionInternal() : {
 	{return new PostfixExpressionInternal1(expression, firstToken.next,token);} |
 	"(" [LOOKAHEAD(ArgumentExpressionList()) argumentExpressionList=ArgumentExpressionList()] ")" 
 	{return new PostfixExpressionInternal2(argumentExpressionList, firstToken.next,token);} |
-	"." t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} 
+	"." t=<IDENTIFIER>{identifier=new ASTStringNode(t.image,new WToken(t));} 
 	{return new PostfixExpressionInternal3(identifier, firstToken.next,token);} |
-	"->" t=<IDENTIFIER>{identifier1=new ASTStringNode(t.toString(),new WToken(t));} 
+	"->" t=<IDENTIFIER>{identifier1=new ASTStringNode(t.image,new WToken(t));} 
 	{return new PostfixExpressionInternal4(identifier1, firstToken.next,token);} |
-	t=<PLUSPLUS>{plusplus=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<PLUSPLUS>{plusplus=new ASTStringNode(t.image,new WToken(t));} 
 	{return new PostfixExpressionInternal5(plusplus, firstToken.next,token);} |
-	t=<MINUSMINUS>{minusminus=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<MINUSMINUS>{minusminus=new ASTStringNode(t.image,new WToken(t));} 
 	{return new PostfixExpressionInternal6(minusminus, firstToken.next,token);}
  ) }
 
@@ -1217,7 +1217,7 @@ PrimaryExpression PrimaryExpression() : {
 	Expression expression;
 	Token firstToken=token;
 } { (
-	t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<IDENTIFIER>{identifier=new ASTStringNode(t.image,new WToken(t));} 
 	{return new PrimaryExpression1(identifier, firstToken.next,token);} |
 	constant=Constant() 
 	{return new PrimaryExpression2(constant, firstToken.next,token);} |
@@ -1243,13 +1243,13 @@ Constant Constant() : {
 	ASTStringNode string_literal;
 	Token firstToken=token;
 } { (
-	t=<INTEGER_LITERAL>{integer_literal=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<INTEGER_LITERAL>{integer_literal=new ASTStringNode(t.image,new WToken(t));} 
 	{return new Constant1(integer_literal, firstToken.next,token);} |
-	t=<FLOATING_POINT_LITERAL>{floating_point_literal=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<FLOATING_POINT_LITERAL>{floating_point_literal=new ASTStringNode(t.image,new WToken(t));} 
 	{return new Constant2(floating_point_literal, firstToken.next,token);} |
-	t=<CHARACTER_LITERAL>{character_literal=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<CHARACTER_LITERAL>{character_literal=new ASTStringNode(t.image,new WToken(t));} 
 	{return new Constant3(character_literal, firstToken.next,token);} |
-	t=<STRING_LITERAL>{string_literal=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<STRING_LITERAL>{string_literal=new ASTStringNode(t.image,new WToken(t));} 
 	{return new Constant4(string_literal, firstToken.next,token);}
  ) }
 
