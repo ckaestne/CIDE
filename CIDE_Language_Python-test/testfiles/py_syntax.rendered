@@ -1,0 +1,356 @@
+
+if __name__ == "__main__" :
+	print "hello world"
+pi = 3.14
+false0 = False
+false1 = 0
+hello = "hello"
+false2 = ""
+false2 = None
+line = "hello\n"
+firm = r"hello\n"
+quot1 = "a\"b'c"
+quot2 = 'a"b\'c'
+num = num * 2 + 3 - myfloat
+num = 2 ** 4 % 5
+num += 1
+m = (1 << 3) & 0xff | 0x03 ^ 0x01
+strop = 'he' + 'lo' * 3
+print hello [0]
+print hello [0 : 2]
+nums = [1 , 2 , 3]
+mixed = [pi , "three" , 3.13]
+empty = []
+[one , two] = [1 , 2]
+tup1 = (1 , 2 , 3)
+tup2 = (pi , "three" , 3.13)
+empty_tuple = ()
+single_tuple = ("a" ,)
+(one , two) = (- 1 , - 2)
+first = nums [0]
+sl = nums [0 : 2]
+mixed [1] = "neo"
+mixed [0 : 2] = ["a" , "b"]
+joined = nums * 3 + ["a" , 9]
+nested = [nums , 8]
+length = len (nums)
+bool = 1 in nums
+t = tuple (nums)
+new = [x * 2 for x in nums]
+nums.extend ([4 , 5])
+dir (nums)
+dict1 = {10 : "ten" , "key" : "val"}
+ages = {"jim" : 18 , "ted" : 21}
+empty_dict = {}
+val = dict1 [10]
+ages ["ron"] = 24
+ages ["ron"] += 1
+del ages ["ron"]
+b = ages.has_key ("billy")
+set1 = set (["c" , "a" , "c"])
+set2 = set ("abba")
+bool = "a" in set1
+set3 = set1 - set2
+set3 = set1 | set2
+set3 = set1 & set2
+set3 = set1 ^ set2
+if (value is not None) and (value == 1) :
+	print "value equals 1" ,
+	print " more can come in this block"
+if (job == "millionaire") or (state != "dead") :
+	print "a suitable husband found"
+else :
+	print "not suitable"
+list1 = (1 , 2 , 3 , 9)
+list2 = (1 , 2 , 7)
+if (list1 <= list2) and (not age < 80) :
+	print "1 = 1, 2 = 2, but 3 <= 7 so its True"
+if ok : print "ok"
+if (i == 1) : do_something1 ()
+elif (i == 2) : do_something2 ()
+elif (i == 3) : do_something3 ()
+else : do_something4 ()
+sentence = ['Marry' , 'had' , 'a' , 'little' , 'lamb']
+for word in sentence :
+	print word , len (word)
+for i in range (10) :
+	print i
+for i in xrange (1000) :
+	print i
+i = 0
+while (i < 10) :
+	print "iteration number " , i
+	i += 1
+for i in xrange (10) : print i
+while not end_of_file () : read_next_line ()
+for i in xrange (10) :
+	if i == 3 : continue
+	if i == 5 : break
+	print i ,
+while True :
+	pass
+def print_hello () :
+	print "hello"
+def seventeen () :
+	return 17
+num = seventeen () + 53
+def retlist () :
+	return [1 , 2 , 3]
+[one , two , thr] = retlist ()
+def has_args (arg1 , arg2) :
+	num = arg1 + 4
+	mylist = arg2 + ['a' , 7]
+has_args (5.16 , [1 , 'b'])
+def sqrt (num , debug = False) :
+	if debug : print "Sqrt:"
+	return calc_sqrt (num)
+sqrt (9)
+sqrt (16 , True)
+sqrt (25 , debug = True)
+def many (num , ** keywords) :
+	print "num is " , num
+	print "named args are:"
+	print keywords.keys ()
+many (1)
+many (2 , debug = True)
+def arg_list (num , * arglist) :
+	print "num is " , num
+	print "arg list is:"
+	print arglist
+arg_list (1)
+arg_list (2 , 'a' , 3.14)
+args = [3 , 6]
+r = range (* args)
+def duplicate_n_maker (n) :
+	return lambda arg1 : arg1 * n
+dup3 = duplicate_n_maker (3)
+dup_str = dup3 ('go')
+import sys
+try :
+	f = open ("file.txt")
+except IOError :
+	print "Could not open"
+else :
+	f.close ()
+a = [1 , 2 , 3]
+try :
+	a [7] = 0
+except (IndexError , TypeError) :
+	print "IndexError caught"
+except Exception , e :
+	print "Exception: " , e
+except :
+	print "Unexpected:"
+	print sys.exc_info () [0]
+	raise
+try :
+	a [7] = 0
+finally :
+	print "Will run regardless"
+class MyException (Exception) :
+	"""My general exception with an output message."""
+	def __init__ (self , msg) :
+		self.msg = msg
+	def __str__ (self) :
+		return repr (self.msg)
+class MyMiniEx (Exception) :
+	pass
+try :
+	raise MyException ("hello")
+except MyException , e :
+	print e
+try :
+	raise MyMiniEx
+except Exception :
+	pass
+class MyVector :
+	"""A simple vector class."""
+	num_created = 0
+	def __init__ (self , x = 0 , y = 0) :
+		self.__x = x
+		self.__y = y
+		MyVector.num_created += 1
+	def get_size (self) :
+		return self.__x + self.__y
+	def get_num_created () :
+		return MyVector.num_created
+print MyVector.num_created
+v = MyVector ()
+w = MyVector (0.23 , 0.98)
+print w.get_size ()
+bool = isinstance (v , MyVector)
+class MyObject :
+	def __init__ (self , weight) :
+		self.__weight = weight
+	def print_name (self) : pass
+	def get_weight (self) :
+		return self.__weight
+class Soap (MyObject) :
+	"""A throwable branded soap."""
+	def __init__ (self , brand) :
+		MyObject.__init__ (self , 1.33)
+		self.__brand = brand
+	def print_name (self) :
+		print "Soap produced by " , self.__brand ,
+		print "which weighs " , self.get_weight ()
+	def __del__ (self) :
+		print "No more soap"
+		MyObject.__del__ (self)
+s = Soap ("Gillette")
+m = s.get_weight ()
+s.print_name ()
+bool = isinstance (s , MyObject)
+del s
+class MyVector :
+	def __repr__ (self) :
+		return "MyVector(" + repr (self.__x) + "," + repr (self.__y) + ")"
+	def __str__ (self) :
+		return "vector with coords (" + repr (self.__x) + "," + repr (self.__y) + ")"
+	def __cmp__ (self , other) :
+		return (self.get_size () - other.get_size ())
+	def __nonzero__ (self) :
+		if (self.get_size () > 0) : return True
+		else : return False
+	def __add__ (self , other) :
+		return MyVector (self.__x + other.__x , self.__y + other.__y)
+print repr (v)
+print w
+if w > v : print "w is bigger"
+if not v : print "v is False"
+print v + w
+dir ()
+dir (__builtins__)
+dir (sys)
+dir (lst)
+def sqrt (n) :
+	"""Calc the square root of a number."""
+def sqrt (n) :
+	"""Calc the square root of a number.
+
+  Arguments:
+    n - Number to calc square root of.
+  Returns:
+    Square root of n.
+  """
+print sqrt.__doc__
+help (sqrt)
+help (help)
+help (sys)
+help ()
+import re
+c = 'Someone, call 911.'
+mo = re.search (r'call' , c)
+s = mo.group (0)
+t = mo.span (0)
+mo = re.search (r'Some(...)' , c)
+s = mo.group (1)
+t = mo.groups ()
+t = mo.span (1)
+i = re.finditer (r'.o.' , c)
+for mo in i : print mo.group (0)
+l = re.findall (r'.o.' , c)
+l = re.findall (r'o(.)(.)' , c)
+g = "hello world"
+g = re.sub (r'hello' , 'world' , g)
+l = re.split (r'\W+' , c)
+l = re.split (r'(\W+)' , c)
+re.search (r'c.11' , c)
+re.search (r'c.11' , c , re.S)
+re.search (r'911\.' , c)
+re.search (r'o..' , c)
+re.search (r'g?one' , c)
+re.search (r'cal+' , c)
+re.search (r'cal{2}' , c)
+re.search (r'cal{0,3}' , c)
+re.search (r'S.*o' , c)
+re.search (r'S.*?o' , c)
+re.search (r'^.o' , c)
+re.search (r'....$' , c)
+re.search (r'9[012-9a-z]' , c)
+re.search (r'.o[^m]' , c)
+re.search (r'\d*' , c)
+re.search (r'S\w*' , c)
+re.search (r'..e\b' , c)
+re.search (r' \D...' , c)
+re.search (r'\s.*\s' , c)
+re.search (r'\x39\x31+' , c)
+re.search (r'Some(.*),' , c)
+re.search (r'e(one|two)' , c)
+re.search (r'e(?:one|tw)' , c)
+re.search (r'(.)..\1' , c)
+re.search (r'some' , c , re.I)
+re.search (r'^Some' , c , re.M)
+fin = None
+fout = None
+try :
+	fin = open ("input.txt" , "r")
+	fout = open ("output.txt" , "w")
+	first = fin.readline ()
+	print "First line:" , line
+	for line in fin :
+		fout.write (line)
+except IOError , e :
+	print "Error in file IO: " , e
+if fin : fin.close ()
+if fout : fout.close ()
+from struct import *
+fin = None
+try :
+	fin = open ("input.bin" , "rb")
+	s = f.read (8)
+	while (len (s) == 8) :
+		x , y , z = unpack (">HH<L" , s)
+		print "Read record: " "%04x %04x %08x" % (x , y , z)
+		s = f.read (8)
+except IOError :
+	pass
+if fin : fin.close ()
+print "without a new line" ,
+data = fin.read ()
+s = "%s has %d eyes" % (name , 2)
+import pickle
+ages = {"ron" : 18 , "ted" : 21}
+pickle.dump (ages , fout)
+ages = pickle.load (fin)
+import os
+print os.getcwd ()
+os.chdir ('..')
+import glob
+lst = glob.glob ('*.txt')
+import shutil
+shutil.copyfile ('a.py' , 'a.bak')
+b = len ('hello') > len ([1 , 2 , 3])
+print 'a is' , chr (ord ('a'))
+i = int ('38') + int ('0x3a' , 16)
+print repr (96)
+print str (96)
+print hex (58)
+l = map (hex , [10 , 20])
+l = range (0 , 10 , 3)
+i = reduce (lambda x , y : x + y , [1 , 2 , 3 , 4])
+import Sound.Effects.echo
+from Sound.Effects import echo
+reload (echo)
+from Sound.Effects.echo import *
+import sys
+sys.exit ("bye")
+sys.path.append ('c:\\')
+import math
+print math.sqrt (9)
+import random
+f = random.random ()
+i = randint (1 , 10)
+print random.choice (['a' , 'b'])
+from datetime import date
+a = date.today () - date (1981 , 11 , 21)
+print age.days
+import zlib
+c = zlib.compress ("hello world")
+print zlib.decompress (c)
+exec ('x=1')
+y = eval ('x+1')
+import os
+os.system ('del *.txt')
+os.startfile ("calc.exe")
+stdin , stdouterr = os.popen4 ('dir /b')
+print stdouterr.read ()
