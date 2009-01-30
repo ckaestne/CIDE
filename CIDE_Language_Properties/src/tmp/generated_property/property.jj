@@ -28,7 +28,7 @@ Document Document() : {
 	ASTStringNode eof;
 	Token firstToken=token;
 } { (
-	(t=<LINE>{line=new ASTStringNode(t.toString(),new WToken(t));}{lineList.add(line);})* t=<EOF>{eof=new ASTStringNode(t.toString(),new WToken(t));} 
+	(t=<LINE>{line=new ASTStringNode(t.image,new WToken(t));}{lineList.add(line);})* t=<EOF>{eof=new ASTStringNode(t.image,new WToken(t));} 
 	{return new Document(lineList, eof, firstToken.next,token);}
  ) }
 

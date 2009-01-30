@@ -25,11 +25,11 @@ public class PropertyParser implements PropertyParserConstants {
         break label_1;
       }
       t = jj_consume_token(LINE);
-                  line=new ASTStringNode(t.toString(),new WToken(t));
-                                                                       lineList.add(line);
+                  line=new ASTStringNode(t.image,new WToken(t));
+                                                                  lineList.add(line);
     }
     t = jj_consume_token(0);
-                                                                                                      eof=new ASTStringNode(t.toString(),new WToken(t));
+                                                                                                 eof=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new Document(lineList, eof, firstToken.next,token);}
     throw new Error("Missing return statement in function");
   }
