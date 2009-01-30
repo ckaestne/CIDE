@@ -250,10 +250,10 @@ public class BaliParser implements BaliParserConstants {
         ASTStringNode _options1;
         Token firstToken=token;
     t = jj_consume_token(_OPTIONS);
-                     _options=new ASTStringNode(t.toString(),new WToken(t));
+                     _options=new ASTStringNode(t.image,new WToken(t));
     block = Block();
     t = jj_consume_token(_OPTIONS);
-                                                                                                         _options1=new ASTStringNode(t.toString(),new WToken(t));
+                                                                                                    _options1=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new OptionsNode(_options, block, _options1, firstToken.next,token);}
     throw new Error("Missing return statement in function");
   }
@@ -265,10 +265,10 @@ public class BaliParser implements BaliParserConstants {
         ASTStringNode _code1;
         Token firstToken=token;
     t = jj_consume_token(_CODE);
-                  _code=new ASTStringNode(t.toString(),new WToken(t));
+                  _code=new ASTStringNode(t.image,new WToken(t));
     block = Block();
     t = jj_consume_token(_CODE);
-                                                                                                _code1=new ASTStringNode(t.toString(),new WToken(t));
+                                                                                           _code1=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new ParserCode(_code, block, _code1, firstToken.next,token);}
     throw new Error("Missing return statement in function");
   }
@@ -279,7 +279,7 @@ public class BaliParser implements BaliParserConstants {
         Token firstToken=token;
     jj_consume_token(LBRACE);
     t = findBlockEnd();
-                             findblockend=new ASTStringNode(t.toString(),new WToken(t));
+                             findblockend=new ASTStringNode(t.image,new WToken(t));
     jj_consume_token(RBRACE);
          {if (true) return new Block(findblockend, firstToken.next,token);}
     throw new Error("Missing return statement in function");
@@ -360,9 +360,9 @@ public class BaliParser implements BaliParserConstants {
         ASTStringNode bali_token;
         Token firstToken=token;
     t = jj_consume_token(STRING);
-                   string=new ASTStringNode(t.toString(),new WToken(t));
+                   string=new ASTStringNode(t.image,new WToken(t));
     t = jj_consume_token(BALI_TOKEN);
-                                                                                         bali_token=new ASTStringNode(t.toString(),new WToken(t));
+                                                                                    bali_token=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new BaliTokenDefinition(string, bali_token, firstToken.next,token);}
     throw new Error("Missing return statement in function");
   }
@@ -373,7 +373,7 @@ public class BaliParser implements BaliParserConstants {
         ScanBlock scanBlock;
         Token firstToken=token;
     t = jj_consume_token(_JAVACODE);
-                      _javacode=new ASTStringNode(t.toString(),new WToken(t));
+                      _javacode=new ASTStringNode(t.image,new WToken(t));
     scanBlock = ScanBlock();
          {if (true) return new JavacodeProduction(_javacode, scanBlock, firstToken.next,token);}
     throw new Error("Missing return statement in function");
@@ -385,7 +385,7 @@ public class BaliParser implements BaliParserConstants {
         ScanBlock scanBlock;
         Token firstToken=token;
     t = jj_consume_token(_TOKEN_MGR_DECLS);
-                             _token_mgr_decls=new ASTStringNode(t.toString(),new WToken(t));
+                             _token_mgr_decls=new ASTStringNode(t.image,new WToken(t));
     jj_consume_token(COLON);
     scanBlock = ScanBlock();
          {if (true) return new TokenManagerDeclarations(_token_mgr_decls, scanBlock, firstToken.next,token);}
@@ -398,9 +398,9 @@ public class BaliParser implements BaliParserConstants {
         ASTStringNode findblockend;
         Token firstToken=token;
     t = findBlockBegin();
-                           findblockbegin=new ASTStringNode(t.toString(),new WToken(t));
+                           findblockbegin=new ASTStringNode(t.image,new WToken(t));
     t = findBlockEnd();
-                                                                                                           findblockend=new ASTStringNode(t.toString(),new WToken(t));
+                                                                                                      findblockend=new ASTStringNode(t.image,new WToken(t));
     jj_consume_token(RBRACE);
          {if (true) return new ScanBlock(findblockbegin, findblockend, firstToken.next,token);}
     throw new Error("Missing return statement in function");
@@ -415,10 +415,10 @@ public class BaliParser implements BaliParserConstants {
         ArrayList<Production> production1List = new ArrayList<Production>();
         Token firstToken=token;
     t = jj_consume_token(IDENTIFIER);
-                       identifier=new ASTStringNode(t.toString(),new WToken(t));
+                       identifier=new ASTStringNode(t.image,new WToken(t));
     jj_consume_token(COLON);
     production = Production();
-                                                                                                              list0.add(production);
+                                                                                                         list0.add(production);
     label_2:
     while (true) {
       switch (jj_nt.kind) {
@@ -431,7 +431,7 @@ public class BaliParser implements BaliParserConstants {
       }
       jj_consume_token(PIPE);
       production1 = Production();
-                                                                                                                                                                    list0.add(production1);
+                                                                                                                                                               list0.add(production1);
     }
     jj_consume_token(SCOLON);
          {if (true) return new BaliGrammarRule(list0, identifier, firstToken.next,token);}
@@ -461,10 +461,10 @@ public class BaliParser implements BaliParserConstants {
         ASTStringNode findcloseparen;
         Token firstToken=token;
     t = jj_consume_token(_LOOKAHEAD);
-                       _lookahead=new ASTStringNode(t.toString(),new WToken(t));
+                       _lookahead=new ASTStringNode(t.image,new WToken(t));
     jj_consume_token(OPENPAREN);
     t = findCloseParen();
-                                                                                                         findcloseparen=new ASTStringNode(t.toString(),new WToken(t));
+                                                                                                    findcloseparen=new ASTStringNode(t.image,new WToken(t));
     jj_consume_token(CLOSEPAREN);
          {if (true) return new Lookahead(_lookahead, findcloseparen, firstToken.next,token);}
     throw new Error("Missing return statement in function");
@@ -588,7 +588,7 @@ public class BaliParser implements BaliParserConstants {
         Token firstToken=token;
     jj_consume_token(DOUBLECOLON);
     t = jj_consume_token(IDENTIFIER);
-                            identifier=new ASTStringNode(t.toString(),new WToken(t));
+                            identifier=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new ClassName(identifier, firstToken.next,token);}
     throw new Error("Missing return statement in function");
   }
@@ -644,17 +644,17 @@ public class BaliParser implements BaliParserConstants {
     switch (jj_nt.kind) {
     case BALI_TOKEN:
       t = jj_consume_token(BALI_TOKEN);
-                       bali_token=new ASTStringNode(t.toString(),new WToken(t));
+                       bali_token=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new BaliTokenNode(bali_token, firstToken.next,token);}
       break;
     case IDENTIFIER:
       t = jj_consume_token(IDENTIFIER);
-                       identifier=new ASTStringNode(t.toString(),new WToken(t));
+                       identifier=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new IdentifierNode(identifier, firstToken.next,token);}
       break;
     case STRING:
       t = jj_consume_token(STRING);
-                   string=new ASTStringNode(t.toString(),new WToken(t));
+                   string=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new StringNode(string, firstToken.next,token);}
       break;
     default:
@@ -757,7 +757,7 @@ public class BaliParser implements BaliParserConstants {
         ASTStringNode bali_token;
         Token firstToken=token;
     t = jj_consume_token(BALI_TOKEN);
-                       bali_token=new ASTStringNode(t.toString(),new WToken(t));
+                       bali_token=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new StateName(bali_token, firstToken.next,token);}
     throw new Error("Missing return statement in function");
   }
@@ -772,22 +772,22 @@ public class BaliParser implements BaliParserConstants {
     switch (jj_nt.kind) {
     case _TOKEN:
       t = jj_consume_token(_TOKEN);
-                   _token=new ASTStringNode(t.toString(),new WToken(t));
+                   _token=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new TokenKindNode(_token, firstToken.next,token);}
       break;
     case _SPECIAL_TOKEN:
       t = jj_consume_token(_SPECIAL_TOKEN);
-                           _special_token=new ASTStringNode(t.toString(),new WToken(t));
+                           _special_token=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new SpecialKindNode(_special_token, firstToken.next,token);}
       break;
     case _SKIP:
       t = jj_consume_token(_SKIP);
-                  _skip=new ASTStringNode(t.toString(),new WToken(t));
+                  _skip=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new SkipKindNode(_skip, firstToken.next,token);}
       break;
     case _MORE:
       t = jj_consume_token(_MORE);
-                  _more=new ASTStringNode(t.toString(),new WToken(t));
+                  _more=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new MoreKindNode(_more, firstToken.next,token);}
       break;
     default:
@@ -804,7 +804,7 @@ public class BaliParser implements BaliParserConstants {
         Token firstToken=token;
     jj_consume_token(SBOPEN);
     t = jj_consume_token(_IGNORE_CASE);
-                             _ignore_case=new ASTStringNode(t.toString(),new WToken(t));
+                             _ignore_case=new ASTStringNode(t.image,new WToken(t));
     jj_consume_token(SBCLOSE);
          {if (true) return new CaseFlag(_ignore_case, firstToken.next,token);}
     throw new Error("Missing return statement in function");
@@ -868,7 +868,7 @@ public class BaliParser implements BaliParserConstants {
         Token firstToken=token;
     jj_consume_token(COLON);
     t = jj_consume_token(BALI_TOKEN);
-                           bali_token=new ASTStringNode(t.toString(),new WToken(t));
+                           bali_token=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new NextState(bali_token, firstToken.next,token);}
     throw new Error("Missing return statement in function");
   }
@@ -881,7 +881,7 @@ public class BaliParser implements BaliParserConstants {
     switch (jj_nt.kind) {
     case STRING:
       t = jj_consume_token(STRING);
-                   string=new ASTStringNode(t.toString(),new WToken(t));
+                   string=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new StringRegexNode(string, firstToken.next,token);}
       break;
     case OPENANGLE:
@@ -905,7 +905,7 @@ public class BaliParser implements BaliParserConstants {
         Token firstToken=token;
     if (jj_2_1(2)) {
       t = jj_consume_token(BALI_TOKEN);
-                                    bali_token=new ASTStringNode(t.toString(),new WToken(t));
+                                    bali_token=new ASTStringNode(t.image,new WToken(t));
       jj_consume_token(CLOSEANGLE);
          {if (true) return new BaliRegexNode(bali_token, firstToken.next,token);}
     } else {
@@ -931,12 +931,12 @@ public class BaliParser implements BaliParserConstants {
         Token firstToken=token;
     if (jj_2_2(2)) {
       t = jj_consume_token(STRING);
-                                string=new ASTStringNode(t.toString(),new WToken(t));
+                                string=new ASTStringNode(t.image,new WToken(t));
       jj_consume_token(CLOSEANGLE);
          {if (true) return new StringComplexNode(string, firstToken.next,token);}
     } else {
       t = findCloseAngle();
-                           findcloseangle=new ASTStringNode(t.toString(),new WToken(t));
+                           findcloseangle=new ASTStringNode(t.image,new WToken(t));
       jj_consume_token(CLOSEANGLE);
          {if (true) return new AngleComplexNode(findcloseangle, firstToken.next,token);}
     }
@@ -958,7 +958,7 @@ public class BaliParser implements BaliParserConstants {
       ;
     }
     t = jj_consume_token(BALI_TOKEN);
-                                                                              bali_token=new ASTStringNode(t.toString(),new WToken(t));
+                                                                              bali_token=new ASTStringNode(t.image,new WToken(t));
     jj_consume_token(COLON);
          {if (true) return new Label(text17, bali_token, firstToken.next,token);}
     throw new Error("Missing return statement in function");

@@ -356,7 +356,7 @@ OptionsNode OptionsNode() : {
 	ASTStringNode _options1;
 	Token firstToken=token;
 } { (
-	t=<_OPTIONS>{_options=new ASTStringNode(t.toString(),new WToken(t));} block=Block() t=<_OPTIONS>{_options1=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<_OPTIONS>{_options=new ASTStringNode(t.image,new WToken(t));} block=Block() t=<_OPTIONS>{_options1=new ASTStringNode(t.image,new WToken(t));} 
 	{return new OptionsNode(_options, block, _options1, firstToken.next,token);}
  ) }
 
@@ -367,7 +367,7 @@ ParserCode ParserCode() : {
 	ASTStringNode _code1;
 	Token firstToken=token;
 } { (
-	t=<_CODE>{_code=new ASTStringNode(t.toString(),new WToken(t));} block=Block() t=<_CODE>{_code1=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<_CODE>{_code=new ASTStringNode(t.image,new WToken(t));} block=Block() t=<_CODE>{_code1=new ASTStringNode(t.image,new WToken(t));} 
 	{return new ParserCode(_code, block, _code1, firstToken.next,token);}
  ) }
 
@@ -376,7 +376,7 @@ Block Block() : {
 	ASTStringNode findblockend;
 	Token firstToken=token;
 } { (
-	"{" t=findBlockEnd(){findblockend=new ASTStringNode(t.toString(),new WToken(t));} "}" 
+	"{" t=findBlockEnd(){findblockend=new ASTStringNode(t.image,new WToken(t));} "}" 
 	{return new Block(findblockend, firstToken.next,token);}
  ) }
 
@@ -415,7 +415,7 @@ BaliTokenDefinition BaliTokenDefinition() : {
 	ASTStringNode bali_token;
 	Token firstToken=token;
 } { (
-	t=<STRING>{string=new ASTStringNode(t.toString(),new WToken(t));} t=<BALI_TOKEN>{bali_token=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<STRING>{string=new ASTStringNode(t.image,new WToken(t));} t=<BALI_TOKEN>{bali_token=new ASTStringNode(t.image,new WToken(t));} 
 	{return new BaliTokenDefinition(string, bali_token, firstToken.next,token);}
  ) }
 
@@ -425,7 +425,7 @@ JavacodeProduction JavacodeProduction() : {
 	ScanBlock scanBlock;
 	Token firstToken=token;
 } { (
-	t=<_JAVACODE>{_javacode=new ASTStringNode(t.toString(),new WToken(t));} scanBlock=ScanBlock() 
+	t=<_JAVACODE>{_javacode=new ASTStringNode(t.image,new WToken(t));} scanBlock=ScanBlock() 
 	{return new JavacodeProduction(_javacode, scanBlock, firstToken.next,token);}
  ) }
 
@@ -435,7 +435,7 @@ TokenManagerDeclarations TokenManagerDeclarations() : {
 	ScanBlock scanBlock;
 	Token firstToken=token;
 } { (
-	t=<_TOKEN_MGR_DECLS>{_token_mgr_decls=new ASTStringNode(t.toString(),new WToken(t));} ":" scanBlock=ScanBlock() 
+	t=<_TOKEN_MGR_DECLS>{_token_mgr_decls=new ASTStringNode(t.image,new WToken(t));} ":" scanBlock=ScanBlock() 
 	{return new TokenManagerDeclarations(_token_mgr_decls, scanBlock, firstToken.next,token);}
  ) }
 
@@ -445,7 +445,7 @@ ScanBlock ScanBlock() : {
 	ASTStringNode findblockend;
 	Token firstToken=token;
 } { (
-	t=findBlockBegin(){findblockbegin=new ASTStringNode(t.toString(),new WToken(t));} t=findBlockEnd(){findblockend=new ASTStringNode(t.toString(),new WToken(t));} "}" 
+	t=findBlockBegin(){findblockbegin=new ASTStringNode(t.image,new WToken(t));} t=findBlockEnd(){findblockend=new ASTStringNode(t.image,new WToken(t));} "}" 
 	{return new ScanBlock(findblockbegin, findblockend, firstToken.next,token);}
  ) }
 
@@ -458,7 +458,7 @@ BaliGrammarRule BaliGrammarRule() : {
 	ArrayList<Production> production1List = new ArrayList<Production>();
 	Token firstToken=token;
 } { (
-	t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} ":" production=Production(){list0.add(production);} ("|" production1=Production(){list0.add(production1);})* ";" 
+	t=<IDENTIFIER>{identifier=new ASTStringNode(t.image,new WToken(t));} ":" production=Production(){list0.add(production);} ("|" production1=Production(){list0.add(production1);})* ";" 
 	{return new BaliGrammarRule(list0, identifier, firstToken.next,token);}
  ) }
 
@@ -477,7 +477,7 @@ Lookahead Lookahead() : {
 	ASTStringNode findcloseparen;
 	Token firstToken=token;
 } { (
-	t=<_LOOKAHEAD>{_lookahead=new ASTStringNode(t.toString(),new WToken(t));} "(" t=findCloseParen(){findcloseparen=new ASTStringNode(t.toString(),new WToken(t));} ")" 
+	t=<_LOOKAHEAD>{_lookahead=new ASTStringNode(t.image,new WToken(t));} "(" t=findCloseParen(){findcloseparen=new ASTStringNode(t.image,new WToken(t));} ")" 
 	{return new Lookahead(_lookahead, findcloseparen, firstToken.next,token);}
  ) }
 
@@ -522,7 +522,7 @@ ClassName ClassName() : {
 	ASTStringNode identifier;
 	Token firstToken=token;
 } { (
-	"::" t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} 
+	"::" t=<IDENTIFIER>{identifier=new ASTStringNode(t.image,new WToken(t));} 
 	{return new ClassName(identifier, firstToken.next,token);}
  ) }
 
@@ -553,11 +553,11 @@ Terminal Terminal() : {
 	ASTStringNode string;
 	Token firstToken=token;
 } { (
-	t=<BALI_TOKEN>{bali_token=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<BALI_TOKEN>{bali_token=new ASTStringNode(t.image,new WToken(t));} 
 	{return new BaliTokenNode(bali_token, firstToken.next,token);} |
-	t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<IDENTIFIER>{identifier=new ASTStringNode(t.image,new WToken(t));} 
 	{return new IdentifierNode(identifier, firstToken.next,token);} |
-	t=<STRING>{string=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<STRING>{string=new ASTStringNode(t.image,new WToken(t));} 
 	{return new StringNode(string, firstToken.next,token);}
  ) }
 
@@ -606,7 +606,7 @@ StateName StateName() : {
 	ASTStringNode bali_token;
 	Token firstToken=token;
 } { (
-	t=<BALI_TOKEN>{bali_token=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<BALI_TOKEN>{bali_token=new ASTStringNode(t.image,new WToken(t));} 
 	{return new StateName(bali_token, firstToken.next,token);}
  ) }
 
@@ -618,13 +618,13 @@ REKind REKind() : {
 	ASTStringNode _more;
 	Token firstToken=token;
 } { (
-	t=<_TOKEN>{_token=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<_TOKEN>{_token=new ASTStringNode(t.image,new WToken(t));} 
 	{return new TokenKindNode(_token, firstToken.next,token);} |
-	t=<_SPECIAL_TOKEN>{_special_token=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<_SPECIAL_TOKEN>{_special_token=new ASTStringNode(t.image,new WToken(t));} 
 	{return new SpecialKindNode(_special_token, firstToken.next,token);} |
-	t=<_SKIP>{_skip=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<_SKIP>{_skip=new ASTStringNode(t.image,new WToken(t));} 
 	{return new SkipKindNode(_skip, firstToken.next,token);} |
-	t=<_MORE>{_more=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<_MORE>{_more=new ASTStringNode(t.image,new WToken(t));} 
 	{return new MoreKindNode(_more, firstToken.next,token);}
  ) }
 
@@ -633,7 +633,7 @@ CaseFlag CaseFlag() : {
 	ASTStringNode _ignore_case;
 	Token firstToken=token;
 } { (
-	"[" t=<_IGNORE_CASE>{_ignore_case=new ASTStringNode(t.toString(),new WToken(t));} "]" 
+	"[" t=<_IGNORE_CASE>{_ignore_case=new ASTStringNode(t.image,new WToken(t));} "]" 
 	{return new CaseFlag(_ignore_case, firstToken.next,token);}
  ) }
 
@@ -663,7 +663,7 @@ NextState NextState() : {
 	ASTStringNode bali_token;
 	Token firstToken=token;
 } { (
-	":" t=<BALI_TOKEN>{bali_token=new ASTStringNode(t.toString(),new WToken(t));} 
+	":" t=<BALI_TOKEN>{bali_token=new ASTStringNode(t.image,new WToken(t));} 
 	{return new NextState(bali_token, firstToken.next,token);}
  ) }
 
@@ -673,7 +673,7 @@ Regex Regex() : {
 	AngleRegex angleRegex;
 	Token firstToken=token;
 } { (
-	t=<STRING>{string=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<STRING>{string=new ASTStringNode(t.image,new WToken(t));} 
 	{return new StringRegexNode(string, firstToken.next,token);} |
 	"<" angleRegex=AngleRegex() 
 	{return new AngleRegexNode(angleRegex, firstToken.next,token);}
@@ -686,7 +686,7 @@ AngleRegex AngleRegex() : {
 	ComplexRegex complexRegex;
 	Token firstToken=token;
 } { (
-	LOOKAHEAD(2) t=<BALI_TOKEN>{bali_token=new ASTStringNode(t.toString(),new WToken(t));} ">" 
+	LOOKAHEAD(2) t=<BALI_TOKEN>{bali_token=new ASTStringNode(t.image,new WToken(t));} ">" 
 	{return new BaliRegexNode(bali_token, firstToken.next,token);} |
 	LOOKAHEAD(2) [label=Label()] complexRegex=ComplexRegex() 
 	{return new ComplexRegexNode(label, complexRegex, firstToken.next,token);}
@@ -698,9 +698,9 @@ ComplexRegex ComplexRegex() : {
 	ASTStringNode findcloseangle;
 	Token firstToken=token;
 } { (
-	LOOKAHEAD(2) t=<STRING>{string=new ASTStringNode(t.toString(),new WToken(t));} ">" 
+	LOOKAHEAD(2) t=<STRING>{string=new ASTStringNode(t.image,new WToken(t));} ">" 
 	{return new StringComplexNode(string, firstToken.next,token);} |
-	t=findCloseAngle(){findcloseangle=new ASTStringNode(t.toString(),new WToken(t));} ">" 
+	t=findCloseAngle(){findcloseangle=new ASTStringNode(t.image,new WToken(t));} ">" 
 	{return new AngleComplexNode(findcloseangle, firstToken.next,token);}
  ) }
 
@@ -710,7 +710,7 @@ Label Label() : {
 	ASTStringNode bali_token;
 	Token firstToken=token;
 } { (
-	["#" {text17=new ASTTextNode("#",new WToken(token));}] t=<BALI_TOKEN>{bali_token=new ASTStringNode(t.toString(),new WToken(t));} ":" 
+	["#" {text17=new ASTTextNode("#",new WToken(token));}] t=<BALI_TOKEN>{bali_token=new ASTStringNode(t.image,new WToken(t));} ":" 
 	{return new Label(text17, bali_token, firstToken.next,token);}
  ) }
 
