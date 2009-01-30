@@ -41,18 +41,18 @@ public class JavaCCParser implements JavaCCParserConstants {
     jj_consume_token(_PARSER_BEGIN);
     jj_consume_token(LPAREN);
     t = jj_consume_token(IDENTIFIER);
-                                                                            identifier=new ASTStringNode(t.toString(),new WToken(t));
+                                                                            identifier=new ASTStringNode(t.image,new WToken(t));
     jj_consume_token(RPAREN);
     compilationUnit = CompilationUnit();
     jj_consume_token(_PARSER_END);
     jj_consume_token(LPAREN);
     t = jj_consume_token(IDENTIFIER);
-                                                                                                                                                                                                             identifier1=new ASTStringNode(t.toString(),new WToken(t));
+                                                                                                                                                                                                        identifier1=new ASTStringNode(t.image,new WToken(t));
     jj_consume_token(RPAREN);
     label_1:
     while (true) {
       production = production();
-                                                                                                                                                                                                                                                                                                      productionList.add(production);
+                                                                                                                                                                                                                                                                                            productionList.add(production);
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case _OPTIONS:
       case _LOOKAHEAD:
@@ -88,7 +88,7 @@ public class JavaCCParser implements JavaCCParserConstants {
       }
     }
     t = jj_consume_token(0);
-                                                                                                                                                                                                                                                                                                                                                 eof=new ASTStringNode(t.toString(),new WToken(t));
+                                                                                                                                                                                                                                                                                                                                       eof=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new javacc_input(javacc_options, identifier, compilationUnit, identifier1, productionList, eof, firstToken.next,token);}
     throw new Error("Missing return statement in function");
   }
@@ -139,7 +139,7 @@ public class JavaCCParser implements JavaCCParserConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case IDENTIFIER:
       t = jj_consume_token(IDENTIFIER);
-                       identifier=new ASTStringNode(t.toString(),new WToken(t));
+                       identifier=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new OptionName1(identifier, firstToken.next,token);}
       break;
     case _LOOKAHEAD:
@@ -171,7 +171,7 @@ public class JavaCCParser implements JavaCCParserConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case INTEGER_LITERAL:
       t = jj_consume_token(INTEGER_LITERAL);
-                            integer_literal=new ASTStringNode(t.toString(),new WToken(t));
+                            integer_literal=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new OptionValue1(integer_literal, firstToken.next,token);}
       break;
     case FALSE:
@@ -181,7 +181,7 @@ public class JavaCCParser implements JavaCCParserConstants {
       break;
     case STRING_LITERAL:
       t = jj_consume_token(STRING_LITERAL);
-                           string_literal=new ASTStringNode(t.toString(),new WToken(t));
+                           string_literal=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new OptionValue3(string_literal, firstToken.next,token);}
       break;
     default:
@@ -267,7 +267,7 @@ public class JavaCCParser implements JavaCCParserConstants {
     }
     resultType = ResultType();
     t = jj_consume_token(IDENTIFIER);
-                                                                                            identifier=new ASTStringNode(t.toString(),new WToken(t));
+                                                                                            identifier=new ASTStringNode(t.image,new WToken(t));
     formalParameters = FormalParameters();
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case THROWS:
@@ -331,7 +331,7 @@ public class JavaCCParser implements JavaCCParserConstants {
     }
     resultType = ResultType();
     t = jj_consume_token(IDENTIFIER);
-                                                                                 identifier=new ASTStringNode(t.toString(),new WToken(t));
+                                                                                 identifier=new ASTStringNode(t.image,new WToken(t));
     formalParameters = FormalParameters();
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case THROWS:
@@ -442,8 +442,8 @@ public class JavaCCParser implements JavaCCParserConstants {
       case LT:
         jj_consume_token(LT);
         t = jj_consume_token(IDENTIFIER);
-                           identifier=new ASTStringNode(t.toString(),new WToken(t));
-                                                                                      list1.add(identifier);
+                           identifier=new ASTStringNode(t.image,new WToken(t));
+                                                                                 list1.add(identifier);
         label_5:
         while (true) {
           switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -456,8 +456,8 @@ public class JavaCCParser implements JavaCCParserConstants {
           }
           jj_consume_token(COMMA);
           t = jj_consume_token(IDENTIFIER);
-                                                                                                                                  identifier1=new ASTStringNode(t.toString(),new WToken(t));
-                                                                                                                                                                                              list1.add(identifier1);
+                                                                                                                             identifier1=new ASTStringNode(t.image,new WToken(t));
+                                                                                                                                                                                    list1.add(identifier1);
         }
         jj_consume_token(GT);
          {if (true) return new regular_expr_productionPrefix2(list1, firstToken.next,token);}
@@ -527,7 +527,7 @@ public class JavaCCParser implements JavaCCParserConstants {
     case COLON:
       jj_consume_token(COLON);
       t = jj_consume_token(IDENTIFIER);
-                                                                                    identifier=new ASTStringNode(t.toString(),new WToken(t));
+                                                                                    identifier=new ASTStringNode(t.image,new WToken(t));
       break;
     default:
       jj_la1[19] = jj_gen;
@@ -604,7 +604,7 @@ public class JavaCCParser implements JavaCCParserConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case INTEGER_LITERAL:
       t = jj_consume_token(INTEGER_LITERAL);
-                                          integer_literal=new ASTStringNode(t.toString(),new WToken(t));
+                                          integer_literal=new ASTStringNode(t.image,new WToken(t));
       break;
     default:
       jj_la1[22] = jj_gen;
@@ -613,7 +613,7 @@ public class JavaCCParser implements JavaCCParserConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case COMMA:
       jj_consume_token(COMMA);
-                                                                                                                              text470=new ASTTextNode(",",new WToken(token));
+                                                                                                                         text470=new ASTTextNode(",",new WToken(token));
       break;
     default:
       jj_la1[23] = jj_gen;
@@ -627,7 +627,7 @@ public class JavaCCParser implements JavaCCParserConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case COMMA:
       jj_consume_token(COMMA);
-                                                                                                                                                                                                                                                                                                                       text471=new ASTTextNode(",",new WToken(token));
+                                                                                                                                                                                                                                                                                                                  text471=new ASTTextNode(",",new WToken(token));
       break;
     default:
       jj_la1[24] = jj_gen;
@@ -756,7 +756,7 @@ public class JavaCCParser implements JavaCCParserConstants {
     jj_consume_token(LPAREN);
     name = Name();
     t = jj_consume_token(IDENTIFIER);
-                                               identifier=new ASTStringNode(t.toString(),new WToken(t));
+                                               identifier=new ASTStringNode(t.image,new WToken(t));
     jj_consume_token(RPAREN);
     block = Block();
          {if (true) return new CatchPart(name, identifier, block, firstToken.next,token);}
@@ -772,7 +772,7 @@ public class JavaCCParser implements JavaCCParserConstants {
         Token firstToken=token;
     if (jj_2_4(2147483647)) {
       t = jj_consume_token(IDENTIFIER);
-                                                    identifier=new ASTStringNode(t.toString(),new WToken(t));
+                                                    identifier=new ASTStringNode(t.image,new WToken(t));
       arguments = Arguments();
          {if (true) return new expansion_unitMain1(identifier, arguments, firstToken.next,token);}
     } else {
@@ -784,7 +784,7 @@ public class JavaCCParser implements JavaCCParserConstants {
         case DOT:
           jj_consume_token(DOT);
           t = jj_consume_token(IDENTIFIER);
-                                                                    identifier1=new ASTStringNode(t.toString(),new WToken(t));
+                                                                    identifier1=new ASTStringNode(t.image,new WToken(t));
           break;
         default:
           jj_la1[31] = jj_gen;
@@ -834,7 +834,7 @@ public class JavaCCParser implements JavaCCParserConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case STRING_LITERAL:
       t = jj_consume_token(STRING_LITERAL);
-                           string_literal=new ASTStringNode(t.toString(),new WToken(t));
+                           string_literal=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new regular_expression1(string_literal, firstToken.next,token);}
       break;
     default:
@@ -856,7 +856,7 @@ public class JavaCCParser implements JavaCCParserConstants {
       } else if (jj_2_6(2)) {
         jj_consume_token(LT);
         t = jj_consume_token(IDENTIFIER);
-                                        identifier=new ASTStringNode(t.toString(),new WToken(t));
+                                        identifier=new ASTStringNode(t.image,new WToken(t));
         jj_consume_token(GT);
          {if (true) return new regular_expression3(identifier, firstToken.next,token);}
       } else {
@@ -892,7 +892,7 @@ public class JavaCCParser implements JavaCCParserConstants {
       ;
     }
     t = jj_consume_token(IDENTIFIER);
-                                                                               identifier=new ASTStringNode(t.toString(),new WToken(t));
+                                                                               identifier=new ASTStringNode(t.image,new WToken(t));
     jj_consume_token(COLON);
          {if (true) return new RegId(text476, identifier, firstToken.next,token);}
     throw new Error("Missing return statement in function");
@@ -960,13 +960,13 @@ public class JavaCCParser implements JavaCCParserConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case STRING_LITERAL:
       t = jj_consume_token(STRING_LITERAL);
-                           string_literal=new ASTStringNode(t.toString(),new WToken(t));
+                           string_literal=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new complex_regular_expression_unit1(string_literal, firstToken.next,token);}
       break;
     case LT:
       jj_consume_token(LT);
       t = jj_consume_token(IDENTIFIER);
-                           identifier=new ASTStringNode(t.toString(),new WToken(t));
+                           identifier=new ASTStringNode(t.image,new WToken(t));
       jj_consume_token(GT);
          {if (true) return new complex_regular_expression_unit2(identifier, firstToken.next,token);}
       break;
@@ -1021,7 +1021,7 @@ public class JavaCCParser implements JavaCCParserConstants {
     case LBRACE:
       jj_consume_token(LBRACE);
       t = jj_consume_token(INTEGER_LITERAL);
-                                integer_literal=new ASTStringNode(t.toString(),new WToken(t));
+                                integer_literal=new ASTStringNode(t.image,new WToken(t));
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case COMMA:
         cREUPostfixPP = CREUPostfixPP();
@@ -1049,7 +1049,7 @@ public class JavaCCParser implements JavaCCParserConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case INTEGER_LITERAL:
       t = jj_consume_token(INTEGER_LITERAL);
-                                 integer_literal=new ASTStringNode(t.toString(),new WToken(t));
+                                 integer_literal=new ASTStringNode(t.image,new WToken(t));
       break;
     default:
       jj_la1[44] = jj_gen;
@@ -1118,12 +1118,12 @@ public class JavaCCParser implements JavaCCParserConstants {
         ASTStringNode string_literal1 = null;
         Token firstToken=token;
     t = jj_consume_token(STRING_LITERAL);
-                           string_literal=new ASTStringNode(t.toString(),new WToken(t));
+                           string_literal=new ASTStringNode(t.image,new WToken(t));
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case MINUS:
       jj_consume_token(MINUS);
       t = jj_consume_token(STRING_LITERAL);
-                                                                                                                  string_literal1=new ASTStringNode(t.toString(),new WToken(t));
+                                                                                                             string_literal1=new ASTStringNode(t.image,new WToken(t));
       break;
     default:
       jj_la1[48] = jj_gen;
@@ -3815,22 +3815,22 @@ public class JavaCCParser implements JavaCCParserConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case INTEGER_LITERAL:
       t = jj_consume_token(INTEGER_LITERAL);
-                            integer_literal=new ASTStringNode(t.toString(),new WToken(t));
+                            integer_literal=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new Literal1(integer_literal, firstToken.next,token);}
       break;
     case FLOATING_POINT_LITERAL:
       t = jj_consume_token(FLOATING_POINT_LITERAL);
-                                   floating_point_literal=new ASTStringNode(t.toString(),new WToken(t));
+                                   floating_point_literal=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new Literal2(floating_point_literal, firstToken.next,token);}
       break;
     case CHARACTER_LITERAL:
       t = jj_consume_token(CHARACTER_LITERAL);
-                              character_literal=new ASTStringNode(t.toString(),new WToken(t));
+                              character_literal=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new Literal3(character_literal, firstToken.next,token);}
       break;
     case STRING_LITERAL:
       t = jj_consume_token(STRING_LITERAL);
-                           string_literal=new ASTStringNode(t.toString(),new WToken(t));
+                           string_literal=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new Literal4(string_literal, firstToken.next,token);}
       break;
     case FALSE:
@@ -5643,7 +5643,7 @@ public class JavaCCParser implements JavaCCParserConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case IDENTIFIER:
       t = jj_consume_token(IDENTIFIER);
-                       identifier=new ASTStringNode(t.toString(),new WToken(t));
+                       identifier=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new JavaIdentifier1(identifier, firstToken.next,token);}
       break;
     case _OPTIONS:

@@ -966,7 +966,7 @@ javacc_input javacc_input() : {
 	ASTStringNode eof;
 	Token firstToken=token;
 } { (
-	[javacc_options=javacc_options()] "PARSER_BEGIN" "(" t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} ")" compilationUnit=CompilationUnit() "PARSER_END" "(" t=<IDENTIFIER>{identifier1=new ASTStringNode(t.toString(),new WToken(t));} ")" (production=production(){productionList.add(production);})+ t=<EOF>{eof=new ASTStringNode(t.toString(),new WToken(t));} 
+	[javacc_options=javacc_options()] "PARSER_BEGIN" "(" t=<IDENTIFIER>{identifier=new ASTStringNode(t.image,new WToken(t));} ")" compilationUnit=CompilationUnit() "PARSER_END" "(" t=<IDENTIFIER>{identifier1=new ASTStringNode(t.image,new WToken(t));} ")" (production=production(){productionList.add(production);})+ t=<EOF>{eof=new ASTStringNode(t.image,new WToken(t));} 
 	{return new javacc_input(javacc_options, identifier, compilationUnit, identifier1, productionList, eof, firstToken.next,token);}
  ) }
 
@@ -993,7 +993,7 @@ OptionName OptionName() : {
 	ASTStringNode identifier;
 	Token firstToken=token;
 } { (
-	t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<IDENTIFIER>{identifier=new ASTStringNode(t.image,new WToken(t));} 
 	{return new OptionName1(identifier, firstToken.next,token);} |
 	"LOOKAHEAD"  
 	{return new OptionName2(firstToken.next,token);} |
@@ -1010,11 +1010,11 @@ OptionValue OptionValue() : {
 	ASTStringNode string_literal;
 	Token firstToken=token;
 } { (
-	t=<INTEGER_LITERAL>{integer_literal=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<INTEGER_LITERAL>{integer_literal=new ASTStringNode(t.image,new WToken(t));} 
 	{return new OptionValue1(integer_literal, firstToken.next,token);} |
 	booleanLiteral=BooleanLiteral() 
 	{return new OptionValue2(booleanLiteral, firstToken.next,token);} |
-	t=<STRING_LITERAL>{string_literal=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<STRING_LITERAL>{string_literal=new ASTStringNode(t.image,new WToken(t));} 
 	{return new OptionValue3(string_literal, firstToken.next,token);}
  ) }
 
@@ -1045,7 +1045,7 @@ javacode_production javacode_production() : {
 	Block block;
 	Token firstToken=token;
 } { (
-	"JAVACODE" [accessModifier=AccessModifier()] resultType=ResultType() t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} formalParameters=FormalParameters() [throwsClause=ThrowsClause()] block=Block() 
+	"JAVACODE" [accessModifier=AccessModifier()] resultType=ResultType() t=<IDENTIFIER>{identifier=new ASTStringNode(t.image,new WToken(t));} formalParameters=FormalParameters() [throwsClause=ThrowsClause()] block=Block() 
 	{return new javacode_production(accessModifier, resultType, identifier, formalParameters, throwsClause, block, firstToken.next,token);}
  ) }
 
@@ -1071,7 +1071,7 @@ bnf_production bnf_production() : {
 	expansion_choices expansion_choices;
 	Token firstToken=token;
 } { (
-	[accessModifier=AccessModifier()] resultType=ResultType() t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} formalParameters=FormalParameters() [throwsClause=ThrowsClause()] ":" block=Block() "{" expansion_choices=expansion_choices() "}" 
+	[accessModifier=AccessModifier()] resultType=ResultType() t=<IDENTIFIER>{identifier=new ASTStringNode(t.image,new WToken(t));} formalParameters=FormalParameters() [throwsClause=ThrowsClause()] ":" block=Block() "{" expansion_choices=expansion_choices() "}" 
 	{return new bnf_production(accessModifier, resultType, identifier, formalParameters, throwsClause, block, expansion_choices, firstToken.next,token);}
  ) }
 
@@ -1110,7 +1110,7 @@ regular_expr_productionPrefix regular_expr_productionPrefix() : {
 } { (
 	LOOKAHEAD(2) "<" "*" ">"  
 	{return new regular_expr_productionPrefix1(firstToken.next,token);} |
-	"<" t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));}{list1.add(identifier);} ("," t=<IDENTIFIER>{identifier1=new ASTStringNode(t.toString(),new WToken(t));}{list1.add(identifier1);})* ">" 
+	"<" t=<IDENTIFIER>{identifier=new ASTStringNode(t.image,new WToken(t));}{list1.add(identifier);} ("," t=<IDENTIFIER>{identifier1=new ASTStringNode(t.image,new WToken(t));}{list1.add(identifier1);})* ">" 
 	{return new regular_expr_productionPrefix2(list1, firstToken.next,token);}
  ) }
 
@@ -1142,7 +1142,7 @@ regexpr_spec regexpr_spec() : {
 	ASTStringNode identifier = null;
 	Token firstToken=token;
 } { (
-	regular_expression=regular_expression() [block=Block()] [":" t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));}] 
+	regular_expression=regular_expression() [block=Block()] [":" t=<IDENTIFIER>{identifier=new ASTStringNode(t.image,new WToken(t));}] 
 	{return new regexpr_spec(regular_expression, block, identifier, firstToken.next,token);}
  ) }
 
@@ -1176,7 +1176,7 @@ local_lookahead local_lookahead() : {
 	Expression expression = null;
 	Token firstToken=token;
 } { (
-	[LOOKAHEAD(1) t=<INTEGER_LITERAL>{integer_literal=new ASTStringNode(t.toString(),new WToken(t));}] [LOOKAHEAD(1) "," {text470=new ASTTextNode(",",new WToken(token));}] [LOOKAHEAD(0, { getToken(1).kind != RPAREN && getToken(1).kind != LBRACE } ) expansion_choices=expansion_choices()] [LOOKAHEAD(1) "," {text471=new ASTTextNode(",",new WToken(token));}] ["{" expression=Expression() "}"] 
+	[LOOKAHEAD(1) t=<INTEGER_LITERAL>{integer_literal=new ASTStringNode(t.image,new WToken(t));}] [LOOKAHEAD(1) "," {text470=new ASTTextNode(",",new WToken(token));}] [LOOKAHEAD(0, { getToken(1).kind != RPAREN && getToken(1).kind != LBRACE } ) expansion_choices=expansion_choices()] [LOOKAHEAD(1) "," {text471=new ASTTextNode(",",new WToken(token));}] ["{" expression=Expression() "}"] 
 	{return new local_lookahead(integer_literal, text470, expansion_choices, text471, expression, firstToken.next,token);}
  ) }
 
@@ -1215,7 +1215,7 @@ CatchPart CatchPart() : {
 	Block block;
 	Token firstToken=token;
 } { (
-	"catch" "(" name=Name() t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} ")" block=Block() 
+	"catch" "(" name=Name() t=<IDENTIFIER>{identifier=new ASTStringNode(t.image,new WToken(t));} ")" block=Block() 
 	{return new CatchPart(name, identifier, block, firstToken.next,token);}
  ) }
 
@@ -1227,9 +1227,9 @@ expansion_unitMain expansion_unitMain() : {
 	ASTStringNode identifier1 = null;
 	Token firstToken=token;
 } { (
-	LOOKAHEAD( <IDENTIFIER> "(") t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} arguments=Arguments() 
+	LOOKAHEAD( <IDENTIFIER> "(") t=<IDENTIFIER>{identifier=new ASTStringNode(t.image,new WToken(t));} arguments=Arguments() 
 	{return new expansion_unitMain1(identifier, arguments, firstToken.next,token);} |
-	regular_expression=regular_expression() ["." t=<IDENTIFIER>{identifier1=new ASTStringNode(t.toString(),new WToken(t));}] 
+	regular_expression=regular_expression() ["." t=<IDENTIFIER>{identifier1=new ASTStringNode(t.image,new WToken(t));}] 
 	{return new expansion_unitMain2(regular_expression, identifier1, firstToken.next,token);}
  ) }
 
@@ -1252,11 +1252,11 @@ regular_expression regular_expression() : {
 	ASTStringNode identifier;
 	Token firstToken=token;
 } { (
-	t=<STRING_LITERAL>{string_literal=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<STRING_LITERAL>{string_literal=new ASTStringNode(t.image,new WToken(t));} 
 	{return new regular_expression1(string_literal, firstToken.next,token);} |
 	LOOKAHEAD(3) "<" [regId=RegId()] complex_regular_expression_choices=complex_regular_expression_choices() ">" 
 	{return new regular_expression2(regId, complex_regular_expression_choices, firstToken.next,token);} |
-	LOOKAHEAD(2) "<" t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} ">" 
+	LOOKAHEAD(2) "<" t=<IDENTIFIER>{identifier=new ASTStringNode(t.image,new WToken(t));} ">" 
 	{return new regular_expression3(identifier, firstToken.next,token);} |
 	"<" "EOF" ">"  
 	{return new EOFExpr(firstToken.next,token);}
@@ -1268,7 +1268,7 @@ RegId RegId() : {
 	ASTStringNode identifier;
 	Token firstToken=token;
 } { (
-	["#" {text476=new ASTTextNode("#",new WToken(token));}] t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} ":" 
+	["#" {text476=new ASTTextNode("#",new WToken(token));}] t=<IDENTIFIER>{identifier=new ASTStringNode(t.image,new WToken(t));} ":" 
 	{return new RegId(text476, identifier, firstToken.next,token);}
  ) }
 
@@ -1301,9 +1301,9 @@ complex_regular_expression_unit complex_regular_expression_unit() : {
 	CREUPostfix cREUPostfix = null;
 	Token firstToken=token;
 } { (
-	t=<STRING_LITERAL>{string_literal=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<STRING_LITERAL>{string_literal=new ASTStringNode(t.image,new WToken(t));} 
 	{return new complex_regular_expression_unit1(string_literal, firstToken.next,token);} |
-	"<" t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} ">" 
+	"<" t=<IDENTIFIER>{identifier=new ASTStringNode(t.image,new WToken(t));} ">" 
 	{return new complex_regular_expression_unit2(identifier, firstToken.next,token);} |
 	character_list=character_list() 
 	{return new complex_regular_expression_unit3(character_list, firstToken.next,token);} |
@@ -1323,7 +1323,7 @@ CREUPostfix CREUPostfix() : {
 	{return new CREUPostfix2(firstToken.next,token);} |
 	"?"  
 	{return new CREUPostfix3(firstToken.next,token);} |
-	"{" t=<INTEGER_LITERAL>{integer_literal=new ASTStringNode(t.toString(),new WToken(t));} [cREUPostfixPP=CREUPostfixPP()] "}" 
+	"{" t=<INTEGER_LITERAL>{integer_literal=new ASTStringNode(t.image,new WToken(t));} [cREUPostfixPP=CREUPostfixPP()] "}" 
 	{return new CREUPostfix4(integer_literal, cREUPostfixPP, firstToken.next,token);}
  ) }
 
@@ -1332,7 +1332,7 @@ CREUPostfixPP CREUPostfixPP() : {
 	ASTStringNode integer_literal = null;
 	Token firstToken=token;
 } { (
-	"," [t=<INTEGER_LITERAL>{integer_literal=new ASTStringNode(t.toString(),new WToken(t));}] 
+	"," [t=<INTEGER_LITERAL>{integer_literal=new ASTStringNode(t.image,new WToken(t));}] 
 	{return new CREUPostfixPP(integer_literal, firstToken.next,token);}
  ) }
 
@@ -1362,7 +1362,7 @@ character_descriptor character_descriptor() : {
 	ASTStringNode string_literal1 = null;
 	Token firstToken=token;
 } { (
-	t=<STRING_LITERAL>{string_literal=new ASTStringNode(t.toString(),new WToken(t));} ["-" t=<STRING_LITERAL>{string_literal1=new ASTStringNode(t.toString(),new WToken(t));}] 
+	t=<STRING_LITERAL>{string_literal=new ASTStringNode(t.image,new WToken(t));} ["-" t=<STRING_LITERAL>{string_literal1=new ASTStringNode(t.image,new WToken(t));}] 
 	{return new character_descriptor(string_literal, string_literal1, firstToken.next,token);}
  ) }
 
@@ -2374,13 +2374,13 @@ Literal Literal() : {
 	NullLiteral nullLiteral;
 	Token firstToken=token;
 } { (
-	t=<INTEGER_LITERAL>{integer_literal=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<INTEGER_LITERAL>{integer_literal=new ASTStringNode(t.image,new WToken(t));} 
 	{return new Literal1(integer_literal, firstToken.next,token);} |
-	t=<FLOATING_POINT_LITERAL>{floating_point_literal=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<FLOATING_POINT_LITERAL>{floating_point_literal=new ASTStringNode(t.image,new WToken(t));} 
 	{return new Literal2(floating_point_literal, firstToken.next,token);} |
-	t=<CHARACTER_LITERAL>{character_literal=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<CHARACTER_LITERAL>{character_literal=new ASTStringNode(t.image,new WToken(t));} 
 	{return new Literal3(character_literal, firstToken.next,token);} |
-	t=<STRING_LITERAL>{string_literal=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<STRING_LITERAL>{string_literal=new ASTStringNode(t.image,new WToken(t));} 
 	{return new Literal4(string_literal, firstToken.next,token);} |
 	booleanLiteral=BooleanLiteral() 
 	{return new Literal5(booleanLiteral, firstToken.next,token);} |
@@ -2932,7 +2932,7 @@ JavaIdentifier JavaIdentifier() : {
 	ASTStringNode identifier;
 	Token firstToken=token;
 } { (
-	t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<IDENTIFIER>{identifier=new ASTStringNode(t.image,new WToken(t));} 
 	{return new JavaIdentifier1(identifier, firstToken.next,token);} |
 	"options"  
 	{return new JavaIdentifier2(firstToken.next,token);} |
