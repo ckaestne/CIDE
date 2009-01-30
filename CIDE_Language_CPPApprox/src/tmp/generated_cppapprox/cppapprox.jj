@@ -405,7 +405,7 @@ TranslationUnit TranslationUnit() : {
 	ASTStringNode eof;
 	Token firstToken=token;
 } { (
-	sequence_CodeUnit_TopLevel=Sequence_CodeUnit_TopLevel() t=<EOF>{eof=new ASTStringNode(t.toString(),new WToken(t));} 
+	sequence_CodeUnit_TopLevel=Sequence_CodeUnit_TopLevel() t=<EOF>{eof=new ASTStringNode(t.image,new WToken(t));} 
 	{return new TranslationUnit(sequence_CodeUnit_TopLevel, eof, firstToken.next,token);}
  ) }
 
@@ -441,7 +441,7 @@ CodeUnit_TopLevel CodeUnit_TopLevel() : {
 	{return new Define(pPDefineStatement, firstToken.next,token);} |
 	LOOKAHEAD(2) pPIfDef_TopLevel=PPIfDef_TopLevel() 
 	{return new IfDefTL(pPIfDef_TopLevel, firstToken.next,token);} |
-	LOOKAHEAD(2) "#" pPOtherIgnore=PPOtherIgnore() t=findLineEnd(){findlineend=new ASTStringNode(t.toString(),new WToken(t));} 
+	LOOKAHEAD(2) "#" pPOtherIgnore=PPOtherIgnore() t=findLineEnd(){findlineend=new ASTStringNode(t.image,new WToken(t));} 
 	{return new Preprocessor(pPOtherIgnore, findlineend, firstToken.next,token);} |
 	templateDecl=TemplateDecl() 
 	{return new CodeUnit_TopLevel5(templateDecl, firstToken.next,token);} |
@@ -485,7 +485,7 @@ CodeUnit_InBlock CodeUnit_InBlock() : {
 	{return new IncludeBL(pPIncludeStatement, firstToken.next,token);} |
 	LOOKAHEAD(2) pPDefineStatement=PPDefineStatement() 
 	{return new DefineBL(pPDefineStatement, firstToken.next,token);} |
-	LOOKAHEAD(2) "#" pPOtherIgnore=PPOtherIgnore() t=findLineEnd(){findlineend=new ASTStringNode(t.toString(),new WToken(t));} 
+	LOOKAHEAD(2) "#" pPOtherIgnore=PPOtherIgnore() t=findLineEnd(){findlineend=new ASTStringNode(t.image,new WToken(t));} 
 	{return new PreprocessorBL(pPOtherIgnore, findlineend, firstToken.next,token);} |
 	typeDef=TypeDef() 
 	{return new TypeDefInBlock(typeDef, firstToken.next,token);} |
@@ -523,7 +523,7 @@ IfStatement IfStatement() : {
 	ElseBlock elseBlock = null;
 	Token firstToken=token;
 } { (
-	"if" "(" t=findEndCB(){findendcb=new ASTStringNode(t.toString(),new WToken(t));} blockOrSingleStatement=BlockOrSingleStatement() [LOOKAHEAD(1) elseBlock=ElseBlock()] 
+	"if" "(" t=findEndCB(){findendcb=new ASTStringNode(t.image,new WToken(t));} blockOrSingleStatement=BlockOrSingleStatement() [LOOKAHEAD(1) elseBlock=ElseBlock()] 
 	{return new IfStatement(findendcb, blockOrSingleStatement, elseBlock, firstToken.next,token);}
  ) }
 
@@ -540,7 +540,7 @@ ForStatement ForStatement() : {
 	BlockOrSingleStatement blockOrSingleStatement;
 	Token firstToken=token;
 } { (
-	"for" "(" t=findEndCB(){findendcb=new ASTStringNode(t.toString(),new WToken(t));} blockOrSingleStatement=BlockOrSingleStatement() 
+	"for" "(" t=findEndCB(){findendcb=new ASTStringNode(t.image,new WToken(t));} blockOrSingleStatement=BlockOrSingleStatement() 
 	{return new ForStatement(findendcb, blockOrSingleStatement, firstToken.next,token);}
  ) }
 
@@ -550,7 +550,7 @@ WhileStatement WhileStatement() : {
 	BlockOrSingleStatement blockOrSingleStatement;
 	Token firstToken=token;
 } { (
-	"while" "(" t=findEndCB(){findendcb=new ASTStringNode(t.toString(),new WToken(t));} blockOrSingleStatement=BlockOrSingleStatement() 
+	"while" "(" t=findEndCB(){findendcb=new ASTStringNode(t.image,new WToken(t));} blockOrSingleStatement=BlockOrSingleStatement() 
 	{return new WhileStatement(findendcb, blockOrSingleStatement, firstToken.next,token);}
  ) }
 
@@ -560,7 +560,7 @@ DoStatement DoStatement() : {
 	ASTStringNode findendcb;
 	Token firstToken=token;
 } { (
-	"do" blockOrSingleStatement=BlockOrSingleStatement() "while" "(" t=findEndCB(){findendcb=new ASTStringNode(t.toString(),new WToken(t));} ";" 
+	"do" blockOrSingleStatement=BlockOrSingleStatement() "while" "(" t=findEndCB(){findendcb=new ASTStringNode(t.image,new WToken(t));} ";" 
 	{return new DoStatement(blockOrSingleStatement, findendcb, firstToken.next,token);}
  ) }
 
@@ -571,7 +571,7 @@ SwitchStatement SwitchStatement() : {
 	ArrayList<SwCase> swCaseList = new ArrayList<SwCase>();
 	Token firstToken=token;
 } { (
-	"switch" "(" t=findEndCB(){findendcb=new ASTStringNode(t.toString(),new WToken(t));} "{" (swCase=SwCase(){swCaseList.add(swCase);})* "}" 
+	"switch" "(" t=findEndCB(){findendcb=new ASTStringNode(t.image,new WToken(t));} "{" (swCase=SwCase(){swCaseList.add(swCase);})* "}" 
 	{return new SwitchStatement(findendcb, swCaseList, firstToken.next,token);}
  ) }
 
@@ -587,7 +587,7 @@ SwCase SwCase() : {
 } { (
 	"default" ":" sequence_CodeUnit_InBlock=Sequence_CodeUnit_InBlock() 
 	{return new SwCase1(sequence_CodeUnit_InBlock, firstToken.next,token);} |
-	"case" [LOOKAHEAD(1) "(" t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} ")"] swCaseLabel=SwCaseLabel() (moreSwCaseLabel=MoreSwCaseLabel(){moreSwCaseLabelList.add(moreSwCaseLabel);})* ":" sequence_CodeUnit_InBlock1=Sequence_CodeUnit_InBlock() 
+	"case" [LOOKAHEAD(1) "(" t=<IDENTIFIER>{identifier=new ASTStringNode(t.image,new WToken(t));} ")"] swCaseLabel=SwCaseLabel() (moreSwCaseLabel=MoreSwCaseLabel(){moreSwCaseLabelList.add(moreSwCaseLabel);})* ":" sequence_CodeUnit_InBlock1=Sequence_CodeUnit_InBlock() 
 	{return new SwCase2(identifier, swCaseLabel, moreSwCaseLabelList, sequence_CodeUnit_InBlock1, firstToken.next,token);}
  ) }
 
@@ -598,9 +598,9 @@ SwCaseLabel SwCaseLabel() : {
 	ASTStringNode literal;
 	Token firstToken=token;
 } { (
-	t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<IDENTIFIER>{identifier=new ASTStringNode(t.image,new WToken(t));} 
 	{return new SwCaseLabel1(identifier, firstToken.next,token);} |
-	[t=<OTHER>{other=new ASTStringNode(t.toString(),new WToken(t));}] t=<LITERAL>{literal=new ASTStringNode(t.toString(),new WToken(t));} 
+	[t=<OTHER>{other=new ASTStringNode(t.image,new WToken(t));}] t=<LITERAL>{literal=new ASTStringNode(t.image,new WToken(t));} 
 	{return new SwCaseLabel2(other, literal, firstToken.next,token);}
  ) }
 
@@ -636,9 +636,9 @@ TemplateArg TemplateArg() : {
 	ASTStringNode identifier1;
 	Token firstToken=token;
 } { (
-	"class" t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} 
+	"class" t=<IDENTIFIER>{identifier=new ASTStringNode(t.image,new WToken(t));} 
 	{return new TemplateArg1(identifier, firstToken.next,token);} |
-	t=<IDENTIFIER>{identifier1=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<IDENTIFIER>{identifier1=new ASTStringNode(t.image,new WToken(t));} 
 	{return new TemplateArg2(identifier1, firstToken.next,token);}
  ) }
 
@@ -648,7 +648,7 @@ ExternDecl ExternDecl() : {
 	Block block;
 	Token firstToken=token;
 } { (
-	"extern" t=<LITERAL>{literal=new ASTStringNode(t.toString(),new WToken(t));} block=Block() 
+	"extern" t=<LITERAL>{literal=new ASTStringNode(t.image,new WToken(t));} block=Block() 
 	{return new ExternDecl(literal, block, firstToken.next,token);}
  ) }
 
@@ -657,7 +657,7 @@ PPIncludeStatement PPIncludeStatement() : {
 	ASTStringNode findlineend;
 	Token firstToken=token;
 } { (
-	"#" "include" t=findLineEnd(){findlineend=new ASTStringNode(t.toString(),new WToken(t));} 
+	"#" "include" t=findLineEnd(){findlineend=new ASTStringNode(t.image,new WToken(t));} 
 	{return new PPIncludeStatement(findlineend, firstToken.next,token);}
  ) }
 
@@ -667,9 +667,9 @@ PPDefineStatement PPDefineStatement() : {
 	ASTStringNode findlineend1;
 	Token firstToken=token;
 } { (
-	LOOKAHEAD(2) "#" "define" t=findLineEnd(){findlineend=new ASTStringNode(t.toString(),new WToken(t));} 
+	LOOKAHEAD(2) "#" "define" t=findLineEnd(){findlineend=new ASTStringNode(t.image,new WToken(t));} 
 	{return new PPDefineStatement1(findlineend, firstToken.next,token);} |
-	LOOKAHEAD(2) "#" "undef" t=findLineEnd(){findlineend1=new ASTStringNode(t.toString(),new WToken(t));} 
+	LOOKAHEAD(2) "#" "undef" t=findLineEnd(){findlineend1=new ASTStringNode(t.image,new WToken(t));} 
 	{return new PPDefineStatement2(findlineend1, firstToken.next,token);}
  ) }
 
@@ -715,11 +715,11 @@ IfDefLine IfDefLine() : {
 	ASTStringNode findlineend;
 	Token firstToken=token;
 } { (
-	LOOKAHEAD(2) "#" "ifdef" t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} 
+	LOOKAHEAD(2) "#" "ifdef" t=<IDENTIFIER>{identifier=new ASTStringNode(t.image,new WToken(t));} 
 	{return new IfDefLine1(identifier, firstToken.next,token);} |
-	LOOKAHEAD(2) "#" "ifndef" t=<IDENTIFIER>{identifier1=new ASTStringNode(t.toString(),new WToken(t));} 
+	LOOKAHEAD(2) "#" "ifndef" t=<IDENTIFIER>{identifier1=new ASTStringNode(t.image,new WToken(t));} 
 	{return new IfDefLine2(identifier1, firstToken.next,token);} |
-	"#" "if" t=findLineEnd(){findlineend=new ASTStringNode(t.toString(),new WToken(t));} 
+	"#" "if" t=findLineEnd(){findlineend=new ASTStringNode(t.image,new WToken(t));} 
 	{return new IfDefLine3(findlineend, firstToken.next,token);}
  ) }
 
@@ -739,7 +739,7 @@ IfElseIf_BlockLevel IfElseIf_BlockLevel() : {
 	Sequence_CodeUnit_InBlock sequence_CodeUnit_InBlock;
 	Token firstToken=token;
 } { (
-	ifElseIf=IfElseIf() t=findLineEnd(){findlineend=new ASTStringNode(t.toString(),new WToken(t));} sequence_CodeUnit_InBlock=Sequence_CodeUnit_InBlock() 
+	ifElseIf=IfElseIf() t=findLineEnd(){findlineend=new ASTStringNode(t.image,new WToken(t));} sequence_CodeUnit_InBlock=Sequence_CodeUnit_InBlock() 
 	{return new IfElseIf_BlockLevel(ifElseIf, findlineend, sequence_CodeUnit_InBlock, firstToken.next,token);}
  ) }
 
@@ -750,7 +750,7 @@ IfElseIf_TopLevel IfElseIf_TopLevel() : {
 	Sequence_CodeUnit_TopLevel sequence_CodeUnit_TopLevel;
 	Token firstToken=token;
 } { (
-	ifElseIf=IfElseIf() t=findLineEnd(){findlineend=new ASTStringNode(t.toString(),new WToken(t));} sequence_CodeUnit_TopLevel=Sequence_CodeUnit_TopLevel() 
+	ifElseIf=IfElseIf() t=findLineEnd(){findlineend=new ASTStringNode(t.image,new WToken(t));} sequence_CodeUnit_TopLevel=Sequence_CodeUnit_TopLevel() 
 	{return new IfElseIf_TopLevel(ifElseIf, findlineend, sequence_CodeUnit_TopLevel, firstToken.next,token);}
  ) }
 
@@ -773,7 +773,7 @@ ConstructorHeader ConstructorHeader() : {
 	ASTStringNode identifier;
 	Token firstToken=token;
 } { (
-	(modifier=Modifier(){modifierList.add(modifier);})* [LOOKAHEAD(1) functionExoticStuff=FunctionExoticStuff()] t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} "(" 
+	(modifier=Modifier(){modifierList.add(modifier);})* [LOOKAHEAD(1) functionExoticStuff=FunctionExoticStuff()] t=<IDENTIFIER>{identifier=new ASTStringNode(t.image,new WToken(t));} "(" 
 	{return new ConstructorHeader(modifierList, functionExoticStuff, identifier, firstToken.next,token);}
  ) }
 
@@ -802,7 +802,7 @@ memoryInitializer memoryInitializer() : {
 	FunctionParameterList functionParameterList = null;
 	Token firstToken=token;
 } { (
-	t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} "(" [functionParameterList=FunctionParameterList()] ")" 
+	t=<IDENTIFIER>{identifier=new ASTStringNode(t.image,new WToken(t));} "(" [functionParameterList=FunctionParameterList()] ")" 
 	{return new memoryInitializer(identifier, functionParameterList, firstToken.next,token);}
  ) }
 
@@ -825,7 +825,7 @@ FunctionHeader FunctionHeader() : {
 	ASTStringNode identifier;
 	Token firstToken=token;
 } { (
-	(modifier=Modifier(){modifierList.add(modifier);})* functionReturnType=FunctionReturnType() [LOOKAHEAD(1) functionExoticStuff=FunctionExoticStuff()] t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} "(" 
+	(modifier=Modifier(){modifierList.add(modifier);})* functionReturnType=FunctionReturnType() [LOOKAHEAD(1) functionExoticStuff=FunctionExoticStuff()] t=<IDENTIFIER>{identifier=new ASTStringNode(t.image,new WToken(t));} "(" 
 	{return new FunctionHeader(modifierList, functionReturnType, functionExoticStuff, identifier, firstToken.next,token);}
  ) }
 
@@ -839,7 +839,7 @@ FunctionReturnType FunctionReturnType() : {
 	ASTTextNode text78 = null;
 	Token firstToken=token;
 } { (
-	["const" {text74=new ASTTextNode("const",new WToken(token));}] ["struct" {text75=new ASTTextNode("struct",new WToken(token));}] ["unsigned" {text76=new ASTTextNode("unsigned",new WToken(token));}] t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} ["*" {text77=new ASTTextNode("*",new WToken(token));}] ["&" {text78=new ASTTextNode("&",new WToken(token));}] 
+	["const" {text74=new ASTTextNode("const",new WToken(token));}] ["struct" {text75=new ASTTextNode("struct",new WToken(token));}] ["unsigned" {text76=new ASTTextNode("unsigned",new WToken(token));}] t=<IDENTIFIER>{identifier=new ASTStringNode(t.image,new WToken(t));} ["*" {text77=new ASTTextNode("*",new WToken(token));}] ["&" {text78=new ASTTextNode("&",new WToken(token));}] 
 	{return new FunctionReturnType1(text74, text75, text76, identifier, text77, text78, firstToken.next,token);} |
 	"operator"  
 	{return new FunctionReturnType2(firstToken.next,token);}
@@ -871,7 +871,7 @@ FunctionExoticStuff FunctionExoticStuff() : {
 	ASTStringNode literal;
 	Token firstToken=token;
 } { (
-	"__regbank" "(" t=<LITERAL>{literal=new ASTStringNode(t.toString(),new WToken(t));} ")" 
+	"__regbank" "(" t=<LITERAL>{literal=new ASTStringNode(t.image,new WToken(t));} ")" 
 	{return new FunctionExoticStuff(literal, firstToken.next,token);}
  ) }
 
@@ -922,7 +922,7 @@ AnyOpSymbol AnyOpSymbol() : {
 	ASTStringNode symbols;
 	Token firstToken=token;
 } { (
-	t=<SYMBOLS>{symbols=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<SYMBOLS>{symbols=new ASTStringNode(t.image,new WToken(t));} 
 	{return new AnyOpSymbol1(symbols, firstToken.next,token);} |
 	"="  
 	{return new AnyOpSymbol2(firstToken.next,token);} |
@@ -949,7 +949,7 @@ GotoLabel GotoLabel() : {
 	ASTStringNode identifier;
 	Token firstToken=token;
 } { (
-	t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} ":" 
+	t=<IDENTIFIER>{identifier=new ASTStringNode(t.image,new WToken(t));} ":" 
 	{return new GotoLabel(identifier, firstToken.next,token);}
  ) }
 
@@ -972,7 +972,7 @@ BlockOrSemi BlockOrSemi() : {
 	Block block1;
 	Token firstToken=token;
 } { (
-	LOOKAHEAD(1) "=" t=<LITERAL>{literal=new ASTStringNode(t.toString(),new WToken(t));} ";"  
+	LOOKAHEAD(1) "=" t=<LITERAL>{literal=new ASTStringNode(t.image,new WToken(t));} ";"  
 	{return new BlockOrSemi1(literal, firstToken.next,token);} |
 	LOOKAHEAD(1) ";"  
 	{return new BlockOrSemi2(firstToken.next,token);} |
@@ -1012,7 +1012,7 @@ BlockAssignment BlockAssignment() : {
 	ASTStringNode findendccb;
 	Token firstToken=token;
 } { (
-	"=" [cast=Cast()] "{" t=findEndCCB(){findendccb=new ASTStringNode(t.toString(),new WToken(t));} 
+	"=" [cast=Cast()] "{" t=findEndCCB(){findendccb=new ASTStringNode(t.image,new WToken(t));} 
 	{return new BlockAssignment(cast, findendccb, firstToken.next,token);}
  ) }
 
@@ -1022,7 +1022,7 @@ EnumBlock EnumBlock() : {
 	ASTStringNode findendccb;
 	Token firstToken=token;
 } { (
-	"enum" [t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));}] "{" t=findEndCCB(){findendccb=new ASTStringNode(t.toString(),new WToken(t));} 
+	"enum" [t=<IDENTIFIER>{identifier=new ASTStringNode(t.image,new WToken(t));}] "{" t=findEndCCB(){findendccb=new ASTStringNode(t.image,new WToken(t));} 
 	{return new EnumBlock(identifier, findendccb, firstToken.next,token);}
  ) }
 
@@ -1039,7 +1039,7 @@ CPPClassForwardDecl CPPClassForwardDecl() : {
 	ASTStringNode identifier;
 	Token firstToken=token;
 } { (
-	"class" t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} ";" 
+	"class" t=<IDENTIFIER>{identifier=new ASTStringNode(t.image,new WToken(t));} ";" 
 	{return new CPPClassForwardDecl(identifier, firstToken.next,token);}
  ) }
 
@@ -1062,7 +1062,7 @@ class_head class_head() : {
 	base_specifier base_specifier = null;
 	Token firstToken=token;
 } { (
-	LOOKAHEAD(class_key() <IDENTIFIER> [base_specification()] "{") class_key=class_key() t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} [base_specification=base_specification()] 
+	LOOKAHEAD(class_key() <IDENTIFIER> [base_specification()] "{") class_key=class_key() t=<IDENTIFIER>{identifier=new ASTStringNode(t.image,new WToken(t));} [base_specification=base_specification()] 
 	{return new class_head1(class_key, identifier, base_specification, firstToken.next,token);} |
 	class_key1=class_key() [base_specifier=base_specifier()] 
 	{return new class_head2(class_key1, base_specifier, firstToken.next,token);}
@@ -1085,11 +1085,11 @@ base_specifier base_specifier() : {
 	ASTStringNode identifier2;
 	Token firstToken=token;
 } { (
-	t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<IDENTIFIER>{identifier=new ASTStringNode(t.image,new WToken(t));} 
 	{return new base_specifier1(identifier, firstToken.next,token);} |
-	"virtual" [access_specifier=access_specifier()] t=<IDENTIFIER>{identifier1=new ASTStringNode(t.toString(),new WToken(t));} 
+	"virtual" [access_specifier=access_specifier()] t=<IDENTIFIER>{identifier1=new ASTStringNode(t.image,new WToken(t));} 
 	{return new base_specifier2(access_specifier, identifier1, firstToken.next,token);} |
-	access_specifier1=access_specifier() ["virtual" {text97=new ASTTextNode("virtual",new WToken(token));}] t=<IDENTIFIER>{identifier2=new ASTStringNode(t.toString(),new WToken(t));} 
+	access_specifier1=access_specifier() ["virtual" {text97=new ASTTextNode("virtual",new WToken(token));}] t=<IDENTIFIER>{identifier2=new ASTStringNode(t.image,new WToken(t));} 
 	{return new base_specifier3(access_specifier1, text97, identifier2, firstToken.next,token);}
  ) }
 
@@ -1154,13 +1154,13 @@ AnyStmtToken AnyStmtToken() : {
 	PPOtherIgnore pPOtherIgnore;
 	Token firstToken=token;
 } { (
-	t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<IDENTIFIER>{identifier=new ASTStringNode(t.image,new WToken(t));} 
 	{return new AnyStmtToken1(identifier, firstToken.next,token);} |
-	t=<LITERAL>{literal=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<LITERAL>{literal=new ASTStringNode(t.image,new WToken(t));} 
 	{return new AnyStmtToken2(literal, firstToken.next,token);} |
-	t=<OTHER>{other=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<OTHER>{other=new ASTStringNode(t.image,new WToken(t));} 
 	{return new AnyStmtToken3(other, firstToken.next,token);} |
-	t=<SYMBOLS>{symbols=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<SYMBOLS>{symbols=new ASTStringNode(t.image,new WToken(t));} 
 	{return new AnyStmtToken4(symbols, firstToken.next,token);} |
 	","  
 	{return new AnyStmtToken5(firstToken.next,token);} |
@@ -1262,17 +1262,17 @@ VarDeclToken VarDeclToken() : {
 	ASTStringNode findendcb;
 	Token firstToken=token;
 } { (
-	t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<IDENTIFIER>{identifier=new ASTStringNode(t.image,new WToken(t));} 
 	{return new VarDeclToken1(identifier, firstToken.next,token);} |
-	t=<LITERAL>{literal=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<LITERAL>{literal=new ASTStringNode(t.image,new WToken(t));} 
 	{return new VarDeclToken2(literal, firstToken.next,token);} |
 	"*"  
 	{return new VarDeclToken3(firstToken.next,token);} |
 	"&"  
 	{return new VarDeclToken4(firstToken.next,token);} |
-	t=<OTHER>{other=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<OTHER>{other=new ASTStringNode(t.image,new WToken(t));} 
 	{return new VarDeclToken5(other, firstToken.next,token);} |
-	t=<SYMBOLS>{symbols=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<SYMBOLS>{symbols=new ASTStringNode(t.image,new WToken(t));} 
 	{return new VarDeclToken6(symbols, firstToken.next,token);} |
 	"|"  
 	{return new VarDeclToken7(firstToken.next,token);} |
@@ -1288,7 +1288,7 @@ VarDeclToken VarDeclToken() : {
 	{return new VarDeclToken12(pPOtherIgnore, firstToken.next,token);} |
 	modifier=Modifier() 
 	{return new VarDeclToken13(modifier, firstToken.next,token);} |
-	"(" t=findEndCB(){findendcb=new ASTStringNode(t.toString(),new WToken(t));} 
+	"(" t=findEndCB(){findendcb=new ASTStringNode(t.image,new WToken(t));} 
 	{return new VarDeclToken14(findendcb, firstToken.next,token);} |
 	"="  
 	{return new VarDeclToken15(firstToken.next,token);}
@@ -1299,7 +1299,7 @@ Literal Literal() : {
 	ASTStringNode literal;
 	Token firstToken=token;
 } { (
-	t=<LITERAL>{literal=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<LITERAL>{literal=new ASTStringNode(t.image,new WToken(t));} 
 	{return new Literal(literal, firstToken.next,token);}
  ) }
 
