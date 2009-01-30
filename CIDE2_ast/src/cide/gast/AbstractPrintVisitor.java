@@ -55,7 +55,8 @@ public class AbstractPrintVisitor extends ASTVisitor {
 			if (generateSpaces)
 				if (lastToken != null
 						&& !getNoSpaceAfterToken().contains(lastToken)
-						&& !getNoSpaceBeforeToken().contains(token))
+						&& !getNoSpaceBeforeToken().contains(token)
+						&& !(lastToken.trim().length()==0))
 					print(' ');
 
 			print(token);

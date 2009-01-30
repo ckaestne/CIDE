@@ -69,7 +69,7 @@ public class Token {
 	 * Returns the image.
 	 */
 	public String toString() {
-		return image;
+		return "[Token kind="+kind+" image=\""+image+"\" loc="+offset+"-"+(offset+length)+"]";
 	}
 
 	/**
