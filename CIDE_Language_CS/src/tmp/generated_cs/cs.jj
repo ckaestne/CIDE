@@ -178,7 +178,7 @@ compilation_unit compilation_unit() : {
 	ASTStringNode eof;
 	Token firstToken=token;
 } { (
-	(using_directive=using_directive(){using_directiveList.add(using_directive);})* [attributes_either=attributes_either()] [compilation_unitEnd=compilation_unitEnd()] t=<EOF>{eof=new ASTStringNode(t.toString(),new WToken(t));} 
+	(using_directive=using_directive(){using_directiveList.add(using_directive);})* [attributes_either=attributes_either()] [compilation_unitEnd=compilation_unitEnd()] t=<EOF>{eof=new ASTStringNode(t.image,new WToken(t));} 
 	{return new compilation_unit(using_directiveList, attributes_either, compilation_unitEnd, eof, firstToken.next,token);}
  ) }
 
@@ -187,7 +187,7 @@ identifier identifier() : {
 	ASTStringNode identifier;
 	Token firstToken=token;
 } { (
-	t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<IDENTIFIER>{identifier=new ASTStringNode(t.image,new WToken(t));} 
 	{return new identifier1(identifier, firstToken.next,token);} |
 	"module"  
 	{return new identifier2(firstToken.next,token);} |
@@ -207,15 +207,15 @@ literal literal() : {
 } { (
 	boolean_literal=boolean_literal() 
 	{return new literal1(boolean_literal, firstToken.next,token);} |
-	t=<NUMERIC_LITERAL>{numeric_literal=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<NUMERIC_LITERAL>{numeric_literal=new ASTStringNode(t.image,new WToken(t));} 
 	{return new literal2(numeric_literal, firstToken.next,token);} |
-	t=<HEXADECIMAL_INTEGER_LITERAL>{hexadecimal_integer_literal=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<HEXADECIMAL_INTEGER_LITERAL>{hexadecimal_integer_literal=new ASTStringNode(t.image,new WToken(t));} 
 	{return new literal3(hexadecimal_integer_literal, firstToken.next,token);} |
-	t=<CHARACTER_LITERAL>{character_literal=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<CHARACTER_LITERAL>{character_literal=new ASTStringNode(t.image,new WToken(t));} 
 	{return new literal4(character_literal, firstToken.next,token);} |
-	t=<REGULAR_STRING_LITERAL>{regular_string_literal=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<REGULAR_STRING_LITERAL>{regular_string_literal=new ASTStringNode(t.image,new WToken(t));} 
 	{return new literal5(regular_string_literal, firstToken.next,token);} |
-	t=<VERBATIM_STRING_LITERAL>{verbatim_string_literal=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<VERBATIM_STRING_LITERAL>{verbatim_string_literal=new ASTStringNode(t.image,new WToken(t));} 
 	{return new literal6(verbatim_string_literal, firstToken.next,token);} |
 	"null"  
 	{return new literal7(firstToken.next,token);}
@@ -1860,7 +1860,7 @@ accessor_declaration accessor_declaration() : {
 	body body;
 	Token firstToken=token;
 } { (
-	[attributes=attributes()] t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} body=body() 
+	[attributes=attributes()] t=<IDENTIFIER>{identifier=new ASTStringNode(t.image,new WToken(t));} body=body() 
 	{return new accessor_declaration(attributes, identifier, body, firstToken.next,token);}
  ) }
 
@@ -2267,7 +2267,7 @@ interface_accessor interface_accessor() : {
 	ASTStringNode identifier;
 	Token firstToken=token;
 } { (
-	[attributes=attributes()] t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} ";" 
+	[attributes=attributes()] t=<IDENTIFIER>{identifier=new ASTStringNode(t.image,new WToken(t));} ";" 
 	{return new interface_accessor(attributes, identifier, firstToken.next,token);}
  ) }
 
@@ -2442,7 +2442,7 @@ attribute_target attribute_target() : {
 	{return new attribute_target1(firstToken.next,token);} |
 	"return"  
 	{return new attribute_target2(firstToken.next,token);} |
-	t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<IDENTIFIER>{identifier=new ASTStringNode(t.image,new WToken(t));} 
 	{return new attribute_target3(identifier, firstToken.next,token);}
  ) }
 
@@ -2484,7 +2484,7 @@ pointer_member_access pointer_member_access() : {
 	ASTStringNode identifier;
 	Token firstToken=token;
 } { (
-	"->" t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} 
+	"->" t=<IDENTIFIER>{identifier=new ASTStringNode(t.image,new WToken(t));} 
 	{return new pointer_member_access(identifier, firstToken.next,token);}
  ) }
 

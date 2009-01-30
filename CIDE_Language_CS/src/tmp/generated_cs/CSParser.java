@@ -59,7 +59,7 @@ import cide.gparser.*;
       ;
     }
     t = jj_consume_token(0);
-                                                                                                                                                                                    eof=new ASTStringNode(t.toString(),new WToken(t));
+                                                                                                                                                                                    eof=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new compilation_unit(using_directiveList, attributes_either, compilation_unitEnd, eof, firstToken.next,token);}
     throw new Error("Missing return statement in function");
   }
@@ -71,7 +71,7 @@ import cide.gparser.*;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case IDENTIFIER:
       t = jj_consume_token(IDENTIFIER);
-                       identifier=new ASTStringNode(t.toString(),new WToken(t));
+                       identifier=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new identifier1(identifier, firstToken.next,token);}
       break;
     case MODULE:
@@ -107,27 +107,27 @@ import cide.gparser.*;
       break;
     case NUMERIC_LITERAL:
       t = jj_consume_token(NUMERIC_LITERAL);
-                            numeric_literal=new ASTStringNode(t.toString(),new WToken(t));
+                            numeric_literal=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new literal2(numeric_literal, firstToken.next,token);}
       break;
     case HEXADECIMAL_INTEGER_LITERAL:
       t = jj_consume_token(HEXADECIMAL_INTEGER_LITERAL);
-                                        hexadecimal_integer_literal=new ASTStringNode(t.toString(),new WToken(t));
+                                        hexadecimal_integer_literal=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new literal3(hexadecimal_integer_literal, firstToken.next,token);}
       break;
     case CHARACTER_LITERAL:
       t = jj_consume_token(CHARACTER_LITERAL);
-                              character_literal=new ASTStringNode(t.toString(),new WToken(t));
+                              character_literal=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new literal4(character_literal, firstToken.next,token);}
       break;
     case REGULAR_STRING_LITERAL:
       t = jj_consume_token(REGULAR_STRING_LITERAL);
-                                   regular_string_literal=new ASTStringNode(t.toString(),new WToken(t));
+                                   regular_string_literal=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new literal5(regular_string_literal, firstToken.next,token);}
       break;
     case VERBATIM_STRING_LITERAL:
       t = jj_consume_token(VERBATIM_STRING_LITERAL);
-                                    verbatim_string_literal=new ASTStringNode(t.toString(),new WToken(t));
+                                    verbatim_string_literal=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new literal6(verbatim_string_literal, firstToken.next,token);}
       break;
     case NULL:
@@ -4476,7 +4476,7 @@ import cide.gparser.*;
       ;
     }
     t = jj_consume_token(IDENTIFIER);
-                                                 identifier=new ASTStringNode(t.toString(),new WToken(t));
+                                                 identifier=new ASTStringNode(t.image,new WToken(t));
     body = body();
          {if (true) return new accessor_declaration(attributes, identifier, body, firstToken.next,token);}
     throw new Error("Missing return statement in function");
@@ -5462,7 +5462,7 @@ import cide.gparser.*;
       ;
     }
     t = jj_consume_token(IDENTIFIER);
-                                                 identifier=new ASTStringNode(t.toString(),new WToken(t));
+                                                 identifier=new ASTStringNode(t.image,new WToken(t));
     jj_consume_token(SEMI);
          {if (true) return new interface_accessor(attributes, identifier, firstToken.next,token);}
     throw new Error("Missing return statement in function");
@@ -5834,7 +5834,7 @@ import cide.gparser.*;
       break;
     case IDENTIFIER:
       t = jj_consume_token(IDENTIFIER);
-                       identifier=new ASTStringNode(t.toString(),new WToken(t));
+                       identifier=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new attribute_target3(identifier, firstToken.next,token);}
       break;
     default:
@@ -5946,7 +5946,7 @@ import cide.gparser.*;
         Token firstToken=token;
     jj_consume_token(ARROW);
     t = jj_consume_token(IDENTIFIER);
-                            identifier=new ASTStringNode(t.toString(),new WToken(t));
+                            identifier=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new pointer_member_access(identifier, firstToken.next,token);}
     throw new Error("Missing return statement in function");
   }

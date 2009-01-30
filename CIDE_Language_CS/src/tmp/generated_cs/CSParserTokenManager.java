@@ -2043,8 +2043,8 @@ protected Token jjFillToken()
    t.beginColumn = input_stream.getBeginColumn();
    t.endLine = input_stream.getEndLine();
    t.endColumn = input_stream.getEndColumn();
-   t.offset = input_stream.getOffset();
    t.length = input_stream.getLength();
+   t.offset = input_stream.getOffset();
    return t;
 }
 
