@@ -66,7 +66,7 @@ public class FJParser implements FJParserConstants {
         Token firstToken=token;
     typeDeclaration = TypeDeclaration();
     t = jj_consume_token(0);
-                                                  eof=new ASTStringNode(t.toString(),new WToken(t));
+                                                  eof=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new Goal(typeDeclaration, eof, firstToken.next,token);}
     throw new Error("Missing return statement in function");
   }
@@ -83,7 +83,7 @@ public class FJParser implements FJParserConstants {
         Token firstToken=token;
     jj_consume_token(CLASS);
     t = jj_consume_token(IDENTIFIER);
-                               identifier=new ASTStringNode(t.toString(),new WToken(t));
+                               identifier=new ASTStringNode(t.image,new WToken(t));
     jj_consume_token(EXTENDS);
     extendedType = ExtendedType();
     jj_consume_token(LBRACE);
@@ -95,7 +95,7 @@ public class FJParser implements FJParserConstants {
         break label_1;
       }
       varDeclaration = VarDeclaration();
-                                                                                                                                                                                  varDeclarationList.add(varDeclaration);
+                                                                                                                                                                             varDeclarationList.add(varDeclaration);
     }
     classConstructor = ClassConstructor();
     label_2:
@@ -111,7 +111,7 @@ public class FJParser implements FJParserConstants {
         break label_2;
       }
       methodDeclaration = MethodDeclaration();
-                                                                                                                                                                                                                                                                                                        methodDeclarationList.add(methodDeclaration);
+                                                                                                                                                                                                                                                                                                   methodDeclarationList.add(methodDeclaration);
     }
     jj_consume_token(RBRACE);
          {if (true) return new TypeDeclaration(identifier, extendedType, varDeclarationList, classConstructor, methodDeclarationList, firstToken.next,token);}
@@ -125,7 +125,7 @@ public class FJParser implements FJParserConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case IDENTIFIER:
       t = jj_consume_token(IDENTIFIER);
-                       identifier=new ASTStringNode(t.toString(),new WToken(t));
+                       identifier=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new ExtendedType1(identifier, firstToken.next,token);}
       break;
     case OBJECT:
@@ -147,7 +147,7 @@ public class FJParser implements FJParserConstants {
         Token firstToken=token;
     type = Type();
     t = jj_consume_token(IDENTIFIER);
-                                   identifier=new ASTStringNode(t.toString(),new WToken(t));
+                                   identifier=new ASTStringNode(t.image,new WToken(t));
     jj_consume_token(38);
          {if (true) return new VarDeclaration(type, identifier, firstToken.next,token);}
     throw new Error("Missing return statement in function");
@@ -216,10 +216,10 @@ public class FJParser implements FJParserConstants {
     jj_consume_token(THIS);
     jj_consume_token(DOT);
     t = jj_consume_token(IDENTIFIER);
-                                  identifier=new ASTStringNode(t.toString(),new WToken(t));
+                                  identifier=new ASTStringNode(t.image,new WToken(t));
     jj_consume_token(39);
     t = jj_consume_token(IDENTIFIER);
-                                                                                                                identifier1=new ASTStringNode(t.toString(),new WToken(t));
+                                                                                                           identifier1=new ASTStringNode(t.image,new WToken(t));
     jj_consume_token(38);
          {if (true) return new FieldAssign(identifier, identifier1, firstToken.next,token);}
     throw new Error("Missing return statement in function");
@@ -234,7 +234,7 @@ public class FJParser implements FJParserConstants {
         Token firstToken=token;
     type = Type();
     t = jj_consume_token(IDENTIFIER);
-                                   identifier=new ASTStringNode(t.toString(),new WToken(t));
+                                   identifier=new ASTStringNode(t.image,new WToken(t));
     jj_consume_token(LPAREN);
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case OBJECT:
@@ -316,7 +316,7 @@ public class FJParser implements FJParserConstants {
         Token firstToken=token;
     type = Type();
     t = jj_consume_token(IDENTIFIER);
-                                   identifier=new ASTStringNode(t.toString(),new WToken(t));
+                                   identifier=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new FormalParameter(type, identifier, firstToken.next,token);}
     throw new Error("Missing return statement in function");
   }
@@ -332,7 +332,7 @@ public class FJParser implements FJParserConstants {
       break;
     case IDENTIFIER:
       t = jj_consume_token(IDENTIFIER);
-                       identifier=new ASTStringNode(t.toString(),new WToken(t));
+                       identifier=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new Type2(identifier, firstToken.next,token);}
       break;
     case OBJECT:
@@ -486,7 +486,7 @@ public class FJParser implements FJParserConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case INTEGER_LITERAL:
       t = jj_consume_token(INTEGER_LITERAL);
-                            integer_literal=new ASTStringNode(t.toString(),new WToken(t));
+                            integer_literal=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new PrimaryExpression1(integer_literal, firstToken.next,token);}
       break;
     default:
@@ -501,7 +501,7 @@ public class FJParser implements FJParserConstants {
         switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
         case IDENTIFIER:
           t = jj_consume_token(IDENTIFIER);
-                       identifier=new ASTStringNode(t.toString(),new WToken(t));
+                       identifier=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new PrimaryExpression4(identifier, firstToken.next,token);}
           break;
         default:
@@ -539,7 +539,7 @@ public class FJParser implements FJParserConstants {
     invokeTarget = InvokeTarget();
     jj_consume_token(DOT);
     t = jj_consume_token(IDENTIFIER);
-                                                       identifier=new ASTStringNode(t.toString(),new WToken(t));
+                                                       identifier=new ASTStringNode(t.image,new WToken(t));
     jj_consume_token(LPAREN);
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case THIS:
@@ -566,7 +566,7 @@ public class FJParser implements FJParserConstants {
     invokeTarget = InvokeTarget();
     jj_consume_token(DOT);
     t = jj_consume_token(IDENTIFIER);
-                                                       identifier=new ASTStringNode(t.toString(),new WToken(t));
+                                                       identifier=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new FieldInvoke(invokeTarget, identifier, firstToken.next,token);}
     throw new Error("Missing return statement in function");
   }
@@ -588,7 +588,7 @@ public class FJParser implements FJParserConstants {
       break;
     case IDENTIFIER:
       t = jj_consume_token(IDENTIFIER);
-                       identifier=new ASTStringNode(t.toString(),new WToken(t));
+                       identifier=new ASTStringNode(t.image,new WToken(t));
          {if (true) return new InvokeTarget3(identifier, firstToken.next,token);}
       break;
     case THIS:
@@ -610,7 +610,7 @@ public class FJParser implements FJParserConstants {
         Token firstToken=token;
     jj_consume_token(NEW);
     t = jj_consume_token(IDENTIFIER);
-                             identifier=new ASTStringNode(t.toString(),new WToken(t));
+                             identifier=new ASTStringNode(t.image,new WToken(t));
     jj_consume_token(LPAREN);
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case THIS:
@@ -718,14 +718,14 @@ public class FJParser implements FJParserConstants {
     return false;
   }
 
-  final private boolean jj_3R_41() {
-    if (jj_scan_token(PLUS)) return true;
-    if (jj_3R_32()) return true;
+  final private boolean jj_3R_15() {
+    if (jj_3R_25()) return true;
     return false;
   }
 
-  final private boolean jj_3_1() {
-    if (jj_3R_8()) return true;
+  final private boolean jj_3R_41() {
+    if (jj_scan_token(PLUS)) return true;
+    if (jj_3R_32()) return true;
     return false;
   }
 
@@ -748,6 +748,11 @@ public class FJParser implements FJParserConstants {
 
   final private boolean jj_3R_37() {
     if (jj_3R_41()) return true;
+    return false;
+  }
+
+  final private boolean jj_3_1() {
+    if (jj_3R_8()) return true;
     return false;
   }
 
@@ -955,11 +960,6 @@ public class FJParser implements FJParserConstants {
     return false;
   }
 
-  final private boolean jj_3R_16() {
-    if (jj_3R_25()) return true;
-    return false;
-  }
-
   final private boolean jj_3R_32() {
     if (jj_3R_17()) return true;
     Token xsp;
@@ -977,6 +977,11 @@ public class FJParser implements FJParserConstants {
 
   final private boolean jj_3R_22() {
     if (jj_3R_29()) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_16() {
+    if (jj_3R_25()) return true;
     return false;
   }
 
@@ -1004,11 +1009,6 @@ public class FJParser implements FJParserConstants {
     }
     }
     }
-    return false;
-  }
-
-  final private boolean jj_3R_15() {
-    if (jj_3R_25()) return true;
     return false;
   }
 

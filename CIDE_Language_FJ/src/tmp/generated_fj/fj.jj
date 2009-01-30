@@ -208,7 +208,7 @@ Goal Goal() : {
 	ASTStringNode eof;
 	Token firstToken=token;
 } { (
-	typeDeclaration=TypeDeclaration() t=<EOF>{eof=new ASTStringNode(t.toString(),new WToken(t));} 
+	typeDeclaration=TypeDeclaration() t=<EOF>{eof=new ASTStringNode(t.image,new WToken(t));} 
 	{return new Goal(typeDeclaration, eof, firstToken.next,token);}
  ) }
 
@@ -223,7 +223,7 @@ TypeDeclaration TypeDeclaration() : {
 	ArrayList<MethodDeclaration> methodDeclarationList = new ArrayList<MethodDeclaration>();
 	Token firstToken=token;
 } { (
-	"class" t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} "extends" extendedType=ExtendedType() "{" (LOOKAHEAD(2) varDeclaration=VarDeclaration(){varDeclarationList.add(varDeclaration);})* classConstructor=ClassConstructor() (methodDeclaration=MethodDeclaration(){methodDeclarationList.add(methodDeclaration);})* "}" 
+	"class" t=<IDENTIFIER>{identifier=new ASTStringNode(t.image,new WToken(t));} "extends" extendedType=ExtendedType() "{" (LOOKAHEAD(2) varDeclaration=VarDeclaration(){varDeclarationList.add(varDeclaration);})* classConstructor=ClassConstructor() (methodDeclaration=MethodDeclaration(){methodDeclarationList.add(methodDeclaration);})* "}" 
 	{return new TypeDeclaration(identifier, extendedType, varDeclarationList, classConstructor, methodDeclarationList, firstToken.next,token);}
  ) }
 
@@ -232,7 +232,7 @@ ExtendedType ExtendedType() : {
 	ASTStringNode identifier;
 	Token firstToken=token;
 } { (
-	t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<IDENTIFIER>{identifier=new ASTStringNode(t.image,new WToken(t));} 
 	{return new ExtendedType1(identifier, firstToken.next,token);} |
 	"Object"  
 	{return new ExtendedType2(firstToken.next,token);}
@@ -244,7 +244,7 @@ VarDeclaration VarDeclaration() : {
 	ASTStringNode identifier;
 	Token firstToken=token;
 } { (
-	type=Type() t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} ";" 
+	type=Type() t=<IDENTIFIER>{identifier=new ASTStringNode(t.image,new WToken(t));} ";" 
 	{return new VarDeclaration(type, identifier, firstToken.next,token);}
  ) }
 
@@ -266,7 +266,7 @@ FieldAssign FieldAssign() : {
 	ASTStringNode identifier1;
 	Token firstToken=token;
 } { (
-	"this" "." t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} "=" t=<IDENTIFIER>{identifier1=new ASTStringNode(t.toString(),new WToken(t));} ";" 
+	"this" "." t=<IDENTIFIER>{identifier=new ASTStringNode(t.image,new WToken(t));} "=" t=<IDENTIFIER>{identifier1=new ASTStringNode(t.image,new WToken(t));} ";" 
 	{return new FieldAssign(identifier, identifier1, firstToken.next,token);}
  ) }
 
@@ -278,7 +278,7 @@ MethodDeclaration MethodDeclaration() : {
 	Expression expression;
 	Token firstToken=token;
 } { (
-	type=Type() t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} "(" [formalParameterList=FormalParameterList()] ")" "{" "return" expression=Expression() ";" "}" 
+	type=Type() t=<IDENTIFIER>{identifier=new ASTStringNode(t.image,new WToken(t));} "(" [formalParameterList=FormalParameterList()] ")" "{" "return" expression=Expression() ";" "}" 
 	{return new MethodDeclaration(type, identifier, formalParameterList, expression, firstToken.next,token);}
  ) }
 
@@ -312,7 +312,7 @@ FormalParameter FormalParameter() : {
 	ASTStringNode identifier;
 	Token firstToken=token;
 } { (
-	type=Type() t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} 
+	type=Type() t=<IDENTIFIER>{identifier=new ASTStringNode(t.image,new WToken(t));} 
 	{return new FormalParameter(type, identifier, firstToken.next,token);}
  ) }
 
@@ -323,7 +323,7 @@ Type Type() : {
 } { (
 	"int"  
 	{return new Type1(firstToken.next,token);} |
-	t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<IDENTIFIER>{identifier=new ASTStringNode(t.image,new WToken(t));} 
 	{return new Type2(identifier, firstToken.next,token);} |
 	"Object"  
 	{return new Type3(firstToken.next,token);}
@@ -414,13 +414,13 @@ PrimaryExpression PrimaryExpression() : {
 	NestedExpression nestedExpression;
 	Token firstToken=token;
 } { (
-	t=<INTEGER_LITERAL>{integer_literal=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<INTEGER_LITERAL>{integer_literal=new ASTStringNode(t.image,new WToken(t));} 
 	{return new PrimaryExpression1(integer_literal, firstToken.next,token);} |
 	LOOKAHEAD(2147483647) methodInvoke=MethodInvoke() 
 	{return new PrimaryExpression2(methodInvoke, firstToken.next,token);} |
 	LOOKAHEAD(2147483647) fieldInvoke=FieldInvoke() 
 	{return new PrimaryExpression3(fieldInvoke, firstToken.next,token);} |
-	t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<IDENTIFIER>{identifier=new ASTStringNode(t.image,new WToken(t));} 
 	{return new PrimaryExpression4(identifier, firstToken.next,token);} |
 	LOOKAHEAD(2147483647) allocationExpression=AllocationExpression() 
 	{return new PrimaryExpression5(allocationExpression, firstToken.next,token);} |
@@ -437,7 +437,7 @@ MethodInvoke MethodInvoke() : {
 	ExpressionList expressionList = null;
 	Token firstToken=token;
 } { (
-	invokeTarget=InvokeTarget() "." t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} "(" [expressionList=ExpressionList()] ")" 
+	invokeTarget=InvokeTarget() "." t=<IDENTIFIER>{identifier=new ASTStringNode(t.image,new WToken(t));} "(" [expressionList=ExpressionList()] ")" 
 	{return new MethodInvoke(invokeTarget, identifier, expressionList, firstToken.next,token);}
  ) }
 
@@ -447,7 +447,7 @@ FieldInvoke FieldInvoke() : {
 	ASTStringNode identifier;
 	Token firstToken=token;
 } { (
-	invokeTarget=InvokeTarget() "." t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} 
+	invokeTarget=InvokeTarget() "." t=<IDENTIFIER>{identifier=new ASTStringNode(t.image,new WToken(t));} 
 	{return new FieldInvoke(invokeTarget, identifier, firstToken.next,token);}
  ) }
 
@@ -462,7 +462,7 @@ InvokeTarget InvokeTarget() : {
 	{return new InvokeTarget1(allocationExpression, firstToken.next,token);} |
 	nestedExpression=NestedExpression() 
 	{return new InvokeTarget2(nestedExpression, firstToken.next,token);} |
-	t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} 
+	t=<IDENTIFIER>{identifier=new ASTStringNode(t.image,new WToken(t));} 
 	{return new InvokeTarget3(identifier, firstToken.next,token);} |
 	"this"  
 	{return new InvokeTarget4(firstToken.next,token);}
@@ -474,7 +474,7 @@ AllocationExpression AllocationExpression() : {
 	ExpressionList expressionList = null;
 	Token firstToken=token;
 } { (
-	"new" t=<IDENTIFIER>{identifier=new ASTStringNode(t.toString(),new WToken(t));} "(" [expressionList=ExpressionList()] ")" 
+	"new" t=<IDENTIFIER>{identifier=new ASTStringNode(t.image,new WToken(t));} "(" [expressionList=ExpressionList()] ")" 
 	{return new AllocationExpression(identifier, expressionList, firstToken.next,token);}
  ) }
 
