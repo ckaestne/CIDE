@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: CIDE Language Plugin for Python
+Bundle-SymbolicName: de.ovgu.cide.language.python;singleton:=true
+Bundle-Version: 0.1.0.qualifier
+Export-Package: tmp.generated_python
+Require-Bundle: de.ovgu.cide.ast,
+ de.ovgu.cide.core
+Bundle-Vendor: Christian Kaestner, University of Magdeburg
