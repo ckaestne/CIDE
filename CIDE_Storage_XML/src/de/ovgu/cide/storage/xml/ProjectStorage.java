@@ -273,7 +273,11 @@ public class ProjectStorage {
 				}
 			}
 			
-			toggleActivation((Element) activeAlternative.getParentNode(), false);
+			NodeList childNodes = activeAlternative.getParentNode().getChildNodes();
+			for (int i = 0; i < childNodes.getLength(); ++i) {
+				deactivateElement((Element) childNodes.item(i));
+			}
+			
 			activeAlternative = createAlternativeNode(activeAlternative.getParentNode(), altID);
 		}
 		
@@ -323,11 +327,11 @@ public class ProjectStorage {
 				for (int i = 0; i < allAlternatives.getLength(); ++i) {
 					Element element = (Element) allAlternatives.item(i);
 					if (!element.equals(newAlternativeNode))
-						toggleActivation(element, false);
+						deactivateElement(element);
 				}
 			}
 			
-			toggleActivation(newAlternativeNode, true);
+			activateElement(newAlternativeNode);
 		} else
 			return false;
 		
@@ -430,13 +434,41 @@ public class ProjectStorage {
 	}
 
 	/**
-	 * (De)aktiviert die Alternative hinter dem gegebenen Element. Bei der Deaktivierung werden auch alle Kindknoten deaktiviert.
-	 * Bei der Aktivierung wird nur diejenige Kind-Alternative aktiviert, für die wasActive == "true" gilt.
+	 * Deaktiviert die Alternativen hinter dem gegebenen Element. Bei der Deaktivierung werden auch alle Kindknoten deaktiviert.
 	 * 
 	 * @param element	Zu (de)aktivierendes Element
 	 * @param isActive	Indikator: Element soll aktiviert werden
 	 */
-	private void toggleActivation(Element element, boolean isActive) {
+	private void deactivateElement(Element element) {
+		if (element == null)
+			return;
+		
+		NodeList childNodes = element.getChildNodes();
+		for (int i = 0; i < childNodes.getLength(); ++i) {
+			Node childNode = childNodes.item(i);
+			
+			// Rekursiver Abstieg nur dann, wenn Alternative gerade aktiv ist, denn wasActive darf nur bei Kindern von Alternativen
+			// auf false gesetzt werden, die gerade aktiv sind.
+			if ((childNode.getNodeType() == Node.ELEMENT_NODE)
+					// Wenn das Element ein alternative-Knoten ist, dann muss er aktiv sein
+					&& (!element.getNodeName().equals("alternative") || element.getAttribute("isActive").equals("true"))) {
+				deactivateElement((Element) childNode);
+			}
+		}
+		
+		if (element.getNodeName().equals("alternative")) {
+			boolean wasActive = element.getAttribute("isActive").equals("true");
+			element.setAttribute("isActive", "false");
+			element.setAttribute("wasActive", wasActive ? "true" : "false");
+		}
+	}
+	
+	/**
+	 * Aktiviert das gegebene Element in jedem Fall (d.h. auch wenn wasActive == false) und aktiviert die Kindknoten
+	 * genau dann, wenn wasActive == true.
+	 * @param element	Zu aktivierendes Element
+	 */
+	private void activateElement(Element element) {
 		if (element == null)
 			return;
 		
@@ -444,20 +476,21 @@ public class ProjectStorage {
 		for (int i = 0; i < childNodes.getLength(); ++i) {
 			Node childNode = childNodes.item(i);
 			if (childNode.getNodeType() == Node.ELEMENT_NODE) {
-				if (isActive)
-					reactivate((Element) childNode);
-				else
-					toggleActivation((Element) childNode, isActive);
+				reactivate((Element) childNode);
 			}
 		}
 		
 		if (element.getNodeName().equals("alternative")) {
 			boolean wasActive = element.getAttribute("isActive").equals("true");
-			element.setAttribute("isActive", isActive ? "true" : "false");
+			element.setAttribute("isActive", "true");
 			element.setAttribute("wasActive", wasActive ? "true" : "false");
 		}
 	}
 	
+	/**
+	 * Aktiviert das gegebene Element und alle seine Kindknoten genau dann, wenn wasActive == true.
+	 * @param element	Zu aktivierendes Element
+	 */
 	private void reactivate(Element element) {
 		if (element == null)
 			return;
