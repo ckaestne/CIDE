@@ -8,6 +8,10 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextViewerExtension2;
+import org.eclipse.jface.text.source.AnnotationRulerColumn;
+import org.eclipse.jface.text.source.CompositeRuler;
+import org.eclipse.jface.text.source.IAnnotationAccess;
+import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.IVerticalRuler;
 import org.eclipse.jface.text.source.SourceViewer;
@@ -25,6 +29,7 @@ import de.ovgu.cide.ColorListChangedEvent;
 import de.ovgu.cide.ColoredIDEImages;
 import de.ovgu.cide.FileColorChangedEvent;
 import de.ovgu.cide.IColorChangeListener;
+import de.ovgu.cide.af.AlternativeAnnotation;
 import de.ovgu.cide.editor.ColoredEditorExtensions.IProjectionColoredEditor;
 import de.ovgu.cide.editor.inlineprojection.InlineProjectionSourceViewer;
 import de.ovgu.cide.editor.inlineprojection.InlineProjectionSupport;
@@ -39,6 +44,7 @@ public class ColoredTextEditor extends AbstractDecoratedTextEditor implements
 
 	private final ColoredEditorExtensions editorExtension;
 	private ProjectionColorManager projectionColorManager;
+	private IAnnotationAccess annotationAccess;
 
 	public ColoredTextEditor() {
 		super();
@@ -80,6 +86,20 @@ public class ColoredTextEditor extends AbstractDecoratedTextEditor implements
 		}
 		return null;
 	}
+	
+	@Override
+	protected CompositeRuler createCompositeRuler() {
+		annotationAccess = new AnnotationMarkerAccess();
+		IAnnotationModel annotationModel = getDocumentProvider().getAnnotationModel(getEditorInput());
+        AnnotationRulerColumn annotationRulerCol = new AnnotationRulerColumn(annotationModel, 16, annotationAccess);
+        annotationRulerCol.addAnnotationType(AlternativeAnnotation.ALTERNATIVE_TYPE);
+        
+        CompositeRuler compositeRuler = new CompositeRuler();
+        compositeRuler.setModel(annotationModel);
+        compositeRuler.addDecorator(0, annotationRulerCol);
+        
+        return compositeRuler;
+	}
 
 	@Override
 	protected ISourceViewer createSourceViewer(Composite parent,
@@ -87,6 +107,13 @@ public class ColoredTextEditor extends AbstractDecoratedTextEditor implements
 		InlineProjectionSourceViewer viewer = new InlineProjectionSourceViewer(
 				parent, ruler, getOverviewRuler(), isOverviewRulerVisible(),
 				styles);
+		
+		// Könnte man einkommentieren, um blaue squigglys unter die Codefragmente zu malen, zu denen es Alternativen gibt.
+		// Mir gefällts nicht.
+//        AnnotationPainter ap = new AnnotationPainter(viewer, annotationAccess);
+//        ap.addAnnotationType(AlternativeAnnotation.ALTERNATIVE_TYPE);
+//        ap.setAnnotationTypeColor(AlternativeAnnotation.ALTERNATIVE_TYPE, new Color(Display.getDefault(), new RGB(0, 0, 255)));
+//        viewer.addPainter(ap);
 
 		return viewer;
 	}
@@ -142,6 +169,8 @@ public class ColoredTextEditor extends AbstractDecoratedTextEditor implements
 
 		// color caches
 		editorExtension.initKeepColorManager();
+		
+		editorExtension.installAlternativeAnnotations();
 	}
 
 	public SourceViewer getSourceViewerR() {

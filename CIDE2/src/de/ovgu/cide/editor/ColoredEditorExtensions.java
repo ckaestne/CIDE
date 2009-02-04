@@ -11,6 +11,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.swt.SWT;
@@ -22,7 +23,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.texteditor.IDocumentProvider;
 
+import de.ovgu.cide.af.AlternativeAnnotationManager;
 import de.ovgu.cide.editor.keepcolors.ColorCacheManager;
 import de.ovgu.cide.features.IFeature;
 import de.ovgu.cide.features.IFeatureModel;
@@ -52,7 +56,11 @@ public class ColoredEditorExtensions {
 
 		ISelectionProvider getSelectionProvider();
 		
+		IDocumentProvider getDocumentProvider();
+		
 		IDocument getDocument();
+		
+		IEditorInput getEditorInput();
 		
 		void doSave(IProgressMonitor progressMonitor);
 	}
@@ -62,6 +70,7 @@ public class ColoredEditorExtensions {
 	}
 
 	private IColoredEditor editor;
+	private AlternativeAnnotationManager altAnnotationManager;
 
 	public ColoredEditorExtensions(IColoredEditor editor) {
 		this.editor = editor;
@@ -180,6 +189,14 @@ public class ColoredEditorExtensions {
 		return editor.getDocument();
 	}
 	
+	public IAnnotationModel getAnnotationModel() {
+		return editor.getDocumentProvider().getAnnotationModel(editor.getEditorInput());
+	}
+	
+	public AlternativeAnnotationManager getAltAnnotationManager() {
+		return altAnnotationManager;
+	}
+	
 	public void fillContextMenu(IMenuManager menu) {
 		if (!editor.isDirty()) {
 			ColoredSourceFile sourceFile = editor.getSourceFile();
@@ -209,7 +226,11 @@ public class ColoredEditorExtensions {
 					MenuManager mm = new MenuManager("Alternative code");
 					menu.add(mm);
 
-					mm.add(new CreateAlternativeAction(contextNonOptional));
+					// Eine Alternative soll nur dann angelegt werden können, wenn das aktive Codefragment min. eine Farbe hat,
+					// die es nicht von einem Elternknoten erbt.
+					if (contextNonOptional.nodesHaveNotInheritedColors())
+						mm.add(new CreateAlternativeAction(contextNonOptional));
+					
 					mm.add(new SwitchAlternativeSubmenu(contextNonOptional));
 				}
 			}
@@ -226,6 +247,11 @@ public class ColoredEditorExtensions {
 		mainControl.setLayoutData(data);
 
 		parent.layout();
+	}
+	
+	public void installAlternativeAnnotations() {
+		altAnnotationManager = new AlternativeAnnotationManager(getAnnotationModel());		
+		altAnnotationManager.setAnnotations(editor.getSourceFile().getAltFeatureManager().getNode2Alternatives());
 	}
 	
 	public ColorCacheManager getColorCacheManager() {

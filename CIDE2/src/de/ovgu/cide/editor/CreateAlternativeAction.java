@@ -28,7 +28,9 @@ public class CreateAlternativeAction extends Action {
 		});
 		
 		if (dialog.open() == InputDialog.OK) {
+			context.getEditorExtensions().getAltAnnotationManager().removeAnnotations();
 			context.getSourceFile().getAltFeatureManager().createAlternative(context.getSelectedNodes(), dialog.getValue());
+			context.getEditorExtensions().getAltAnnotationManager().setAnnotations(context.getSourceFile().getAltFeatureManager().getNode2Alternatives());
 		}
 	}
 }

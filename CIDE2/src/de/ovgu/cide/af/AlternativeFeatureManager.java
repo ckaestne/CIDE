@@ -24,6 +24,7 @@ public class AlternativeFeatureManager {
 	
 	private ColoredSourceFile coloredSourceFile;
 	private Map<String, List<Alternative>> id2alternatives;		// Mapped eine ASTNode-ID auf eine Liste verfügbarer Alternativen
+	private Map<IASTNode, List<Alternative>> node2alternatives;	// Mapped einen IASTNode auf eine Liste verfügbarer Alternativen
 	
 	public AlternativeFeatureManager(ColoredSourceFile coloredSourceFile) {
 		this.coloredSourceFile = coloredSourceFile;
@@ -43,20 +44,25 @@ public class AlternativeFeatureManager {
 			return;
 		
 		final List<String> astIDs = new LinkedList<String>();
+		final List<IASTNode> allASTNodes = new LinkedList<IASTNode>();
 		
 		for (IASTNode node : nodes) {
 			if (node == null)
 				continue;
 			if (!recursive) {
-				if (!astIDs.contains(node.getId()))
+				if (!astIDs.contains(node.getId())) {
 					astIDs.add(node.getId());
+					allASTNodes.add(node);
+				}
 			}
 			else {
 				node.accept(new ASTVisitor() {
 					@Override
 					public boolean visit(IASTNode node) {
-						if (!astIDs.contains(node.getId()))
+						if (!astIDs.contains(node.getId())) {
 							astIDs.add(node.getId());
+							allASTNodes.add(node);
+						}
 						return true;
 					}
 				});
@@ -65,7 +71,10 @@ public class AlternativeFeatureManager {
 		
 		if (id2alternatives == null)
 			id2alternatives = new HashMap<String, List<Alternative>>();
-		mergeAlternatives(coloredSourceFile.getColorManager().getAlternatives(astIDs));
+		if (node2alternatives == null)
+			node2alternatives = new HashMap<IASTNode, List<Alternative>>();
+		
+		mergeAlternatives(coloredSourceFile.getColorManager().getAlternatives(astIDs), allASTNodes);
 	}
 	
 	private void updateAlternativeList(IASTNode node, boolean recursive) {
@@ -81,6 +90,10 @@ public class AlternativeFeatureManager {
 		if (id2alternatives == null)
 			return null;
 		return id2alternatives.get(id);
+	}
+	
+	public Map<IASTNode, List<Alternative>> getNode2Alternatives() {
+		return node2alternatives;
 	}
 
 	public void createAlternative(List<IASTNode> nodes, String altID) {
@@ -116,9 +129,13 @@ public class AlternativeFeatureManager {
 //		return result;
 //	}
 	
-	private void mergeAlternatives(Map<String, List<Alternative>> newAlternatives) {
-		if ((id2alternatives == null) || (newAlternatives == null))
+	private void mergeAlternatives(Map<String, List<Alternative>> newAlternatives, List<IASTNode> allASTNodes) {
+		if ((id2alternatives == null) || (node2alternatives == null) || (newAlternatives == null) || (allASTNodes == null))
 			return;
+		
 		id2alternatives.putAll(newAlternatives);
+		for (IASTNode node : allASTNodes) {
+			node2alternatives.put(node, id2alternatives.get(node.getId()));
+		}
 	}
 }

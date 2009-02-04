@@ -41,6 +41,18 @@ public class SourceFileColorManager extends AbstractColorManager {
 	public Set<IFeature> getOwnColors(IASTNode node) {
 		return super.getOwnColors(node.getId());
 	}
+	
+	public Set<IFeature> getNotInheritedColors(IASTNode node) {
+		Set<IFeature> ownColors = getOwnColors(node);
+		Set<IFeature> inheritedColors = getInheritedColors(node);
+
+		for (IFeature feature : inheritedColors) {
+			if (ownColors.contains(feature))
+				ownColors.remove(feature);
+		}
+		
+		return ownColors;
+	}
 
 	public boolean addColor(IASTNode node, IFeature color) {
 		if (node == null)

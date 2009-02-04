@@ -32,6 +32,8 @@ public class SwitchAlternativeAction extends Action {
 		ColoredEditorExtensions editorExtensions = context.getEditorExtensions();
 		ColorCacheManager colorCacheManager = editorExtensions.getColorCacheManager();
 		
+		context.getEditorExtensions().getAltAnnotationManager().removeAnnotations();
+		
 		try {
 			if (colorCacheManager != null) colorCacheManager.deactivate();
 			editorExtensions.getDocument().replace(selection.getOffset(), selection.getLength(), alternative.text);
@@ -43,6 +45,7 @@ public class SwitchAlternativeAction extends Action {
 		
 		editorExtensions.save();
 		context.getSourceFile().getAltFeatureManager().activateAlternative(alternative, selectedNode);
+		context.getEditorExtensions().getAltAnnotationManager().setAnnotations(context.getSourceFile().getAltFeatureManager().getNode2Alternatives());
 		
 		// CIDECorePlugin.notifyListeners() funktioniert nicht richtig, wenn man am Ende des Dokuments eine Alternative
 		// einsetzt, die kuerzer ist als der urspruengliche Text. Grund dafuer scheint zu sein, dass man nur die AST-Knoten

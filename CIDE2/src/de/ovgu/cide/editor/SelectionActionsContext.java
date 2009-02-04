@@ -56,6 +56,32 @@ public class SelectionActionsContext {
 
 		return true;
 	}
+	
+	public boolean nodesAreColored() {
+		if (!anyNodesSelected())
+			return false;
+		
+		SourceFileColorManager colorManager = sourceFile.getColorManager();
+		for (IASTNode node : selectedNodes) {
+			if (colorManager.getColors(node).isEmpty())
+				return false;
+		}
+
+		return true;
+	}
+	
+	public boolean nodesHaveNotInheritedColors() {
+		if (!anyNodesSelected())
+			return false;
+		
+		SourceFileColorManager colorManager = sourceFile.getColorManager();
+		for (IASTNode node : selectedNodes) {
+			if (colorManager.getNotInheritedColors(node).isEmpty())
+				return false;
+		}
+		
+		return true;
+	}
 
 	private void updateSelectedASTs(boolean optionalNodesOnly) {
 		try {
