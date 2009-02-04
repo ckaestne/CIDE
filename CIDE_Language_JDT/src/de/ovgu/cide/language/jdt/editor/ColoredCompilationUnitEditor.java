@@ -11,6 +11,11 @@ import org.eclipse.jdt.internal.ui.javaeditor.JavaSourceViewer;
 import org.eclipse.jdt.internal.ui.text.java.IJavaReconcilingListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.source.AnnotationRulerColumn;
+import org.eclipse.jface.text.source.CompositeRuler;
+import org.eclipse.jface.text.source.IAnnotationAccess;
+import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.text.source.IOverviewRuler;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.IVerticalRuler;
@@ -19,7 +24,9 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 
 import de.ovgu.cide.ColoredIDEImages;
+import de.ovgu.cide.af.AlternativeAnnotation;
 import de.ovgu.cide.configuration.jdt.JDTColorManagerBridge;
+import de.ovgu.cide.editor.AnnotationMarkerAccess;
 import de.ovgu.cide.editor.ColoredEditorExtensions;
 import de.ovgu.cide.editor.ColoredEditorExtensions.IProjectionColoredEditor;
 import de.ovgu.cide.features.FeatureModelManager;
@@ -30,13 +37,12 @@ import de.ovgu.cide.language.jdt.editor.inlineprojection.InlineProjectionJavaVie
 import de.ovgu.cide.language.jdt.editor.inlineprojection.InlineProjectionSupport;
 
 @SuppressWarnings("restriction")
-public class ColoredCompilationUnitEditor extends CompilationUnitEditor
-		implements IProjectionColoredEditor {
+public class ColoredCompilationUnitEditor extends CompilationUnitEditor implements IProjectionColoredEditor {
 
 	public static final String EDITOR_ID = "de.ovgu.cide.ColoredCompilationUnitEditor";
 	
-	
 	private final ColoredEditorExtensions editorExtension;
+	private IAnnotationAccess annotationAccess;
 
 	public ColoredCompilationUnitEditor() {
 		editorExtension = new ColoredEditorExtensions(this);
@@ -68,6 +74,20 @@ public class ColoredCompilationUnitEditor extends CompilationUnitEditor
 			return ColoredSourceFile.getColoredSourceFile(file, featureModel);
 		}
 		return null;
+	}
+	
+	@Override
+	protected CompositeRuler createCompositeRuler() {
+		annotationAccess = new AnnotationMarkerAccess();
+		IAnnotationModel annotationModel = getDocumentProvider().getAnnotationModel(getEditorInput());
+        AnnotationRulerColumn annotationRulerCol = new AnnotationRulerColumn(annotationModel, 16, annotationAccess);
+        annotationRulerCol.addAnnotationType(AlternativeAnnotation.ALTERNATIVE_TYPE);
+        
+        CompositeRuler compositeRuler = new CompositeRuler();
+        compositeRuler.setModel(annotationModel);
+        compositeRuler.addDecorator(0, annotationRulerCol);
+        
+        return compositeRuler;
 	}
 
 	private void installCodeColoring() {
@@ -112,8 +132,7 @@ public class ColoredCompilationUnitEditor extends CompilationUnitEditor
 
 	}
 
-	private ListenerList fReconcilingListeners = new ListenerList(
-			ListenerList.IDENTITY);
+	private ListenerList fReconcilingListeners = new ListenerList(ListenerList.IDENTITY);
 
 	private ProjectionColorManager projectionColorManager;
 
@@ -202,7 +221,11 @@ public class ColoredCompilationUnitEditor extends CompilationUnitEditor
 		editorExtension.createErrorPanel(parent);
 		editorExtension.alignErrorPanel(parent);
 		editorExtension.initKeepColorManager();
-
+		editorExtension.installAlternativeAnnotations();
+	}
+	
+	public IDocument getDocument() {
+		return getSourceViewer().getDocument();
 	}
 
 	public ProjectionColorManager getProjectionColorManager() {
@@ -225,4 +248,5 @@ public class ColoredCompilationUnitEditor extends CompilationUnitEditor
 		super.doSave(progressMonitor);
 
 		editorExtension.afterSave(wasDirty);
-	}}
+	}
+}
