@@ -1,13 +1,20 @@
 package de.ovgu.cide.editor;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.ITextSelection;
 
 import cide.gast.IASTNode;
+import cide.gparser.ParseException;
 import de.ovgu.cide.af.Alternative;
 import de.ovgu.cide.editor.keepcolors.ColorCacheManager;
 
+/**
+ * Action that switches to another alternative of the selected code-fragment.
+ * 
+ * @author Malte Rosenthal
+ */
 public class SwitchAlternativeAction extends Action {
 
 	private Alternative alternative;
@@ -44,8 +51,16 @@ public class SwitchAlternativeAction extends Action {
 		}
 		
 		editorExtensions.save();
-		context.getSourceFile().getAltFeatureManager().activateAlternative(alternative, selectedNode);
-		context.getEditorExtensions().getAltAnnotationManager().setAnnotations(context.getSourceFile().getAltFeatureManager().getNode2Alternatives());
+		try {
+			context.getSourceFile().getAltFeatureManager().activateAlternative(alternative, selectedNode);
+			context.getEditorExtensions().getAltAnnotationManager().setAnnotations(context.getSourceFile().getAltFeatureManager().getNode2Alternatives());
+		} catch (CoreException e) {
+			context.getEditorExtensions().markCoreException(e);
+			return;
+		} catch (ParseException e) {
+			context.getEditorExtensions().markParseException(e);
+			return;
+		}
 		
 		// CIDECorePlugin.notifyListeners() funktioniert nicht richtig, wenn man am Ende des Dokuments eine Alternative
 		// einsetzt, die kuerzer ist als der urspruengliche Text. Grund dafuer scheint zu sein, dass man nur die AST-Knoten

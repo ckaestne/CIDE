@@ -2,13 +2,18 @@ package de.ovgu.cide.editor;
 
 import java.util.List;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.MenuManager;
 
 import cide.gast.IASTNode;
+import cide.gparser.ParseException;
 import de.ovgu.cide.af.Alternative;
 import de.ovgu.cide.af.AlternativeFeatureManager;
 
+/**
+ * @author Malte Rosenthal
+ */
 public class SwitchAlternativeSubmenu extends MenuManager implements IContributionItem {
 
 	public SwitchAlternativeSubmenu(SelectionActionsContext context) {
@@ -19,7 +24,16 @@ public class SwitchAlternativeSubmenu extends MenuManager implements IContributi
 			return;
 		IASTNode selectedNode = selectedNodes.get(0);
 		
-		AlternativeFeatureManager altFeatureManager = context.getSourceFile().getAltFeatureManager();
+		AlternativeFeatureManager altFeatureManager;
+		try {
+			altFeatureManager = context.getSourceFile().getAltFeatureManager();
+		} catch (CoreException e) {
+			context.getEditorExtensions().markCoreException(e);
+			return;
+		} catch (ParseException e) {
+			context.getEditorExtensions().markParseException(e);
+			return;
+		}
 		List<Alternative> alternatives = altFeatureManager.getAlternatives(selectedNode.getId());
 		
 		//                              Wenn es nur eine Alternative gibt, muss sie inaktiv sein

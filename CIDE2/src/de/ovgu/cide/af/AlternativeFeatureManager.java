@@ -26,17 +26,9 @@ public class AlternativeFeatureManager {
 	private Map<String, List<Alternative>> id2alternatives;		// Mapped eine ASTNode-ID auf eine Liste verfügbarer Alternativen
 	private Map<IASTNode, List<Alternative>> node2alternatives;	// Mapped einen IASTNode auf eine Liste verfügbarer Alternativen
 	
-	public AlternativeFeatureManager(ColoredSourceFile coloredSourceFile) {
+	public AlternativeFeatureManager(ColoredSourceFile coloredSourceFile) throws CoreException, ParseException {
 		this.coloredSourceFile = coloredSourceFile;
-		try {
-			updateAlternativeList(coloredSourceFile.getAST(), true);
-		} catch (CoreException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		updateAlternativeList(coloredSourceFile.getAST(), true);
 	}
 	
 	private void updateAlternativeList(List<IASTNode> nodes, boolean recursive) {

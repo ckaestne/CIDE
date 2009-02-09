@@ -12,6 +12,11 @@ import org.eclipse.jface.text.source.IAnnotationModel;
 
 import cide.gast.IASTNode;
 
+/**
+ * Manager for annotations (not coloring, but a marker on the vertical ruler) that indicate the existance of alternative code-fragments.
+ * 
+ * @author Malte Rosenthal
+ */
 public class AlternativeAnnotationManager {
 
 	private IAnnotationModel annotationModel;

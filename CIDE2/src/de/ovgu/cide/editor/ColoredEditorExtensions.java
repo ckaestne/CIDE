@@ -26,6 +26,8 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 
+import cide.gparser.ParseException;
+
 import de.ovgu.cide.af.AlternativeAnnotationManager;
 import de.ovgu.cide.editor.keepcolors.ColorCacheManager;
 import de.ovgu.cide.features.IFeature;
@@ -251,7 +253,13 @@ public class ColoredEditorExtensions {
 	
 	public void installAlternativeAnnotations() {
 		altAnnotationManager = new AlternativeAnnotationManager(getAnnotationModel());		
-		altAnnotationManager.setAnnotations(editor.getSourceFile().getAltFeatureManager().getNode2Alternatives());
+		try {
+			altAnnotationManager.setAnnotations(editor.getSourceFile().getAltFeatureManager().getNode2Alternatives());
+		} catch (CoreException e) {
+			markCoreException(e);
+		} catch (ParseException e) {
+			markParseException(e);
+		}
 	}
 	
 	public ColorCacheManager getColorCacheManager() {

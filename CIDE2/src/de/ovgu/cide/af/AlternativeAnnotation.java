@@ -5,6 +5,11 @@ import org.eclipse.swt.graphics.Image;
 
 import de.ovgu.cide.ColoredIDEImages;
 
+/**
+ * Annotation (not coloring, but a marker on the vertical ruler) that indicates the existance of alternative code-fragments.
+ * 
+ * @author Malte Rosenthal
+ */
 public class AlternativeAnnotation extends Annotation {
 	public static String ALTERNATIVE_TYPE = "alternative.type";
 	

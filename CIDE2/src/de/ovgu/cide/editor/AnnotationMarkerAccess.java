@@ -13,6 +13,11 @@ import org.eclipse.swt.widgets.Canvas;
 import de.ovgu.cide.ColoredIDEImages;
 import de.ovgu.cide.af.AlternativeAnnotation;
 
+/**
+ * Ermöglicht Annotationen in Form von Markern auf den vertical ruler zu setzen.
+ * 
+ * @author Malte Rosenthal
+ */
 public class AnnotationMarkerAccess implements IAnnotationAccess, IAnnotationAccessExtension {
 	
     public Object getType(Annotation annotation) {

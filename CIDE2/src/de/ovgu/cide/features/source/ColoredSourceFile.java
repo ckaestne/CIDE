@@ -149,7 +149,7 @@ public class ColoredSourceFile {
 		return colorManager;
 	}
 	
-	public AlternativeFeatureManager getAltFeatureManager() {
+	public AlternativeFeatureManager getAltFeatureManager() throws CoreException, ParseException {
 		if (altFeatureManager == null) {
 			altFeatureManager = new AlternativeFeatureManager(this);
 		}
