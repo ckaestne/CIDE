@@ -25,11 +25,8 @@ public class SimplePrintVisitor extends AbstractPrintVisitor {
 		}
 		if (node instanceof Goal) {
 			Goal n = (Goal)node;
-			{
-				TypeDeclaration v=n.getTypeDeclaration();
-				if (v!=null) {
-					v.accept(this);
-				}
+			for (TypeDeclaration v : n.getTypeDeclaration()) {
+				v.accept(this);
 			}
 			{
 				ASTStringNode v=n.getEof();
@@ -190,26 +187,6 @@ public class SimplePrintVisitor extends AbstractPrintVisitor {
 			printToken("}");
 			return false;
 		}
-		if (node instanceof BinaryOperator1) {
-			BinaryOperator1 n = (BinaryOperator1)node;
-			printToken("+");
-			return false;
-		}
-		if (node instanceof BinaryOperator2) {
-			BinaryOperator2 n = (BinaryOperator2)node;
-			printToken("-");
-			return false;
-		}
-		if (node instanceof BinaryOperator3) {
-			BinaryOperator3 n = (BinaryOperator3)node;
-			printToken("*");
-			return false;
-		}
-		if (node instanceof BinaryOperator4) {
-			BinaryOperator4 n = (BinaryOperator4)node;
-			printToken("/");
-			return false;
-		}
 		if (node instanceof FormalParameterList) {
 			FormalParameterList n = (FormalParameterList)node;
 			Iterator<FormalParameter> listElements = n.getFormalParameter().iterator();
@@ -240,11 +217,6 @@ public class SimplePrintVisitor extends AbstractPrintVisitor {
 		}
 		if (node instanceof Type1) {
 			Type1 n = (Type1)node;
-			printToken("int");
-			return false;
-		}
-		if (node instanceof Type2) {
-			Type2 n = (Type2)node;
 			{
 				ASTStringNode v=n.getIdentifier();
 				if (v!=null) {
@@ -253,113 +225,13 @@ public class SimplePrintVisitor extends AbstractPrintVisitor {
 			}
 			return false;
 		}
-		if (node instanceof Type3) {
-			Type3 n = (Type3)node;
+		if (node instanceof Type2) {
+			Type2 n = (Type2)node;
 			printToken("Object");
 			return false;
 		}
 		if (node instanceof Expression) {
 			Expression n = (Expression)node;
-			{
-				Term v=n.getTerm();
-				if (v!=null) {
-					v.accept(this);
-				}
-			}
-			for (PlusOrMinus v : n.getPlusOrMinus()) {
-				v.accept(this);
-			}
-			return false;
-		}
-		if (node instanceof PlusOrMinus1) {
-			PlusOrMinus1 n = (PlusOrMinus1)node;
-			{
-				PlusExpressionRest v=n.getPlusExpressionRest();
-				if (v!=null) {
-					v.accept(this);
-				}
-			}
-			return false;
-		}
-		if (node instanceof PlusOrMinus2) {
-			PlusOrMinus2 n = (PlusOrMinus2)node;
-			{
-				MinusExpressionRest v=n.getMinusExpressionRest();
-				if (v!=null) {
-					v.accept(this);
-				}
-			}
-			return false;
-		}
-		if (node instanceof PlusExpressionRest) {
-			PlusExpressionRest n = (PlusExpressionRest)node;
-			printToken("+");
-			{
-				Term v=n.getTerm();
-				if (v!=null) {
-					v.accept(this);
-				}
-			}
-			return false;
-		}
-		if (node instanceof MinusExpressionRest) {
-			MinusExpressionRest n = (MinusExpressionRest)node;
-			printToken("-");
-			{
-				Term v=n.getTerm();
-				if (v!=null) {
-					v.accept(this);
-				}
-			}
-			return false;
-		}
-		if (node instanceof Term) {
-			Term n = (Term)node;
-			{
-				PrimaryExpression v=n.getPrimaryExpression();
-				if (v!=null) {
-					v.accept(this);
-				}
-			}
-			for (TimesOrDivide v : n.getTimesOrDivide()) {
-				v.accept(this);
-			}
-			return false;
-		}
-		if (node instanceof TimesOrDivide1) {
-			TimesOrDivide1 n = (TimesOrDivide1)node;
-			{
-				TimesExpressionRest v=n.getTimesExpressionRest();
-				if (v!=null) {
-					v.accept(this);
-				}
-			}
-			return false;
-		}
-		if (node instanceof TimesOrDivide2) {
-			TimesOrDivide2 n = (TimesOrDivide2)node;
-			{
-				DivideExpressionRest v=n.getDivideExpressionRest();
-				if (v!=null) {
-					v.accept(this);
-				}
-			}
-			return false;
-		}
-		if (node instanceof TimesExpressionRest) {
-			TimesExpressionRest n = (TimesExpressionRest)node;
-			printToken("*");
-			{
-				PrimaryExpression v=n.getPrimaryExpression();
-				if (v!=null) {
-					v.accept(this);
-				}
-			}
-			return false;
-		}
-		if (node instanceof DivideExpressionRest) {
-			DivideExpressionRest n = (DivideExpressionRest)node;
-			printToken("/");
 			{
 				PrimaryExpression v=n.getPrimaryExpression();
 				if (v!=null) {

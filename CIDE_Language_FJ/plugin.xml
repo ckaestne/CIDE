@@ -10,5 +10,14 @@
             name="Featherweight Java Language Extension">
       </language>
    </extension>
+   <extension
+         point="de.ovgu.cide.typing.typingProvider">
+      <typingProvider
+            id="de.ovgu.cide.typing.fj"
+            languageId="de.ovgu.cide.language.fj"
+            name="cFJ Typing"
+            provider="de.ovgu.cide.typing.fj.CFJTypingExtension">
+      </typingProvider>
+   </extension>
 
 </plugin>

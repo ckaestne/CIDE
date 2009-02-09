@@ -1,3 +1,9 @@
+/* ********************************************************************************************************************
+ * ATTENTION!
+ *            Please do not change the grammar without adapting the type-system (package de.ovgu.cide.typing.fj)!
+ *            The names of the (non-)terminals are used in the source-code.
+ * *******************************************************************************************************************/
+
 options {
   STATIC = false;
 }
@@ -121,7 +127,7 @@ TOKEN :
 {
   < THIS: "this" >
 | < OBJECT: "Object" >
-| < CLASS: "class" >| < EXTENDS: "extends" >| < INT: "int" >| < NEW: "new" >| < RETURN: "return" >| < SUPER: "super" >}
+| < CLASS: "class" >| < EXTENDS: "extends" >| /*< INT: "int" >|*/ < NEW: "new" >| < RETURN: "return" >| < SUPER: "super" >}
 
 /* LITERALS */
 
@@ -203,13 +209,15 @@ TOKEN :
 {
   < PLUS: "+" >| < MINUS: "-" >| < STAR: "*" >| < SLASH: "/" >}
 
-
-
-
+/* ********************************************************************************************************************
+ * ATTENTION!
+ *            Please do not change the grammar without adapting the type-system (package de.ovgu.cide.typing.fj)!
+ *            The names of the (non-)terminals are used in the source-code.
+ * *******************************************************************************************************************/
 
 GRAMMARSTART
 
-Goal :  TypeDeclaration <EOF>;
+Goal :  ( TypeDeclaration )* <EOF>;
 
 TypeDeclaration : 
 	"class" <IDENTIFIER> "extends" ExtendedType "{" ( LL(2) VarDeclaration )*
@@ -230,12 +238,14 @@ FieldAssign : "this" "." <IDENTIFIER> "=" <IDENTIFIER> ";";
 MethodDeclaration : 
 	Type <IDENTIFIER> "(" ( FormalParameterList )? ")" "{" "return"
 	Expression ";" "}";
-	
+
+/*	
 BinaryOperator : 
 	"+"
 	| "-"
 	| "*"
 	| "/";
+*/
 
 FormalParameterList : 
 	&LI FormalParameter ("," &LI FormalParameter)*;
@@ -244,10 +254,14 @@ FormalParameter :
 	Type <IDENTIFIER>;
 	
 Type : 
-	"int"
-	| <IDENTIFIER>
+	//"int"
+	//| <IDENTIFIER>
+	<IDENTIFIER>
 	| "Object";
 
+Expression : PrimaryExpression;
+
+/*
 Expression : Term ( PlusOrMinus )*;
 PlusOrMinus: PlusExpressionRest | MinusExpressionRest;
 
@@ -259,6 +273,7 @@ TimesOrDivide: TimesExpressionRest | DivideExpressionRest;
 	
 TimesExpressionRest : "*" PrimaryExpression;
 DivideExpressionRest : "/" PrimaryExpression;
+*/
 
 PrimaryExpression : 
 	<INTEGER_LITERAL>

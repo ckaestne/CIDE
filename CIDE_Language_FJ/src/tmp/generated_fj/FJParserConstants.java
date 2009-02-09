@@ -11,27 +11,26 @@ public interface FJParserConstants {
   int OBJECT = 14;
   int CLASS = 15;
   int EXTENDS = 16;
-  int INT = 17;
-  int NEW = 18;
-  int RETURN = 19;
-  int SUPER = 20;
-  int INTEGER_LITERAL = 21;
-  int DECIMAL_LITERAL = 22;
-  int HEX_LITERAL = 23;
-  int OCTAL_LITERAL = 24;
-  int IDENTIFIER = 25;
-  int LETTER = 26;
-  int DIGIT = 27;
-  int LPAREN = 28;
-  int RPAREN = 29;
-  int LBRACE = 30;
-  int RBRACE = 31;
-  int COMMA = 32;
-  int DOT = 33;
-  int PLUS = 34;
-  int MINUS = 35;
-  int STAR = 36;
-  int SLASH = 37;
+  int NEW = 17;
+  int RETURN = 18;
+  int SUPER = 19;
+  int INTEGER_LITERAL = 20;
+  int DECIMAL_LITERAL = 21;
+  int HEX_LITERAL = 22;
+  int OCTAL_LITERAL = 23;
+  int IDENTIFIER = 24;
+  int LETTER = 25;
+  int DIGIT = 26;
+  int LPAREN = 27;
+  int RPAREN = 28;
+  int LBRACE = 29;
+  int RBRACE = 30;
+  int COMMA = 31;
+  int DOT = 32;
+  int PLUS = 33;
+  int MINUS = 34;
+  int STAR = 35;
+  int SLASH = 36;
 
   int DEFAULT = 0;
   int IN_SINGLE_LINE_COMMENT = 1;
@@ -56,7 +55,6 @@ public interface FJParserConstants {
     "\"Object\"",
     "\"class\"",
     "\"extends\"",
-    "\"int\"",
     "\"new\"",
     "\"return\"",
     "\"super\"",

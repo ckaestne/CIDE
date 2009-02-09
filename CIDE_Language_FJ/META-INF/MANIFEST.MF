@@ -5,5 +5,8 @@ Bundle-SymbolicName: de.ovgu.cide.language.fj;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Export-Package: tmp.generated_fj
 Require-Bundle: de.ovgu.cide.ast,
- de.ovgu.cide.core
+ de.ovgu.cide.core,
+ de.ovgu.cide.typing,
+ org.eclipse.core.runtime;bundle-version="3.4.0"
 Bundle-Vendor: Christian Kaestner, University of Magdeburg
+Import-Package: org.eclipse.core.resources

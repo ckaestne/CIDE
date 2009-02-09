@@ -61,13 +61,26 @@ public class FJParser implements FJParserConstants {
 
   final public Goal Goal() throws ParseException {
         TypeDeclaration typeDeclaration;
+        ArrayList<TypeDeclaration> typeDeclarationList = new ArrayList<TypeDeclaration>();
         Token t;
         ASTStringNode eof;
         Token firstToken=token;
-    typeDeclaration = TypeDeclaration();
+    label_1:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case CLASS:
+        ;
+        break;
+      default:
+        jj_la1[0] = jj_gen;
+        break label_1;
+      }
+      typeDeclaration = TypeDeclaration();
+                                           typeDeclarationList.add(typeDeclaration);
+    }
     t = jj_consume_token(0);
-                                                  eof=new ASTStringNode(t.image,new WToken(t));
-         {if (true) return new Goal(typeDeclaration, eof, firstToken.next,token);}
+                                                                                                eof=new ASTStringNode(t.image,new WToken(t));
+         {if (true) return new Goal(typeDeclarationList, eof, firstToken.next,token);}
     throw new Error("Missing return statement in function");
   }
 
@@ -87,28 +100,27 @@ public class FJParser implements FJParserConstants {
     jj_consume_token(EXTENDS);
     extendedType = ExtendedType();
     jj_consume_token(LBRACE);
-    label_1:
+    label_2:
     while (true) {
       if (jj_2_1(2)) {
         ;
       } else {
-        break label_1;
+        break label_2;
       }
       varDeclaration = VarDeclaration();
                                                                                                                                                                              varDeclarationList.add(varDeclaration);
     }
     classConstructor = ClassConstructor();
-    label_2:
+    label_3:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case OBJECT:
-      case INT:
       case IDENTIFIER:
         ;
         break;
       default:
-        jj_la1[0] = jj_gen;
-        break label_2;
+        jj_la1[1] = jj_gen;
+        break label_3;
       }
       methodDeclaration = MethodDeclaration();
                                                                                                                                                                                                                                                                                                    methodDeclarationList.add(methodDeclaration);
@@ -133,7 +145,7 @@ public class FJParser implements FJParserConstants {
          {if (true) return new ExtendedType2(firstToken.next,token);}
       break;
     default:
-      jj_la1[1] = jj_gen;
+      jj_la1[2] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -148,7 +160,7 @@ public class FJParser implements FJParserConstants {
     type = Type();
     t = jj_consume_token(IDENTIFIER);
                                    identifier=new ASTStringNode(t.image,new WToken(t));
-    jj_consume_token(38);
+    jj_consume_token(37);
          {if (true) return new VarDeclaration(type, identifier, firstToken.next,token);}
     throw new Error("Missing return statement in function");
   }
@@ -164,12 +176,11 @@ public class FJParser implements FJParserConstants {
     jj_consume_token(LPAREN);
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case OBJECT:
-    case INT:
     case IDENTIFIER:
       formalParameterList = FormalParameterList();
       break;
     default:
-      jj_la1[2] = jj_gen;
+      jj_la1[3] = jj_gen;
       ;
     }
     jj_consume_token(RPAREN);
@@ -185,20 +196,20 @@ public class FJParser implements FJParserConstants {
       expressionList = ExpressionList();
       break;
     default:
-      jj_la1[3] = jj_gen;
+      jj_la1[4] = jj_gen;
       ;
     }
     jj_consume_token(RPAREN);
-    jj_consume_token(38);
-    label_3:
+    jj_consume_token(37);
+    label_4:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case THIS:
         ;
         break;
       default:
-        jj_la1[4] = jj_gen;
-        break label_3;
+        jj_la1[5] = jj_gen;
+        break label_4;
       }
       fieldAssign = FieldAssign();
                                                                                                                                                              fieldAssignList.add(fieldAssign);
@@ -217,10 +228,10 @@ public class FJParser implements FJParserConstants {
     jj_consume_token(DOT);
     t = jj_consume_token(IDENTIFIER);
                                   identifier=new ASTStringNode(t.image,new WToken(t));
-    jj_consume_token(39);
+    jj_consume_token(38);
     t = jj_consume_token(IDENTIFIER);
                                                                                                            identifier1=new ASTStringNode(t.image,new WToken(t));
-    jj_consume_token(38);
+    jj_consume_token(37);
          {if (true) return new FieldAssign(identifier, identifier1, firstToken.next,token);}
     throw new Error("Missing return statement in function");
   }
@@ -238,48 +249,20 @@ public class FJParser implements FJParserConstants {
     jj_consume_token(LPAREN);
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case OBJECT:
-    case INT:
     case IDENTIFIER:
       formalParameterList = FormalParameterList();
       break;
     default:
-      jj_la1[5] = jj_gen;
+      jj_la1[6] = jj_gen;
       ;
     }
     jj_consume_token(RPAREN);
     jj_consume_token(LBRACE);
     jj_consume_token(RETURN);
     expression = Expression();
-    jj_consume_token(38);
+    jj_consume_token(37);
     jj_consume_token(RBRACE);
          {if (true) return new MethodDeclaration(type, identifier, formalParameterList, expression, firstToken.next,token);}
-    throw new Error("Missing return statement in function");
-  }
-
-  final public BinaryOperator BinaryOperator() throws ParseException {
-        Token firstToken=token;
-    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-    case PLUS:
-      jj_consume_token(PLUS);
-         {if (true) return new BinaryOperator1(firstToken.next,token);}
-      break;
-    case MINUS:
-      jj_consume_token(MINUS);
-         {if (true) return new BinaryOperator2(firstToken.next,token);}
-      break;
-    case STAR:
-      jj_consume_token(STAR);
-         {if (true) return new BinaryOperator3(firstToken.next,token);}
-      break;
-    case SLASH:
-      jj_consume_token(SLASH);
-         {if (true) return new BinaryOperator4(firstToken.next,token);}
-      break;
-    default:
-      jj_la1[6] = jj_gen;
-      jj_consume_token(-1);
-      throw new ParseException();
-    }
     throw new Error("Missing return statement in function");
   }
 
@@ -291,7 +274,7 @@ public class FJParser implements FJParserConstants {
         Token firstToken=token;
     formalParameter = FormalParameter();
                                           list0.add(formalParameter);
-    label_4:
+    label_5:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case COMMA:
@@ -299,7 +282,7 @@ public class FJParser implements FJParserConstants {
         break;
       default:
         jj_la1[7] = jj_gen;
-        break label_4;
+        break label_5;
       }
       jj_consume_token(COMMA);
       formalParameter1 = FormalParameter();
@@ -326,18 +309,14 @@ public class FJParser implements FJParserConstants {
         ASTStringNode identifier;
         Token firstToken=token;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-    case INT:
-      jj_consume_token(INT);
-         {if (true) return new Type1(firstToken.next,token);}
-      break;
     case IDENTIFIER:
       t = jj_consume_token(IDENTIFIER);
                        identifier=new ASTStringNode(t.image,new WToken(t));
-         {if (true) return new Type2(identifier, firstToken.next,token);}
+         {if (true) return new Type1(identifier, firstToken.next,token);}
       break;
     case OBJECT:
       jj_consume_token(OBJECT);
-         {if (true) return new Type3(firstToken.next,token);}
+         {if (true) return new Type2(firstToken.next,token);}
       break;
     default:
       jj_la1[8] = jj_gen;
@@ -348,128 +327,10 @@ public class FJParser implements FJParserConstants {
   }
 
   final public Expression Expression() throws ParseException {
-        Term term;
-        PlusOrMinus plusOrMinus;
-        ArrayList<PlusOrMinus> plusOrMinusList = new ArrayList<PlusOrMinus>();
-        Token firstToken=token;
-    term = Term();
-    label_5:
-    while (true) {
-      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case PLUS:
-      case MINUS:
-        ;
-        break;
-      default:
-        jj_la1[9] = jj_gen;
-        break label_5;
-      }
-      plusOrMinus = PlusOrMinus();
-                                               plusOrMinusList.add(plusOrMinus);
-    }
-         {if (true) return new Expression(term, plusOrMinusList, firstToken.next,token);}
-    throw new Error("Missing return statement in function");
-  }
-
-  final public PlusOrMinus PlusOrMinus() throws ParseException {
-        PlusExpressionRest plusExpressionRest;
-        MinusExpressionRest minusExpressionRest;
-        Token firstToken=token;
-    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-    case PLUS:
-      plusExpressionRest = PlusExpressionRest();
-         {if (true) return new PlusOrMinus1(plusExpressionRest, firstToken.next,token);}
-      break;
-    case MINUS:
-      minusExpressionRest = MinusExpressionRest();
-         {if (true) return new PlusOrMinus2(minusExpressionRest, firstToken.next,token);}
-      break;
-    default:
-      jj_la1[10] = jj_gen;
-      jj_consume_token(-1);
-      throw new ParseException();
-    }
-    throw new Error("Missing return statement in function");
-  }
-
-  final public PlusExpressionRest PlusExpressionRest() throws ParseException {
-        Term term;
-        Token firstToken=token;
-    jj_consume_token(PLUS);
-    term = Term();
-         {if (true) return new PlusExpressionRest(term, firstToken.next,token);}
-    throw new Error("Missing return statement in function");
-  }
-
-  final public MinusExpressionRest MinusExpressionRest() throws ParseException {
-        Term term;
-        Token firstToken=token;
-    jj_consume_token(MINUS);
-    term = Term();
-         {if (true) return new MinusExpressionRest(term, firstToken.next,token);}
-    throw new Error("Missing return statement in function");
-  }
-
-  final public Term Term() throws ParseException {
-        PrimaryExpression primaryExpression;
-        TimesOrDivide timesOrDivide;
-        ArrayList<TimesOrDivide> timesOrDivideList = new ArrayList<TimesOrDivide>();
-        Token firstToken=token;
-    primaryExpression = PrimaryExpression();
-    label_6:
-    while (true) {
-      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case STAR:
-      case SLASH:
-        ;
-        break;
-      default:
-        jj_la1[11] = jj_gen;
-        break label_6;
-      }
-      timesOrDivide = TimesOrDivide();
-                                                                             timesOrDivideList.add(timesOrDivide);
-    }
-         {if (true) return new Term(primaryExpression, timesOrDivideList, firstToken.next,token);}
-    throw new Error("Missing return statement in function");
-  }
-
-  final public TimesOrDivide TimesOrDivide() throws ParseException {
-        TimesExpressionRest timesExpressionRest;
-        DivideExpressionRest divideExpressionRest;
-        Token firstToken=token;
-    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-    case STAR:
-      timesExpressionRest = TimesExpressionRest();
-         {if (true) return new TimesOrDivide1(timesExpressionRest, firstToken.next,token);}
-      break;
-    case SLASH:
-      divideExpressionRest = DivideExpressionRest();
-         {if (true) return new TimesOrDivide2(divideExpressionRest, firstToken.next,token);}
-      break;
-    default:
-      jj_la1[12] = jj_gen;
-      jj_consume_token(-1);
-      throw new ParseException();
-    }
-    throw new Error("Missing return statement in function");
-  }
-
-  final public TimesExpressionRest TimesExpressionRest() throws ParseException {
         PrimaryExpression primaryExpression;
         Token firstToken=token;
-    jj_consume_token(STAR);
     primaryExpression = PrimaryExpression();
-         {if (true) return new TimesExpressionRest(primaryExpression, firstToken.next,token);}
-    throw new Error("Missing return statement in function");
-  }
-
-  final public DivideExpressionRest DivideExpressionRest() throws ParseException {
-        PrimaryExpression primaryExpression;
-        Token firstToken=token;
-    jj_consume_token(SLASH);
-    primaryExpression = PrimaryExpression();
-         {if (true) return new DivideExpressionRest(primaryExpression, firstToken.next,token);}
+         {if (true) return new Expression(primaryExpression, firstToken.next,token);}
     throw new Error("Missing return statement in function");
   }
 
@@ -490,7 +351,7 @@ public class FJParser implements FJParserConstants {
          {if (true) return new PrimaryExpression1(integer_literal, firstToken.next,token);}
       break;
     default:
-      jj_la1[13] = jj_gen;
+      jj_la1[9] = jj_gen;
       if (jj_2_2(2147483647)) {
         methodInvoke = MethodInvoke();
          {if (true) return new PrimaryExpression2(methodInvoke, firstToken.next,token);}
@@ -505,7 +366,7 @@ public class FJParser implements FJParserConstants {
          {if (true) return new PrimaryExpression4(identifier, firstToken.next,token);}
           break;
         default:
-          jj_la1[14] = jj_gen;
+          jj_la1[10] = jj_gen;
           if (jj_2_4(2147483647)) {
             allocationExpression = AllocationExpression();
          {if (true) return new PrimaryExpression5(allocationExpression, firstToken.next,token);}
@@ -519,7 +380,7 @@ public class FJParser implements FJParserConstants {
          {if (true) return new PrimaryExpression7(nestedExpression, firstToken.next,token);}
               break;
             default:
-              jj_la1[15] = jj_gen;
+              jj_la1[11] = jj_gen;
               jj_consume_token(-1);
               throw new ParseException();
             }
@@ -550,7 +411,7 @@ public class FJParser implements FJParserConstants {
       expressionList = ExpressionList();
       break;
     default:
-      jj_la1[16] = jj_gen;
+      jj_la1[12] = jj_gen;
       ;
     }
     jj_consume_token(RPAREN);
@@ -596,7 +457,7 @@ public class FJParser implements FJParserConstants {
          {if (true) return new InvokeTarget4(firstToken.next,token);}
       break;
     default:
-      jj_la1[17] = jj_gen;
+      jj_la1[13] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -621,7 +482,7 @@ public class FJParser implements FJParserConstants {
       expressionList = ExpressionList();
       break;
     default:
-      jj_la1[18] = jj_gen;
+      jj_la1[14] = jj_gen;
       ;
     }
     jj_consume_token(RPAREN);
@@ -659,15 +520,15 @@ public class FJParser implements FJParserConstants {
         Token firstToken=token;
     expression = Expression();
                                 list0.add(expression);
-    label_7:
+    label_6:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case COMMA:
         ;
         break;
       default:
-        jj_la1[19] = jj_gen;
-        break label_7;
+        jj_la1[15] = jj_gen;
+        break label_6;
       }
       jj_consume_token(COMMA);
       expression1 = Expression();
@@ -712,63 +573,28 @@ public class FJParser implements FJParserConstants {
     finally { jj_save(4, xla); }
   }
 
-  final private boolean jj_3R_42() {
-    if (jj_scan_token(MINUS)) return true;
-    if (jj_3R_32()) return true;
+  final private boolean jj_3R_26() {
+    if (jj_3R_27()) return true;
     return false;
   }
 
-  final private boolean jj_3R_15() {
-    if (jj_3R_25()) return true;
-    return false;
-  }
-
-  final private boolean jj_3R_41() {
-    if (jj_scan_token(PLUS)) return true;
-    if (jj_3R_32()) return true;
-    return false;
-  }
-
-  final private boolean jj_3R_33() {
-    if (jj_3R_35()) return true;
-    return false;
-  }
-
-  final private boolean jj_3R_10() {
-    if (jj_3R_14()) return true;
-    if (jj_scan_token(DOT)) return true;
-    if (jj_scan_token(IDENTIFIER)) return true;
-    return false;
-  }
-
-  final private boolean jj_3R_38() {
-    if (jj_3R_42()) return true;
-    return false;
-  }
-
-  final private boolean jj_3R_37() {
-    if (jj_3R_41()) return true;
+  final private boolean jj_3_5() {
+    if (jj_3R_11()) return true;
     return false;
   }
 
   final private boolean jj_3_1() {
-    if (jj_3R_8()) return true;
+    if (jj_3R_7()) return true;
     return false;
   }
 
-  final private boolean jj_3R_35() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3R_37()) {
-    jj_scanpos = xsp;
-    if (jj_3R_38()) return true;
-    }
+  final private boolean jj_3_4() {
+    if (jj_3R_10()) return true;
     return false;
   }
 
-  final private boolean jj_3R_9() {
-    if (jj_3R_14()) return true;
-    if (jj_scan_token(DOT)) return true;
+  final private boolean jj_3R_10() {
+    if (jj_scan_token(NEW)) return true;
     if (jj_scan_token(IDENTIFIER)) return true;
     if (jj_scan_token(LPAREN)) return true;
     Token xsp;
@@ -778,237 +604,175 @@ public class FJParser implements FJParserConstants {
     return false;
   }
 
-  final private boolean jj_3R_8() {
-    if (jj_3R_13()) return true;
-    if (jj_scan_token(IDENTIFIER)) return true;
-    return false;
-  }
-
-  final private boolean jj_3R_28() {
-    if (jj_3R_29()) return true;
-    return false;
-  }
-
-  final private boolean jj_3R_30() {
-    if (jj_3R_32()) return true;
-    Token xsp;
-    while (true) {
-      xsp = jj_scanpos;
-      if (jj_3R_33()) { jj_scanpos = xsp; break; }
-    }
-    return false;
-  }
-
-  final private boolean jj_3_5() {
-    if (jj_3R_12()) return true;
-    return false;
-  }
-
-  final private boolean jj_3_4() {
-    if (jj_3R_11()) return true;
-    return false;
-  }
-
-  final private boolean jj_3R_20() {
-    if (jj_scan_token(OBJECT)) return true;
-    return false;
-  }
-
-  final private boolean jj_3R_27() {
-    if (jj_scan_token(IDENTIFIER)) return true;
-    return false;
-  }
-
-  final private boolean jj_3R_19() {
+  final private boolean jj_3R_25() {
     if (jj_scan_token(IDENTIFIER)) return true;
     return false;
   }
 
   final private boolean jj_3_3() {
-    if (jj_3R_10()) return true;
-    return false;
-  }
-
-  final private boolean jj_3R_18() {
-    if (jj_scan_token(INT)) return true;
-    return false;
-  }
-
-  final private boolean jj_3_2() {
     if (jj_3R_9()) return true;
     return false;
   }
 
-  final private boolean jj_3R_26() {
+  final private boolean jj_3R_22() {
+    if (jj_scan_token(THIS)) return true;
+    return false;
+  }
+
+  final private boolean jj_3_2() {
+    if (jj_3R_8()) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_21() {
+    if (jj_scan_token(IDENTIFIER)) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_24() {
     if (jj_scan_token(INTEGER_LITERAL)) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_7() {
+    if (jj_3R_12()) return true;
+    if (jj_scan_token(IDENTIFIER)) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_20() {
+    if (jj_3R_27()) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_15() {
+    if (jj_3R_23()) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_19() {
+    if (jj_3R_10()) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_29() {
+    if (jj_scan_token(COMMA)) return true;
+    if (jj_3R_28()) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_16() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_24()) {
+    jj_scanpos = xsp;
+    if (jj_3_2()) {
+    jj_scanpos = xsp;
+    if (jj_3_3()) {
+    jj_scanpos = xsp;
+    if (jj_3R_25()) {
+    jj_scanpos = xsp;
+    if (jj_3_4()) {
+    jj_scanpos = xsp;
+    if (jj_3_5()) {
+    jj_scanpos = xsp;
+    if (jj_3R_26()) return true;
+    }
+    }
+    }
+    }
+    }
+    }
     return false;
   }
 
   final private boolean jj_3R_13() {
     Token xsp;
     xsp = jj_scanpos;
-    if (jj_3R_18()) {
-    jj_scanpos = xsp;
     if (jj_3R_19()) {
     jj_scanpos = xsp;
-    if (jj_3R_20()) return true;
-    }
-    }
-    return false;
-  }
-
-  final private boolean jj_3R_34() {
-    if (jj_3R_36()) return true;
-    return false;
-  }
-
-  final private boolean jj_3R_17() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3R_26()) {
+    if (jj_3R_20()) {
     jj_scanpos = xsp;
-    if (jj_3_2()) {
+    if (jj_3R_21()) {
     jj_scanpos = xsp;
-    if (jj_3_3()) {
-    jj_scanpos = xsp;
-    if (jj_3R_27()) {
-    jj_scanpos = xsp;
-    if (jj_3_4()) {
-    jj_scanpos = xsp;
-    if (jj_3_5()) {
-    jj_scanpos = xsp;
-    if (jj_3R_28()) return true;
+    if (jj_3R_22()) return true;
     }
     }
-    }
-    }
-    }
-    }
-    return false;
-  }
-
-  final private boolean jj_3R_25() {
-    if (jj_3R_30()) return true;
-    Token xsp;
-    while (true) {
-      xsp = jj_scanpos;
-      if (jj_3R_31()) { jj_scanpos = xsp; break; }
-    }
-    return false;
-  }
-
-  final private boolean jj_3R_44() {
-    if (jj_scan_token(SLASH)) return true;
-    if (jj_3R_17()) return true;
-    return false;
-  }
-
-  final private boolean jj_3R_29() {
-    if (jj_scan_token(LPAREN)) return true;
-    if (jj_3R_30()) return true;
-    if (jj_scan_token(RPAREN)) return true;
-    return false;
-  }
-
-  final private boolean jj_3R_43() {
-    if (jj_scan_token(STAR)) return true;
-    if (jj_3R_17()) return true;
-    return false;
-  }
-
-  final private boolean jj_3R_40() {
-    if (jj_3R_44()) return true;
-    return false;
-  }
-
-  final private boolean jj_3R_12() {
-    if (jj_scan_token(LPAREN)) return true;
-    if (jj_3R_13()) return true;
-    if (jj_scan_token(RPAREN)) return true;
-    if (jj_3R_17()) return true;
-    return false;
-  }
-
-  final private boolean jj_3R_39() {
-    if (jj_3R_43()) return true;
-    return false;
-  }
-
-  final private boolean jj_3R_36() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3R_39()) {
-    jj_scanpos = xsp;
-    if (jj_3R_40()) return true;
-    }
-    return false;
-  }
-
-  final private boolean jj_3R_11() {
-    if (jj_scan_token(NEW)) return true;
-    if (jj_scan_token(IDENTIFIER)) return true;
-    if (jj_scan_token(LPAREN)) return true;
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3R_16()) jj_scanpos = xsp;
-    if (jj_scan_token(RPAREN)) return true;
-    return false;
-  }
-
-  final private boolean jj_3R_24() {
-    if (jj_scan_token(THIS)) return true;
-    return false;
-  }
-
-  final private boolean jj_3R_32() {
-    if (jj_3R_17()) return true;
-    Token xsp;
-    while (true) {
-      xsp = jj_scanpos;
-      if (jj_3R_34()) { jj_scanpos = xsp; break; }
     }
     return false;
   }
 
   final private boolean jj_3R_23() {
-    if (jj_scan_token(IDENTIFIER)) return true;
-    return false;
-  }
-
-  final private boolean jj_3R_22() {
-    if (jj_3R_29()) return true;
-    return false;
-  }
-
-  final private boolean jj_3R_16() {
-    if (jj_3R_25()) return true;
-    return false;
-  }
-
-  final private boolean jj_3R_21() {
-    if (jj_3R_11()) return true;
-    return false;
-  }
-
-  final private boolean jj_3R_31() {
-    if (jj_scan_token(COMMA)) return true;
-    if (jj_3R_30()) return true;
+    if (jj_3R_28()) return true;
+    Token xsp;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3R_29()) { jj_scanpos = xsp; break; }
+    }
     return false;
   }
 
   final private boolean jj_3R_14() {
+    if (jj_3R_23()) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_9() {
+    if (jj_3R_13()) return true;
+    if (jj_scan_token(DOT)) return true;
+    if (jj_scan_token(IDENTIFIER)) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_28() {
+    if (jj_3R_16()) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_27() {
+    if (jj_scan_token(LPAREN)) return true;
+    if (jj_3R_28()) return true;
+    if (jj_scan_token(RPAREN)) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_18() {
+    if (jj_scan_token(OBJECT)) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_17() {
+    if (jj_scan_token(IDENTIFIER)) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_8() {
+    if (jj_3R_13()) return true;
+    if (jj_scan_token(DOT)) return true;
+    if (jj_scan_token(IDENTIFIER)) return true;
+    if (jj_scan_token(LPAREN)) return true;
     Token xsp;
     xsp = jj_scanpos;
-    if (jj_3R_21()) {
+    if (jj_3R_14()) jj_scanpos = xsp;
+    if (jj_scan_token(RPAREN)) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_12() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_17()) {
     jj_scanpos = xsp;
-    if (jj_3R_22()) {
-    jj_scanpos = xsp;
-    if (jj_3R_23()) {
-    jj_scanpos = xsp;
-    if (jj_3R_24()) return true;
+    if (jj_3R_18()) return true;
     }
-    }
-    }
+    return false;
+  }
+
+  final private boolean jj_3R_11() {
+    if (jj_scan_token(LPAREN)) return true;
+    if (jj_3R_12()) return true;
+    if (jj_scan_token(RPAREN)) return true;
+    if (jj_3R_16()) return true;
     return false;
   }
 
@@ -1020,7 +784,7 @@ public class FJParser implements FJParserConstants {
   public boolean lookingAhead = false;
   private boolean jj_semLA;
   private int jj_gen;
-  final private int[] jj_la1 = new int[20];
+  final private int[] jj_la1 = new int[16];
   static private int[] jj_la1_0;
   static private int[] jj_la1_1;
   static {
@@ -1028,10 +792,10 @@ public class FJParser implements FJParserConstants {
       jj_la1_1();
    }
    private static void jj_la1_0() {
-      jj_la1_0 = new int[] {0x2024000,0x2004000,0x2024000,0x12242000,0x2000,0x2024000,0x0,0x0,0x2024000,0x0,0x0,0x0,0x0,0x200000,0x2000000,0x10000000,0x12242000,0x12042000,0x12242000,0x0,};
+      jj_la1_0 = new int[] {0x8000,0x1004000,0x1004000,0x1004000,0x9122000,0x2000,0x1004000,0x80000000,0x1004000,0x100000,0x1000000,0x8000000,0x9122000,0x9022000,0x9122000,0x80000000,};
    }
    private static void jj_la1_1() {
-      jj_la1_1 = new int[] {0x0,0x0,0x0,0x0,0x0,0x0,0x3c,0x1,0x0,0xc,0xc,0x30,0x30,0x0,0x0,0x0,0x0,0x0,0x0,0x1,};
+      jj_la1_1 = new int[] {0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,};
    }
   final private JJCalls[] jj_2_rtns = new JJCalls[5];
   private boolean jj_rescan = false;
@@ -1042,7 +806,7 @@ public class FJParser implements FJParserConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 20; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 16; i++) jj_la1[i] = -1;
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
@@ -1051,7 +815,7 @@ public class FJParser implements FJParserConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 20; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 16; i++) jj_la1[i] = -1;
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
@@ -1060,7 +824,7 @@ public class FJParser implements FJParserConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 20; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 16; i++) jj_la1[i] = -1;
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
@@ -1069,7 +833,7 @@ public class FJParser implements FJParserConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 20; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 16; i++) jj_la1[i] = -1;
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
@@ -1180,15 +944,15 @@ public class FJParser implements FJParserConstants {
 
   public ParseException generateParseException() {
     jj_expentries.removeAllElements();
-    boolean[] la1tokens = new boolean[40];
-    for (int i = 0; i < 40; i++) {
+    boolean[] la1tokens = new boolean[39];
+    for (int i = 0; i < 39; i++) {
       la1tokens[i] = false;
     }
     if (jj_kind >= 0) {
       la1tokens[jj_kind] = true;
       jj_kind = -1;
     }
-    for (int i = 0; i < 20; i++) {
+    for (int i = 0; i < 16; i++) {
       if (jj_la1[i] == jj_gen) {
         for (int j = 0; j < 32; j++) {
           if ((jj_la1_0[i] & (1<<j)) != 0) {
@@ -1200,7 +964,7 @@ public class FJParser implements FJParserConstants {
         }
       }
     }
-    for (int i = 0; i < 40; i++) {
+    for (int i = 0; i < 39; i++) {
       if (la1tokens[i]) {
         jj_expentry = new int[1];
         jj_expentry[0] = i;

@@ -6,9 +6,9 @@ import cide.greferences.*;
 import java.util.*;
 
 public class Goal extends GenASTNode implements ISourceFile {
-  public Goal(TypeDeclaration typeDeclaration, ASTStringNode eof, Token firstToken, Token lastToken) {
+  public Goal(ArrayList<TypeDeclaration> typeDeclaration, ASTStringNode eof, Token firstToken, Token lastToken) {
     super(new Property[] {
-      new PropertyOne<TypeDeclaration>("typeDeclaration", typeDeclaration),
+      new PropertyZeroOrMore<TypeDeclaration>("typeDeclaration", typeDeclaration),
       new PropertyOne<ASTStringNode>("eof", eof)
     }, firstToken, lastToken);
   }
@@ -18,8 +18,8 @@ public class Goal extends GenASTNode implements ISourceFile {
   public IASTNode deepCopy() {
     return new Goal(cloneProperties(),firstToken,lastToken);
   }
-  public TypeDeclaration getTypeDeclaration() {
-    return ((PropertyOne<TypeDeclaration>)getProperty("typeDeclaration")).getValue();
+  public ArrayList<TypeDeclaration> getTypeDeclaration() {
+    return ((PropertyZeroOrMore<TypeDeclaration>)getProperty("typeDeclaration")).getValue();
   }
   public ASTStringNode getEof() {
     return ((PropertyOne<ASTStringNode>)getProperty("eof")).getValue();

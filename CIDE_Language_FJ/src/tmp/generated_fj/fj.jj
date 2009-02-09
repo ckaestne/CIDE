@@ -1,3 +1,9 @@
+/* ********************************************************************************************************************
+ * ATTENTION!
+ *            Please do not change the grammar without adapting the type-system (package de.ovgu.cide.typing.fj)!
+ *            The names of the (non-)terminals are used in the source-code.
+ * *******************************************************************************************************************/
+
 options {
   STATIC = false;
 }
@@ -121,7 +127,7 @@ TOKEN :
 {
   < THIS: "this" >
 | < OBJECT: "Object" >
-| < CLASS: "class" >| < EXTENDS: "extends" >| < INT: "int" >| < NEW: "new" >| < RETURN: "return" >| < SUPER: "super" >}
+| < CLASS: "class" >| < EXTENDS: "extends" >| /*< INT: "int" >|*/ < NEW: "new" >| < RETURN: "return" >| < SUPER: "super" >}
 
 /* LITERALS */
 
@@ -204,12 +210,13 @@ TOKEN :
   < PLUS: "+" >| < MINUS: "-" >| < STAR: "*" >| < SLASH: "/" >}
 Goal Goal() : { 
 	TypeDeclaration typeDeclaration;
+	ArrayList<TypeDeclaration> typeDeclarationList = new ArrayList<TypeDeclaration>();
 	Token t;
 	ASTStringNode eof;
 	Token firstToken=token;
 } { (
-	typeDeclaration=TypeDeclaration() t=<EOF>{eof=new ASTStringNode(t.image,new WToken(t));} 
-	{return new Goal(typeDeclaration, eof, firstToken.next,token);}
+	(typeDeclaration=TypeDeclaration(){typeDeclarationList.add(typeDeclaration);})* t=<EOF>{eof=new ASTStringNode(t.image,new WToken(t));} 
+	{return new Goal(typeDeclarationList, eof, firstToken.next,token);}
  ) }
 
 TypeDeclaration TypeDeclaration() : { 
@@ -282,19 +289,6 @@ MethodDeclaration MethodDeclaration() : {
 	{return new MethodDeclaration(type, identifier, formalParameterList, expression, firstToken.next,token);}
  ) }
 
-BinaryOperator BinaryOperator() : { 
-	Token firstToken=token;
-} { (
-	"+"  
-	{return new BinaryOperator1(firstToken.next,token);} |
-	"-"  
-	{return new BinaryOperator2(firstToken.next,token);} |
-	"*"  
-	{return new BinaryOperator3(firstToken.next,token);} |
-	"/"  
-	{return new BinaryOperator4(firstToken.next,token);}
- ) }
-
 FormalParameterList FormalParameterList() : { 
 	FormalParameter formalParameter;
 	ArrayList<FormalParameter> list0=new ArrayList<FormalParameter>();
@@ -321,86 +315,18 @@ Type Type() : {
 	ASTStringNode identifier;
 	Token firstToken=token;
 } { (
-	"int"  
-	{return new Type1(firstToken.next,token);} |
 	t=<IDENTIFIER>{identifier=new ASTStringNode(t.image,new WToken(t));} 
-	{return new Type2(identifier, firstToken.next,token);} |
+	{return new Type1(identifier, firstToken.next,token);} |
 	"Object"  
-	{return new Type3(firstToken.next,token);}
+	{return new Type2(firstToken.next,token);}
  ) }
 
 Expression Expression() : { 
-	Term term;
-	PlusOrMinus plusOrMinus;
-	ArrayList<PlusOrMinus> plusOrMinusList = new ArrayList<PlusOrMinus>();
-	Token firstToken=token;
-} { (
-	term=Term() (plusOrMinus=PlusOrMinus(){plusOrMinusList.add(plusOrMinus);})* 
-	{return new Expression(term, plusOrMinusList, firstToken.next,token);}
- ) }
-
-PlusOrMinus PlusOrMinus() : { 
-	PlusExpressionRest plusExpressionRest;
-	MinusExpressionRest minusExpressionRest;
-	Token firstToken=token;
-} { (
-	plusExpressionRest=PlusExpressionRest() 
-	{return new PlusOrMinus1(plusExpressionRest, firstToken.next,token);} |
-	minusExpressionRest=MinusExpressionRest() 
-	{return new PlusOrMinus2(minusExpressionRest, firstToken.next,token);}
- ) }
-
-PlusExpressionRest PlusExpressionRest() : { 
-	Term term;
-	Token firstToken=token;
-} { (
-	"+" term=Term() 
-	{return new PlusExpressionRest(term, firstToken.next,token);}
- ) }
-
-MinusExpressionRest MinusExpressionRest() : { 
-	Term term;
-	Token firstToken=token;
-} { (
-	"-" term=Term() 
-	{return new MinusExpressionRest(term, firstToken.next,token);}
- ) }
-
-Term Term() : { 
-	PrimaryExpression primaryExpression;
-	TimesOrDivide timesOrDivide;
-	ArrayList<TimesOrDivide> timesOrDivideList = new ArrayList<TimesOrDivide>();
-	Token firstToken=token;
-} { (
-	primaryExpression=PrimaryExpression() (timesOrDivide=TimesOrDivide(){timesOrDivideList.add(timesOrDivide);})* 
-	{return new Term(primaryExpression, timesOrDivideList, firstToken.next,token);}
- ) }
-
-TimesOrDivide TimesOrDivide() : { 
-	TimesExpressionRest timesExpressionRest;
-	DivideExpressionRest divideExpressionRest;
-	Token firstToken=token;
-} { (
-	timesExpressionRest=TimesExpressionRest() 
-	{return new TimesOrDivide1(timesExpressionRest, firstToken.next,token);} |
-	divideExpressionRest=DivideExpressionRest() 
-	{return new TimesOrDivide2(divideExpressionRest, firstToken.next,token);}
- ) }
-
-TimesExpressionRest TimesExpressionRest() : { 
 	PrimaryExpression primaryExpression;
 	Token firstToken=token;
 } { (
-	"*" primaryExpression=PrimaryExpression() 
-	{return new TimesExpressionRest(primaryExpression, firstToken.next,token);}
- ) }
-
-DivideExpressionRest DivideExpressionRest() : { 
-	PrimaryExpression primaryExpression;
-	Token firstToken=token;
-} { (
-	"/" primaryExpression=PrimaryExpression() 
-	{return new DivideExpressionRest(primaryExpression, firstToken.next,token);}
+	primaryExpression=PrimaryExpression() 
+	{return new Expression(primaryExpression, firstToken.next,token);}
  ) }
 
 PrimaryExpression PrimaryExpression() : { 

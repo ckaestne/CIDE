@@ -6,10 +6,9 @@ import cide.greferences.*;
 import java.util.*;
 
 public class Expression extends GenASTNode {
-  public Expression(Term term, ArrayList<PlusOrMinus> plusOrMinus, Token firstToken, Token lastToken) {
+  public Expression(PrimaryExpression primaryExpression, Token firstToken, Token lastToken) {
     super(new Property[] {
-      new PropertyOne<Term>("term", term),
-      new PropertyZeroOrMore<PlusOrMinus>("plusOrMinus", plusOrMinus)
+      new PropertyOne<PrimaryExpression>("primaryExpression", primaryExpression)
     }, firstToken, lastToken);
   }
   public Expression(Property[] properties, IToken firstToken, IToken lastToken) {
@@ -18,10 +17,7 @@ public class Expression extends GenASTNode {
   public IASTNode deepCopy() {
     return new Expression(cloneProperties(),firstToken,lastToken);
   }
-  public Term getTerm() {
-    return ((PropertyOne<Term>)getProperty("term")).getValue();
-  }
-  public ArrayList<PlusOrMinus> getPlusOrMinus() {
-    return ((PropertyZeroOrMore<PlusOrMinus>)getProperty("plusOrMinus")).getValue();
+  public PrimaryExpression getPrimaryExpression() {
+    return ((PropertyOne<PrimaryExpression>)getProperty("primaryExpression")).getValue();
   }
 }

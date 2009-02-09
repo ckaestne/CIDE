@@ -6,8 +6,9 @@ import cide.greferences.*;
 import java.util.*;
 
 public class Type1 extends Type {
-  public Type1(Token firstToken, Token lastToken) {
+  public Type1(ASTStringNode identifier, Token firstToken, Token lastToken) {
     super(new Property[] {
+      new PropertyOne<ASTStringNode>("identifier", identifier)
     }, firstToken, lastToken);
   }
   public Type1(Property[] properties, IToken firstToken, IToken lastToken) {
@@ -15,5 +16,8 @@ public class Type1 extends Type {
   }
   public IASTNode deepCopy() {
     return new Type1(cloneProperties(),firstToken,lastToken);
+  }
+  public ASTStringNode getIdentifier() {
+    return ((PropertyOne<ASTStringNode>)getProperty("identifier")).getValue();
   }
 }
