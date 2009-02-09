@@ -48,10 +48,12 @@ public abstract class AbstractFileBasedTypingProvider extends
 
 						try {
 							IFile file = (IFile) resource;
-							ColoredSourceFile coloredSourceFile = ColoredSourceFile
-									.getColoredSourceFile(file);
-							if (matchFileForUpdate(coloredSourceFile))
-								files.add(coloredSourceFile);
+							
+							if (ColoredSourceFile.isFileColored(file)) {
+								ColoredSourceFile coloredSourceFile = ColoredSourceFile.getColoredSourceFile(file);
+								if (matchFileForUpdate(coloredSourceFile))
+									files.add(coloredSourceFile);
+							}
 						} catch (FeatureModelNotFoundException e) {
 						}
 
@@ -95,6 +97,8 @@ public abstract class AbstractFileBasedTypingProvider extends
 				oldChecks = new HashSet<ITypingCheck>();
 			if (matchFileForUpdate(file)) {
 				Set<ITypingCheck> newChecks = checkFile(file);
+				if (newChecks == null)
+					newChecks = new HashSet<ITypingCheck>();
 
 				for (ITypingCheck old : oldChecks)
 					if (!newChecks.contains(old))

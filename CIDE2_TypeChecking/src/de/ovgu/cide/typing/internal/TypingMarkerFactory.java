@@ -12,8 +12,7 @@ public class TypingMarkerFactory {
 	public static final String PARAM_PROBLEMDATA = "de.ovgu.cide.core.typing.problem.problemdata";
 
 	private final static String[] ATTRIBUTE_NAMES = { IMarker.MESSAGE,
-			IMarker.SEVERITY, IMarker.CHAR_START, IMarker.CHAR_END,
-			IMarker.LINE_NUMBER, PARAM_PROBLEMTYPE, PARAM_PROBLEMDATA };
+			IMarker.SEVERITY, IMarker.CHAR_START, IMarker.CHAR_END, PARAM_PROBLEMTYPE, PARAM_PROBLEMDATA };
 
 	public IMarker createErrorMarker(ITypingCheck check) throws CoreException {
 		assert null != check.getFile();
@@ -29,7 +28,7 @@ public class TypingMarkerFactory {
 			throws CoreException {
 		marker.setAttributes(ATTRIBUTE_NAMES, new Object[] {
 				check.getErrorMessage(), getSeverity(check),
-				getStartPosition(check), getEndPosition(check), 0,
+				getStartPosition(check), getEndPosition(check),
 				check.getProblemType(), getNodeId(check) });
 	}
 
@@ -41,7 +40,7 @@ public class TypingMarkerFactory {
 		return check.getSource().getStartPosition()
 				+ check.getSource().getLength() + 1;
 	}
-
+	
 	private Integer getSeverity(ITypingCheck check) {
 		switch (check.getSeverity()) {
 		case ERROR:
