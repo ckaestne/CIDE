@@ -1,0 +1,16 @@
+class Trials extends Object {
+	Object one;
+	Object two;
+	
+	Trials() {
+		super();
+	}
+	
+	Object proj1 (Object q1 , Object q2) {
+		return q1;
+	}
+	
+	Object proj2 (Object p1 , Object p2) {
+		return p2;
+	}
+}
