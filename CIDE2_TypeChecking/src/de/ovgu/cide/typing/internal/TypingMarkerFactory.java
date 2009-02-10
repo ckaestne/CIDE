@@ -37,8 +37,7 @@ public class TypingMarkerFactory {
 	}
 
 	private Integer getEndPosition(ITypingCheck check) {
-		return check.getSource().getStartPosition()
-				+ check.getSource().getLength() + 1;
+		return check.getSource().getStartPosition() + check.getSource().getLength();
 	}
 	
 	private Integer getSeverity(ITypingCheck check) {
