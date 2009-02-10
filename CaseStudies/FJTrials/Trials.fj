@@ -1,16 +1,220 @@
 class Trials extends Object {
-	Object one;
-	Object two;
+	SomeClass z;
+	//GibtsNicht g;
 	
-	Trials() {
+	Trials(SomeClass z) {
+		super();
+		this.z = z;
+	}
+	
+	/* T-VAR *************************************
+	Object TVarFails1() {
+		return x;
+	}
+	
+	Object TVarFails2(Object y) {
+		return x;
+	}
+	**********************************************/
+	
+	Object TVarOK1(Object x) {
+		return x;
+	}
+	
+	Trials TVarOK2(Trials x) {
+		return x;
+	}
+	
+	/* T-FIELD **********************************
+	Object TFieldFails1() {
+		return this.x;
+	}
+	
+	Object TFieldFails2(Object t) {
+		return t.y;
+	}
+	
+	Object TFieldFails3() {
+		return this.g;
+	}
+	**********************************************/
+	
+	Object TFieldOK() {
+		return this.z;
+	}
+	
+	/* T-INVK *************************************
+	Object TInvkFails1() {
+		return this.gibtsNicht();
+	}
+	
+	Object TInvkFails2(Object x) {
+		return this.TVarOK2(x);
+	}
+	
+	Object TInvkFails3(Trials x) {
+		return this.TVarOK2(x, x);
+	}
+	**********************************************/
+	
+	Object TInvkOK1() {
+		return this.TFieldOK();
+	}
+	
+	Object TInvkOK2(Trials x) {
+		return this.TVarOK2(x);
+	}
+	
+	/* T-NEW *************************************
+	Object TNewFail1() {
+		return new GibtsNicht();
+	}
+	
+	Trials TNewFail2() {
+		return new Trials();
+	}
+	
+	Trials TNewFail3(Trials o) {
+		return new Trials(o, o);
+	}
+	
+	Trials TNewFail4(Object o) {
+		return new Trials(o);
+	}
+	**********************************************/
+	
+	Object TNewOK1(SomeClassSub o) {
+		return new Trials(o);
+	}
+	
+	Object TNewOK2(SomeClass o) {
+		return new Trials(o);
+	}
+	
+	/* T-CAST ************************************************
+	Object TCastFail1() {
+		return (GibtsNicht) (new Trials(new SomeClass()));
+	}
+	
+	Object TCastFail2() {
+		return (Trials) new SomeClass();
+	}
+	*********************************************************/
+	
+	Object TCastOK1() {
+		return (SomeClass) new SomeClass();
+	}
+	
+	Object TCastOK2() {
+		return (Object) new SomeClass();
+	}
+	
+	Object TCastOK3() {
+		return (SomeClassSub) new SomeClass();
+	}
+	
+	/* M not OK in C ********************************
+	GibtsNicht MethFail1() {
+		return new GibtsNicht();
+	}
+	
+	Trials MethFail2() {
+		return new SomeClass();
+	}
+	*************************************************/
+}
+
+class SomeClass extends Object {
+	SomeClass() {
 		super();
 	}
 	
-	Object proj1 (Object q1 , Object q2) {
-		return q1;
+	Object overrideFail1() {
+		return new SomeClass();
 	}
 	
-	Object proj2 (Object p1 , Object p2) {
-		return p2;
+	Object overrideOK2() {
+		return new SomeClass();
+	}
+}
+
+class SomeClassSub extends SomeClass {
+	SomeClassSub() {
+		super();
+	}
+	
+	/* override ************************************
+	Object overrideFail1(Object o) {
+		return o;
+	}
+	************************************************/
+	
+	Object overrideOK1() {
+		return new SomeClassSub();
+	}
+	
+	Object overrideOK2() {
+		return new SomeClassSub();
+	}
+}
+
+/* C not OK ****************************************
+class ClassFail1 extends GibtsNicht {
+	GehtNicht() {
+		super();
+	}
+}
+
+class ClassFail2 extends Trials {
+	ClassFail2() {
+		super();
+	}
+}
+
+class ClassFail3 extends Trials {
+	ClassFail3(Object o) {
+		super(o);
+	}
+}
+
+class ClassFail4 extends Trials {
+	Object o;
+	ClassFail4(SomeClass c, Object o) {
+		super(c);
+	}
+}
+
+class ClassFail5 extends ClassOK2 {
+	ClassFail5(SomeClass c, Object o1) {
+		super(c);
+	}
+}
+
+***************************************************/
+
+class ClassOK1 extends Trials {
+
+	ClassOK1(SomeClass c) {
+		super(c);
+	}
+}
+
+class ClassOK2 extends Trials {
+	Object o;
+	ClassOK2(SomeClass c, Object o) {
+		super(c);
+		this.o = o;
+	}
+}
+
+class ClassOK3 extends ClassOK2 {
+	Object o;
+	ClassOK3(SomeClass c, Object o1, Object o2) {
+		super(c, o1);
+		this.o = o2;
+	}
+	
+	Object methode() {
+		return this.o;
 	}
 }
