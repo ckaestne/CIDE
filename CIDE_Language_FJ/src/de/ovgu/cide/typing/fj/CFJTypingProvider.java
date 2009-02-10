@@ -8,6 +8,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 
 import tmp.generated_fj.MethodDeclaration;
+import tmp.generated_fj.TypeDeclaration;
 import cide.gast.IASTNode;
 import cide.gast.IASTVisitor;
 import cide.gparser.ParseException;
@@ -39,9 +40,15 @@ public class CFJTypingProvider extends AbstractFileBasedTypingProvider {
 
 				@Override
 				public boolean visit(IASTNode node) {
-					if ((node != null) && (node instanceof MethodDeclaration)) {
-						checks.add(new CFJMethodTypingCheck(file, (MethodDeclaration) node, typingManager));
-						return false;
+					if (node != null) {
+						if (node instanceof MethodDeclaration) {
+							checks.add(new CFJMethodTypingCheck(file, (MethodDeclaration) node, typingManager));
+							return false;
+						}
+						if (node instanceof TypeDeclaration) {
+							checks.add(new CFJClassTypingCheck(file, (TypeDeclaration) node, typingManager));
+							return true;
+						}
 					}
 					return true;
 				}

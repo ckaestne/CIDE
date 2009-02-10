@@ -1,10 +1,5 @@
-import java.io.File;
-import java.io.FileNotFoundException;
-
 import org.junit.Before;
 import org.junit.Test;
-
-import cide.gparser.ParseException;
 
 public class ParserTest extends FJParserTester {
 	@Before
@@ -12,7 +7,9 @@ public class ParserTest extends FJParserTester {
 		tester = new FJParserTester();
 	}
 
-	@Test
+	// Kann nicht mehr funktionieren, weil ich die binären Operatoren +, -, * und / rausgeschmissen habe,
+	// um mich bei der Implementierung des Typsystems besser am Paper anlehnen zu können.
+	//@Test
 	public void testComplex() throws Exception {
 		parseAndCheckFile("Complex.fj");
 	}
@@ -21,5 +18,4 @@ public class ParserTest extends FJParserTester {
 	public void testTestCase() throws Exception {
 		parseAndCheckFile("TestCase.fj");
 	}
-
 }
