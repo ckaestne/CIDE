@@ -12,6 +12,7 @@ import org.eclipse.core.runtime.CoreException;
 
 import tmp.generated_fj.AllocationExpression;
 import tmp.generated_fj.CastExpression;
+import tmp.generated_fj.ClassConstructor;
 import tmp.generated_fj.Expression;
 import tmp.generated_fj.ExpressionList;
 import tmp.generated_fj.ExtendedType;
@@ -35,11 +36,13 @@ import tmp.generated_fj.PrimaryExpression4;
 import tmp.generated_fj.PrimaryExpression5;
 import tmp.generated_fj.PrimaryExpression6;
 import tmp.generated_fj.PrimaryExpression7;
+import tmp.generated_fj.PrimaryExpression8;
 import tmp.generated_fj.Type;
 import tmp.generated_fj.Type1;
 import tmp.generated_fj.Type2;
 import tmp.generated_fj.TypeDeclaration;
 import tmp.generated_fj.VarDeclaration;
+import cide.gast.ASTStringNode;
 import cide.gast.IASTNode;
 import cide.gparser.ParseException;
 import de.ovgu.cide.features.IFeature;
@@ -50,6 +53,8 @@ import de.ovgu.cide.typing.model.IEvaluationStrategy;
 
 /**
  * Manager für das CFJ-Typsystem
+ * 
+ * Grundlegende Voraussetzung: jedes CFJ-Programm ist auch ein gültiges FJ-Programm, wenn man die Annotationen weglässt
  * 
  * @author Malte Rosenthal
  */
@@ -65,7 +70,6 @@ public class CFJTypingManager {
 	private Map<String, CFJType> typeID2superType;
 	
 	private List<String> errorMessages;
-	//public List<String> presentVariables;		// XXX MRO
 	
 	public CFJTypingManager(ColoredSourceFile file) throws CoreException, ParseException {
 		this.file = file;
@@ -121,48 +125,69 @@ public class CFJTypingManager {
 		return true;
 	}
 	
-	public CFJType getType(String identifier) {
-		if (typeID2type.containsKey(identifier))
-			return typeID2type.get(identifier);
+	public static class MethodSignature {
+		public Type returnType;
+		public FormalParameterList formalParameters;
 		
-		CFJType type = new CFJType(identifier);
-		typeID2type.put(identifier, type);
-		return type;
-	}
-	
-	public CFJType getType(CFJTypeDeclarationWrapper astNode) {
-		if (astNode == null)
-			return null;
-		
-		CFJType result;
-		if (typeID2type.containsKey(astNode.getIdentifier().getValue())) {
-			result = typeID2type.get(astNode.getIdentifier().getValue());
-			result.astNode = astNode;
-		} else {
-			result = new CFJType(astNode);
-			typeID2type.put(astNode.getIdentifier().getValue(), result);
+		public MethodSignature(MethodDeclaration method) {
+			this(method.getType(), method.getFormalParameterList());
 		}
-		return result;
-	}
-	
-	public CFJType getType(TypeDeclaration astNode) {
-		if (astNode == null)
-			return null;
 		
-		CFJType result;
-		if (typeID2type.containsKey(astNode.getIdentifier().getValue())) {
-			result = typeID2type.get(astNode.getIdentifier().getValue());
-			if (result.astNode == null)
-				result.astNode = new CFJTypeDeclarationWrapper(astNode);
-			else
-				result.astNode.setTypeDeclaration(astNode);
-		} else {
-			result = new CFJType(astNode);
-			typeID2type.put(astNode.getIdentifier().getValue(), result);
+		public MethodSignature(Type returnType, FormalParameterList formalParameters) {
+			this.returnType = returnType;
+			this.formalParameters = formalParameters;
 		}
-		return result;
+		
+		@Override
+		public boolean equals(Object obj) {
+			if ((obj == null) || !(obj instanceof MethodSignature))
+				return false;
+			MethodSignature that = (MethodSignature) obj;
+			
+			if (!typesAreEqual(this.returnType, that.returnType))
+				return false;
+			
+			List<FormalParameter> thisFormalParameters = (this.formalParameters == null) ? null : this.formalParameters.getFormalParameter();
+			List<FormalParameter> thatFormalParameters = (that.formalParameters == null) ? null : that.formalParameters.getFormalParameter();
+			
+			if (thisFormalParameters == null) {
+				if (thatFormalParameters != null)
+					return false;
+			} else {
+				if (thatFormalParameters == null)
+					return false;
+				if (thisFormalParameters.size() != thatFormalParameters.size())
+					return false;
+				
+				for (int i = 0; i < thisFormalParameters.size(); ++i) {
+					if (!typesAreEqual(thisFormalParameters.get(i).getType(), thatFormalParameters.get(i).getType()))
+						return false;
+				}
+			}
+			
+			return true;
+		}
 	}
 	
+	/**
+	 * Zwei Methoden sind gleich, wenn sie gleich heißen und die gleiche Signatur haben
+	 * @param method1
+	 * @param method2
+	 * @return
+	 */
+	public static boolean methodsAreEqual(MethodDeclaration method1, MethodDeclaration method2) {
+		if (method1 == null)
+			return (method2 == null);
+		if (method2 == null)
+			return false;
+		
+		return (method1.getIdentifier().getValue().equals(method2.getIdentifier().getValue()) 
+				&& new MethodSignature(method1).equals(new MethodSignature(method2)));
+	}
+	
+	/**
+	 * Repräsentiert einen Typ, der vom Typsystem ermittelt wird
+	 */
 	public class CFJType {
 		private String identifier;
 		private CFJTypeDeclarationWrapper astNode;
@@ -235,6 +260,53 @@ public class CFJTypingManager {
 		}
 	}
 	
+	/**
+	 * Erzeugt eine Instanz von CFJType aus dem gegebenen Namen des Typs
+	 * @param identifier	Name des Typs
+	 * @return
+	 */
+	public CFJType getType(String identifier) {
+		if (typeID2type.containsKey(identifier))
+			return typeID2type.get(identifier);
+		
+		CFJType type = new CFJType(identifier);
+		typeID2type.put(identifier, type);
+		return type;
+	}
+	
+	public CFJType getType(CFJTypeDeclarationWrapper astNode) {
+		if (astNode == null)
+			return null;
+		
+		CFJType result;
+		if (typeID2type.containsKey(astNode.getIdentifier().getValue())) {
+			result = typeID2type.get(astNode.getIdentifier().getValue());
+			result.astNode = astNode;
+		} else {
+			result = new CFJType(astNode);
+			typeID2type.put(astNode.getIdentifier().getValue(), result);
+		}
+		return result;
+	}
+	
+	public CFJType getType(TypeDeclaration astNode) {
+		if (astNode == null)
+			return null;
+		
+		CFJType result;
+		if (typeID2type.containsKey(astNode.getIdentifier().getValue())) {
+			result = typeID2type.get(astNode.getIdentifier().getValue());
+			if (result.astNode == null)
+				result.astNode = new CFJTypeDeclarationWrapper(astNode);
+			else
+				result.astNode.setTypeDeclaration(astNode);
+		} else {
+			result = new CFJType(astNode);
+			typeID2type.put(astNode.getIdentifier().getValue(), result);
+		}
+		return result;
+	}
+	
 	public boolean areSubtypes(ArrayList<CFJType> subTypes, ArrayList<CFJType> superTypes) {
 		if (subTypes == null)
 			return (superTypes == null);
@@ -258,50 +330,6 @@ public class CFJTypingManager {
 			return false;
 		
 		return true;
-	}
-	
-	public class MethodSignature {
-		public Type returnType;
-		public FormalParameterList formalParameters;
-		
-		public MethodSignature(MethodDeclaration method) {
-			this(method.getType(), method.getFormalParameterList());
-		}
-		
-		public MethodSignature(Type returnType, FormalParameterList formalParameters) {
-			this.returnType = returnType;
-			this.formalParameters = formalParameters;
-		}
-		
-		@Override
-		public boolean equals(Object obj) {
-			if ((obj == null) || !(obj instanceof MethodSignature))
-				return false;
-			MethodSignature that = (MethodSignature) obj;
-			
-			if (!typesAreEqual(this.returnType, that.returnType))
-				return false;
-			
-			List<FormalParameter> thisFormalParameters = (this.formalParameters == null) ? null : this.formalParameters.getFormalParameter();
-			List<FormalParameter> thatFormalParameters = (that.formalParameters == null) ? null : that.formalParameters.getFormalParameter();
-			
-			if (thisFormalParameters == null) {
-				if (thatFormalParameters != null)
-					return false;
-			} else {
-				if (thatFormalParameters == null)
-					return false;
-				if (thisFormalParameters.size() != thatFormalParameters.size())
-					return false;
-				
-				for (int i = 0; i < thisFormalParameters.size(); ++i) {
-					if (!typesAreEqual(thisFormalParameters.get(i).getType(), thatFormalParameters.get(i).getType()))
-						return false;
-				}
-			}
-			
-			return true;
-		}
 	}
 	
 	// Auxiliary definitions -----------------------------------------------------------------------------------------------
@@ -345,6 +373,7 @@ public class CFJTypingManager {
 			if (extendedType instanceof ExtendedType1) {
 				List<IASTNode> fieldsOfSupertype = fields(findTypeDeclaration(((ExtendedType1) extendedType).getIdentifier().getValue()));
 				if (fieldsOfSupertype != null)
+					// Reihenfolge der fields ist wichtig: Superklassen hängen immer vorne an
 					result.addAll(0, fieldsOfSupertype);
 			}
 		}
@@ -353,6 +382,14 @@ public class CFJTypingManager {
 		return result;
 	}
 	
+	/**
+	 * mlookup unter Berücksichtigung der Annotationen
+	 * @param identifier
+	 * @param node
+	 * @param features
+	 * @param strategy
+	 * @return
+	 */
 	public IASTNode mlookup(String identifier, CFJTypeDeclarationWrapper node, Set<IFeature> features, IEvaluationStrategy strategy) {
 		if ((identifier == null) || (node == null) || (strategy == null))
 			return null;
@@ -371,12 +408,54 @@ public class CFJTypingManager {
 		
 		List<IASTNode> result = filter(methodDeclarations, features, strategy);
 		
-		if ((result == null) || (result.size() != 1)) {
+		if ((result == null) || result.isEmpty()) {
 			return mlookup(identifier, findTypeDeclaration(node.getExtendedType()), features, strategy);
 		}
+		
+		// result.size() != 1 kann eigentlich nicht passieren, weil in der Klasse überprüft wird, dass es
+		// keine zwei Methoden mit gleichem Namen gibt.
+		
 		return result.get(0);
 	}
 	
+	/**
+	 * mlookup ohne Berücksichtigung der Annotationen
+	 * @param identifier
+	 * @param node
+	 * @return
+	 */
+	public IASTNode mlookup(String identifier, CFJTypeDeclarationWrapper node) {
+		if ((identifier == null) || (node == null))
+			return null;
+		
+		ArrayList<MethodDeclaration> allMethodDeclarations = node.getMethodDeclaration();
+		if ((allMethodDeclarations == null) || (allMethodDeclarations.size() < 1))
+			return null;
+		
+		List<IASTNode> methodDeclarations = new LinkedList<IASTNode>();
+		for (int i = 0; i < allMethodDeclarations.size(); ++i) {
+			if (allMethodDeclarations.get(i).getIdentifier().getValue().equals(identifier))
+				methodDeclarations.add(allMethodDeclarations.get(i));
+		}
+		
+		if ((methodDeclarations == null) || methodDeclarations.isEmpty()) {
+			return mlookup(identifier, findTypeDeclaration(node.getExtendedType()));
+		}
+		
+		// methodDeclarations.size() != 1 kann eigentlich nicht passieren, weil in der Klasse überprüft wird, dass es
+		// keine zwei Methoden mit gleichem Namen gibt.
+		
+		return methodDeclarations.get(0);
+	}
+	
+	/**
+	 * mtype unter Berücksichtigung der Annotationen
+	 * @param identifier
+	 * @param node
+	 * @param features
+	 * @param strategy
+	 * @return
+	 */
 	public MethodSignature mtype(String identifier, CFJTypeDeclarationWrapper node, Set<IFeature> features, IEvaluationStrategy strategy) {
 		MethodDeclaration method = (MethodDeclaration) mlookup(identifier, node, features, strategy);
 		if (method == null)
@@ -385,6 +464,32 @@ public class CFJTypingManager {
 		return new MethodSignature(method.getType(), method.getFormalParameterList());
 	}
 	
+	/**
+	 * mtype ohne Berücksichtigung der Annotationen
+	 * @param identifier
+	 * @param node
+	 * @return
+	 */
+	public MethodSignature mtype(String identifier, CFJTypeDeclarationWrapper node) {
+		MethodDeclaration method = (MethodDeclaration) mlookup(identifier, node);
+		if (method == null)
+			return null;
+		
+		return new MethodSignature(method.getType(), method.getFormalParameterList());
+	}
+	
+	/**
+	 * Eine Methode ist ein gültiges Overriding, wenn
+	 *    1. in keiner Superklasse eine Methode mit dem gleichen Namen existiert (ohne Berücksichtigung der Annotationen) oder
+	 *    2. in einer Superklasse eine Methode mit dem gleichen Namen existiert (ohne Berücksichtigung der Annotationen) und
+	 *       die Annotationen passen. Bei der Überprüfung der Annotationen darf aber nicht die ohne Berücksichtigung der Annotationen
+	 *       gefundene Methode genommen werden, sondern es muss nochmal eine Methode mit gleichem Namen gesucht werden, diesmal
+	 *       aber unter Berücksichtigung der Annotationen.
+	 *       
+	 * @param method
+	 * @param strategy
+	 * @return
+	 */
 	public boolean override(MethodDeclaration method, IEvaluationStrategy strategy) {
 		if (method == null)
 			return false;
@@ -404,13 +509,15 @@ public class CFJTypingManager {
 		SourceFileColorManager colorManager = file.getColorManager();
 		Set<IFeature> features = colorManager.getColors(method);
 		
-		MethodSignature existentSignature = mtype(identifier, superTypeDeclaration, features, strategy);
+		MethodSignature existentSignature = mtype(identifier, superTypeDeclaration);
 		if (existentSignature == null)
 			return true;
 		if (!signature.equals(existentSignature))
 			return false;
 		if (signature.formalParameters == null)
 			return true;
+		
+		existentSignature = mtype(identifier, superTypeDeclaration, features, strategy);
 		
 		for (int i = 0; i < signature.formalParameters.getFormalParameter().size(); ++i) {
 			Set<IFeature> source = colorManager.getColors(signature.formalParameters.getFormalParameter().get(i));
@@ -432,7 +539,7 @@ public class CFJTypingManager {
 	 * @param method
 	 * @return
 	 */
-	public CFJType typeOf(String identifier, MethodDeclaration method, IEvaluationStrategy strategy) {
+	public CFJType typeOf(ASTStringNode identifier, MethodDeclaration method, IEvaluationStrategy strategy) {
 		if ((identifier == null) || (method == null))
 			return null;
 		
@@ -442,15 +549,37 @@ public class CFJTypingManager {
 		if (formalParameters != null) {
 			SourceFileColorManager colorManager = file.getColorManager();
 			
-			// (T.1)
-			List<IASTNode> presentParameters = filter(cast(formalParameters), colorManager.getColors(method), strategy);
+			// (T.1) -> (V.1): Variable muss existieren
+			List<IASTNode> presentParameters = filter(cast(formalParameters), colorManager.getColors(identifier), strategy);
 			for (IASTNode node : presentParameters) {
-				if (((FormalParameter) node).getIdentifier().getValue().equals(identifier))
+				if (((FormalParameter) node).getIdentifier().getValue().equals(identifier.getValue()))
 					return getType(getIdentifier(((FormalParameter) node).getType()));
 			}
 		}
 		
-		errorMessages.add("Variable >" + identifier + "< does not exist in some variants.");
+		errorMessages.add(0, "Variable >" + identifier + "< does not exist in some variants.");
+		return null;
+	}
+	
+	private CFJType typeOf(ASTStringNode identifier, ClassConstructor constructor, IEvaluationStrategy strategy) {
+		if ((identifier == null) || (constructor == null))
+			return null;
+		
+		FormalParameterList formalParameterList = constructor.getFormalParameterList();
+		ArrayList<FormalParameter> formalParameters = (formalParameterList == null) ? null : formalParameterList.getFormalParameter();
+		
+		if (formalParameters != null) {
+			SourceFileColorManager colorManager = file.getColorManager();
+			
+			// (T.1) -> (V.1): Variable muss existieren
+			List<IASTNode> presentParameters = filter(cast(formalParameters), colorManager.getColors(identifier), strategy);
+			for (IASTNode node : presentParameters) {
+				if (((FormalParameter) node).getIdentifier().getValue().equals(identifier.getValue()))
+					return getType(getIdentifier(((FormalParameter) node).getType()));
+			}
+		}
+		
+		errorMessages.add(0, "Variable >" + identifier + "< does not exist in some variants.");
 		return null;
 	}
 	
@@ -466,9 +595,10 @@ public class CFJTypingManager {
 		if (node2type.containsKey(fieldInvoke))
 			return node2type.get(fieldInvoke);
 		
+		// (F.2): Invoke target muss well-typed sein
 		CFJType typeOfInvokeTarget = typeOf(fieldInvoke.getInvokeTarget(), strategy);
 		if (typeOfInvokeTarget == null) {
-			errorMessages.add("Invoke target is not well-typed.");
+			errorMessages.add(0, "Invoke target is not well-typed.");
 			return null;
 		}
 		
@@ -476,19 +606,21 @@ public class CFJTypingManager {
 		SourceFileColorManager colorManager = file.getColorManager();
 		
 		List<IASTNode> fieldsOfInvokeTarget = filter(fields(typeOfInvokeTarget.getASTNode()), colorManager.getColors(fieldInvoke), strategy);
+		// (T.2) -> (F.1i): Feld muss existieren
 		if ((fieldsOfInvokeTarget == null) || (fieldsOfInvokeTarget.isEmpty())) {
-			// (T.2)
-			errorMessages.add("Field is not present in invoke target.");
+			errorMessages.add(0, "Field is not present in invoke target in some variants.");
 			return null;
 		}
 		
+		// (L.2): Typ des Feldes muss existieren (wird eigentlich bereits in der Klasse überprüft, aber da wir
+		//        die Reihenfolge der Checks nicht genau wissen, prüfen wir das hier auch nochmal)
 		for (IASTNode node : fieldsOfInvokeTarget) {
 			VarDeclaration varDecl = (VarDeclaration) node;
 			if (fieldInvoke.getIdentifier().getValue().equals(varDecl.getIdentifier().getValue())) {
 				CFJTypeDeclarationWrapper typeDeclaration = findTypeDeclaration(getIdentifier(varDecl.getType()));
+				
 				if (typeDeclaration == null) {
-					// (L.2)
-					errorMessages.add("Type >" + getIdentifier(varDecl.getType()) + "< does not exist.");
+					errorMessages.add(0, "Type >" + getIdentifier(varDecl.getType()) + "< does not exist.");
 					return null;
 				}
 				if (strategy.implies(fm, colorManager.getColors(varDecl), colorManager.getColors(typeDeclaration))) {
@@ -496,11 +628,14 @@ public class CFJTypingManager {
 					node2type.put(fieldInvoke, type);
 					return type;
 				}
+				
+				errorMessages.add(0, "Type >" + getIdentifier(varDecl.getType()) + "< does not exist in some variants.");
+				return null;
 			}
 		}
 		
-		// (T.2)
-		errorMessages.add("Field is not present in invoke target.");
+		// (T.2) -> (F.1ii): Feld muss existieren
+		errorMessages.add(0, "Field is not present in invoke target in some variants.");
 		return null;
 	}
 	
@@ -516,9 +651,10 @@ public class CFJTypingManager {
 		if (node2type.containsKey(methodInvoke))
 			return node2type.get(methodInvoke);
 		
+		// (I.3): Invoke target muss well-typed sein
 		CFJType typeOfInvokeTarget = typeOf(methodInvoke.getInvokeTarget(), strategy);
 		if (typeOfInvokeTarget == null) {
-			errorMessages.add("Invoke target is not well-typed.");
+			errorMessages.add(0, "Invoke target is not well-typed.");
 			return null;
 		}
 		
@@ -527,22 +663,30 @@ public class CFJTypingManager {
 		
 		MethodSignature mtype = 
 			mtype(methodInvoke.getIdentifier().getValue(), typeOfInvokeTarget.getASTNode(), colorManager.getColors(methodInvoke), strategy);
+		// (T.3i) -> (I.1): Methode muss existieren
 		if (mtype == null) {
-			// (T.3i)
-			errorMessages.add("Method is not present in some variants.");
+			errorMessages.add(0, "Method is not present in some variants.");
 			return null;
 		}
 		
+		// (I.4): Expressions müssen well-typed sein
 		ArrayList<CFJType> typesOfExpressions = typesOf(methodInvoke.getExpressionList(), strategy);
+		if ((methodInvoke.getExpressionList() != null) && (typesOfExpressions == null)) {
+			errorMessages.add(0, "At least one of the expressions are not well-typed.");
+			return null;
+		}
+		
 		ArrayList<CFJType> typesOfParameters = typesOf(mtype.formalParameters);
 		
+		// (I.5): richtige Anzahl von Aufrufparametern
 		if (!haveSameSize(typesOfExpressions, typesOfParameters)) {
-			errorMessages.add("Wrong number of parameters.");
+			errorMessages.add(0, "Wrong number of parameters.");
 			return null;
 		}
 		
+		// (I.6): Expressions müssen Subtypen der Typen der formalen Parameter sein
 		if (!areSubtypes(typesOfExpressions, typesOfParameters)) {
-			errorMessages.add("Expressions are not subtypes of method-parameters.");
+			errorMessages.add(0, "Expressions are not subtypes of method-parameters.");
 			return null;
 		}
 		
@@ -551,14 +695,14 @@ public class CFJTypingManager {
 		if (methodInvoke.getExpressionList() != null) {
 			for (int i = 0; i < methodInvoke.getExpressionList().getExpression().size(); ++i) {
 				Set<IFeature> source = colorManager.getColors(methodInvoke.getExpressionList().getExpression().get(i));
-				addAll(source, features);
+				source = addAll(source, features);
 				Set<IFeature> target = (mtype.formalParameters == null) ? new HashSet<IFeature>() 
 																		: colorManager.getColors(mtype.formalParameters.getFormalParameter().get(i));
-				addAll(target, features);
+				target = addAll(target, features);
 
+				// (T.3ii) -> (I.2): Annotationen müssen passen
 				if (!strategy.equal(fm, source, target)) {
-					// (T.3ii)
-					errorMessages.add("Annotations of expressions and method-parameters don't match.");
+					errorMessages.add(0, "Annotations of expressions and method-parameters don't match.");
 					return null;
 				}
 			}
@@ -581,25 +725,31 @@ public class CFJTypingManager {
 		if (node2type.containsKey(allocationExpression))
 			return node2type.get(allocationExpression);
 		
+		IFeatureModel fm = file.getFeatureModel();
+		SourceFileColorManager colorManager = file.getColorManager();
+		Set<IFeature> features = colorManager.getColors(allocationExpression);
+		
 		CFJTypeDeclarationWrapper typeDeclaration = findTypeDeclaration(allocationExpression.getIdentifier().getValue());
+		
+		// (T.4i) -> (N.1): Typ muss existieren
 		if (typeDeclaration == null) {
-			// Teil von (T.4i)
-			errorMessages.add("Type >" + allocationExpression.getIdentifier().getValue() + "< does not exist.");
+			errorMessages.add(0, "Type >" + allocationExpression.getIdentifier().getValue() + "< does not exist.");
+			return null;
+		}
+		if (!strategy.implies(fm, features, colorManager.getColors(typeDeclaration))) {
+			errorMessages.add(0, "Type does not exist in some variants.");
 			return null;
 		}
 		
-		IFeatureModel fm = file.getFeatureModel();
-		SourceFileColorManager colorManager = file.getColorManager();
-		
-		List<IASTNode> fieldsOfTypeDeclaration = filter(fields(typeDeclaration), colorManager.getColors(allocationExpression), strategy);
+		List<IASTNode> fieldsOfTypeDeclaration = fields(typeDeclaration);
 		if (fieldsOfTypeDeclaration == null)
 			// Dürfte eigentlich nicht passieren, denn gibt es keine Felder, wird eine leere Liste zurückgegeben.
 			return null;
 		
+		// (N.3): Expressions müssen well-typed sein
 		ArrayList<CFJType> typesOfExpressions = typesOf(allocationExpression.getExpressionList(), strategy);
-		if ((typesOfExpressions != null) && (fieldsOfTypeDeclaration.size() != typesOfExpressions.size())) {
-			// Teil von (T.4ii)
-			errorMessages.add("Wrong number of parameters.");
+		if ((allocationExpression.getExpressionList() != null) && (typesOfExpressions == null)) {
+			errorMessages.add(0, "At least one of the expressions are not well-typed.");
 			return null;
 		}
 		
@@ -612,31 +762,28 @@ public class CFJTypingManager {
 			}
 		}
 
-		Set<IFeature> features = colorManager.getColors(allocationExpression);
+		// (N.4): richtige Anzahl von Parametern
 		if (!haveSameSize(typesOfExpressions, typesOfFields)) {
-			errorMessages.add("Wrong number of parameters.");
+			errorMessages.add(0, "Wrong number of parameters.");
 			return null;
 		}
+		
+		// (N.5): Expressions müssen Subtypen der Typen der formalen Parameter sein
 		if (!areSubtypes(typesOfExpressions, typesOfFields)) {
-			errorMessages.add("Expressions are not subtypes of parameters.");
-			return null;
-		}
-		if (!strategy.implies(fm, features, colorManager.getColors(typeDeclaration))) {
-			// (T.4i)
-			errorMessages.add("Type does not exist in some variants.");
+			errorMessages.add(0, "Expressions are not subtypes of parameters.");
 			return null;
 		}
 
 		if (allocationExpression.getExpressionList() != null) {
 			for (int i = 0; i < allocationExpression.getExpressionList().getExpression().size(); ++i) {
 				Set<IFeature> source = colorManager.getColors(allocationExpression.getExpressionList().getExpression().get(i));
-				addAll(source, features);
+				source = addAll(source, features);
 				Set<IFeature> target = colorManager.getColors(fieldsOfTypeDeclaration.get(i));
-				addAll(target, features);
+				target = addAll(target, features);
 
+				// (T.4ii) -> (N.2): Annotationen müssen passen
 				if (!strategy.equal(fm, source, target)) {
-					// (T.4ii)
-					errorMessages.add("Annotations of expressions and parameters don't match.");
+					errorMessages.add(0, "Annotations of expressions and parameters don't match.");
 					return null;
 				}
 			}
@@ -659,34 +806,36 @@ public class CFJTypingManager {
 		if (node2type.containsKey(castExpression))
 			return node2type.get(castExpression);
 		
+		// (C.2): Expression muss well-typed sein
 		CFJType typeOfPrimExpression = typeOf(castExpression.getPrimaryExpression(), strategy);
 		if (typeOfPrimExpression == null) {
-			errorMessages.add("Primary expression is not well-typed.");
+			errorMessages.add(0, "Primary expression is not well-typed.");
 			return null;
 		}
-		
-		CFJTypeDeclarationWrapper typeDeclaration = findTypeDeclaration(getIdentifier(castExpression.getType()));
-		if (typeDeclaration == null) {
-			// Teil von (T.5)
-			errorMessages.add("Type does not exist.");
-			return null;
-		}
-		CFJType typeOfTypeDeclaration = getType(typeDeclaration);
 		
 		IFeatureModel fm = file.getFeatureModel();
 		SourceFileColorManager colorManager = file.getColorManager();
 		
-		if (!strategy.implies(fm, colorManager.getColors(castExpression), colorManager.getColors(typeDeclaration))) {
-			// (T.5)
-			errorMessages.add("Type does not exist in some variants.");
+		CFJTypeDeclarationWrapper typeDeclaration = findTypeDeclaration(getIdentifier(castExpression.getType()));
+		
+		// (T.5) -> (C.1): Typ muss existieren
+		if (typeDeclaration == null) {
+			errorMessages.add(0, "Type does not exist.");
 			return null;
 		}
+		if (!strategy.implies(fm, colorManager.getColors(castExpression), colorManager.getColors(typeDeclaration))) {
+			errorMessages.add(0, "Type does not exist in some variants.");
+			return null;
+		}
+		
+		CFJType typeOfTypeDeclaration = getType(typeDeclaration);		
 		if (typeOfPrimExpression.isSubtypeOf(typeOfTypeDeclaration) || (typeOfTypeDeclaration.isProperSubtypeOf(typeOfPrimExpression))) {
 			node2type.put(castExpression, typeOfTypeDeclaration);
 			return typeOfTypeDeclaration;
 		}
 		
-		errorMessages.add("Illegal cast.");
+		// (C.3): Cast muss legal sein
+		errorMessages.add(0, "Illegal cast.");
 		return null;
 	}
 	
@@ -706,13 +855,13 @@ public class CFJTypingManager {
 		}
 		// <IDENTIFIER>
 		if (invokeTarget instanceof InvokeTarget3) {
-			return typeOf(((InvokeTarget3) invokeTarget).getIdentifier().getValue(), findSurroundingMethodDeclaration(invokeTarget), strategy);
+			return typeOf(((InvokeTarget3) invokeTarget).getIdentifier(), findSurroundingMethodDeclaration(invokeTarget), strategy);
 		}
 		// "this"
 		if (invokeTarget instanceof InvokeTarget4) {
 			TypeDeclaration surroundingTypeDeclaration = findSurroundingTypeDeclaration(invokeTarget);
 			if (surroundingTypeDeclaration == null) {
-				errorMessages.add("Did not find surrounding type for >this<.");
+				errorMessages.add(0, "Did not find surrounding type for >this<.");
 				return null;
 			}
 			return getType(surroundingTypeDeclaration);
@@ -746,8 +895,10 @@ public class CFJTypingManager {
 		}
 		// <IDENTIFIER>
 		if (primaryExpression instanceof PrimaryExpression4) {
-			return typeOf(((PrimaryExpression4) primaryExpression).getIdentifier().getValue(), 
-						  findSurroundingMethodDeclaration(primaryExpression), strategy);
+			MethodDeclaration methodDeclaration = findSurroundingMethodDeclaration(primaryExpression);
+			if (methodDeclaration != null)
+				return typeOf(((PrimaryExpression4) primaryExpression).getIdentifier(), methodDeclaration, strategy);
+			return typeOf(((PrimaryExpression4) primaryExpression).getIdentifier(), findSurroundingClassConstructor(primaryExpression), strategy);
 		}
 		// AllocationExpression
 		if (primaryExpression instanceof PrimaryExpression5) {
@@ -760,6 +911,15 @@ public class CFJTypingManager {
 		// NestedExpression
 		if (primaryExpression instanceof PrimaryExpression7) {
 			return typeOf(((PrimaryExpression7) primaryExpression).getNestedExpression(), strategy);
+		}
+		// "this"
+		if (primaryExpression instanceof PrimaryExpression8) {
+			TypeDeclaration surroundingTypeDeclaration = findSurroundingTypeDeclaration(primaryExpression);
+			if (surroundingTypeDeclaration == null) {
+				errorMessages.add(0, "Did not find surrounding type for >this<.");
+				return null;
+			}
+			return getType(surroundingTypeDeclaration);
 		}
 		
 		// Tritt nur bei unvollständiger Fallunterscheidung auf
@@ -799,7 +959,10 @@ public class CFJTypingManager {
 		
 		ArrayList<CFJType> types = new ArrayList<CFJType>(expressions.size());
 		for (int i = 0; i < expressions.size(); ++i) {
-			types.add(typeOf(expressions.get(i), strategy));
+			CFJType type = typeOf(expressions.get(i), strategy);
+			if (type == null)
+				return null;
+			types.add(type);
 		}
 		return types;
 	}
@@ -808,6 +971,15 @@ public class CFJTypingManager {
 		while (node != null) {
 			if (node instanceof MethodDeclaration)
 				return (MethodDeclaration) node;
+			node = node.getParent();
+		}
+		return null;
+	}
+	
+	public ClassConstructor findSurroundingClassConstructor(IASTNode node) {
+		while (node != null) {
+			if (node instanceof ClassConstructor)
+				return (ClassConstructor) node;
 			node = node.getParent();
 		}
 		return null;
@@ -867,12 +1039,20 @@ public class CFJTypingManager {
 		return result;
 	}
 	
-	public static void addAll(Set<IFeature> to, Set<IFeature> from) {
+	public static Set<IFeature> addAll(Set<IFeature> to, Set<IFeature> from) {
 		if ((to == null) || (from == null))
-			return;
+			return new HashSet<IFeature>();
 		
-		for (IFeature f : from) {
-			to.add(f);
+		// Wir machen diesen Workaround, weil >to< oft ein unmodifiable set ist.
+		Set<IFeature> result = new HashSet<IFeature>();
+		
+		for (IFeature f : to) {
+			result.add(f);
 		}
+		for (IFeature f : from) {
+			result.add(f);
+		}
+		
+		return result;
 	}
 }

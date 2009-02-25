@@ -1,5 +1,6 @@
 package de.ovgu.cide.typing.fj;
 
+import cide.gast.IASTNode;
 import de.ovgu.cide.features.source.ColoredSourceFile;
 import de.ovgu.cide.typing.model.ITypingCheck;
 
@@ -13,13 +14,18 @@ public abstract class CFJTypingCheck implements ITypingCheck {
 	protected ColoredSourceFile file;
 	protected CFJTypingManager typingManager;
 	protected String errorMessage;
+	protected IASTNode source;
 	
-	protected CFJTypingCheck(ColoredSourceFile file, CFJTypingManager typingManager) {
+	protected CFJTypingCheck(ColoredSourceFile file, CFJTypingManager typingManager, IASTNode source) {
 		this.file = file;
 		this.typingManager = typingManager;
+		this.source = source;
 	}
 	
-	protected boolean createError(String message) {
+	protected boolean createError(String message, IASTNode source) {
+		if (source != null)
+			this.source = source;
+		
 		StringBuilder sb = new StringBuilder(message.length() + typingManager.getErrorMessages().size() * 50);
 		sb.append(message);
 		for (String s : typingManager.getErrorMessages()) {
@@ -29,6 +35,10 @@ public abstract class CFJTypingCheck implements ITypingCheck {
 		
 		typingManager.clearErrorMessages();
 		return false;
+	}
+	
+	protected boolean createError(String message) {
+		return createError(message, null);
 	}
 
 	@Override
@@ -44,5 +54,10 @@ public abstract class CFJTypingCheck implements ITypingCheck {
 	@Override
 	public Severity getSeverity() {
 		return Severity.ERROR;
+	}
+	
+	@Override
+	public IASTNode getSource() {
+		return source;
 	}
 }

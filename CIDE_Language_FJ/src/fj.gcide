@@ -231,7 +231,7 @@ VarDeclaration : Type <IDENTIFIER> ";";
 
 ClassConstructor : 
 	Type "(" ( FormalParameterList )? ")" "{" "super"
-	"(" ( ExpressionList )? ")" ";" ( FieldAssign )* "}";
+	"(" ( /*ExpressionList*/ IdentifierList )? ")" ";" ( FieldAssign )* "}";
 	
 FieldAssign : "this" "." <IDENTIFIER> "=" <IDENTIFIER> ";";
 
@@ -246,6 +246,9 @@ BinaryOperator :
 	| "*"
 	| "/";
 */
+
+IdentifierList :
+	&LI <IDENTIFIER> ("," &LI <IDENTIFIER>)*;
 
 FormalParameterList : 
 	&LI FormalParameter ("," &LI FormalParameter)*;
@@ -282,7 +285,8 @@ PrimaryExpression :
 	| <IDENTIFIER>
 	| LL(2147483647) AllocationExpression
 	| LL(2147483647) CastExpression
-	| NestedExpression;
+	| NestedExpression
+	| "this";
 	
 MethodInvoke : 
 	InvokeTarget "." <IDENTIFIER> "(" ( ExpressionList )? ")";

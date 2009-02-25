@@ -120,7 +120,7 @@ public class SimplePrintVisitor extends AbstractPrintVisitor {
 			printToken("super");
 			printToken("(");
 			{
-				ExpressionList v=n.getExpressionList();
+				IdentifierList v=n.getIdentifierList();
 				if (v!=null) {
 					v.accept(this);
 				}
@@ -185,6 +185,18 @@ public class SimplePrintVisitor extends AbstractPrintVisitor {
 			}
 			printToken(";");
 			printToken("}");
+			return false;
+		}
+		if (node instanceof IdentifierList) {
+			IdentifierList n = (IdentifierList)node;
+			Iterator<ASTStringNode> listElements = n.getIdentifier().iterator();
+			if (listElements.hasNext()) {
+				listElements.next().accept(this);
+			}
+			while (listElements.hasNext()) {
+				printToken(",");
+				listElements.next().accept(this);
+			}
 			return false;
 		}
 		if (node instanceof FormalParameterList) {
@@ -308,6 +320,11 @@ public class SimplePrintVisitor extends AbstractPrintVisitor {
 					v.accept(this);
 				}
 			}
+			return false;
+		}
+		if (node instanceof PrimaryExpression8) {
+			PrimaryExpression8 n = (PrimaryExpression8)node;
+			printToken("this");
 			return false;
 		}
 		if (node instanceof MethodInvoke) {

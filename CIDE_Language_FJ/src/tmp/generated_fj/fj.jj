@@ -258,13 +258,13 @@ VarDeclaration VarDeclaration() : {
 ClassConstructor ClassConstructor() : { 
 	Type type;
 	FormalParameterList formalParameterList = null;
-	ExpressionList expressionList = null;
+	IdentifierList identifierList = null;
 	FieldAssign fieldAssign;
 	ArrayList<FieldAssign> fieldAssignList = new ArrayList<FieldAssign>();
 	Token firstToken=token;
 } { (
-	type=Type() "(" [formalParameterList=FormalParameterList()] ")" "{" "super" "(" [expressionList=ExpressionList()] ")" ";" (fieldAssign=FieldAssign(){fieldAssignList.add(fieldAssign);})* "}" 
-	{return new ClassConstructor(type, formalParameterList, expressionList, fieldAssignList, firstToken.next,token);}
+	type=Type() "(" [formalParameterList=FormalParameterList()] ")" "{" "super" "(" [identifierList=IdentifierList()] ")" ";" (fieldAssign=FieldAssign(){fieldAssignList.add(fieldAssign);})* "}" 
+	{return new ClassConstructor(type, formalParameterList, identifierList, fieldAssignList, firstToken.next,token);}
  ) }
 
 FieldAssign FieldAssign() : { 
@@ -287,6 +287,18 @@ MethodDeclaration MethodDeclaration() : {
 } { (
 	type=Type() t=<IDENTIFIER>{identifier=new ASTStringNode(t.image,new WToken(t));} "(" [formalParameterList=FormalParameterList()] ")" "{" "return" expression=Expression() ";" "}" 
 	{return new MethodDeclaration(type, identifier, formalParameterList, expression, firstToken.next,token);}
+ ) }
+
+IdentifierList IdentifierList() : { 
+	Token t;
+	ASTStringNode identifier;
+	ArrayList<ASTStringNode> list0=new ArrayList<ASTStringNode>();
+	ASTStringNode identifier1;
+	ArrayList<ASTStringNode> identifier1List = new ArrayList<ASTStringNode>();
+	Token firstToken=token;
+} { (
+	t=<IDENTIFIER>{identifier=new ASTStringNode(t.image,new WToken(t));}{list0.add(identifier);} ("," t=<IDENTIFIER>{identifier1=new ASTStringNode(t.image,new WToken(t));}{list0.add(identifier1);})* 
+	{return new IdentifierList(list0, firstToken.next,token);}
  ) }
 
 FormalParameterList FormalParameterList() : { 
@@ -353,7 +365,9 @@ PrimaryExpression PrimaryExpression() : {
 	LOOKAHEAD(2147483647) castExpression=CastExpression() 
 	{return new PrimaryExpression6(castExpression, firstToken.next,token);} |
 	nestedExpression=NestedExpression() 
-	{return new PrimaryExpression7(nestedExpression, firstToken.next,token);}
+	{return new PrimaryExpression7(nestedExpression, firstToken.next,token);} |
+	"this"  
+	{return new PrimaryExpression8(firstToken.next,token);}
  ) }
 
 MethodInvoke MethodInvoke() : { 
