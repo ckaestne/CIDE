@@ -1,0 +1,328 @@
+class TVar extends Object {
+	Object o;
+	TVar(Object o) {
+		super();
+		this.o = o;
+	}
+	
+	Object methodFails(Object o) {
+		// (V.1): Variable muss existieren
+		//return o;
+		return this;
+	}
+	
+	Object methodOK(Object o) {
+		return new TVar(o);
+	}
+}
+
+class TField extends Object {
+	Object t2OK;
+	
+	// (L.2): Typ des Feldes muss existieren
+	//SomeClass l2Fails;
+	
+	TField(Object o1 /*, SomeClass o2*/) {
+		super();
+		this.t2OK = o1;
+		//this.l2Fails = o2;
+	}
+	
+	Object methT2OK(TField t) {
+		return t.t2OK;
+	}
+	
+	/* (F.1): Feld muss existieren
+	Object methT2Fails(TField t) {
+		return t.t2OK;
+	}
+	*/
+}
+
+class SomeClass extends Object {
+	SomeClass() {
+		super();
+	}
+}
+
+// ----------------------------------------------------
+
+class TInvk extends Object {
+	TInvkTarget invkTarget;
+	
+	TInvk(TInvkTarget i) {
+		super();
+		this.invkTarget = i;
+	}
+	
+	TInvkTargetSuper methT3iOK(TInvkTarget t) {
+		return t.methT3iOK();
+	}
+	
+	/* (I.1): Methode muss existieren
+	TInvkTarget methT3iFails(TInvkTarget t) {
+		return t.methT3iFails();
+	}
+	*/
+	
+	Object methT3iiOK(TInvkTarget t, Object o1, Object o2) {
+		return t.proj1(o1, o2);
+	}
+	
+	/* (I.2): Annotationen müssen passen
+	Object methT3iiFails(TInvkTarget t, Object o1, Object o2) {
+		return t.proj1(o1, o2);
+	}
+	*/
+}
+
+class TInvkTargetSuper extends Object {
+	TInvkTargetSuper() {
+		super();
+	}
+
+	TInvkTargetSuper methT3iOK() {
+		return this;
+	}
+}
+
+class TInvkTarget extends TInvkTargetSuper {
+	TInvkTarget() {
+		super();
+	}
+	
+	TInvkTargetSuper methT3iOK() {
+		return this;
+	}
+	
+	TInvkTarget methT3iFails() {
+		return this;
+	}
+	
+	Object proj1(Object o1, Object o2) {
+		return o1;
+	}
+}
+
+// -------------------------------------------------------------------
+
+class TNew extends Object {
+	TNew() {
+		super();
+	}
+	
+	Object methT4OK() {
+		return new NewClass(this, this);
+	}
+	
+	/* (N.1): Typ muss existieren
+	Object methT4iFails() {
+		return new NewClass2();
+	}
+	*/
+	
+	/* (N.2): Annotationen müssen passen
+	Object methT4iiFails() {
+		return new NewClass3(this);
+	}
+	*/
+}
+
+class NewClass extends Object {
+	TNew n1;
+	TNew n2;
+	
+	NewClass(TNew n1, TNew n2) {
+		super();
+		this.n1 = n1;
+		this.n2 = n2;
+	}
+}
+
+class NewClass2 extends Object {
+	NewClass2() {
+		super();
+	}
+}
+
+class NewClass3 extends Object {
+	TNew n1;
+	
+	NewClass3(TNew n1) {
+		super();
+		this.n1 = n1;
+	}
+}
+
+// ------------------------------------------------------
+
+class TCast extends Object {
+	TCast() {
+		super();
+	}
+	
+	SuperClass methT5OK() {
+		return (SuperClass) (new SubClass());
+	}
+	
+	/* (C.1): Typ muss existieren
+	Object methT5Fails() {
+		return (SubClass) (new TCast());
+	}
+	*/
+}
+
+class SuperClass extends TCast {
+	SuperClass() {
+		super();
+	}
+}
+
+class SubClass extends SuperClass {
+	SubClass() {
+		super();
+	}
+}
+
+// --------------------------------------------------------
+
+class SuperClass1 extends Object {
+	SuperClass1() {
+		super();
+	}
+	
+	SomeClass1 methM1OK() {
+		return new SomeClass1();
+	}
+	
+	/* (M.1): Rückgabetyp muss existieren
+	SomeClass2 methM1Fails() {
+		return this;
+	}
+	*/
+	
+	SomeClass1 methM2OK() {
+		return new SomeClass1();
+	}
+	
+	SomeClass1 methM2Fails() {
+		return new SomeClass1();
+	}
+	
+	Object methM2Fails2(Object o) {
+		return this;
+	}
+	
+	Object methM3OK(SomeClass2 s) {
+		return this;
+	}
+	
+	/* (M.3): Typ eines jeden formalen Parameters muss existieren
+	Object methM3Fails(SomeClass2 s) {
+		return this;
+	}
+	*/
+	
+	// Check auf (T.1) fails lässt sich wegen der Färbung nicht auskommentieren
+}
+
+// overriding
+
+class SubClass1 extends SuperClass1 {
+	SubClass1() {
+		super();
+	}
+	
+	SomeClass1 methM2OK() {
+		return new SomeClass1();
+	}
+	
+	/*
+	SomeClass1 methM2Fails(Object o) {
+		return new SomeClass1();
+	}
+	*/
+	
+	/*
+	Object methM2Fails2(Object o) {
+		return this;
+	}
+	*/
+}
+
+class SomeClass1 extends Object {
+	SomeClass1() {
+		super();
+	}
+}
+
+class SomeClass2 extends Object {
+	SomeClass2() {
+		super();
+	}
+}
+
+// ------------------------------------------------------------
+
+class SuperClass10 extends Object {
+	SuperClass10() {
+		super();
+	}
+}
+
+/* (L.1): Supertyp muss existieren
+class ClassL1Fails extends SuperClass10 {
+	ClassL1Fails() {
+		super();
+	}
+}
+*/
+
+// Konstruktor ----------------------------------------------
+
+class SuperClass11 extends Object {
+	Object o1;
+	Object o2;
+	
+	SuperClass11(Object o1, Object o2) {
+		super();
+		this.o1 = o1;
+		this.o2 = o2;
+	}
+}
+
+class ClassK1K2OK extends SuperClass11 {
+	Object o3;
+	
+	ClassK1K2OK(Object o1, Object o2, Object o3) {
+		super(o1, o2);
+		this.o3 = o3;
+	}
+}
+
+/*
+class ClassK1Fails extends SuperClass11 {
+	ClassK1Fails(Object o1, Object o2) {
+		super(o1, o2);
+	}
+}
+*/
+
+// Check (K.2) fails kann wegen der Färbung nicht auskommentiert werden.	
+
+/*
+class ClassK3Fails extends Object {
+	SomeClass10 s;
+	
+	ClassK3Fails(SomeClass10 s) {
+		super();
+		this.s = s;
+	}
+}
+*/
+
+class SomeClass10 extends Object {
+	SomeClass10() {
+		super();
+	}
+}

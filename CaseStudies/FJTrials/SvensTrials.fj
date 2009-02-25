@@ -1,0 +1,217 @@
+// HierarchyError -----------------------------------------------------------------
+
+// The following lines should cause an error indicating a cylic class hierarchy
+//
+// 1. self-inheritance
+// class hallo extends hallo { hallo () { super (); } } 
+//
+// 2. mutual inheritance
+// class Aa extends Bb { Aa(){ super(); } }
+// class Bb extends Aa { Bb(){ super(); } }
+// 
+// 3. cycle of three
+// class Aa extends Bb { Aa(){ super(); } }
+// class Bb extends Cc { Bb(){ super(); } }
+// class Cc extends Aa { Cc(){ super(); } }
+
+// The following definitions should be ok (order reversed)
+// class Aa extends Bb      { Aa(){ super(); } }
+// class Bb extends Object { Bb(){ super(); } }
+
+// ListError -----------------------------------------------------
+
+class Error extends Object { Error () { super (); } }
+
+class Nat extends Object {
+    Nat () { super (); }
+    Object nth (List l) { return new Error (); }
+}
+class Zero extends Nat {
+    Zero () { super (); }
+    Object nth (List l) { return l.head (); }
+}
+class Succ extends Nat {
+    Nat n;
+    Succ (Nat n) { super (); this.n = n; }
+    Object nth (List l) { return (this.n).nth (l.tail ()); }
+}
+
+class List extends Object {
+    List () { super (); }
+    Object head () { return new Error (); }
+    List   tail () { return (List)(Object)new Error (); }
+    List append (List l) { return l; }
+}
+class Nil extends List {
+    Nil () { super (); }
+}
+class Cons extends List {
+    Object hd;
+    List tl;
+    Cons (Object hd, List tl) { super(); this.hd = hd; this.tl = tl; }
+    Object head () { return this.hd; }
+    List   tail () { return this.tl; }
+    List append (List l) { return new Cons (this.hd, (this.tl).append (l)); }
+    // The following method should non type-check
+    // List illTyped () { return this.append (new Zero()); }
+}
+
+class ListTrials extends Object {
+	ListTrials() {
+		super();
+	}
+	
+	Nat zero() {
+		return new Zero();
+	}
+	
+	Nat one() {
+		return new Succ(this.zero());
+	}
+	
+	Nat two() {
+		return new Succ(this.one());
+	}
+	
+	List l21() {
+		return new Cons (this.two(), new Cons (this.one(), new Nil ()));
+	}
+	
+	List l0() {
+		return new Cons (this.zero(), new Nil ());
+	}
+	
+	List l210() {
+		return (this.l21()).append(this.l0());
+	}
+	
+	Nat a() {
+		return (Nat) (this.two()).nth(this.l210());
+	}
+	
+	List empty() {
+		return new Nil();
+	}
+	
+	List empt1() {
+		return (this.l0()).tail();
+	}
+	
+	// The following expressions should not type-check
+	
+	/*
+	List ill() {
+		return (this.l210()).append(this.zero());
+	}
+	
+	List ill2() {
+		return new Cons (new Zero(), new Zero ());
+	}
+	*/
+	
+	// These are legal casts:
+	
+	List l0v0() {
+		return (List) this.l0();
+	}
+	
+	Object l0v1() {
+		return (Object) this.l0();
+	}
+	
+	List l0v2() {
+		return (List) this.l0v2();
+	}
+	
+	// The following expressions should raise class cast exceptions
+	// wohl zur Laufzeit :-)
+	
+	List err1() {
+		return ((this.l0()).tail()).tail();
+	}
+	
+	List error() {
+		return (this.empty()).tail();
+	}
+}
+
+// Pair ---------------------------------------------------------------------------
+
+class Pair extends Object { 
+  Object fst; 
+  Object snd; 
+  Pair (Object fst, Object snd) { 
+    super (); 
+    this.fst = fst; 
+    this.snd = snd; 
+  } 
+  Pair setFst (Object fst1) { 
+    return new Pair (fst1, this.snd); 
+  } 
+  Pair setSnd (Object snd1) { 
+    return new Pair (this.fst, snd1); 
+  } 
+} 
+
+class A extends Object { A () { super (); } }
+class B extends A { B () { super (); } }
+class C extends B { C () { super (); } }
+class D extends C { D () { super (); } } 
+
+class E extends D {
+	Object foo;
+	Object bar;
+	E(Object foo, Object bar) { super(); this.foo=foo; this.bar=bar; }
+}
+
+class F extends E {
+	Object baz;
+	F(Object foo, Object bar, Object baz) { super(foo, bar); this.baz=baz; }
+}
+
+class PairTrials extends Object {
+	PairTrials() {
+		super();
+	}
+	
+	Pair p1() {
+		return (new Pair(new A(), new B())).setSnd (new C());
+	}
+	
+	Object p2() {
+		return (new Pair(new A(), new B())).snd;
+	}
+	
+	C p3() {
+		return (C)(B)(A)(new D());
+	}
+}
+
+// SyntaxError -------------------------------------------------------------------
+
+// Each of the following lines should cause a syntax error
+// hallo
+// class hallo
+// class hallo { }
+// class hallo extends { }
+// class hallo extends ;
+// class hallo extends Object { }
+// class hallo extends Object { } ;
+// class hallo extends Object { hallo } ;
+// class hallo extends Object { hallo ( } ;
+// class hallo extends Object { hallo () } ;
+// class hallo extends Object { hallo () {} ;
+// class hallo extends Object { hallo () {}} ;
+// class hallo extends Object { hallo () { }; } ;
+// class hallo extends Object { hallo () { super }; } ;
+// class hallo extends Object { hallo () { superClass() }; } ;
+// class hallo extends Object { hallo () { super () }; } ;
+// class hallo extends Object { hallo () { super (); }; } ;
+// class hallo extends Object { hallo () { super (); } } ;
+// class A extends Object { A (new Object()) { super (); } }
+
+// wrong constructor name:
+// class AA extends Object { B () { super (); } }
+
+// The next line is OK
+ class hallo2 extends Object { hallo2 () { super (); } } 

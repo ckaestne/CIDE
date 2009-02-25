@@ -1,0 +1,72 @@
+/* Featherweight Java Example
+ * Natural Numbers 
+ */
+
+class Nat extends Object {
+    Nat () { super (); }
+    Nat pred () { return this; }
+    Nat add (Nat m)  { return m; }
+    Nat mult (Nat m) { return this; }
+    Nat subFrom (Nat m) { return m; }
+    Nat sub (Nat m) { return m.subFrom (this); }
+    Nat divCeil (Nat m) { return this; }
+    Nat div (Nat m) { return (this.sub(m.pred())).divCeil(m); }
+}
+class Zero extends Nat {
+    Zero () { super (); }
+}
+class Succ extends Nat {
+    Nat n;
+    Succ (Nat n) { super (); this.n = n; }
+    Nat pred () { return this.n; }
+    Nat add (Nat m) { return new Succ ((this.n).add (m)); }
+    Nat mult (Nat m) { return ((this.n).mult (m)).add (m); }
+    Nat subFrom (Nat m) { return (this.n).subFrom (m.pred()); }
+    Nat divCeil (Nat m) { return new Succ((this.sub(m)).divCeil(m)); }
+}
+
+class NatTrials extends Object {
+	NatTrials() {
+		super();
+	}
+
+	Nat zero() {
+		return new Zero();
+	}
+	
+	Nat one() {
+		return new Succ(this.zero());
+	}
+	
+	Nat two() {
+		return new Succ(this.one());
+	}
+	
+	Nat three() {
+		return (this.one()).add(this.two());
+	}
+	
+	Nat six() {
+		return (this.two()).mult(this.three());
+	}
+	
+	Nat five() {
+		return (this.six()).pred();
+	}
+	
+	Nat four() {
+		return (this.two()).subFrom(this.six());
+	}
+	
+	Nat n3() {
+		return (this.five()).divCeil(this.two());
+	}
+	
+	Nat n2() {
+		return (this.five()).div(this.two());
+	}
+	
+	Nat inf() {
+		return (this.five()).div(this.zero());
+	}
+}

@@ -1,0 +1,345 @@
+class Trials extends Object {
+	SomeClass z;
+	
+	Trials(SomeClass z) {
+		super();
+		this.z = z;
+	}
+	
+	/* T-VAR *************************************
+	// (V.1)
+	
+	Object TVarFails1() {
+		return x;
+	}
+	
+	Object TVarFails2(Object y) {
+		return x;
+	}
+	**********************************************/
+	
+	Object TVarOK1(Object x) {
+		return x;
+	}
+	
+	Trials TVarOK2(Trials x) {
+		return x;
+	}
+	
+	/* T-FIELD **********************************
+	// (F.1)
+	
+	Object TFieldFails1() {
+		return this.x;
+	}
+	
+	Object TFieldFails2(Object t) {
+		return t.y;
+	}
+	
+	Object TFieldFails3() {
+		return this.g;
+	}
+	**********************************************/
+	
+	Object TFieldOK() {
+		return this.z;
+	}
+	
+	// T-INVK *************************************
+	
+	/* (I.1): Methode muss existieren
+	Object TInvkFails1() {
+		return this.gibtsNicht();
+	}
+	*/
+	
+	/* (I.5): richtige Anzahl von Aufrufparametern
+	Object TInvkFails3(Trials x) {
+		return this.TVarOK2(x, x);
+	}
+	*/
+	
+	/* (I.6): Expressions müssen Subtypen der Typen der formalen Parameter sein
+	Object TInvkFails2(Object x) {
+		return this.TVarOK2(x);
+	}
+	*/
+	
+	Object TInvkOK1() {
+		return this.TFieldOK();
+	}
+	
+	Object TInvkOK2(Trials x) {
+		return this.TVarOK2(x);
+	}
+	
+	// T-NEW *************************************
+	
+	/* (N.1): Typ muss existieren
+	Object TNewFail1() {
+		return new GibtsNicht();
+	}
+	*/
+	
+	/* (N.4): richtige Anzahl von Aufrufparametern
+	Trials TNewFail2() {
+		return new Trials();
+	}
+	*/
+	
+	/* (N.5): Expressions müssen Subtypen der Typen der formalen Parameter sein
+	Trials TNewFail3(Trials o) {
+		return new Trials(o);
+	}
+	*/
+	
+	Object TNewOK1(SomeClassSub o) {
+		return new Trials(o);
+	}
+	
+	Object TNewOK2(SomeClass o) {
+		return new Trials(o);
+	}
+	
+	// T-CAST ************************************************
+	
+	/* (C.1): Typ muss existieren
+	Object TCastFail1() {
+		return (GibtsNicht) (new Trials(new SomeClass()));
+	}
+	*/
+	
+	/* (C.3): Cast muss legal sein
+	Object TCastFail2() {
+		return (Trials) new SomeClass();
+	}
+	*/
+	
+	Object TCastOK1() {
+		return (SomeClass) new SomeClass();
+	}
+	
+	Object TCastOK2() {
+		return (Object) new SomeClass();
+	}
+	
+	Object TCastOK3() {
+		return (SomeClassSub) new SomeClass();
+	}
+	
+	// M not OK in C ********************************
+
+	/* (M.1): Rückgabetyp muss existieren
+	GibtsNicht MethFail1() {
+		return new GibtsNicht();
+	}
+	*/
+	
+	// (M.2) kommt später
+	
+	/* (M.3): Typ eines jeden formalen Parameters muss existieren
+	Object MethFail10(GibtsNicht g) {
+		return g;
+	}
+	*/
+	
+	/* (M.5): Expression muss Subtyp vom Rückgabetyp sein
+	Trials MethFail2() {
+		return new SomeClass();
+	}
+	*/
+	
+	/* (M.6): keine 2 formalen Parameter mit gleichem Namen
+	Object MethFail3(Object o, Object o) {
+		return o;
+	}
+	*/
+}
+
+// (M.2): gültiges Overriding
+
+class SomeClass extends Object {
+	SomeClass() {
+		super();
+	}
+	
+	Object overrideFail1() {
+		return new SomeClass();
+	}
+	
+	Object overrideOK2() {
+		return new SomeClass();
+	}
+}
+
+class SomeClassSub extends SomeClass {
+	SomeClassSub() {
+		super();
+	}
+	
+	/* override ************************************
+	Object overrideFail1(Object o) {
+		return o;
+	}
+	************************************************/
+	
+	Object overrideOK1() {
+		return new SomeClassSub();
+	}
+	
+	Object overrideOK2() {
+		return new SomeClassSub();
+	}
+}
+
+// C not OK ****************************************
+
+class ClassOK1 extends Trials {
+	ClassOK1(SomeClass c) {
+		super(c);
+	}
+}
+
+class ClassOK2 extends Trials {
+	Object o;
+	ClassOK2(SomeClass c1, Object o) {
+		super(c1);
+		this.o = o;
+	}
+}
+
+class ClassOK3 extends ClassOK2 {
+	Object u;
+	ClassOK3(SomeClass c, Object o1, Object o2) {
+		super(c, o1);
+		this.u = o2;
+	}
+	
+	Object methode() {
+		return this.o;
+	}
+}
+
+/* (L.1): Supertyp muss existieren
+class ClassFail1 extends GibtsNicht {
+	GehtNicht() {
+		super();
+	}
+}
+*/
+
+/* (L.2): Typen der Felder müssen existieren
+class ClassFail100 extends Object {
+	GibtsNicht g;
+	ClassFail100(GibtsNicht g) {
+		super();
+		this.g = g;
+	}
+}
+*/
+
+/* (L.3): keine 2 Klassen mit gleichem Namen
+class ClassFail10 extends Object {
+	ClassFail10() {
+		super();
+	}
+}
+class ClassFail10 extends Object {
+	ClassFail10() {
+		super();
+	}
+}
+*/
+
+/* (L.4): keine 2 Methoden mit gleichem Namen
+class ClassFail11 extends Object {
+	ClassFail11() {
+		super();
+	}
+	
+	Object method() {
+		return this;
+	}
+	
+	Object method(Object o) {
+		return o;
+	}
+}
+*/
+
+/* (L.5): Klasse darf nicht >Object< heißen. Sogar schon Syntaxfehler.
+class Object extends Object {
+	Object() {
+		super();
+	}
+}
+*/
+
+// (L.6) wird in SvensTrials.fj gechecked
+
+/* (L.7): keine 2 Felder in Klasse und allen Superklassen mit gleichem Namen
+class ClassFails101 extends ClassOK2 {
+	Object o;
+	ClassFails101(SomeClass c1, Object o, Object u) {
+		super(c1, o);
+		this.o = u;
+	}
+}
+*/
+
+// Konstruktoren ----------------------------------------------
+
+/*
+class ClassFail2 extends Trials {
+	ClassFail2() {
+		super();
+	}
+}
+*/
+
+/*
+class ClassFail3 extends Trials {
+	ClassFail3(Object o) {
+		super(o);
+	}
+}
+*/
+
+/*
+class ClassFail4 extends Trials {
+	Object o;
+	ClassFail4(SomeClass c, Object o) {
+		super(c);
+	}
+}
+*/
+
+/*
+class ClassFail5 extends ClassOK2 {
+	ClassFail5(SomeClass c, Object o1) {
+		super(c);
+	}
+}
+*/
+
+/* (K.4): Konstruktor muss so heißen wie die Klasse
+class ClassFail12 extends Object {
+	FalscherName() {
+		super();
+	}
+}
+*/
+
+/* (K.5): keine 2 formalen Parameter mit gleichem Namen
+class ClassFail13 extends Object {
+	Object o1;
+	Object o2;
+	
+	ClassFail13(Object o, Object o) {
+		super();
+		this.o1 = o;
+		this.o2 = o;
+	}
+}
+*/

@@ -1,0 +1,75 @@
+class Error extends Object { Error () { super (); } }
+
+class Nat extends Object {
+    Nat () { super (); }
+    Object nth (List l) { return new Error (); }
+}
+class Zero extends Nat {
+    Zero () { super (); }
+    Object nth (List l) { return l.head (); }
+}
+class Succ extends Nat {
+    Nat n;
+    Succ (Nat n) { super (); this.n = n; }
+    Object nth (List l) { return (this.n).nth (l.tail ()); }
+}
+
+class List extends Object {
+    List () { super (); }
+    Object head () { return new Error (); }
+    List   tail () { return (List)(Object)new Error (); }
+    List append (List l) { return l; }
+}
+class Nil extends List {
+    Nil () { super (); }
+}
+class Cons extends List {
+    Object hd;
+    List tl;
+    Cons (Object hd, List tl) { super(); this.hd = hd; this.tl = tl; }
+    Object head () { return this.hd; }
+    List   tail () { return this.tl; }
+    List append (List l) { return new Cons (this.hd, (this.tl).append (l)); }
+}
+
+class ListTrials extends Object {
+	ListTrials() {
+		super();
+	}
+
+	Nat zero() {
+		return new Zero();
+	}
+	
+	Nat one() {
+		return new Succ(this.zero());
+	}
+	
+	Nat two() {
+		return new Succ(this.one());
+	}
+
+	List l21() {
+		return new Cons (this.two(), new Cons (this.one(), new Nil ()));
+	}
+	
+	List l0() {
+		return new Cons (this.zero(), new Nil ());
+	}
+	
+	List l210() {
+		return (this.l21()).append (this.l0());
+	}
+
+	Nat first() {
+		return (Nat) (this.zero()).nth (this.l210());
+	}
+	
+	Nat second() {
+		return (Nat) (this.one()).nth (this.l210());
+	}
+	
+	Nat third() {
+		return (Nat) (this.two()).nth (this.l210());
+	}
+}
