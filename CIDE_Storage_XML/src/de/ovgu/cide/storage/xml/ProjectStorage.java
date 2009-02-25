@@ -561,7 +561,11 @@ public class ProjectStorage {
 			}
 		}
 		
-		return createAnnotationNode(astID, (Element) parent.getChildNodes().item(0), altID);
+		Node childNode = parent.getChildNodes().item(0);
+		if (childNode == null)
+			childNode = parent;
+		
+		return createAnnotationNode(astID, childNode, altID);
 	}
 	
 	/**
@@ -570,7 +574,7 @@ public class ProjectStorage {
 	 *
 	 * @return	Neu angelegter Annotations-Knoten
 	 */
-	private Element createAnnotationNode(String astID, Element parent, String altID) {
+	private Element createAnnotationNode(String astID, Node parent, String altID) {
 		if (parent == null)
 			return null;
 		
