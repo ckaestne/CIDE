@@ -1,5 +1,6 @@
 package de.ovgu.cide.typing.internal.manager;
 
+import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
@@ -53,6 +54,20 @@ public class EvaluationStrategyProxy implements IEvaluationStrategy {
 			loadTarget();
 		return target.implies(featureModel, source, targete);
 	}
+	
+	@Override
+	public boolean areMutualExclusive(IFeatureModel featureModel, Set<IFeature> context, List<Set<IFeature>> featureSets) {
+		if (target == null)
+			loadTarget();
+		return target.areMutualExclusive(featureModel, context, featureSets);
+	}
+	
+	@Override
+	public boolean mayBeMissing(IFeatureModel featureModel, Set<IFeature> context, List<Set<IFeature>> featureSets) {
+		if (target == null)
+			loadTarget();
+		return target.mayBeMissing(featureModel, context, featureSets);
+	}
 
 	public boolean isResponsible(String featureModelId) {
 		return featureModelProviderId.equals(featureModelId);
@@ -63,5 +78,4 @@ public class EvaluationStrategyProxy implements IEvaluationStrategy {
 			loadTarget();
 		target.clearCache(featureModel);
 	}
-
 }
