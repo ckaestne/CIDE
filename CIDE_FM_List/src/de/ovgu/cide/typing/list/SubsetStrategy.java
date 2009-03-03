@@ -1,8 +1,8 @@
 package de.ovgu.cide.typing.list;
 
+import java.util.List;
 import java.util.Set;
 
-import cide.gast.IASTNode;
 import de.ovgu.cide.features.IFeature;
 import de.ovgu.cide.features.IFeatureModel;
 import de.ovgu.cide.typing.model.IEvaluationStrategy;
@@ -19,13 +19,11 @@ import de.ovgu.cide.typing.model.IEvaluationStrategy;
  */
 public class SubsetStrategy implements IEvaluationStrategy {
 
-	public boolean equal(IFeatureModel featureModel, Set<IFeature> source,
-			Set<IFeature> target) {
+	public boolean equal(IFeatureModel featureModel, Set<IFeature> source, Set<IFeature> target) {
 		return source.equals(target);
 	}
 
-	public boolean implies(IFeatureModel featureModel, Set<IFeature> source,
-			Set<IFeature> target) {
+	public boolean implies(IFeatureModel featureModel, Set<IFeature> source, Set<IFeature> target) {
 		return source.containsAll(target);
 	}
 
@@ -33,4 +31,13 @@ public class SubsetStrategy implements IEvaluationStrategy {
 		// not needed
 	}
 
+	@Override
+	public boolean areMutualExclusive(IFeatureModel featureModel, Set<IFeature> context, List<Set<IFeature>> featureSets) {
+		return (featureSets.size() < 2);
+	}
+
+	@Override
+	public boolean mayBeMissing(IFeatureModel featureModel, Set<IFeature> context, List<Set<IFeature>> featureSets) {
+		return (!featureSets.isEmpty());
+	}
 }
