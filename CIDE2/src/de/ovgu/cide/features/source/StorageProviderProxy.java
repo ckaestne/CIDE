@@ -12,6 +12,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import de.ovgu.cide.af.Alternative;
 import de.ovgu.cide.features.IFeature;
 import de.ovgu.cide.features.IFeatureModel;
+import de.ovgu.cide.features.IFeatureModelWithID;
 
 public class StorageProviderProxy implements IStorageProvider {
 
@@ -28,12 +29,12 @@ public class StorageProviderProxy implements IStorageProvider {
 		return target.readAnnotations(project, annotatedResource, featureModel);
 	}
 
-	public boolean storeAnnotations(IProject project, Object annotatedResource,
-			Map<String, Set<IFeature>> annotations, Map<String, List<String>> parentIDs, IProgressMonitor monitor)
+	public boolean storeAnnotations(IProject project, Object annotatedResource, Map<String, Set<IFeature>> annotations, 
+			Map<String, Boolean> isOptional, Map<String, List<String>> parentIDs, IProgressMonitor monitor)
 			throws CoreException {
 		if (target == null)
 			loadTarget();
-		return target.storeAnnotations(project, annotatedResource, annotations, parentIDs, monitor);
+		return target.storeAnnotations(project, annotatedResource, annotations, isOptional, parentIDs, monitor);
 	}
 	
 	public boolean activateAlternative(IProject project, Object annotatedResource, Alternative alternative, Map<String, String> id2oldText) {
@@ -49,10 +50,10 @@ public class StorageProviderProxy implements IStorageProvider {
 	}
 	
 	@Override
-	public Map<String, List<Alternative>> getAlternatives(IProject project, Object annotatedResource, List<String> ids) {
+	public Map<String, List<Alternative>> getAlternatives(IProject project, Object annotatedResource, List<String> ids, IFeatureModelWithID featureModel) {
 		if (target == null)
 			loadTarget();
-		return target.getAlternatives(project, annotatedResource, ids);
+		return target.getAlternatives(project, annotatedResource, ids, featureModel);
 	}
 
 	private IConfigurationElement configElement;

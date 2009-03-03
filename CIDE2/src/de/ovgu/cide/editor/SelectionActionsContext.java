@@ -70,7 +70,7 @@ public class SelectionActionsContext {
 		return true;
 	}
 	
-	public boolean nodesHaveNotInheritedColors() {
+	public boolean nodesHaveNonInheritedColors() {
 		if (!anyNodesSelected())
 			return false;
 		
@@ -90,7 +90,7 @@ public class SelectionActionsContext {
 			
 			SelectionFinder selectionFinder = new SelectionFinder(selectedNodes, textSelection, optionalNodesOnly);
 			ast.accept(selectionFinder);
-			allSelectedNodes = selectionFinder.getAllSelectedNodes();			
+			allSelectedNodes = selectionFinder.getAllSelectedNodes();
 		} catch (Exception e) { }
 	}
 

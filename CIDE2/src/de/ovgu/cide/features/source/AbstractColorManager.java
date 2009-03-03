@@ -13,6 +13,7 @@ import org.eclipse.core.runtime.CoreException;
 import de.ovgu.cide.af.Alternative;
 import de.ovgu.cide.features.IFeature;
 import de.ovgu.cide.features.IFeatureModel;
+import de.ovgu.cide.features.IFeatureModelWithID;
 
 abstract class AbstractColorManager {
 
@@ -46,7 +47,7 @@ abstract class AbstractColorManager {
 			return;
 
 		try {
-			if (storageProvider.storeAnnotations(project, resource, id2colors, getID2parentIDs(), null))
+			if (storageProvider.storeAnnotations(project, resource, id2colors, getID2isOptional(), getID2parentIDs(), null))
 				changed = false;
 		} catch (CoreException e) {
 			e.printStackTrace();
@@ -54,6 +55,10 @@ abstract class AbstractColorManager {
 	}
 	
 	protected Map<String, List<String>> getID2parentIDs() {
+		return null;
+	}
+	
+	protected Map<String, Boolean> getID2isOptional() {
 		return null;
 	}
 
@@ -108,8 +113,15 @@ abstract class AbstractColorManager {
 		return success;
 	}
 	
-	public Map<String, List<Alternative>> getAlternatives(List<String> ids) {
-		return storageProvider.getAlternatives(project, resource, ids);
+	/**
+	 * Liefert alle Alternativen zu den AST-Knoten mit den gegebenen IDs. Ist ids == null, so werden die Alternativen
+	 * aller AST-Knoten zurückgegeben.
+	 * @param ids
+	 * @param featureModel
+	 * @return
+	 */
+	public Map<String, List<Alternative>> getAlternatives(List<String> ids, IFeatureModelWithID featureModel) {
+		return storageProvider.getAlternatives(project, resource, ids, featureModel);
 	}
 	
 	protected boolean activateAlternative(Alternative alternative, Map<String, String> id2oldText) {

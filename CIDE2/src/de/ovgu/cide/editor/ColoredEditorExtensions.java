@@ -205,7 +205,7 @@ public class ColoredEditorExtensions {
 			
 			if (sourceFile != null) {
 				SelectionActionsContext contextOptional = 
-					new SelectionActionsContext(sourceFile, editor.getSelectionProvider().getSelection(), this, true);
+					new SelectionActionsContext(sourceFile, editor.getSelectionProvider().getSelection(), this, false);		// XXX MRO: true
 				IFeatureModel fm = sourceFile.getFeatureModel();
 				
 				List<IFeature> visibleFeatures = new ArrayList<IFeature>(fm.getVisibleFeatures());
@@ -230,7 +230,7 @@ public class ColoredEditorExtensions {
 
 					// Eine Alternative soll nur dann angelegt werden können, wenn das aktive Codefragment min. eine Farbe hat,
 					// die es nicht von einem Elternknoten erbt.
-					if (contextNonOptional.nodesHaveNotInheritedColors())
+					if (contextNonOptional.nodesHaveNonInheritedColors())
 						mm.add(new CreateAlternativeAction(contextNonOptional));
 					
 					mm.add(new SwitchAlternativeSubmenu(contextNonOptional));

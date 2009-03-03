@@ -11,6 +11,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import de.ovgu.cide.af.Alternative;
 import de.ovgu.cide.features.IFeature;
 import de.ovgu.cide.features.IFeatureModel;
+import de.ovgu.cide.features.IFeatureModelWithID;
 
 public interface IStorageProvider {
 
@@ -20,7 +21,7 @@ public interface IStorageProvider {
 	 * 
 	 * @return whether storage has been successful
 	 */
-	boolean storeAnnotations(IProject project, Object annotatedResource, Map<String, Set<IFeature>> annotations, 
+	boolean storeAnnotations(IProject project, Object annotatedResource, Map<String, Set<IFeature>> annotations, Map<String, Boolean> isOptional,
 			Map<String, List<String>> parentIDs, IProgressMonitor monitor)
 			throws CoreException;
 
@@ -42,7 +43,15 @@ public interface IStorageProvider {
 	 */
 	boolean storeNewAlternative(IProject project, Object annotatedResource, Alternative alternative, Map<String, String> id2oldText);
 	
-	Map<String, List<Alternative>> getAlternatives(IProject project, Object annotatedResource, List<String> ids);
+	/**
+	 * Retrieves all alternatives for the given list of AST-node-IDs. If ids == null, then the alternatives of all AST-nodes
+	 * are returned.
+	 * @param project
+	 * @param annotatedResource
+	 * @param ids
+	 * @return
+	 */
+	Map<String, List<Alternative>> getAlternatives(IProject project, Object annotatedResource, List<String> ids, IFeatureModelWithID featureModel);
 
 	/**
 	 * returns whether this storage manager can be used with the given feature

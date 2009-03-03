@@ -21,6 +21,7 @@ public class SourceFileColorManager extends AbstractColorManager {
 	private final ColoredSourceFile source;
 	
 	private Map<String, List<String>> id2parentIDs;
+	private Map<String, Boolean> id2isOptional;
 
 	public SourceFileColorManager(IStorageProvider storageProvider,
 			ColoredSourceFile source,
@@ -31,11 +32,17 @@ public class SourceFileColorManager extends AbstractColorManager {
 		this.source = source;
 		
 		id2parentIDs = new HashMap<String, List<String>>();
+		id2isOptional = new HashMap<String, Boolean>();
 	}
 	
 	@Override
 	protected Map<String, List<String>> getID2parentIDs() {
 		return id2parentIDs;
+	}
+	
+	@Override
+	protected Map<String,Boolean> getID2isOptional() {
+		return id2isOptional;
 	}
 
 	public Set<IFeature> getOwnColors(IASTNode node) {
@@ -57,7 +64,7 @@ public class SourceFileColorManager extends AbstractColorManager {
 	public boolean addColor(IASTNode node, IFeature color) {
 		if (node == null)
 			return false;
-		updateID2parentIDs(node);
+		updateMaps(node);
 		
 		return super.addColor(node.getId(), color);
 	}
@@ -96,8 +103,8 @@ public class SourceFileColorManager extends AbstractColorManager {
 		if (node == null)
 			return false;
 		
-		updateID2parentIDs(node);
-		return super.createAlternative(new Alternative(altID, node.getId(), id2parentIDs.get(node.getId()), null), createID2Text(node));
+		updateMaps(node);
+		return super.createAlternative(new Alternative(altID, node.getId(), node.isOptional(), id2parentIDs.get(node.getId()), null), createID2Text(node));
 	}
 
 	/*
@@ -141,7 +148,7 @@ public class SourceFileColorManager extends AbstractColorManager {
 	}
 
 	public void setColors(IASTNode node, Set<IFeature> newColors) {
-		updateID2parentIDs(node);
+		updateMaps(node);
 		super.setColors(node.getId(), newColors);
 	}
 
@@ -149,17 +156,21 @@ public class SourceFileColorManager extends AbstractColorManager {
 		return directoryColorManager;
 	}
 	
-	private void updateID2parentIDs(IASTNode node) {
+	private void updateMaps(IASTNode node) {
 		if (node == null)
 			return;
 		
 		LinkedList<String> parentIDs = new LinkedList<String>();
 		IASTNode parentNode = node;
 		while ((parentNode = parentNode.getParent()) != null) {
-			if ((parentNode.getId() != null) && (parentNode.getId().length() > 0))
+			if ((parentNode.getId() != null) && (parentNode.getId().length() > 0)) {
 				parentIDs.addFirst(parentNode.getId());
+				id2isOptional.put(parentNode.getId(), parentNode.isOptional());
+			}
 		}
+		
 		id2parentIDs.put(node.getId(), parentIDs);
+		id2isOptional.put(node.getId(), node.isOptional());
 	}
 	
 	private Map<String, String> createID2Text(IASTNode node) {

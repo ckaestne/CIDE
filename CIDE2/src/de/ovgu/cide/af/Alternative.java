@@ -23,6 +23,12 @@ public class Alternative {
 	public String entityID;
 	
 	/**
+	 * Indikator: Zugrunde liegende Entität (z.B. AST-Knoten) ist optional, 
+	 * d.h. es muss nicht in jeder Konfiguration eine Alternative existieren.
+	 */
+	public boolean isOptional;
+	
+	/**
 	 * Liste von IDs der Eltern-Entitäten
 	 */
 	public List<String> entityParentIDs;
@@ -31,6 +37,11 @@ public class Alternative {
 	 * Menge von Features, mit der die Alternative annotiert ist
 	 */
 	public Set<IFeature> features;
+	
+	/**
+	 * Menge von Features, die die Alternative von seinen Eltern erbt
+	 */
+	public Set<IFeature> inheritedFeatures;
 	
 	/**
 	 * Text der Alternative, z.B. Sourcecode
@@ -42,9 +53,10 @@ public class Alternative {
 	 */
 	public boolean isActive;
 	
-	public Alternative(String altID, String entityID, List<String> entityParentIDs, Set<IFeature> features) {
+	public Alternative(String altID, String entityID, boolean isOptional, List<String> entityParentIDs, Set<IFeature> features) {
 		this.altID = altID;
 		this.entityID = entityID;
+		this.isOptional = isOptional;
 		this.entityParentIDs = entityParentIDs;
 		this.features = features;
 		
@@ -64,6 +76,11 @@ public class Alternative {
 	
 	public Alternative setText(String text) {
 		this.text = text;
+		return this;
+	}
+	
+	public Alternative setInheritedFeatures(Set<IFeature> features) {
+		this.inheritedFeatures = features;
 		return this;
 	}
 }

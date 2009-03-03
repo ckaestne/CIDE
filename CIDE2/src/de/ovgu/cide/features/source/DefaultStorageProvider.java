@@ -120,7 +120,7 @@ public class DefaultStorageProvider implements IStorageProvider {
 		return new HashMap<String, Set<IFeature>>();
 	}
 
-	public boolean storeAnnotations(IProject project, Object annotatedResource, Map<String, Set<IFeature>> annotations, 
+	public boolean storeAnnotations(IProject project, Object annotatedResource, Map<String, Set<IFeature>> annotations, Map<String, Boolean> isOptional,
 			Map<String, List<String>> parentIDs, IProgressMonitor monitor)
 			throws CoreException {
 		assert annotatedResource instanceof IFile
@@ -266,7 +266,7 @@ public class DefaultStorageProvider implements IStorageProvider {
 	}
 
 	@Override
-	public Map<String, List<Alternative>> getAlternatives(IProject project, Object annotatedResource, List<String> ids) {
+	public Map<String, List<Alternative>> getAlternatives(IProject project, Object annotatedResource, List<String> ids, IFeatureModelWithID featureModel) {
 		return null;
 	}
 }

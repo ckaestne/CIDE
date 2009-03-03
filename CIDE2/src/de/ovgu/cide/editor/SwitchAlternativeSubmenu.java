@@ -25,8 +25,10 @@ public class SwitchAlternativeSubmenu extends MenuManager implements IContributi
 		IASTNode selectedNode = selectedNodes.get(0);
 		
 		AlternativeFeatureManager altFeatureManager;
+		List<Alternative> alternatives;
 		try {
 			altFeatureManager = context.getSourceFile().getAltFeatureManager();
+			alternatives = altFeatureManager.getAlternatives(selectedNode.getId());
 		} catch (CoreException e) {
 			context.getEditorExtensions().markCoreException(e);
 			return;
@@ -34,7 +36,6 @@ public class SwitchAlternativeSubmenu extends MenuManager implements IContributi
 			context.getEditorExtensions().markParseException(e);
 			return;
 		}
-		List<Alternative> alternatives = altFeatureManager.getAlternatives(selectedNode.getId());
 		
 		//                              Wenn es nur eine Alternative gibt, muss sie inaktiv sein
 		if ((alternatives != null) && ((alternatives.size() != 1) || !alternatives.get(0).isActive)) {

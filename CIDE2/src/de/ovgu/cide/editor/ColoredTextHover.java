@@ -192,12 +192,13 @@ public class ColoredTextHover implements ITextHover {
 			SingleNodeFinder snf = new SingleNodeFinder(hoverRegion.getOffset());
 			ast.accept(snf);
 			IASTNode node = snf.result;
-			while (node != null && !node.isOptional())
-				node = node.getParent();
+			// Uns interessieren nun auch nicht-optionale Knoten (wg. alternativen Features)
+//			while (node != null && !node.isOptional())
+//				node = node.getParent();
 			if (node != null)
 				result.add(node);
 		} else
-			ast.accept(new SelectionFinder(result, hoverRegion, true));
+			ast.accept(new SelectionFinder(result, hoverRegion, false));	// Uns interessieren nun auch nicht-optionale Knoten (wg. alternativen Features)
 		return result;
 	}
 
@@ -251,5 +252,4 @@ public class ColoredTextHover implements ITextHover {
 			return new Region(selection.x, selection.y);
 		return new Region(offset, 0);
 	}
-
 }
