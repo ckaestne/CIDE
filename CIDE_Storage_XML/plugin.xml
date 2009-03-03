@@ -9,5 +9,13 @@
             provider="de.ovgu.cide.storage.xml.XMLStorageProvider">
       </storageProvider>
    </extension>
+   <extension
+         point="de.ovgu.cide.typing.typingProvider">
+      <typingProvider
+            id="de.ovgu.cide.af"
+            name="Alternative Features Syntax"
+            provider="de.ovgu.cide.af.AlternativeSyntaxExtension">
+      </typingProvider>
+   </extension>
 
 </plugin>

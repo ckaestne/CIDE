@@ -70,15 +70,12 @@ public class ProjectStorage {
 					dom = newDom(parser);
 			} catch (SAXException e) {
 				dom = newDom(parser);
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IOException e) {
 				dom = newDom(parser);
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		} catch (ParserConfigurationException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 	}
@@ -173,7 +170,8 @@ public class ProjectStorage {
 	 * 
 	 * Achtung: jede Liste von Vorgaenger-IDs muss top-down sortiert sein, d.h. der aelteste Vorgaenger muss ganz vorne stehen usw.
 	 */
-	public boolean storeAnnotations(String path, Map<String, Set<IFeature>> annotations, Map<String, List<String>> parentIDs) {
+	public boolean storeAnnotations(String path, Map<String, Set<IFeature>> annotations, Map<String, Boolean> isOptional, 
+									Map<String, List<String>> parentIDs) {
 		try {
 			Element featureAnnotationsElement = findFeatureAnnotationsElement(path);
 			
@@ -190,7 +188,7 @@ public class ProjectStorage {
 				
 				if (activeAlternative == null) {
 					// Keine aktive Alternative gefunden: neue Annotation anlegen
-					activeAlternative = (Element) createAnnotationNode(annotation.getKey(), featureAnnotationsElement, 
+					activeAlternative = (Element) createAnnotationNode(annotation.getKey(), isOptional, featureAnnotationsElement, 
 								parentIDs.get(annotation.getKey()), DEFAULT_ALTID).getChildNodes().item(0);
 				} else {
 					// Aktive Alternative gefunden: Feature-Annotationen loeschen, damit sie gleich neu gesetzt werden koennen
@@ -216,13 +214,10 @@ public class ProjectStorage {
 		try {
 			serializeDom();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (TransformerException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (CoreException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -239,7 +234,6 @@ public class ProjectStorage {
 			return false;
 		
 		String astID = alternative.entityID;
-		List<String> parentIDs = alternative.entityParentIDs;
 		String altID = alternative.altID;
 		Set<IFeature> features = alternative.features;
 		
@@ -255,10 +249,8 @@ public class ProjectStorage {
 		Element activeAlternative = findActiveAlternative(featureAnnotationsElement, astID);
 		
 		if (activeAlternative == null) {
-			// Keine aktive Alternative gefunden: neue Annotation anlegen
-			// Eigentlich ungewoehnliche Situation, denn eine Alternative sollte von der Oberflaeche aus eigentlich nur zu einer
-			// bestehenden Entitaet angelegt werden koennen. Wir unterstuetzen es trotzdem :-)
-			activeAlternative = (Element) createAnnotationNode(astID, featureAnnotationsElement, parentIDs, altID).getChildNodes().item(0);
+			System.err.println("Fatal error: You cannot create an alternative for a not existing node.");
+			return false;
 		} else {
 			// Aktive Alternative gefunden:
 			// Texte auch der aktiven Kinder aktualisieren, Alternative deaktivieren und eine neue, aktive Alternative erzeugen
@@ -288,13 +280,10 @@ public class ProjectStorage {
 		try {
 			serializeDom();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (TransformerException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (CoreException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -338,21 +327,25 @@ public class ProjectStorage {
 		try {
 			serializeDom();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (TransformerException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (CoreException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
 		return true;
 	}
 	
-	public Map<String, List<Alternative>> getAlternatives(String path, List<String> ids) {
-		if ((ids == null) || (ids.size() < 1))
+	/**
+	 * @param path
+	 * @param ids	Liste von IDs von AST-Knoten, die relevant sind. Ist diese Liste null, so werden die Alternativen
+	 * 				aller AST-Knoten zurückgegeben.
+	 * @return
+	 */
+	public Map<String, List<Alternative>> getAlternatives(String path, List<String> ids, IFeatureModelWithID featureModel) {
+		boolean allAlternatives = (ids == null);
+		if ((ids != null) && (ids.size() < 1))
 			return null;
 		
 		Element featureAnnotationsElement = findFeatureAnnotationsElement(path);
@@ -367,7 +360,9 @@ public class ProjectStorage {
 		for (int i = 0; i < annotations.getLength(); ++i) {
 			Element annotation = (Element) annotations.item(i);
 			String astid = annotation.getAttributes().getNamedItem("astid").getNodeValue();
-			if (ids.contains(astid)) {
+			boolean isOptional = annotation.getAttributes().getNamedItem("isOptional").getNodeValue().equals("true");
+			
+			if (allAlternatives || ids.contains(astid)) {
 				NodeList alternatives = annotation.getChildNodes();
 				
 				List<Alternative> altList = null;
@@ -382,10 +377,16 @@ public class ProjectStorage {
 				
 				for (int j = 0; j < alternatives.getLength(); ++j) {
 					Element alternative = (Element) alternatives.item(j);
-					if (alternative.getNodeName().equals("alternative") && parentIsActive(alternative)) {
-						Alternative alt = buildAlternative(alternative).setEntityID(astid);
-						altList.add(alt);
-						alternative2node.put(alt, alternative);
+					
+					if (alternative.getNodeName().equals("alternative")) {
+						if (allAlternatives) {
+							Alternative alt = buildAlternative(alternative, astid, isOptional, featureModel);
+							altList.add(alt);
+						} else if (parentIsActive(alternative)) {
+							Alternative alt = buildAlternative(alternative, astid, isOptional, featureModel);
+							altList.add(alt);
+							alternative2node.put(alt, alternative);
+						}
 					}
 				}
 			}
@@ -410,12 +411,28 @@ public class ProjectStorage {
 		return false;
 	}
 	
-	private Alternative buildAlternative(Element alternative) {
+	private Alternative buildAlternative(Element alternative, String astid, boolean isOptional, IFeatureModelWithID featureModel) {
 		if (alternative == null)
 			return null;
 		
-		return (new Alternative(alternative.getAttribute("altid"), null, null, null))
-					.setActive(alternative.getAttribute("isActive").equals("true")).setText(getText(alternative));
+		List<String> parentIDs = new LinkedList<String>();
+		Set<IFeature> inheritedFeatures = new HashSet<IFeature>();
+		
+		Node parent = alternative.getParentNode().getParentNode();
+		while (!parent.getNodeName().equals("featureannotations")) {
+			if (parent.getNodeName().equals("alternative")) {
+				inheritedFeatures.addAll(loadFeatures(parent, featureModel));
+			} else if (parent.getNodeName().equals("annotation")) {
+				Node astidNode = parent.getAttributes().getNamedItem("astid");
+				if (astidNode != null)
+					parentIDs.add(0, astidNode.getNodeValue());
+			}
+			
+			parent = parent.getParentNode();
+		}
+		
+		return (new Alternative(alternative.getAttribute("altid"), astid, isOptional, parentIDs, loadFeatures(alternative, featureModel)))
+					.setActive(alternative.getAttribute("isActive").equals("true")).setText(getText(alternative)).setInheritedFeatures(inheritedFeatures);
 	}
 	
 	private String getText(Element alternative) {
@@ -537,7 +554,7 @@ public class ProjectStorage {
 	 *
 	 * @return	Neu angelegter Annotations-Knoten
 	 */
-	private Element createAnnotationNode(String astID, Element grandParent, List<String> parentIDs, String altID) {
+	private Element createAnnotationNode(String astID, Map<String, Boolean> isOptional, Element grandParent, List<String> parentIDs, String altID) {
 		if (grandParent == null)
 			return null;
 		
@@ -545,27 +562,23 @@ public class ProjectStorage {
 		Element parent = grandParent;
 		if (parentIDs != null) {
 			for (String parentID : parentIDs) {
-				grandParent = parent;
+				grandParent = (Element) (parent.getNodeName().equals("alternative") ? parent.getParentNode() : parent);
 				if (insertParent) {
-					parent = createAnnotationNode(parentID, findActiveAlternative(grandParent), DEFAULT_ALTID);
+					parent = (Element) createAnnotationNode(parentID, isOptional.get(parentID), findActiveAlternative(grandParent), DEFAULT_ALTID)
+									   .getChildNodes().item(0);
 				} else {
 					parent = findActiveAlternative(parent, parentID);
 					insertParent |= (parent == null);
 					
 					if (parent == null) {
-						parent = createAnnotationNode(parentID, findActiveAlternative(grandParent), DEFAULT_ALTID);
-					} else {
-						parent = (Element) parent.getParentNode();
+						parent = (Element) createAnnotationNode(parentID, isOptional.get(parentID), findActiveAlternative(grandParent), DEFAULT_ALTID)
+										   .getChildNodes().item(0);
 					}
 				}
 			}
 		}
 		
-		Node childNode = parent.getChildNodes().item(0);
-		if (childNode == null)
-			childNode = parent;
-		
-		return createAnnotationNode(astID, childNode, altID);
+		return createAnnotationNode(astID, isOptional.get(astID), parent, altID);
 	}
 	
 	/**
@@ -574,12 +587,13 @@ public class ProjectStorage {
 	 *
 	 * @return	Neu angelegter Annotations-Knoten
 	 */
-	private Element createAnnotationNode(String astID, Node parent, String altID) {
+	private Element createAnnotationNode(String astID, boolean isOptional, Node parent, String altID) {
 		if (parent == null)
 			return null;
 		
 		Element annotationElement = dom.createElement("annotation");
 		annotationElement.setAttribute("astid", astID);
+		annotationElement.setAttribute("isOptional", isOptional ? "true" : "false");
 		
 		createAlternativeNode(annotationElement, altID);		
 		parent.appendChild(annotationElement);

@@ -47,14 +47,14 @@ public class XMLStorageProvider implements IStorageProvider {
 				(IFeatureModelWithID) featureModel);
 	}
 
-	public boolean storeAnnotations(IProject project, Object annotatedResource, Map<String, Set<IFeature>> annotations, 
+	public boolean storeAnnotations(IProject project, Object annotatedResource, Map<String, Set<IFeature>> annotations, Map<String, Boolean> isOptional,
 			Map<String, List<String>> parentIDs, IProgressMonitor monitor)
 			throws CoreException {
 		assert annotatedResource instanceof IResource;
 		String path = ((IResource) annotatedResource).getProjectRelativePath()
 				.toPortableString();
 
-		return getProjectStorage(project).storeAnnotations(path, annotations, parentIDs);
+		return getProjectStorage(project).storeAnnotations(path, annotations, isOptional, parentIDs);
 	}
 	
 	public boolean storeNewAlternative(IProject project, Object annotatedResource, Alternative alternative, Map<String, String> id2oldText) {
@@ -65,11 +65,11 @@ public class XMLStorageProvider implements IStorageProvider {
 	}
 	
 	@Override
-	public Map<String, List<Alternative>> getAlternatives(IProject project, Object annotatedResource, List<String> ids) {
+	public Map<String, List<Alternative>> getAlternatives(IProject project, Object annotatedResource, List<String> ids, IFeatureModelWithID featureModel) {
 		assert annotatedResource instanceof IResource;
 		String path = ((IResource) annotatedResource).getProjectRelativePath().toPortableString();
 		
-		return getProjectStorage(project).getAlternatives(path, ids);
+		return getProjectStorage(project).getAlternatives(path, ids, featureModel);
 	}
 
 	public boolean activateAlternative(IProject project, Object annotatedResource, Alternative alternative, Map<String, String> id2oldText) {
