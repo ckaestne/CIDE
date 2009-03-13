@@ -192,9 +192,13 @@ public class ColoredTextHover implements ITextHover {
 			SingleNodeFinder snf = new SingleNodeFinder(hoverRegion.getOffset());
 			ast.accept(snf);
 			IASTNode node = snf.result;
-			// Uns interessieren nun auch nicht-optionale Knoten (wg. alternativen Features)
-//			while (node != null && !node.isOptional())
-//				node = node.getParent();
+			// Ist kein Text markiert, so suchen wir nach dem nächsten optionalen Knoten. Sonst würde man z.B.
+			// bei einem gefärbten "Object o1;" die Angabe "no direct colors" bekommen, da der Cursor entweder
+			// über dem Knoten "Object" oder "o1" steht.
+			// Nachteil: Ist z.B. nur der Rückgabetyp einer Methode gefärbt, so bekommt man die Angabe "no direct colors".
+			//           Den Aufwand, um dies zu vermeiden, ist es nicht Wert :-)
+			while (node != null && !node.isOptional())
+				node = node.getParent();
 			if (node != null)
 				result.add(node);
 		} else
