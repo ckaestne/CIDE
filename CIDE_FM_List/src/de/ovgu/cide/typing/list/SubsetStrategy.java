@@ -40,4 +40,9 @@ public class SubsetStrategy implements IEvaluationStrategy {
 	public boolean mayBeMissing(IFeatureModel featureModel, Set<IFeature> context, List<Set<IFeature>> featureSets) {
 		return (!featureSets.isEmpty());
 	}
+	
+	@Override
+	public boolean exists(IFeatureModel featureModel, Set<IFeature> features) {
+		return true;
+	}
 }
