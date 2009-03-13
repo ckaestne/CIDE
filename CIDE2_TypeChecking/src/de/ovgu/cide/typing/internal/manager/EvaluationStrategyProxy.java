@@ -68,6 +68,13 @@ public class EvaluationStrategyProxy implements IEvaluationStrategy {
 			loadTarget();
 		return target.mayBeMissing(featureModel, context, featureSets);
 	}
+	
+	@Override
+	public boolean exists(IFeatureModel featureModel, Set<IFeature> features) {
+		if (target == null)
+			loadTarget();
+		return target.exists(featureModel, features);
+	}
 
 	public boolean isResponsible(String featureModelId) {
 		return featureModelProviderId.equals(featureModelId);

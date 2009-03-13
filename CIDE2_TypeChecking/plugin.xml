@@ -42,6 +42,22 @@
 
 
 	</extension>
+ <extension
+       point="org.eclipse.ui.editorActions">
+    <editorContribution
+          id="coloride.coloredEditorActions"
+          targetID="de.ovgu.cide.ColoredTextEditor">
+       <action
+             class="de.ovgu.cide.typing.internal.ForceValidationAction"
+             icon="icons/sample.gif"
+             id="coloride.validator.ForceValidationAction"
+             label="Force Full Type Check"
+             style="push"
+             toolbarPath="Normal/additions"
+             tooltip="Force type check for full project ">
+       </action>
+    </editorContribution>
+ </extension>
 
 
 </plugin>

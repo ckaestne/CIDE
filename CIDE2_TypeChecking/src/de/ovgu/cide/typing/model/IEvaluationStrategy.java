@@ -44,6 +44,20 @@ public interface IEvaluationStrategy {
 	boolean equal(IFeatureModel featureModel, Set<IFeature> source, Set<IFeature> target);
 	
 	/**
+	 * Checks whether there exists a set of features that is valid within the feature model, so that all given features are present.
+	 * 
+	 * In detail it is checked whether there exists a set F of features so that
+	 * 		eval(FM, F) AND eval(feature_1, F) AND eval(feature_n, F)
+	 * is true.
+	 * 
+	 * @param featureModel
+	 * @param features
+	 * 
+	 * @return true if there exists such a set of features || false, otherwise
+	 */
+	boolean exists(IFeatureModel featureModel, Set<IFeature> features);
+	
+	/**
 	 * Checks whether the given featureSets are mutually exclusive in the given context and for the current feature model.
 	 * 
 	 * In detail it is checked whether
