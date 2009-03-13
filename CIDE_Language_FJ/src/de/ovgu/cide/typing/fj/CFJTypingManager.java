@@ -383,43 +383,32 @@ public class CFJTypingManager {
 	}
 	
 	/**
-	 * mlookup unter Berücksichtigung der Annotationen
+	 * Gibt alle Methoden mit gegebenem Namen zurück, die in der Vererbungshierarchie ab node aufwärts gefunden werden.
 	 * @param identifier
 	 * @param node
-	 * @param features
-	 * @param strategy
 	 * @return
 	 */
-	public IASTNode mlookup(String identifier, CFJTypeDeclarationWrapper node, Set<IFeature> features, IEvaluationStrategy strategy) {
-		if ((identifier == null) || (node == null) || (strategy == null))
-			return null;
-		if (features == null)
-			features = new HashSet<IFeature>();
-		
-		ArrayList<MethodDeclaration> allMethodDeclarations = node.getMethodDeclaration();
-		if ((allMethodDeclarations == null) || (allMethodDeclarations.size() < 1))
+	public List<MethodDeclaration> mlookupAll(String identifier, CFJTypeDeclarationWrapper node) {
+		if ((identifier == null) || (node == null))
 			return null;
 		
-		List<IASTNode> methodDeclarations = new LinkedList<IASTNode>();
-		for (int i = 0; i < allMethodDeclarations.size(); ++i) {
-			if (allMethodDeclarations.get(i).getIdentifier().getValue().equals(identifier))
-				methodDeclarations.add(allMethodDeclarations.get(i));
-		}
+		List<MethodDeclaration> result = new LinkedList<MethodDeclaration>();		
+		do {
+			ArrayList<MethodDeclaration> allMethodDeclarations = node.getMethodDeclaration();
+			if (allMethodDeclarations != null) {
+				for (int i = 0; i < allMethodDeclarations.size(); ++i) {
+					if (allMethodDeclarations.get(i).getIdentifier().getValue().equals(identifier))
+						result.add(allMethodDeclarations.get(i));
+				}
+			}
+			node = findTypeDeclaration(node.getExtendedType());
+		} while ((node != null) && !node.isObjectType());
 		
-		List<IASTNode> result = filter(methodDeclarations, features, strategy);
-		
-		if ((result == null) || result.isEmpty()) {
-			return mlookup(identifier, findTypeDeclaration(node.getExtendedType()), features, strategy);
-		}
-		
-		// result.size() != 1 kann eigentlich nicht passieren, weil in der Klasse überprüft wird, dass es
-		// keine zwei Methoden mit gleichem Namen gibt.
-		
-		return result.get(0);
+		return result;
 	}
 	
 	/**
-	 * mlookup ohne Berücksichtigung der Annotationen
+	 * Gibt die erste Methode mit gegebenem Namen zurück, die in der Vererbungshierarchie ab node aufwärts gefunden wird.
 	 * @param identifier
 	 * @param node
 	 * @return
@@ -448,24 +437,97 @@ public class CFJTypingManager {
 		return methodDeclarations.get(0);
 	}
 	
+	// XXX MRO: BACKUP
+//	/**
+//	 * Gibt eine Liste von Signaturen zurück, die für die Überprüfung von Overriding und Methodenaufrufen relevant sind. Details sind
+//	 * informell sehr schwer zu erklären. Also: siehe Sourcecode ;-)
+//	 * @param identifier
+//	 * @param node
+//	 * @param features
+//	 * @param strategy
+//	 * @return
+//	 */
+//	private List<MethodSignature> mtypes(String identifier, CFJTypeDeclarationWrapper node, Set<IFeature> features, IEvaluationStrategy strategy) {
+//		List<MethodDeclaration> methods = mlookupAll(identifier, node);
+//		if (methods == null)
+//			return null;
+//		
+//		IFeatureModel fm = file.getFeatureModel();
+//		SourceFileColorManager colorManager = file.getColorManager();
+//		
+//		List<MethodSignature> result = new LinkedList<MethodSignature>();
+//		for (MethodDeclaration method : methods) {
+//			Set<IFeature> featuresWithMethod = addAll(features, colorManager.getColors(method));
+//			
+//			// Eine Methode ist nur dann relevant, wenn sie zusammen mit den gegebenen Features präsent sein kann
+//			if (strategy.exists(fm, featuresWithMethod)) {
+//				boolean methodIsRelevant = true;
+//				List<Set<IFeature>> mayBeMissing = new LinkedList<Set<IFeature>>();
+//				
+//				// Die Methode ist nur dann relevant, wenn es eine Konfiguration gibt, in der keine der "Methoden unterhalb" im Kontext der
+//				// gegebenen Features und der Methode präsent ist
+//				for (MethodDeclaration method2 : methods) {
+//					if (method2 == method)
+//						break;
+//					mayBeMissing.add(colorManager.getColors(method2));
+//					
+//					if (!strategy.mayBeMissing(fm, featuresWithMethod, mayBeMissing)) {
+//						methodIsRelevant = false;
+//						break;
+//					}
+//				}
+//				
+//				if (methodIsRelevant)
+//					result.add(new MethodSignature(method.getType(), method.getFormalParameterList()));
+//			}
+//		}
+//		
+//		return result;
+//	}
+	
 	/**
-	 * mtype unter Berücksichtigung der Annotationen
+	 * Gibt eine Liste von Signaturen zurück, die für die Überprüfung von Overriding und Methodenaufrufen relevant sind. Details sind
+	 * informell sehr schwer zu erklären. Also: siehe Sourcecode ;-)
 	 * @param identifier
 	 * @param node
 	 * @param features
 	 * @param strategy
 	 * @return
 	 */
-	public MethodSignature mtype(String identifier, CFJTypeDeclarationWrapper node, Set<IFeature> features, IEvaluationStrategy strategy) {
-		MethodDeclaration method = (MethodDeclaration) mlookup(identifier, node, features, strategy);
-		if (method == null)
+	private List<MethodSignature> mtypes(String identifier, CFJTypeDeclarationWrapper node, Set<IFeature> features, IEvaluationStrategy strategy) {
+		List<MethodDeclaration> methods = mlookupAll(identifier, node);
+		if (methods == null)
 			return null;
 		
-		return new MethodSignature(method.getType(), method.getFormalParameterList());
+		IFeatureModel fm = file.getFeatureModel();
+		SourceFileColorManager colorManager = file.getColorManager();
+		
+		List<MethodSignature> result = new LinkedList<MethodSignature>();
+		for (MethodDeclaration method : methods) {
+			Set<IFeature> featuresWithMethod = addAll(features, colorManager.getColors(method));
+			
+			// Eine Methode ist nur dann relevant, wenn sie zusammen mit den gegebenen Features präsent sein kann
+			if (strategy.exists(fm, featuresWithMethod)) {
+				List<Set<IFeature>> mayBeMissing = new LinkedList<Set<IFeature>>();
+				
+				for (MethodDeclaration method2 : methods) {
+					if (method2 == method)
+						break;
+					mayBeMissing.add(colorManager.getColors(method2));
+				}
+
+				// Die Methode ist nur dann relevant, wenn es eine Konfiguration gibt, in der keine der "Methoden unterhalb" im Kontext der
+				// gegebenen Features und der Methode präsent ist
+				if (mayBeMissing.isEmpty() || strategy.mayBeMissing(fm, featuresWithMethod, mayBeMissing))
+					result.add(new MethodSignature(method.getType(), method.getFormalParameterList()));
+			}
+		}
+		
+		return result;
 	}
 	
 	/**
-	 * mtype ohne Berücksichtigung der Annotationen
+	 * Gibt die Signatur der ersten Methode mit gegebenem Namen zurück, die in der Vererbungshierarchie ab node gefunden wird.
 	 * @param identifier
 	 * @param node
 	 * @return
@@ -479,12 +541,10 @@ public class CFJTypingManager {
 	}
 	
 	/**
-	 * Eine Methode ist ein gültiges Overriding, wenn
-	 *    1. in keiner Superklasse eine Methode mit dem gleichen Namen existiert (ohne Berücksichtigung der Annotationen) oder
-	 *    2. in einer Superklasse eine Methode mit dem gleichen Namen existiert (ohne Berücksichtigung der Annotationen) und
-	 *       die Annotationen passen. Bei der Überprüfung der Annotationen darf aber nicht die ohne Berücksichtigung der Annotationen
-	 *       gefundene Methode genommen werden, sondern es muss nochmal eine Methode mit gleichem Namen gesucht werden, diesmal
-	 *       aber unter Berücksichtigung der Annotationen.
+	 * Eine Methode ist ein gültiges Overriding, falls
+	 * 1. sie ein gültiges Overriding im Sinne von FJ ist UND
+	 * 2. die Farben der Parameter mit jeder Methode gleichen Namens in den Superklassen zusammenpassen (s.u.), mit der sie gleichzeitig
+	 *    präsent sein kann.
 	 *       
 	 * @param method
 	 * @param strategy
@@ -504,30 +564,42 @@ public class CFJTypingManager {
 
 		String identifier = method.getIdentifier().getValue();
 		MethodSignature signature = new MethodSignature(method);
-
-		IFeatureModel fm = file.getFeatureModel();
-		SourceFileColorManager colorManager = file.getColorManager();
-		Set<IFeature> features = colorManager.getColors(method);
 		
+		// Überprüfung im Sinne von FJ
 		MethodSignature existentSignature = mtype(identifier, superTypeDeclaration);
 		if (existentSignature == null)
 			return true;
 		if (!signature.equals(existentSignature))
 			return false;
+		
 		if (signature.formalParameters == null)
 			return true;
 		
-		existentSignature = mtype(identifier, superTypeDeclaration, features, strategy);
+		IFeatureModel fm = file.getFeatureModel();
+		SourceFileColorManager colorManager = file.getColorManager();
+		Set<IFeature> features = colorManager.getColors(method);
 		
-		for (int i = 0; i < signature.formalParameters.getFormalParameter().size(); ++i) {
-			Set<IFeature> source = colorManager.getColors(signature.formalParameters.getFormalParameter().get(i));
-			addAll(source, features);
-			Set<IFeature> target = colorManager.getColors(existentSignature.formalParameters.getFormalParameter().get(i));
-			addAll(target, features);
-			
-			if (!strategy.equal(fm, source, target))
-				return false;
+		List<MethodSignature> existentSignatures = mtypes(identifier, superTypeDeclaration, features, strategy);
+		if ((existentSignatures == null) || existentSignatures.isEmpty())
+			return true;
+		
+		for (MethodSignature sig : existentSignatures) {
+			// Im Kontext der Farben beider Methoden müssen die Parameter beider Methoden in genau den gleichen
+			// Varianten präsent sein.
+			for (int i = 0; i < signature.formalParameters.getFormalParameter().size(); ++i) {
+				Set<IFeature> source = colorManager.getColors(signature.formalParameters.getFormalParameter().get(i));
+				source = addAll(addAll(source, features), getFeaturesOfParent(sig.returnType));
+				Set<IFeature> target = colorManager.getColors(sig.formalParameters.getFormalParameter().get(i));
+				target = addAll(target, features);
+
+				if (!strategy.equal(fm, source, target)) {
+					errorMessages.add(0, "Annotations of parameters don't fit with method in class >" + 
+										 findSurroundingTypeDeclaration(sig.returnType).getIdentifier().getValue() + "<.");
+					return false;
+				}
+			}
 		}
+		
 		return true;
 	}
 	
@@ -660,11 +732,23 @@ public class CFJTypingManager {
 		
 		IFeatureModel fm = file.getFeatureModel();
 		SourceFileColorManager colorManager = file.getColorManager();
+		Set<IFeature> features = colorManager.getColors(methodInvoke);
 		
-		MethodSignature mtype = 
-			mtype(methodInvoke.getIdentifier().getValue(), typeOfInvokeTarget.getASTNode(), colorManager.getColors(methodInvoke), strategy);
+		List<MethodSignature> mtypes = 
+			mtypes(methodInvoke.getIdentifier().getValue(), typeOfInvokeTarget.getASTNode(), colorManager.getColors(methodInvoke), strategy);
+		
 		// (T.3i) -> (I.1): Methode muss existieren
-		if (mtype == null) {
+		if ((mtypes == null) || mtypes.isEmpty()) {
+			errorMessages.add(0, "Method is not present.");
+			return null;
+		}
+		
+		List<Set<IFeature>> featuresOfMethods = new LinkedList<Set<IFeature>>();
+		for (MethodSignature mtype : mtypes) {
+			featuresOfMethods.add(getFeaturesOfParent(mtype.returnType));
+		}
+		
+		if (strategy.mayBeMissing(fm, features, featuresOfMethods)) {
 			errorMessages.add(0, "Method is not present in some variants.");
 			return null;
 		}
@@ -676,39 +760,47 @@ public class CFJTypingManager {
 			return null;
 		}
 		
-		ArrayList<CFJType> typesOfParameters = typesOf(mtype.formalParameters);
-		
-		// (I.5): richtige Anzahl von Aufrufparametern
-		if (!haveSameSize(typesOfExpressions, typesOfParameters)) {
-			errorMessages.add(0, "Wrong number of parameters.");
-			return null;
-		}
-		
-		// (I.6): Expressions müssen Subtypen der Typen der formalen Parameter sein
-		if (!areSubtypes(typesOfExpressions, typesOfParameters)) {
-			errorMessages.add(0, "Expressions are not subtypes of method-parameters.");
-			return null;
-		}
-		
-		Set<IFeature> features = colorManager.getColors(methodInvoke);
-		
-		if (methodInvoke.getExpressionList() != null) {
-			for (int i = 0; i < methodInvoke.getExpressionList().getExpression().size(); ++i) {
-				Set<IFeature> source = colorManager.getColors(methodInvoke.getExpressionList().getExpression().get(i));
-				source = addAll(source, features);
-				Set<IFeature> target = (mtype.formalParameters == null) ? new HashSet<IFeature>() 
-																		: colorManager.getColors(mtype.formalParameters.getFormalParameter().get(i));
-				target = addAll(target, features);
+		// Für jede Methode, die aufgerufen werden könnte, müssen Checks durchgeführt werden
+		for (MethodSignature mtype : mtypes) {
+			ArrayList<CFJType> typesOfParameters = typesOf(mtype.formalParameters);
 
-				// (T.3ii) -> (I.2): Annotationen müssen passen
-				if (!strategy.equal(fm, source, target)) {
-					errorMessages.add(0, "Annotations of expressions and method-parameters don't match.");
-					return null;
+			// (I.5): richtige Anzahl von Aufrufparametern
+			if (!haveSameSize(typesOfExpressions, typesOfParameters)) {
+				errorMessages.add(0, "Wrong number of parameters.");
+				return null;
+			}
+
+			// (I.6): Expressions müssen Subtypen der Typen der formalen Parameter sein
+			if (!areSubtypes(typesOfExpressions, typesOfParameters)) {
+				errorMessages.add(0, "Expressions are not subtypes of method-parameters.");
+				return null;
+			}
+
+			if (methodInvoke.getExpressionList() != null) {
+				for (int i = 0; i < methodInvoke.getExpressionList().getExpression().size(); ++i) {
+					Set<IFeature> featuresOfMethod = getFeaturesOfParent(mtype.returnType);
+					if (featuresOfMethod == null)
+						featuresOfMethod = new HashSet<IFeature>();
+					
+					// Im Kontext der Farben von Methodenaufruf und Methode müssen die Expressions und die Parameter
+					// in genau den gleichen Varianten präsent sein.
+					Set<IFeature> source = colorManager.getColors(methodInvoke.getExpressionList().getExpression().get(i));
+					source = addAll(addAll(source, features), featuresOfMethod);
+					Set<IFeature> target = (mtype.formalParameters == null) ?  new HashSet<IFeature>()
+							: colorManager.getColors(mtype.formalParameters.getFormalParameter().get(i));
+					target = addAll(addAll(target, features), featuresOfMethod);
+
+					// (T.3ii) -> (I.2): Annotationen müssen passen
+					if (!strategy.equal(fm, source, target)) {
+						errorMessages.add(0, "Annotations of expressions and method-parameters of method in class >" + 
+											 findSurroundingTypeDeclaration(mtype.returnType).getIdentifier().getValue() + "< don't match.");
+						return null;
+					}
 				}
 			}
 		}
 
-		CFJType type = getType(getIdentifier(mtype.returnType));
+		CFJType type = getType(getIdentifier(mtypes.get(0).returnType));
 		node2type.put(methodInvoke, type);
 		return type;
 	}
@@ -1054,5 +1146,13 @@ public class CFJTypingManager {
 		}
 		
 		return result;
+	}
+	
+	private Set<IFeature> getFeaturesOfParent(IASTNode node) {
+		if ((node == null) || (node.getParent() == null))
+			return null;
+		
+		SourceFileColorManager colorManager = file.getColorManager();
+		return colorManager.getColors(node.getParent());
 	}
 }

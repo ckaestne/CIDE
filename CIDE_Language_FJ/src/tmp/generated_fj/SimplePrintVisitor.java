@@ -27,6 +27,8 @@ public class SimplePrintVisitor extends AbstractPrintVisitor {
 			Goal n = (Goal)node;
 			for (TypeDeclaration v : n.getTypeDeclaration()) {
 				v.accept(this);
+				hintNewLine();
+				hintNewLine();
 			}
 			{
 				ASTStringNode v=n.getEof();
@@ -53,8 +55,11 @@ public class SimplePrintVisitor extends AbstractPrintVisitor {
 				}
 			}
 			printToken("{");
+			hintIncIndent();
+			hintNewLine();
 			for (VarDeclaration v : n.getVarDeclaration()) {
 				v.accept(this);
+				hintNewLine();
 			}
 			{
 				ClassConstructor v=n.getClassConstructor();
@@ -62,9 +67,13 @@ public class SimplePrintVisitor extends AbstractPrintVisitor {
 					v.accept(this);
 				}
 			}
+			hintNewLine();
 			for (MethodDeclaration v : n.getMethodDeclaration()) {
+				hintNewLine();
 				v.accept(this);
+				hintNewLine();
 			}
+			hintDecIndent();
 			printToken("}");
 			return false;
 		}
@@ -117,6 +126,8 @@ public class SimplePrintVisitor extends AbstractPrintVisitor {
 			}
 			printToken(")");
 			printToken("{");
+			hintIncIndent();
+			hintNewLine();
 			printToken("super");
 			printToken("(");
 			{
@@ -128,8 +139,11 @@ public class SimplePrintVisitor extends AbstractPrintVisitor {
 			printToken(")");
 			printToken(";");
 			for (FieldAssign v : n.getFieldAssign()) {
+				hintNewLine();
 				v.accept(this);
 			}
+			hintDecIndent();
+			hintNewLine();
 			printToken("}");
 			return false;
 		}
@@ -176,6 +190,8 @@ public class SimplePrintVisitor extends AbstractPrintVisitor {
 			}
 			printToken(")");
 			printToken("{");
+			hintIncIndent();
+			hintNewLine();
 			printToken("return");
 			{
 				Expression v=n.getExpression();
@@ -184,6 +200,8 @@ public class SimplePrintVisitor extends AbstractPrintVisitor {
 				}
 			}
 			printToken(";");
+			hintDecIndent();
+			hintNewLine();
 			printToken("}");
 			return false;
 		}

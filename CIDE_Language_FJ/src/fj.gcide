@@ -217,11 +217,14 @@ TOKEN :
 
 GRAMMARSTART
 
-Goal :  ( TypeDeclaration )* <EOF>;
+Goal :  ( TypeDeclaration @! @! )* <EOF>;
 
 TypeDeclaration : 
-	"class" <IDENTIFIER> "extends" ExtendedType "{" ( LL(2) VarDeclaration )*
-	ClassConstructor ( MethodDeclaration )* "}";
+	"class" <IDENTIFIER> "extends" ExtendedType "{" @+!
+	( LL(2) VarDeclaration @! )*
+	ClassConstructor @!
+	( @! MethodDeclaration @! )* @-
+	"}";
 
 ExtendedType : 
 	<IDENTIFIER>
@@ -230,14 +233,17 @@ ExtendedType :
 VarDeclaration : Type <IDENTIFIER> ";";
 
 ClassConstructor : 
-	Type "(" ( FormalParameterList )? ")" "{" "super"
-	"(" ( /*ExpressionList*/ IdentifierList )? ")" ";" ( FieldAssign )* "}";
+	Type "(" ( FormalParameterList )? ")" "{" @+!
+	"super"	"(" ( /*ExpressionList*/ IdentifierList )? ")" ";"
+	( @! FieldAssign )* @-!
+	"}";
 	
 FieldAssign : "this" "." <IDENTIFIER> "=" <IDENTIFIER> ";";
 
 MethodDeclaration : 
-	Type <IDENTIFIER> "(" ( FormalParameterList )? ")" "{" "return"
-	Expression ";" "}";
+	Type <IDENTIFIER> "(" ( FormalParameterList )? ")" "{" @+!
+	"return" Expression ";" @-!
+	"}";
 
 /*	
 BinaryOperator : 
