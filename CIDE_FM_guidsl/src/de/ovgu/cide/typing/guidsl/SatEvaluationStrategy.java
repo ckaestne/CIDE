@@ -68,7 +68,7 @@ public class SatEvaluationStrategy extends AbstractCachingEvaluationStrategy {
 		} catch (TimeoutException e) {
 			e.printStackTrace();
 			// in case of a timeout assume everything is fine and the
-			// implication is true. idea is not to report false positive
+			// formula is true. idea is not to report false positive
 			return true;
 		}
 	}
@@ -91,7 +91,25 @@ public class SatEvaluationStrategy extends AbstractCachingEvaluationStrategy {
 		} catch (TimeoutException e) {
 			e.printStackTrace();
 			// in case of a timeout assume everything is fine and the
-			// implication is true. idea is not to report false positive
+			// result is false. idea is not to report false positive
+			return false;
+		}
+	}
+	
+	@Override
+	protected boolean calcExists(IFeatureModel featureModel, Set<IFeature> features) {
+		// ignore empty feature models
+		if (featureModel instanceof EmptyFeatureModel)
+			return true;
+		assert featureModel instanceof GuidslFeatureModelWrapper;
+		
+		FeatureModel guidslModel = ((GuidslFeatureModelWrapper) featureModel).getInternalModel();
+		try {
+			return guidslModel.exists(convertToGuidslFeatures(features));
+		} catch (TimeoutException e) {
+			e.printStackTrace();
+			// in case of a timeout assume everything is fine and the
+			// formula is true. idea is not to report false positive
 			return true;
 		}
 	}
