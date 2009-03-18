@@ -17,5 +17,11 @@
             provider="de.ovgu.cide.af.AlternativeSyntaxExtension">
       </typingProvider>
    </extension>
+   <extension
+         point="de.ovgu.cide.core.configurationMechanism">
+      <configurationMechanism
+            mechanism="de.ovgu.cide.configuration.AFConfigurationMechanism">
+      </configurationMechanism>
+   </extension>
 
 </plugin>

@@ -66,7 +66,7 @@ public class AlternativeSyntaxCheck implements ITypingCheck {
 			
 			for (Alternative alternative : alternatives) {
 				// Wir könnten noch überprüfen, ob context und isOptional bei jeder Alternative gleich sind, aber
-				// das sollten sie (sonst Programmierfehler beim Anlegen/Speichern von Alternativen. Außerdem
+				// das sollten sie (sonst Programmierfehler beim Anlegen/Speichern von Alternativen). Außerdem
 				// würde es ausreichen, context und isOptional nur aus einer der Alternativen auszulesen.
 				context = alternative.inheritedFeatures;
 				isOptional = alternative.isOptional;
