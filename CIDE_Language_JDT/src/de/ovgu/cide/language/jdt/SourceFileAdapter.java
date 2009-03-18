@@ -81,6 +81,10 @@ public class SourceFileAdapter implements ISourceFile {
 	public void setParent(IASTNode parentNode, Property parentProperty) {
 		ast.setParent(parentNode, parentProperty);
 	}
+	
+	public void setParentProperty(Property parentProperty) {
+		ast.setParentProperty(parentProperty);
+	}
 
 	public void remove() {
 		ast.remove();
@@ -89,5 +93,10 @@ public class SourceFileAdapter implements ISourceFile {
 	@Override
 	public List<IASTNode> getChildren() {
 		return ast.getChildren();
+	}
+
+	@Override
+	public void replaceSubtreeWith(IASTNode newNode) {
+		ast.replaceSubtreeWith(newNode);
 	}
 }
