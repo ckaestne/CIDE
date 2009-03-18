@@ -35,6 +35,10 @@ public class ForceValidationAction implements IWorkbenchWindowActionDelegate, IO
 
 		CIDETypingPlugin.getDefault().getTypingManager().recheckProjects(p);
 	}
+	
+	public List<IProject> getProjects() {
+		return projects;
+	}
 
 	/**
 	 * Selection in the workbench has been changed. We can change the state of
