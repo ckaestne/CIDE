@@ -1,15 +1,16 @@
 package de.ovgu.cide.language.fj;
 
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
 import tmp.generated_fj.FJParser;
 import cide.gast.ISourceFile;
 import cide.gparser.OffsetCharStream;
 import cide.gparser.ParseException;
-import cide.languages.ILanguageExtension;
+import cide.languages.ExtendedLanguageExtension;
 import cide.languages.ILanguageParser;
 
-public class FJLanguageExtension implements ILanguageExtension {
+public class FJLanguageExtension extends ExtendedLanguageExtension<FJParser> {
 
 	private final static String[] EXTENSIONS = new String[] { ".fj" };
 
@@ -32,4 +33,10 @@ public class FJLanguageExtension implements ILanguageExtension {
 		return LANGUAGE_EXTENSION_ID;
 	}
 
+	@Override
+	protected FJParser getInternalParser(String code) {
+		if (code == null)
+			return null;
+		return new FJParser(new ByteArrayInputStream(code.getBytes()));
+	}
 }

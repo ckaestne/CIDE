@@ -162,6 +162,11 @@ public class CFJTypeDeclarationWrapper implements IASTNode {
 		if (typeDeclaration != null)
 			typeDeclaration.setParent(parentNode, parentProperty);
 	}
+	
+	public void setParentProperty(Property parentProperty) {
+		if (typeDeclaration != null)
+			typeDeclaration.setParentProperty(parentProperty);
+	}
 
 	public ASTStringNode getIdentifier() {
 		if (typeDeclaration != null)
@@ -179,5 +184,11 @@ public class CFJTypeDeclarationWrapper implements IASTNode {
 		if (typeDeclaration != null)
 			return typeDeclaration.getMethodDeclaration();
 		return null;
+	}
+
+	@Override
+	public void replaceSubtreeWith(IASTNode newNode) {
+		if (typeDeclaration != null)
+			typeDeclaration.replaceSubtreeWith(newNode);
 	}
 }
