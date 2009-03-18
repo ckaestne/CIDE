@@ -51,19 +51,25 @@ public class PropertyOptionalWithDefault<T extends IASTNode> extends Property {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public void replaceChild(IASTNode oldChild, IASTNode newChild) {
+		if (value == oldChild)
+			setValue((T) newChild);
+	}
 
 	void setParent(IASTNode parent) {
 		super.setParent(parent);
-		value.setParent(parent, this);
+		value.setParentProperty(this);
 	}
 
+	@SuppressWarnings("unchecked")
 	Property deepCopy() {
-		return new PropertyOptionalWithDefault<T>(new String(name), (T) value
-				.deepCopy(), new String(defaultValue));
+		return new PropertyOptionalWithDefault<T>(new String(name), (T) value.deepCopy(), new String(defaultValue));
 	}
 	
 	public IASTNode[] getChildren() {
-		if (value!=null)
+		if (value != null)
 			return new IASTNode[] { value };
 		else
 			return new IASTNode[] { defaultNode };

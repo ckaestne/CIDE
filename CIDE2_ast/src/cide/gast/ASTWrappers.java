@@ -7,6 +7,7 @@ public class ASTWrappers {
 	 * returns if n inherits the colors of its parent node. usually colors are
 	 * inherited, but there are some exceptions, i.e., if statements
 	 */
+	@SuppressWarnings("unchecked")
 	public static boolean inheritsColors(IASTNode parent, IASTNode n) {
 		if (parent == null)
 			return true;

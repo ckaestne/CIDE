@@ -45,11 +45,11 @@ public class PropertyList<T extends IASTNode> extends PropertyZeroOrMore<T> {
 	 * after cloning the IDs might change (due to renumbering) but are again
 	 * consistent inside the AST
 	 */
+	@SuppressWarnings("unchecked")
 	Property deepCopy() {
 		ArrayList<T> clonedList = new ArrayList<T>(valueList.size());
 		for (T entry : valueList)
 			clonedList.add((T) entry.deepCopy());
 		return new PropertyList<T>(new String(name), clonedList);
 	}
-
 }

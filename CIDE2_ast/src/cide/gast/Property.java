@@ -21,7 +21,15 @@ public abstract class Property {
 	public abstract void removeSubtree(IASTNode node);
 
 	public abstract IASTNode[] getChildren();
+	
+	public abstract void replaceChild(IASTNode oldChild, IASTNode newChild);
 
+	/**
+	 * Setzt den Parent des Propertys auf den gegebenen AST-Knoten
+	 * ACHTUNG: Dieses Property wird nicht als Kind des gegebenen AST-Knoten eingetragen. Dies muss manuell geschehen
+	 * 			und passiert im Konstruktor von ASTNode.
+	 * @param node Parent-Knoten
+	 */
 	void setParent(IASTNode node) {
 		this.parent = node;
 	}

@@ -17,10 +17,11 @@ public abstract class ASTNode implements IASTNode {
 				return 1;
 			return 0;
 		}
-
 	}
 
 	protected final List<Property> properties;
+
+	private Property parentProperty;
 
 	public final IToken firstToken;
 
@@ -106,20 +107,24 @@ public abstract class ASTNode implements IASTNode {
 		return (ISourceFile) parent;
 	}
 
-	private IASTNode parentNode;
-
-	private Property parentProperty;
-
 	/**
-	 * never call from outside this package
+	 * ATTENTION: Never call from outside this package!
+	 * 			  Never call from a Property!
 	 */
 	public void setParent(IASTNode parentNode, Property parentProperty) {
-		this.parentNode = parentNode;
+		this.parentProperty = parentProperty;
+		if (this.parentProperty != null)
+			this.parentProperty.setParent(parentNode);
+	}
+	
+	public void setParentProperty(Property parentProperty) {
 		this.parentProperty = parentProperty;
 	}
 
 	public IASTNode getParent() {
-		return parentNode;
+		if (parentProperty == null)
+			return null;
+		return parentProperty.getNode();
 	}
 
 	public Property getLocationInParent() {
@@ -132,8 +137,8 @@ public abstract class ASTNode implements IASTNode {
 		if (idCache != null)
 			return idCache;
 		String id = "";
-		if (parentNode != null)
-			id = parentNode.getId() + "/" + parentProperty.getId(this);
+		if (this.getParent() != null)
+			id = this.getParent().getId() + "/" + parentProperty.getId(this);
 		idCache = id;
 		return id;
 	}
@@ -176,8 +181,21 @@ public abstract class ASTNode implements IASTNode {
 	public void remove() {
 		if (!isOptional())
 			return;
-
 		parentProperty.removeSubtree(this);
+	}
+	
+	/**
+	 * Ersetzt diesen Knoten durch den gegebenen Knoten.
+	 * 
+	 * ACHTUNG: Die Änderungen von Offsets, die durch ein Austauschen eines Knotens passieren können, werden
+	 * 			NICHT durchgeführt, so dass der AST unbrauchbar werden könnte.
+	 * 			Zur Zeit wird diese Methode nur auf einer DeepCopy des AST ausgeführt, die dann gerendered wird.
+	 * 
+	 * @param newNode
+	 */
+	public void replaceSubtreeWith(IASTNode newNode) {
+		newNode.setParentProperty(this.parentProperty);
+		newNode.getLocationInParent().replaceChild(this, newNode);
 	}
 
 	// public boolean hasReferenceTypes() {
@@ -211,9 +229,9 @@ public abstract class ASTNode implements IASTNode {
 					&& getLength() == ((IASTNode) obj).getLength();
 		return super.equals(obj);
 	}
+	
 	@Override
 	public int hashCode() {
 		return getStartPosition();
 	}
-
 }

@@ -27,17 +27,24 @@ public class PropertyZeroOrOne<T extends IASTNode> extends Property {
 			setValue(null);
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public void replaceChild(IASTNode oldChild, IASTNode newChild) {
+		if (value == oldChild)
+			setValue((T) newChild);
+	}
 	
 	void setParent(IASTNode parent) {
 		super.setParent(parent);
 		if (value != null)
-			value.setParent(parent, this);
+			value.setParentProperty(this);
 	}
 
 	public boolean hasValue() {
 		return value != null;
 	}
 
+	@SuppressWarnings("unchecked")
 	Property deepCopy() {
 		T newValue = null;
 		if (value != null)

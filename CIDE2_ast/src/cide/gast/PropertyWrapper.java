@@ -1,7 +1,6 @@
 package cide.gast;
 
-public class PropertyWrapper<T extends IASTNode, TWrappee extends IASTNode>
-		extends Property {
+public class PropertyWrapper<T extends IASTNode, TWrappee extends IASTNode>	extends Property {
 
 	protected T value;
 	private String wrappeeProperty;
@@ -21,9 +20,9 @@ public class PropertyWrapper<T extends IASTNode, TWrappee extends IASTNode>
 			return getWrappee();
 	}
 
+	@SuppressWarnings("unchecked")
 	public TWrappee getWrappee() {
-		return ((PropertyOne<TWrappee>) value.getProperty(wrappeeProperty))
-				.getValue();
+		return ((PropertyOne<TWrappee>) value.getProperty(wrappeeProperty)).getValue();
 	}
 
 	public void setValue(T value) {
@@ -44,15 +43,22 @@ public class PropertyWrapper<T extends IASTNode, TWrappee extends IASTNode>
 			notifyChange();
 		}
 	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public void replaceChild(IASTNode oldChild, IASTNode newChild) {
+		if (value == oldChild)
+			setValue((T) newChild);
+	}
 
 	void setParent(IASTNode parent) {
 		super.setParent(parent);
-		value.setParent(parent, this);
+		value.setParentProperty(this);
 	}
 
+	@SuppressWarnings("unchecked")
 	Property deepCopy() {
-		return new PropertyWrapper<T, TWrappee>(new String(name), (T) value
-				.deepCopy(), new String(wrappeeProperty));
+		return new PropertyWrapper<T, TWrappee>(new String(name), (T) value.deepCopy(), new String(wrappeeProperty));
 	}
 
 	public IASTNode[] getChildren() {
@@ -62,5 +68,4 @@ public class PropertyWrapper<T extends IASTNode, TWrappee extends IASTNode>
 	public boolean isWrapper() {
 		return true;
 	}
-
 }

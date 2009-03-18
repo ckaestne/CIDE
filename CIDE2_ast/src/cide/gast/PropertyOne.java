@@ -27,12 +27,20 @@ public class PropertyOne<T extends IASTNode> extends Property {
 	public void removeSubtree(IASTNode node) {
 		throw new UnsupportedOperationException();
 	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public void replaceChild(IASTNode oldChild, IASTNode newChild) {
+		if (value == oldChild)
+			setValue((T) newChild);
+	}
 
 	public void setParent(IASTNode parent) {
 		super.setParent(parent);
-		value.setParent(parent, this);
+		value.setParentProperty(this);
 	}
 
+	@SuppressWarnings("unchecked")
 	Property deepCopy() {
 		return new PropertyOne<T>(new String(name), (T) value.deepCopy());
 	}
