@@ -133,7 +133,10 @@ public class SourceFileColorManager extends AbstractColorManager {
 
 		IASTNode parent = node.getParent();
 		if (parent != null) {
-			if (parent.isOptional())
+			// Da nun (mit der Möglichkeit, alternative Codefragmente angeben zu können) auch nicht-optionale
+			// Codefragmente gefärbt werden können, müssen nun auch von nicht-optionalen Knoten geerbte Farben
+			// mitberücksichtigt werden.
+			//if (parent.isOptional())
 				if (ASTWrappers.inheritsColors(parent, node))
 					result.addAll(getOwnColors(parent));
 			result.addAll(getInheritedColors(parent));

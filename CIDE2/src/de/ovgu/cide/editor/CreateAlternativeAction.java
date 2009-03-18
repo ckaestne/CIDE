@@ -39,7 +39,7 @@ public class CreateAlternativeAction extends Action {
 			context.getEditorExtensions().getAltAnnotationManager().removeAnnotations();
 			try {
 				context.getSourceFile().getAltFeatureManager().createAlternative(context.getSelectedNodes(), dialog.getValue());
-				context.getEditorExtensions().getAltAnnotationManager().setAnnotations(context.getSourceFile().getAltFeatureManager().getNode2Alternatives());
+				context.getEditorExtensions().getAltAnnotationManager().setAnnotations(context.getSourceFile().getAltFeatureManager().getAlternativeNodes());
 			} catch (CoreException e) {
 				context.getEditorExtensions().markCoreException(e);
 			} catch (ParseException e) {

@@ -254,7 +254,7 @@ public class ColoredEditorExtensions {
 	public void installAlternativeAnnotations() {
 		altAnnotationManager = new AlternativeAnnotationManager(getAnnotationModel());		
 		try {
-			altAnnotationManager.setAnnotations(editor.getSourceFile().getAltFeatureManager().getNode2Alternatives());
+			altAnnotationManager.setAnnotations(editor.getSourceFile().getAltFeatureManager().getAlternativeNodes());
 		} catch (CoreException e) {
 			markCoreException(e);
 		} catch (ParseException e) {

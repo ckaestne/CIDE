@@ -29,6 +29,14 @@ public class LanguageExtensionProxy implements ILanguageExtension {
 	private final String name;
 	private final String id;
 	private ILanguageExtension target = null;
+	
+	/**
+	 * Nicht schön, aber nützlich :-)
+	 * @return
+	 */
+	public ILanguageExtension getTarget() {
+		return target;
+	}
 
 	public String[] getFileExtensions() {
 		return fileExtensions;

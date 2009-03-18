@@ -51,13 +51,10 @@ public class ColoredSourceFile {
 		this.storageProvider = StorageProviderManager.getInstance()
 				.getStorageProvider(coloredSourceFile.getProject(),
 						featureModel);
-		if (language == null)
-			errorLanguageExtensionNotFound(coloredSourceFile);
-		// if (language != null)
-		// this.colorFile = getColorFile(coloredSourceFile);
-		// else {
-		// colorFile = null;
-		// }
+		
+		// Ich denke, das brauchen wir nicht
+//		if (language == null)
+//			errorLanguageExtensionNotFound(coloredSourceFile);
 	}
 
 	/**
@@ -224,15 +221,16 @@ public class ColoredSourceFile {
 		return language;
 	}
 
-	private void errorLanguageExtensionNotFound(IFile input) {
-		System.err.println("No language extensions registered for file "
-				+ input.getName());
-		System.err.print("Enabled file extensions:");
-		for (LanguageExtensionProxy le : LanguageExtensionManager.getInstance()
-				.getEnabledLanguageExtensions())
-			System.err.print(" " + le.printFileExtensions(" "));
-		System.err.println();
-	}
+	// Ich denke, das brauchen wir nicht
+//	private void errorLanguageExtensionNotFound(IFile input) {
+//		System.err.println("No language extensions registered for file "
+//				+ input.getName());
+//		System.err.print("Enabled file extensions:");
+//		for (LanguageExtensionProxy le : LanguageExtensionManager.getInstance()
+//				.getEnabledLanguageExtensions())
+//			System.err.print(" " + le.printFileExtensions(" "));
+//		System.err.println();
+//	}
 
 	private static ILanguageExtension findLanguageExtension(IFile input) {
 		List<LanguageExtensionProxy> languageExtensions = LanguageExtensionManager

@@ -53,7 +53,7 @@ public class SwitchAlternativeAction extends Action {
 		editorExtensions.save();
 		try {
 			context.getSourceFile().getAltFeatureManager().activateAlternative(alternative, selectedNode);
-			context.getEditorExtensions().getAltAnnotationManager().setAnnotations(context.getSourceFile().getAltFeatureManager().getNode2Alternatives());
+			context.getEditorExtensions().getAltAnnotationManager().setAnnotations(context.getSourceFile().getAltFeatureManager().getAlternativeNodes());
 		} catch (CoreException e) {
 			context.getEditorExtensions().markCoreException(e);
 			return;
