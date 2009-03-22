@@ -13,6 +13,8 @@ public interface IASTNode {
 	public IASTNode getParent();
 
 	public String getId();
+	
+	public void setId(String id);
 
 	public int getStartPosition();
 

@@ -142,6 +142,10 @@ public abstract class ASTNode implements IASTNode {
 		idCache = id;
 		return id;
 	}
+	
+	public void setId(String id) {
+		idCache = id;
+	}
 
 	public List<Property> getProperties() {
 		return Collections.unmodifiableList(properties);

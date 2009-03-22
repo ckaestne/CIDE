@@ -13,8 +13,24 @@ import cide.gast.IASTNode;
  * @param <ParserType> Typ des interner Parsers (z.B. FJParser)
  */
 public abstract class ExtendedLanguageExtension<ParserType> implements ILanguageExtension {
+	
+	/**
+	 * Parsed das gegebene Codefragment, das an Stelle des gegebenen AST-Knotens stehen kann.
+	 * D.h. z.B. auch, dass die ID des gegebenen Knotens übernommen wird.
+	 * @param node
+	 * @param code
+	 * @return
+	 */
+	public IASTNode parseCodeFragment(IASTNode node, String code) {
+		IASTNode result = this.parseCodeFragment(node.getClass().getSimpleName(), code);
+		if (result != null) {
+			result.setId(node.getId());
+		}
+		
+		return result;
+	}
 
-	public IASTNode parseCodeFragment(String nonTerminalName, String code) {
+	private IASTNode parseCodeFragment(String nonTerminalName, String code) {
 		ParserType internalParser = getInternalParser(code);
 		if (internalParser == null)
 			return null;
