@@ -1,4 +1,4 @@
-package de.ovgu.cide.typing.fj;
+package de.ovgu.cide.typing.fj.af;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -45,10 +45,16 @@ import tmp.generated_fj.VarDeclaration;
 import cide.gast.ASTStringNode;
 import cide.gast.IASTNode;
 import cide.gparser.ParseException;
+import de.ovgu.cide.af.Alternative;
+import de.ovgu.cide.af.AlternativeFeatureManager;
+import de.ovgu.cide.af.RootAlternative;
 import de.ovgu.cide.features.IFeature;
 import de.ovgu.cide.features.IFeatureModel;
 import de.ovgu.cide.features.source.ColoredSourceFile;
 import de.ovgu.cide.features.source.SourceFileColorManager;
+import de.ovgu.cide.typing.fj.CFJTypeDeclarationWrapper;
+import de.ovgu.cide.typing.fj.CFJTypingManager;
+import de.ovgu.cide.typing.fj.FindTypeDeclarationVisitor;
 import de.ovgu.cide.typing.model.IEvaluationStrategy;
 
 /**
@@ -58,7 +64,7 @@ import de.ovgu.cide.typing.model.IEvaluationStrategy;
  * 
  * @author Malte Rosenthal
  */
-public class CFJTypingManager {
+public class CFJTypingManagerAF extends CFJTypingManager {
 	
 	private ColoredSourceFile file;
 	private IASTNode ast;
@@ -67,11 +73,14 @@ public class CFJTypingManager {
 	private Map<String, CFJTypeDeclarationWrapper> typeID2typeDeclaration;
 	private Map<IASTNode, CFJType> node2type;
 	private Map<String, CFJType> typeID2type;
-	private Map<String, CFJType> typeID2superType;
+//	private Map<String, CFJType> typeID2superType;
 	
 	private List<String> errorMessages;
+	public RootAlternative rootAlternative;
 	
-	public CFJTypingManager(ColoredSourceFile file) throws CoreException, ParseException {
+	public CFJTypingManagerAF(ColoredSourceFile file) throws CoreException, ParseException {
+		super(file);
+		
 		this.file = file;
 		ast = file.getAST();
 		
@@ -82,9 +91,10 @@ public class CFJTypingManager {
 		
 		node2type = new HashMap<IASTNode, CFJType>();
 		typeID2type = new HashMap<String, CFJType>();
-		typeID2superType = new HashMap<String, CFJType>();
+//		typeID2superType = new HashMap<String, CFJType>();
 		
 		errorMessages = new LinkedList<String>();
+		rootAlternative = new RootAlternative();
 	}
 	
 	public List<String> getErrorMessages() {
@@ -125,49 +135,49 @@ public class CFJTypingManager {
 		return true;
 	}
 	
-	public static class MethodSignature {
-		public Type returnType;
-		public FormalParameterList formalParameters;
-		
-		public MethodSignature(MethodDeclaration method) {
-			this(method.getType(), method.getFormalParameterList());
-		}
-		
-		public MethodSignature(Type returnType, FormalParameterList formalParameters) {
-			this.returnType = returnType;
-			this.formalParameters = formalParameters;
-		}
-		
-		@Override
-		public boolean equals(Object obj) {
-			if ((obj == null) || !(obj instanceof MethodSignature))
-				return false;
-			MethodSignature that = (MethodSignature) obj;
-			
-			if (!typesAreEqual(this.returnType, that.returnType))
-				return false;
-			
-			List<FormalParameter> thisFormalParameters = (this.formalParameters == null) ? null : this.formalParameters.getFormalParameter();
-			List<FormalParameter> thatFormalParameters = (that.formalParameters == null) ? null : that.formalParameters.getFormalParameter();
-			
-			if (thisFormalParameters == null) {
-				if (thatFormalParameters != null)
-					return false;
-			} else {
-				if (thatFormalParameters == null)
-					return false;
-				if (thisFormalParameters.size() != thatFormalParameters.size())
-					return false;
-				
-				for (int i = 0; i < thisFormalParameters.size(); ++i) {
-					if (!typesAreEqual(thisFormalParameters.get(i).getType(), thatFormalParameters.get(i).getType()))
-						return false;
-				}
-			}
-			
-			return true;
-		}
-	}
+//	public static class MethodSignature {
+//		public Type returnType;
+//		public FormalParameterList formalParameters;
+//		
+//		public MethodSignature(MethodDeclaration method) {
+//			this(method.getType(), method.getFormalParameterList());
+//		}
+//		
+//		public MethodSignature(Type returnType, FormalParameterList formalParameters) {
+//			this.returnType = returnType;
+//			this.formalParameters = formalParameters;
+//		}
+//		
+//		@Override
+//		public boolean equals(Object obj) {
+//			if ((obj == null) || !(obj instanceof MethodSignature))
+//				return false;
+//			MethodSignature that = (MethodSignature) obj;
+//			
+//			if (!typesAreEqual(this.returnType, that.returnType))
+//				return false;
+//			
+//			List<FormalParameter> thisFormalParameters = (this.formalParameters == null) ? null : this.formalParameters.getFormalParameter();
+//			List<FormalParameter> thatFormalParameters = (that.formalParameters == null) ? null : that.formalParameters.getFormalParameter();
+//			
+//			if (thisFormalParameters == null) {
+//				if (thatFormalParameters != null)
+//					return false;
+//			} else {
+//				if (thatFormalParameters == null)
+//					return false;
+//				if (thisFormalParameters.size() != thatFormalParameters.size())
+//					return false;
+//				
+//				for (int i = 0; i < thisFormalParameters.size(); ++i) {
+//					if (!typesAreEqual(thisFormalParameters.get(i).getType(), thatFormalParameters.get(i).getType()))
+//						return false;
+//				}
+//			}
+//			
+//			return true;
+//		}
+//	}
 	
 	/**
 	 * Zwei Methoden sind gleich, wenn sie gleich heißen und die gleiche Signatur haben
@@ -185,80 +195,80 @@ public class CFJTypingManager {
 				&& new MethodSignature(method1).equals(new MethodSignature(method2)));
 	}
 	
-	/**
-	 * Repräsentiert einen Typ, der vom Typsystem ermittelt wird
-	 */
-	public class CFJType {
-		public String identifier;
-		public CFJTypeDeclarationWrapper astNode;
-		
-		public CFJType(String identifier) {
-			this.identifier = identifier;
-		}
-		
-		public CFJType(CFJTypeDeclarationWrapper astNode) {
-			this.astNode = astNode;
-			if (this.astNode != null)
-				this.identifier = this.astNode.getIdentifier().getValue();
-		}
-		
-		public CFJType(TypeDeclaration astNode) {
-			this(new CFJTypeDeclarationWrapper(astNode));
-		}
-		
-		public CFJTypeDeclarationWrapper getASTNode() {
-			if (astNode == null) {
-				astNode = findTypeDeclaration(identifier);
-			}
-			return astNode;
-		}
-		
-		public CFJType getSuperType() {
-			if (typeID2superType.containsKey(identifier))
-				return typeID2superType.get(identifier);
-			
-			if (astNode == null)
-				astNode = findTypeDeclaration(identifier);
-			if (astNode != null) {
-				CFJType superType = getType(getIdentifier(astNode.getExtendedType()));
-				typeID2superType.put(identifier, superType);
-				return superType;
-			}
-			
-			return null;
-		}
-		
-		public boolean isSubtypeOf(CFJType superType) {
-			if (superType == null)
-				return false;
-			
-			CFJType subType = this;
-			do {
-				if (subType.equals(superType))
-					return true;
-			} while ((subType = subType.getSuperType()) != null);
-			
-			return false;
-		}
-		
-		public boolean isProperSubtypeOf(CFJType superType) {
-			CFJType parent = this.getSuperType();
-			if (parent != null)
-				return parent.isSubtypeOf(superType);
-			return false;
-		}
-		
-		@Override
-		public boolean equals(Object obj) {
-			if ((obj == null) || (!(obj instanceof CFJType)))
-				return false;
-			CFJType that = (CFJType) obj;
-			
-			if (this.identifier == null)
-				return (that.identifier == null);
-			return this.identifier.equals(that.identifier);
-		}
-	}
+//	/**
+//	 * Repräsentiert einen Typ, der vom Typsystem ermittelt wird
+//	 */
+//	public class CFJType {
+//		private String identifier;
+//		private CFJTypeDeclarationWrapper astNode;
+//		
+//		private CFJType(String identifier) {
+//			this.identifier = identifier;
+//		}
+//		
+//		private CFJType(CFJTypeDeclarationWrapper astNode) {
+//			this.astNode = astNode;
+//			if (this.astNode != null)
+//				this.identifier = this.astNode.getIdentifier().getValue();
+//		}
+//		
+//		private CFJType(TypeDeclaration astNode) {
+//			this(new CFJTypeDeclarationWrapper(astNode));
+//		}
+//		
+//		public CFJTypeDeclarationWrapper getASTNode() {
+//			if (astNode == null) {
+//				astNode = findTypeDeclaration(identifier);
+//			}
+//			return astNode;
+//		}
+//		
+//		public CFJType getSuperType() {
+//			if (typeID2superType.containsKey(identifier))
+//				return typeID2superType.get(identifier);
+//			
+//			if (astNode == null)
+//				astNode = findTypeDeclaration(identifier);
+//			if (astNode != null) {
+//				CFJType superType = getType(getIdentifier(astNode.getExtendedType()));
+//				typeID2superType.put(identifier, superType);
+//				return superType;
+//			}
+//			
+//			return null;
+//		}
+//		
+//		public boolean isSubtypeOf(CFJType superType) {
+//			if (superType == null)
+//				return false;
+//			
+//			CFJType subType = this;
+//			do {
+//				if (subType.equals(superType))
+//					return true;
+//			} while ((subType = subType.getSuperType()) != null);
+//			
+//			return false;
+//		}
+//		
+//		public boolean isProperSubtypeOf(CFJType superType) {
+//			CFJType parent = this.getSuperType();
+//			if (parent != null)
+//				return parent.isSubtypeOf(superType);
+//			return false;
+//		}
+//		
+//		@Override
+//		public boolean equals(Object obj) {
+//			if ((obj == null) || (!(obj instanceof CFJType)))
+//				return false;
+//			CFJType that = (CFJType) obj;
+//			
+//			if (this.identifier == null)
+//				return (that.identifier == null);
+//			return this.identifier.equals(that.identifier);
+//		}
+//	}
 	
 	/**
 	 * Erzeugt eine Instanz von CFJType aus dem gegebenen Namen des Typs
@@ -380,6 +390,49 @@ public class CFJTypingManager {
 		
 		node2fields.put(node, result);
 		return result;
+	}
+	
+	public boolean overshadows(Alternative altVarDeclaration, VarDeclaration modelNode, TypeDeclaration typeDeclaration, Set<IFeature> context, 
+							   IEvaluationStrategy strategy) throws CoreException, ParseException {
+		
+		if ((altVarDeclaration == null) || (strategy == null))
+			return false;
+		
+		Set<IFeature> features = addAll(context, altVarDeclaration.getFeatures());
+		IFeatureModel fm = file.getFeatureModel();
+		AlternativeFeatureManager altFeatureManager = file.getAltFeatureManager();
+		String identifier = altVarDeclaration.getNode(this.file, modelNode).getIdentifier().getValue();
+
+		CFJTypeDeclarationWrapper supertypeDeclaration = findTypeDeclaration(typeDeclaration.getExtendedType());
+		if ((supertypeDeclaration != null) && !supertypeDeclaration.isObjectType()) {
+			List<Alternative> altSupertypeDeclarations = altFeatureManager.getAlternatives(supertypeDeclaration.getTypeDeclaration(), rootAlternative);
+
+			for (Alternative altSupertypeDeclaration : altSupertypeDeclarations) {
+				TypeDeclaration altSupertypeDeclNode = altSupertypeDeclaration.getNode(this.file, supertypeDeclaration.getTypeDeclaration());
+				
+				ArrayList<VarDeclaration> varDeclarations = altSupertypeDeclNode.getVarDeclaration();
+
+				for (VarDeclaration varDeclaration : varDeclarations) {
+					List<Alternative> altVarDeclarations = altFeatureManager.getAlternatives(varDeclaration, altSupertypeDeclaration);
+
+					for (Alternative alt : altVarDeclarations) {
+						if (alt.getNode(this.file, varDeclaration).getIdentifier().getValue().equals(identifier) 
+								&& strategy.exists(fm, addAll(features, alt.getFeatures()))) {
+							errorMessages.add(0, "Alternative >" + altVarDeclaration.altID + "< of variable >" + identifier + "< overshadows " +
+									"alternative >" + alt.altID + "< in alternative >" + altSupertypeDeclaration.altID + "< of class >" + 
+									altSupertypeDeclNode.getIdentifier().getValue() + "<.");
+							return true;
+						}
+					}
+				}
+				
+				Set<IFeature> f = addAll(context, altSupertypeDeclaration.getFeatures());
+				if (strategy.exists(fm, f) && overshadows(altVarDeclaration, modelNode, altSupertypeDeclNode, f, strategy))
+					return true;
+			}
+		}
+		
+		return false;
 	}
 	
 	/**

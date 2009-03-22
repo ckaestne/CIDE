@@ -30,9 +30,9 @@ import de.ovgu.cide.typing.model.IEvaluationStrategy;
  */
 public class CFJClassTypingCheck extends CFJTypingCheck {
 	
-	private TypeDeclaration typeDeclaration;
+	protected TypeDeclaration typeDeclaration;
 	
-	public CFJClassTypingCheck(ColoredSourceFile file, TypeDeclaration typeDeclaration, CFJTypingManager typingManager) {
+	public CFJClassTypingCheck(ColoredSourceFile file, CFJTypingManager typingManager, TypeDeclaration typeDeclaration) {
 		super(file, typingManager, typeDeclaration);
 		this.typeDeclaration = typeDeclaration;
 	}
@@ -43,36 +43,13 @@ public class CFJClassTypingCheck extends CFJTypingCheck {
 		// (L.2) wird hier nicht direkt geprüft, da es mittelbar über die Konstruktor-Checks mitgeprüft wird
 		
 		// (L.3): keine 2 Klassen mit gleichem Namen
-		ArrayList<TypeDeclaration> typeDeclarations = ((Goal) typeDeclaration.getParent()).getTypeDeclaration();
-		if (typeDeclarations != null) {
-			boolean typeDeclarationAlreadyFound = false;
-			
-			for (int i = 0; i < typeDeclarations.size(); ++i) {
-				if (typeDeclarations.get(i).getIdentifier().getValue().equals(typeDeclaration.getIdentifier().getValue())) {
-					if (typeDeclarationAlreadyFound)
-						return createError("Duplicate type declaration >" + typeDeclarations.get(i).getIdentifier().getValue() + "<.", 
-							typeDeclaration);
-					else
-						typeDeclarationAlreadyFound = true;
-				}
-			}
-		}
+		if (!checkL3()) return false;
 		
 		// (L.4): keine 2 Methoden mit gleichem Namen
-		ArrayList<MethodDeclaration> methodDeclarations = typeDeclaration.getMethodDeclaration();
-		if (methodDeclarations != null) {
-			for (int i = 0; i < methodDeclarations.size(); ++i) {
-				for (int j = i + 1; j < methodDeclarations.size(); ++j) {
-					if (methodDeclarations.get(i).getIdentifier().getValue().equals(methodDeclarations.get(j).getIdentifier().getValue()))
-						return createError("Duplicate method declaration >" + methodDeclarations.get(i).getIdentifier().getValue() + "<.", 
-											methodDeclarations.get(j));
-				}
-			}
-		}
+		if (!checkL4(typeDeclaration)) return false;
 		
 		// (L.5): Klasse darf nicht >Object< heißen
-		if (typeDeclaration.getIdentifier().getValue().equals("Object"))
-			return createError("Illegal classname >Object<", typeDeclaration.getIdentifier());
+		if (!checkL5()) return false;
 		
 		IFeatureModel fm = file.getFeatureModel();
 		SourceFileColorManager colorManager = file.getColorManager();
@@ -208,6 +185,53 @@ public class CFJClassTypingCheck extends CFJTypingCheck {
 			}
 		}
 		
+		return true;
+	}
+	
+	/**
+	 * (L.3): keine 2 Klassen mit gleichem Namen
+	 */
+	protected boolean checkL3() {
+		ArrayList<TypeDeclaration> typeDeclarations = ((Goal) typeDeclaration.getParent()).getTypeDeclaration();
+		if (typeDeclarations != null) {
+			boolean typeDeclarationAlreadyFound = false;
+			
+			for (int i = 0; i < typeDeclarations.size(); ++i) {
+				if (typeDeclarations.get(i).getIdentifier().getValue().equals(typeDeclaration.getIdentifier().getValue())) {
+					if (typeDeclarationAlreadyFound)
+						return createError("Duplicate type declaration >" + typeDeclarations.get(i).getIdentifier().getValue() + "<.", 
+							typeDeclaration);
+					else
+						typeDeclarationAlreadyFound = true;
+				}
+			}
+		}
+		return true;
+	}
+	
+	/**
+	 * (L.4): keine 2 Methoden mit gleichem Namen
+	 */
+	protected boolean checkL4(TypeDeclaration typeDeclaration) {
+		ArrayList<MethodDeclaration> methodDeclarations = typeDeclaration.getMethodDeclaration();
+		if (methodDeclarations != null) {
+			for (int i = 0; i < methodDeclarations.size(); ++i) {
+				for (int j = i + 1; j < methodDeclarations.size(); ++j) {
+					if (methodDeclarations.get(i).getIdentifier().getValue().equals(methodDeclarations.get(j).getIdentifier().getValue()))
+						return createError("Duplicate method declaration >" + methodDeclarations.get(i).getIdentifier().getValue() + "<.", 
+											methodDeclarations.get(j));
+				}
+			}
+		}
+		return true;
+	}
+	
+	/**
+	 * (L.5): Klasse darf nicht >Object< heißen
+	 */
+	protected boolean checkL5() {
+		if (typeDeclaration.getIdentifier().getValue().equals("Object"))
+			return createError("Illegal classname >Object<", typeDeclaration.getIdentifier());
 		return true;
 	}
 

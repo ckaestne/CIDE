@@ -14,6 +14,9 @@ import cide.gast.IASTVisitor;
 import cide.gparser.ParseException;
 import de.ovgu.cide.features.source.ColoredSourceFile;
 import de.ovgu.cide.language.fj.FJLanguageExtension;
+import de.ovgu.cide.typing.fj.af.CFJClassTypingCheckAF;
+import de.ovgu.cide.typing.fj.af.CFJMethodTypingCheckAF;
+import de.ovgu.cide.typing.fj.af.CFJTypingManagerAF;
 import de.ovgu.cide.typing.model.AbstractFileBasedTypingProvider;
 import de.ovgu.cide.typing.model.ITypingCheck;
 
@@ -33,7 +36,7 @@ public class CFJTypingProvider extends AbstractFileBasedTypingProvider {
 		
 		final Set<ITypingCheck> checks = new HashSet<ITypingCheck>();
 		try {
-			final CFJTypingManager typingManager = new CFJTypingManager(file);
+			final CFJTypingManagerAF typingManager = new CFJTypingManagerAF(file);	// XXX MRO: CFJTypingManagerAF für zusätzlich alternative Features 
 			file.getAST().accept(new IASTVisitor() {
 				@Override
 				public void postVisit(IASTNode node) { }
@@ -42,11 +45,13 @@ public class CFJTypingProvider extends AbstractFileBasedTypingProvider {
 				public boolean visit(IASTNode node) {
 					if (node != null) {
 						if (node instanceof MethodDeclaration) {
-							checks.add(new CFJMethodTypingCheck(file, (MethodDeclaration) node, typingManager));
+							// XXX MRO: CFJMethodTypingCheckAF für zusätzlich alternative Features
+							checks.add(new CFJMethodTypingCheckAF(file, typingManager, (MethodDeclaration) node));
 							return false;
 						}
 						if (node instanceof TypeDeclaration) {
-							checks.add(new CFJClassTypingCheck(file, (TypeDeclaration) node, typingManager));
+							// XXX MRO: CFJClassTypingCheckAF für zusätzlich alternative Features
+							checks.add(new CFJClassTypingCheckAF(file, typingManager, (TypeDeclaration) node));
 							return true;
 						}
 					}

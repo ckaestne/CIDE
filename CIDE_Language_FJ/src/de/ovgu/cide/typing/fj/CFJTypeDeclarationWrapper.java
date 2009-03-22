@@ -191,4 +191,10 @@ public class CFJTypeDeclarationWrapper implements IASTNode {
 		if (typeDeclaration != null)
 			typeDeclaration.replaceSubtreeWith(newNode);
 	}
+
+	@Override
+	public void setId(String id) {
+		if (typeDeclaration != null)
+			typeDeclaration.setId(id);
+	}
 }

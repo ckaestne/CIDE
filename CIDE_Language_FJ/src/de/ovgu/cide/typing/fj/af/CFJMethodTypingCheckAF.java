@@ -1,4 +1,4 @@
-package de.ovgu.cide.typing.fj;
+package de.ovgu.cide.typing.fj.af;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -9,6 +9,8 @@ import tmp.generated_fj.MethodDeclaration;
 import de.ovgu.cide.features.IFeatureModel;
 import de.ovgu.cide.features.source.ColoredSourceFile;
 import de.ovgu.cide.features.source.SourceFileColorManager;
+import de.ovgu.cide.typing.fj.CFJMethodTypingCheck;
+import de.ovgu.cide.typing.fj.CFJTypeDeclarationWrapper;
 import de.ovgu.cide.typing.fj.CFJTypingManager.CFJType;
 import de.ovgu.cide.typing.model.IEvaluationStrategy;
 
@@ -19,11 +21,11 @@ import de.ovgu.cide.typing.model.IEvaluationStrategy;
  * 
  * @author Malte Rosenthal
  */
-public class CFJMethodTypingCheck extends CFJTypingCheck {
+public class CFJMethodTypingCheckAF extends CFJMethodTypingCheck {
 	
 	private MethodDeclaration methodDeclaration;
 	
-	public CFJMethodTypingCheck(ColoredSourceFile file, CFJTypingManager typingManager, MethodDeclaration methodDeclaration) {
+	public CFJMethodTypingCheckAF(ColoredSourceFile file, CFJTypingManagerAF typingManager, MethodDeclaration methodDeclaration) {
 		super(file, typingManager, methodDeclaration);
 		this.methodDeclaration = methodDeclaration;
 	}
@@ -33,7 +35,7 @@ public class CFJMethodTypingCheck extends CFJTypingCheck {
 		IFeatureModel fm = file.getFeatureModel();
 		SourceFileColorManager colorManager = file.getColorManager();
 
-		CFJTypeDeclarationWrapper returnTypeDeclaration = typingManager.findTypeDeclaration(CFJTypingManager.getIdentifier(methodDeclaration.getType()));
+		CFJTypeDeclarationWrapper returnTypeDeclaration = typingManager.findTypeDeclaration(CFJTypingManagerAF.getIdentifier(methodDeclaration.getType()));
 		
 		FormalParameterList formalParameterList = methodDeclaration.getFormalParameterList();
 		ArrayList<FormalParameter> formalParameters = (formalParameterList == null) ? null : formalParameterList.getFormalParameter();
@@ -48,7 +50,7 @@ public class CFJMethodTypingCheck extends CFJTypingCheck {
 				set.add(param.getIdentifier().getValue());
 				
 				// (M.3): Typ eines jeden formalen Parameters muss existieren
-				CFJTypeDeclarationWrapper typeDecl = typingManager.findTypeDeclaration(CFJTypingManager.getIdentifier(param.getType()));
+				CFJTypeDeclarationWrapper typeDecl = typingManager.findTypeDeclaration(CFJTypingManagerAF.getIdentifier(param.getType()));
 				if ((typeDecl == null) || !strategy.implies(fm, colorManager.getColors(param), colorManager.getColors(typeDecl))) {
 					return createError("Type of parameter >" + param.getIdentifier().getValue() + "< does not exist in some variants.", param.getType());
 				}

@@ -40,6 +40,11 @@ public abstract class CFJTypingCheck implements ITypingCheck {
 	protected boolean createError(String message) {
 		return createError(message, null);
 	}
+	
+	protected boolean prependError(String message) {
+		errorMessage = (errorMessage == null) ? message : message + " -> " + errorMessage;
+		return false;
+	}
 
 	@Override
 	public String getErrorMessage() {
