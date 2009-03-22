@@ -99,4 +99,9 @@ public class SourceFileAdapter implements ISourceFile {
 	public void replaceSubtreeWith(IASTNode newNode) {
 		ast.replaceSubtreeWith(newNode);
 	}
+
+	@Override
+	public void setId(String id) {
+		ast.setId(id);
+	}
 }
