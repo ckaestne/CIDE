@@ -58,7 +58,7 @@ public class AFConfigurationMechanism implements IConfigurationMechanism {
 		if (project == null)
 			return null;
 		
-		final Map<String, List<Alternative>> id2alternatives = sourceFile.getAltFeatureManager().getAlternatives();
+		final Map<String, List<Alternative>> id2alternatives = sourceFile.getAltFeatureManager().getAllAlternatives();
 		if ((id2alternatives == null) || (id2alternatives.isEmpty()))
 			return (new DefaultConfigurationMechanism()).configureFile(sourceFile, selectedFeatures);
 		
@@ -109,8 +109,8 @@ public class AFConfigurationMechanism implements IConfigurationMechanism {
 						if (alternative.isActive)
 							continue;
 						
-						if (strategy.implies(fm, visibleSelectedFeatures, alternative.features)) {
-							IASTNode newNode = languageExtension.parseCodeFragment(node.getClass().getSimpleName(), alternative.text);
+						if (strategy.implies(fm, visibleSelectedFeatures, alternative.getFeatures())) {
+							IASTNode newNode = languageExtension.parseCodeFragment(node, alternative.text);
 							if (newNode == null) {
 								exceptions.add(new ConfigurationException("Alternative >" + alternative.altID + "< of node >" + 
 																		  node.getId() + "< cannot be parsed."));
@@ -118,7 +118,12 @@ public class AFConfigurationMechanism implements IConfigurationMechanism {
 							}
 							
 							node.replaceSubtreeWith(newNode);
-							return true;
+							
+							// Den weiteren Durchlauf durch den AST müssen wir jetzt steuern, weil der "alte" Durchlauf
+							// nun die Kinder des alten AST-Knotens besuchen würde.
+							for (IASTNode child : newNode.getChildren())
+								visit(child);
+							return false;
 						}
 					}
 				}

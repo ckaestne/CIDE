@@ -49,7 +49,7 @@ public class AlternativeSyntaxCheck implements ITypingCheck {
 	
 	@Override
 	public boolean evaluate(IEvaluationStrategy strategy) {
-		Map<String, List<Alternative>> id2alternatives = file.getAltFeatureManager().getAlternatives();
+		Map<String, List<Alternative>> id2alternatives = file.getAltFeatureManager().getAllAlternatives();
 		if (id2alternatives == null)
 			return true;
 		
@@ -64,25 +64,31 @@ public class AlternativeSyntaxCheck implements ITypingCheck {
 			boolean isOptional = false;
 			List<Set<IFeature>> featureSets = new LinkedList<Set<IFeature>>();
 			
-			for (Alternative alternative : alternatives) {
-				// Wir könnten noch überprüfen, ob context und isOptional bei jeder Alternative gleich sind, aber
-				// das sollten sie (sonst Programmierfehler beim Anlegen/Speichern von Alternativen). Außerdem
-				// würde es ausreichen, context und isOptional nur aus einer der Alternativen auszulesen.
-				context = alternative.inheritedFeatures;
-				isOptional = alternative.isOptional;
+			Map<Alternative, List<Alternative>> alternativesGroupedByParent = file.getAltFeatureManager().groupByParent(alternatives);
+			for (Entry<Alternative, List<Alternative>> group : alternativesGroupedByParent.entrySet()) {
+				context = group.getKey().getFeatures();
+				featureSets.clear();
 				
-				featureSets.add(alternative.features);
-			}
-			
-			// Zwei Alternativen müssen sich gegenseitig ausschließen
-			if (!strategy.areMutualExclusive(fm, context, featureSets)) {
-				return createError("At least two alternatives of node >" + entry.getKey() + "< are not mutually exclusive.", entry.getKey());
-			}
-			
-			// Bei nicht-optionalen AST-Knoten muss zusätzlich bei jeder gültigen Konfiguration mindestens eine
-			// Alternative präsent sein
-			if (!isOptional && strategy.mayBeMissing(fm, context, featureSets)) {
-				return createError("Node >" + entry.getKey() + "< is not present in some variants.", entry.getKey());
+				for (Alternative alternative : group.getValue()) {
+					// Wir könnten noch überprüfen, ob isOptional bei jeder Alternative gleich ist, aber
+					// das sollten sie (sonst Programmierfehler beim Anlegen/Speichern von Alternativen). Außerdem
+					// würde es ausreichen, isOptional nur aus einer der Alternativen auszulesen.
+					isOptional = alternative.isOptional;
+					featureSets.add(alternative.ownFeatures);
+				}
+				
+				// Zwei Alternativen müssen sich gegenseitig ausschließen
+				if (!strategy.areMutualExclusive(fm, context, featureSets)) {
+					return createError("At least two alternatives of node >" + entry.getKey() + "< in parent-alternative >" + 
+									   group.getKey().altID + "< are not mutually exclusive.", entry.getKey());
+				}
+				
+				// Bei nicht-optionalen AST-Knoten muss zusätzlich bei jeder gültigen Konfiguration mindestens eine
+				// Alternative präsent sein
+				if (!isOptional && strategy.mayBeMissing(fm, context, featureSets)) {
+					return createError("Parent-alternative >" + group.getKey().altID + "<: Node >" + entry.getKey() + 
+									   "< is not present in some variants.", entry.getKey());
+				}
 			}
 		}
 		

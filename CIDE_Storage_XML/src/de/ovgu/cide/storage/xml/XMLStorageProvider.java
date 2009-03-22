@@ -65,11 +65,11 @@ public class XMLStorageProvider implements IStorageProvider {
 	}
 	
 	@Override
-	public Map<String, List<Alternative>> getAlternatives(IProject project, Object annotatedResource, List<String> ids, IFeatureModelWithID featureModel) {
+	public Map<String, List<Alternative>> getAllAlternatives(IProject project, Object annotatedResource, IFeatureModelWithID featureModel) {
 		assert annotatedResource instanceof IResource;
 		String path = ((IResource) annotatedResource).getProjectRelativePath().toPortableString();
 		
-		return getProjectStorage(project).getAlternatives(path, ids, featureModel);
+		return getProjectStorage(project).getAlternatives(path, featureModel);
 	}
 
 	public boolean activateAlternative(IProject project, Object annotatedResource, Alternative alternative, Map<String, String> id2oldText) {

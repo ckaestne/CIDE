@@ -31,6 +31,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import de.ovgu.cide.af.Alternative;
+import de.ovgu.cide.af.RootAlternative;
 import de.ovgu.cide.features.IFeature;
 import de.ovgu.cide.features.IFeatureModelWithID;
 import de.ovgu.cide.features.IFeatureWithID;
@@ -235,7 +236,7 @@ public class ProjectStorage {
 		
 		String astID = alternative.entityID;
 		String altID = alternative.altID;
-		Set<IFeature> features = alternative.features;
+		Set<IFeature> features = alternative.ownFeatures;
 		
 		Element featureAnnotationsElement = findFeatureAnnotationsElement(path);
 		
@@ -338,16 +339,12 @@ public class ProjectStorage {
 	}
 	
 	/**
+	 * Gibt alle Alternativen aller AST-Knoten zurück.
 	 * @param path
-	 * @param ids	Liste von IDs von AST-Knoten, die relevant sind. Ist diese Liste null, so werden die Alternativen
-	 * 				aller AST-Knoten zurückgegeben.
+	 * @param featureModel
 	 * @return
 	 */
-	public Map<String, List<Alternative>> getAlternatives(String path, List<String> ids, IFeatureModelWithID featureModel) {
-		boolean allAlternatives = (ids == null);
-		if ((ids != null) && (ids.size() < 1))
-			return null;
-		
+	public Map<String, List<Alternative>> getAlternatives(String path, IFeatureModelWithID featureModel) {		
 		Element featureAnnotationsElement = findFeatureAnnotationsElement(path);
 		if (featureAnnotationsElement == null)
 			return null;
@@ -355,44 +352,69 @@ public class ProjectStorage {
 		if (alternative2node == null)
 			alternative2node = new HashMap<Alternative, Element>();
 		
-		NodeList annotations = featureAnnotationsElement.getElementsByTagName("annotation");
 		Map<String, List<Alternative>> result = new HashMap<String, List<Alternative>>();
-		for (int i = 0; i < annotations.getLength(); ++i) {
-			Element annotation = (Element) annotations.item(i);
-			String astid = annotation.getAttributes().getNamedItem("astid").getNodeValue();
-			boolean isOptional = annotation.getAttributes().getNamedItem("isOptional").getNodeValue().equals("true");
+		NodeList topLevelAnnotations = featureAnnotationsElement.getChildNodes();
+		Alternative rootAlternative = new RootAlternative();
+		
+		for (int i = 0; i < topLevelAnnotations.getLength(); ++i) {
+			result.putAll(getAlternatives((Element) topLevelAnnotations.item(i), rootAlternative, featureModel));
+		}
+		
+		return result;
+	}
+	
+	/**
+	 * Gibt alle Alternativen aller AST-Knoten ab dem gegebenen Annotations-Knoten zurück.
+	 * @param annotation
+	 * @param parent
+	 * @param featureModel
+	 * @return
+	 */
+	private Map<String, List<Alternative>> getAlternatives(Element annotation, Alternative parent, IFeatureModelWithID featureModel) {
+		String astid = annotation.getAttributes().getNamedItem("astid").getNodeValue();
+		boolean isOptional = annotation.getAttributes().getNamedItem("isOptional").getNodeValue().equals("true");
+		
+		Map<String, List<Alternative>> result = new HashMap<String, List<Alternative>>();
+		List<Alternative> altList = new LinkedList<Alternative>();
+		result.put(astid, altList);
+		
+		NodeList alternatives = annotation.getChildNodes();
+		for (int i = 0; i < alternatives.getLength(); ++i) {
+			Element alternative = (Element) alternatives.item(i);
+			Alternative alt = buildAlternative(alternative, astid, isOptional, featureModel);
+			altList.add(alt);
 			
-			if (allAlternatives || ids.contains(astid)) {
-				NodeList alternatives = annotation.getChildNodes();
-				
-				List<Alternative> altList = null;
-				if (alternatives.getLength() > 0) {
-					if (result.containsKey(astid)) 
-						altList = result.get(astid);
-					else {
-						altList = new LinkedList<Alternative>();
-						result.put(astid, altList);
-					}
-				}
-				
-				for (int j = 0; j < alternatives.getLength(); ++j) {
-					Element alternative = (Element) alternatives.item(j);
-					
-					if (alternative.getNodeName().equals("alternative")) {
-						if (allAlternatives) {
-							Alternative alt = buildAlternative(alternative, astid, isOptional, featureModel);
-							altList.add(alt);
-						} else if (parentIsActive(alternative)) {
-							Alternative alt = buildAlternative(alternative, astid, isOptional, featureModel);
-							altList.add(alt);
-							alternative2node.put(alt, alternative);
-						}
-					}
+			if (parent != null) {
+				parent.addChild(alt);
+				alt.setParent(parent);
+			}
+			
+			if (parentIsActive(alternative))
+				alternative2node.put(alt, alternative);
+			
+			NodeList subAnnotations = alternative.getChildNodes();
+			for (int j = 0; j < subAnnotations.getLength(); ++j) {
+				if (subAnnotations.item(j).getNodeName().equals("annotation")) {
+					Element subAnnotation = (Element) subAnnotations.item(j);
+					mergeId2AlternativesMap(result, getAlternatives(subAnnotation, alt, featureModel));
 				}
 			}
 		}
 		
 		return result;
+	}
+	
+	private void mergeId2AlternativesMap(Map<String, List<Alternative>> m1, Map<String, List<Alternative>> m2) {
+		if ((m1 == null) || (m2 == null))
+			return;
+		
+		for (Entry<String, List<Alternative>> entry : m2.entrySet()) {
+			if (m1.containsKey(entry.getKey())) {
+				m1.get(entry.getKey()).addAll(entry.getValue());
+			} else {
+				m1.put(entry.getKey(), entry.getValue());
+			}
+		}
 	}
 	
 	private boolean parentIsActive(Element alternative) {
