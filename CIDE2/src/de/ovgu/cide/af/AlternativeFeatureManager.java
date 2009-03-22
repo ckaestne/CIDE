@@ -34,84 +34,141 @@ public class AlternativeFeatureManager {
 	}
 	
 	private void init() throws CoreException, ParseException {
-		if (id2alternatives != null)
-			id2alternatives.clear();
-		if (id2node != null)
-			id2node.clear();
+		id2alternatives = coloredSourceFile.getColorManager().getAllAlternatives((IFeatureModelWithID) coloredSourceFile.getFeatureModel());
 		
-		updateAlternativeList(coloredSourceFile.getAST(), true);
-	}
-	
-	private void updateAlternativeList(List<IASTNode> nodes, boolean recursive) {
-		if ((nodes == null) || nodes.isEmpty())
-			return;
-		
-		final List<String> astIDs = new LinkedList<String>();
-		
-		for (IASTNode node : nodes) {
-			if (node == null)
-				continue;
-			if (!recursive) {
-				if (!astIDs.contains(node.getId())) {
-					astIDs.add(node.getId());
-					id2node.put(node.getId(), node);
-				}
+		id2node.clear();
+		coloredSourceFile.getAST().accept(new ASTVisitor() {
+			@Override
+			public boolean visit(IASTNode node) {
+				id2node.put(node.getId(), node);
+				return true;
 			}
-			else {
-				node.accept(new ASTVisitor() {
-					@Override
-					public boolean visit(IASTNode node) {
-						if (!astIDs.contains(node.getId())) {
-							astIDs.add(node.getId());
-							id2node.put(node.getId(), node);
-						}
-						return true;
-					}
-				});
-			}
-		}
-		
-		if (id2alternatives == null)
-			id2alternatives = new HashMap<String, List<Alternative>>();
-		
-		mergeAlternatives(coloredSourceFile.getColorManager().getAlternatives(astIDs, (IFeatureModelWithID) coloredSourceFile.getFeatureModel()));
+		});
 	}
-	
-	private void updateAlternativeList(IASTNode node, boolean recursive) {
-		if (node == null)
-			return;
 		
-		List<IASTNode> nodes = new LinkedList<IASTNode>();
-		nodes.add(node);
-		updateAlternativeList(nodes, recursive);
-	}
-	
-	public List<Alternative> getAlternatives(String id) throws CoreException, ParseException {
-		init();
-		if (id2alternatives == null)
-			return null;
-		return id2alternatives.get(id);
-	}
-	
-	public Map<String, List<Alternative>> getAlternatives() {
-		return coloredSourceFile.getColorManager().getAlternatives(null, (IFeatureModelWithID) coloredSourceFile.getFeatureModel());
+	/**
+	 * Gibt alle Alternativen aller AST-Knoten zurück.
+	 */
+	public Map<String, List<Alternative>> getAllAlternatives() {
+		return coloredSourceFile.getColorManager().getAllAlternatives((IFeatureModelWithID) coloredSourceFile.getFeatureModel());
 	}
 	
 	/**
-	 * Gibt alle AST-Knoten zurück, zu denen es mindestens zwei Alternativen gibt
+	 * Gibt eine Liste von Alternativen zum AST-Knoten mit gegebener ID zurück, dessen Vater-Alternative aktiv ist.
+	 * 
+	 * Dabei werden Änderungen an der aktiven Alternative, die noch nicht in die XML-Datei zurückgespeichert wurden, nicht berücksichtigt.
+	 * Steht die aktive Alternative also noch gar nicht in der XML-Datei, so wird sie hier auch nicht zurückgegeben.
+	 * @param id
 	 * @return
 	 * @throws CoreException
 	 * @throws ParseException
 	 */
-	public List<IASTNode> getAlternativeNodes() throws CoreException, ParseException {
+	public List<Alternative> getAlternativesWithActiveParent(String id) throws CoreException, ParseException {
 		init();
+		if (id2alternatives == null)
+			return null;
+		
+		List<Alternative> result = new LinkedList<Alternative>();
+		List<Alternative> allAlternatives = id2alternatives.get(id);
+		
+		if (allAlternatives != null) {
+			for (Alternative alternative : allAlternatives) {
+				if (alternative.parentIsActive())
+					result.add(alternative);
+			}
+		}
+		
+		return result;
+	}
+	
+	/**
+	 * Gibt alle AST-Knoten zurück, zu denen es mindestens zwei Alternativen gibt, dessen Vater-Alternative aktiv ist.
+	 * @return
+	 * @throws CoreException
+	 * @throws ParseException
+	 */
+	public List<IASTNode> getAlternativeNodesWithActiveParent() throws CoreException, ParseException {
+		init();
+		if (id2alternatives == null)
+			return null;
+		
 		List<IASTNode> result = new LinkedList<IASTNode>();
 		
 		for (Entry<String, List<Alternative>> entry : id2alternatives.entrySet()) {
-			if ((entry.getValue() != null) && (entry.getValue().size() > 1))
-				result.add(id2node.get(entry.getKey()));
+			Map<Alternative, List<Alternative>> alternativesGroupedByParent = groupByParent(entry.getValue());
+			if (alternativesGroupedByParent != null) {
+				for (Entry<Alternative, List<Alternative>> group : alternativesGroupedByParent.entrySet()) {
+					if (group.getKey().isActive && (group.getValue() != null) && (group.getValue().size() > 1)) {
+						result.add(id2node.get(entry.getKey()));
+						break;
+					}
+				}
+			}
 		}
 		
+		return result;
+	}
+	
+	public Map<Alternative, List<Alternative>> groupByParent(List<Alternative> alternatives) {
+		if (alternatives == null)
+			return null;
+		
+		Map<Alternative, List<Alternative>> result = new HashMap<Alternative, List<Alternative>>();
+		for (Alternative alternative : alternatives) {
+			if (result.containsKey(alternative.getParent())) {
+				result.get(alternative.getParent()).add(alternative);
+			} else {
+				List<Alternative> list = new LinkedList<Alternative>();
+				list.add(alternative);
+				result.put(alternative.getParent(), list);
+			}
+		}
+		
+		return result;
+	}
+	
+	/**
+	 * Gibt eine Liste von Alternativen zum gegebenen AST-Knoten innerhalb der gegebenen Eltern-Alternative zurück.
+	 * Dabei werden Änderungen an der aktiven Alternative, die noch nicht in die XML-Datei zurückgespeichert wurden, mitberücksichtigt.
+	 * 
+	 * @param node
+	 * @param parent
+	 * @return
+	 * @throws CoreException
+	 * @throws ParseException
+	 */
+	public List<Alternative> getAlternatives(IASTNode node, Alternative parent) throws CoreException, ParseException {
+		if (node == null)
+			return null;
+
+		init();
+		List<Alternative> result = new LinkedList<Alternative>();
+		if (id2alternatives == null) {
+			result.add(new Alternative(node, parent.getFeatures()));
+			return result;
+		}
+		
+		List<Alternative> alternatives = id2alternatives.get(node.getId());
+		Alternative activeAlternative = null;
+		
+		if (alternatives != null) {
+			for (Alternative alternative : alternatives) {
+				if (alternative.getParent().equals(parent)) {
+					if (!alternative.isActive) {
+						result.add(alternative);
+					} else
+						activeAlternative = alternative;
+				}
+			}
+		}
+
+		if (activeAlternative != null) {
+			activeAlternative.update(coloredSourceFile, node);
+			result.add(activeAlternative);
+		} else {
+			result.add(new Alternative(node, parent.getFeatures()));
+		}
+
 		return result;
 	}
 	
@@ -143,12 +200,5 @@ public class AlternativeFeatureManager {
 		
 		coloredSourceFile.getColorManager().activateAlternative(alternative, node);
 		CIDECorePlugin.getDefault().notifyListeners(new ASTColorChangedEvent(this, node, coloredSourceFile));
-	}
-	
-	private void mergeAlternatives(Map<String, List<Alternative>> newAlternatives) {
-		// Diese Methode war schonmal komplexer ;-)
-		if ((id2alternatives == null) || (newAlternatives == null))
-			return;
-		id2alternatives.putAll(newAlternatives);
 	}
 }

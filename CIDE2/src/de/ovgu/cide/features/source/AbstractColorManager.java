@@ -114,14 +114,12 @@ abstract class AbstractColorManager {
 	}
 	
 	/**
-	 * Liefert alle Alternativen zu den AST-Knoten mit den gegebenen IDs. Ist ids == null, so werden die Alternativen
-	 * aller AST-Knoten zurückgegeben.
-	 * @param ids
+	 * Liefert alle Alternativen zu allen AST-Knoten.
 	 * @param featureModel
 	 * @return
 	 */
-	public Map<String, List<Alternative>> getAlternatives(List<String> ids, IFeatureModelWithID featureModel) {
-		return storageProvider.getAlternatives(project, resource, ids, featureModel);
+	public Map<String, List<Alternative>> getAllAlternatives(IFeatureModelWithID featureModel) {
+		return storageProvider.getAllAlternatives(project, resource, featureModel);
 	}
 	
 	protected boolean activateAlternative(Alternative alternative, Map<String, String> id2oldText) {

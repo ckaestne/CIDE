@@ -28,7 +28,7 @@ public class SwitchAlternativeSubmenu extends MenuManager implements IContributi
 		List<Alternative> alternatives;
 		try {
 			altFeatureManager = context.getSourceFile().getAltFeatureManager();
-			alternatives = altFeatureManager.getAlternatives(selectedNode.getId());
+			alternatives = altFeatureManager.getAlternativesWithActiveParent(selectedNode.getId());
 		} catch (CoreException e) {
 			context.getEditorExtensions().markCoreException(e);
 			return;

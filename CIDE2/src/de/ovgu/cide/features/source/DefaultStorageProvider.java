@@ -266,7 +266,7 @@ public class DefaultStorageProvider implements IStorageProvider {
 	}
 
 	@Override
-	public Map<String, List<Alternative>> getAlternatives(IProject project, Object annotatedResource, List<String> ids, IFeatureModelWithID featureModel) {
+	public Map<String, List<Alternative>> getAllAlternatives(IProject project, Object annotatedResource, IFeatureModelWithID featureModel) {
 		return null;
 	}
 }

@@ -50,10 +50,10 @@ public class StorageProviderProxy implements IStorageProvider {
 	}
 	
 	@Override
-	public Map<String, List<Alternative>> getAlternatives(IProject project, Object annotatedResource, List<String> ids, IFeatureModelWithID featureModel) {
+	public Map<String, List<Alternative>> getAllAlternatives(IProject project, Object annotatedResource, IFeatureModelWithID featureModel) {
 		if (target == null)
 			loadTarget();
-		return target.getAlternatives(project, annotatedResource, ids, featureModel);
+		return target.getAllAlternatives(project, annotatedResource, featureModel);
 	}
 
 	private IConfigurationElement configElement;

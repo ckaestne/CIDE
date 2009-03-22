@@ -44,14 +44,12 @@ public interface IStorageProvider {
 	boolean storeNewAlternative(IProject project, Object annotatedResource, Alternative alternative, Map<String, String> id2oldText);
 	
 	/**
-	 * Retrieves all alternatives for the given list of AST-node-IDs. If ids == null, then the alternatives of all AST-nodes
-	 * are returned.
+	 * Retrieves all alternatives for all AST-nodes.
 	 * @param project
 	 * @param annotatedResource
-	 * @param ids
 	 * @return
 	 */
-	Map<String, List<Alternative>> getAlternatives(IProject project, Object annotatedResource, List<String> ids, IFeatureModelWithID featureModel);
+	Map<String, List<Alternative>> getAllAlternatives(IProject project, Object annotatedResource, IFeatureModelWithID featureModel);
 
 	/**
 	 * returns whether this storage manager can be used with the given feature
