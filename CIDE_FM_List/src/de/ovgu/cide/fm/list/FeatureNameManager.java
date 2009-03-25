@@ -191,7 +191,7 @@ public class FeatureNameManager {
 							.readObject();
 					featureVisibility = (HashMap<FixedFeature, Boolean>) out
 							.readObject();
-					// depricated
+					// @deprecated
 					out.readObject();
 					dependsOnRelation = (HashMap<FixedFeature, Set<FixedFeature>>) out
 							.readObject();
@@ -225,7 +225,7 @@ public class FeatureNameManager {
 			ObjectOutputStream out = new ObjectOutputStream(b);
 			out.writeObject(featureNames);
 			out.writeObject(featureVisibility);
-			// deprecated
+			// @deprecated
 			out.writeObject(Collections.EMPTY_MAP);
 			out.writeObject(dependsOnRelation);
 			out.writeObject(featureColors);
