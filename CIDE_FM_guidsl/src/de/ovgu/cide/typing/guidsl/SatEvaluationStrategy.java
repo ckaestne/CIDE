@@ -13,6 +13,7 @@ import de.ovgu.cide.fm.guidsl.EmptyFeatureModel;
 import de.ovgu.cide.fm.guidsl.FeatureAdapter;
 import de.ovgu.cide.fm.guidsl.GuidslFeatureModelWrapper;
 import de.ovgu.cide.typing.model.AbstractCachingEvaluationStrategy;
+import de.ovgu.cide.typing.model.DebugTyping;
 import featureide.fm.core.Feature;
 import featureide.fm.core.FeatureModel;
 
@@ -21,7 +22,8 @@ import featureide.fm.core.FeatureModel;
  * implementation which then used a SAT solver to check implications on the
  * background of the feature model
  * 
- * this strategy must cache results as queries to the SAT solver are expensive
+ * this strategy must cache results because queries to the SAT solver are
+ * expensive
  * 
  * @author ckaestne
  * 
@@ -29,19 +31,53 @@ import featureide.fm.core.FeatureModel;
 public class SatEvaluationStrategy extends AbstractCachingEvaluationStrategy {
 
 	@Override
-	protected boolean calcImplies(IFeatureModel featureModel, Set<IFeature> source, Set<IFeature> target) {
+	public boolean implies(IFeatureModel featureModel, Set<IFeature> source,
+			Set<IFeature> target) {
+
+		// if (source.containall(target))
+		// return true;
+
+		if (source.isEmpty() && target.isEmpty()) {
+			DebugTyping.debug_emptycounter++;
+			return true;
+		}
+		if (source.equals(target)) {
+			DebugTyping.debug_equalcounter++;
+			return true;
+		}
+
+		return super.implies(featureModel, source, target);
+	}
+
+	@Override
+	protected boolean calcImplies(IFeatureModel featureModel,
+			Set<IFeature> source, Set<IFeature> target) {
 		// ignore empty feature models
 		if (featureModel instanceof EmptyFeatureModel)
 			return true;
 		assert featureModel instanceof GuidslFeatureModelWrapper;
 
-		FeatureModel guidslModel = ((GuidslFeatureModelWrapper) featureModel).getInternalModel();
+		DebugTyping.debug_satcounter++;
+
+		if (source.containsAll(target)) {
+			DebugTyping.debug_subsetcounter++;
+			return true;
+		}
+
+		long start = System.currentTimeMillis();// debug only
+
+		FeatureModel guidslModel = ((GuidslFeatureModelWrapper) featureModel)
+				.getInternalModel();
 
 		Set<Feature> guidslSourceFeatures = convertToGuidslFeatures(source);
 		Set<Feature> guidslTargetFeatures = convertToGuidslFeatures(target);
 
 		try {
-			return guidslModel.checkImplies(guidslSourceFeatures, guidslTargetFeatures);
+			boolean result = guidslModel.checkImplies(guidslSourceFeatures,
+					guidslTargetFeatures);
+			long end = System.currentTimeMillis();// debug only
+			DebugTyping.satTime(end - start, source, target);
+			return result;
 		} catch (TimeoutException e) {
 			e.printStackTrace();
 			// in case of a timeout assume everything is fine and the
@@ -51,20 +87,23 @@ public class SatEvaluationStrategy extends AbstractCachingEvaluationStrategy {
 	}
 
 	@Override
-	public boolean areMutualExclusive(IFeatureModel featureModel, Set<IFeature> context, List<Set<IFeature>> featureSets) {
+	public boolean areMutualExclusive(IFeatureModel featureModel,
+			Set<IFeature> context, List<Set<IFeature>> featureSets) {
 		// ignore empty feature models
 		if (featureModel instanceof EmptyFeatureModel)
 			return true;
 		assert featureModel instanceof GuidslFeatureModelWrapper;
-		
+
 		List<Set<Feature>> guidslFeatureSets = new LinkedList<Set<Feature>>();
 		for (Set<IFeature> features : featureSets) {
 			guidslFeatureSets.add(convertToGuidslFeatures(features));
 		}
 
-		FeatureModel guidslModel = ((GuidslFeatureModelWrapper) featureModel).getInternalModel();
+		FeatureModel guidslModel = ((GuidslFeatureModelWrapper) featureModel)
+				.getInternalModel();
 		try {
-			return guidslModel.areMutualExclusive(convertToGuidslFeatures(context), guidslFeatureSets);
+			return guidslModel.areMutualExclusive(
+					convertToGuidslFeatures(context), guidslFeatureSets);
 		} catch (TimeoutException e) {
 			e.printStackTrace();
 			// in case of a timeout assume everything is fine and the
@@ -72,22 +111,25 @@ public class SatEvaluationStrategy extends AbstractCachingEvaluationStrategy {
 			return true;
 		}
 	}
-	
+
 	@Override
-	public boolean mayBeMissing(IFeatureModel featureModel, Set<IFeature> context, List<Set<IFeature>> featureSets) {
+	public boolean mayBeMissing(IFeatureModel featureModel,
+			Set<IFeature> context, List<Set<IFeature>> featureSets) {
 		// ignore empty feature models
 		if (featureModel instanceof EmptyFeatureModel)
 			return true;
 		assert featureModel instanceof GuidslFeatureModelWrapper;
-		
+
 		List<Set<Feature>> guidslFeatureSets = new LinkedList<Set<Feature>>();
 		for (Set<IFeature> features : featureSets) {
 			guidslFeatureSets.add(convertToGuidslFeatures(features));
 		}
 
-		FeatureModel guidslModel = ((GuidslFeatureModelWrapper) featureModel).getInternalModel();
+		FeatureModel guidslModel = ((GuidslFeatureModelWrapper) featureModel)
+				.getInternalModel();
 		try {
-			return guidslModel.mayBeMissing(convertToGuidslFeatures(context), guidslFeatureSets);
+			return guidslModel.mayBeMissing(convertToGuidslFeatures(context),
+					guidslFeatureSets);
 		} catch (TimeoutException e) {
 			e.printStackTrace();
 			// in case of a timeout assume everything is fine and the
@@ -95,15 +137,17 @@ public class SatEvaluationStrategy extends AbstractCachingEvaluationStrategy {
 			return false;
 		}
 	}
-	
+
 	@Override
-	protected boolean calcExists(IFeatureModel featureModel, Set<IFeature> features) {
+	protected boolean calcExists(IFeatureModel featureModel,
+			Set<IFeature> features) {
 		// ignore empty feature models
 		if (featureModel instanceof EmptyFeatureModel)
 			return true;
 		assert featureModel instanceof GuidslFeatureModelWrapper;
-		
-		FeatureModel guidslModel = ((GuidslFeatureModelWrapper) featureModel).getInternalModel();
+
+		FeatureModel guidslModel = ((GuidslFeatureModelWrapper) featureModel)
+				.getInternalModel();
 		try {
 			return guidslModel.exists(convertToGuidslFeatures(features));
 		} catch (TimeoutException e) {
@@ -113,17 +157,17 @@ public class SatEvaluationStrategy extends AbstractCachingEvaluationStrategy {
 			return true;
 		}
 	}
-	
+
 	private Set<Feature> convertToGuidslFeatures(Set<IFeature> features) {
 		if (features == null)
 			return null;
-		
+
 		Set<Feature> guidslFeatures = new HashSet<Feature>(features.size());
 		for (IFeature f : features) {
 			assert f instanceof FeatureAdapter;
 			guidslFeatures.add(((FeatureAdapter) f).getInternalFeature());
 		}
-		
+
 		return guidslFeatures;
 	}
 }
