@@ -7,6 +7,7 @@ import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.JavaCore;
@@ -31,9 +32,9 @@ public class JDTTypingProvider extends AbstractFileBasedTypingProvider
 				.create(project));
 	}
 
-	public void updateAll() {
+	public void updateAll(IProgressMonitor monitor) {
 		getBindingColors().clear();
-		super.updateAll();
+		super.updateAll(monitor);
 	}
 
 	private final BindingProjectColorCache bindingColorCache;
@@ -88,11 +89,11 @@ public class JDTTypingProvider extends AbstractFileBasedTypingProvider
 		}
 	}
 
-	public void prepareReevaluation(Collection<ColoredSourceFile> files) {
+	public void prepareReevaluation(Collection<ColoredSourceFile> files, IProgressMonitor monitor) {
 		updateFileColorCache(files);
 	}
 
-	public void prepareReevaluationAll() {
+	public void prepareReevaluationAll(IProgressMonitor monitor) {
 		try {
 			getBindingColors().rebuildEntireProject();
 		} catch (JavaModelException e) {
