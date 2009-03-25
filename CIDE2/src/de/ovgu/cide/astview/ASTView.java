@@ -403,6 +403,8 @@ public class ASTView extends ViewPart implements IShowInSource {
 		}
 
 		public void colorListChanged(ColorListChangedEvent event) {
+			if (fView.fColoredJavaSourceFile == null)
+				return;
 			if (event.getProject() == fView.fColoredJavaSourceFile
 					.getResource().getProject()
 					&& event.anyChangeOf(ChangeType.COLOR))
