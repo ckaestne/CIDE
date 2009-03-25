@@ -15,6 +15,8 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.SubProgressMonitor;
 
 import de.ovgu.cide.features.FeatureModelNotFoundException;
 import de.ovgu.cide.features.source.ColoredSourceFile;
@@ -39,7 +41,8 @@ public abstract class AbstractFileBasedTypingProvider extends
 
 	final protected Map<IFile, Set<ITypingCheck>> checks = new HashMap<IFile, Set<ITypingCheck>>();
 
-	public void updateAll() {
+	public void updateAll(IProgressMonitor monitor) {
+		monitor.subTask("Searching for files to check");
 		final LinkedList<ColoredSourceFile> files = new LinkedList<ColoredSourceFile>();
 		try {
 			getProject().accept(new IResourceVisitor() {
@@ -48,9 +51,10 @@ public abstract class AbstractFileBasedTypingProvider extends
 
 						try {
 							IFile file = (IFile) resource;
-							
+
 							if (ColoredSourceFile.isFileColored(file)) {
-								ColoredSourceFile coloredSourceFile = ColoredSourceFile.getColoredSourceFile(file);
+								ColoredSourceFile coloredSourceFile = ColoredSourceFile
+										.getColoredSourceFile(file);
 								if (matchFileForUpdate(coloredSourceFile))
 									files.add(coloredSourceFile);
 							}
@@ -78,20 +82,27 @@ public abstract class AbstractFileBasedTypingProvider extends
 			obsoleteChecks.addAll(entry.getValue());
 		}
 		if (obsoleteChecks.size() > 0)
-			fireTypingCheckChanged(Collections.EMPTY_SET, obsoleteChecks);
+			fireTypingCheckChanged(Collections.EMPTY_SET, obsoleteChecks,
+					monitor);
 
-		updateFileInternal(files);
+		updateFileInternal(files, monitor);
 	}
 
-	public void updateFile(Collection<ColoredSourceFile> files) {
-		updateFileInternal(files);
+	public void updateFile(Collection<ColoredSourceFile> files,
+			IProgressMonitor monitor) {
+		updateFileInternal(files, monitor);
 	}
 
-	protected void updateFileInternal(Collection<ColoredSourceFile> files) {
+	protected void updateFileInternal(Collection<ColoredSourceFile> files,
+			IProgressMonitor monitor) {
 		Set<ITypingCheck> addedChecks = new HashSet<ITypingCheck>();
 		Set<ITypingCheck> obsoleteChecks = new HashSet<ITypingCheck>();
 
+		monitor.beginTask("Type checking...", 2);
+		SubProgressMonitor monitor1 = new SubProgressMonitor(monitor, 1);
+		monitor1.beginTask("Checking files", files.size());
 		for (ColoredSourceFile file : files) {
+			monitor1.subTask("Checking " + file.getName());
 			Set<ITypingCheck> oldChecks = checks.get(file.getResource());
 			if (oldChecks == null)
 				oldChecks = new HashSet<ITypingCheck>();
@@ -111,9 +122,12 @@ public abstract class AbstractFileBasedTypingProvider extends
 				obsoleteChecks.addAll(oldChecks);
 				checks.remove(file.getResource());
 			}
+			monitor1.worked(1);
 		}
+		monitor1.done();
 
-		fireTypingCheckChanged(addedChecks, obsoleteChecks);
+		fireTypingCheckChanged(addedChecks, obsoleteChecks, monitor);
+		monitor.done();
 	}
 
 	protected abstract Set<ITypingCheck> checkFile(ColoredSourceFile file);

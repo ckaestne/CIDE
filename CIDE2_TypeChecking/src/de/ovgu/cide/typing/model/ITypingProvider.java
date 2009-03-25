@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Set;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.IProgressMonitor;
 
 import de.ovgu.cide.features.source.ColoredSourceFile;
 
@@ -48,14 +49,16 @@ public interface ITypingProvider {
 	/**
 	 * informs the typing provider that the content of one or more files has
 	 * changed. this operation is blocking and should be run from a thread/job
+	 * @param monitor TODO
 	 */
-	void updateFile(Collection<ColoredSourceFile> files);
+	void updateFile(Collection<ColoredSourceFile> files, IProgressMonitor monitor);
 
 	/**
 	 * the entire typechecking for the project should be redone. this operation
 	 * is blocking and should be run from a thread/job
+	 * @param monitor TODO
 	 */
-	void updateAll();
+	void updateAll(IProgressMonitor monitor);
 
 	/**
 	 * called before the checks of one or more files are reevaluated. usually a
@@ -69,13 +72,15 @@ public interface ITypingProvider {
 	 * 
 	 * @param files
 	 *            files that are to be reevaluated
+	 * @param monitor TODO
 	 */
-	void prepareReevaluation(Collection<ColoredSourceFile> files);
+	void prepareReevaluation(Collection<ColoredSourceFile> files, IProgressMonitor monitor);
 
 	/**
 	 * same as prepareReevaluation(files) but for the entire project
+	 * @param monitor TODO
 	 * 
 	 */
-	void prepareReevaluationAll();
+	void prepareReevaluationAll(IProgressMonitor monitor);
 
 }

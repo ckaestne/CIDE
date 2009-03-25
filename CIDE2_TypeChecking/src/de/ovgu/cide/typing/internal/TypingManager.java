@@ -27,6 +27,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubProgressMonitor;
 
 import de.ovgu.cide.ASTColorChangedEvent;
 import de.ovgu.cide.CIDECorePlugin;
@@ -40,6 +41,7 @@ import de.ovgu.cide.features.IFeatureModel;
 import de.ovgu.cide.features.source.ColoredSourceFile;
 import de.ovgu.cide.typing.internal.manager.EvaluationStrategyManager;
 import de.ovgu.cide.typing.internal.manager.TypingExtensionManager;
+import de.ovgu.cide.typing.model.DebugTyping;
 import de.ovgu.cide.typing.model.IEvaluationStrategy;
 import de.ovgu.cide.typing.model.ITypingCheck;
 import de.ovgu.cide.typing.model.ITypingCheckListener;
@@ -115,12 +117,13 @@ public class TypingManager {
 			reevaluateFileChecks(toCheck);
 		}
 
-		public void changedTypingChecks(TypeCheckChangeEvent event) {
+		public void changedTypingChecks(TypeCheckChangeEvent event,
+				IProgressMonitor monitor) {
 			// called from within a job!
 			knownChecks.removeAll(event.getObsoleteChecks());
 			removeObsoleteErrors(event.getObsoleteChecks());
 			evaluateChecks(event.getAddedChecks(), event.getProvider()
-					.getProject());
+					.getProject(), monitor);
 			knownChecks.addAll(event.getAddedChecks());
 		}
 
@@ -162,8 +165,14 @@ public class TypingManager {
 
 	/**
 	 * called from within a job
+	 * 
+	 * @param monitor
 	 */
-	public void evaluateChecks(Collection<ITypingCheck> checks, IProject project) {
+	public void evaluateChecks(Collection<ITypingCheck> checks,
+			IProject project, IProgressMonitor monitor) {
+		SubProgressMonitor monitor2 = new SubProgressMonitor(monitor, 1);
+		monitor2.beginTask("Evaluating type checks...", checks.size() + 10);
+
 		// called from within a job!
 		IEvaluationStrategy strategy;
 		try {
@@ -177,15 +186,28 @@ public class TypingManager {
 		// cannot check anything without a strategy
 		if (strategy == null)
 			return;
+
+		monitor2.worked(10);
+
+		int i = 0;
 		for (ITypingCheck check : checks) {
+			i++;
+			if (i % 25 == 0) {
+				monitor2.subTask("Evaluating type check " + i + "/"
+						+ checks.size());
+				monitor2.worked(25);
+			}
+
 			boolean isWelltyped = check.evaluate(strategy);
 
 			if (!isWelltyped)
 				markIlltyped(check);
 			else
 				markWelltyped(check);
-		}
 
+		}
+		DebugTyping.print();//debug only
+		monitor2.done();
 	}
 
 	private void markWelltyped(ITypingCheck check) {
@@ -237,7 +259,7 @@ public class TypingManager {
 				List<ITypingProvider> typingProviders = TypingExtensionManager
 						.getInstance().getTypingProviders(project);
 				for (ITypingProvider typingProvider : typingProviders) {
-					typingProvider.prepareReevaluationAll();
+					typingProvider.prepareReevaluationAll(monitor);
 				}
 
 				// TODO currently pretty inefficient. should store association
@@ -247,7 +269,7 @@ public class TypingManager {
 					if (check.getFile().getResource().getProject() == project)
 						toCheck.add(check);
 				}
-				evaluateChecks(toCheck, project);
+				evaluateChecks(toCheck, project, monitor);
 
 				return Status.OK_STATUS;
 			}
@@ -291,8 +313,8 @@ public class TypingManager {
 							.getInstance().getTypingProviders(
 									fileGroup.getKey());
 					for (ITypingProvider typingProvider : typingProviders) {
-						typingProvider
-								.prepareReevaluation(fileGroup.getValue());
+						typingProvider.prepareReevaluation(
+								fileGroup.getValue(), monitor);
 					}
 
 				}
@@ -302,7 +324,7 @@ public class TypingManager {
 				for (ITypingCheck check : checks) {
 					if (files.contains(check.getFile()))
 						evaluateChecks(Collections.singleton(check), check
-								.getFile().getResource().getProject());
+								.getFile().getResource().getProject(), monitor);
 				}
 				return Status.OK_STATUS;
 			}

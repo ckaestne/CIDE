@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.IProgressMonitor;
 
 public abstract class AbstractTypingProvider implements ITypingProvider {
 
@@ -28,11 +29,11 @@ public abstract class AbstractTypingProvider implements ITypingProvider {
 	}
 
 	protected void fireTypingCheckChanged(Collection<ITypingCheck> added,
-			Collection<ITypingCheck> obsolete) {
+			Collection<ITypingCheck> obsolete, IProgressMonitor monitor) {
 		if (added.size() > 0 || obsolete.size() > 0)
 			for (ITypingCheckListener listener : listeners)
 				listener.changedTypingChecks(new TypeCheckChangeEvent(this,
-						added, obsolete));
+						added, obsolete), monitor);
 	}
 
 }

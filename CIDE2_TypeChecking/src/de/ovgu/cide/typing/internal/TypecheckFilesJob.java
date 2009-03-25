@@ -45,7 +45,7 @@ public class TypecheckFilesJob extends WorkspaceJob {
 		TypingExtensionManager.registerListener(typingProviders,
 				typingManager.listener);
 		for (ITypingProvider typingProvider : typingProviders) {
-			typingProvider.updateFile(files);
+			typingProvider.updateFile(files, monitor);
 		}
 		// monitor.worked(5);
 		return Status.OK_STATUS;

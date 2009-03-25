@@ -39,7 +39,9 @@ class TypecheckProjectJob extends WorkspaceJob {
 		if (monitor.isCanceled())
 			return Status.CANCEL_STATUS;
 
-		for (IProject project : projects) {
+		for (IProject project : projects) if (project.isOpen()){
+			monitor.subTask("Checking "+project.getName());
+			
 			// delete old markers
 			project.deleteMarkers(TypingMarkerFactory.MARKER_TYPE_ID, true,
 					IResource.DEPTH_INFINITE);
@@ -49,7 +51,7 @@ class TypecheckProjectJob extends WorkspaceJob {
 			TypingExtensionManager.registerListener(typingProviders,
 					typingManager.listener);
 			for (ITypingProvider typingProvider : typingProviders) {
-				typingProvider.updateAll();
+				typingProvider.updateAll(monitor);
 			}
 		}
 		// monitor.worked(5);
