@@ -46,5 +46,12 @@ public class UnifiedASTNode extends ASTNode {
 	public String getId() {
 		return id;
 	}
+	
+	@Override
+	public boolean isOptional() {
+		if (getParent()==null)
+			return true;
+		return super.isOptional();
+	}
 
 }
