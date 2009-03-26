@@ -34,7 +34,8 @@ public class AlternativeFeatureManager {
 	}
 	
 	private void init() throws CoreException, ParseException {
-		id2alternatives = coloredSourceFile.getColorManager().getAllAlternatives((IFeatureModelWithID) coloredSourceFile.getFeatureModel());
+		if (coloredSourceFile.isColored())
+			id2alternatives = coloredSourceFile.getColorManager().getAllAlternatives((IFeatureModelWithID) coloredSourceFile.getFeatureModel());
 		
 		id2node.clear();
 		coloredSourceFile.getAST().accept(new ASTVisitor() {

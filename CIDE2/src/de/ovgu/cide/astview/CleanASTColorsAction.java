@@ -27,8 +27,9 @@ public class CleanASTColorsAction extends Action {
 
 	public CleanASTColorsAction(List<IASTNode> nodes, ColoredSourceFile file) {
 		super();
-		assert nodes != null && !nodes.isEmpty();
+		assert nodes != null;
 		this.nodes = nodes;
+		this.setEnabled(!nodes.isEmpty());
 		this.file = file;
 		this.setText("Clean colors");
 	}
