@@ -8,6 +8,7 @@ import java.util.Set;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 
 import tmp.generated_bali.BaliGrammarRule;
 import tmp.generated_bali.IdentifierNode;
@@ -121,12 +122,10 @@ public class BaliTypingProvider extends AbstractFileBasedTypingProvider {
 		return new FileChecker(file).run();
 	}
 
-	public void prepareReevaluation(Collection<ColoredSourceFile> files) {
-		// nothing to do
-	}
+	@Override
+	public void prepareReevaluation(Collection<ColoredSourceFile> files, IProgressMonitor monitor) { }
 
-	public void prepareReevaluationAll() {
-		// nothing to do
-	}
+	@Override
+	public void prepareReevaluationAll(IProgressMonitor monitor) { }
 
 }
