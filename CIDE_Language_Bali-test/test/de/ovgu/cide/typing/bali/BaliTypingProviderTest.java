@@ -1,13 +1,10 @@
 package de.ovgu.cide.typing.bali;
 
-import static org.junit.Assert.*;
-
 import java.util.Collections;
 import java.util.Set;
 
 import junit.framework.Assert;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -61,7 +58,7 @@ public class BaliTypingProviderTest {
 	public void testNoErrors() throws CoreException,
 			FeatureModelNotFoundException {
 		getProvider("NoError");
-		provider.updateFile(Collections.singleton(getTestFile()));
+		provider.updateFile(Collections.singleton(getTestFile()), null);
 		Set<ITypingCheck> checks = provider.getChecks();
 		Assert.assertNotNull(checks);
 		Assert.assertTrue("No checks generated", checks.size() > 0);
@@ -73,9 +70,9 @@ public class BaliTypingProviderTest {
 			FeatureModelNotFoundException {
 		// checking the same file twice should return the same checks
 		getProvider("NoError");
-		provider.updateFile(Collections.singleton(getTestFile()));
+		provider.updateFile(Collections.singleton(getTestFile()), null);
 		Set<ITypingCheck> checks1 = provider.getChecks();
-		provider.updateFile(Collections.singleton(getTestFile()));
+		provider.updateFile(Collections.singleton(getTestFile()), null);
 		Set<ITypingCheck> checks2 = provider.getChecks();
 		Assert.assertEquals(checks1, checks1);
 		Assert.assertEquals(checks1, checks2);
@@ -85,10 +82,10 @@ public class BaliTypingProviderTest {
 	public void testCheckAllAndCheckFileEqual() throws Exception {
 		// checking that updateAll works as expected
 		getProvider("NoError");
-		provider.updateFile(Collections.singleton(getTestFile()));
+		provider.updateFile(Collections.singleton(getTestFile()), null);
 		Set<ITypingCheck> checks1 = provider.getChecks();
 		getProvider("NoError");
-		provider.updateAll();
+		provider.updateAll(null);
 		Set<ITypingCheck> checks2 = provider.getChecks();
 		Assert.assertEquals(checks1, checks2);
 	}
