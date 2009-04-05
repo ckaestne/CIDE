@@ -6,6 +6,7 @@ import java.util.Set;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 
 import cide.gparser.ParseException;
 
@@ -40,10 +41,10 @@ public class AlternativeSyntaxProvider extends AbstractFileBasedTypingProvider {
 	}
 
 	@Override
-	public void prepareReevaluation(Collection<ColoredSourceFile> files) { }
+	public void prepareReevaluation(Collection<ColoredSourceFile> files, IProgressMonitor monitor) { }
 
 	@Override
-	public void prepareReevaluationAll() { }
+	public void prepareReevaluationAll(IProgressMonitor monitor) { }
 
 	@Override
 	protected boolean matchFileForUpdate(ColoredSourceFile coloredSourceFile) {
