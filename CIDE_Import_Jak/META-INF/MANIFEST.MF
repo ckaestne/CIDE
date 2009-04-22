@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: CIDE_Import_Jak Plug-in
+Bundle-SymbolicName: de.ovgu.cide.import.jak;singleton:=true
+Bundle-Version: 0.1.0
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Require-Bundle: de.ovgu.cide.ast;bundle-version="1.0.2",
+ de.ovgu.cide.core;bundle-version="1.3.1",
+ de.ovgu.cide.language.jdt;bundle-version="0.1.0",
+ org.eclipse.jdt.core;bundle-version="3.4.2",
+ org.eclipse.core.resources;bundle-version="3.4.1",
+ org.eclipse.core.runtime;bundle-version="3.4.0",
+ FeatureIDE_FM_Core;bundle-version="2.2.3",
+ org.eclipse.text;bundle-version="3.4.0",
+ org.eclipse.ui;bundle-version="3.4.1"
+Bundle-ClassPath: .,
+ lib/FeatureHouse-0.2.jar

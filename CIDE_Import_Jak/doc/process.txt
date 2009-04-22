@@ -1,0 +1,11 @@
+Import works in multiple steps:
+
+* first, a FeatureHouse extension is used to flatten all files and introduce annotations as textual comments
+
+* second, the result and the feature model is moved into a newly created java project in the workspace
+
+* third, the guidsl feature model is extended to include all OR features
+
+* fourth, the textual annotations are read and removed, while their content is applied to the AST
+
+* finally, a pretty printing step would be a good idea.
