@@ -30,7 +30,7 @@ public class EquationEditorPage extends AbstractConfigurationPage {
 			GuidslFeatureModelWrapper featureModel) {
 		super(pageName, featureModel);
 		this.model = featureModel;
-		configuration = new Configuration(featureModel.model, false);
+		configuration = new Configuration(featureModel.model, true);
 		setPageComplete(configuration.valid());
 		setTitle("Feature selection");
 		this.setDescription("Select features for a variant (double-click on feature to select or deselect)");

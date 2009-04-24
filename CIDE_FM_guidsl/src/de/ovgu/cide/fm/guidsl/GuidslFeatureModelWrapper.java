@@ -186,8 +186,7 @@ public class GuidslFeatureModelWrapper extends AbstractFeatureModel {
 	}
 
 	public IFeature createNewFeature() {
-		// TODO Auto-generated method stub
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	/**

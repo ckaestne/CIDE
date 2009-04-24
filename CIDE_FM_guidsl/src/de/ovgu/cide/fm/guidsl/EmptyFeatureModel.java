@@ -53,7 +53,7 @@ public class EmptyFeatureModel extends AbstractFeatureModel {
 	}
 
 	public IFeature createNewFeature() {
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 }
