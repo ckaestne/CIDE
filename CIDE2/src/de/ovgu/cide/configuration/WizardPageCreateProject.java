@@ -23,7 +23,7 @@ public class WizardPageCreateProject extends WizardPage {
 		super(pageName);
 		this.setTitle("Define Target Project");
 		this.setPageComplete(false);
-		sourceProject=p;
+		sourceProject = p;
 	}
 
 	IProject sourceProject;
@@ -31,7 +31,8 @@ public class WizardPageCreateProject extends WizardPage {
 	public Text projectName;
 
 	private void checkProjectName() {
-		if (projectName.getText().equals(sourceProject.getName())) {
+		if (sourceProject != null
+				&& projectName.getText().equals(sourceProject.getName())) {
 			WizardPageCreateProject.this.setMessage(
 					"Cannot overwrite the source project.", DialogPage.ERROR);
 			WizardPageCreateProject.this.setPageComplete(false);
@@ -88,12 +89,12 @@ public class WizardPageCreateProject extends WizardPage {
 		FormData data = new FormData();
 		data.top = new FormAttachment(label, 5);
 		data.left = new FormAttachment(0, 0);
-		data.width=200;
+		data.width = 200;
 		projectName.setLayoutData(data);
 
 		data = new FormData();
 		data.right = new FormAttachment(100, 0);
-		data.left = new FormAttachment(projectName,5);
+		data.left = new FormAttachment(projectName, 5);
 		data.top = new FormAttachment(label, 5);
 		data.width = 40;
 		button.setLayoutData(data);
@@ -101,4 +102,12 @@ public class WizardPageCreateProject extends WizardPage {
 		this.setControl(composite);
 	}
 
+	public IProject getTargetProject() {
+		return ResourcesPlugin.getWorkspace().getRoot().getProject(
+				projectName.getText());
+	}
+
+	public void setSourceProject(IProject sp) {
+		sourceProject = sp;
+	}
 }
