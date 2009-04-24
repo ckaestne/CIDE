@@ -50,7 +50,7 @@ public class SourceFileColorManager extends AbstractColorManager {
 	}
 	
 	public Set<IFeature> getNotInheritedColors(IASTNode node) {
-		Set<IFeature> ownColors = getOwnColors(node);
+		Set<IFeature> ownColors = new HashSet<IFeature>(getOwnColors(node));
 		Set<IFeature> inheritedColors = getInheritedColors(node);
 
 		for (IFeature feature : inheritedColors) {

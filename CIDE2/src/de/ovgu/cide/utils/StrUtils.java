@@ -1,6 +1,7 @@
 package de.ovgu.cide.utils;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
 
@@ -35,6 +36,16 @@ public class StrUtils {
 	
 	public static InputStream strToInputStream(String txt){
 		return new ByteArrayInputStream(txt.getBytes());	
+	}
+	
+	public static String strFromInputStream(InputStream stream)
+			throws IOException{
+		 StringBuffer out = new StringBuffer();
+		    byte[] b = new byte[4096];
+		    for (int n; (n = stream.read(b)) != -1;) {
+		        out.append(new String(b, 0, n));
+		    }
+		    return out.toString();
 	}
 	
 }

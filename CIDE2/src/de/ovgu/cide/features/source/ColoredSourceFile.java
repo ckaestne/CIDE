@@ -101,7 +101,7 @@ public class ColoredSourceFile {
 		ISourceFile astRoot = null;
 		long start = System.currentTimeMillis();
 		ILanguageParser parser = language.getParser(coloredSourceFile
-				.getContents(), coloredSourceFile.getFullPath().toOSString());
+				.getContents(true), coloredSourceFile.getFullPath().toOSString());
 		try {
 			astRoot = parser.getRoot();
 		} catch (TokenMgrError error) {
