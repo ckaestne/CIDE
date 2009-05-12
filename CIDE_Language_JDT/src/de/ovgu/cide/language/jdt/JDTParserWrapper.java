@@ -27,7 +27,11 @@ public class JDTParserWrapper implements ILanguageParser {
 	}
 
 	public static boolean isJavaFile(IFile file) {
-		return getICompilationUnit(file) != null;
+		try {
+			return getICompilationUnit(file) != null;
+		} catch (java.lang.IllegalArgumentException e) {
+			return false;
+		}
 	}
 
 	public static ICompilationUnit getICompilationUnit(IFile file) {
