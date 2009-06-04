@@ -88,7 +88,7 @@ public class ListFeatureModel extends AbstractFeatureModel {
 	}
 
 	public IFeature createNewFeature() {
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 }
