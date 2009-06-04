@@ -16,7 +16,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.ide.IDE;
 
-import featureide.fm.ui.editors.GrammarEditor;
+import featureide.fm.ui.editors.FeatureModelEditor;
 
 public class EditFeatureModelAction implements IObjectActionDelegate {
 
@@ -53,7 +53,7 @@ public class EditFeatureModelAction implements IObjectActionDelegate {
 			}
 
 			IDE.openEditor(part.getSite().getPage(), modelFile,
-					GrammarEditor.ID);
+					FeatureModelEditor.ID);
 		} catch (PartInitException e) {
 			MessageDialog.openInformation(shell, "CIDE",
 					"Error opening model.m file.");
