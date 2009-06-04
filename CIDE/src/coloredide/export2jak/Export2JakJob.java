@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -78,12 +79,49 @@ public class Export2JakJob extends BaseExportJob {
 		createFile(equationFile, equationContent, monitor);
 	}
 
+	private void createModelFile(IProgressMonitor monitor,
+			List<Set<Feature>> refactoringOrder) throws CoreException {
+		IFile modelFile = targetProject.getFile("model.m");
+		String declStr = "Model extension...\n";
+		declStr += "DERIVATIVES:\n";
+		for (int idx = 0; idx < refactoringOrder.size(); idx++) {
+			Set<Feature> d = refactoringOrder.get(idx);
+			if (d.size() > 1) {
+				if (idx == 0)
+					declStr += "    ";
+				else
+					declStr += "  | ";
+				declStr += getDerivativeName(d) + "\n";
+			}
+		}
+
+		declStr += "\n\n%%\n\n\n";
+		for (int idx = 0; idx < refactoringOrder.size(); idx++) {
+			Set<Feature> d = refactoringOrder.get(idx);
+			if (d.size() > 1) {
+				declStr += getDerivativeName(d) + " iff (";
+				for (Iterator<Feature> featureiter = d.iterator(); featureiter
+						.hasNext();) {
+					declStr += featureName2LayerName(featureiter.next().getShortName(sourceProject));
+					if (featureiter.hasNext())
+						declStr += " and ";
+				}
+				declStr+=");\n";
+			}
+		}
+
+		InputStream equationContent = new ByteArrayInputStream(declStr
+				.getBytes());
+		createFile(modelFile, equationContent, monitor);
+	}
+
 	@Override
 	protected void finishExport(IProgressMonitor monitor) throws CoreException {
 		List<Set<Feature>> refactoringOrder = new ArrayList<Set<Feature>>(
 				seenDerivatives);
 		Collections.sort(refactoringOrder, new DerivativeComparator());
 		createEquationFile(monitor, refactoringOrder);
+		createModelFile(monitor, refactoringOrder);
 		super.finishExport(monitor);
 	}
 

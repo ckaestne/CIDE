@@ -3,7 +3,7 @@ package coloredide.export2jak;
 public class JakExportOptions {
 
 	static {
-		resetDefaultAHEAD();
+		resetDefaultFST();
 	}
 
 	public static boolean DERIVATIVES_IN_SUBDIRECTORIES;

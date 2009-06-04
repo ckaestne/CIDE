@@ -152,6 +152,13 @@
               id="coloride.convert"
               label="Convert Annotations to CIDE2 Format..."
               menubarPath="coloride.menu1/group1"/>
+           <action
+                 class="coloredide.utils.ExportFeatureModelAction"
+                 enablesFor="1"
+                 id="coloride.exportToGuidsl"
+                 label="Export to GUIDSL Model... (list)"
+                 menubarPath="coloride.menu1/cideGroup">
+           </action>
      </objectContribution>
      <objectContribution
            adaptable="true"

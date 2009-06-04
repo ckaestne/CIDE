@@ -178,7 +178,7 @@ public abstract class BaseExportJob extends WorkspaceJob {
 	 * @param shortName
 	 * @return
 	 */
-	private String featureName2LayerName(String name) {
+	protected String featureName2LayerName(String name) {
 		return name.replaceAll(" ", "");
 	}
 
