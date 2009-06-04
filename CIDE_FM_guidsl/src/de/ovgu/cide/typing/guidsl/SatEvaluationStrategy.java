@@ -9,9 +9,8 @@ import org.sat4j.specs.TimeoutException;
 
 import de.ovgu.cide.features.IFeature;
 import de.ovgu.cide.features.IFeatureModel;
-import de.ovgu.cide.fm.guidsl.EmptyFeatureModel;
 import de.ovgu.cide.fm.guidsl.FeatureAdapter;
-import de.ovgu.cide.fm.guidsl.GuidslFeatureModelWrapper;
+import de.ovgu.cide.fm.guidsl.FeatureModelProxy;
 import de.ovgu.cide.typing.model.AbstractCachingEvaluationStrategy;
 import de.ovgu.cide.typing.model.DebugTyping;
 import featureide.fm.core.Feature;
@@ -53,9 +52,7 @@ public class SatEvaluationStrategy extends AbstractCachingEvaluationStrategy {
 	protected boolean calcImplies(IFeatureModel featureModel,
 			Set<IFeature> source, Set<IFeature> target) {
 		// ignore empty feature models
-		if (featureModel instanceof EmptyFeatureModel)
-			return true;
-		assert featureModel instanceof GuidslFeatureModelWrapper;
+		assert featureModel instanceof FeatureModelProxy;
 
 		DebugTyping.debug_satcounter++;
 
@@ -66,8 +63,10 @@ public class SatEvaluationStrategy extends AbstractCachingEvaluationStrategy {
 
 		long start = System.currentTimeMillis();// debug only
 
-		FeatureModel guidslModel = ((GuidslFeatureModelWrapper) featureModel)
+		FeatureModel guidslModel = ((FeatureModelProxy) featureModel)
 				.getInternalModel();
+		if (guidslModel == null)
+			return true;
 
 		Set<Feature> guidslSourceFeatures = convertToGuidslFeatures(source);
 		Set<Feature> guidslTargetFeatures = convertToGuidslFeatures(target);
@@ -90,17 +89,17 @@ public class SatEvaluationStrategy extends AbstractCachingEvaluationStrategy {
 	public boolean areMutualExclusive(IFeatureModel featureModel,
 			Set<IFeature> context, List<Set<IFeature>> featureSets) {
 		// ignore empty feature models
-		if (featureModel instanceof EmptyFeatureModel)
+		assert featureModel instanceof FeatureModelProxy;
+		FeatureModel guidslModel = ((FeatureModelProxy) featureModel)
+				.getInternalModel();
+		if (guidslModel == null)
 			return true;
-		assert featureModel instanceof GuidslFeatureModelWrapper;
 
 		List<Set<Feature>> guidslFeatureSets = new LinkedList<Set<Feature>>();
 		for (Set<IFeature> features : featureSets) {
 			guidslFeatureSets.add(convertToGuidslFeatures(features));
 		}
 
-		FeatureModel guidslModel = ((GuidslFeatureModelWrapper) featureModel)
-				.getInternalModel();
 		try {
 			return guidslModel.areMutualExclusive(
 					convertToGuidslFeatures(context), guidslFeatureSets);
@@ -116,17 +115,17 @@ public class SatEvaluationStrategy extends AbstractCachingEvaluationStrategy {
 	public boolean mayBeMissing(IFeatureModel featureModel,
 			Set<IFeature> context, List<Set<IFeature>> featureSets) {
 		// ignore empty feature models
-		if (featureModel instanceof EmptyFeatureModel)
+		assert featureModel instanceof FeatureModelProxy;
+		FeatureModel guidslModel = ((FeatureModelProxy) featureModel)
+				.getInternalModel();
+		if (guidslModel == null)
 			return true;
-		assert featureModel instanceof GuidslFeatureModelWrapper;
 
 		List<Set<Feature>> guidslFeatureSets = new LinkedList<Set<Feature>>();
 		for (Set<IFeature> features : featureSets) {
 			guidslFeatureSets.add(convertToGuidslFeatures(features));
 		}
 
-		FeatureModel guidslModel = ((GuidslFeatureModelWrapper) featureModel)
-				.getInternalModel();
 		try {
 			return guidslModel.mayBeMissing(convertToGuidslFeatures(context),
 					guidslFeatureSets);
@@ -142,12 +141,11 @@ public class SatEvaluationStrategy extends AbstractCachingEvaluationStrategy {
 	protected boolean calcExists(IFeatureModel featureModel,
 			Set<IFeature> features) {
 		// ignore empty feature models
-		if (featureModel instanceof EmptyFeatureModel)
-			return true;
-		assert featureModel instanceof GuidslFeatureModelWrapper;
-
-		FeatureModel guidslModel = ((GuidslFeatureModelWrapper) featureModel)
+		assert featureModel instanceof FeatureModelProxy;
+		FeatureModel guidslModel = ((FeatureModelProxy) featureModel)
 				.getInternalModel();
+		if (guidslModel == null)
+			return true;
 		try {
 			return guidslModel.exists(convertToGuidslFeatures(features));
 		} catch (TimeoutException e) {

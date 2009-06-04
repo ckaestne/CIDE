@@ -194,7 +194,7 @@ public class GuidslFeatureModelWrapper extends AbstractFeatureModel {
 	 * 
 	 * @return
 	 */
-	public FeatureModel getInternalModel() {
+	FeatureModel getInternalModel() {
 		return model;
 	}
 }
