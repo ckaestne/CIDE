@@ -61,6 +61,14 @@ public class CollectInteractionsJob extends ColoredSourceFileIteratorJob {
 
 	private Tree tree;
 
+	private int annoationsCount = 0;
+
+	private int classCount = 0;
+
+	private int methodCount = 0;
+
+	private int fieldCount = 0;
+
 	public CollectInteractionsJob(IProject project, Tree resultTree) {
 		super(project, "Collecting Interactions",
 				"Collecting Interactions from");
@@ -74,6 +82,9 @@ public class CollectInteractionsJob extends ColoredSourceFileIteratorJob {
 			ISourceFile ast;
 			ast = source.getAST();
 			ast.accept(new ASTVisitor() {
+				/**
+				 * collect derivative statistics
+				 */
 				public void postVisit(IASTNode node) {
 					boolean hasOwnColors = source.getColorManager()
 							.getOwnColors(node).size() > 0;
@@ -91,6 +102,43 @@ public class CollectInteractionsJob extends ColoredSourceFileIteratorJob {
 					super.postVisit(node);
 				}
 
+				/**
+				 * collect general statistics
+				 */
+				@Override
+				public boolean visit(IASTNode node) {
+					// annotation counts only if neither parent nor previous
+					// sibling already has it
+					if (!source.getColorManager().getOwnColors(node).isEmpty()) {
+						IASTNode previousSibling = findPreviousSibling(node);
+						if (previousSibling == null
+								|| !sameColors(previousSibling, node))
+							annoationsCount++;
+					}
+
+					return super.visit(node);
+				}
+
+				private IASTNode findPreviousSibling(IASTNode node) {
+					IASTNode previousSibling = null;
+					if (node.getLocationInParent() != null) {
+						IASTNode[] siblings = node.getLocationInParent()
+								.getChildren();
+						for (IASTNode sibling : siblings) {
+							if (sibling == node)
+								break;
+							previousSibling = sibling;
+						}
+					}
+					return previousSibling;
+				}
+
+				private boolean sameColors(IASTNode previousSibling,
+						IASTNode node) {
+					return source.getColorManager().getOwnColors(node).equals(
+							source.getColorManager().getOwnColors(
+									previousSibling));
+				}
 			});
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
@@ -108,6 +156,7 @@ public class CollectInteractionsJob extends ColoredSourceFileIteratorJob {
 				printInteractionNumberDevelopment();
 				printDerivatives();
 				printAllOccurrences();
+				printAnnotationCount();
 			}
 		});
 	}
@@ -123,6 +172,19 @@ public class CollectInteractionsJob extends ColoredSourceFileIteratorJob {
 			createItem2(allOccurrences, f.getName(), occurencesByFeature.get(f));
 		}
 		setCountingCaption(allOccurrences);
+	}
+
+	/**
+	 * prints general statistics about the number of annotations
+	 */
+	protected void printAnnotationCount() {
+		TreeItem statisticsItem = new TreeItem(tree, SWT.DEFAULT);
+		statisticsItem.setText("General Statistics");
+		createItem2(statisticsItem, "Annoations: " + annoationsCount, null);
+		createItem2(statisticsItem, "Classes: " + classCount, null);
+		createItem2(statisticsItem, "Methods: " + methodCount, null);
+		createItem2(statisticsItem, "Fields: " + fieldCount, null);
+
 	}
 
 	private void clearTree() {
