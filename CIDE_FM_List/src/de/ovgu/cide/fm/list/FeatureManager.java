@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.eclipse.core.resources.IProject;
 import org.eclipse.swt.graphics.RGB;
 
 import de.ovgu.cide.utils.ColorHelper;
@@ -34,14 +33,6 @@ public class FeatureManager {
 	public static final FixedFeature BASEFEATURE = new FixedFeature(-1,
 			new RGB(0, 0, 0)) {
 		private static final long serialVersionUID = 1L;
-
-		public String getShortName(IProject project) {
-			return "Base";
-		}
-
-		public boolean isVisible(IProject project) {
-			return true;
-		}
 
 		// public IFeature getParentFeature(IProject project) {
 		// return null;
