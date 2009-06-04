@@ -75,7 +75,7 @@ public class ColorProjectionSubmenu extends MenuManager implements
 	public ColorProjectionSubmenu(IProjectionColoredEditor editor,
 			SelectionActionsContext context) {
 
-		super("Projection");
+		super("Projection in current file");
 		Set<IFeature> expandedColors = editor.getProjectionColorManager()
 				.getExpandedColors();
 		List<IFeature> allFeatures = ColorHelper.sortFeatures(context
