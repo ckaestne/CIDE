@@ -6,7 +6,7 @@
       <language 
             class="de.ovgu.cide.language.java.JavaLanguageExtension"
             fileExtensions=".java"
-            id="de.ovgu.cide.language.java15"
+            id="de.ovgu.cide.language.java"
             name="Java 1.5 Language Extension">
       </language>
    </extension>
