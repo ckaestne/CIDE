@@ -58,9 +58,6 @@ public abstract class Property {
 
 	abstract Property deepCopy();
 
-	public boolean isWrapper() {
-		return false;
-	}
 
 	protected void notifyChange() {
 		if (parent != null)

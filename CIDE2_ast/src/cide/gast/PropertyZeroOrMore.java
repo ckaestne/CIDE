@@ -69,7 +69,6 @@ public class PropertyZeroOrMore<T extends IASTNode> extends Property {
 		notifyChange();
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	public void replaceChild(IASTNode oldChild, IASTNode newChild) {
 		int index = -2;
@@ -91,7 +90,6 @@ public class PropertyZeroOrMore<T extends IASTNode> extends Property {
 	 * after cloning the IDs might change (due to renumbering) but are again
 	 * consistent inside the AST
 	 */
-	@SuppressWarnings("unchecked")
 	Property deepCopy() {
 		ArrayList<T> clonedList = new ArrayList<T>(valueList.size());
 		for (T entry : valueList)

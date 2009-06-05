@@ -27,7 +27,6 @@ public class PropertyZeroOrOne<T extends IASTNode> extends Property {
 			setValue(null);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public void replaceChild(IASTNode oldChild, IASTNode newChild) {
 		if (value == oldChild)
@@ -44,7 +43,6 @@ public class PropertyZeroOrOne<T extends IASTNode> extends Property {
 		return value != null;
 	}
 
-	@SuppressWarnings("unchecked")
 	Property deepCopy() {
 		T newValue = null;
 		if (value != null)

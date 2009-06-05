@@ -108,15 +108,15 @@ public abstract class ASTNode implements IASTNode {
 	}
 
 	/**
-	 * ATTENTION: Never call from outside this package!
-	 * 			  Never call from a Property!
+	 * ATTENTION: Never call from outside this package! Never call from a
+	 * Property!
 	 */
 	public void setParent(IASTNode parentNode, Property parentProperty) {
 		this.parentProperty = parentProperty;
 		if (this.parentProperty != null)
 			this.parentProperty.setParent(parentNode);
 	}
-	
+
 	public void setParentProperty(Property parentProperty) {
 		this.parentProperty = parentProperty;
 	}
@@ -142,7 +142,7 @@ public abstract class ASTNode implements IASTNode {
 		idCache = id;
 		return id;
 	}
-	
+
 	public void setId(String id) {
 		idCache = id;
 	}
@@ -187,13 +187,14 @@ public abstract class ASTNode implements IASTNode {
 			return;
 		parentProperty.removeSubtree(this);
 	}
-	
+
 	/**
 	 * Ersetzt diesen Knoten durch den gegebenen Knoten.
 	 * 
-	 * ACHTUNG: Die Änderungen von Offsets, die durch ein Austauschen eines Knotens passieren können, werden
-	 * 			NICHT durchgeführt, so dass der AST unbrauchbar werden könnte.
-	 * 			Zur Zeit wird diese Methode nur auf einer DeepCopy des AST ausgeführt, die dann gerendered wird.
+	 * ACHTUNG: Die Änderungen von Offsets, die durch ein Austauschen eines
+	 * Knotens passieren können, werden NICHT durchgeführt, so dass der AST
+	 * unbrauchbar werden könnte. Zur Zeit wird diese Methode nur auf einer
+	 * DeepCopy des AST ausgeführt, die dann gerendered wird.
 	 * 
 	 * @param newNode
 	 */
@@ -233,9 +234,30 @@ public abstract class ASTNode implements IASTNode {
 					&& getLength() == ((IASTNode) obj).getLength();
 		return super.equals(obj);
 	}
-	
+
 	@Override
 	public int hashCode() {
 		return getStartPosition();
 	}
+
+	@Override
+	public boolean isWrapper() {
+		return getWrappee() != null;
+	}
+
+	/**
+	 * default implementation looks up whether PropertyWrapper.isWrapper is
+	 * used. may be overwritten by other parser generators if needed.
+	 * 
+	 * the JDT bridge uses a different mechanism
+	 */
+	@Override
+	public IASTNode getWrappee() {
+		Property lip = getLocationInParent();
+		if (!(lip instanceof PropertyWrapper))
+			return null;
+		return ((PropertyWrapper<IASTNode, IASTNode>) lip).getWrappee();
+
+	}
+
 }
