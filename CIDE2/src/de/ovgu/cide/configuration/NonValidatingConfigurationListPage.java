@@ -1,5 +1,6 @@
 package de.ovgu.cide.configuration;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -22,7 +23,8 @@ public class NonValidatingConfigurationListPage extends
 		setPageComplete(true);
 	}
 
-	private Table table;
+	protected Table table;
+	protected final HashMap<IFeature, TableItem> featureItems = new HashMap<IFeature, TableItem>();
 
 	@Override
 	protected Control createMainControl(Composite composite) {
@@ -35,6 +37,7 @@ public class NonValidatingConfigurationListPage extends
 			item.setData(feature);
 			item.setChecked(initialSelection != null
 					&& initialSelection.contains(feature));
+			featureItems.put(feature, item);
 		}
 		return table;
 	}
