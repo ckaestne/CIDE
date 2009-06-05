@@ -54,7 +54,7 @@ public class SourceFileAdapter implements ISourceFile {
 	}
 
 	public String getDisplayName() {
-		
+
 		return ast.getDisplayName();
 	}
 
@@ -81,7 +81,7 @@ public class SourceFileAdapter implements ISourceFile {
 	public void setParent(IASTNode parentNode, Property parentProperty) {
 		ast.setParent(parentNode, parentProperty);
 	}
-	
+
 	public void setParentProperty(Property parentProperty) {
 		ast.setParentProperty(parentProperty);
 	}
@@ -103,5 +103,15 @@ public class SourceFileAdapter implements ISourceFile {
 	@Override
 	public void setId(String id) {
 		ast.setId(id);
+	}
+
+	@Override
+	public IASTNode getWrappee() {
+		return null;
+	}
+
+	@Override
+	public boolean isWrapper() {
+		return false;
 	}
 }

@@ -1,6 +1,7 @@
 package de.ovgu.cide.language.jdt;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.jdt.core.dom.ChildListPropertyDescriptor;
@@ -19,6 +20,7 @@ import cide.gast.PropertyOne;
 import cide.gast.PropertyZeroOrMore;
 import cide.gast.PropertyZeroOrOne;
 import cide.gast.SimpleToken;
+import de.ovgu.cide.configuration.jdt.ASTColorInheritance;
 
 /**
  * input: Eclipse AST; output: CIDE AST
@@ -100,7 +102,7 @@ public class ASTBridge {
 			c_props.add(new PropertyZeroOrOne<ASTNode>(e_prop.getId(), c_node));
 
 			c_node = new UnifiedASTNode(getDisplayName(e_parent), ASTID
-					.id(e_parent), c_props, c_firstToken, c_lastToken);
+					.id(e_parent), c_props, c_firstToken, c_lastToken, null);
 
 			e_node = e_parent;
 		}
@@ -112,22 +114,48 @@ public class ASTBridge {
 		IToken c_lastToken = new PosToken(e_node.getStartPosition()
 				+ e_node.getLength());
 
+		IASTNode[] wrappee = null;
 		List<StructuralPropertyDescriptor> e_props = e_node
 				.structuralPropertiesForType();
 		List<Property> c_props = new ArrayList<Property>();
 		for (StructuralPropertyDescriptor e_prop : e_props) {
-			if (e_prop.isSimpleProperty())
-				c_props.add(bridgeSimpleProperty(e_node,
-						(SimplePropertyDescriptor) e_prop));
-			else if (e_prop.isChildListProperty())
-				c_props.add(bridgeChildListProperty(e_node,
-						(ChildListPropertyDescriptor) e_prop));
-			else if (e_prop.isChildProperty())
-				c_props.add(bridgeChildProperty(e_node,
-						(ChildPropertyDescriptor) e_prop));
+			if (e_prop.isSimpleProperty()) {
+				Property prop = bridgeSimpleProperty(e_node,
+						(SimplePropertyDescriptor) e_prop);
+				if (ASTColorInheritance.notInheritedProperties.contains(e_prop))
+					wrappee = join(wrappee, prop.getChildren());
+				c_props.add(prop);
+			} else if (e_prop.isChildListProperty()) {
+				Property prop = bridgeChildListProperty(e_node,
+						(ChildListPropertyDescriptor) e_prop);
+				if (ASTColorInheritance.notInheritedProperties.contains(e_prop))
+					wrappee = join(wrappee, prop.getChildren());
+				c_props.add(prop);
+			} else if (e_prop.isChildProperty()) {
+				Property prop = bridgeChildProperty(e_node,
+						(ChildPropertyDescriptor) e_prop);
+				if (ASTColorInheritance.notInheritedProperties.contains(e_prop))
+					wrappee = join(wrappee, prop.getChildren());
+				c_props.add(prop);
+			}
+
 		}
 		return new UnifiedASTNode(getDisplayName(e_node), ASTID.id(e_node),
-				c_props, c_firstToken, c_lastToken);
+				c_props, c_firstToken, c_lastToken, wrappee);
+	}
+
+	/** helper method to concatenate two arrays */
+	private IASTNode[] join(IASTNode[] existing, IASTNode[] newarray) {
+		if (existing == null || existing.length == 0)
+			return newarray;
+		if (newarray == null || newarray.length == 0)
+			return existing;
+
+		ArrayList<IASTNode> result = new ArrayList<IASTNode>(existing.length
+				+ newarray.length);
+		result.addAll(Arrays.asList(existing));
+		result.addAll(Arrays.asList(newarray));
+		return result.toArray(new IASTNode[existing.length + newarray.length]);
 	}
 
 	private Property bridgeChildProperty(
@@ -150,6 +178,7 @@ public class ASTBridge {
 		else
 			child = new ASTTextNode(o.toString(), new SimpleToken(e_node
 					.getStartPosition(), e_node.getLength()));
+
 		return new PropertyOne<ASTNode>(prop.getId(), child);
 	}
 
