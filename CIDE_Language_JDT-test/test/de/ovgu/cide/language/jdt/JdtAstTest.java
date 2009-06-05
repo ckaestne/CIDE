@@ -17,6 +17,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import cide.gast.ASTVisitor;
+import cide.gast.ASTWrappers;
 import cide.gast.IASTNode;
 import cide.gast.IASTVisitor;
 import cide.gast.ISourceFile;
@@ -25,7 +26,7 @@ import cide.gparser.ParseException;
 public class JdtAstTest {
 
 	private static IFile file;
-	private static String javaContent = "class Test { public void foo() {} }";
+	private static String javaContent = "class Test { public void foo() { if (false) foo(); } }";
 
 	@BeforeClass
 	public static void setUpClass() throws Exception {
@@ -70,6 +71,8 @@ public class JdtAstTest {
 				System.out.print(node.getDisplayName());
 				if (node.isOptional())
 					System.out.print("]");
+				if (node.isWrapper())
+					System.out.print(" WRAPPER");
 				System.out.println("  - " + node.getStartPosition() + " - "
 						+ node.getLength());
 
@@ -91,7 +94,7 @@ public class JdtAstTest {
 		// parent,id !=null
 		ast.accept(new ASTVisitor() {
 			public boolean visit(IASTNode node) {
-				if (node.isOptional()) {
+				if (node.isOptional() && node.getParent() != null) {
 					node.remove();
 					return false;
 				}
@@ -100,8 +103,9 @@ public class JdtAstTest {
 		});
 		ast.accept(new ASTVisitor() {
 			public boolean visit(IASTNode node) {
-				Assert.assertFalse("optional element after removal", node
-						.isOptional());
+				if (node.getParent() != null)
+					Assert.assertFalse("optional element after removal", node
+							.isOptional());
 				return true;
 			}
 		});
@@ -167,5 +171,32 @@ public class JdtAstTest {
 		Assert.assertNotNull(c_method.getParent().getParent());
 		Assert.assertEquals(c_method.getParent().getId(), ASTID
 				.calculateId(e_method.getParent()));
+	}
+
+	@Test
+	public void testNotInheritedColors() {
+		ast.accept(new ASTVisitor() {
+			@Override
+			public boolean visit(IASTNode node) {
+				if (node.getParent() == null)
+					return true;
+
+				boolean inherits = ASTWrappers.inheritsColors(node.getParent(),
+						node);
+				if (node.getDisplayName().equals("ExpressionStatement"))
+					Assert.assertFalse(
+							"Child to if-statement does not inherit color",
+							inherits);
+				else
+					Assert
+							.assertTrue(
+									"all elements but the ExpressionStatement inherit colors",
+									inherits);
+
+				return super.visit(node);
+			}
+
+		});
+
 	}
 }

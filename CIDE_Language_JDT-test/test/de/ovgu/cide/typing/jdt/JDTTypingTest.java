@@ -51,7 +51,7 @@ public class JDTTypingTest {
 		ITypingProvider typingprovider = new JDTTypingExtension()
 				.createTypingProvider(project);
 		typingprovider.updateFile(Collections.singletonList(ColoredSourceFile
-				.getColoredSourceFile(file)));
+				.getColoredSourceFile(file)),null);
 		Assert.assertTrue("no checks found",
 				typingprovider.getChecks().size() > 0);
 	}
@@ -61,7 +61,7 @@ public class JDTTypingTest {
 		ITypingProvider typingprovider = new JDTTypingExtension()
 				.createTypingProvider(project);
 		typingprovider.updateFile(Collections.singletonList(ColoredSourceFile
-				.getColoredSourceFile(file)));
+				.getColoredSourceFile(file)),null);
 
 		SubsetStrategy strategy = new SubsetStrategy();
 		for (ITypingCheck check : typingprovider.getChecks()) {
