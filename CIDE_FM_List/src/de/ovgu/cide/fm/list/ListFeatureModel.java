@@ -11,7 +11,6 @@ import org.eclipse.core.resources.IProject;
 
 import de.ovgu.cide.ColorListChangedEvent;
 import de.ovgu.cide.configuration.AbstractConfigurationPage;
-import de.ovgu.cide.configuration.NonValidatingConfigurationListPage;
 import de.ovgu.cide.features.AbstractFeatureModel;
 import de.ovgu.cide.features.IFeature;
 
@@ -80,7 +79,7 @@ public class ListFeatureModel extends AbstractFeatureModel {
 	}
 
 	public AbstractConfigurationPage getConfigurationPage(String pageName) {
-		return new NonValidatingConfigurationListPage(pageName, this);
+		return new ValidatingConfigurationListPage(pageName, this);
 	}
 
 	public boolean isValidSelection(Set<IFeature> selection) {
