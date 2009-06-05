@@ -12,7 +12,7 @@ import cide.gast.IASTNode;
 
 /**
  * searches to AST for nodes that lie in a specified selection range. returns
- * only the toplevel nodes as far as possible
+ * only the toplevel nodes (and their wrapped children) as far as possible
  * 
  * this is used to determine which nodes should be colored for a user selection
  * 
