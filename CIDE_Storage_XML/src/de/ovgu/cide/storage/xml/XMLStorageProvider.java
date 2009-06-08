@@ -78,4 +78,8 @@ public class XMLStorageProvider implements IStorageProvider {
 
 		return getProjectStorage(project).activateAlternative(path, alternative, id2oldText);
 	}
+	
+	public boolean canHandleAlternatives() {
+		return true;
+	}
 }
