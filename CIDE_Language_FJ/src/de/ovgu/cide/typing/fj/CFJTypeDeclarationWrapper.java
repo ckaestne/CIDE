@@ -197,4 +197,18 @@ public class CFJTypeDeclarationWrapper implements IASTNode {
 		if (typeDeclaration != null)
 			typeDeclaration.setId(id);
 	}
+
+	@Override
+	public IASTNode getWrappee() {
+		if (typeDeclaration != null)
+			return typeDeclaration.getWrappee();
+		return null;
+	}
+
+	@Override
+	public boolean isWrapper() {
+		if (typeDeclaration != null)
+			return typeDeclaration.isWrapper();
+		return false;
+	}
 }
