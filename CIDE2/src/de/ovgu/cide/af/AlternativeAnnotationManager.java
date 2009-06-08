@@ -28,12 +28,13 @@ public class AlternativeAnnotationManager {
 	public void setAnnotations(List<IASTNode> nodes) {
 		if ((nodes != null) && !nodes.isEmpty()) {
 			for (IASTNode node : nodes) {
-				addAnnotation(node);
+				if (node != null)
+					addAnnotation(node);
 			}
 		}
 	}
 	
-	public void addAnnotation(IASTNode node) {
+	private void addAnnotation(IASTNode node) {
 		if (!annotatedNodes.contains(node.getId())) {
 			AlternativeAnnotation annotation = new AlternativeAnnotation(node.getId());
 			annotationModel.addAnnotation(annotation, new Position(node.getStartPosition(), node.getLength()));

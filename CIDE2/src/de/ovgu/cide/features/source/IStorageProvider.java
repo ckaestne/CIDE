@@ -61,7 +61,7 @@ public interface IStorageProvider {
 	boolean isCompatible(IFeatureModel featureModel);
 	
 	/**
-	 * TODO MRO
+	 * Activates the given alternative
 	 * @param project
 	 * @param annotatedResource
 	 * @param astID
@@ -69,4 +69,9 @@ public interface IStorageProvider {
 	 * @return
 	 */
 	boolean activateAlternative(IProject project, Object annotatedResource, Alternative alternative, Map<String, String> id2oldText);
+	
+	/**
+	 * @return If the storage provider can handle alternatives
+	 */
+	boolean canHandleAlternatives();
 }

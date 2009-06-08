@@ -56,6 +56,12 @@ public class ColoredSourceFile {
 //		if (language == null)
 //			errorLanguageExtensionNotFound(coloredSourceFile);
 	}
+	
+	public boolean alternativesArePossible() {
+		if (storageProvider == null)
+			return false;
+		return storageProvider.canHandleAlternatives();
+	}
 
 	/**
 	 * returns whether this file can be colored. to be colorable the file must

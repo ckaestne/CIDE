@@ -204,36 +204,35 @@ public class ColoredEditorExtensions {
 			ColoredSourceFile sourceFile = editor.getSourceFile();
 			
 			if (sourceFile != null) {
-				SelectionActionsContext contextOptional = 
-					new SelectionActionsContext(sourceFile, editor.getSelectionProvider().getSelection(), this, false);		// XXX MRO: true
+				SelectionActionsContext context = 
+					new SelectionActionsContext(sourceFile, editor.getSelectionProvider().getSelection(), this, !sourceFile.alternativesArePossible());
 				IFeatureModel fm = sourceFile.getFeatureModel();
 				
-				List<IFeature> visibleFeatures = new ArrayList<IFeature>(fm.getVisibleFeatures());
-				Collections.sort(visibleFeatures);
-				
-				for (IFeature feature : visibleFeatures) {
-					menu.add(new ToggleTextColorAction(contextOptional, feature));
+				if (context.canColorNodes()) {
+					List<IFeature> visibleFeatures = new ArrayList<IFeature>(fm.getVisibleFeatures());
+					Collections.sort(visibleFeatures);
+
+					for (IFeature feature : visibleFeatures) {
+						menu.add(new ToggleTextColorAction(context, feature));
+					}
+
+					menu.add(new ToggleAllFeatureSubmenu(context, fm.getFeatures()));
+					menu.add(new NewFeatureAction(context, fm));
 				}
-				
-				menu.add(new ToggleAllFeatureSubmenu(contextOptional, fm.getFeatures()));
-				menu.add(new NewFeatureAction(contextOptional, fm));
 
 				if (editor instanceof IProjectionColoredEditor)
-					menu.add(new ColorProjectionSubmenu((IProjectionColoredEditor) editor, contextOptional));
+					menu.add(new ColorProjectionSubmenu((IProjectionColoredEditor) editor, context));
 				
-				SelectionActionsContext contextNonOptional = 
-					new SelectionActionsContext(sourceFile, editor.getSelectionProvider().getSelection(), this, false);
-				
-				if (contextNonOptional.anyNodesSelected()) {
+				if (context.canCreateAlternatives()) {
 					MenuManager mm = new MenuManager("Alternative code");
 					menu.add(mm);
 
 					// Eine Alternative soll nur dann angelegt werden können, wenn das aktive Codefragment min. eine Farbe hat,
 					// die es nicht von einem Elternknoten erbt.
-					if (contextNonOptional.nodesHaveNonInheritedColors())
-						mm.add(new CreateAlternativeAction(contextNonOptional));
+					if (context.nodesHaveNonInheritedColors())
+						mm.add(new CreateAlternativeAction(context));
 					
-					mm.add(new SwitchAlternativeSubmenu(contextNonOptional));
+					mm.add(new SwitchAlternativeSubmenu(context));
 				}
 			}
 		}

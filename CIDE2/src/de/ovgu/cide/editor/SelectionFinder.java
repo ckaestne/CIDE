@@ -62,18 +62,23 @@ public class SelectionFinder extends ASTVisitor {
 	@Override
 	public boolean visit(IASTNode node) {
 		boolean r = super.visit(node);
-		if (node.getStartPosition() >= offset
-				&& (node.getStartPosition() + node.getLength()) <= (offset + length)) {
+		if (node.getStartPosition() >= offset && (node.getStartPosition() + node.getLength()) <= (offset + length)) {
 			if (!optionalOnly || node.isOptional()) {
-				boolean parentAlreadySelected = selectedNodes.contains(node
-						.getParent());
-				boolean hasKnownParent = knownNodes.contains(node.getParent());
-				boolean inheritsColors = ASTWrappers.inheritsColors(node
-						.getParent(), node);
+				IASTNode parent = node.getParent();
+				
+				boolean parentAlreadySelected = selectedNodes.contains(parent);
+				boolean hasKnownParent = knownNodes.contains(parent);
+				
+				// Dieser Parameter wirkt sich nur aus, wenn auch nicht-optionale Knoten selektiert werden können
+				boolean parentRegionIsIdentical = 
+					!optionalOnly && (parent.getStartPosition() == node.getStartPosition()) && (parent.getLength() == node.getLength());
+				boolean inheritsColors = ASTWrappers.inheritsColors(parent, node);
 
-				if (!hasKnownParent
-						|| (!inheritsColors && parentAlreadySelected)) {
+				if (!hasKnownParent || parentRegionIsIdentical || (!inheritsColors && parentAlreadySelected)) {
 					selectedNodes.add(node);
+					
+					if (parentRegionIsIdentical)
+						selectedNodes.remove(parent);
 				}
 			}
 			knownNodes.add(node);

@@ -154,7 +154,7 @@ public class AlternativeFeatureManager {
 		
 		if (alternatives != null) {
 			for (Alternative alternative : alternatives) {
-				if (alternative.getParent().equals(parent)) {
+				if (alternative.hasAncestor(parent)) {
 					if (!alternative.isActive) {
 						result.add(alternative);
 					} else
@@ -171,6 +171,23 @@ public class AlternativeFeatureManager {
 		}
 
 		return result;
+	}
+	
+	/**
+	 * Weiﬂ man, dass ein AST-Knoten in nur einer Alternative vorliegen kann (z.B. weil man keine Alternativen zu dem Knoten
+	 * angeben kann), so kann diese Alternative mit dieser Methode abgerufen werden.
+	 * 
+	 * @param node
+	 * @param parent
+	 * @return
+	 * @throws CoreException
+	 * @throws ParseException
+	 */
+	public Alternative getTheAlternative(IASTNode node, Alternative parent) throws CoreException, ParseException {
+		List<Alternative> alternatives = getAlternatives(node, parent);
+		if ((alternatives != null) && (alternatives.size() == 1))
+			return alternatives.get(0);
+		return null;
 	}
 	
 	public void createAlternative(List<IASTNode> nodes, String altID) {

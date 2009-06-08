@@ -55,6 +55,12 @@ public class StorageProviderProxy implements IStorageProvider {
 			loadTarget();
 		return target.getAllAlternatives(project, annotatedResource, featureModel);
 	}
+	
+	public boolean canHandleAlternatives() {
+		if (target == null)
+			loadTarget();
+		return target.canHandleAlternatives();
+	}
 
 	private IConfigurationElement configElement;
 

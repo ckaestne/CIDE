@@ -106,6 +106,17 @@ public class Alternative {
 		return parent;
 	}
 	
+	public boolean hasAncestor(Alternative alternative) {
+		if (alternative == null)
+			return (this.parent == null);
+		if (alternative.equals(this.parent))
+			return true;
+		if (this.parent != null)
+			return this.parent.hasAncestor(alternative);
+			
+		return false;
+	}
+	
 	public boolean parentIsActive() {
 		return ((parent == null) || parent.isActive);
 	}
@@ -120,6 +131,7 @@ public class Alternative {
 		return ((children != null) && (children.size() > 1));
 	}
 	
+	@SuppressWarnings("unchecked")
 	public <NodeType extends IASTNode> NodeType getNode(ColoredSourceFile sourceFile, NodeType modelNode) {
 		ILanguageExtension le = sourceFile.getLanguageExtension();
 		if (le instanceof LanguageExtensionProxy)

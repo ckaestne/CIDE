@@ -269,4 +269,8 @@ public class DefaultStorageProvider implements IStorageProvider {
 	public Map<String, List<Alternative>> getAllAlternatives(IProject project, Object annotatedResource, IFeatureModelWithID featureModel) {
 		return null;
 	}
+	
+	public boolean canHandleAlternatives() {
+		return false;
+	}
 }
