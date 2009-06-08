@@ -35,9 +35,13 @@ public class CFJTypingProvider extends AbstractFileBasedTypingProvider {
 		if (file == null)
 			return null;
 		
+		final boolean handleAlternatives = file.alternativesArePossible();
 		final Set<ITypingCheck> checks = new HashSet<ITypingCheck>();
+		
 		try {
-			final CFJTypingManagerAF typingManager = new CFJTypingManagerAF(file);	// XXX MRO: CFJTypingManagerAF für zusätzlich alternative Features 
+			final CFJTypingManagerAF typingManagerAF = handleAlternatives ? new CFJTypingManagerAF(file) : null; 
+			final CFJTypingManager typingManager = !handleAlternatives ? new CFJTypingManager(file) : null;
+			
 			file.getAST().accept(new IASTVisitor() {
 				@Override
 				public void postVisit(IASTNode node) { }
@@ -46,13 +50,19 @@ public class CFJTypingProvider extends AbstractFileBasedTypingProvider {
 				public boolean visit(IASTNode node) {
 					if (node != null) {
 						if (node instanceof MethodDeclaration) {
-							// XXX MRO: CFJMethodTypingCheckAF für zusätzlich alternative Features
-							checks.add(new CFJMethodTypingCheckAF(file, typingManager, (MethodDeclaration) node));
+							if (handleAlternatives)
+								checks.add(new CFJMethodTypingCheckAF(file, typingManagerAF, (MethodDeclaration) node));
+							else
+								checks.add(new CFJMethodTypingCheck(file, typingManager, (MethodDeclaration) node));
+							
 							return false;
 						}
 						if (node instanceof TypeDeclaration) {
-							// XXX MRO: CFJClassTypingCheckAF für zusätzlich alternative Features
-							checks.add(new CFJClassTypingCheckAF(file, typingManager, (TypeDeclaration) node));
+							if (handleAlternatives)
+								checks.add(new CFJClassTypingCheckAF(file, typingManagerAF, (TypeDeclaration) node));
+							else
+								checks.add(new CFJClassTypingCheck(file, typingManager, (TypeDeclaration) node));
+							
 							return true;
 						}
 					}

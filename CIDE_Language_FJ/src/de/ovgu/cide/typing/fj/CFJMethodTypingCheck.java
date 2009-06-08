@@ -21,7 +21,7 @@ import de.ovgu.cide.typing.model.IEvaluationStrategy;
  */
 public class CFJMethodTypingCheck extends CFJTypingCheck {
 	
-	private MethodDeclaration methodDeclaration;
+	protected MethodDeclaration methodDeclaration;
 	
 	public CFJMethodTypingCheck(ColoredSourceFile file, CFJTypingManager typingManager, MethodDeclaration methodDeclaration) {
 		super(file, typingManager, methodDeclaration);

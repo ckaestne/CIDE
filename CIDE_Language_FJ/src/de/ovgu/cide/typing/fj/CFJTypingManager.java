@@ -60,7 +60,9 @@ import de.ovgu.cide.typing.model.IEvaluationStrategy;
  */
 public class CFJTypingManager {
 	
-	private ColoredSourceFile file;
+	protected ColoredSourceFile file;
+	protected List<String> errorMessages;
+	
 	private IASTNode ast;
 	
 	private Map<IASTNode, List<IASTNode>> node2fields;
@@ -68,8 +70,6 @@ public class CFJTypingManager {
 	private Map<IASTNode, CFJType> node2type;
 	private Map<String, CFJType> typeID2type;
 	private Map<String, CFJType> typeID2superType;
-	
-	private List<String> errorMessages;
 	
 	public CFJTypingManager(ColoredSourceFile file) throws CoreException, ParseException {
 		this.file = file;
@@ -418,15 +418,15 @@ public class CFJTypingManager {
 			return null;
 		
 		ArrayList<MethodDeclaration> allMethodDeclarations = node.getMethodDeclaration();
-		if ((allMethodDeclarations == null) || (allMethodDeclarations.size() < 1))
-			return null;
-		
 		List<IASTNode> methodDeclarations = new LinkedList<IASTNode>();
-		for (int i = 0; i < allMethodDeclarations.size(); ++i) {
-			if (allMethodDeclarations.get(i).getIdentifier().getValue().equals(identifier))
-				methodDeclarations.add(allMethodDeclarations.get(i));
-		}
 		
+		if (allMethodDeclarations != null) {
+			for (int i = 0; i < allMethodDeclarations.size(); ++i) {
+				if (allMethodDeclarations.get(i).getIdentifier().getValue().equals(identifier))
+					methodDeclarations.add(allMethodDeclarations.get(i));
+			}
+		}
+
 		if ((methodDeclarations == null) || methodDeclarations.isEmpty()) {
 			return mlookup(identifier, findTypeDeclaration(node.getExtendedType()));
 		}
@@ -437,54 +437,6 @@ public class CFJTypingManager {
 		return methodDeclarations.get(0);
 	}
 	
-	// XXX MRO: BACKUP
-//	/**
-//	 * Gibt eine Liste von Signaturen zurück, die für die Überprüfung von Overriding und Methodenaufrufen relevant sind. Details sind
-//	 * informell sehr schwer zu erklären. Also: siehe Sourcecode ;-)
-//	 * @param identifier
-//	 * @param node
-//	 * @param features
-//	 * @param strategy
-//	 * @return
-//	 */
-//	private List<MethodSignature> mtypes(String identifier, CFJTypeDeclarationWrapper node, Set<IFeature> features, IEvaluationStrategy strategy) {
-//		List<MethodDeclaration> methods = mlookupAll(identifier, node);
-//		if (methods == null)
-//			return null;
-//		
-//		IFeatureModel fm = file.getFeatureModel();
-//		SourceFileColorManager colorManager = file.getColorManager();
-//		
-//		List<MethodSignature> result = new LinkedList<MethodSignature>();
-//		for (MethodDeclaration method : methods) {
-//			Set<IFeature> featuresWithMethod = addAll(features, colorManager.getColors(method));
-//			
-//			// Eine Methode ist nur dann relevant, wenn sie zusammen mit den gegebenen Features präsent sein kann
-//			if (strategy.exists(fm, featuresWithMethod)) {
-//				boolean methodIsRelevant = true;
-//				List<Set<IFeature>> mayBeMissing = new LinkedList<Set<IFeature>>();
-//				
-//				// Die Methode ist nur dann relevant, wenn es eine Konfiguration gibt, in der keine der "Methoden unterhalb" im Kontext der
-//				// gegebenen Features und der Methode präsent ist
-//				for (MethodDeclaration method2 : methods) {
-//					if (method2 == method)
-//						break;
-//					mayBeMissing.add(colorManager.getColors(method2));
-//					
-//					if (!strategy.mayBeMissing(fm, featuresWithMethod, mayBeMissing)) {
-//						methodIsRelevant = false;
-//						break;
-//					}
-//				}
-//				
-//				if (methodIsRelevant)
-//					result.add(new MethodSignature(method.getType(), method.getFormalParameterList()));
-//			}
-//		}
-//		
-//		return result;
-//	}
-	
 	/**
 	 * Gibt eine Liste von Signaturen zurück, die für die Überprüfung von Overriding und Methodenaufrufen relevant sind. Details sind
 	 * informell sehr schwer zu erklären. Also: siehe Sourcecode ;-)
@@ -494,7 +446,7 @@ public class CFJTypingManager {
 	 * @param strategy
 	 * @return
 	 */
-	private List<MethodSignature> mtypes(String identifier, CFJTypeDeclarationWrapper node, Set<IFeature> features, IEvaluationStrategy strategy) {
+	protected List<MethodSignature> mtypes(String identifier, CFJTypeDeclarationWrapper node, Set<IFeature> features, IEvaluationStrategy strategy) {
 		List<MethodDeclaration> methods = mlookupAll(identifier, node);
 		if (methods == null)
 			return null;
@@ -611,7 +563,7 @@ public class CFJTypingManager {
 	 * @param method
 	 * @return
 	 */
-	public CFJType typeOf(ASTStringNode identifier, MethodDeclaration method, IEvaluationStrategy strategy) {
+	private CFJType typeOf(ASTStringNode identifier, MethodDeclaration method, IEvaluationStrategy strategy) {
 		if ((identifier == null) || (method == null))
 			return null;
 		
@@ -661,7 +613,7 @@ public class CFJTypingManager {
 	 * @param strategy
 	 * @return
 	 */
-	public CFJType typeOf(FieldInvoke fieldInvoke, IEvaluationStrategy strategy) {
+	private CFJType typeOf(FieldInvoke fieldInvoke, IEvaluationStrategy strategy) {
 		if (fieldInvoke == null)
 			return null;
 		if (node2type.containsKey(fieldInvoke))
@@ -717,7 +669,7 @@ public class CFJTypingManager {
 	 * @param strategy
 	 * @return
 	 */
-	public CFJType typeOf(MethodInvoke methodInvoke, IEvaluationStrategy strategy) {
+	private CFJType typeOf(MethodInvoke methodInvoke, IEvaluationStrategy strategy) {
 		if (methodInvoke == null)
 			return null;
 		if (node2type.containsKey(methodInvoke))
@@ -811,7 +763,7 @@ public class CFJTypingManager {
 	 * @param strategy
 	 * @return
 	 */
-	public CFJType typeOf(AllocationExpression allocationExpression, IEvaluationStrategy strategy) {
+	private CFJType typeOf(AllocationExpression allocationExpression, IEvaluationStrategy strategy) {
 		if (allocationExpression == null)
 			return null;
 		if (node2type.containsKey(allocationExpression))
@@ -892,7 +844,7 @@ public class CFJTypingManager {
 	 * @param strategy
 	 * @return
 	 */
-	public CFJType typeOf(CastExpression castExpression, IEvaluationStrategy strategy) {
+	private CFJType typeOf(CastExpression castExpression, IEvaluationStrategy strategy) {
 		if (castExpression == null)
 			return null;
 		if (node2type.containsKey(castExpression))
@@ -933,7 +885,7 @@ public class CFJTypingManager {
 	
 	// Rekursiver Abstieg im AST -------------------------------------------------------------------------------------------
 
-	public CFJType typeOf(InvokeTarget invokeTarget, IEvaluationStrategy strategy) {
+	private CFJType typeOf(InvokeTarget invokeTarget, IEvaluationStrategy strategy) {
 		if (invokeTarget == null)
 			return null;
 		
@@ -969,7 +921,7 @@ public class CFJTypingManager {
 		return typeOf(expression.getPrimaryExpression(), strategy);
 	}
 
-	public CFJType typeOf(PrimaryExpression primaryExpression, IEvaluationStrategy strategy) {
+	private CFJType typeOf(PrimaryExpression primaryExpression, IEvaluationStrategy strategy) {
 		if (primaryExpression == null)
 			return null;
 		
@@ -1018,7 +970,7 @@ public class CFJTypingManager {
 		return null;
 	}
 
-	public CFJType typeOf(NestedExpression nestedExpression, IEvaluationStrategy strategy) {
+	private CFJType typeOf(NestedExpression nestedExpression, IEvaluationStrategy strategy) {
 		if (nestedExpression == null)
 			return null;
 		return typeOf(nestedExpression.getExpression(), strategy);
@@ -1041,7 +993,7 @@ public class CFJTypingManager {
 		return types;
 	}
 
-	public ArrayList<CFJType> typesOf(ExpressionList expressionList, IEvaluationStrategy strategy) {
+	private ArrayList<CFJType> typesOf(ExpressionList expressionList, IEvaluationStrategy strategy) {
 		if (expressionList == null)
 			return null;
 		
@@ -1059,7 +1011,7 @@ public class CFJTypingManager {
 		return types;
 	}
 	
-	public MethodDeclaration findSurroundingMethodDeclaration(IASTNode node) {
+	private MethodDeclaration findSurroundingMethodDeclaration(IASTNode node) {
 		while (node != null) {
 			if (node instanceof MethodDeclaration)
 				return (MethodDeclaration) node;
@@ -1068,7 +1020,7 @@ public class CFJTypingManager {
 		return null;
 	}
 	
-	public ClassConstructor findSurroundingClassConstructor(IASTNode node) {
+	private ClassConstructor findSurroundingClassConstructor(IASTNode node) {
 		while (node != null) {
 			if (node instanceof ClassConstructor)
 				return (ClassConstructor) node;
@@ -1150,7 +1102,7 @@ public class CFJTypingManager {
 		return result;
 	}
 	
-	private Set<IFeature> getFeaturesOfParent(IASTNode node) {
+	protected Set<IFeature> getFeaturesOfParent(IASTNode node) {
 		if ((node == null) || (node.getParent() == null))
 			return null;
 		

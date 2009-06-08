@@ -235,7 +235,7 @@ public class CFJClassTypingCheck extends CFJTypingCheck {
 		return true;
 	}
 
-	private boolean inheritanceHierarchyOK(CFJTypeDeclarationWrapper supertypeDeclaration) {
+	protected boolean inheritanceHierarchyOK(CFJTypeDeclarationWrapper supertypeDeclaration) {
 		if (supertypeDeclaration == null)
 			return false;
 		List<String> knownClassNames = new LinkedList<String>();
