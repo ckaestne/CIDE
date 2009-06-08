@@ -2,6 +2,7 @@ package cide.languages;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.List;
 
 import cide.gast.IASTNode;
 
@@ -25,6 +26,8 @@ public abstract class ExtendedLanguageExtension<ParserType> implements ILanguage
 		IASTNode result = this.parseCodeFragment(node.getClass().getSimpleName(), code);
 		if (result != null) {
 			result.setId(node.getId());
+			// Habe ich mal rausgenommen, weil es denke ich nicht benötigt wird
+			//result.setParent(node.getParent(), node.getLocationInParent());
 		}
 		
 		return result;
@@ -39,10 +42,8 @@ public abstract class ExtendedLanguageExtension<ParserType> implements ILanguage
 		try {
 			method = internalParser.getClass().getMethod(nonTerminalName, (Class<?>[]) null);
 		} catch (SecurityException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (NoSuchMethodException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -53,13 +54,10 @@ public abstract class ExtendedLanguageExtension<ParserType> implements ILanguage
 		try {
 			result = method.invoke(internalParser, (Object[]) null);
 		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (InvocationTargetException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -68,6 +66,13 @@ public abstract class ExtendedLanguageExtension<ParserType> implements ILanguage
 		
 		return (IASTNode) result;
 	}
+	
+	/**
+	 * Gibt zurück, ob zur gegebenen Liste von AST-Knoten Alternativen angegeben werden können. Standardwert ist true.
+	 * Subklassen können diese Methode überschreiben, um z.B. Alternativen nur für eine bestimmte Menge von AST-Knoten
+	 * zu ermöglichen.
+	 */
+	public boolean canCreateAlternatives(List<IASTNode> nodes) { return true; }
 	
 	protected abstract ParserType getInternalParser(String code);
 }
