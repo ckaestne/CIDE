@@ -14,7 +14,6 @@ import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.Region;
 import org.eclipse.swt.graphics.Point;
 
-import cide.gast.ASTVisitor;
 import cide.gast.IASTNode;
 import cide.gast.ISourceFile;
 import cide.gparser.ParseException;
@@ -41,13 +40,23 @@ import de.ovgu.cide.utils.ColorHelper;
  */
 public class ColoredTextHover implements ITextHover {
 
-	private final ColoredSourceFile sourceFile;
+	protected static final String NOT_COLORED = "Selected code fragment cannot be colored";
+	protected String NL = "\n";
+	
+	protected ColoredSourceFile sourceFile;
 	// private final IProject project;
 	private SourceFileColorManager colorManager;
 
 	public ColoredTextHover(ColoredSourceFile sourceFile) {
+		setColoredSourceFile(sourceFile);
+	}
+
+	protected void setColoredSourceFile(ColoredSourceFile sourceFile) {
 		this.sourceFile = sourceFile;
-		this.colorManager = sourceFile.getColorManager();
+		if (sourceFile != null)
+			this.colorManager = sourceFile.getColorManager();
+		else
+			this.colorManager = null;
 	}
 
 	public String getHoverInfo(ITextViewer textViewer, IRegion hoverRegion) {
@@ -60,12 +69,15 @@ public class ColoredTextHover implements ITextHover {
 		if ((nodes == null || nodes.isEmpty()) && hoverRegion.getLength() == 0)
 			return null;
 		if (nodes == null || nodes.isEmpty())
-			return "Selected code fragment cannot be colored";
+			return NOT_COLORED;
 
 		String tooltip = "";
 
 		tooltip += tooltipNodes(nodes);
-		tooltip += tooltipColors(nodes);
+		String ttc = tooltipColors(nodes);
+		if (ttc == null)
+			return null;
+		tooltip += ttc;
 
 		return tooltip.trim();
 	}
@@ -75,12 +87,12 @@ public class ColoredTextHover implements ITextHover {
 		String result = "";
 		for (int nodeidx = 0; nodeidx < nodes.size() && nodeidx < 5; nodeidx++) {
 			String aststr = getASTStringOutput(nodes.get(nodeidx));
-			result += "\"" + aststr + "\"\n";
+			result += "\"" + aststr + "\""+NL;
 		}
 		if (nodes.size() > 5)
-			result += "...\n";
+			result += "..."+NL;
 
-		return result + "\n";
+		return result + NL;
 	}
 
 	private String getASTStringOutput(IASTNode node) {
@@ -103,12 +115,12 @@ public class ColoredTextHover implements ITextHover {
 				(nodes.size() > 1 ? "Common " : "") + "Features", allColors);
 
 		// details (direct colors, inherited colors, file colors)
-		tooltip += "\n";
+		tooltip += NL;
 		Set<IFeature> directColors = getDirectColors(nodes);
 		if (directColors.size() > 0)
 			tooltip += printColorsShort("Direct Colors", directColors);
 		else
-			tooltip += "No direct colors.\n";
+			tooltip += "No direct colors."+NL;
 
 		Set<IFeature> inheritedColors = getInheritedColors(nodes);
 		if (inheritedColors.size() > 0)
@@ -117,6 +129,12 @@ public class ColoredTextHover implements ITextHover {
 		Set<IFeature> fileColors = getFileColors();
 		if (fileColors.size() > 0)
 			tooltip += printColorsShort("File Colors", fileColors);
+
+		// for no colors whatsoever return no tooltip
+		if (directColors.size() == 0 && inheritedColors.size() == 0
+				&& fileColors.size() == 0)
+			return null;
+
 		return tooltip;
 	}
 
@@ -192,46 +210,36 @@ public class ColoredTextHover implements ITextHover {
 			SingleNodeFinder snf = new SingleNodeFinder(hoverRegion.getOffset());
 			ast.accept(snf);
 			IASTNode node = snf.result;
-			// Ist kein Text markiert, so suchen wir nach dem nächsten optionalen Knoten. Sonst würde man z.B.
-			// bei einem gefärbten "Object o1;" die Angabe "no direct colors" bekommen, da der Cursor entweder
+			// Ist kein Text markiert, so suchen wir nach dem nächsten
+			// optionalen Knoten. Sonst würde man z.B.
+			// bei einem gefärbten "Object o1;" die Angabe "no direct colors"
+			// bekommen, da der Cursor entweder
 			// über dem Knoten "Object" oder "o1" steht.
-			// Nachteil: Ist z.B. nur der Rückgabetyp einer Methode gefärbt, so bekommt man die Angabe "no direct colors".
-			//           Den Aufwand, um dies zu vermeiden, ist es nicht Wert :-)
+			// Nachteil: Ist z.B. nur der Rückgabetyp einer Methode gefärbt, so
+			// bekommt man die Angabe "no direct colors".
+			// Den Aufwand, um dies zu vermeiden, ist es nicht Wert :-)
 			while (node != null && !node.isOptional())
 				node = node.getParent();
 			if (node != null)
 				result.add(node);
 		} else
-			ast.accept(new SelectionFinder(result, hoverRegion, false));	// Uns interessieren nun auch nicht-optionale Knoten (wg. alternativen Features)
+			ast.accept(new SelectionFinder(result, hoverRegion, false)); // Uns
+		// interessieren
+		// nun
+		// auch
+		// nicht-optionale
+		// Knoten
+		// (wg.
+		// alternativen
+		// Features)
 		return result;
 	}
 
-	private static class SingleNodeFinder extends ASTVisitor {
-		private int offset;
-
-		public SingleNodeFinder(int offset) {
-			this.offset = offset;
-		}
-
-		IASTNode result = null;
-
-		@Override
-		public boolean visit(IASTNode node) {
-			if (node.getStartPosition() <= offset
-					&& (node.getStartPosition() + node.getLength()) > offset) {
-				if (result == null || node.getLength() < result.getLength())
-					result = node;
-				return true;
-			}
-			return false;
-		}
-	}
-
 	private String printColors(String title, Collection<IFeature> colors) {
-		String result = title + ":\n";
+		String result = title + ":"+NL;
 		List<IFeature> sortedColors = ColorHelper.sortFeatures(colors);
 		for (IFeature color : sortedColors) {
-			result += " - " + color.getName() + "\n";
+			result += " - " + color.getName() + NL;
 		}
 		return result;
 	}
@@ -247,7 +255,7 @@ public class ColoredTextHover implements ITextHover {
 				result += ", ";
 			result += color.getName();
 		}
-		return result + "\n";
+		return result + NL;
 	}
 
 	public IRegion getHoverRegion(ITextViewer textViewer, int offset) {
