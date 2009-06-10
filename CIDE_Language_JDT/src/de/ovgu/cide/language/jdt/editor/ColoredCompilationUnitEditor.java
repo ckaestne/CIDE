@@ -190,7 +190,7 @@ public class ColoredCompilationUnitEditor extends CompilationUnitEditor implemen
 			return super.getTitleImage();
 	}
 
-	protected ISourceViewer createJavaSourceViewer(Composite parent,
+	protected JavaSourceViewer createJavaSourceViewer(Composite parent,
 			IVerticalRuler verticalRuler, IOverviewRuler overviewRuler,
 			boolean isOverviewRulerVisible, int styles, IPreferenceStore store) {
 		InlineProjectionJavaViewer viewer = new InlineProjectionJavaViewer(
