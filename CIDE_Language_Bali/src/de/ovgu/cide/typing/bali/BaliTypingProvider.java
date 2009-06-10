@@ -123,9 +123,13 @@ public class BaliTypingProvider extends AbstractFileBasedTypingProvider {
 	}
 
 	@Override
-	public void prepareReevaluation(Collection<ColoredSourceFile> files, IProgressMonitor monitor) { }
+	public void prepareReevaluation(Collection<ColoredSourceFile> files, IProgressMonitor monitor) {
+		// nothing to do
+	}
 
 	@Override
-	public void prepareReevaluationAll(IProgressMonitor monitor) { }
+	public void prepareReevaluationAll(IProgressMonitor monitor) {
+		// nothing to do
+	}
 
 }
