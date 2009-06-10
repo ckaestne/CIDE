@@ -37,10 +37,9 @@
          point="org.eclipse.jdt.ui.javaEditorTextHovers">
       <hover
             activate="true"
-            class="coloredide.editor.ColorInfoHover"
-            description="ColorInfoHoverDesc"
-            id="ColoredIDE.ColorInfoHover"
-            label="ColorInfoHover"/>
+            class="de.ovgu.cide.language.jdt.editor.FeatureInfoHover"
+            id="FeatureInfoHover"
+            label="FeatureInfoHover"/>
    </extension>
                 <extension
                       point="de.ovgu.cide.typing.typingProvider">
