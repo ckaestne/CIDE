@@ -65,7 +65,7 @@ public class ProjectionColorManager implements IProjectionColorManager {
 		Set<IFeature> visibleColors = getExpandedColors();
 
 		List<Annotation> changedAnnotations = new ArrayList<Annotation>();
-		for (Iterator iter = annotationModel.getAnnotationIterator(); iter
+		for (Iterator<Annotation> iter = annotationModel.getAnnotationIterator(); iter
 				.hasNext();) {
 			ColoredInlineProjectionAnnotation annotation = (ColoredInlineProjectionAnnotation) iter
 					.next();
