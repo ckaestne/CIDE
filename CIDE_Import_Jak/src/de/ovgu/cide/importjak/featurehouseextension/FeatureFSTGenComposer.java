@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.prop4j.Equals;
 import org.prop4j.Implies;
 import org.prop4j.Literal;
@@ -79,12 +80,15 @@ public class FeatureFSTGenComposer {
 		return featureVisitor.getPrintVisitors();
 	}
 
-	public void run(String[] args) {
+	public void run(String[] args, IProgressMonitor monitor) {
 		cmd.parseCmdLineArguments(args);
 		try {
+			if (monitor != null)
+				monitor.subTask("Loading feature model");
 			try {
 				fileLoader.loadFiles(cmd.equationFileName,
-						cmd.equationBaseDirectoryName, cmd.isAheadEquationFile);
+						cmd.equationBaseDirectoryName, cmd.isAheadEquationFile,
+						monitor);
 			} catch (cide.gparser.ParseException e1) {
 				System.out.println("error");
 				// fireParseErrorOccured(e1);
@@ -101,8 +105,12 @@ public class FeatureFSTGenComposer {
 				LinkedList<FSTNonTerminal> features = builder.getFeatures();
 				initializeOriginalFeatures(features);
 				prepareAHEADCode(features);
+				new StatisticsCollector().collectStatistics(features);
+				if (monitor != null)
+					monitor.subTask("Composing " + features.size()
+							+ " features");
 
-				FSTNode composition = compose(features);
+				FSTNode composition = compose(features, monitor);
 				// modify(composition);
 
 				try {
@@ -110,13 +118,13 @@ public class FeatureFSTGenComposer {
 				} catch (PrintVisitorException e) {
 					e.printStackTrace();
 				}
-//				for (FSTNonTerminal feature : features) {
-//					System.out.println(feature.toString());
-//				}
-//				System.out
-//						.println("--------------------------------------------------");
-//				 if (composition != null)
-//				 System.out.println(composition.toString());
+				// for (FSTNonTerminal feature : features) {
+				// System.out.println(feature.toString());
+				// }
+				// System.out
+				// .println("--------------------------------------------------");
+				// if (composition != null)
+				// System.out.println(composition.toString());
 			}
 		} catch (FileNotFoundException e1) {
 			// e1.printStackTrace();
@@ -185,9 +193,16 @@ public class FeatureFSTGenComposer {
 		composer.run(args);
 	}
 
-	private static FSTNode compose(List<FSTNonTerminal> tl) {
+	private static FSTNode compose(List<FSTNonTerminal> tl,
+			IProgressMonitor monitor) {
 		FSTNode composed = null;
+		int idx = 0;
 		for (FSTNode current : tl) {
+			idx++;
+			if (monitor != null)
+				monitor.subTask("Composing " + idx + "/" + tl.size()
+						+ " features");
+
 			if (composed != null) {
 				composed = compose(current, composed);
 			} else
@@ -370,6 +385,10 @@ public class FeatureFSTGenComposer {
 		return new Literal(NodeCreator.getVariable(
 				GuidslFileLoader.featureModel.getFeature(featureName),
 				GuidslFileLoader.featureModel));
+	}
+
+	public void run(String[] strings) {
+		run(strings, null);
 	}
 
 }

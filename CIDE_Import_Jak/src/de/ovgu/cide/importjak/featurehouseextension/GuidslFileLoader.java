@@ -8,6 +8,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+
 import builder.ArtifactBuilderInterface;
 import cide.gparser.ParseException;
 import featureide.fm.core.Feature;
@@ -40,22 +42,24 @@ public class GuidslFileLoader {
 	}
 
 	public void loadFiles(String equationFileName,
-			String equationBaseDirectoryName, boolean aheadEquation)
-			throws FileNotFoundException, ParseException {
+			String equationBaseDirectoryName, boolean aheadEquation,
+			IProgressMonitor monitor) throws FileNotFoundException,
+			ParseException {
 		parseEquationFile(equationFileName, equationBaseDirectoryName,
-				aheadEquation);
+				aheadEquation, monitor);
 	}
 
 	private void parseEquationFile(String equationFileName,
-			String equationBaseDirectoryName, boolean aheadEquation)
-			throws FileNotFoundException, ParseException {
+			String equationBaseDirectoryName, boolean aheadEquation,
+			IProgressMonitor monitor) throws FileNotFoundException,
+			ParseException {
 		if (equationFileName == null || equationFileName.length() == 0)
 			throw new FileNotFoundException();
 		File equationFile = new File(equationFileName);
 
 		if (equationFileName.endsWith(".m")) {
 			// if input is a guidsl feature model
-			loadGuidslModel(equationFile, equationBaseDirectoryName);
+			loadGuidslModel(equationFile, equationBaseDirectoryName, monitor);
 			return;
 		}
 		throw new ParseException("Unexpected file format. Use model.m file");
@@ -64,8 +68,8 @@ public class GuidslFileLoader {
 	public static FeatureModel featureModel;
 
 	private void loadGuidslModel(File grammarFile,
-			String equationBaseDirectoryName) throws FileNotFoundException,
-			ParseException {
+			String equationBaseDirectoryName, IProgressMonitor monitor)
+			throws FileNotFoundException, ParseException {
 		FeatureModel fm = new FeatureModel();
 		try {
 			new FeatureModelReader(fm).readFromFile(grammarFile);
@@ -99,30 +103,33 @@ public class GuidslFileLoader {
 						getDirectoryName(new File(equationBaseDirectoryName)));
 			}
 			for (String feature : features) {
+				if (monitor != null)
+					monitor.subTask("Parsing " + feature + "...");
 				if (!feature.trim().equals("")) {
 					File featureFile = new File(equationBaseDirectoryName
 							+ feature);
-					parseDirectory(featureFile, true);
+					parseDirectory(featureFile, true, monitor);
 				}
 			}
 		}
 
 	}
 
-	private List<String> getFeatureList(FeatureModel fm) {
+	public static List<String> getFeatureList(FeatureModel fm) {
 		List<String> result = new ArrayList<String>();
 		getFeatureList(fm.getRoot(), result);
 		return result;
 	}
 
-	private void getFeatureList(Feature root, List<String> result) {
+	private static void getFeatureList(Feature root, List<String> result) {
 		result.add(root.getName());
 		for (int i = root.getChildrenCount() - 1; i >= 0; i--)
 			getFeatureList(root.getChildren().get(i), result);
 	}
 
-	private void parseDirectory(File directory, boolean recursive)
-			throws FileNotFoundException, ParseException {
+	private void parseDirectory(File directory, boolean recursive,
+			IProgressMonitor monitor) throws FileNotFoundException,
+			ParseException {
 		if (recursive) {
 			File[] files = directory.listFiles(fileFilter);
 			if (files != null) {
@@ -132,7 +139,9 @@ public class GuidslFileLoader {
 					while (iterator.hasNext()) {
 						ArtifactBuilderInterface builder = iterator.next();
 						if (builder.acceptFile(files[i])) {
-								builder.processFile(files[i]);
+							if (monitor != null)
+								monitor.subTask("Parsing " + files[i] + "...");
+							builder.processFile(files[i]);
 						}
 					}
 				}
@@ -140,7 +149,7 @@ public class GuidslFileLoader {
 			File[] directories = directory.listFiles(directoryFileFilter);
 			if (directories != null) {
 				for (int i = 0; i < directories.length; i++) {
-					parseDirectory(directories[i], recursive);
+					parseDirectory(directories[i], recursive, monitor);
 				}
 			}
 		} else {
@@ -152,6 +161,8 @@ public class GuidslFileLoader {
 					while (iterator.hasNext()) {
 						ArtifactBuilderInterface builder = iterator.next();
 						if (builder.acceptFile(files[i])) {
+							if (monitor != null)
+								monitor.subTask("Parsing " + files[i] + "...");
 							builder.processFile(files[i]);
 						}
 					}
@@ -205,6 +216,5 @@ public class GuidslFileLoader {
 		}
 
 	}
-
 
 }

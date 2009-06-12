@@ -2,8 +2,6 @@ package de.ovgu.cide.importjak;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -12,7 +10,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
@@ -34,7 +31,7 @@ import org.eclipse.ui.IImportWizard;
 import org.eclipse.ui.IWorkbench;
 
 import de.ovgu.cide.configuration.WizardPageCreateProject;
-
+import de.ovgu.cide.importjak.featurehouseextension.GuidslFileLoader;
 import featureide.fm.core.FeatureModel;
 import featureide.fm.core.io.UnsupportedModelException;
 import featureide.fm.core.io.guidsl.FeatureModelReader;
@@ -108,7 +105,7 @@ public class ImportJakWizard extends Wizard implements IImportWizard {
 			new Label(parent, SWT.NONE).setText("Features:");
 
 			featureList = new List(parent, SWT.BORDER | SWT.V_SCROLL);
-			featureList.setEnabled(false);
+			// featureList.setEnabled(false);
 			featureList.setLayoutData(new RowData(SWT.DEFAULT, 200));
 
 			setControl(parent);
@@ -155,9 +152,8 @@ public class ImportJakWizard extends Wizard implements IImportWizard {
 			setErrorMessage(null);
 			setPageComplete(true);
 			featureList.removeAll();
-			java.util.List<String> featureNames = new ArrayList<String>(
-					featureModel.getFeatureNames());
-			Collections.sort(featureNames);
+			java.util.List<String> featureNames = GuidslFileLoader
+					.getFeatureList(featureModel);
 			for (String featureName : featureNames)
 				if (targetProject.getFolder(featureName).exists())
 					featureList.add(featureName);
@@ -233,6 +229,7 @@ public class ImportJakWizard extends Wizard implements IImportWizard {
 				// monitor.worked(1);
 			}
 		};
+		job.setUser(true);
 		job.schedule();
 
 		return true;

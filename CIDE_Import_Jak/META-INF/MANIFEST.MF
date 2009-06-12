@@ -10,8 +10,8 @@ Require-Bundle: de.ovgu.cide.ast;bundle-version="1.0.2",
  org.eclipse.jdt.core;bundle-version="3.4.2",
  org.eclipse.core.resources;bundle-version="3.4.1",
  org.eclipse.core.runtime;bundle-version="3.4.0",
- FeatureIDE_FM_Core;bundle-version="2.2.3",
  org.eclipse.text;bundle-version="3.4.0",
- org.eclipse.ui;bundle-version="3.4.1"
+ org.eclipse.ui;bundle-version="3.4.1",
+ de.ovgu.featureide.fm.core;bundle-version="2.3.0"
 Bundle-ClassPath: .,
  lib/FeatureHouse-0.2.jar

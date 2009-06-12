@@ -42,13 +42,17 @@ public class JakImporter {
 			throws CoreException, IOException {
 		assert jakProject.getFile("model.m").exists();
 
+		monitor.beginTask("Importing from " + jakProject.getName(),
+				IProgressMonitor.UNKNOWN);
+
 		// flatten all files into annotations with FeatureHouse extension, code
 		// in "model" folder
-		FeatureFSTGenComposer.main(new String[] { "--expression",
+		monitor.subTask("Composing Java/Jak files...");
+		new FeatureFSTGenComposer().run(new String[] { "--expression",
 				jakProject.getFile("model.m").getLocation().toOSString(),
 				"--base-directory", jakProject.getLocation().toOSString(),
 				"--output-directory",
-				targetJavaProject.getLocation().toOSString() + "/" });
+				targetJavaProject.getLocation().toOSString() + "/" }, monitor);
 
 		// copy model file
 		jakProject.getFile("model.m").copy(
@@ -66,8 +70,11 @@ public class JakImporter {
 				StrUtils.strToInputStream(newfm), true, true, monitor);
 
 		// parse as CIDE annotations on AST
-		targetJavaProject.getFolder("model").accept(new CIDEAnnotationParser());
+		monitor.subTask("Importing annotations...");
+		targetJavaProject.getFolder("model").accept(
+				new CIDEAnnotationParser(monitor));
 
+		monitor.done();
 	}
 
 	private String prepareFeatureModel(IProject targetJavaProject,
@@ -94,8 +101,8 @@ public class JakImporter {
 
 			private Set<Set<String>> parseAnnoations(String content) {
 
-				List<AnnotationMarker> annotations = new CIDEAnnotationParser()
-						.findAnnotations(content);
+				List<AnnotationMarker> annotations = new CIDEAnnotationParser(
+						null).findAnnotations(content);
 
 				Set<Set<String>> result = new HashSet<Set<String>>();
 				for (AnnotationMarker annoation : annotations) {

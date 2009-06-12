@@ -2,9 +2,12 @@ package de.ovgu.cide.importjak.featurehouseextension;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.core.compiler.IProblem;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ASTParser;
@@ -34,7 +37,7 @@ public class FeatureJavaMethodOverriding {
 	public static void compose(FSTTerminal terminalA, FSTTerminal terminalB,
 			FSTTerminal terminalComp, FSTNonTerminal nonterminalParent) {
 
-		if (terminalA.getBody().matches(".*\\s*original\\s*.*")) {
+		if (terminalA.getBody().contains("original")) {
 			composeWrapper(terminalA, terminalB, terminalComp,
 					nonterminalParent);
 
@@ -62,7 +65,7 @@ public class FeatureJavaMethodOverriding {
 		boolean mutuallyExclusive = GuidslFileLoader.featureModel
 				.checkCondition(new Not(new And(FeatureExpressions
 						.get(terminalA), FeatureExpressions.get(terminalB))));
-//		assert mutuallyExclusive;
+		// assert mutuallyExclusive;
 
 		String constructorA = terminalA.getBody();
 		String constructorB = terminalB.getBody();
@@ -97,7 +100,7 @@ public class FeatureJavaMethodOverriding {
 		}
 
 		if (!mutuallyExclusive) {
-			String warning = "Two conflicting method introductions: "
+			String warning = "Two conflicting method introductions (or wrong composition order): "
 					+ terminalA.getName() + " -- "
 					+ FeatureExpressions.get(terminalA) + " vs. "
 					+ FeatureExpressions.get(terminalB)
@@ -219,6 +222,9 @@ public class FeatureJavaMethodOverriding {
 		ASTNode ast = parseMethod(body);
 		WrapperCaseVisitor wcv = new WrapperCaseVisitor();
 		ast.accept(wcv);
+
+		if (wcv.methodDeclaration == null)
+			return "error";
 
 		return wcv.methodDeclaration.getName().getIdentifier();
 	}
@@ -438,13 +444,20 @@ public class FeatureJavaMethodOverriding {
 
 	private static ASTNode parseMethod(String wrapper) {
 		ASTParser parser = ASTParser.newParser(AST.JLS3);
+		Hashtable options = JavaCore.getOptions();
+		options.put(JavaCore.COMPILER_COMPLIANCE, "1.5");
+		options.put(JavaCore.COMPILER_SOURCE, "1.5");
+		
+		parser.setCompilerOptions(options);
 		parser.setKind(ASTParser.K_CLASS_BODY_DECLARATIONS);
 		parser.setSource(wrapper.toCharArray());
 		ASTNode ast = parser.createAST(null);
 
 		if (ast instanceof CompilationUnit) {
 			if (((CompilationUnit) ast).getProblems().length > 0)
-				System.err.println(((CompilationUnit) ast).getProblems());
+				for (IProblem problem : ((CompilationUnit) ast).getProblems())
+					if (problem.isError())
+						System.err.println(problem.getMessage() + "\n" + wrapper);
 		}
 
 		return ast;

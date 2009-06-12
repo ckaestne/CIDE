@@ -15,6 +15,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.ToolFactory;
 import org.eclipse.jdt.core.formatter.CodeFormatter;
@@ -74,9 +75,17 @@ public class CIDEAnnotationParser implements IResourceVisitor {
 		}
 	}
 
+	private IProgressMonitor monitor;
+
+	public CIDEAnnotationParser(IProgressMonitor monitor) {
+		this.monitor = monitor;
+	}
+
 	@Override
 	public boolean visit(IResource resource) throws CoreException {
 		if (resource instanceof IFile) {
+			if (monitor != null)
+				monitor.subTask("Importing annotations: " + resource.getName());
 			try {
 				ColoredSourceFile csFile = ColoredSourceFile
 						.getColoredSourceFile((IFile) resource);
@@ -149,8 +158,8 @@ public class CIDEAnnotationParser implements IResourceVisitor {
 				content, 0, content.length(), 0, null);
 		IDocument document = new Document(content);
 		try {
-			if (edit!=null)
-			edit.apply(document);
+			if (edit != null)
+				edit.apply(document);
 		} catch (MalformedTreeException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
