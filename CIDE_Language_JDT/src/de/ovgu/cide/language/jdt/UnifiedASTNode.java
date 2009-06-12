@@ -9,24 +9,30 @@ import cide.gast.IToken;
 import cide.gast.Property;
 
 public class UnifiedASTNode extends ASTNode {
+	public enum Kind {
+		TYPE, METHOD, FIELD, STATEMENT, OTHER
+	}
 
 	private final String displayName;
 	private String id;
 	private IASTNode[] wrappees;
+	private Kind kind;
 
 	protected UnifiedASTNode(String displayName, String id,
 			List<Property> properties, IToken firstToken, IToken lastToken,
-			IASTNode[] wrappees) {
+			IASTNode[] wrappees, Kind kind) {
 		super(properties, firstToken, lastToken);
 		this.displayName = displayName;
 		this.id = id;
 		this.wrappees = wrappees;
+		this.kind = kind;
 	}
 
 	@Override
 	public ASTNode deepCopy() {
 		return new UnifiedASTNode(displayName, id, Arrays
-				.asList(cloneProperties()), firstToken, lastToken, wrappees);
+				.asList(cloneProperties()), firstToken, lastToken, wrappees,
+				kind);
 	}
 
 	@Override
@@ -49,6 +55,16 @@ public class UnifiedASTNode extends ASTNode {
 	@Override
 	public String getId() {
 		return id;
+	}
+
+	/**
+	 * kind is only used for bridged JDT nodes to determine some properties that
+	 * would otherwise be checked by dynamic instanceof checks
+	 * 
+	 * @return
+	 */
+	public Kind getKind() {
+		return kind;
 	}
 
 	@Override

@@ -329,8 +329,7 @@ class JDTCheckGenerator_Base extends ASTVisitor {
 		return super.visit(node);
 	}
 
-	protected IASTNode bridge(ASTNode node) {
-		return new ASTBridge().getASTNode((CompilationUnit) node.getRoot(),
-				node, false);
+	protected static IASTNode bridge(ASTNode node) {
+		return ASTBridge.bridge(node);
 	}
 }

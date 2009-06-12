@@ -1,11 +1,20 @@
 package de.ovgu.cide.typing.jdt.checks;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 import org.eclipse.jdt.core.dom.IVariableBinding;
 
 import cide.gast.IASTNode;
+import de.ovgu.cide.features.IFeature;
 import de.ovgu.cide.features.source.ColoredSourceFile;
 import de.ovgu.cide.typing.jdt.JDTTypingProvider;
+import de.ovgu.cide.typing.jdt.checks.resolutions.ASTBindingFinderHelper;
+import de.ovgu.cide.typing.jdt.checks.resolutions.AbstractJDTTypingCheckWithResolution;
 import de.ovgu.cide.typing.model.IEvaluationStrategy;
+import de.ovgu.cide.typing.model.ITypingMarkerResolution;
 
 /**
  * checks colors between a field and references to it
@@ -13,7 +22,7 @@ import de.ovgu.cide.typing.model.IEvaluationStrategy;
  * @author ckaestne
  * 
  */
-public class FieldAccessCheck extends AbstractJDTTypingCheck {
+public class FieldAccessCheck extends AbstractJDTTypingCheckWithResolution {
 
 	private final IVariableBinding targetField;
 
@@ -35,11 +44,33 @@ public class FieldAccessCheck extends AbstractJDTTypingCheck {
 				+ targetField.getName();
 	}
 
-	
 	public String getProblemType() {
 		return "de.ovgu.cide.typing.jdt.fieldaccess";
 	}
 
-	
+	@Override
+	protected void addResolutions(
+			ArrayList<ITypingMarkerResolution> resolutions,
+			HashSet<IFeature> colorDiff) {
+		resolutions.addAll(Arrays
+				.asList(createChangeNodeColorResolution(
+						findCallingStatement(source), colorDiff, true,
+						"statement", 20)));
+		resolutions.addAll(Arrays.asList(createChangeNodeColorResolution(
+				findCallingMethod(source), colorDiff, true, "method", 18)));
+		resolutions.addAll(Arrays.asList(createChangeNodeColorResolution(
+				findCallingType(source), colorDiff, true, "type", 16)));
+
+		// add resolution for target (field declaration)
+		IASTNode fieldDecl = ASTBindingFinderHelper.getFieldDecl(targetField);
+		if (fieldDecl != null)
+			resolutions.addAll(Arrays.asList(createChangeNodeColorResolution(
+					fieldDecl, colorDiff, false, "field declaration", 14)));
+	}
+
+	@Override
+	protected Set<IFeature> getTargetColors() {
+		return typingProvider.getBindingColors().getColors(targetField);
+	}
 
 }

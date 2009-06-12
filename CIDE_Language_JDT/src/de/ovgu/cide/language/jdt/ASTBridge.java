@@ -7,8 +7,13 @@ import java.util.List;
 import org.eclipse.jdt.core.dom.ChildListPropertyDescriptor;
 import org.eclipse.jdt.core.dom.ChildPropertyDescriptor;
 import org.eclipse.jdt.core.dom.CompilationUnit;
+import org.eclipse.jdt.core.dom.FieldDeclaration;
+import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.SimplePropertyDescriptor;
+import org.eclipse.jdt.core.dom.Statement;
 import org.eclipse.jdt.core.dom.StructuralPropertyDescriptor;
+import org.eclipse.jdt.core.dom.Type;
+import org.eclipse.jdt.core.dom.TypeDeclaration;
 
 import cide.gast.ASTNode;
 import cide.gast.ASTTextNode;
@@ -21,6 +26,7 @@ import cide.gast.PropertyZeroOrMore;
 import cide.gast.PropertyZeroOrOne;
 import cide.gast.SimpleToken;
 import de.ovgu.cide.configuration.jdt.ASTColorInheritance;
+import de.ovgu.cide.language.jdt.UnifiedASTNode.Kind;
 
 /**
  * input: Eclipse AST; output: CIDE AST
@@ -102,7 +108,8 @@ public class ASTBridge {
 			c_props.add(new PropertyZeroOrOne<ASTNode>(e_prop.getId(), c_node));
 
 			c_node = new UnifiedASTNode(getDisplayName(e_parent), ASTID
-					.id(e_parent), c_props, c_firstToken, c_lastToken, null);
+					.id(e_parent), c_props, c_firstToken, c_lastToken, null,
+					getKind(e_parent));
 
 			e_node = e_parent;
 		}
@@ -141,7 +148,20 @@ public class ASTBridge {
 
 		}
 		return new UnifiedASTNode(getDisplayName(e_node), ASTID.id(e_node),
-				c_props, c_firstToken, c_lastToken, wrappee);
+				c_props, c_firstToken, c_lastToken, wrappee, getKind(e_node));
+	}
+
+	private Kind getKind(org.eclipse.jdt.core.dom.ASTNode e_node) {
+		if (e_node instanceof Statement)
+			return Kind.STATEMENT;
+		if (e_node instanceof TypeDeclaration)
+			return Kind.TYPE;
+		if (e_node instanceof MethodDeclaration)
+			return Kind.METHOD;
+		if (e_node instanceof FieldDeclaration)
+			return Kind.FIELD;
+
+		return Kind.OTHER;
 	}
 
 	/** helper method to concatenate two arrays */
@@ -226,5 +246,10 @@ public class ASTBridge {
 			return bridgeOneChildProperty(e_node, prop);
 		else
 			return bridgeOptionalChildProperty(e_node, prop);
+	}
+
+	public static IASTNode bridge(org.eclipse.jdt.core.dom.ASTNode node) {
+		return new ASTBridge().getASTNode((CompilationUnit) node.getRoot(),
+				node, false);
 	}
 }
