@@ -10,7 +10,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.ovgu.cide.editor.keepcolors.ColorCache;
 import de.ovgu.cide.editor.keepcolors.ColorCache.ColoredItem;
 import de.ovgu.cide.features.IFeature;
 

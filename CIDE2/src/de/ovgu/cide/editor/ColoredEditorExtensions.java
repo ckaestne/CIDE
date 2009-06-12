@@ -27,7 +27,6 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 
 import cide.gparser.ParseException;
-
 import de.ovgu.cide.af.AlternativeAnnotationManager;
 import de.ovgu.cide.editor.keepcolors.ColorCacheManager;
 import de.ovgu.cide.features.IFeature;
