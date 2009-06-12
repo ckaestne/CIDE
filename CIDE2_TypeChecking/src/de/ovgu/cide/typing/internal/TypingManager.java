@@ -206,7 +206,7 @@ public class TypingManager {
 				markWelltyped(check);
 
 		}
-		DebugTyping.print();//debug only
+		DebugTyping.print();// debug only
 		monitor2.done();
 	}
 
@@ -391,6 +391,14 @@ public class TypingManager {
 			projectFiles.add(file);
 		}
 		return result;
+	}
+
+	/**
+	 * do not call outside this plugin. this method is only used to access
+	 * cached checks to marker resolutions
+	 */
+	public Set<ITypingCheck> getKnownChecks() {
+		return knownChecks;
 	}
 
 }

@@ -58,6 +58,13 @@
        </action>
     </editorContribution>
  </extension>
+ <extension
+       point="org.eclipse.ui.ide.markerResolution">
+    <markerResolutionGenerator
+          class="de.ovgu.cide.typing.internal.resolution.ResolutionGenerator"
+          markerType="de.ovgu.cide.core.typing.problem">
+    </markerResolutionGenerator>
+ </extension>
 
 
 </plugin>
