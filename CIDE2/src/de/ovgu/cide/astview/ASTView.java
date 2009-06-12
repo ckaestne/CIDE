@@ -50,6 +50,7 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.ui.IActionBars;
@@ -388,14 +389,24 @@ public class ASTView extends ViewPart implements IShowInSource {
 			// not interesting
 		}
 
-		public void astColorChanged(ASTColorChangedEvent event) {
+		public void astColorChanged(final ASTColorChangedEvent event) {
 			if (event.getColoredSourceFile() == fView.fColoredJavaSourceFile)
-				fView.colorUpdated(event.getAffectedNodes());
+				Display.getDefault().asyncExec(new Runnable() {
+					@Override
+					public void run() {
+						fView.colorUpdated(event.getAffectedNodes());
+					}
+				});
 		}
 
 		public void astRefreshed(ColoredSourceFile sourceFile) {
 			if (sourceFile == fView.fColoredJavaSourceFile)
-				fView.refreshAST();
+				Display.getDefault().asyncExec(new Runnable() {
+					@Override
+					public void run() {
+						fView.refreshAST();
+					}
+				});
 		}
 
 		public void fileColorChanged(FileColorChangedEvent event) {
@@ -408,7 +419,12 @@ public class ASTView extends ViewPart implements IShowInSource {
 			if (event.getProject() == fView.fColoredJavaSourceFile
 					.getResource().getProject()
 					&& event.anyChangeOf(ChangeType.COLOR))
-				fView.fViewer.refresh();
+				Display.getDefault().asyncExec(new Runnable() {
+					@Override
+					public void run() {
+						fView.fViewer.refresh();
+					}
+				});
 		}
 	}
 
