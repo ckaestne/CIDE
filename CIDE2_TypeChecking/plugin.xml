@@ -15,10 +15,7 @@
 	</extension>
 
 	<extension point="org.eclipse.ui.actionSets">
-		<actionSet id="coloride.actionSet" label="CIDE" visible="true">
-			<menu id="colorMenu" label="Colors">
-				<separator name="colorGroup" />
-			</menu>
+		<actionSet id="typechecking" label="CIDE" visible="true">
 			<action class="de.ovgu.cide.typing.internal.ForceValidationAction"
 				id="coloride.validator.ForceValidationAction" label="Force Full Type Check"
 				menubarPath="colorMenu/colorGroup" style="push"
