@@ -50,5 +50,25 @@
                          provider="de.ovgu.cide.typing.jdt.JDTTypingExtension">
                    </typingProvider>
                 </extension>
+ <extension
+        point="org.eclipse.ui.actionSets">
+     <actionSet
+           id="jdt"
+           label="Colors"
+           visible="true">
+        <action
+              class="de.ovgu.cide.typing.jdt.organizeimports.OrganizeAllImportsAction"
+              id="menu_AstView.action3"
+              label="Organize Imports"
+              menubarPath="colorMenu/colorGroup"/>
+          <action
+                class="coloredide.export2jak.validator.CheckColorsForJakExportAction"
+                id="coloredide.export.jak.CheckColors"
+                label="Check Colors for Jak Export"
+                menubarPath="colorMenu/colorGroup"
+                style="push">
+          </action>
 
+     </actionSet>
+  </extension>
 </plugin>

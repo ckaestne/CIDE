@@ -1,12 +1,12 @@
 package de.ovgu.cide.typing.jdt.checks.resolutions;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.core.resources.IMarker;
-import org.eclipse.ui.IMarkerResolution;
 
 import cide.gast.IASTNode;
 import de.ovgu.cide.features.IFeature;
@@ -44,7 +44,8 @@ public abstract class AbstractJDTTypingCheckWithResolution extends
 		ArrayList<ITypingMarkerResolution> resolutions = new ArrayList<ITypingMarkerResolution>();
 		addResolutions(resolutions, colorDiff);
 		Collections.sort(resolutions);
-		return resolutions.toArray(new ITypingMarkerResolution[resolutions.size()]);
+		return resolutions.toArray(new ITypingMarkerResolution[resolutions
+				.size()]);
 	}
 
 	protected abstract void addResolutions(
@@ -77,13 +78,13 @@ public abstract class AbstractJDTTypingCheckWithResolution extends
 		return node;
 	}
 
-	protected ITypingMarkerResolution[] createChangeNodeColorResolution(IASTNode node,
-			HashSet<IFeature> colorDiff, boolean add, String nodeType,
-			int relevance) {
+	protected Collection<ITypingMarkerResolution> createChangeNodeColorResolution(
+			IASTNode node, HashSet<IFeature> colorDiff, boolean add,
+			String nodeType, int relevance) {
 
 		if (node == null)
-			return NO_RESOLUTIONS;
-		ArrayList<IMarkerResolution> resolutions = new ArrayList<IMarkerResolution>();
+			return Collections.EMPTY_SET;
+		ArrayList<ITypingMarkerResolution> resolutions = new ArrayList<ITypingMarkerResolution>();
 
 		if (add) {
 			if (colorDiff.size() > 1)
@@ -109,10 +110,10 @@ public abstract class AbstractJDTTypingCheckWithResolution extends
 				if (file.getColorManager().hasColor(currentNode, color))
 					resolutions.add(new ChangeNodeColorResolution(file,
 							currentNode, Collections.singleton(color), add,
-							nodeType , relevance));
+							nodeType, relevance));
 			}
 		}
 
-		return resolutions.toArray(new ITypingMarkerResolution[resolutions.size()]);
+		return resolutions;
 	}
 }

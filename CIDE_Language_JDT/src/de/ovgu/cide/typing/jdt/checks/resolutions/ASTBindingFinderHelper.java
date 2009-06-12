@@ -6,6 +6,8 @@ import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.IBinding;
+import org.eclipse.jdt.core.dom.IMethodBinding;
+import org.eclipse.jdt.core.dom.ITypeBinding;
 
 import cide.gast.IASTNode;
 import cide.gparser.ParseException;
@@ -20,6 +22,33 @@ public class ASTBindingFinderHelper {
 
 	public static IASTNode getFieldDecl(IBinding binding) {
 
+		CompilationUnit ast = getAST(binding);
+		if (ast == null)
+			return null;
+
+		ASTBindingFinder bindingFinder = new ASTBindingFinder(binding.getKey());
+		ast.accept(bindingFinder);
+		ASTNode result = bindingFinder.getResult();
+		if (result == null)
+			return null;
+
+		return ASTBridge.bridge(result);
+	}
+
+	public static IASTNode getMethodDecl(IMethodBinding binding) {
+		CompilationUnit ast = getAST(binding);
+		if (ast == null)
+			return null;
+
+		ASTBindingFinder bindingFinder = new ASTBindingFinder(binding.getKey());
+		ast.accept(bindingFinder);
+		ASTNode result = bindingFinder.getResult();
+		if (result == null)
+			return null;
+
+		return ASTBridge.bridge(result);
+	}
+	public static IASTNode getTypeDecl(ITypeBinding binding) {
 		CompilationUnit ast = getAST(binding);
 		if (ast == null)
 			return null;
@@ -50,4 +79,5 @@ public class ASTBindingFinderHelper {
 		}
 
 	}
+
 }

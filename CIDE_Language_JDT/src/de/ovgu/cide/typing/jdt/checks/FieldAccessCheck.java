@@ -1,7 +1,6 @@
 package de.ovgu.cide.typing.jdt.checks;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -52,20 +51,20 @@ public class FieldAccessCheck extends AbstractJDTTypingCheckWithResolution {
 	protected void addResolutions(
 			ArrayList<ITypingMarkerResolution> resolutions,
 			HashSet<IFeature> colorDiff) {
-		resolutions.addAll(Arrays
-				.asList(createChangeNodeColorResolution(
+		resolutions
+				.addAll(createChangeNodeColorResolution(
 						findCallingStatement(source), colorDiff, true,
-						"statement", 20)));
-		resolutions.addAll(Arrays.asList(createChangeNodeColorResolution(
-				findCallingMethod(source), colorDiff, true, "method", 18)));
-		resolutions.addAll(Arrays.asList(createChangeNodeColorResolution(
-				findCallingType(source), colorDiff, true, "type", 16)));
+						"statement", 20));
+		resolutions.addAll(createChangeNodeColorResolution(
+				findCallingMethod(source), colorDiff, true, "method", 18));
+		resolutions.addAll(createChangeNodeColorResolution(
+				findCallingType(source), colorDiff, true, "type", 16));
 
 		// add resolution for target (field declaration)
 		IASTNode fieldDecl = ASTBindingFinderHelper.getFieldDecl(targetField);
 		if (fieldDecl != null)
-			resolutions.addAll(Arrays.asList(createChangeNodeColorResolution(
-					fieldDecl, colorDiff, false, "field declaration", 14)));
+			resolutions.addAll(createChangeNodeColorResolution(fieldDecl,
+					colorDiff, false, "field declaration", 14));
 	}
 
 	@Override

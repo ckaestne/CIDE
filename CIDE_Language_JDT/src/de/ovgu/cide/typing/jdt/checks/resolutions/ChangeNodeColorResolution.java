@@ -12,9 +12,9 @@ import de.ovgu.cide.CIDECorePlugin;
 import de.ovgu.cide.features.IFeature;
 import de.ovgu.cide.features.source.ColoredSourceFile;
 import de.ovgu.cide.features.source.SourceFileColorManager;
-import de.ovgu.cide.typing.model.ITypingMarkerResolution;
+import de.ovgu.cide.typing.model.AbstractTypingMarkerResolution;
 
-public class ChangeNodeColorResolution implements ITypingMarkerResolution {
+public class ChangeNodeColorResolution extends AbstractTypingMarkerResolution {
 
 	private final Set<IFeature> colorDiff;
 
@@ -30,7 +30,6 @@ public class ChangeNodeColorResolution implements ITypingMarkerResolution {
 
 	private String nodeType = null;
 
-	private int rel = 10;
 
 	public ChangeNodeColorResolution(ColoredSourceFile source,
 			IASTNode targetNode, Set<IFeature> colorDiff, boolean add) {
@@ -53,7 +52,7 @@ public class ChangeNodeColorResolution implements ITypingMarkerResolution {
 			String nodeType, int relevance) {
 		this(source, targetNode, colorDiff, add);
 		this.nodeType = nodeType;
-		this.rel = relevance;
+		setRelevance(relevance);
 	}
 
 	public void run(IMarker marker) {
@@ -101,21 +100,6 @@ public class ChangeNodeColorResolution implements ITypingMarkerResolution {
 		return null;
 	}
 
-	public void setRelevance(int rel) {
-		this.rel = rel;
-	}
 
-	public int getRelevance() {
-		return rel;
-	}
-
-	@Override
-	public int compareTo(ITypingMarkerResolution o) {
-		if (o.getRelevance() > this.getRelevance())
-			return -1;
-		if (o.getRelevance() < this.getRelevance())
-			return 1;
-		return 0;
-	}
 
 }

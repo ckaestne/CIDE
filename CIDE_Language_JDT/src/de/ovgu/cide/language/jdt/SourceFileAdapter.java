@@ -46,7 +46,7 @@ public class SourceFileAdapter implements ISourceFile {
 	}
 
 	public ISourceFile getRoot() {
-		return getRoot();
+		return ast.getRoot();
 	}
 
 	public int getStartPosition() {
