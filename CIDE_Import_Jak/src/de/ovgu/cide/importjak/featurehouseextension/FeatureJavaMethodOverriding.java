@@ -444,7 +444,7 @@ public class FeatureJavaMethodOverriding {
 
 	private static ASTNode parseMethod(String wrapper) {
 		ASTParser parser = ASTParser.newParser(AST.JLS3);
-		Hashtable options = JavaCore.getOptions();
+		Hashtable<String,String> options = JavaCore.getOptions();
 		options.put(JavaCore.COMPILER_COMPLIANCE, "1.5");
 		options.put(JavaCore.COMPILER_SOURCE, "1.5");
 		
