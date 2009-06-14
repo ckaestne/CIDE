@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.exportWizards">
+      <wizard
+            category="de.ovgu.cide.export"
+            class="de.ovgu.cide.export.virtual.ExportCPPWizard"
+            id="de.ovgu.cide.export.ifdef"
+            name="Export to #ifdef (CPP)">
+      </wizard>
+      <wizard
+            category="de.ovgu.cide.export"
+            class="de.ovgu.cide.export.virtual.ExportMungeWizard"
+            id="de.ovgu.cide.export.munge"
+            name="Export to Munge">
+      </wizard>
+   </extension>
+
+</plugin>
