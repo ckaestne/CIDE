@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+<extension
+        point="org.eclipse.ui.actionSets">
+     <actionSet
+           id="coloride.actionSet"
+           label="Colors"
+           visible="true">
+          <action
+                class="de.ovgu.cide.export.physical.ahead.validator.CheckColorsForJakExportAction"
+                id="de.ovgu.cide.export.jak.CheckColors"
+                label="Check Colors for Jak Export"
+                menubarPath="colorMenu/colorGroup"
+                style="push">
+          </action>
+
+     </actionSet>
+  </extension>
+   <extension
+         point="org.eclipse.ui.exportWizards">
+      <wizard
+            category="de.ovgu.cide.export"
+            class="de.ovgu.cide.export.physical.ExportJakWizard"
+            id="de.ovgu.cide.export.jak"
+            name="Export to AHEAD (Jak)">
+      </wizard>
+      <wizard
+            category="de.ovgu.cide.export"
+            class="de.ovgu.cide.export.physical.ExportFeatureHouseWizard"
+            id="de.ovgu.cide.export.fh"
+            name="Export to FeatureHouse (Java)">
+      </wizard>
+   </extension>
+</plugin>
