@@ -789,8 +789,10 @@ public class CFJTypingManagerAF extends CFJTypingManager {
 	
 	public CFJType typeOf(Expression expression, IEvaluationStrategy strategy) {
 		MethodDeclaration methodDeclaration = (MethodDeclaration) expression.getParent();
+		
 		try {
-			return typeOf(expression, altFeatureManager.getTheAlternative(methodDeclaration, rootAlternative), methodDeclaration, null, strategy);
+			Alternative methodAlternative = altFeatureManager.getTheAlternative(methodDeclaration, rootAlternative);
+			return typeOf(expression, methodAlternative, methodDeclaration, methodAlternative.getFeatures(), strategy);
 		} catch (CoreException e) {
 			e.printStackTrace();
 			return null;
