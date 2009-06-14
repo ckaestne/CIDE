@@ -1,0 +1,21 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: CIDE JDT Export Framework
+Bundle-SymbolicName: de.ovgu.cide.export.jdt;singleton:=true
+Bundle-Version: 0.1.0.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.ui.ide,
+ org.eclipse.jface.text,
+ org.eclipse.ui.workbench.texteditor,
+ org.eclipse.ui.editors,
+ org.eclipse.core.resources,
+ org.eclipse.ui,
+ org.eclipse.jdt.core,
+ org.eclipse.jdt.ui,
+ de.ovgu.cide.ast;bundle-version="1.0.2",
+ de.ovgu.cide.core;bundle-version="1.3.1",
+ de.ovgu.cide.fm.guidsl;bundle-version="0.2.0",
+ de.ovgu.cide.language.jdt;bundle-version="0.1.0",
+ de.ovgu.cide.typing;bundle-version="0.1.0"
+Export-Package: de.ovgu.cide.export
