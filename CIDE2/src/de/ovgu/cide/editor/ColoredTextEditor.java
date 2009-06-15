@@ -24,6 +24,7 @@ import org.eclipse.ui.texteditor.AbstractDecoratedTextEditor;
 import cide.gast.IASTNode;
 import de.ovgu.cide.ASTColorChangedEvent;
 import de.ovgu.cide.CIDECorePlugin;
+import de.ovgu.cide.Change;
 import de.ovgu.cide.ChangeType;
 import de.ovgu.cide.ColorListChangedEvent;
 import de.ovgu.cide.ColoredIDEImages;
@@ -45,6 +46,7 @@ public class ColoredTextEditor extends AbstractDecoratedTextEditor implements
 	private final ColoredEditorExtensions editorExtension;
 	private ProjectionColorManager projectionColorManager;
 	private IAnnotationAccess annotationAccess;
+	private InlineProjectionSourceViewer viewer;
 
 	public ColoredTextEditor() {
 		super();
@@ -86,34 +88,39 @@ public class ColoredTextEditor extends AbstractDecoratedTextEditor implements
 		}
 		return null;
 	}
-	
+
 	@Override
 	protected CompositeRuler createCompositeRuler() {
 		annotationAccess = new AnnotationMarkerAccess();
-		IAnnotationModel annotationModel = getDocumentProvider().getAnnotationModel(getEditorInput());
-        AnnotationRulerColumn annotationRulerCol = new AnnotationRulerColumn(annotationModel, 16, annotationAccess);
-        annotationRulerCol.addAnnotationType(AlternativeAnnotation.ALTERNATIVE_TYPE);
-        
-        CompositeRuler compositeRuler = new CompositeRuler();
-        compositeRuler.setModel(annotationModel);
-        compositeRuler.addDecorator(0, annotationRulerCol);
-        
-        return compositeRuler;
+		IAnnotationModel annotationModel = getDocumentProvider()
+				.getAnnotationModel(getEditorInput());
+		AnnotationRulerColumn annotationRulerCol = new AnnotationRulerColumn(
+				annotationModel, 16, annotationAccess);
+		annotationRulerCol
+				.addAnnotationType(AlternativeAnnotation.ALTERNATIVE_TYPE);
+
+		CompositeRuler compositeRuler = new CompositeRuler();
+		compositeRuler.setModel(annotationModel);
+		compositeRuler.addDecorator(0, annotationRulerCol);
+
+		return compositeRuler;
 	}
 
 	@Override
 	protected ISourceViewer createSourceViewer(Composite parent,
 			IVerticalRuler ruler, int styles) {
-		InlineProjectionSourceViewer viewer = new InlineProjectionSourceViewer(
-				parent, ruler, getOverviewRuler(), isOverviewRulerVisible(),
-				styles);
-		
-		// Könnte man einkommentieren, um blaue squigglys unter die Codefragmente zu malen, zu denen es Alternativen gibt.
+		viewer = new InlineProjectionSourceViewer(parent, ruler,
+				getOverviewRuler(), isOverviewRulerVisible(), styles);
+
+		// Könnte man einkommentieren, um blaue squigglys unter die
+		// Codefragmente zu malen, zu denen es Alternativen gibt.
 		// Mir gefällts nicht.
-//        AnnotationPainter ap = new AnnotationPainter(viewer, annotationAccess);
-//        ap.addAnnotationType(AlternativeAnnotation.ALTERNATIVE_TYPE);
-//        ap.setAnnotationTypeColor(AlternativeAnnotation.ALTERNATIVE_TYPE, new Color(Display.getDefault(), new RGB(0, 0, 255)));
-//        viewer.addPainter(ap);
+		// AnnotationPainter ap = new AnnotationPainter(viewer,
+		// annotationAccess);
+		// ap.addAnnotationType(AlternativeAnnotation.ALTERNATIVE_TYPE);
+		// ap.setAnnotationTypeColor(AlternativeAnnotation.ALTERNATIVE_TYPE, new
+		// Color(Display.getDefault(), new RGB(0, 0, 255)));
+		// viewer.addPainter(ap);
 
 		return viewer;
 	}
@@ -169,7 +176,7 @@ public class ColoredTextEditor extends AbstractDecoratedTextEditor implements
 
 		// color caches
 		editorExtension.initKeepColorManager();
-		
+
 		editorExtension.installAlternativeAnnotations();
 	}
 
@@ -180,14 +187,14 @@ public class ColoredTextEditor extends AbstractDecoratedTextEditor implements
 	public InlineProjectionSourceViewer getSourceViewerI() {
 		return (InlineProjectionSourceViewer) getSourceViewer();
 	}
-	
+
 	public IDocument getDocument() {
 		return getSourceViewer().getDocument();
 	}
 
 	public void astColorChanged(ASTColorChangedEvent event) {
 		IDocument doc = getSourceViewer().getDocument();
-		
+
 		if (event.getColoredSourceFile() != getSourceFile())
 			return;
 
@@ -244,6 +251,17 @@ public class ColoredTextEditor extends AbstractDecoratedTextEditor implements
 	}
 
 	public void colorListChanged(ColorListChangedEvent event) {
+		if (event.anyChangeOf(ChangeType.VISIBILITY)) {
+			for (Change change : event.getChanges()) {
+				if (change.type == ChangeType.VISIBILITY)
+					if (change.feature.isVisible())
+						getProjectionColorManager().expandColor(change.feature);
+					else
+						getProjectionColorManager().collapseColor(
+								change.feature);
+			}
+		}
+
 		// redraw on color or visibility changes in the feature model
 		if (event.anyChangeOf(ChangeType.COLOR)
 				|| event.anyChangeOf(ChangeType.VISIBILITY))
@@ -268,5 +286,9 @@ public class ColoredTextEditor extends AbstractDecoratedTextEditor implements
 
 	public void markParseException(Throwable e) {
 		editorExtension.markParseException(e);
+	}
+
+	public InlineProjectionSourceViewer getViewer() {
+		return viewer;
 	}
 }

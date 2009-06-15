@@ -8,6 +8,9 @@ import java.util.Set;
 
 import org.eclipse.jface.text.source.Annotation;
 
+import de.ovgu.cide.Change;
+import de.ovgu.cide.ChangeType;
+import de.ovgu.cide.ColorListChangedEvent;
 import de.ovgu.cide.editor.ColoredEditorExtensions.IProjectionColoredEditor;
 import de.ovgu.cide.editor.inlineprojection.ColoredInlineProjectionAnnotation;
 import de.ovgu.cide.editor.inlineprojection.InlineProjectionAnnotationModel;
@@ -26,7 +29,9 @@ public class ProjectionColorManager implements IProjectionColorManager {
 
 	private final Set<IFeature> collapsedColors = new HashSet<IFeature>();
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see coloredide.editor.IProjectionColorManager#getExpandedColors()
 	 */
 	public Set<IFeature> getExpandedColors() {
@@ -39,30 +44,43 @@ public class ProjectionColorManager implements IProjectionColorManager {
 		return visibleFeatures;
 	}
 
-	/* (non-Javadoc)
-	 * @see coloredide.editor.IProjectionColorManager#expandColor(coloredide.features.IFeature)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * coloredide.editor.IProjectionColorManager#expandColor(coloredide.features
+	 * .IFeature)
 	 */
 	public void expandColor(IFeature color) {
 		collapsedColors.remove(color);
 		updateProjectionAnnotations();
 	}
 
-	/* (non-Javadoc)
-	 * @see coloredide.editor.IProjectionColorManager#collapseColor(coloredide.features.IFeature)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * coloredide.editor.IProjectionColorManager#collapseColor(coloredide.features
+	 * .IFeature)
 	 */
 	public void collapseColor(IFeature color) {
 		collapsedColors.add(color);
 		updateProjectionAnnotations();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see coloredide.editor.IProjectionColorManager#expandAllColors()
 	 */
 	public void expandAllColors() {
 		collapsedColors.clear();
 		updateProjectionAnnotations();
 	}
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see coloredide.editor.IProjectionColorManager#collapseAllColors()
 	 */
 	public void collapseAllColors() {
@@ -91,4 +109,5 @@ public class ProjectionColorManager implements IProjectionColorManager {
 		annotationModel.modifyAnnotations(null, null, changedAnnotations
 				.toArray(new Annotation[changedAnnotations.size()]));
 	}
+
 }

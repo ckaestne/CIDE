@@ -10,6 +10,8 @@ import org.eclipse.jface.text.ITextHover;
 import org.eclipse.jface.text.presentation.IPresentationReconciler;
 import org.eclipse.jface.text.presentation.IPresentationRepairer;
 import org.eclipse.jface.text.presentation.PresentationReconciler;
+import org.eclipse.jface.text.reconciler.IReconciler;
+import org.eclipse.jface.text.reconciler.MonoReconciler;
 import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.jface.text.source.IAnnotationHover;
 import org.eclipse.jface.text.source.IAnnotationModel;
@@ -17,6 +19,7 @@ import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.SourceViewerConfiguration;
 
 import de.ovgu.cide.af.AlternativeAnnotation;
+import de.ovgu.cide.editor.inlineprojection.ProjectionReconcilingStrategy;
 import de.ovgu.cide.features.source.ColoredSourceFile;
 
 public class ColoredSourceViewerConfiguration extends SourceViewerConfiguration {
@@ -25,9 +28,10 @@ public class ColoredSourceViewerConfiguration extends SourceViewerConfiguration 
 	private ColoredTextHover textHover = null;
 	private ColoredTextEditor editor;
 
-	public ColoredSourceViewerConfiguration(ColoredSourceFile sourceFile, ColoredTextEditor editor) {
+	public ColoredSourceViewerConfiguration(ColoredSourceFile sourceFile,
+			ColoredTextEditor editor) {
 		this.editor = editor;
-		
+
 		if (sourceFile != null) {
 			repairer = new ColorRepairer(sourceFile, editor);
 			damager = new ColorDamager(sourceFile);
@@ -36,7 +40,8 @@ public class ColoredSourceViewerConfiguration extends SourceViewerConfiguration 
 		}
 	}
 
-	public IPresentationReconciler getPresentationReconciler(ISourceViewer sourceViewer) {
+	public IPresentationReconciler getPresentationReconciler(
+			ISourceViewer sourceViewer) {
 		PresentationReconciler reconciler = new PresentationReconciler();
 		reconciler
 				.setDocumentPartitioning(getConfiguredDocumentPartitioning(sourceViewer));
@@ -49,36 +54,45 @@ public class ColoredSourceViewerConfiguration extends SourceViewerConfiguration 
 	}
 
 	@Override
-	public ITextHover getTextHover(ISourceViewer sourceViewer, String contentType) {
+	public ITextHover getTextHover(ISourceViewer sourceViewer,
+			String contentType) {
 		return textHover;
 	}
-	
+
 	@Override
 	public IAnnotationHover getAnnotationHover(ISourceViewer sourceViewer) {
 		return new IAnnotationHover() {
 
 			@SuppressWarnings("unchecked")
 			@Override
-			public String getHoverInfo(ISourceViewer sourceViewer, int lineNumber) {
-				
+			public String getHoverInfo(ISourceViewer sourceViewer,
+					int lineNumber) {
+
 				/*
-				 * Recht aufwendige Arbeit, da jede Annotation auf Relevanz überprüft wird. Performanter wäre eine
-				 * Map, die Zeilen mit den entsprechenden Annotationen identifiziert. Diese Map müsste aber bei
-				 * Änderungen im Sourcecode aktualisiert werden.
-				 * Mit dieser Lösung können wir vom bereits vorhandenen Mechanismus profitieren, der Annotationen
-				 * bei Änderungen stabil hält.
+				 * Recht aufwendige Arbeit, da jede Annotation auf Relevanz
+				 * überprüft wird. Performanter wäre eine Map, die Zeilen mit
+				 * den entsprechenden Annotationen identifiziert. Diese Map
+				 * müsste aber bei Änderungen im Sourcecode aktualisiert werden.
+				 * Mit dieser Lösung können wir vom bereits vorhandenen
+				 * Mechanismus profitieren, der Annotationen bei Änderungen
+				 * stabil hält.
 				 */
-				
-				IAnnotationModel annotationModel = sourceViewer.getAnnotationModel();
+
+				IAnnotationModel annotationModel = sourceViewer
+						.getAnnotationModel();
 				LinkedList<String> list = new LinkedList<String>();
-				
+
 				Iterator iterator = annotationModel.getAnnotationIterator();
 				while (iterator.hasNext()) {
 					Annotation annotation = (Annotation) iterator.next();
 					try {
-						if (!annotation.isMarkedDeleted() && annotation.getType().equals(AlternativeAnnotation.ALTERNATIVE_TYPE) 
-								&& editor.getDocument().getLineOfOffset(annotationModel.getPosition(annotation).getOffset()) == lineNumber) {
-							
+						if (!annotation.isMarkedDeleted()
+								&& annotation.getType().equals(
+										AlternativeAnnotation.ALTERNATIVE_TYPE)
+								&& editor.getDocument().getLineOfOffset(
+										annotationModel.getPosition(annotation)
+												.getOffset()) == lineNumber) {
+
 							list.add(annotation.getText());
 						}
 					} catch (BadLocationException e) {
@@ -86,27 +100,42 @@ public class ColoredSourceViewerConfiguration extends SourceViewerConfiguration 
 						e.printStackTrace();
 					}
 				}
-				
+
 				if (list.size() > 0) {
-					StringBuilder stringBuilder = new StringBuilder(100 + 50 * list.size());
-					stringBuilder.append("Alternatives available for following codefragments:");
-					
+					StringBuilder stringBuilder = new StringBuilder(
+							100 + 50 * list.size());
+					stringBuilder
+							.append("Alternatives available for following codefragments:");
+
 					Collections.sort(list);
 					for (String s : list) {
 						stringBuilder.append("\n   - ").append(s);
 					}
-					
+
 					return stringBuilder.toString();
 				}
-				
+
 				return null;
 			}
-			
-//			private String truncate(String text, int maxLen) {
-//				if ((text == null) || (text.length() <= maxLen))
-//					return text;
-//				return text.substring(0, maxLen - 5) + " ...";
-//			}
+
+			// private String truncate(String text, int maxLen) {
+			// if ((text == null) || (text.length() <= maxLen))
+			// return text;
+			// return text.substring(0, maxLen - 5) + " ...";
+			// }
 		};
+	}
+
+	IReconciler reconciler = null;
+
+	@Override
+	public IReconciler getReconciler(ISourceViewer sourceViewer) {
+		if (reconciler == null) {
+			ProjectionReconcilingStrategy strategy = new ProjectionReconcilingStrategy();
+			strategy.setEditor(editor);
+
+			reconciler = new MonoReconciler(strategy, false);
+		}
+		return reconciler;
 	}
 }
