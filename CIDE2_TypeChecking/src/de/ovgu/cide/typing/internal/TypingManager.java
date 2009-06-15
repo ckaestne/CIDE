@@ -135,24 +135,26 @@ public class TypingManager {
 
 			final List<ColoredSourceFile> toCheck = new LinkedList<ColoredSourceFile>();
 			try {
-				event.getDelta().accept(new IResourceDeltaVisitor() {
+				if (event != null && event.getDelta() != null)
+					event.getDelta().accept(new IResourceDeltaVisitor() {
 
-					public boolean visit(IResourceDelta delta)
-							throws CoreException {
-						if (delta.getKind() == IResourceDelta.CHANGED
-								&& (delta.getFlags() & IResourceDelta.CONTENT) > 0)
-							if (delta.getResource().getType() == IResource.FILE)
-								try {
-									toCheck.add(ColoredSourceFile
-											.getColoredSourceFile((IFile) delta
-													.getResource()));
-								} catch (FeatureModelNotFoundException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
-								}
-						return true;
-					}
-				});
+						public boolean visit(IResourceDelta delta)
+								throws CoreException {
+							if (delta.getKind() == IResourceDelta.CHANGED
+									&& (delta.getFlags() & IResourceDelta.CONTENT) > 0)
+								if (delta.getResource().getType() == IResource.FILE)
+									try {
+										toCheck
+												.add(ColoredSourceFile
+														.getColoredSourceFile((IFile) delta
+																.getResource()));
+									} catch (FeatureModelNotFoundException e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+									}
+							return true;
+						}
+					});
 			} catch (CoreException e) {
 
 				e.printStackTrace();
