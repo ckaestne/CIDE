@@ -1,7 +1,9 @@
 package de.ovgu.cide.export.virtual.internal;
 
+import java.util.List;
 import java.util.Set;
 
+import de.ovgu.cide.export.useroptions.IUserOption;
 import de.ovgu.cide.features.IFeature;
 
 public class CPPExportOptions implements IPPExportOptions {
@@ -33,6 +35,11 @@ public class CPPExportOptions implements IPPExportOptions {
 		for (int i = 0; i < features.size(); i++)
 			result += "#endif\n";
 		return result;
+	}
+
+	@Override
+	public List<IUserOption> getUserOptions() {
+		return null;
 	}
 
 }

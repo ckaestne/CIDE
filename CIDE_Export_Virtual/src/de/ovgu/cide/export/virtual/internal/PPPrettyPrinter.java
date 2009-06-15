@@ -5,6 +5,7 @@ import java.util.Set;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jdt.core.dom.ASTNode;
 
+import de.ovgu.cide.export.CopiedNaiveASTFlattener;
 import de.ovgu.cide.features.IFeature;
 import de.ovgu.cide.features.source.SourceFileColorManager;
 import de.ovgu.cide.language.jdt.AstidWrapper;

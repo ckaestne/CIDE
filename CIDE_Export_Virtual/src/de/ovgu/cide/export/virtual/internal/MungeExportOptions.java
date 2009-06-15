@@ -2,8 +2,10 @@ package de.ovgu.cide.export.virtual.internal;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
+import de.ovgu.cide.export.useroptions.IUserOption;
 import de.ovgu.cide.features.IFeature;
 
 public class MungeExportOptions implements IPPExportOptions {
@@ -41,6 +43,11 @@ public class MungeExportOptions implements IPPExportOptions {
 		for (IFeature f : sortedFeatures)
 			result += "/*end[" + getFeatureToken(f) + "]*/";
 		return result;
+	}
+
+	@Override
+	public List<IUserOption> getUserOptions() {
+		return null;
 	}
 
 }

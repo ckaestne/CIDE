@@ -2,6 +2,7 @@ package de.ovgu.cide.export.virtual.internal;
 
 import java.util.Set;
 
+import de.ovgu.cide.export.useroptions.IUserOptionProvider;
 import de.ovgu.cide.features.IFeature;
 
 /**
@@ -12,7 +13,7 @@ import de.ovgu.cide.features.IFeature;
  * @author ckaestne
  * 
  */
-public interface IPPExportOptions {
+public interface IPPExportOptions extends IUserOptionProvider {
 	/**
 	 * should the start and end instructions be printed in a new line? (i.e.
 	 * should a line break be enforced before?)
