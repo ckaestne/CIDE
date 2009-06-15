@@ -18,4 +18,5 @@ Require-Bundle: org.eclipse.core.runtime,
  de.ovgu.cide.fm.guidsl;bundle-version="0.2.0",
  de.ovgu.cide.language.jdt;bundle-version="0.1.0",
  de.ovgu.cide.typing;bundle-version="0.1.0"
-Export-Package: de.ovgu.cide.export
+Export-Package: de.ovgu.cide.export,
+ de.ovgu.cide.export.useroptions
