@@ -103,7 +103,8 @@ public class BaliTypingProvider extends AbstractFileBasedTypingProvider {
 		}
 
 		private ISourceFile parse() throws CoreException, ParseException {
-			assert file.getLanguageExtension().getId() == BaliLanguageExtension.LANGUAGE_EXTENSION_ID;
+			assert BaliLanguageExtension.LANGUAGE_EXTENSION_ID.equals(file
+					.getLanguageExtension().getId());
 
 			return file.getAST();
 		}
@@ -123,7 +124,8 @@ public class BaliTypingProvider extends AbstractFileBasedTypingProvider {
 	}
 
 	@Override
-	public void prepareReevaluation(Collection<ColoredSourceFile> files, IProgressMonitor monitor) {
+	public void prepareReevaluation(Collection<ColoredSourceFile> files,
+			IProgressMonitor monitor) {
 		// nothing to do
 	}
 
