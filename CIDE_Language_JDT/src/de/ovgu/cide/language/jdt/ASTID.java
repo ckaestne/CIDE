@@ -137,7 +137,7 @@ public class ASTID implements Serializable {
 				SuperMethodInvocation.ARGUMENTS_PROPERTY};
 		for (ChildListPropertyDescriptor prop : enumLists) {
 			if (node.getLocationInParent() == prop) {
-				List childList = (List) node.getParent().getStructuralProperty(
+				List<?> childList = (List<?>) node.getParent().getStructuralProperty(
 						prop);
 				int idx = childList.indexOf(node);
 				id += "[" + idx + "]";
@@ -162,7 +162,7 @@ public class ASTID implements Serializable {
 		return id;
 	}
 
-	private static String getParameterTypes(List list) {
+	private static String getParameterTypes(List<?> list) {
 		String result = "";
 		for (Object p : list) {
 			if (p instanceof SingleVariableDeclaration) {
@@ -252,7 +252,7 @@ public class ASTID implements Serializable {
 				TryStatement.CATCH_CLAUSES_PROPERTY };
 		for (ChildListPropertyDescriptor prop : enumLists) {
 			if (node.getLocationInParent() == prop) {
-				List childList = (List) node.getParent().getStructuralProperty(
+				List<?> childList = (List<?>) node.getParent().getStructuralProperty(
 						prop);
 				int idx = childList.indexOf(node);
 				id += "[" + idx + "]";
