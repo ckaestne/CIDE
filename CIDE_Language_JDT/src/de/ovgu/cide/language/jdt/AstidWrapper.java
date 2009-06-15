@@ -2,6 +2,8 @@ package de.ovgu.cide.language.jdt;
 
 import java.util.List;
 
+import org.eclipse.jdt.core.dom.ASTNode;
+
 import cide.gast.IASTNode;
 import cide.gast.IASTVisitor;
 import cide.gast.ISourceFile;
@@ -25,6 +27,9 @@ public class AstidWrapper implements IASTNode {
 
 	public AstidWrapper(String astid) {
 		this.astid = astid;
+	}	
+	public AstidWrapper(ASTNode node) {
+		this.astid = ASTID.id(node);
 	}
 
 	@Override
