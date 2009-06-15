@@ -11,7 +11,7 @@ import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 
-import de.ovgu.cide.features.Feature;
+import de.ovgu.cide.features.IFeature;
 
 public class AspectJCompilationUnit {
 
@@ -92,12 +92,12 @@ public class AspectJCompilationUnit {
 	}
 
 	public void setPrecedenceDeclaration(
-			List<Set<Feature>> newPrecedenceDeclaration,
+			List<Set<IFeature>> newPrecedenceDeclaration,
 			Export2AspectJJob exporter) {
 		this.precedenceDeclaration = "";
 		for (Iterator iter = newPrecedenceDeclaration.iterator(); iter
 				.hasNext();) {
-			Set<Feature> derivative = (Set<Feature>) iter.next();
+			Set<IFeature> derivative = (Set<IFeature>) iter.next();
 			precedenceDeclaration = exporter.getDerivativeName(derivative)
 					+ ", " + precedenceDeclaration;
 		}

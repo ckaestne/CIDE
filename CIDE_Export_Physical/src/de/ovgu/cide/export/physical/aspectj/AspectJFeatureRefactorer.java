@@ -28,21 +28,22 @@ import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
 import de.ovgu.cide.export.physical.ahead.BaseFeatureRefactorer;
 import de.ovgu.cide.export.physical.ahead.RefactoringUtils;
 import de.ovgu.cide.export.physical.internal.LocalVariableAnalyzer;
-import de.ovgu.cide.features.Feature;
+import de.ovgu.cide.export.physical.internal.RefactoringColorManager;
+import de.ovgu.cide.features.IFeature;
 
 public class AspectJFeatureRefactorer extends BaseFeatureRefactorer {
 
 	Set<String> seenMembers;
 
-	private HashMap<Set<Feature>, AspectJCompilationUnit> allAspects;
+	private HashMap<Set<IFeature>, AspectJCompilationUnit> allAspects;
 
 	private AspectJCompilationUnit targetCompUnit;
 
 	private TypeDeclaration mainType;
 
-	public AspectJFeatureRefactorer(Set<Feature> derivative, String layer,
-			HashMap<Set<Feature>, AspectJCompilationUnit> allAspects,
-			IColorManager colorManager) {
+	public AspectJFeatureRefactorer(Set<IFeature> derivative, String layer,
+			HashMap<Set<IFeature>, AspectJCompilationUnit> allAspects,
+			RefactoringColorManager colorManager) {
 		super(derivative, colorManager);
 		// this.targetCompUnit = targetCompUnit;
 		this.allAspects = allAspects;
@@ -190,11 +191,11 @@ public class AspectJFeatureRefactorer extends BaseFeatureRefactorer {
 		FieldDeclaration[] allMembers;
 
 		// CompilationUnitColorManager colormanager;
-		// Set<Feature> derivative;
+		// Set<IFeature> derivative;
 		TypeDeclaration type;
 
 		// public ResolveMemberVisitor(TypeDeclaration type,
-		// CompilationUnitColorManager colormanager, Set<Feature> derivative) {
+		// CompilationUnitColorManager colormanager, Set<IFeature> derivative) {
 		public ResolveMemberVisitor(TypeDeclaration type) {
 			// this.derivative = derivative;
 			allMembers = type.getFields();
@@ -308,7 +309,7 @@ public class AspectJFeatureRefactorer extends BaseFeatureRefactorer {
 
 				// color hook method with the same color as the call (if the
 				// call inherits any colors)
-				Set<Feature> hookColors = colorManager.getInheritedColors(hook
+				Set<IFeature> hookColors = colorManager.getInheritedColors(hook
 						.createHookCall());
 				if (hookColors.size() > 0)
 					colorManager.setColors(hook.getHookDeclaration(),

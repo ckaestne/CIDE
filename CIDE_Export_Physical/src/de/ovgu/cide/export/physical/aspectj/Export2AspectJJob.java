@@ -18,20 +18,23 @@ import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 
-import de.ovgu.cide.export.BaseExportJob;
 import de.ovgu.cide.export.BaseJavaFileExporter;
-import de.ovgu.cide.features.Feature;
+import de.ovgu.cide.export.physical.internal.BasePhysicalExportJob;
+import de.ovgu.cide.export.physical.internal.IPhysicalOptions;
+import de.ovgu.cide.features.FeatureModelNotFoundException;
+import de.ovgu.cide.features.IFeature;
 
-public class Export2AspectJJob extends BaseExportJob {
+public class Export2AspectJJob extends BasePhysicalExportJob<IPhysicalOptions> {
 
 	public Export2AspectJJob(String title, IProject sourceProject,
-			IProject targetProject) {
-		super(title, sourceProject, targetProject);
+			IProject targetProject, IPhysicalOptions options)
+			throws FeatureModelNotFoundException {
+		super(title, sourceProject, targetProject, options);
 		// This hashmap will be used to get the aspects implementing features.
-		allAspects = new HashMap<Set<Feature>, AspectJCompilationUnit>();
+		allAspects = new HashMap<Set<IFeature>, AspectJCompilationUnit>();
 	}
 
-	final HashMap<Set<Feature>, AspectJCompilationUnit> allAspects;
+	final HashMap<Set<IFeature>, AspectJCompilationUnit> allAspects;
 
 	protected void createProject(IProgressMonitor monitor) throws CoreException {
 		monitor.beginTask("Creating AspectJ Project", 2);
@@ -66,7 +69,7 @@ public class Export2AspectJJob extends BaseExportJob {
 				outputLocation); // output location
 
 		int i = 1;
-		for (Set<Feature> derivative : seenDerivatives) {
+		for (Set<IFeature> derivative : seenDerivatives) {
 			if (getDerivativeName(derivative).length() == 0)
 				continue;
 
@@ -98,7 +101,7 @@ public class Export2AspectJJob extends BaseExportJob {
 	}
 
 	private void writeAspects(IProgressMonitor monitor) throws CoreException {
-		for (Set<Feature> derivative : allAspects.keySet()) {
+		for (Set<IFeature> derivative : allAspects.keySet()) {
 			IFolder featureDir = null;
 			if (derivative.size() == 1)
 				featureDir = getFeatureDirectory(derivative.iterator().next());

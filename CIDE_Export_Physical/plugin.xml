@@ -31,5 +31,11 @@
             id="de.ovgu.cide.export.fh"
             name="Export to FeatureHouse (Java)">
       </wizard>
+      <wizard
+            category="de.ovgu.cide.export"
+            class="de.ovgu.cide.export.physical.ExportAspectJWizard"
+            id="de.ovgu.cide.export.aspectj"
+            name="Export to AspectJ">
+      </wizard>
    </extension>
 </plugin>

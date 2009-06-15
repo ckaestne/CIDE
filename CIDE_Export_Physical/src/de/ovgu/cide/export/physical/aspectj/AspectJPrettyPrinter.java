@@ -9,6 +9,8 @@ import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 import org.eclipse.jdt.core.dom.Type;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 
+import de.ovgu.cide.export.CopiedNaiveASTFlattener;
+
 public class AspectJPrettyPrinter extends CopiedNaiveASTFlattener {
 
 	public boolean visit(AspectJCompilationUnit node) {

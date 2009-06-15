@@ -18,6 +18,7 @@ import org.eclipse.jdt.core.dom.TypeDeclaration;
 
 import de.ovgu.cide.export.physical.internal.Formal;
 import de.ovgu.cide.export.physical.internal.LocalVariableAnalyzer;
+import de.ovgu.cide.export.physical.internal.RefactoringColorManager;
 
 public class AjHookMethodHelper {
 
@@ -48,7 +49,7 @@ public class AjHookMethodHelper {
 	// private List<Formal> returnAndDeclareValues;
 
 	public AjHookMethodHelper(List<Statement> statements,
-			MethodDeclaration method, CompilationUnit compUnit, IColorManager colorManager) {
+			MethodDeclaration method, CompilationUnit compUnit, RefactoringColorManager colorManager) {
 		this.compUnit = compUnit;
 		this.hookIdx = AjHookMethodHelper.hookIdxCounter++;
 		this.name = "hook" + hookIdx;
