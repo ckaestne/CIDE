@@ -20,7 +20,7 @@ public class StrUtils {
 		return result;
 	}
 
-	public static String implode(Collection elements, String glue) {
+	public static String implode(Collection<Object> elements, String glue) {
 		boolean first = true;
 		String result = "";
 		for (Object element : elements) {
@@ -32,20 +32,25 @@ public class StrUtils {
 		}
 		return result;
 	}
-	
-	
-	public static InputStream strToInputStream(String txt){
-		return new ByteArrayInputStream(txt.getBytes());	
+
+	public static InputStream strToInputStream(String txt) {
+		return new ByteArrayInputStream(txt.getBytes());
 	}
-	
+
 	public static String strFromInputStream(InputStream stream)
-			throws IOException{
-		 StringBuffer out = new StringBuffer();
-		    byte[] b = new byte[4096];
-		    for (int n; (n = stream.read(b)) != -1;) {
-		        out.append(new String(b, 0, n));
-		    }
-		    return out.toString();
+			throws IOException {
+		StringBuffer out = new StringBuffer();
+		byte[] b = new byte[4096];
+		for (int n; (n = stream.read(b)) != -1;) {
+			out.append(new String(b, 0, n));
+		}
+		return out.toString();
 	}
-	
+
+	public static String firstUp(String input) {
+		if (input == null || input.equals(""))
+			return input;
+		return Character.toUpperCase(input.charAt(0)) + input.substring(1);
+	}
+
 }
