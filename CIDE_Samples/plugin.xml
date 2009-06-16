@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.newWizards">
+      <category
+            id="de.ovgu.cide.doc.samples"
+            name="CIDE"
+            parentCategory="org.eclipse.ui.Examples">
+      </category>
+      <wizard
+            category="org.eclipse.ui.Examples/de.ovgu.cide.doc.samples"
+            class="de.ovgu.cide.samples.wizards.SampleNewWizard"
+            icon="icons/interaction.gif"
+            id="de.ovgu.cide.samples.wizards.SampleNewWizard"
+            name="CIDE Examples">
+      </wizard>
+   </extension>
+
+</plugin>

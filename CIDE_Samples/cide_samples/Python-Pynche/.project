@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+	<comment>Pynche (PYthon Natural Color and Hue Editor - from Barry Warsaw) is a simple color editor implemented in Python (v. 2.2). We have annotated source code in it which is related to the GUI, i.e. Viewers, Windows / Dialogs. Furthermore we have marked fragments of the color features BLUE, GREEN and RED which cross-cut the base code.</comment>
+	<name>Python-Pynche</name>
+	<projects>
+	</projects>
+	<buildSpec>
+	</buildSpec>
+	<natures>
+	</natures>
+</projectDescription>
