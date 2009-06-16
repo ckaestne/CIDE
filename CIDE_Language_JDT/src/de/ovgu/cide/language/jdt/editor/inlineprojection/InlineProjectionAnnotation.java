@@ -36,7 +36,7 @@ public class InlineProjectionAnnotation extends Annotation implements
 	/**
 	 * The type of projection annotations.
 	 */
-	public static final String TYPE = "org.eclipse.inlineprojection"; //$NON-NLS-1$
+	public static final String TYPE = "de.ovgu.cide.jdt.editor.inlineprojection"; //$NON-NLS-1$
 
 	private static Image fgCollapsedImage;
 

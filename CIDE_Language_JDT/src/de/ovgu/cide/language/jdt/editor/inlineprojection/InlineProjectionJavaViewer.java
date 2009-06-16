@@ -45,9 +45,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 
-
-
-@SuppressWarnings(value={"restriction","unchecked"})
+@SuppressWarnings(value = { "restriction", "unchecked" })
 public class InlineProjectionJavaViewer extends JavaSourceViewer implements
 		ITextViewerExtension5 {
 
@@ -58,14 +56,17 @@ public class InlineProjectionJavaViewer extends JavaSourceViewer implements
 			IAnnotationModelListenerExtension {
 
 		/*
-		 * @see org.eclipse.jface.text.source.IAnnotationModelListener#modelChanged(org.eclipse.jface.text.source.IAnnotationModel)
+		 * @see
+		 * org.eclipse.jface.text.source.IAnnotationModelListener#modelChanged
+		 * (org.eclipse.jface.text.source.IAnnotationModel)
 		 */
 		public void modelChanged(IAnnotationModel model) {
 			processModelChanged(model, null);
 		}
 
 		/*
-		 * @see org.eclipse.jface.text.source.IAnnotationModelListenerExtension#modelChanged(org.eclipse.jface.text.source.AnnotationModelEvent)
+		 * @seeorg.eclipse.jface.text.source.IAnnotationModelListenerExtension#
+		 * modelChanged(org.eclipse.jface.text.source.AnnotationModelEvent)
 		 */
 		public void modelChanged(AnnotationModelEvent event) {
 			processModelChanged(event.getAnnotationModel(), event);
@@ -120,13 +121,17 @@ public class InlineProjectionJavaViewer extends JavaSourceViewer implements
 		}
 
 		/*
-		 * @see org.eclipse.jface.text.IDocumentListener#documentAboutToBeChanged(org.eclipse.jface.text.DocumentEvent)
+		 * @see
+		 * org.eclipse.jface.text.IDocumentListener#documentAboutToBeChanged
+		 * (org.eclipse.jface.text.DocumentEvent)
 		 */
 		public void documentAboutToBeChanged(DocumentEvent event) {
 		}
 
 		/*
-		 * @see org.eclipse.jface.text.IDocumentListener#documentChanged(org.eclipse.jface.text.DocumentEvent)
+		 * @see
+		 * org.eclipse.jface.text.IDocumentListener#documentChanged(org.eclipse
+		 * .jface.text.DocumentEvent)
 		 */
 		public void documentChanged(DocumentEvent event) {
 			fExecutionTrigger.removeDocumentListener(this);
@@ -364,8 +369,10 @@ public class InlineProjectionJavaViewer extends JavaSourceViewer implements
 	}
 
 	/*
-	 * @see org.eclipse.jface.text.source.SourceViewer#setDocument(org.eclipse.jface.text.IDocument,
-	 *      org.eclipse.jface.text.source.IAnnotationModel, int, int)
+	 * @see
+	 * org.eclipse.jface.text.source.SourceViewer#setDocument(org.eclipse.jface
+	 * .text.IDocument, org.eclipse.jface.text.source.IAnnotationModel, int,
+	 * int)
 	 */
 	public void setDocument(IDocument document,
 			IAnnotationModel annotationModel, int modelRangeOffset,
@@ -393,7 +400,9 @@ public class InlineProjectionJavaViewer extends JavaSourceViewer implements
 	}
 
 	/*
-	 * @see org.eclipse.jface.text.source.SourceViewer#createVisualAnnotationModel(org.eclipse.jface.text.source.IAnnotationModel)
+	 * @see
+	 * org.eclipse.jface.text.source.SourceViewer#createVisualAnnotationModel
+	 * (org.eclipse.jface.text.source.IAnnotationModel)
 	 */
 	protected IAnnotationModel createVisualAnnotationModel(
 			IAnnotationModel annotationModel) {
@@ -623,8 +632,8 @@ public class InlineProjectionJavaViewer extends JavaSourceViewer implements
 
 	/**
 	 * Returns the first line offset &lt;= <code>offset</code>. If
-	 * <code>testLastLine</code> is <code>true</code> and the offset is on
-	 * last line then <code>offset</code> is returned.
+	 * <code>testLastLine</code> is <code>true</code> and the offset is on last
+	 * line then <code>offset</code> is returned.
 	 * 
 	 * @param document
 	 *            the document
@@ -638,19 +647,19 @@ public class InlineProjectionJavaViewer extends JavaSourceViewer implements
 	 *             if the offset is invalid
 	 * @since 3.2
 	 */
-//	private int toLineStart(IDocument document, int offset, boolean testLastLine)
-//			throws BadLocationException {
-//		if (document == null)
-//			return offset;
-//
-//		if (testLastLine
-//				&& offset >= document.getLineInformationOfOffset(
-//						document.getLength() - 1).getOffset())
-//			return offset;
-//
-//		return document.getLineInformationOfOffset(offset).getOffset();
-//	}
-
+	// private int toLineStart(IDocument document, int offset, boolean
+	// testLastLine)
+	// throws BadLocationException {
+	// if (document == null)
+	// return offset;
+	//
+	// if (testLastLine
+	// && offset >= document.getLineInformationOfOffset(
+	// document.getLength() - 1).getOffset())
+	// return offset;
+	//
+	// return document.getLineInformationOfOffset(offset).getOffset();
+	// }
 	/*
 	 * @see org.eclipse.jface.text.TextViewer#setVisibleRegion(int, int)
 	 */
@@ -662,7 +671,9 @@ public class InlineProjectionJavaViewer extends JavaSourceViewer implements
 	}
 
 	/*
-	 * @see org.eclipse.jface.text.TextViewer#setVisibleDocument(org.eclipse.jface.text.IDocument)
+	 * @see
+	 * org.eclipse.jface.text.TextViewer#setVisibleDocument(org.eclipse.jface
+	 * .text.IDocument)
 	 */
 	protected void setVisibleDocument(IDocument document) {
 		if (!isInlineProjectionMode()) {
@@ -699,7 +710,8 @@ public class InlineProjectionJavaViewer extends JavaSourceViewer implements
 	}
 
 	/*
-	 * @see org.eclipse.jface.text.ITextViewer#overlapsWithVisibleRegion(int,int)
+	 * @see
+	 * org.eclipse.jface.text.ITextViewer#overlapsWithVisibleRegion(int,int)
 	 */
 	public boolean overlapsWithVisibleRegion(int offset, int length) {
 		disableProjection();
@@ -933,8 +945,8 @@ public class InlineProjectionJavaViewer extends JavaSourceViewer implements
 
 	/**
 	 * Adapts the slave visual document of this viewer to the changes described
-	 * in the annotation model event. When the event is <code>null</code>,
-	 * this is identical to a world change event.
+	 * in the annotation model event. When the event is <code>null</code>, this
+	 * is identical to a world change event.
 	 * 
 	 * @param event
 	 *            the annotation model event or <code>null</code>
@@ -1139,8 +1151,8 @@ public class InlineProjectionJavaViewer extends JavaSourceViewer implements
 	 * 
 	 * @param position
 	 *            the position
-	 * @return the ranges that must be collapsed, or <code>null</code> if
-	 *         there are none
+	 * @return the ranges that must be collapsed, or <code>null</code> if there
+	 *         are none
 	 * @since 3.1
 	 */
 	IRegion[] computeCollapsedRegions(Position position) {
@@ -1382,24 +1394,26 @@ public class InlineProjectionJavaViewer extends JavaSourceViewer implements
 	// super.setRangeIndication(offset, length, moveCursor);
 	// }
 
-//	private boolean willAutoExpand(Position position, int offset, int length) {
-//		if (position == null || position.isDeleted())
-//			return false;
-//		// right or left boundary
-//		if (position.getOffset() == offset
-//				|| position.getOffset() + position.getLength() == offset
-//						+ length)
-//			return true;
-//		// completely embedded in given position
-//		if (position.getOffset() < offset
-//				&& offset + length < position.getOffset()
-//						+ position.getLength())
-//			return true;
-//		return false;
-//	}
+	// private boolean willAutoExpand(Position position, int offset, int length)
+	// {
+	// if (position == null || position.isDeleted())
+	// return false;
+	// // right or left boundary
+	// if (position.getOffset() == offset
+	// || position.getOffset() + position.getLength() == offset
+	// + length)
+	// return true;
+	// // completely embedded in given position
+	// if (position.getOffset() < offset
+	// && offset + length < position.getOffset()
+	// + position.getLength())
+	// return true;
+	// return false;
+	// }
 
 	/*
 	 * @see org.eclipse.jface.text.source.SourceViewer#handleDispose()
+	 * 
 	 * @since 3.0
 	 */
 	protected void handleDispose() {
@@ -1408,7 +1422,9 @@ public class InlineProjectionJavaViewer extends JavaSourceViewer implements
 	}
 
 	/*
-	 * @see org.eclipse.jface.text.TextViewer#handleVisibleDocumentAboutToBeChanged(org.eclipse.jface.text.DocumentEvent)
+	 * @see
+	 * org.eclipse.jface.text.TextViewer#handleVisibleDocumentAboutToBeChanged
+	 * (org.eclipse.jface.text.DocumentEvent)
 	 */
 	protected void handleVisibleDocumentChanged(DocumentEvent event) {
 		if (fHandleInlineProjectionChanges
@@ -1449,7 +1465,10 @@ public class InlineProjectionJavaViewer extends JavaSourceViewer implements
 	}
 
 	/*
-	 * @see org.eclipse.jface.text.TextViewer#handleVisibleDocumentAboutToBeChanged(org.eclipse.jface.text.DocumentEvent)
+	 * @see
+	 * org.eclipse.jface.text.TextViewer#handleVisibleDocumentAboutToBeChanged
+	 * (org.eclipse.jface.text.DocumentEvent)
+	 * 
 	 * @since 3.1
 	 */
 	protected void handleVisibleDocumentAboutToBeChanged(DocumentEvent event) {
@@ -1468,7 +1487,9 @@ public class InlineProjectionJavaViewer extends JavaSourceViewer implements
 	}
 
 	/*
-	 * @see org.eclipse.jface.text.ITextViewerExtension5#getCoveredModelRanges(org.eclipse.jface.text.IRegion)
+	 * @see
+	 * org.eclipse.jface.text.ITextViewerExtension5#getCoveredModelRanges(org
+	 * .eclipse.jface.text.IRegion)
 	 */
 	public IRegion[] getCoveredModelRanges(IRegion modelRange) {
 		if (fInformationMapping == null)
@@ -1703,6 +1724,14 @@ public class InlineProjectionJavaViewer extends JavaSourceViewer implements
 			textWidget.setSelection(widgetCaret);
 	}
 
+//	@Override
+//	public IRegion modelRange2WidgetRange(IRegion widgetRange) {
+//		// TODO Auto-generated method stub
+//		IRegion result = super.modelRange2WidgetRange(widgetRange);
+//		System.out.println(widgetRange+" -> "+result);
+//		return result;
+//	}
+
 	/**
 	 * Adapts the behavior of the super class to respect line based folding.
 	 * 
@@ -1727,7 +1756,7 @@ public class InlineProjectionJavaViewer extends JavaSourceViewer implements
 		 * may interact with the selection S in various ways:
 		 * 
 		 * A) P.widget_offset lies at the caret, S.widget_length is zero.
-		 * Requirement 1 applies. S is *behind* P (done so by
+		 * Requirement 1 applies. S isbehind P (done so by
 		 * widgetRange2ModelRange).
 		 * 
 		 * B) P.widget_offset lies inside the widget selection. This case is
@@ -1750,7 +1779,7 @@ public class InlineProjectionJavaViewer extends JavaSourceViewer implements
 		int modelOffset = modelSelection.getOffset();
 		int modelEndOffset = modelOffset + modelSelection.getLength();
 
-		/* Case A: never expand a zero-length selection. S is *behind* P. */
+		/* Case A: never expand a zero-length selection. S isbehind P. */
 		if (widgetSelection.y == 0)
 			return new Point(modelEndOffset, 0);
 
@@ -1824,7 +1853,7 @@ public class InlineProjectionJavaViewer extends JavaSourceViewer implements
 
 	/*
 	 * @see org.eclipse.jface.text.TextViewer#findAndSelect(int,
-	 *      java.lang.String, boolean, boolean, boolean, boolean)
+	 * java.lang.String, boolean, boolean, boolean, boolean)
 	 */
 	protected int findAndSelect(int startPosition, String findString,
 			boolean forwardSearch, boolean caseSensitive, boolean wholeWord,
@@ -1859,7 +1888,7 @@ public class InlineProjectionJavaViewer extends JavaSourceViewer implements
 
 	/*
 	 * @see org.eclipse.jface.text.TextViewer#findAndSelectInRange(int,
-	 *      java.lang.String, boolean, boolean, boolean, int, int, boolean)
+	 * java.lang.String, boolean, boolean, boolean, int, int, boolean)
 	 */
 	protected int findAndSelectInRange(int startPosition, String findString,
 			boolean forwardSearch, boolean caseSensitive, boolean wholeWord,
@@ -1924,7 +1953,8 @@ public class InlineProjectionJavaViewer extends JavaSourceViewer implements
 		if (fInlineProjectionListeners != null) {
 			Iterator e = new ArrayList(fInlineProjectionListeners).iterator();
 			while (e.hasNext()) {
-				IInlineProjectionListener l = (IInlineProjectionListener) e.next();
+				IInlineProjectionListener l = (IInlineProjectionListener) e
+						.next();
 				l.inlineProjectionEnabled();
 			}
 		}
@@ -1938,7 +1968,8 @@ public class InlineProjectionJavaViewer extends JavaSourceViewer implements
 		if (fInlineProjectionListeners != null) {
 			Iterator e = new ArrayList(fInlineProjectionListeners).iterator();
 			while (e.hasNext()) {
-				IInlineProjectionListener l = (IInlineProjectionListener) e.next();
+				IInlineProjectionListener l = (IInlineProjectionListener) e
+						.next();
 				l.inlineProjectionDisabled();
 			}
 		}
