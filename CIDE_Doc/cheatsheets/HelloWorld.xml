@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cheatsheet title="Create a Hello World application">
+   <intro
+         href="/org.eclipse.platform.doc.user/reference/ref-cheatsheets.htm">
+      <description>
+         UNDER CONSTRUCTION!
+
+If you need help at any step, click the (?) to the right. Let&apos;s get started!
+      </description>
+   </intro>
+   <item title="Run your Java application" dialog="false" skip="false">
+      <description>
+         <br/>
+Congratulations! You have successfully created a Hello World
+application!
+      </description>
+   </item>
+</cheatsheet>

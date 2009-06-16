@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Cide_Doc Plug-in
+Bundle-SymbolicName: de.ovgu.cide.doc;singleton:=true
+Bundle-Version: 1.0.0

@@ -1,0 +1,2 @@
+INDEX VERSION 1.125+H:\cide_examples\.metadata\.plugins\org.eclipse.jdt.core
+4276239547.index

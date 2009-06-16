@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS TYPE="org.eclipse.help.toc"?>
+
+<toc label="CIDE Guide" topic="http://wwwiti.cs.uni-magdeburg.de/iti_db/research/cide/">
+   <topic href="helpcontent/gettingStarted.html" label="Top">
+   </topic>
+   <topic href="http://wwwiti.cs.uni-magdeburg.de/iti_db/research/cide/#intro" label="Description">
+   </topic>
+   <topic href="http://wwwiti.cs.uni-magdeburg.de/iti_db/research/cide/#publications" label="Publication">
+   </topic>
+   <topic href="http://wwwiti.cs.uni-magdeburg.de/iti_db/research/cide/#howto" label="Howto">
+   </topic>
+   <topic href="http://wwwiti.cs.uni-magdeburg.de/iti_db/research/cide/#download" label="Download">
+   </topic>
+   <topic href="http://wwwiti.cs.uni-magdeburg.de/iti_db/research/cide/#contact" label="Contact">
+   </topic>
+</toc>

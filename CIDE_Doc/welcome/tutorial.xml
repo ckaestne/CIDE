@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<introContent>
+  <!-- Extension to the SDK Tutorials Page. -->
+  <extensionContent id="deovgucidedoc_tutorial" name="CIDE Tutorials" style="css/tutorials.css" path="tutorials/@">
+    <group label="CIDE Tutorials" id="cide" style-id="content-group">
+      <link url="http://org.eclipse.ui.intro/showStandby?partId=org.eclipse.platform.cheatsheet&amp;input=de.ovgu.cide.doc.cheatsheet.helloworld" label="Create a CIDE - Hello World project" id="cide-hello-world" style-id="content-link">
+        <text>Create a simple CIDE project that ...?!</text>
+      </link>
+    </group>
+  </extensionContent>
+</introContent>
