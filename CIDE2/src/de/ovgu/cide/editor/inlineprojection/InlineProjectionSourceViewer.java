@@ -1700,6 +1700,15 @@ public class InlineProjectionSourceViewer extends ProjectionViewer implements
 			textWidget.setSelection(widgetCaret);
 	}
 
+	
+//	@Override
+//	public IRegion modelRange2WidgetRange(IRegion widgetRange) {
+//		// TODO Auto-generated method stub
+//		IRegion result = super.modelRange2WidgetRange(widgetRange);
+//		System.out.println(widgetRange+" -> "+result);
+//		return result;
+//	}
+	
 	/**
 	 * Adapts the behavior of the super class to respect line based folding.
 	 * 
