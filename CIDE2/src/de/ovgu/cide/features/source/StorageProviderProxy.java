@@ -49,7 +49,6 @@ public class StorageProviderProxy implements IStorageProvider {
 		return target.storeNewAlternative(project, annotatedResource, alternative, id2oldText);
 	}
 	
-	@Override
 	public Map<String, List<Alternative>> getAllAlternatives(IProject project, Object annotatedResource, IFeatureModelWithID featureModel) {
 		if (target == null)
 			loadTarget();

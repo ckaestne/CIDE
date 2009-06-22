@@ -31,23 +31,19 @@ public class ProjectionReconcilingStrategy implements IReconcilingStrategy,
 	private List<CodeSegment> fRemovedPositions = new ArrayList<CodeSegment>();
 	private List<ColoredInlineProjectionAnnotation> oldAnnotations = new ArrayList<ColoredInlineProjectionAnnotation>();
 
-	@Override
 	public void reconcile(DirtyRegion dirtyRegion, IRegion subRegion) {
 		initialReconcile();
 	}
 
-	@Override
 	public void reconcile(IRegion partition) {
 		initialReconcile();
 	}
 
-	@Override
 	public void setDocument(IDocument document) {
 		this.fDocument = document;
 
 	}
 
-	@Override
 	public void initialReconcile() {
 		try {
 			editor.getSourceFile().refreshAST();
@@ -99,7 +95,6 @@ public class ProjectionReconcilingStrategy implements IReconcilingStrategy,
 		}
 	}
 
-	@Override
 	public void setProgressMonitor(IProgressMonitor monitor) {
 	}
 

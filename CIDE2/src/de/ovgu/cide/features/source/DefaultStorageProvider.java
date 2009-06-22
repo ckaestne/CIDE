@@ -260,12 +260,10 @@ public class DefaultStorageProvider implements IStorageProvider {
 		return false;
 	}
 
-	@Override
 	public boolean storeNewAlternative(IProject project, Object annotatedResource, Alternative alternative, Map<String, String> id2oldText) {
 		return false;
 	}
 
-	@Override
 	public Map<String, List<Alternative>> getAllAlternatives(IProject project, Object annotatedResource, IFeatureModelWithID featureModel) {
 		return null;
 	}

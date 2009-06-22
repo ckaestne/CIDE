@@ -25,7 +25,6 @@ public class CreateAlternativeAction extends Action {
 	public void run() {
 		InputDialog dialog = new InputDialog(null, "Alternative name", "Name of new alternative", null, 
 			new IInputValidator() {
-				@Override
 				public String isValid(String newText) {
 					if ((newText == null) || (newText.length() < 1))
 						return "";

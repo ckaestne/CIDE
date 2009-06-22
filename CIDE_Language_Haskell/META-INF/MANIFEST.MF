@@ -3,5 +3,6 @@ Bundle-ManifestVersion: 2
 Bundle-Name: CIDE Language Plugin for Haskell (approx)
 Bundle-SymbolicName: de.ovgu.cide.language.haskell;singleton:=true
 Bundle-Version: 1.0.1.qualifier
-Require-Bundle: de.ovgu.cide.ast
+Require-Bundle: de.ovgu.cide.ast,
+ org.junit4;bundle-version="4.5.0";resolution:=optional
 Bundle-Vendor: Christian Kaestner, University of Magdeburg

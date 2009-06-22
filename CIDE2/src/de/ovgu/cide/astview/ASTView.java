@@ -392,7 +392,6 @@ public class ASTView extends ViewPart implements IShowInSource {
 		public void astColorChanged(final ASTColorChangedEvent event) {
 			if (event.getColoredSourceFile() == fView.fColoredJavaSourceFile)
 				Display.getDefault().asyncExec(new Runnable() {
-					@Override
 					public void run() {
 						fView.colorUpdated(event.getAffectedNodes());
 					}
@@ -402,7 +401,6 @@ public class ASTView extends ViewPart implements IShowInSource {
 		public void astRefreshed(ColoredSourceFile sourceFile) {
 			if (sourceFile == fView.fColoredJavaSourceFile)
 				Display.getDefault().asyncExec(new Runnable() {
-					@Override
 					public void run() {
 						fView.refreshAST();
 					}
@@ -420,7 +418,6 @@ public class ASTView extends ViewPart implements IShowInSource {
 					.getResource().getProject()
 					&& event.anyChangeOf(ChangeType.COLOR))
 				Display.getDefault().asyncExec(new Runnable() {
-					@Override
 					public void run() {
 						fView.fViewer.refresh();
 					}

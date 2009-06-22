@@ -26,7 +26,6 @@ public abstract class AbstractJDTTypingCheckWithResolution extends
 		super(file, typingProvider, source);
 	}
 
-	@Override
 	public ITypingMarkerResolution[] getResolutions(IMarker marker) {
 		Set<IFeature> declColors = getTargetColors();
 		if (declColors == null) {

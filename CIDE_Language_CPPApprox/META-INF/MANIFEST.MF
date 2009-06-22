@@ -4,5 +4,6 @@ Bundle-Name: CIDE Language Plugin for C++ (approx)
 Bundle-SymbolicName: de.ovgu.cide.language.cppapprox;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Require-Bundle: de.ovgu.cide.ast,
- de.ovgu.cide.core
+ de.ovgu.cide.core,
+ org.junit4;bundle-version="4.5.0";resolution:=optional
 Bundle-Vendor: Christian Kaestner, University of Magdeburg

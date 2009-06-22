@@ -36,7 +36,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
-import com.sun.org.apache.xerces.internal.impl.validation.ValidationManager;
 
 import de.ovgu.cide.features.source.FileColorChangeListener;
 import de.ovgu.cide.navigator.FileColorUpdater;
@@ -95,7 +94,6 @@ public class CIDECorePlugin extends AbstractUIPlugin {
 		log(new Status(IStatus.ERROR, getPluginId(), IStatus.ERROR, message, e));
 	}
 
-	private ValidationManager validator;
 	private IResourceChangeListener fileColorChangeListener;
 	private FileColorUpdater fileColorUpdater;
 
@@ -122,7 +120,6 @@ public class CIDECorePlugin extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 
-		validator = new ValidationManager();
 
 		ResourcesPlugin.getWorkspace().addResourceChangeListener(
 				fileColorChangeListener);
@@ -282,7 +279,4 @@ public class CIDECorePlugin extends AbstractUIPlugin {
 			}
 	}
 
-	public ValidationManager getValidator() {
-		return validator;
-	}
 }

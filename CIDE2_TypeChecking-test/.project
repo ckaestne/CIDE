@@ -3,7 +3,6 @@
 	<name>CIDE2_TypeChecking-test</name>
 	<comment></comment>
 	<projects>
-		<project>CIDE_Language_Bali-test</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

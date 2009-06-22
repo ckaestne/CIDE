@@ -25,7 +25,6 @@ public class PythonLanguageExtension implements ILanguageExtension {
 
 	public static final String LANGUAGE_EXTENSION_ID = "de.ovgu.cide.language.python";
 
-	@Override
 	public String getId() {
 		return LANGUAGE_EXTENSION_ID;
 	}

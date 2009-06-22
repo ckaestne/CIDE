@@ -32,112 +32,90 @@ public class AstidWrapper implements IASTNode {
 		this.astid = ASTID.id(node);
 	}
 
-	@Override
 	public void accept(IASTVisitor visitor) {
 
 	}
 
-	@Override
 	public IASTNode deepCopy() {
 		return null;
 	}
 
-	@Override
 	public List<IASTNode> getChildren() {
 		return null;
 	}
 
-	@Override
 	public String getDisplayName() {
 		return null;
 	}
 
-	@Override
 	public String getId() {
 		return astid;
 	}
 
-	@Override
 	public int getLength() {
 		return 0;
 	}
 
-	@Override
 	public Property getLocationInParent() {
 		return null;
 	}
 
-	@Override
 	public IASTNode getParent() {
 		return null;
 	}
 
-	@Override
 	public List<Property> getProperties() {
 		return null;
 	}
 
-	@Override
 	public Property getProperty(String name) {
 		return null;
 	}
 
-	@Override
 	public ISourceFile getRoot() {
 		return null;
 	}
 
-	@Override
 	public int getStartPosition() {
 		return 0;
 	}
 
-	@Override
 	public IASTNode getWrappee() {
 		return null;
 	}
 
-	@Override
 	public boolean isOptional() {
 		return false;
 	}
 
-	@Override
 	public boolean isWrapper() {
 		return false;
 	}
 
-	@Override
 	public void notifyPropertyChanged(Property property) {
 
 	}
 
-	@Override
 	public void remove() {
 
 	}
 
-	@Override
 	public String render() {
 		return null;
 	}
 
-	@Override
 	public void replaceSubtreeWith(IASTNode newNode) {
 
 	}
 
-	@Override
 	public void setId(String id) {
 
 	}
 
-	@Override
 	public void setParent(IASTNode parentNode, Property parentProperty) {
 
 	}
 
-	@Override
 	public void setParentProperty(Property parentProperty) {
 
 	}

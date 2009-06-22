@@ -64,7 +64,6 @@ public class ColoredSourceViewerConfiguration extends SourceViewerConfiguration 
 		return new IAnnotationHover() {
 
 			@SuppressWarnings("unchecked")
-			@Override
 			public String getHoverInfo(ISourceViewer sourceViewer,
 					int lineNumber) {
 
