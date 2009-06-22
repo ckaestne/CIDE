@@ -14,7 +14,6 @@ import de.ovgu.cide.typing.model.ITypingCheckWithResolution;
 
 public class ResolutionGenerator implements IMarkerResolutionGenerator {
 
-	@Override
 	public IMarkerResolution[] getResolutions(IMarker marker) {
 		ITypingCheck check = findResonsibleCheck(marker);
 

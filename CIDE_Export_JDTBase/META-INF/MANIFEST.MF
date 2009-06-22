@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: CIDE JDT Export Framework
 Bundle-SymbolicName: de.ovgu.cide.export.jdt;singleton:=true
-Bundle-Version: 0.1.0.qualifier
+Bundle-Version: 2.1.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui.ide,
@@ -20,3 +20,4 @@ Require-Bundle: org.eclipse.core.runtime,
  de.ovgu.cide.typing;bundle-version="0.1.0"
 Export-Package: de.ovgu.cide.export,
  de.ovgu.cide.export.useroptions
+Bundle-Vendor: Christian Kaestner, University of Magdeburg

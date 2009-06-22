@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: CIDE2 Type Checking Plug-in
 Bundle-SymbolicName: de.ovgu.cide.typing;singleton:=true
-Bundle-Version: 0.1.0.qualifier
+Bundle-Version: 2.1.0.qualifier
 Bundle-Activator: de.ovgu.cide.typing.CIDETypingPlugin
 Require-Bundle: org.eclipse.core.runtime,
  de.ovgu.cide.ast;bundle-version="1.0.2",
@@ -14,6 +14,6 @@ Require-Bundle: org.eclipse.core.runtime,
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Import-Package: org.eclipse.core.resources
-Bundle-Vendor: Christian Kaestner
+Bundle-Vendor: Christian Kaestner, University of Magdeburg
 Export-Package: de.ovgu.cide.typing.internal.manager,
  de.ovgu.cide.typing.model

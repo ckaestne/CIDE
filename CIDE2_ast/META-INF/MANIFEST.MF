@@ -1,8 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: CIDE_ast Plug-in
+Bundle-Name: CIDE General AST Framework (gCIDE Model)
 Bundle-SymbolicName: de.ovgu.cide.ast
-Bundle-Version: 1.0.2.qualifier
+Bundle-Version: 2.1.0.qualifier
+Bundle-Vendor: Christian Kaestner, University of Magdeburg
 Export-Package: cide.features,
  cide.gast,
  cide.gparser;uses:="cide.gast",

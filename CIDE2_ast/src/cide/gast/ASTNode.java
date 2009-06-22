@@ -240,7 +240,6 @@ public abstract class ASTNode implements IASTNode {
 		return getStartPosition();
 	}
 
-	@Override
 	public boolean isWrapper() {
 		return getWrappee() != null;
 	}
@@ -251,7 +250,6 @@ public abstract class ASTNode implements IASTNode {
 	 * 
 	 * the JDT bridge uses a different mechanism
 	 */
-	@Override
 	public IASTNode getWrappee() {
 		Property lip = getLocationInParent();
 		if (!(lip instanceof PropertyWrapper))

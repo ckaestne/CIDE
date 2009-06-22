@@ -2,9 +2,9 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: CIDE Core
 Bundle-SymbolicName: de.ovgu.cide.core;singleton:=true
-Bundle-Version: 1.3.1.qualifier
+Bundle-Version: 2.1.0.qualifier
 Bundle-Activator: de.ovgu.cide.CIDECorePlugin
-Bundle-Vendor: Christian Kaestner
+Bundle-Vendor: Christian Kaestner, University of Magdeburg
 Bundle-Localization: plugin
 Export-Package: de.ovgu.cide,
  de.ovgu.cide.af,

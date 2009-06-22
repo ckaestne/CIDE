@@ -1,8 +1,8 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: CIDE_Language_JDT Plug-in
+Bundle-Name: CIDE Advanced Java Support (JDT)
 Bundle-SymbolicName: de.ovgu.cide.language.jdt;singleton:=true
-Bundle-Version: 0.1.0.qualifier
+Bundle-Version: 2.1.0.qualifier
 Require-Bundle: de.ovgu.cide.ast,
  de.ovgu.cide.core,
  org.eclipse.core.resources,
@@ -18,3 +18,4 @@ Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: de.ovgu.cide.configuration.jdt,
  de.ovgu.cide.language.jdt,
  de.ovgu.cide.typing.jdt
+Bundle-Vendor: Christian Kaestner, University of Magdeburg

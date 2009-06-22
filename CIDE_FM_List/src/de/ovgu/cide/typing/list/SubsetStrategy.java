@@ -31,17 +31,14 @@ public class SubsetStrategy implements IEvaluationStrategy {
 		// not needed
 	}
 
-	@Override
 	public boolean areMutualExclusive(IFeatureModel featureModel, Set<IFeature> context, List<Set<IFeature>> featureSets) {
 		return (featureSets.size() < 2);
 	}
 
-	@Override
 	public boolean mayBeMissing(IFeatureModel featureModel, Set<IFeature> context, List<Set<IFeature>> featureSets) {
 		return (!featureSets.isEmpty());
 	}
 	
-	@Override
 	public boolean exists(IFeatureModel featureModel, Set<IFeature> features) {
 		return true;
 	}

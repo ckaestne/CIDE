@@ -102,37 +102,30 @@ public class FeatureModelProxy implements IFeatureModelWithID {
 
 	}
 
-	@Override
 	public IFeature createNewFeature() throws UnsupportedOperationException {
 		return getTarget().createNewFeature();
 	}
 
-	@Override
 	public AbstractConfigurationPage getConfigurationPage(String pageName) {
 		return getTarget().getConfigurationPage(pageName);
 	}
 
-	@Override
 	public Set<IFeature> getFeatures() {
 		return getTarget().getFeatures();
 	}
 
-	@Override
 	public IProject getProject() {
 		return getTarget().getProject();
 	}
 
-	@Override
 	public Set<IFeature> getVisibleFeatures() {
 		return getTarget().getVisibleFeatures();
 	}
 
-	@Override
 	public boolean isValidSelection(Set<IFeature> selection) {
 		return getTarget().isValidSelection(selection);
 	}
 
-	@Override
 	public IFeature getFeature(long id) {
 		return getTarget().getFeature(id);
 	}

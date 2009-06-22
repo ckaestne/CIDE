@@ -55,21 +55,18 @@ public class EvaluationStrategyProxy implements IEvaluationStrategy {
 		return target.implies(featureModel, source, targete);
 	}
 	
-	@Override
 	public boolean areMutualExclusive(IFeatureModel featureModel, Set<IFeature> context, List<Set<IFeature>> featureSets) {
 		if (target == null)
 			loadTarget();
 		return target.areMutualExclusive(featureModel, context, featureSets);
 	}
 	
-	@Override
 	public boolean mayBeMissing(IFeatureModel featureModel, Set<IFeature> context, List<Set<IFeature>> featureSets) {
 		if (target == null)
 			loadTarget();
 		return target.mayBeMissing(featureModel, context, featureSets);
 	}
 	
-	@Override
 	public boolean exists(IFeatureModel featureModel, Set<IFeature> features) {
 		if (target == null)
 			loadTarget();

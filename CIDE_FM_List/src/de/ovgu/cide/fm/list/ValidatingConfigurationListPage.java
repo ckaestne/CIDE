@@ -34,13 +34,11 @@ public class ValidatingConfigurationListPage extends
 
 		table.addSelectionListener(new SelectionListener() {
 
-			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
 				// TODO Auto-generated method stub
 
 			}
 
-			@Override
 			public void widgetSelected(SelectionEvent e) {
 				checkList();
 			}

@@ -20,7 +20,7 @@ import de.ovgu.cide.features.source.ColoredSourceFile;
 import de.ovgu.cide.typing.CIDETypingPlugin;
 
 public class ForceValidationAction implements IWorkbenchWindowActionDelegate, IObjectActionDelegate, IEditorActionDelegate {
-	private final List<IProject> projects = new ArrayList<IProject>();
+	final List<IProject> projects = new ArrayList<IProject>();
 	private ColoredTextEditor activeEditor;
 
 	public void run(IAction action) {
@@ -81,7 +81,6 @@ public class ForceValidationAction implements IWorkbenchWindowActionDelegate, IO
 
 	public void setActivePart(IAction action, IWorkbenchPart targetPart) { }
 	
-	@Override
 	public void setActiveEditor(IAction action, IEditorPart targetEditor) {
 		if (targetEditor instanceof ColoredTextEditor) {
 			ColoredSourceFile sourceFile = ((ColoredTextEditor) targetEditor).getSourceFile();

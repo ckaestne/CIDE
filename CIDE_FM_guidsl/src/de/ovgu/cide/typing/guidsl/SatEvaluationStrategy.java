@@ -85,7 +85,6 @@ public class SatEvaluationStrategy extends AbstractCachingEvaluationStrategy {
 		}
 	}
 
-	@Override
 	public boolean areMutualExclusive(IFeatureModel featureModel,
 			Set<IFeature> context, List<Set<IFeature>> featureSets) {
 		// ignore empty feature models
@@ -111,7 +110,6 @@ public class SatEvaluationStrategy extends AbstractCachingEvaluationStrategy {
 		}
 	}
 
-	@Override
 	public boolean mayBeMissing(IFeatureModel featureModel,
 			Set<IFeature> context, List<Set<IFeature>> featureSets) {
 		// ignore empty feature models

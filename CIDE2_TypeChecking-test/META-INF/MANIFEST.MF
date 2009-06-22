@@ -2,8 +2,8 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: CIDE Typing Test Fragment
 Bundle-SymbolicName: de.ovgu.cide.typeing-test
-Bundle-Version: 1.0.0
-Fragment-Host: de.ovgu.cide.typing;bundle-version="0.1.0"
+Bundle-Version: 2.1.0.qualifier
+Fragment-Host: de.ovgu.cide.typing;bundle-version="2.1.0"
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: de.ovgu.cide.typing.model
 Require-Bundle: de.ovgu.cide.language.bali;bundle-version="1.0.0"

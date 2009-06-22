@@ -123,13 +123,11 @@ public class BaliTypingProvider extends AbstractFileBasedTypingProvider {
 		return new FileChecker(file).run();
 	}
 
-	@Override
 	public void prepareReevaluation(Collection<ColoredSourceFile> files,
 			IProgressMonitor monitor) {
 		// nothing to do
 	}
 
-	@Override
 	public void prepareReevaluationAll(IProgressMonitor monitor) {
 		// nothing to do
 	}

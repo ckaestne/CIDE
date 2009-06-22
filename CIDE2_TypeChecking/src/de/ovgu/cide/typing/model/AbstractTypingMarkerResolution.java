@@ -13,7 +13,6 @@ public abstract class AbstractTypingMarkerResolution implements ITypingMarkerRes
 		return rel;
 	}
 
-	@Override
 	public int compareTo(ITypingMarkerResolution o) {
 		if (o.getRelevance() > this.getRelevance())
 			return 1;
