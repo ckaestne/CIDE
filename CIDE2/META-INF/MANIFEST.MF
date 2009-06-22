@@ -41,7 +41,6 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui.navigator.resources,
  org.eclipse.ui.navigator,
  org.eclipse.ant.core,
- org.apache.ant,
- org.junit4;bundle-version="[4.0.0,5.0.0)";resolution:=optional
+ org.apache.ant
 Eclipse-LazyStart: true
 Bundle-RequiredExecutionEnvironment: J2SE-1.5

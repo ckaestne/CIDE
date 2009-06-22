@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="de.ovgu.cide.guidsl"
-      label="CIDE: GUIDSL Feature Model (Optional)"
-      version="0.1.0.qualifier"
+      id="de.ovgu.cide.samples"
+      label="CIDE: Examples (Optional)"
+      version="2.1.0.qualifier"
       provider-name="Christian Kaestner / University of Magdeburg">
 
    <description url="http://www.fosd.de/cide">
-      Extension for CIDE with a more powerful feature model, based on the guidsl format. This includes the graphical tree editor from FeatureIDE.
+      Provides a number of colored example projects in various languages originating from various projects and case studies.
    </description>
 
    <copyright>
@@ -45,21 +45,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
    </requires>
 
    <plugin
-         id="de.ovgu.cide.fm.guidsl"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="FeatureIDE_FM_Core"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="FeatureIDE_FM_UI"
+         id="de.ovgu.cide.samples"
          download-size="0"
          install-size="0"
          version="0.0.0"

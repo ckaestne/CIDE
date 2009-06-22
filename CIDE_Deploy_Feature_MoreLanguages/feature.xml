@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="de.ovgu.cide.morelanguages"
-      label="CIDE Core (Required)"
+      label="CIDE: Language Pack (Optional)"
       version="2.1.0.qualifier"
       provider-name="Christian Kaestner / University of Magdeburg">
 
    <description url="http://www.fosd.de/cide">
-      The Colored Integrated Development Environment (CIDE) is a software product line tool for analyzing and decomposing legacy code. It follows the paradigm of virtual separation of concerns, i.e., developers do not physically extract the feature code, but just annotate code fragments inside the original code and use tool support for views and navigation. For annotation, background colors are used, so that code fragments belonging to a feature are shown with a background color; hence the name.  
-
-   CIDE is a research project. It is used in various branches of software engineering research for feature-oriented development, e.g., granularity of feature extensions, safe composition, feature scoping, extractive SPL adoption model, language-independent feature-decomposition, feature interaction analysis, feature location/feature mining, feature modularity, and many more.
+      Extension for CIDE that adds a number of additional languages: ANTLR, C (experimental), C++ (experimental), C#, ECMAScript (JavaScript), Featherweight Java, Java 1.5, gCIDE, Haskell, JavaCC, and Python
    </description>
 
    <copyright>
@@ -86,13 +84,6 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 
    <plugin
          id="de.ovgu.cide.language.ecmascript"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="de.ovgu.cide.language.fj"
          download-size="0"
          install-size="0"
          version="0.0.0"

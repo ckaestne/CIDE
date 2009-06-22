@@ -8,8 +8,8 @@ Bundle-Activator: de.ovgu.cide.fm.list.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.core.resources,
- de.ovgu.cide.core,
- de.ovgu.cide.typing;bundle-version="0.1.0",
- de.ovgu.cide.ast;bundle-version="1.0.2"
+ de.ovgu.cide.core;bundle-version="2.1.0",
+ de.ovgu.cide.typing;bundle-version="2.1.0",
+ de.ovgu.cide.ast;bundle-version="2.1.0"
 Bundle-ActivationPolicy: lazy
 Export-Package: de.ovgu.cide.typing.list

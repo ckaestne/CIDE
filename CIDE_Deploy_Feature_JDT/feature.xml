@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="de.ovgu.cide.jdt"
-      label="CIDE: Advanced Java Support (Optional)"
-      version="0.1.0.qualifier"
+      label="CIDE: Advanced Java Support (Recommended)"
+      version="2.1.0.qualifier"
       provider-name="Christian Kaestner / University of Magdeburg">
 
    <description url="http://www.fosd.de/cide">
-      Java Editor for CIDE, based on the JDT Editor. With syntax highlighting, etc. Open Java files with the &quot;Colored Compilation Unit Editor&quot;.
+      Java Editor for CIDE, based on the JDT Editor. With syntax highlighting, type-checking, etc. Open Java files with the &quot;Colored Compilation Unit Editor&quot;.
+
+Additionally import and export of annotated Java code to AHEAD, FeatureHouse, AspectJ, CPP, and Munge is provided (experimental)
    </description>
 
    <copyright>
@@ -43,6 +45,34 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 
    <plugin
          id="de.ovgu.cide.language.jdt"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="de.ovgu.cide.import.jak"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="de.ovgu.cide.export.jdt"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="de.ovgu.cide.export.physical"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="de.ovgu.cide.export.virtual"
          download-size="0"
          install-size="0"
          version="0.0.0"

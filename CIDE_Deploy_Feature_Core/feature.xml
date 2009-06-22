@@ -2,7 +2,7 @@
 <feature
       id="de.ovgu.cide.core"
       label="CIDE Core (Required)"
-      version="2.0.1.qualifier"
+      version="2.1.0.qualifier"
       provider-name="Christian Kaestner / University of Magdeburg">
 
    <description url="http://www.fosd.de/cide">
@@ -74,84 +74,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
          unpack="false"/>
 
    <plugin
-         id="de.ovgu.cide.language.antlr"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="de.ovgu.cide.language.bali"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="de.ovgu.cide.language.c"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="de.ovgu.cide.language.capprox"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="de.ovgu.cide.language.cppapprox"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="de.ovgu.cide.language.cs"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="de.ovgu.cide.language.ecmascript"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="de.ovgu.cide.language.fj"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="de.ovgu.cide.language.gcide"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="de.ovgu.cide.language.haskell"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="de.ovgu.cide.language.java"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="de.ovgu.cide.language.javacc"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -166,6 +89,20 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 
    <plugin
          id="de.ovgu.cide.language.xml"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="de.ovgu.cide.typing"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="de.ovgu.cide.doc"
          download-size="0"
          install-size="0"
          version="0.0.0"
