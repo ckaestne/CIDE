@@ -4,6 +4,6 @@ Bundle-Name: CIDE Language Plugin for Python
 Bundle-SymbolicName: de.ovgu.cide.language.python;singleton:=true
 Bundle-Version: 2.1.0.qualifier
 Export-Package: tmp.generated_python
-Require-Bundle: de.ovgu.cide.ast,
- de.ovgu.cide.core
+Require-Bundle: de.ovgu.cide.ast;bundle-version="2.1.0",
+ de.ovgu.cide.core;bundle-version="2.1.0"
 Bundle-Vendor: Christian Kaestner, University of Magdeburg
