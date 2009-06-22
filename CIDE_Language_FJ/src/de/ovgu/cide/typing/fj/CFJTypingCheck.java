@@ -46,17 +46,14 @@ public abstract class CFJTypingCheck implements ITypingCheck {
 		return false;
 	}
 
-	@Override
 	public String getErrorMessage() {
 		return errorMessage;
 	}
 
-	@Override
 	public ColoredSourceFile getFile() {
 		return file;
 	}
 
-	@Override
 	public Severity getSeverity() {
 		return Severity.ERROR;
 	}
