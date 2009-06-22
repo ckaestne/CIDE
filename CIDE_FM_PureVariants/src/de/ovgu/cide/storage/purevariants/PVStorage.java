@@ -2,6 +2,7 @@ package de.ovgu.cide.storage.purevariants;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
@@ -11,14 +12,15 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 
-
 import com.ps.consul.eclipse.ui.mapping.MappedObject;
 import com.ps.consul.eclipse.ui.mapping.Mapping;
 import com.ps.consul.eclipse.ui.mapping.Rule;
 import com.ps.xml.ID;
 
+import de.ovgu.cide.af.Alternative;
 import de.ovgu.cide.features.IFeature;
 import de.ovgu.cide.features.IFeatureModel;
+import de.ovgu.cide.features.IFeatureModelWithID;
 import de.ovgu.cide.features.source.IStorageProvider;
 import de.ovgu.cide.fm.purevariants.PVFeatureModel;
 import de.ovgu.cide.fm.purevariants.RuleAdapter;
@@ -71,25 +73,27 @@ public class PVStorage implements IStorageProvider {
 		Set<String> result = new HashSet<String>();
 		int p;
 		while ((p = attributeValue.indexOf('#')) >= 0) {
-			result.add(attributeValue.substring(0, p ));
+			result.add(attributeValue.substring(0, p));
 			attributeValue = attributeValue.substring(p + 1);
 		}
 		return result;
 	}
 
 	public boolean storeAnnotations(IProject project, Object annotatedResource,
-			Map<String, Set<IFeature>> annotations, IProgressMonitor monitor)
+			Map<String, Set<IFeature>> annotations,
+			Map<String, Boolean> isOptional,
+			Map<String, List<String>> parentIDs, IProgressMonitor monitor)
 			throws CoreException {
 		String resourceId = getResourceId(annotatedResource);
 		Map<IFeature, Set<String>> transformedAnnotations = transformAnnotations(annotations);
 
-		Mapping mapping=null;
+		Mapping mapping = null;
 		for (Entry<IFeature, Set<String>> entry : transformedAnnotations
 				.entrySet()) {
 			storeAnnotation(resourceId, entry.getKey(), entry.getValue());
-			mapping=((RuleAdapter)entry.getKey()).getMapping();
+			mapping = ((RuleAdapter) entry.getKey()).getMapping();
 		}
-		if (mapping!=null)
+		if (mapping != null)
 			mapping.save();
 
 		return true;
@@ -147,6 +151,28 @@ public class PVStorage implements IStorageProvider {
 			result.put(f, locations);
 		}
 		locations.add(key);
+	}
+
+	public boolean activateAlternative(IProject project,
+			Object annotatedResource, Alternative alternative,
+			Map<String, String> id2oldText) {
+		return false;
+	}
+
+	public boolean canHandleAlternatives() {
+		return false;
+	}
+
+	public Map<String, List<Alternative>> getAllAlternatives(IProject project,
+			Object annotatedResource, IFeatureModelWithID featureModel) {
+		return null;
+	}
+
+	public boolean storeNewAlternative(IProject project,
+			Object annotatedResource, Alternative alternative,
+			Map<String, String> id2oldText) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }
