@@ -71,7 +71,7 @@ public class ColoredEditorExtensions {
 	}
 
 	private IColoredEditor editor;
-	private AlternativeAnnotationManager altAnnotationManager;
+//	private AlternativeAnnotationManager altAnnotationManager;
 
 	public ColoredEditorExtensions(IColoredEditor editor) {
 		this.editor = editor;
@@ -194,9 +194,9 @@ public class ColoredEditorExtensions {
 		return editor.getDocumentProvider().getAnnotationModel(editor.getEditorInput());
 	}
 	
-	public AlternativeAnnotationManager getAltAnnotationManager() {
-		return altAnnotationManager;
-	}
+//	public AlternativeAnnotationManager getAltAnnotationManager() {
+////		return altAnnotationManager;
+//	}
 	
 	public void fillContextMenu(IMenuManager menu) {
 		if (!editor.isDirty()) {
@@ -226,12 +226,12 @@ public class ColoredEditorExtensions {
 					MenuManager mm = new MenuManager("Alternative code");
 					menu.add(mm);
 
-					// Eine Alternative soll nur dann angelegt werden können, wenn das aktive Codefragment min. eine Farbe hat,
-					// die es nicht von einem Elternknoten erbt.
-					if (context.nodesHaveNonInheritedColors())
-						mm.add(new CreateAlternativeAction(context));
-					
-					mm.add(new SwitchAlternativeSubmenu(context));
+//					// Eine Alternative soll nur dann angelegt werden können, wenn das aktive Codefragment min. eine Farbe hat,
+//					// die es nicht von einem Elternknoten erbt.
+//					if (context.nodesHaveNonInheritedColors())
+//						mm.add(new CreateAlternativeAction(context));
+//					
+//					mm.add(new SwitchAlternativeSubmenu(context));
 				}
 			}
 		}
@@ -250,15 +250,15 @@ public class ColoredEditorExtensions {
 	}
 	
 	public void installAlternativeAnnotations() {
-		altAnnotationManager = new AlternativeAnnotationManager(getAnnotationModel());		
-		try {
-			if (editor.getSourceFile().isColored())
-			altAnnotationManager.setAnnotations(editor.getSourceFile().getAltFeatureManager().getAlternativeNodesWithActiveParent());
-		} catch (CoreException e) {
-			markCoreException(e);
-		} catch (ParseException e) {
-			markParseException(e);
-		}
+//		altAnnotationManager = new AlternativeAnnotationManager(getAnnotationModel());		
+//		try {
+//			if (editor.getSourceFile().isColored())
+//			altAnnotationManager.setAnnotations(editor.getSourceFile().getAltFeatureManager().getAlternativeNodesWithActiveParent());
+//		} catch (CoreException e) {
+//			markCoreException(e);
+//		} catch (ParseException e) {
+//			markParseException(e);
+//		}
 	}
 	
 	public ColorCacheManager getColorCacheManager() {

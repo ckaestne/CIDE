@@ -32,6 +32,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
@@ -127,7 +128,6 @@ public class CIDECorePlugin extends AbstractUIPlugin {
 
 		if (!load())
 			initDefault();
-
 	}
 
 	public void stop(BundleContext context) throws Exception {

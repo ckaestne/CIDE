@@ -40,6 +40,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 
    <requires>
       <import feature="de.ovgu.cide.core" version="2.1.0" match="greaterOrEqual"/>
+      <import feature="de.ovgu.cide.guidsl" version="2.1.0.qualifier"/>
    </requires>
 
    <plugin
