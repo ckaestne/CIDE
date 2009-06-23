@@ -39,9 +39,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
    </url>
 
    <requires>
-      <import feature="de.ovgu.cide.core" version="2.0.1" match="greaterOrEqual"/>
-      <import feature="org.eclipse.gef" version="3.4.0" match="greaterOrEqual"/>
-      <import feature="org.eclipse.jdt" version="3.4.0" match="greaterOrEqual"/>
+      <import feature="de.ovgu.cide.core.feature" version="2.1.0" match="greaterOrEqual"/>
    </requires>
 
    <plugin

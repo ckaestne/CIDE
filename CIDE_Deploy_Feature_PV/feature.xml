@@ -2,7 +2,7 @@
 <feature
       id="de.ovgu.cide.purevariantsconnector"
       label="CIDE: pure::variants connector (Optional)"
-      version="0.1.0.qualifier"
+      version="2.1.0.qualifier"
       provider-name="Christian Kaestner / University of Magdeburg">
 
    <description url="http://www.fosd.de/cide">
@@ -37,10 +37,12 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
    </url>
 
    <requires>
-      <import feature="de.ovgu.cide.core" version="2.0.1" match="greaterOrEqual"/>
-      <import plugin="com.ps.consul.eclipse.ui.mapping"/>
+      <import plugin="org.eclipse.core.runtime"/>
       <import plugin="com.ps.consul.eclipse.core"/>
       <import plugin="com.ps.consul.eclipse.ui"/>
+      <import plugin="com.ps.consul.eclipse.ui.mapping"/>
+      <import plugin="org.eclipse.core.resources"/>
+      <import feature="de.ovgu.cide.core.feature" version="2.1.0" match="greaterOrEqual"/>
    </requires>
 
    <plugin
