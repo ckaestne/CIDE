@@ -3,10 +3,10 @@
    <description name="CIDE Update Site" url="http://wwwiti.cs.uni-magdeburg.de/iti_db/research/cide/update/">
       CIDE Update Site
    </description>
-   <feature url="features/de.ovgu.cide.core.feature_2.1.0.200906222231.jar" id="de.ovgu.cide.core.feature" version="2.1.0.200906222231"/>
-   <feature url="features/de.ovgu.cide.guidsl_2.1.0.200906222231.jar" id="de.ovgu.cide.guidsl" version="2.1.0.200906222231"/>
-   <feature url="features/de.ovgu.cide.jdt_2.1.0.200906222231.jar" id="de.ovgu.cide.jdt" version="2.1.0.200906222231"/>
-   <feature url="features/de.ovgu.cide.morelanguages_2.1.0.200906222231.jar" id="de.ovgu.cide.morelanguages" version="2.1.0.200906222231"/>
-   <feature url="features/de.ovgu.cide.purevariantsconnector_2.1.0.200906222231.jar" id="de.ovgu.cide.purevariantsconnector" version="2.1.0.200906222231"/>
-   <feature url="features/de.ovgu.cide.samples_2.1.0.200906222231.jar" id="de.ovgu.cide.samples" version="2.1.0.200906222231"/>
+   <feature url="features/de.ovgu.cide.core_2.1.0.200906231756.jar" id="de.ovgu.cide.core" version="2.1.0.200906231756"/>
+   <feature url="features/de.ovgu.cide.guidsl_2.1.0.200906231756.jar" id="de.ovgu.cide.guidsl" version="2.1.0.200906231756"/>
+   <feature url="features/de.ovgu.cide.jdt_2.1.0.200906231756.jar" id="de.ovgu.cide.jdt" version="2.1.0.200906231756"/>
+   <feature url="features/de.ovgu.cide.morelanguages_2.1.0.200906231756.jar" id="de.ovgu.cide.morelanguages" version="2.1.0.200906231756"/>
+   <feature url="features/de.ovgu.cide.purevariantsconnector_2.1.0.200906231756.jar" id="de.ovgu.cide.purevariantsconnector" version="2.1.0.200906231756"/>
+   <feature url="features/de.ovgu.cide.samples_2.1.0.200906231756.jar" id="de.ovgu.cide.samples" version="2.1.0.200906231756"/>
 </site>
