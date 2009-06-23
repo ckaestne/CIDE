@@ -1,0 +1,219 @@
+<?xml version="1.1" ?>
+<html>
+<head>
+<meta http-equiv="Content-Language" content="en-us"/>
+<meta name="GENERATOR" content="Microsoft FrontPage 5.0"/>
+<meta name="ProgId" content="FrontPage.Editor.Document"/>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252" />
+<title>A GPL Package</title>
+</head>
+<body>
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%">
+  <tr>
+    <td WIDTH="78">
+    <img border="0" src="images/FopButton3.jpg" width="80" height="64"/></td>
+    <td WIDTH="688" BGCOLOR="#00FFFF"><h1><span face="Arial" color="#0000FF">A 
+    GPL Package</span></h1>
+    </td>
+  </tr>
+</table>
+<p>A Graph Product Line (GPL) package is a customized set of 
+graph algorithms written in Java.&nbsp; This particular package implements a
+<span>weighted</span>, 
+<span>directed</span><span>undirected</span> graph with the following algorithms:</p>
+<ul>
+  <li><a href="#Breadth First Search (BFS)">Breadth First 
+  Search (BFS)</a></li>
+  <li><a href="#Depth First Search (DFS)">Depth First Search 
+  (DFS)</a></li>
+  <li><a href="#Vertex Numbering (Vertex)">Vertex Numbering 
+  (Vertex)</a></li>
+  <li><a href="#Connected Graphs (Connected)">Connected 
+  Graphs (Connected)</a></li>
+  <li>
+  <a href="#Strongly Connected Graphs (StronglyConnected)">Strongly Connected 
+  Graphs (StronglyConnected)</a></li>
+  <li><a href="#Cycle Checking (Cycle)">Cycle Checking 
+  (Cycle)</a></li>
+  <li><a href="#Prims Minimum Spanning Tree (MSTPrim)">Prim's 
+  Minimum Spanning Tree (MSTPrim)</a></li>
+  <li><a href="#Kruskals Minimum Spanning Tree (MSTKruskal)">
+  Kruskal's Minimum Spanning Tree (MSTKruskal)</a></li>
+  <li><a href="#Shortest Path (Shortest)">Shortest Path 
+  (Shortest)</a></li>
+</ul>
+<p>Click on the above algorithm names for more detail about 
+them and how to invoke them.&nbsp; This document also contains sections on the 
+following topics:</p>
+<ul>
+  <li><a href="#Programmatic Invocation">Programmatic 
+  Invocation</a> </li>
+  <li><a href="#Command Line Invocation">Command Line 
+  Invocation</a></li>
+  <li><a href="#Implementation Notes">Implementation Notes</a></li>
+  <li><a href="#Algorithm Descriptions">Algorithm 
+  Descriptions</a></li>
+</ul>
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FFFF00">
+  <tr>
+    <td WIDTH="788"><h2><a name="Programmatic Invocation">
+    Programmatic Invocation</a></h2>
+    </td>
+  </tr>
+</table>
+<p>The following code snippet illustrates how a graph object 
+is defined.&nbsp; First a Graph object is created, and then each edge is added 
+with its corresponding weight:</p>
+<blockquote>
+  <pre>Graph g = new Graph();</pre>
+  <pre>for ( i=0; i&lt;num_edges; i++ ) {
+   Vertex v1 = ( Vertex ) V[ startVertices[ i ] ];
+   Vertex v2 = ( Vertex ) V[ endVertices[ i ] ];
+   EdgeIfc edge = g.addEdge( v1, v2 );
+   edge.setWeight( weights[ i ] );
+}</pre>
+</blockquote>
+<p>Once a graph object is created, you can invoke a graph 
+algorithm.&nbsp;&nbsp; Let algName be the name of an algorithm (look below to 
+find the exact name and parameter list).&nbsp; A typical invocation looks like:</p>
+<blockquote>
+  <pre>g.algName();</pre>
+</blockquote>
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FFFF00">
+  <tr>
+    <td WIDTH="788"><h2><a name="Command Line Invocation">
+    Command Line Invocation</a></h2>
+    </td>
+  </tr>
+</table>
+<p>Your package contains a Main class that has 2 command line 
+parameters: the name of a data file and the number of a vertex:</p>
+<blockquote>
+<pre>&gt; java &lt;your package name&gt;.Main &lt;data file name&gt; &lt;vertex#&gt;</pre>
+</blockquote>
+<p>A data file is a text file with the following sequence of 
+numbers:</p>
+<ul>
+  <li>the number of vertices in the graph (v)</li>
+  <li>the number of edges in the graph (e)</li>
+  <li>3 numbers that are presently ignored (claimed for 
+  future use)</li>
+  <li>a sequence of e pairs of positive numbers 
+  (start-vertex#, end-vertex#) to define each vertex</li>
+  <li>a sequence of e positive numbers to indicate the weight 
+  of each vertex</li>
+</ul>
+<p>Vertex numbers begin with 0..(v-1).</p>
+<p>The vertex# parameter of the command line indicates the 
+root vertex of the graph.</p>
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FFFF00">
+  <tr>
+    <td WIDTH="788"><h2><a name="Implementation Notes">
+    Implementation Notes</a></h2>
+    </td>
+  </tr>
+  <tr>
+				<td><!--G-->
+					<div>The OnlyVertices data structure follows a legacy design where graphs 
+are encoded in two classes: Graph and Vertex. A Graph 
+object defines a list of Vertex objects. Each Vertex object encapsulates 
+two lists (or really containers): an adjacency list of other vertices and a 
+&quot;parallel&quot; Weights list that maintains weight information for the corresponding 
+adjacent vertex (i.e., the length of the adjacency list and the weights list is 
+always the same). The advantage of this data structure is its simplicity; 
+its disadvantage is when edges must be explicitly manipulated.</div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<img border="0" alt="FOP" src="images/G.jpg" width="626" height="300" />
+				</td>
+			</tr>  
+			<tr><!--GEN-->
+				<td>
+					<div class="GPL_TEXT">The WithEdges data structure has a class for every major graph abstraction: Graph, Vertex, Neighbor, and Edge. A Graph object maintains a list 
+(or container) of Vertex objects, and a list (container) of Edge objects. 
+Each Vertex contains a list of adjacent edges, and each Edge object references 
+both Vertex objects with the weight of the edge. The advantage of this 
+data structure is that it cleanly supports the implementation of all graph 
+algorithms; its disadvantage is a larger overhead for graph creation.</div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<img border="0" alt="FOP" src="images/Gen.jpg" width="666" height="402" />
+				</td>
+			</tr>
+			<tr><!--GN-->
+				<td>
+					<div class="GPL_TEXT">The WithNeighbors data structure uses three classes: Graph, Vertex, and Neighbor. A Graph object contains a list (or container) of Vertex 
+objects. Each Vertex object maintains a list (container) of Neighbor 
+objects, which includes the weight of the associated edge. The advantage 
+of this data structure is a simple design, but its disadvantage is when edges 
+must be explicitly manipulated.</div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<img border="0" alt="FOP" src="images/Gn.jpg" width="628" height="331" />
+				</td>
+			</tr>			
+</table>
+<p>&nbsp;</p>
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FFFF00">
+  <tr>
+    <td WIDTH="788"><h2><a name="Algorithm Descriptions">
+    Algorithm Descriptions</a></h2>
+    </td>
+  </tr>
+</table>
+<h4><a name="Breadth First Search (BFS)">Breadth First Search (BFS)</a></h4>
+<p>The standard breadth first search algorithm.</p>
+<h4><a name="Depth First Search (DFS)">Depth First Search 
+(DFS)</a></h4>
+<p>The standard depth-first search algorithm.</p>
+<h4><a name="Vertex Numbering (Vertex)">Vertex Numbering 
+(Vertex)</a></h4>
+<p>Assigns a unique number to each vertex.</p>
+                    <blockquote>
+                        <div class="GPL_CODE">G.NumberVertices(); // numbers vertices <br/>V.VertexNumber      // number of vertex</div>
+                    </blockquote>
+<h4><a name="Connected Graphs (Connected)">Connected Graphs 
+(Connected)</a></h4>
+<p>Computes equivalence classes in 
+undirected graph of nodes under the reachability relationship. Each vertex is 
+assigned a component number (starting with number 0).</p>
+<blockquote>
+						<div class="GPL_CODE">G.ConnectedComponents(); // finds components <br/>V.ComponentNumber        // number of component</div>
+					</blockquote>
+<h4><a name="Strongly Connected Graphs (StronglyConnected)">
+Strongly Connected Graphs (StronglyConnected)</a></h4>
+<p>Computes equivalence classes for directed graphs. Each vertex is assigned a component number (starting with number 0).</p>
+					<blockquote>
+						<div class="GPL_CODE">G.StrongComponents();    // finds components <br/>V.strongComponentNumber; // number of component</div>
+					</blockquote>
+<h4><a name="Cycle Checking (Cycle)">Cycle Checking (Cycle)</a></h4>
+<p>Returns true if there is a cycle in a graph, false otherwise. A cycle in directed graphs is at least 2 edges; in a directed graph it is at least 3.</p>
+	<blockquote>
+						<div class="GPL_CODE">boolean b = G.CycleCheck(); // are there cycles?
+</div>
+					</blockquote>
+<h4><a name="Prims Minimum Spanning Tree (MSTPrim)">Prim's 
+Minimum Spanning Tree (MSTPrim)</a></h4>
+<p>Contains all vertices such that sum of the weights of edges is minimal. Returns a weighted graph.</p>
+					<blockquote>
+						<div class="GPL_CODE">Graph g = G.Prim(); 
+// finds min spanning tree </div>
+					</blockquote>
+<h4><a name="Kruskals Minimum Spanning Tree (MSTKruskal)">
+Kruskal's Minimum Spanning Tree (MSTKruskal)</a></h4>
+<p>Contains all vertices such that sum of the  weights of edges is minimal. Returns a weighted graph.</p>
+						<blockquote>
+							<div class="GPL_CODE">Graph g = G.Kruskal(); // 
+finds min spanning tree </div>
+						</blockquote>
+<h4><a name="Shortest Path (Shortest)">Shortest Path 
+(Shortest)</a></h4>
+<p>No Description yet.</p>
+</body>
+</html>

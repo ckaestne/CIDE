@@ -1,0 +1,3 @@
+requires GUIDSL feature model
+requires JDT extension
+requires HTML language (included in core)
