@@ -40,7 +40,6 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 
    <requires>
       <import feature="de.ovgu.cide.core" version="2.0.1" match="greaterOrEqual"/>
-      <import feature="org.eclipse.gef" version="3.4.0" match="greaterOrEqual"/>
       <import feature="org.eclipse.jdt" version="3.4.0" match="greaterOrEqual"/>
    </requires>
 
@@ -52,14 +51,14 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
          unpack="false"/>
 
    <plugin
-         id="FeatureIDE_FM_Core"
+         id="de.ovgu.featureide.fm.core"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="FeatureIDE_FM_UI"
+         id="de.ovgu.featureide.fm.ui"
          download-size="0"
          install-size="0"
          version="0.0.0"

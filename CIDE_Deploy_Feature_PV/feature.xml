@@ -42,7 +42,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
       <import plugin="com.ps.consul.eclipse.ui"/>
       <import plugin="com.ps.consul.eclipse.ui.mapping"/>
       <import plugin="org.eclipse.core.resources"/>
-      <import feature="de.ovgu.cide.core.feature" version="2.1.0" match="greaterOrEqual"/>
+      <import feature="de.ovgu.cide.core" version="2.1.0" match="greaterOrEqual"/>
    </requires>
 
    <plugin
