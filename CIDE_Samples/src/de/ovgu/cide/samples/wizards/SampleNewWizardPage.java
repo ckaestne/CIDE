@@ -237,22 +237,21 @@ IOverwriteQuery {
 		
 		descBox = new Text(workArea, SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.READ_ONLY | SWT.V_SCROLL);
 		descBox.setText ("");
-		descBox.setLayoutData(new GridData(GridData.FILL_BOTH));
+		
+		GridData dbDG = new GridData(GridData.FILL_BOTH);
+		dbDG.minimumHeight = 75;
+		descBox.setLayoutData(dbDG);
 
 	}
 	
 	private void createRequirementsArea(Composite workArea) {
-		
-		Label title = new Label(workArea, SWT.NONE);
-		title.setText("Warning/s");
-		//title.setIcon
-		
-        //requirementSC = new ScrolledComposite(workArea, SWT.BORDER | SWT.V_SCROLL);
-        //requirementSC.setLayoutData(new GridData(GridData.FILL_BOTH));
-		
-		requirementBox = new Text(workArea, SWT.MULTI | SWT.WRAP | SWT.READ_ONLY | SWT.V_SCROLL);		
-		requirementBox.setLayoutData(new GridData(GridData.FILL_BOTH));
+				
+		requirementBox = new Text(workArea, SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.READ_ONLY | SWT.V_SCROLL);		
+		GridData rbDG = new GridData(GridData.FILL_BOTH);
+		rbDG.minimumHeight = 50;
+		requirementBox.setLayoutData(rbDG);
 		requirementBox.setText ("");
+		requirementBox.setVisible(false);
 		
 		
 	}
@@ -315,11 +314,15 @@ IOverwriteQuery {
 			for (Object object : plugins) {
 				
 				if (!isPluginAvailable(categoryName, (String)object))
-					reqMessage += "-> " + cat.getErrorMsg((String)object) + "\n";
+					reqMessage += "Warning: " + cat.getErrorMsg((String)object) + "\n";
 			}
 		}
 		
 		requirementBox.setText(reqMessage);
+		if (reqMessage.equals(""))
+			requirementBox.setVisible(false);
+		else
+			requirementBox.setVisible(true);
 			
 	}
 	
