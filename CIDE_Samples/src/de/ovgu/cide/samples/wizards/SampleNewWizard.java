@@ -6,19 +6,15 @@ import java.net.URL;
 
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.jface.dialogs.IDialogSettings;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.internal.ide.IDEWorkbenchPlugin;
 import org.osgi.framework.Bundle;
 
 public class SampleNewWizard extends Wizard implements INewWizard {
 
 	public static final String ID = "de.ovgu.cide.samples";
-	private static final String CIDE_EXAMPLE_SECTION = "CIDEExampleImportWizard";//$NON-NLS-1$
 	private static final String CIDE_EXAMPLE_DIR = "cide_samples";//$NON-NLS-1$
 	
 	private SampleNewWizardPage mainPage;
@@ -41,6 +37,7 @@ public class SampleNewWizard extends Wizard implements INewWizard {
 	public void addPages() {
 		mainPage = new SampleNewWizardPage(samplePath);
 		addPage(mainPage);
+		
 	}
 	
 	 /* (non-Javadoc)
@@ -48,8 +45,7 @@ public class SampleNewWizard extends Wizard implements INewWizard {
      */
     public void init(IWorkbench workbench, IStructuredSelection currentSelection) {
         setWindowTitle("CIDE Example Import");
-        setDefaultPageImageDescriptor(IDEWorkbenchPlugin.getIDEImageDescriptor("wizban/importproj_wiz.png")); //$NON-NLS-1$
-		
+        
         
         //get the path for the examples - it can be a jar-file or folder structure
         try {
@@ -69,8 +65,9 @@ public class SampleNewWizard extends Wizard implements INewWizard {
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			IDEWorkbenchPlugin.log(e.getMessage(), e);
-			e.printStackTrace();
+//Todo:log
+//			IDEWorkbenchPlugin.log(e.getMessage(), e);
+//			e.printStackTrace();
 		}
         
     }

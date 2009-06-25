@@ -46,8 +46,8 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -55,23 +55,28 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.dialogs.IOverwriteQuery;
-import org.eclipse.ui.internal.ide.IDEWorkbenchMessages;
-import org.eclipse.ui.internal.ide.IDEWorkbenchPlugin;
-import org.eclipse.ui.internal.ide.StatusUtil;
-import org.eclipse.ui.internal.wizards.datatransfer.ArchiveFileManipulations;
-import org.eclipse.ui.internal.wizards.datatransfer.DataTransferMessages;
-import org.eclipse.ui.internal.wizards.datatransfer.ILeveledImportStructureProvider;
-import org.eclipse.ui.internal.wizards.datatransfer.TarEntry;
-import org.eclipse.ui.internal.wizards.datatransfer.TarException;
-import org.eclipse.ui.internal.wizards.datatransfer.TarFile;
-import org.eclipse.ui.internal.wizards.datatransfer.TarLeveledStructureProvider;
-import org.eclipse.ui.internal.wizards.datatransfer.ZipLeveledStructureProvider;
+//import org.eclipse.ui.internal.ide.IDEWorkbenchMessages;
+//import org.eclipse.ui.internal.ide.IDEWorkbenchPlugin;
+//import org.eclipse.ui.internal.ide.StatusUtil;
+//import org.eclipse.ui.internal.wizards.datatransfer.DataTransferMessages;
+//import org.eclipse.ui.internal.wizards.datatransfer.ILeveledImportStructureProvider;
+//import org.eclipse.ui.internal.wizards.datatransfer.TarLeveledStructureProvider;
+//import org.eclipse.ui.internal.wizards.datatransfer.TarEntry;
+//import org.eclipse.ui.internal.wizards.datatransfer.TarException;
+//import org.eclipse.ui.internal.wizards.datatransfer.TarFile;
+//import org.eclipse.ui.internal.wizards.datatransfer.TarLeveledStructureProvider;
+//import org.eclipse.ui.internal.wizards.datatransfer.ZipLeveledStructureProvider;
 import org.eclipse.ui.statushandlers.StatusManager;
 import org.eclipse.ui.wizards.datatransfer.FileSystemStructureProvider;
 import org.eclipse.ui.wizards.datatransfer.ImportOperation;
+
+import de.ovgu.cide.samples.utils.CommentParser;
+import de.ovgu.cide.samples.utils.RequirementCategory;
+import de.ovgu.cide.samples.utils.ZipStructureProvider;
 
 /**
  * The "New" wizard page allows setting the container for the new file as well
@@ -95,11 +100,14 @@ IOverwriteQuery {
 	 * 
 	 * @since 3.4
 	 */
-	private ILeveledImportStructureProvider structureProvider;
+	private ZipStructureProvider structureProvider;
 	
 	
 	private CheckboxTreeViewer projectsList;
 	private Text descBox;
+	private Text requirementBox;
+	private ScrolledComposite requirementSC;
+	
 	
 	private ProjectRecord[] selectedProjects = new ProjectRecord[0];
 	private IProject[] wsProjects;
@@ -128,7 +136,8 @@ IOverwriteQuery {
 
 		createProjectsList(workArea);
 		createDescriptionArea(workArea);
-	
+		createRequirementsArea(workArea);
+		
 		updateProjectsList(samplePath);
 		
 
@@ -205,7 +214,9 @@ IOverwriteQuery {
 				
 				if (event.getSelection() instanceof IStructuredSelection) {
 					IStructuredSelection iss = (IStructuredSelection) event.getSelection();
-					descBox.setText(((ProjectRecord) iss.getFirstElement()).getComment());
+					descBox.setText(((ProjectRecord) iss.getFirstElement()).getDescription());
+					performRequirementCheck(((ProjectRecord) iss.getFirstElement()).getRequirements());
+						
 				}
 						
 			}
@@ -224,12 +235,27 @@ IOverwriteQuery {
 		Label title = new Label(workArea, SWT.NONE);
 		title.setText("Description");
 		
-		descBox = new Text(workArea, SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.READ_ONLY);
+		descBox = new Text(workArea, SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.READ_ONLY | SWT.V_SCROLL);
 		descBox.setText ("");
 		descBox.setLayoutData(new GridData(GridData.FILL_BOTH));
 
 	}
 	
+	private void createRequirementsArea(Composite workArea) {
+		
+		Label title = new Label(workArea, SWT.NONE);
+		title.setText("Warning/s");
+		//title.setIcon
+		
+        //requirementSC = new ScrolledComposite(workArea, SWT.BORDER | SWT.V_SCROLL);
+        //requirementSC.setLayoutData(new GridData(GridData.FILL_BOTH));
+		
+		requirementBox = new Text(workArea, SWT.MULTI | SWT.WRAP | SWT.READ_ONLY | SWT.V_SCROLL);		
+		requirementBox.setLayoutData(new GridData(GridData.FILL_BOTH));
+		requirementBox.setText ("");
+		
+		
+	}
 	/**
 	 * Create the selection buttons in the listComposite.
 	 * 
@@ -268,7 +294,35 @@ IOverwriteQuery {
 		setButtonLayoutData(deselectAll);
 
 	}
+	
+	public boolean isPluginAvailable(String category, String PluginID) {
+		//TODO!!!
+		return false;
+	}
 
+	public void performRequirementCheck(List requirements) {
+		String reqMessage = "";
+		Iterator i = requirements.iterator();
+		String categoryName;
+		while (i.hasNext()) {
+			RequirementCategory cat = (RequirementCategory) i.next();
+			
+			//get the category name
+			categoryName = cat.getCategory();
+	
+			//get all plugins which need to be checked
+			Set plugins = cat.getPluginIds();
+			for (Object object : plugins) {
+				
+				if (!isPluginAvailable(categoryName, (String)object))
+					reqMessage += "-> " + cat.getErrorMsg((String)object) + "\n";
+			}
+		}
+		
+		requirementBox.setText(reqMessage);
+			
+	}
+	
 	/**
 	 * Update the list of projects based on path. Method declared public only
 	 * for test suite.
@@ -306,36 +360,38 @@ IOverwriteQuery {
 					selectedProjects = new ProjectRecord[0];
 					Collection files = new ArrayList();
 					monitor.worked(10);
-					if (ArchiveFileManipulations.isTarFile(path)) {
-						TarFile sourceTarFile = getSpecifiedTarSourceFile(path);
-						if (sourceTarFile == null) {
-							return;
-						}
-
-						structureProvider = new TarLeveledStructureProvider(
-								sourceTarFile);
-						Object child = structureProvider.getRoot();
-
-						if (!collectProjectFilesFromProvider(files, child, 0,
-								monitor)) {
-							return;
-						}
-						Iterator filesIterator = files.iterator();
-						selectedProjects = new ProjectRecord[files.size()];
-						int index = 0;
-						monitor.worked(50);
-						monitor
-								.subTask("Processing results");
-						while (filesIterator.hasNext()) {
-							selectedProjects[index++] = (ProjectRecord) filesIterator
-									.next();
-						}
-					} else if (ArchiveFileManipulations.isZipFile(path)) {
+					
+//					if (ArchiveFileManipulations.isTarFile(path)) {
+//						TarFile sourceTarFile = getSpecifiedTarSourceFile(path);
+//						if (sourceTarFile == null) {
+//							return;
+//						}
+//
+//						structureProvider = new TarLeveledStructureProvider(
+//								sourceTarFile);
+//						Object child = structureProvider.getRoot();
+//
+//						if (!collectProjectFilesFromProvider(files, child, 0,
+//								monitor)) {
+//							return;
+//						}
+//						Iterator filesIterator = files.iterator();
+//						selectedProjects = new ProjectRecord[files.size()];
+//						int index = 0;
+//						monitor.worked(50);
+//						monitor
+//								.subTask("Processing results");
+//						while (filesIterator.hasNext()) {
+//							selectedProjects[index++] = (ProjectRecord) filesIterator
+//									.next();
+//						}
+//					} else 
+					if (isZipFile(path)) {
 						ZipFile sourceFile = getSpecifiedZipSourceFile(path);
 						if (sourceFile == null) {
 							return;
 						}
-						structureProvider = new ZipLeveledStructureProvider(
+						structureProvider = new ZipStructureProvider(
 								sourceFile);
 						Object child = structureProvider.getRoot();
 
@@ -380,7 +436,7 @@ IOverwriteQuery {
 
 			});
 		} catch (InvocationTargetException e) {
-			IDEWorkbenchPlugin.log(e.getMessage(), e);
+//TODO: Log?		IDEWorkbenchPlugin.log(e.getMessage(), e);
 		} catch (InterruptedException e) {
 			// Nothing to do if the user interrupts.
 		}
@@ -414,25 +470,25 @@ IOverwriteQuery {
 		return null;
 	}
 	
-	/**
-	 * Answer a handle to the zip file currently specified as being the source.
-	 * Return null if this file does not exist or is not of valid format.
-	 */
-	private TarFile getSpecifiedTarSourceFile(String fileName) {
-		if (fileName.length() == 0) {
-			return null;
-		}
-
-		try {
-			return new TarFile(fileName);
-		} catch (TarException e) {
-			displayErrorDialog("Source file is not a valid tar file.");
-		} catch (IOException e) {
-			displayErrorDialog("Source file could not be read.");
-		}
-
-		return null;
-	}
+//	/**
+//	 * Answer a handle to the zip file currently specified as being the source.
+//	 * Return null if this file does not exist or is not of valid format.
+//	 */
+//	private TarFile getSpecifiedTarSourceFile(String fileName) {
+//		if (fileName.length() == 0) {
+//			return null;
+//		}
+//
+//		try {
+//			return new TarFile(fileName);
+//		} catch (TarException e) {
+//			displayErrorDialog("Source file is not a valid tar file.");
+//		} catch (IOException e) {
+//			displayErrorDialog("Source file could not be read.");
+//		}
+//
+//		return null;
+//	}
 	
 
 	
@@ -498,9 +554,10 @@ IOverwriteQuery {
 			try {
 				directoriesVisited.add(directory.getCanonicalPath());
 			} catch (IOException exception) {
-				StatusManager.getManager().handle(
-						StatusUtil.newStatus(IStatus.ERROR, exception
-								.getLocalizedMessage(), exception));
+//TODO: Log?	
+//				StatusManager.getManager().handle(
+//						StatusUtil.newStatus(IStatus.ERROR, exception
+//								.getLocalizedMessage(), exception));
 			}
 		}
 
@@ -529,9 +586,10 @@ IOverwriteQuery {
 							continue;
 						}
 					} catch (IOException exception) {
-						StatusManager.getManager().handle(
-								StatusUtil.newStatus(IStatus.ERROR, exception
-										.getLocalizedMessage(), exception));
+//TODO: Log?	
+//						StatusManager.getManager().handle(
+//								StatusUtil.newStatus(IStatus.ERROR, exception
+//										.getLocalizedMessage(), exception));
 
 					}
 					collectProjectFilesFromDirectory(files, contents[i],
@@ -593,7 +651,7 @@ IOverwriteQuery {
 	private IProject[] getProjectsInWorkspace() {
 		
 		if (wsProjects == null) {
-			wsProjects = IDEWorkbenchPlugin.getPluginWorkspace().getRoot()
+			wsProjects = ResourcesPlugin.getWorkspace().getRoot()
 					.getProjects();
 		}
 		return wsProjects;
@@ -641,13 +699,12 @@ IOverwriteQuery {
 				status = ((CoreException) t).getStatus();
 			} else {
 				status = new Status(IStatus.ERROR,
-						IDEWorkbenchPlugin.IDE_WORKBENCH, 1, message, t);
+						"org.eclipse.ui.ide", 1, message, t);
 			}
 			ErrorDialog.openError(getShell(), message, null, status);
 			return false;
 		}
-		ArchiveFileManipulations.closeStructureProvider(structureProvider,
-				getShell());
+		closeZipStructureProvider(structureProvider,getShell());
 		return true;
 	}
 	
@@ -802,10 +859,66 @@ IOverwriteQuery {
 	 * Performs clean-up if the user cancels the wizard without doing anything
 	 */
 	public void performCancel() {
-		ArchiveFileManipulations.closeStructureProvider(structureProvider,
-				getShell());
+		if (structureProvider != null)
+			closeZipStructureProvider(structureProvider, getShell());
+	}
+	
+	/* ****************************************************************
+	 * HANDLE ZIP FILES
+	**************************************************************** */
+
+	/**
+	 * Determine whether the file with the given filename is in .zip or .jar
+	 * format.
+	 * 
+	 * @param fileName
+	 *            file to test
+	 * @return true if the file is in tar format
+	 */
+	public static boolean isZipFile(String fileName) {
+		if (fileName.length() == 0) {
+			return false;
+		}
+
+		ZipFile zipFile = null;
+		try {
+			zipFile = new ZipFile(fileName);
+		} catch (IOException ioException) {
+			return false;
+		} finally {
+			if (zipFile != null) {
+				try {
+					zipFile.close();
+				} catch (IOException e) {
+					// ignore
+				}
+			}
+		}
+
+		return true;
 	}
 
+	/**
+	 * Closes the given structure provider.  Attempts to close the passed zip file. 
+	 * 
+	 * @param structureProvider
+	 *            The structure provider to be closed, can be <code>null</code>				 
+	 * @param shell
+	 *            The shell to display any possible Dialogs in
+	 */
+	public static void closeZipStructureProvider(ZipStructureProvider structureProvider, Shell shell) {
+			
+			try {
+				structureProvider.getZipFile().close();
+			} catch (IOException e) {
+				ErrorDialog.openError(shell, "Could not close file", e.getMessage(), new Status(IStatus.ERROR,
+						SampleNewWizard.ID, 1, "Could not close file",e));
+
+			}
+	
+	}
+	
+	
 	/* ****************************************************************
 	 * PROJECT RECORD
 	**************************************************************** */
@@ -820,7 +933,7 @@ IOverwriteQuery {
 		Object projectArchiveFile;
 
 		String projectName;
-		String comment;
+		CommentParser comment;
 
 		Object parent;
 
@@ -868,18 +981,18 @@ IOverwriteQuery {
 							IPath path = new Path(
 									((ZipEntry) projectArchiveFile).getName());
 							projectName = path.segment(path.segmentCount() - 2);
-						} else if (projectArchiveFile instanceof TarEntry) {
-							IPath path = new Path(
-									((TarEntry) projectArchiveFile).getName());
-							projectName = path.segment(path.segmentCount() - 2);
-						}
-						comment = "";
+						} 
+//						else if (projectArchiveFile instanceof TarEntry) {
+//							IPath path = new Path(
+//									((TarEntry) projectArchiveFile).getName());
+//							projectName = path.segment(path.segmentCount() - 2);
+//						}
+						comment = null;
 					} else {
-						description = IDEWorkbenchPlugin.getPluginWorkspace()
-								.loadProjectDescription(stream);
+						description = ResourcesPlugin.getWorkspace().loadProjectDescription(stream);
 						stream.close();
 						projectName = description.getName();
-						comment = description.getComment();
+						comment = new CommentParser(description.getComment());
 					}
 
 				}
@@ -891,14 +1004,14 @@ IOverwriteQuery {
 					// name as the project name
 					if (isDefaultLocation(path)) {
 						projectName = path.segment(path.segmentCount() - 2);
-						description = IDEWorkbenchPlugin.getPluginWorkspace()
+						description = ResourcesPlugin.getWorkspace()
 								.newProjectDescription(projectName);
-						comment = description.getComment();
+						comment = new CommentParser(description.getComment());
 					} else {
-						description = IDEWorkbenchPlugin.getPluginWorkspace()
+						description = ResourcesPlugin.getWorkspace()
 								.loadProjectDescription(path);
 						projectName = description.getName();
-						comment = description.getComment();
+						comment = new CommentParser(description.getComment());
 					}
 
 				}
@@ -936,14 +1049,19 @@ IOverwriteQuery {
 		}
 		
 		/**
-		 * Get the comment of the project
+		 * Get the description of the project
 		 * 
 		 * @return String
 		 */
-		public String getComment() {
-			return comment == null ? "" : comment;
+		public String getDescription() {
+			return comment == null ? "" : comment.getDescription();
 		}
-
+		
+		public List getRequirements() {
+			return comment == null ? null : comment.getRequirements();
+		}
+		
+		
 		/**
 		 * Gets the label to be used when rendering this project record in the
 		 * UI.
