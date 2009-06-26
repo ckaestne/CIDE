@@ -1,7 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
 	<name>Java-Chat</name>
-	<comment>This is a simple chat application (client and server) implemented in Java. Following features are annotated: Output (Gui, CommandLine), Authorization / Loggin Password, Message-Logging, Message-Color-Support, Message-Encryption (Caesar, Reverse)</comment>
+	<comment>
+		[description]This is a simple chat application (client and server) implemented with Java. Following features are annotated: Output (Gui, CommandLine), Authorization / Loggin Password, Message-Logging, Message-Color-Support, Message-Encryption (Caesar, Reverse)[/description]
+		[requirementcategory]
+			[categoryname]languageextension[/categoryname]
+			[requirement]
+				[pluginid]le_123[/pluginid] 
+				[errormsg]le_123 nicht vorhanden[/errormsg] 
+			[/requirement]
+		[/requirementcategory]
+		[requirementcategory]
+			[categoryname]featuremodel[/categoryname]
+			[requirement]
+				[pluginid]model_123[/pluginid] 
+				[errormsg]model_123 nicht vorhanden[/errormsg] 
+			[/requirement]
+			[requirement]
+				[pluginid]model_456[/pluginid] 
+				[errormsg]model_456 nicht vorhanden[/errormsg] 
+			[/requirement]
+			[requirement]
+				[pluginid]model_789[/pluginid] 
+				[errormsg]model_789 nicht vorhanden[/errormsg] 
+			[/requirement]
+		[/requirementcategory]
+		[requirementcategory]
+			[categoryname]featuremodel[/categoryname]
+			[requirement]
+				[pluginid]model_123[/pluginid] 
+				[errormsg]model_123 nicht vorhanden[/errormsg] 
+			[/requirement]
+			[requirement]
+				[pluginid]model_456[/pluginid] 
+				[errormsg]model_456 nicht vorhanden[/errormsg] 
+			[/requirement]
+			[requirement]
+				[pluginid]model_789[/pluginid] 
+				[errormsg]model_789 nicht vorhanden[/errormsg] 
+			[/requirement]
+			[requirement]
+				[pluginid]model_101[/pluginid] 
+				[errormsg]model_101 nicht vorhanden[/errormsg] 
+			[/requirement]
+		[/requirementcategory]
+
+	</comment>
 	<projects>
 	</projects>
 	<buildSpec>
