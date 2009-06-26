@@ -3,10 +3,10 @@
 	<name>Java-Chat</name>
 	<comment>
 		[description]This is a simple chat application (client and server) implemented with Java. Following features are annotated: Output (Gui, CommandLine), Authorization / Loggin Password, Message-Logging, Message-Color-Support, Message-Encryption (Caesar, Reverse)[/description]
-		[requirementcategory]
-			[categoryname]languageextension[/categoryname]
+		[requirementcategory] 
+			[categoryname]de.ovgu.cide.core.language[/categoryname]
 			[requirement]
-				[pluginid]le_123[/pluginid] 
+				[pluginid]de.ovgu.cide.language.jdt[/pluginid] 
 				[errormsg]le_123 nicht vorhanden[/errormsg] 
 			[/requirement]
 		[/requirementcategory]

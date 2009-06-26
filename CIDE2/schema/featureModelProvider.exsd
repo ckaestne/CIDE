@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- Schema file written by PDE -->
-<schema targetNamespace="CIDE2">
+<schema targetNamespace="de.ovgu.cide.core" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
       <appInfo>
-         <meta.schema plugin="CIDE2" id="featureModelProvider" name="Feature Model Provider"/>
+         <meta.schema plugin="de.ovgu.cide.core" id="featureModelProvider" name="Feature Model Provider"/>
       </appInfo>
       <documentation>
          Allows to plug in different feature models.
@@ -16,6 +16,11 @@ Supports the following tasks:
    </annotation>
 
    <element name="extension">
+      <annotation>
+         <appInfo>
+            <meta.element />
+         </appInfo>
+      </annotation>
       <complexType>
          <choice>
             <element ref="featureModelProvider"/>
@@ -117,13 +122,5 @@ Supports the following tasks:
       </documentation>
    </annotation>
 
-   <annotation>
-      <appInfo>
-         <meta.section type="copyright"/>
-      </appInfo>
-      <documentation>
-         
-      </documentation>
-   </annotation>
 
 </schema>

@@ -323,6 +323,8 @@ IOverwriteQuery {
 	
 	public boolean isPluginAvailable(String category, String PluginID) {
 		//TODO!!!
+		//FeatureModelManager
+		//LanguageExtensionManager.getInstance().getActive....getId()
 		return false;
 	}
 
