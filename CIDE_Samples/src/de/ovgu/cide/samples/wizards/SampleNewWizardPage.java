@@ -48,8 +48,13 @@ import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.custom.StyleRange;
+import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.GlyphMetrics;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -57,6 +62,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.ISharedImages;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.dialogs.IOverwriteQuery;
 //import org.eclipse.ui.internal.ide.IDEWorkbenchMessages;
@@ -106,7 +113,8 @@ IOverwriteQuery {
 	private CheckboxTreeViewer projectsList;
 	private Text descBox;
 	private Text requirementBox;
-	private ScrolledComposite requirementSC;
+	private Label reqTitle ;
+	private Composite workArea;
 	
 	
 	private ProjectRecord[] selectedProjects = new ProjectRecord[0];
@@ -127,7 +135,7 @@ IOverwriteQuery {
 
 		initializeDialogUnits(parent);
 
-		Composite workArea = new Composite(parent, SWT.NONE);
+		workArea = new Composite(parent, SWT.NONE);
 		setControl(workArea);
 
 		workArea.setLayout(new GridLayout());
@@ -150,7 +158,7 @@ IOverwriteQuery {
 	 * 
 	 * @param workArea
 	 */
-	private void createProjectsList(Composite workArea) {
+	private void createProjectsList(final Composite workArea) {
 
 		Label title = new Label(workArea, SWT.NONE);
 		
@@ -169,8 +177,8 @@ IOverwriteQuery {
 		projectsList = new CheckboxTreeViewer(listComposite, SWT.BORDER);
 		GridData listData = new GridData(GridData.GRAB_HORIZONTAL
 				| GridData.GRAB_VERTICAL | GridData.FILL_BOTH);
+		listData.minimumHeight = 175;
 		projectsList.getControl().setLayoutData(listData);
-
 		projectsList.setContentProvider(new ITreeContentProvider() {
 
 			public Object[] getChildren(Object parentElement) {
@@ -215,6 +223,13 @@ IOverwriteQuery {
 				if (event.getSelection() instanceof IStructuredSelection) {
 					IStructuredSelection iss = (IStructuredSelection) event.getSelection();
 					descBox.setText(((ProjectRecord) iss.getFirstElement()).getDescription());
+					
+//					StyleRange style1 = new StyleRange();
+//					style1.start = 0;
+//					style1.length = 12;
+//					style1.fontStyle = SWT.BOLD;
+//					descBox.setStyleRange(style1);
+
 					performRequirementCheck(((ProjectRecord) iss.getFirstElement()).getRequirements());
 						
 				}
@@ -232,8 +247,12 @@ IOverwriteQuery {
 	
 	private void createDescriptionArea(Composite workArea) {
 		
+		//Image img = workArea.getShell().getDisplay().getSystemImage(SWT.ICON_INFORMATION);
+			//PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_DEC_FIELD_WARNING);
+		
 		Label title = new Label(workArea, SWT.NONE);
 		title.setText("Description");
+		//title.setImage(img);
 		
 		descBox = new Text(workArea, SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.READ_ONLY | SWT.V_SCROLL);
 		descBox.setText ("");
@@ -241,19 +260,27 @@ IOverwriteQuery {
 		GridData dbDG = new GridData(GridData.FILL_BOTH);
 		dbDG.minimumHeight = 75;
 		descBox.setLayoutData(dbDG);
+		
 
 	}
 	
+	
 	private void createRequirementsArea(Composite workArea) {
 				
+		//Image img = PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_WARN_TSK);
+		//Image img = workArea.getShell().getDisplay().getSystemImage(SWT.ICON_WARNING);
+		//reqTitle = new Label(workArea, SWT.NONE);
+		//reqTitle.setText("Warning");
+		//reqTitle.setImage(img);
+		//reqTitle.setVisible(false);
+		
 		requirementBox = new Text(workArea, SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.READ_ONLY | SWT.V_SCROLL);		
 		GridData rbDG = new GridData(GridData.FILL_BOTH);
 		rbDG.minimumHeight = 50;
 		requirementBox.setLayoutData(rbDG);
 		requirementBox.setText ("");
-		requirementBox.setVisible(false);
-		
-		
+		//requirementBox.setVisible(false);
+				
 	}
 	/**
 	 * Create the selection buttons in the listComposite.
@@ -314,15 +341,29 @@ IOverwriteQuery {
 			for (Object object : plugins) {
 				
 				if (!isPluginAvailable(categoryName, (String)object))
-					reqMessage += "Warning: " + cat.getErrorMsg((String)object) + "\n";
+					reqMessage += "Warning:" +  cat.getErrorMsg((String)object) + "\n";
 			}
 		}
 		
 		requirementBox.setText(reqMessage);
-		if (reqMessage.equals(""))
-			requirementBox.setVisible(false);
-		else
-			requirementBox.setVisible(true);
+		
+//		if (reqMessage.equals("")) {
+//			requirementBox.setVisible(false);
+//			reqTitle.setVisible(false);
+//			GridData dbDG = new GridData(GridData.FILL_BOTH);
+//			dbDG.minimumHeight = 150;
+//			descBox.setLayoutData(dbDG);
+//		}
+//		else {
+//			requirementBox.setVisible(true);
+//			reqTitle.setVisible(true);
+//			GridData dbDG = new GridData(GridData.FILL_BOTH);
+//			dbDG.minimumHeight = 75;
+//			descBox.setLayoutData(dbDG);
+//		}
+//		
+
+		workArea.update();
 			
 	}
 	
