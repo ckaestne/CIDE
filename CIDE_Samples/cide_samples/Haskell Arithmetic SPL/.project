@@ -1,7 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
 	<name>Haskell Arithmetic SPL</name>
-	<comment>Small SPL of an arithmetic expression evaluator written in Haskell. Many annotations on little space, used to explore feature granularity. Requires: GUIDSL and Haskell (in Language Extension Pack).</comment>
+	<comment>
+		[description]Small SPL of an arithmetic expression evaluator written in Haskell. Many annotations on little space, used to explore feature granularity.[/description]
+		[requirementcategory] 
+			[categoryname]de.ovgu.cide.languages[/categoryname]
+			[requirement]
+				[pluginid]de.ovgu.cide.language.haskell[/pluginid] 
+				[errormsg]CIDE Language Plugin for Haskell is not installed or disabled.[/errormsg] 
+			[/requirement]
+		[/requirementcategory]
+		[requirementcategory]
+			[categoryname]de.ovgu.cide.features[/categoryname]
+			[requirement]
+				[pluginid]de.ovgu.cide.fm.guidsl[/pluginid] 
+				[errormsg]CIDE guidsl Feature Model Plugin is not installed or disabled.[/errormsg] 
+			[/requirement]
+		[/requirementcategory]
+	</comment>
 	<projects>
 	</projects>
 	<buildSpec>

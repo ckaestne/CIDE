@@ -1,7 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
 	<name>Haskell Graph Library</name>
-	<comment>Library of graph algorithms written in Haskell. Requires: GUIDSL and Haskell (in Language Extension Pack).</comment>
+	<comment>
+		[description]Library of graph algorithms written in Haskell.[/description]
+		[requirementcategory] 
+			[categoryname]de.ovgu.cide.languages[/categoryname]
+			[requirement]
+				[pluginid]de.ovgu.cide.language.haskell[/pluginid] 
+				[errormsg]CIDE Language Plugin for Haskell is not installed or disabled.[/errormsg] 
+			[/requirement]
+		[/requirementcategory]
+		[requirementcategory]
+			[categoryname]de.ovgu.cide.features[/categoryname]
+			[requirement]
+				[pluginid]de.ovgu.cide.fm.guidsl[/pluginid] 
+				[errormsg]CIDE guidsl Feature Model Plugin is not installed or disabled.[/errormsg] 
+			[/requirement]
+		[/requirementcategory]
+	</comment>
 	<projects>
 	</projects>
 	<buildSpec>

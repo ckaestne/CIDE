@@ -47,14 +47,8 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.ScrolledComposite;
-import org.eclipse.swt.custom.StyleRange;
-import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.GlyphMetrics;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -62,25 +56,15 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.ISharedImages;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.dialogs.IOverwriteQuery;
-//import org.eclipse.ui.internal.ide.IDEWorkbenchMessages;
-//import org.eclipse.ui.internal.ide.IDEWorkbenchPlugin;
-//import org.eclipse.ui.internal.ide.StatusUtil;
-//import org.eclipse.ui.internal.wizards.datatransfer.DataTransferMessages;
-//import org.eclipse.ui.internal.wizards.datatransfer.ILeveledImportStructureProvider;
-//import org.eclipse.ui.internal.wizards.datatransfer.TarLeveledStructureProvider;
-//import org.eclipse.ui.internal.wizards.datatransfer.TarEntry;
-//import org.eclipse.ui.internal.wizards.datatransfer.TarException;
-//import org.eclipse.ui.internal.wizards.datatransfer.TarFile;
-//import org.eclipse.ui.internal.wizards.datatransfer.TarLeveledStructureProvider;
-//import org.eclipse.ui.internal.wizards.datatransfer.ZipLeveledStructureProvider;
-import org.eclipse.ui.statushandlers.StatusManager;
 import org.eclipse.ui.wizards.datatransfer.FileSystemStructureProvider;
 import org.eclipse.ui.wizards.datatransfer.ImportOperation;
 
+import de.ovgu.cide.features.FeatureModelManager;
+import de.ovgu.cide.features.FeatureModelProviderProxy;
+import de.ovgu.cide.languages.LanguageExtensionManager;
+import de.ovgu.cide.languages.LanguageExtensionProxy;
 import de.ovgu.cide.samples.utils.CommentParser;
 import de.ovgu.cide.samples.utils.RequirementCategory;
 import de.ovgu.cide.samples.utils.ZipStructureProvider;
@@ -93,10 +77,7 @@ import de.ovgu.cide.samples.utils.ZipStructureProvider;
 
 public class SampleNewWizardPage extends WizardPage implements
 IOverwriteQuery {
-//	private Text containerText;
-//	private Text fileText;
 
-	//private ISelection selection;
 	/**
 	 * The name of the folder containing metadata information for the workspace.
 	 */
@@ -112,14 +93,16 @@ IOverwriteQuery {
 	
 	private CheckboxTreeViewer projectsList;
 	private Text descBox;
-	private Text requirementBox;
-	private Label reqTitle ;
+//	private Text requirementBox;
+//	private Label reqTitle ;
 	private Composite workArea;
 	
 	
 	private ProjectRecord[] selectedProjects = new ProjectRecord[0];
 	private IProject[] wsProjects;
 	private String samplePath;
+	
+
 	/**
 	 * Constructor for SampleNewWizardPage.
 	 * 
@@ -144,7 +127,7 @@ IOverwriteQuery {
 
 		createProjectsList(workArea);
 		createDescriptionArea(workArea);
-		createRequirementsArea(workArea);
+		//createRequirementsArea(workArea);
 		
 		updateProjectsList(samplePath);
 		
@@ -186,7 +169,7 @@ IOverwriteQuery {
 			}
 
 			public Object[] getElements(Object inputElement) {
-				return getValidProjects();
+				return selectedProjects;
 			}
 
 			public boolean hasChildren(Object element) {
@@ -196,7 +179,6 @@ IOverwriteQuery {
 			public Object getParent(Object element) {
 				return null;
 			}
-
 
 			public void dispose() {}
 
@@ -213,6 +195,13 @@ IOverwriteQuery {
 
 		projectsList.addCheckStateListener(new ICheckStateListener() {
 			public void checkStateChanged(CheckStateChangedEvent event) {
+							
+				ProjectRecord tmpRecord = (ProjectRecord)event.getElement();
+				if (tmpRecord.hasWarnings()) {
+					projectsList.setChecked(tmpRecord, false);
+					setMessage(tmpRecord.getWarningText(),WARNING);
+				}
+				
 				setPageComplete(projectsList.getCheckedElements().length > 0);
 			}
 		});
@@ -222,16 +211,17 @@ IOverwriteQuery {
 				
 				if (event.getSelection() instanceof IStructuredSelection) {
 					IStructuredSelection iss = (IStructuredSelection) event.getSelection();
-					descBox.setText(((ProjectRecord) iss.getFirstElement()).getDescription());
 					
-//					StyleRange style1 = new StyleRange();
-//					style1.start = 0;
-//					style1.length = 12;
-//					style1.fontStyle = SWT.BOLD;
-//					descBox.setStyleRange(style1);
-
-					performRequirementCheck(((ProjectRecord) iss.getFirstElement()).getRequirements());
-						
+					ProjectRecord tmpRecord = (ProjectRecord) iss.getFirstElement();
+					descBox.setText(tmpRecord.getDescription());
+					
+					if (tmpRecord.hasWarnings()) {
+						setMessage(tmpRecord.getWarningText(),WARNING);
+					} 
+					else {
+						setMessage("");
+					}
+										
 				}
 						
 			}
@@ -247,12 +237,8 @@ IOverwriteQuery {
 	
 	private void createDescriptionArea(Composite workArea) {
 		
-		//Image img = workArea.getShell().getDisplay().getSystemImage(SWT.ICON_INFORMATION);
-			//PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_DEC_FIELD_WARNING);
-		
 		Label title = new Label(workArea, SWT.NONE);
 		title.setText("Description");
-		//title.setImage(img);
 		
 		descBox = new Text(workArea, SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.READ_ONLY | SWT.V_SCROLL);
 		descBox.setText ("");
@@ -261,27 +247,26 @@ IOverwriteQuery {
 		dbDG.minimumHeight = 75;
 		descBox.setLayoutData(dbDG);
 		
-
 	}
 	
+//	private void createRequirementsArea(Composite workArea) {
+//				
+//		//Image img = PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_WARN_TSK);
+//		//Image img = workArea.getShell().getDisplay().getSystemImage(SWT.ICON_WARNING);
+//		//reqTitle = new Label(workArea, SWT.NONE);
+//		//reqTitle.setText("Warning");
+//		//reqTitle.setImage(img);
+//		//reqTitle.setVisible(false);
+//		
+//		requirementBox = new Text(workArea, SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.READ_ONLY | SWT.V_SCROLL);		
+//		GridData rbDG = new GridData(GridData.FILL_BOTH);
+//		rbDG.minimumHeight = 50;
+//		requirementBox.setLayoutData(rbDG);
+//		requirementBox.setText ("");
+//		//requirementBox.setVisible(false);
+//				
+//	}
 	
-	private void createRequirementsArea(Composite workArea) {
-				
-		//Image img = PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_WARN_TSK);
-		//Image img = workArea.getShell().getDisplay().getSystemImage(SWT.ICON_WARNING);
-		//reqTitle = new Label(workArea, SWT.NONE);
-		//reqTitle.setText("Warning");
-		//reqTitle.setImage(img);
-		//reqTitle.setVisible(false);
-		
-		requirementBox = new Text(workArea, SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.READ_ONLY | SWT.V_SCROLL);		
-		GridData rbDG = new GridData(GridData.FILL_BOTH);
-		rbDG.minimumHeight = 50;
-		requirementBox.setLayoutData(rbDG);
-		requirementBox.setText ("");
-		//requirementBox.setVisible(false);
-				
-	}
 	/**
 	 * Create the selection buttons in the listComposite.
 	 * 
@@ -301,7 +286,8 @@ IOverwriteQuery {
 		selectAll.setText("Select All");
 		selectAll.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				projectsList.setCheckedElements(selectedProjects);
+				
+				selectAllElementsWithoutWarnings();
 				setPageComplete(projectsList.getCheckedElements().length > 0);
 			}
 		});
@@ -320,55 +306,7 @@ IOverwriteQuery {
 		setButtonLayoutData(deselectAll);
 
 	}
-	
-	public boolean isPluginAvailable(String category, String PluginID) {
-		//TODO!!!
-		//FeatureModelManager
-		//LanguageExtensionManager.getInstance().getActive....getId()
-		return false;
-	}
 
-	public void performRequirementCheck(List requirements) {
-		String reqMessage = "";
-		Iterator i = requirements.iterator();
-		String categoryName;
-		while (i.hasNext()) {
-			RequirementCategory cat = (RequirementCategory) i.next();
-			
-			//get the category name
-			categoryName = cat.getCategory();
-	
-			//get all plugins which need to be checked
-			Set plugins = cat.getPluginIds();
-			for (Object object : plugins) {
-				
-				if (!isPluginAvailable(categoryName, (String)object))
-					reqMessage += "Warning:" +  cat.getErrorMsg((String)object) + "\n";
-			}
-		}
-		
-		requirementBox.setText(reqMessage);
-		
-//		if (reqMessage.equals("")) {
-//			requirementBox.setVisible(false);
-//			reqTitle.setVisible(false);
-//			GridData dbDG = new GridData(GridData.FILL_BOTH);
-//			dbDG.minimumHeight = 150;
-//			descBox.setLayoutData(dbDG);
-//		}
-//		else {
-//			requirementBox.setVisible(true);
-//			reqTitle.setVisible(true);
-//			GridData dbDG = new GridData(GridData.FILL_BOTH);
-//			dbDG.minimumHeight = 75;
-//			descBox.setLayoutData(dbDG);
-//		}
-//		
-
-		workArea.update();
-			
-	}
-	
 	/**
 	 * Update the list of projects based on path. Method declared public only
 	 * for test suite.
@@ -388,7 +326,6 @@ IOverwriteQuery {
 
 		final File directory = new File(path);
 		
-		
 		try {
 			getContainer().run(true, true, new IRunnableWithProgress() {
 
@@ -404,34 +341,9 @@ IOverwriteQuery {
 					monitor
 							.beginTask("Searching for projects", 100);
 					selectedProjects = new ProjectRecord[0];
-					Collection files = new ArrayList();
+					Collection<ProjectRecord> files = new ArrayList<ProjectRecord>();
 					monitor.worked(10);
 					
-//					if (ArchiveFileManipulations.isTarFile(path)) {
-//						TarFile sourceTarFile = getSpecifiedTarSourceFile(path);
-//						if (sourceTarFile == null) {
-//							return;
-//						}
-//
-//						structureProvider = new TarLeveledStructureProvider(
-//								sourceTarFile);
-//						Object child = structureProvider.getRoot();
-//
-//						if (!collectProjectFilesFromProvider(files, child, 0,
-//								monitor)) {
-//							return;
-//						}
-//						Iterator filesIterator = files.iterator();
-//						selectedProjects = new ProjectRecord[files.size()];
-//						int index = 0;
-//						monitor.worked(50);
-//						monitor
-//								.subTask("Processing results");
-//						while (filesIterator.hasNext()) {
-//							selectedProjects[index++] = (ProjectRecord) filesIterator
-//									.next();
-//						}
-//					} else 
 					if (isZipFile(path)) {
 						ZipFile sourceFile = getSpecifiedZipSourceFile(path);
 						if (sourceFile == null) {
@@ -445,7 +357,7 @@ IOverwriteQuery {
 								monitor)) {
 							return;
 						}
-						Iterator filesIterator = files.iterator();
+						Iterator<ProjectRecord> filesIterator = files.iterator();
 						selectedProjects = new ProjectRecord[files.size()];
 						int index = 0;
 						monitor.worked(50);
@@ -463,16 +375,15 @@ IOverwriteQuery {
 								null, monitor)) {
 							return;
 						}
-						Iterator filesIterator = files.iterator();
+						Iterator<ProjectRecord> filesIterator = files.iterator();
 						selectedProjects = new ProjectRecord[files.size()];
 						int index = 0;
 						monitor.worked(50);
 						monitor
 								.subTask("Processing results");
 						while (filesIterator.hasNext()) {
-							File file = (File) filesIterator.next();
-							selectedProjects[index] = new ProjectRecord(file);
-							index++;
+							selectedProjects[index++] = (ProjectRecord) filesIterator
+							.next();
 						}
 					} else {
 						monitor.worked(60);
@@ -482,19 +393,32 @@ IOverwriteQuery {
 
 			});
 		} catch (InvocationTargetException e) {
-//TODO: Log?		IDEWorkbenchPlugin.log(e.getMessage(), e);
+			e.printStackTrace();
 		} catch (InterruptedException e) {
-			// Nothing to do if the user interrupts.
+			e.printStackTrace();
 		}
 
 		projectsList.refresh(true);
-		projectsList.setCheckedElements(getValidProjects());
-		if (getValidProjects().length < selectedProjects.length) {
-			setMessage("Some examples were hidden because they exist in the workspace directory",
-					WARNING);
-		}
+		
+		selectAllElementsWithoutWarnings();
+		
 		setPageComplete(projectsList.getCheckedElements().length > 0);
 	}
+	
+	private void selectAllElementsWithoutWarnings() {
+		
+		ProjectRecord[] records = selectedProjects;
+		for (int i = 0; i < records.length; i++) {
+			if (records[i].hasWarnings) {
+				projectsList.setGrayed(records[i],true);
+			}
+			else {
+				projectsList.setChecked(records[i],true);	
+			}
+		}
+		
+	}
+	
 	
 	/**
 	 * Answer a handle to the zip file currently specified as being the source.
@@ -508,35 +432,15 @@ IOverwriteQuery {
 		try {
 			return new ZipFile(fileName);
 		} catch (ZipException e) {
-			displayErrorDialog("Source file is not a valid Zip file.");
+			System.err.println("Source file is not a valid Zip file." + e.getStackTrace());
+
 		} catch (IOException e) {
-			displayErrorDialog("Source file could not be read.");
+			System.err.println("Source file could not be read." + e.getStackTrace());
 		}
 
 		return null;
 	}
 	
-//	/**
-//	 * Answer a handle to the zip file currently specified as being the source.
-//	 * Return null if this file does not exist or is not of valid format.
-//	 */
-//	private TarFile getSpecifiedTarSourceFile(String fileName) {
-//		if (fileName.length() == 0) {
-//			return null;
-//		}
-//
-//		try {
-//			return new TarFile(fileName);
-//		} catch (TarException e) {
-//			displayErrorDialog("Source file is not a valid tar file.");
-//		} catch (IOException e) {
-//			displayErrorDialog("Source file could not be read.");
-//		}
-//
-//		return null;
-//	}
-	
-
 	
 	/**
 	 * Collect the list of .project files that are under directory into files.
@@ -546,18 +450,18 @@ IOverwriteQuery {
 	 * 		The monitor to report to
 	 * @return boolean <code>true</code> if the operation was completed.
 	 */
-	private boolean collectProjectFilesFromProvider(Collection files,
+	private boolean collectProjectFilesFromProvider(Collection<ProjectRecord> files,
 			Object entry, int level, IProgressMonitor monitor) {
 
 		if (monitor.isCanceled()) {
 			return false;
 		}
 		monitor.subTask("Checking: " + 	structureProvider.getLabel(entry));
-		List children = structureProvider.getChildren(entry);
+		List<ZipEntry> children = structureProvider.getChildren(entry);
 		if (children == null) {
-			children = new ArrayList(1);
+			children = new ArrayList<ZipEntry>(1);
 		}
-		Iterator childrenEnum = children.iterator();
+		Iterator<ZipEntry> childrenEnum = children.iterator();
 		while (childrenEnum.hasNext()) {
 			Object child = childrenEnum.next();
 			if (structureProvider.isFolder(child)) {
@@ -583,8 +487,8 @@ IOverwriteQuery {
 	 * 		The monitor to report to
 	 * @return boolean <code>true</code> if the operation was completed.
 	 */
-	private boolean collectProjectFilesFromDirectory(Collection files,
-			File directory, Set directoriesVisited, IProgressMonitor monitor) {
+	private boolean collectProjectFilesFromDirectory(Collection<ProjectRecord> files,
+			File directory, Set<String> directoriesVisited, IProgressMonitor monitor) {
 
 		if (monitor.isCanceled()) {
 			return false;
@@ -596,14 +500,11 @@ IOverwriteQuery {
 
 		// Initialize recursion guard for recursive symbolic links
 		if (directoriesVisited == null) {
-			directoriesVisited = new HashSet();
+			directoriesVisited = new HashSet<String>();
 			try {
 				directoriesVisited.add(directory.getCanonicalPath());
 			} catch (IOException exception) {
-//TODO: Log?	
-//				StatusManager.getManager().handle(
-//						StatusUtil.newStatus(IStatus.ERROR, exception
-//								.getLocalizedMessage(), exception));
+				exception.printStackTrace();
 			}
 		}
 
@@ -612,10 +513,8 @@ IOverwriteQuery {
 		for (int i = 0; i < contents.length; i++) {
 			File file = contents[i];
 			if (file.isFile() && file.getName().equals(dotProject)) {
-				files.add(file);
-				
-				// add description
-				
+				files.add( new ProjectRecord(file));
+								
 				// don't search sub-directories since we can't have nested
 				// projects
 				return true;
@@ -632,11 +531,7 @@ IOverwriteQuery {
 							continue;
 						}
 					} catch (IOException exception) {
-//TODO: Log?	
-//						StatusManager.getManager().handle(
-//								StatusUtil.newStatus(IStatus.ERROR, exception
-//										.getLocalizedMessage(), exception));
-
+						exception.printStackTrace();
 					}
 					collectProjectFilesFromDirectory(files, contents[i],
 							directoriesVisited, monitor);
@@ -644,49 +539,6 @@ IOverwriteQuery {
 			}
 		}
 		return true;
-	}
-	/**
-	 * Get the array of valid project records that can be imported from the
-	 * source workspace or archive, selected by the user. If a project with the
-	 * same name exists in both the source workspace and the current workspace,
-	 * it will not appear in the list of projects to import and thus cannot be
-	 * selected for import.
-	 * 
-	 * Method declared public for test suite.
-	 * 
-	 * @return ProjectRecord[] array of projects that can be imported into the
-	 * 	workspace
-	 */
-	public ProjectRecord[] getValidProjects() {
-		List validProjects = new ArrayList();
-		for (int i = 0; i < selectedProjects.length; i++) {
-			if (!isProjectInWorkspace(selectedProjects[i].getProjectName())) {
-				validProjects.add(selectedProjects[i]);
-			}
-		}
-		return (ProjectRecord[]) validProjects
-				.toArray(new ProjectRecord[validProjects.size()]);
-	}
-
-	/**
-	 * Determine if the project with the given name is in the current workspace.
-	 * 
-	 * @param projectName
-	 * 		String the project name to check
-	 * @return boolean true if the project with the given name is in this
-	 * 	workspace
-	 */
-	private boolean isProjectInWorkspace(String projectName) {
-		if (projectName == null) {
-			return false;
-		}
-		IProject[] workspaceProjects = getProjectsInWorkspace();
-		for (int i = 0; i < workspaceProjects.length; i++) {
-			if (projectName.equals(workspaceProjects[i].getName())) {
-				return true;
-			}
-		}
-		return false;
 	}
 	
 	/**
@@ -748,12 +600,12 @@ IOverwriteQuery {
 						"org.eclipse.ui.ide", 1, message, t);
 			}
 			ErrorDialog.openError(getShell(), message, null, status);
+			e.printStackTrace();
 			return false;
 		}
 		closeZipStructureProvider(structureProvider,getShell());
 		return true;
 	}
-	
 	
 	/**
 	 * Create the project described in record. If it is successful return true.
@@ -785,7 +637,7 @@ IOverwriteQuery {
 		}
 		if (record.projectArchiveFile != null) {
 			// import from archive
-			List fileSystemObjects = structureProvider
+			List<ZipEntry> fileSystemObjects = structureProvider
 					.getChildren(record.parent);
 			structureProvider.setStrip(record.level);
 			ImportOperation operation = new ImportOperation(project
@@ -832,7 +684,7 @@ IOverwriteQuery {
 
 		// import operation to import project files if copy checkbox is selected
 		if (importSource != null) {
-			List filesToImport = FileSystemStructureProvider.INSTANCE
+			List<?> filesToImport = FileSystemStructureProvider.INSTANCE
 					.getChildren(importSource);
 			ImportOperation operation = new ImportOperation(project
 					.getFullPath(), importSource,
@@ -848,15 +700,6 @@ IOverwriteQuery {
 		return true;
 	}
 	
-	/**
-	 * Display an error dialog with the specified message.
-	 * 
-	 * @param message
-	 * 		the error message
-	 */
-	protected void displayErrorDialog(String message) {
-		MessageDialog.openError(getContainer().getShell(),"Internal Error", message);
-	}
 
 	/**
 	 * The <code>WizardDataTransfer</code> implementation of this
@@ -936,7 +779,7 @@ IOverwriteQuery {
 				try {
 					zipFile.close();
 				} catch (IOException e) {
-					// ignore
+					e.printStackTrace();
 				}
 			}
 		}
@@ -953,12 +796,15 @@ IOverwriteQuery {
 	 *            The shell to display any possible Dialogs in
 	 */
 	public static void closeZipStructureProvider(ZipStructureProvider structureProvider, Shell shell) {
-			
+		if (structureProvider == null)
+			return;
+		
 			try {
 				structureProvider.getZipFile().close();
 			} catch (IOException e) {
-				ErrorDialog.openError(shell, "Could not close file", e.getMessage(), new Status(IStatus.ERROR,
-						SampleNewWizard.ID, 1, "Could not close file",e));
+				e.printStackTrace();
+//				ErrorDialog.openError(shell, "Could not close file", e.getMessage(), new Status(IStatus.ERROR,
+//						SampleNewWizard.ID, 1, "Could not close file",e));
 
 			}
 	
@@ -980,12 +826,16 @@ IOverwriteQuery {
 
 		String projectName;
 		CommentParser comment;
+		private String warning = "";
+		private boolean hasWarnings = false;
 
 		Object parent;
 
 		int level;
 
 		IProjectDescription description;
+		private List<LanguageExtensionProxy> availLanguages;
+		private FeatureModelProviderProxy activeFeatureManager;
 
 		/**
 		 * Create a record for a project based on the info in the file.
@@ -995,6 +845,9 @@ IOverwriteQuery {
 		ProjectRecord(File file) {
 			projectSystemFile = file;
 			setProjectName();
+			performAlreadyExistsCheck();
+			performRequirementCheck();
+			
 		}
 
 		/**
@@ -1010,6 +863,9 @@ IOverwriteQuery {
 			this.parent = parent;
 			this.level = level;
 			setProjectName();
+			performAlreadyExistsCheck();
+			performRequirementCheck();
+
 		}
 
 		/**
@@ -1063,8 +919,10 @@ IOverwriteQuery {
 				}
 			} catch (CoreException e) {
 				// no good couldn't get the name
+				e.printStackTrace();
 			} catch (IOException e) {
 				// no good couldn't get the name
+				e.printStackTrace();
 			}
 		}
 
@@ -1103,10 +961,124 @@ IOverwriteQuery {
 			return comment == null ? "" : comment.getDescription();
 		}
 		
-		public List getRequirements() {
+		private List<RequirementCategory> getRequirements() {
 			return comment == null ? null : comment.getRequirements();
 		}
 		
+		public boolean hasWarnings() {	
+			return hasWarnings;
+		}
+		
+		public String getWarningText() {	
+			return warning;
+		}
+		
+		/**
+		 * This method needs to be extended if you would like to check availablity of further plugin
+		 * categories. Currently only "de.ovgu.cide.features" and "de.ovgu.cide.languages" are checked.
+		 * 
+		 * @param category
+		 * @param pluginID
+		 * @return
+		 */
+		private boolean isPluginAvailable(String category, String pluginID) {
+
+			//check feature availability of  model managers
+			if (category.equals("de.ovgu.cide.features")) {
+				
+				if (activeFeatureManager == null)
+					activeFeatureManager = FeatureModelManager.getInstance().getActiveFeatureModelProvider();
+				
+				if (activeFeatureManager == null)
+					return false;
+				
+				if (pluginID.equals(activeFeatureManager.getId())) {
+					return true;
+				}
+				
+			}
+			
+			
+			//check availability of language extensions
+			if (category.equals("de.ovgu.cide.languages")) {
+				
+				if (availLanguages == null)
+					availLanguages = LanguageExtensionManager.getInstance().getEnabledLanguageExtensions();
+				
+				if (availLanguages == null)
+					return false;
+				
+				for (LanguageExtensionProxy langExtProxy : availLanguages) {
+					if (pluginID.equals(langExtProxy.getId())) {
+						return true;
+					}
+				}
+				
+			}
+					
+			return false;
+		}
+
+		private void performAlreadyExistsCheck() {
+			
+			if (isProjectInWorkspace(getProjectName())) {
+				warning +="This example already exists in the workspace directory \n";
+				hasWarnings = true;
+			}
+			
+		}
+		
+		/**
+		 * Determine if the project with the given name is in the current workspace.
+		 * 
+		 * @param projectName
+		 * 		String the project name to check
+		 * @return boolean true if the project with the given name is in this
+		 * 	workspace
+		 */
+		private boolean isProjectInWorkspace(String projectName) {
+			if (projectName == null) {
+				return false;
+			}
+			IProject[] workspaceProjects = getProjectsInWorkspace();
+			for (int i = 0; i < workspaceProjects.length; i++) {
+				if (projectName.equals(workspaceProjects[i].getName())) {
+					return true;
+				}
+			}
+			return false;
+		}
+		
+		private void performRequirementCheck() {
+			
+			List<RequirementCategory> requirements = getRequirements();
+			
+			if (requirements == null)
+				return;
+			
+			Iterator<RequirementCategory> i = requirements.iterator();
+			String categoryName;
+
+			
+			while (i.hasNext()) {
+				RequirementCategory cat = i.next();
+				
+				//get the category name
+				categoryName = cat.getCategory();
+		
+				//get all plugins which need to be checked
+				Set<String> plugins = cat.getPluginIds();
+				for (String plugin : plugins) {
+					
+					if (!isPluginAvailable(categoryName, plugin)) {
+						warning += cat.getErrorMsg(plugin) + "\n";
+						hasWarnings = true;
+					}
+						
+				}
+			}
+				
+		}
 		
 		/**
 		 * Gets the label to be used when rendering this project record in the
@@ -1121,5 +1093,33 @@ IOverwriteQuery {
 
 		}
 	}
+	
+	
+	/* ****************************************************************
+	 * BACKUP
+	**************************************************************** */
+	
+	/**
+	 * Get the array of valid project records that can be imported from the
+	 * source workspace or archive, selected by the user. If a project with the
+	 * same name exists in both the source workspace and the current workspace,
+	 * it will not appear in the list of projects to import and thus cannot be
+	 * selected for import.
+	 * 
+	 * Method declared public for test suite.
+	 * 
+	 * @return ProjectRecord[] array of projects that can be imported into the
+	 * 	workspace
+	 */
+//	public ProjectRecord[] getValidProjects() {
+//		List validProjects = new ArrayList();
+//		for (int i = 0; i < selectedProjects.length; i++) {
+//			if (!isProjectInWorkspace(selectedProjects[i].getProjectName())) {
+//				validProjects.add(selectedProjects[i]);
+//			}
+//		}
+//		return (ProjectRecord[]) validProjects
+//				.toArray(new ProjectRecord[validProjects.size()]);
+//	}
 	
 }

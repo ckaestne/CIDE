@@ -18,9 +18,9 @@ import java.util.Set;
 public class RequirementCategory
 {
 	String catName;
-	Map requirements = new HashMap();
+	Map<String, String>  requirements = new HashMap<String, String>();
 	
-	public RequirementCategory (String categoryName, Map requirements) {
+	public RequirementCategory (String categoryName, Map<String, String>  requirements) {
 		this.catName = categoryName;
 		this.requirements = requirements;		
 	}
@@ -29,12 +29,12 @@ public class RequirementCategory
 		return catName;
 	}
 	
-	public Set getPluginIds() {
+	public Set<String> getPluginIds() {
 		return requirements.keySet();
 	}
 	
 	public String getErrorMsg(String pluginId) {
-		return (String)requirements.get(pluginId);
+		return requirements.get(pluginId);
 	
 	}
 }

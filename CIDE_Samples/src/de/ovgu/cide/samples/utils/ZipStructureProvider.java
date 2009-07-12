@@ -25,9 +25,9 @@ public class ZipStructureProvider implements IImportStructureProvider  {
 
 	private ZipEntry root = new ZipEntry("/");//$NON-NLS-1$
 
-	private Map children;
+	private Map<ZipEntry, List<ZipEntry>>  children;
 
-	private Map directoryEntryCache = new HashMap();
+	private Map<IPath, ZipEntry> directoryEntryCache = new HashMap<IPath, ZipEntry>();
 
 	private int stripLevel;
 
@@ -66,10 +66,10 @@ public class ZipStructureProvider implements IImportStructureProvider  {
 		}
 		ZipEntry newEntry = new ZipEntry(pathname.toString());
 		directoryEntryCache.put(pathname, newEntry);
-		List childList = new ArrayList();
+		List<ZipEntry> childList = new ArrayList<ZipEntry>();
 		children.put(newEntry, childList);
 
-		List parentChildList = (List) children.get(parent);
+		List<ZipEntry> parentChildList = (List<ZipEntry>)children.get(parent);
 		parentChildList.add(newEntry);
 		return newEntry;
 	}
@@ -87,19 +87,19 @@ public class ZipStructureProvider implements IImportStructureProvider  {
 					.removeLastSegments(1));
 		}
 
-		List childList = (List) children.get(parent);
+		List<ZipEntry>  childList = (List<ZipEntry>) children.get(parent);
 		childList.add(entry);
 	}
 
 	/*
 	 * (non-Javadoc) Method declared on IImportStructureProvider
 	 */
-	public List getChildren(Object element) {
+	public List<ZipEntry>  getChildren(Object element) {
 		if (children == null) {
 			initialize();
 		}
 
-		return ((List) children.get(element));
+		return ((List<ZipEntry>) children.get(element));
 	}
 
 	/*
@@ -109,7 +109,7 @@ public class ZipStructureProvider implements IImportStructureProvider  {
 		try {
 			return zipFile.getInputStream((ZipEntry) element);
 		} catch (IOException e) {
-			//IDEWorkbenchPlugin.log(e.getLocalizedMessage(), e);
+			System.err.println(e.getStackTrace());
 			return null;
 		}
 	}
@@ -182,8 +182,7 @@ public class ZipStructureProvider implements IImportStructureProvider  {
 		try {
 			getZipFile().close();
 		} catch (IOException e) {
-			//IDEWorkbenchPlugin.log(DataTransferMessages.ZipImport_couldNotClose
-			//		+ getZipFile().getName(), e);
+			System.err.println("Could not Close Archieve: " + e.getStackTrace());
 			return false;
 		}
 		return true;
@@ -194,10 +193,10 @@ public class ZipStructureProvider implements IImportStructureProvider  {
 	 * specified source file.
 	 */
 	protected void initialize() {
-		children = new HashMap(1000);
+		children = new HashMap<ZipEntry, List<ZipEntry>>(1000);
 
-		children.put(root, new ArrayList());
-		Enumeration entries = zipFile.entries();
+		children.put(root, new ArrayList<ZipEntry>());
+		Enumeration<?> entries = zipFile.entries();
 		while (entries.hasMoreElements()) {
 			ZipEntry entry = (ZipEntry) entries.nextElement();
 			IPath path = new Path(entry.getName()).addTrailingSeparator();

@@ -64,10 +64,7 @@ public class SampleNewWizard extends Wizard implements INewWizard {
 			
 			
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-//Todo:log
-//			IDEWorkbenchPlugin.log(e.getMessage(), e);
-//			e.printStackTrace();
+			e.printStackTrace();
 		}
         
     }

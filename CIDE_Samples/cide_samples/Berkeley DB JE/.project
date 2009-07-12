@@ -1,7 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
 	<name>BerkeleyDb</name>
-	<comment>Berkeley DB JE is an embedded database engine, in which 37 features have been annotated as part of a case study. Also demonstrates type-checking facilities. Note: set java memory to 1GB or type-checking will run extremely slow. Requires GUIDSL feature model and JDT extension (both must be active in preferences).</comment>
+	<comment>
+		[description]Berkeley DB JE is an embedded database engine, in which 37 features have been annotated as part of a case study. Also demonstrates type-checking facilities. Note: set java memory to 1GB or type-checking will run extremely slow.[/description]
+		[requirementcategory] 
+			[categoryname]de.ovgu.cide.languages[/categoryname]
+			[requirement]
+				[pluginid]de.ovgu.cide.language.jdt[/pluginid] 
+				[errormsg]CIDE Java 1.6 (Eclipse JDT based) Language Extension is not installed or disabled.[/errormsg] 
+			[/requirement]
+		[/requirementcategory]
+		[requirementcategory]
+			[categoryname]de.ovgu.cide.features[/categoryname]
+			[requirement]
+				[pluginid]de.ovgu.cide.fm.guidsl[/pluginid] 
+				[errormsg]CIDE guidsl Feature Model Plugin is not installed or disabled.[/errormsg] 
+			[/requirement]
+		[/requirementcategory]
+	</comment>
 	<projects>
 	</projects>
 	<buildSpec>

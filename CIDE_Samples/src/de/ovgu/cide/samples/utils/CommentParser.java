@@ -22,7 +22,7 @@ public class CommentParser {
 	
 	private String comment;
 	private String desc;
-	private List req = new ArrayList();
+	private List<RequirementCategory> req = new ArrayList<RequirementCategory>();
 	
 	
 	public CommentParser(String comment){
@@ -42,9 +42,9 @@ public class CommentParser {
 			
 	}
 	
-	private List getElements(String tag, String text, int fromIdx) {
+	private List<String> getElements(String tag, String text, int fromIdx) {
 		String openTag;
-		List results = new ArrayList();
+		List<String> results = new ArrayList<String>();
 		
 		
 		int startId = 0; 
@@ -83,28 +83,26 @@ public class CommentParser {
 		
 	}
 	
-	public List getRequirements() {
+	public List<RequirementCategory> getRequirements() {
 		
 		if (req.size() > 0)
 			return req;
 		
-		//get the requirements		
-		int idx = 0;
-		
-		List reqCats = getElements(REQUIREMENT_CATEGORYS_TAG, comment, 0);
-		Iterator i = reqCats.iterator();
+		//get the requirements
+		List<String> reqCats = getElements(REQUIREMENT_CATEGORYS_TAG, comment, 0);
+		Iterator<String> i = reqCats.iterator();
 		
 		String reqGroup;
 		String catName;
 		String curReq;
-		Map requirements;
+		Map<String, String> requirements;
 		
 		while (i.hasNext()) {
 			reqGroup = (String) i.next();
 			catName = getTextInTag(REQUIREMENT_CATEGORY_NAME_TAG, reqGroup);
-			requirements = new HashMap();
-			List reqs = getElements(REQUIREMENT_TAG, reqGroup, 0);
-			Iterator j = reqs.iterator();
+			requirements = new HashMap<String, String> ();
+			List<String> reqs = getElements(REQUIREMENT_TAG, reqGroup, 0);
+			Iterator<String> j = reqs.iterator();
 			
 			while(j.hasNext()) {
 				curReq = (String) j.next();
