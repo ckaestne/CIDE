@@ -67,10 +67,19 @@ public class UnifiedASTNode extends ASTNode {
 		return kind;
 	}
 
+	/**
+	 * add handling of wrappers here! careful, since appropriate removal must be
+	 * realized in a different location
+	 */
 	@Override
 	public boolean isOptional() {
 		if (getParent() == null)
 			return true;
+
+		// if this is a wrappee, it can be annotated
+		if (getParent().getWrappee() == this)
+			return true;
+
 		return super.isOptional();
 	}
 
