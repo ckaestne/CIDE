@@ -106,10 +106,11 @@ public abstract class AbstractJDTTypingCheckWithResolution extends
 					currentNode = currentNode.getParent();
 				}
 
-				if (file.getColorManager().hasColor(currentNode, color))
-					resolutions.add(new ChangeNodeColorResolution(file,
-							currentNode, Collections.singleton(color), add,
-							nodeType, relevance));
+				if (currentNode != null)
+					if (file.getColorManager().hasColor(currentNode, color))
+						resolutions.add(new ChangeNodeColorResolution(file,
+								currentNode, Collections.singleton(color), add,
+								nodeType, relevance));
 			}
 		}
 

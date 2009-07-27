@@ -221,7 +221,7 @@ public class ColoredCompilationUnitEditor extends CompilationUnitEditor implemen
 		editorExtension.createErrorPanel(parent);
 		editorExtension.alignErrorPanel(parent);
 		editorExtension.initKeepColorManager();
-		editorExtension.installAlternativeAnnotations();
+//		editorExtension.installAlternativeAnnotations();
 	}
 	
 	public IDocument getDocument() {
