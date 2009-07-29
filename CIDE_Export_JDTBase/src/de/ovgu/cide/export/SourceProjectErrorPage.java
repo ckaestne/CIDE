@@ -19,7 +19,6 @@ public class SourceProjectErrorPage extends WizardPage {
 		this.source = sourceProject;
 	}
 
-	@Override
 	public void createControl(Composite parent) {
 
 		setTitle("Cannot export");

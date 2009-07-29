@@ -263,7 +263,7 @@ public class ColoredHighlightingReconciler implements IJavaReconcilingListener,
 			return;
 
 		
-		updateInlineProjectionAnnotations(addedPositions, editor);
+//		updateInlineProjectionAnnotations(addedPositions, editor);TODO disabled inline projection
 
 		IWorkbenchPartSite site = editor.getSite();
 		if (site == null)

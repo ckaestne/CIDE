@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Set;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import de.ovgu.cide.features.Feature;
@@ -21,7 +22,7 @@ public class ColorStorageTest {
 	public void setUp() throws Exception {
 	}
 
-	@Test
+	@Test@Ignore
 	public void testLoadOldColorFile() throws Exception {
 		InputStream is = new FileInputStream("test/.dircolors");
 		ObjectInputStream out = new ObjectInputStream(is);

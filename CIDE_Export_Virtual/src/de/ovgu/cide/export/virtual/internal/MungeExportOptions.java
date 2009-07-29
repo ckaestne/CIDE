@@ -10,7 +10,6 @@ import de.ovgu.cide.features.IFeature;
 
 public class MungeExportOptions implements IPPExportOptions {
 
-	@Override
 	public String getStartInstruction(Set<IFeature> features) {
 		String result = "";
 		ArrayList<IFeature> sortedFeatures = new ArrayList<IFeature>(features);
@@ -20,7 +19,6 @@ public class MungeExportOptions implements IPPExportOptions {
 		return result;
 	}
 
-	@Override
 	public boolean inNewLine() {
 		return false;
 	}
@@ -34,7 +32,6 @@ public class MungeExportOptions implements IPPExportOptions {
 		return result.toString();
 	}
 
-	@Override
 	public String getEndInstruction(Set<IFeature> features) {
 		String result = "";
 		ArrayList<IFeature> sortedFeatures = new ArrayList<IFeature>(features);
@@ -45,7 +42,6 @@ public class MungeExportOptions implements IPPExportOptions {
 		return result;
 	}
 
-	@Override
 	public List<IUserOption> getUserOptions() {
 		return null;
 	}

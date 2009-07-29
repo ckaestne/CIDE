@@ -67,6 +67,8 @@ public class TestPersistenceAction extends Action {
 	 *      IMember)
 	 */
 	protected boolean isChecked(IAction action, IASTNode member) {
+		if (member == null)
+			return false;
 		return set.contains(member.getId());
 	}
 }

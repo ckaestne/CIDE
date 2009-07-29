@@ -12,6 +12,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
 
 import de.ovgu.cide.typing.internal.manager.TypingExtensionManager;
 import de.ovgu.cide.typing.model.ITypingProvider;
@@ -57,4 +58,6 @@ class TypecheckProjectJob extends WorkspaceJob {
 		// monitor.worked(5);
 		return Status.OK_STATUS;
 	}
+	
+	
 }

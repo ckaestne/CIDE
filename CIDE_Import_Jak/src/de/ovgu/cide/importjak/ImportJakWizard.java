@@ -52,7 +52,6 @@ public class ImportJakWizard extends Wizard implements IImportWizard {
 			setTitle("Select AHEAD/FeatureHouse Project");
 		}
 
-		@Override
 		public void createControl(Composite parent) {
 			parent = new Composite(parent, SWT.NONE);
 			RowLayout rl = new RowLayout(SWT.VERTICAL);
@@ -70,7 +69,6 @@ public class ImportJakWizard extends Wizard implements IImportWizard {
 			pathEdit.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 			pathEdit.addModifyListener(new ModifyListener() {
 
-				@Override
 				public void modifyText(ModifyEvent e) {
 					selectNewPath(pathEdit.getText());
 				}
@@ -189,7 +187,6 @@ public class ImportJakWizard extends Wizard implements IImportWizard {
 		super.addPages();
 	}
 
-	@Override
 	public boolean performFinish() {
 		assert sourceProject != null;
 		final IProject targetProject = targetWizard.getTargetProject();
@@ -235,7 +232,6 @@ public class ImportJakWizard extends Wizard implements IImportWizard {
 		return true;
 	}
 
-	@Override
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
 		if (selection != null
 				&& selection.getFirstElement() instanceof IProject)

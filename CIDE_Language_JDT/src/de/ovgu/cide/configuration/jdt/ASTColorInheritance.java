@@ -50,14 +50,14 @@ public class ASTColorInheritance {
 	static {
 		notInheritedProperties = new HashSet<ChildPropertyDescriptor>();
 		notInheritedProperties.add(IfStatement.THEN_STATEMENT_PROPERTY);
-		notInheritedProperties.add(IfStatement.ELSE_STATEMENT_PROPERTY);
+//		notInheritedProperties.add(IfStatement.ELSE_STATEMENT_PROPERTY);
 		notInheritedProperties.add(WhileStatement.BODY_PROPERTY);
 		notInheritedProperties.add(ForStatement.BODY_PROPERTY);
 		notInheritedProperties.add(DoStatement.BODY_PROPERTY);
 		notInheritedProperties.add(TryStatement.BODY_PROPERTY);
 		notInheritedProperties.add(SynchronizedStatement.BODY_PROPERTY);
 		notInheritedProperties.add(ConditionalExpression.THEN_EXPRESSION_PROPERTY);
-		notInheritedProperties.add(ConditionalExpression.ELSE_EXPRESSION_PROPERTY);
+//		notInheritedProperties.add(ConditionalExpression.ELSE_EXPRESSION_PROPERTY);
 	}
 
 	// private static List<ASTNode> wrapItem(ASTNode node){

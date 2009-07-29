@@ -81,7 +81,6 @@ public class CIDEAnnotationParser implements IResourceVisitor {
 		this.monitor = monitor;
 	}
 
-	@Override
 	public boolean visit(IResource resource) throws CoreException {
 		if (resource instanceof IFile) {
 			if (monitor != null)

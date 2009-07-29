@@ -62,12 +62,6 @@
           markerType="de.ovgu.cide.core.typing.problem">
     </markerResolutionGenerator>
  </extension>
- <extension
-       point="org.eclipse.ui.startup">
-    <startup
-          class="de.ovgu.cide.typing.CIDETypingStartup">
-    </startup>
- </extension>
 
 
 </plugin>

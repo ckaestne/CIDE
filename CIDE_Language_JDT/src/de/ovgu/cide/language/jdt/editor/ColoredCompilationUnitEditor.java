@@ -190,15 +190,16 @@ public class ColoredCompilationUnitEditor extends CompilationUnitEditor implemen
 			return super.getTitleImage();
 	}
 
-	protected JavaSourceViewer createJavaSourceViewer(Composite parent,
-			IVerticalRuler verticalRuler, IOverviewRuler overviewRuler,
-			boolean isOverviewRulerVisible, int styles, IPreferenceStore store) {
-		InlineProjectionJavaViewer viewer = new InlineProjectionJavaViewer(
-				parent, verticalRuler, getOverviewRuler(),
-				isOverviewRulerVisible(), styles, store);
-
-		return viewer;
-	}
+//	TODO: disabled inline projection
+//	protected JavaSourceViewer createJavaSourceViewer(Composite parent,
+//			IVerticalRuler verticalRuler, IOverviewRuler overviewRuler,
+//			boolean isOverviewRulerVisible, int styles, IPreferenceStore store) {
+//		InlineProjectionJavaViewer viewer = new InlineProjectionJavaViewer(
+//				parent, verticalRuler, getOverviewRuler(),
+//				isOverviewRulerVisible(), styles, store);
+//
+//		return viewer;
+//	}
 
 	@Override
 	public void createPartControl(Composite parent) {
@@ -208,15 +209,15 @@ public class ColoredCompilationUnitEditor extends CompilationUnitEditor implemen
 		if (isMarkingOccurrences())
 			uninstallOccurrencesFinder();
 
-		InlineProjectionJavaViewer viewer = (InlineProjectionJavaViewer) getViewer();
-
-		InlineProjectionSupport projectionSupport = new InlineProjectionSupport(
-				viewer, getAnnotationAccess(), getSharedColors());
-		projectionSupport.install();
-		viewer.doOperation(ProjectionViewer.TOGGLE);
-
-		viewer.disableProjection();
-		viewer.enableInlineProjection();
+//		InlineProjectionJavaViewer viewer = (InlineProjectionJavaViewer) getViewer();
+//
+//		InlineProjectionSupport projectionSupport = new InlineProjectionSupport(
+//				viewer, getAnnotationAccess(), getSharedColors());
+//		projectionSupport.install();TODO: disabled inline projection
+//		viewer.doOperation(ProjectionViewer.TOGGLE);
+//
+//		viewer.disableProjection();
+//		viewer.enableInlineProjection();
 
 		editorExtension.createErrorPanel(parent);
 		editorExtension.alignErrorPanel(parent);

@@ -6,11 +6,11 @@ import java.util.Set;
 import de.ovgu.cide.export.useroptions.IUserOption;
 import de.ovgu.cide.features.IFeature;
 
-public class CPPExportOptions implements IPPExportOptions {
+public class AntennaExportOptions implements IPPExportOptions {
 	public String getStartInstruction(Set<IFeature> features) {
 		String result = "";
 		for (IFeature f : features)
-			result += "#ifdef " + getFeatureToken(f) + "\n";
+			result += "//#ifdef " + getFeatureToken(f) + "\n";
 		return result;
 	}
 
@@ -30,7 +30,7 @@ public class CPPExportOptions implements IPPExportOptions {
 	public String getEndInstruction(Set<IFeature> features) {
 		String result = "";
 		for (int i = 0; i < features.size(); i++)
-			result += "#endif\n";
+			result += "//#endif\n";
 		return result;
 	}
 

@@ -826,8 +826,8 @@ public class ASTView extends ViewPart implements IShowInSource {
 				.setChecked(fContentProvider.isFilterNonOptional);
 		ColoredIDEImages.setImageDescriptors(fFilterNonOptionalAction,
 				ColoredIDEImages.INTERACTION);
-		fFilterNonOptionalAction
-				.setActionDefinitionId("de.ovgu.cide.astview.filternonoptional"); //$NON-NLS-1$
+//		fFilterNonOptionalAction
+//				.setActionDefinitionId("de.ovgu.cide.astview.filternonoptional"); //$NON-NLS-1$
 		// ColoredIDEImages.setImageDescriptors(fFocusAction,
 		// ColoredIDEImages.SETFOCUS);
 

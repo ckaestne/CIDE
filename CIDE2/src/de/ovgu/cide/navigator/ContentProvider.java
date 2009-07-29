@@ -1,5 +1,7 @@
 package de.ovgu.cide.navigator;
 
+import java.util.Arrays;
+
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
@@ -11,7 +13,7 @@ import org.eclipse.jface.viewers.Viewer;
 public class ContentProvider implements ITreeContentProvider {
 
 	public Object[] getChildren(Object parentElement) {
-		return null;
+		return new Object[0];
 	}
 
 	public Object getParent(Object element) {
@@ -23,7 +25,7 @@ public class ContentProvider implements ITreeContentProvider {
 	}
 
 	public Object[] getElements(Object inputElement) {
-		return null;
+		return new Object[0];
 	}
 
 	public void dispose() {

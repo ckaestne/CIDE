@@ -5,16 +5,22 @@
          point="org.eclipse.ui.exportWizards">
       <wizard
             category="de.ovgu.cide.export"
-            class="de.ovgu.cide.export.virtual.ExportCPPWizard"
-            id="de.ovgu.cide.export.ifdef"
-            name="Export to #ifdef (CPP)">
-      </wizard>
-      <wizard
-            category="de.ovgu.cide.export"
             class="de.ovgu.cide.export.virtual.ExportMungeWizard"
             id="de.ovgu.cide.export.munge"
             name="Export to Munge">
       </wizard>
+      <wizard
+            category="de.ovgu.cide.export"
+            class="de.ovgu.cide.export.virtual.ExportCPPWizard"
+            id="de.ovgu.cide.export.ifdef"
+            name="Export to #ifdef (cpp)">
+      </wizard>
+ <wizard
+            category="de.ovgu.cide.export"
+            class="de.ovgu.cide.export.virtual.ExportAntennaWizard"
+            id="de.ovgu.cide.export.antenna"
+            name="Export to #ifdef (Antenna)">
+      </wizard>      
    </extension>
 
 </plugin>

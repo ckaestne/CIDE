@@ -93,22 +93,23 @@ public class TypingManager {
 			final HashSet<ColoredSourceFile> toCheck = new HashSet<ColoredSourceFile>();
 			for (IContainer folder : event.getAffectedFolders()) {
 				try {
-					folder.accept(new IResourceVisitor() {
+					if (folder.exists())
+						folder.accept(new IResourceVisitor() {
 
-						public boolean visit(IResource resource)
-								throws CoreException {
-							if (resource instanceof IFile)
-								try {
-									toCheck
-											.add(ColoredSourceFile
-													.getColoredSourceFile((IFile) resource));
-								} catch (FeatureModelNotFoundException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
-								}
-							return true;
-						}
-					});
+							public boolean visit(IResource resource)
+									throws CoreException {
+								if (resource instanceof IFile)
+									try {
+										toCheck
+												.add(ColoredSourceFile
+														.getColoredSourceFile((IFile) resource));
+									} catch (FeatureModelNotFoundException e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+									}
+								return true;
+							}
+						});
 				} catch (CoreException e) {
 					e.printStackTrace();
 				}

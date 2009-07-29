@@ -19,7 +19,6 @@ public class UserOptionsPage extends WizardPage implements IWizardPage {
 	}
 
 	// TODO layout
-	@Override
 	public void createControl(Composite parent) {
 		Composite composite = new Composite(parent, SWT.NONE);
 		setControl(composite);

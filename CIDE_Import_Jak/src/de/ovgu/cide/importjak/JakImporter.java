@@ -83,7 +83,6 @@ public class JakImporter {
 		final Set<Set<String>> orFeatures = new HashSet<Set<String>>();
 		targetJavaProject.getFolder("model").accept(new IResourceVisitor() {
 
-			@Override
 			public boolean visit(IResource resource) throws CoreException {
 				if (resource instanceof IFile
 						&& ((IFile) resource).getFileExtension().equals("java")) {
@@ -125,7 +124,6 @@ public class JakImporter {
 		}
 		Collections.sort(sortedOrFeatures, new Comparator<List<String>>() {
 
-			@Override
 			public int compare(List<String> o1, List<String> o2) {
 				if (o1.size() < o2.size())
 					return 1;

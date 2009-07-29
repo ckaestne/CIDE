@@ -91,10 +91,14 @@
 
 
 	<extension point="org.eclipse.ui.navigator.navigatorContent">
-		<navigatorContent activeByDefault="true"
-			contentProvider="de.ovgu.cide.navigator.ContentProvider" id="coloredide.navigatorContentColorProvider"
-			labelProvider="de.ovgu.cide.navigator.ColoringProvider" name="CIDE Color Provider"
-			priority="high">
+		<navigatorContent
+        activeByDefault="true"
+        contentProvider="de.ovgu.cide.navigator.ContentProvider"
+        id="de.ovgu.cide.navigatorContentColorProvider"
+        labelProvider="de.ovgu.cide.navigator.ColoringProvider"
+        name="CIDE Color Provider"
+        priority="high"
+        providesSaveables="false">
 			<triggerPoints>
 				<or>
 					<instanceof value="org.eclipse.core.resources.IWorkspaceRoot" />

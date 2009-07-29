@@ -2,7 +2,10 @@ package de.ovgu.cide.language.jdt;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.WeakHashMap;
 
 import org.eclipse.jdt.core.dom.ChildListPropertyDescriptor;
 import org.eclipse.jdt.core.dom.ChildPropertyDescriptor;
@@ -115,7 +118,14 @@ public class ASTBridge {
 
 	}
 
+	private static final Map<org.eclipse.jdt.core.dom.ASTNode, cide.gast.ASTNode> bridgeCache = Collections
+			.synchronizedMap(new WeakHashMap<org.eclipse.jdt.core.dom.ASTNode, cide.gast.ASTNode>());
+
 	private ASTNode bridgeASTNode(org.eclipse.jdt.core.dom.ASTNode e_node) {
+		ASTNode result = bridgeCache.get(e_node);
+		if (result != null)
+			return result;
+
 		IToken c_firstToken = new PosToken(e_node.getStartPosition());
 		IToken c_lastToken = new PosToken(e_node.getStartPosition()
 				+ e_node.getLength());
@@ -146,8 +156,10 @@ public class ASTBridge {
 			}
 
 		}
-		return new UnifiedASTNode(getDisplayName(e_node), ASTID.id(e_node),
+		result = new UnifiedASTNode(getDisplayName(e_node), ASTID.id(e_node),
 				c_props, c_firstToken, c_lastToken, wrappee, getKind(e_node));
+		bridgeCache.put(e_node, result);
+		return result;
 	}
 
 	private Kind getKind(org.eclipse.jdt.core.dom.ASTNode e_node) {

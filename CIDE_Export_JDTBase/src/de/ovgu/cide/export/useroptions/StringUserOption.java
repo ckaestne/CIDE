@@ -21,7 +21,6 @@ public class StringUserOption extends AbstractUserOption implements IUserOption 
 		return value;
 	}
 
-	@Override
 	public void createUI(Composite parent) {
 		Composite composite = new Composite(parent, SWT.NONE);
 		composite.setLayout(new FillLayout(SWT.HORIZONTAL));
@@ -32,7 +31,6 @@ public class StringUserOption extends AbstractUserOption implements IUserOption 
 		text.setEnabled(true);
 		text.addModifyListener(new ModifyListener() {
 
-			@Override
 			public void modifyText(ModifyEvent e) {
 				value = text.getText();
 			}

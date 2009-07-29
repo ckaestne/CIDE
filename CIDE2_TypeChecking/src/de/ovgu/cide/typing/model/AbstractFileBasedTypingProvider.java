@@ -16,6 +16,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 
 import de.ovgu.cide.features.FeatureModelNotFoundException;
@@ -98,10 +99,15 @@ public abstract class AbstractFileBasedTypingProvider extends
 		Set<ITypingCheck> addedChecks = new HashSet<ITypingCheck>();
 		Set<ITypingCheck> obsoleteChecks = new HashSet<ITypingCheck>();
 
+		if (monitor.isCanceled())
+			return;
+
 		monitor.beginTask("Type checking...", 2);
 		SubProgressMonitor monitor1 = new SubProgressMonitor(monitor, 1);
 		monitor1.beginTask("Checking files", files.size());
 		for (ColoredSourceFile file : files) {
+			if (monitor.isCanceled())
+				return;
 			monitor1.subTask("Checking " + file.getName());
 			Set<ITypingCheck> oldChecks = checks.get(file.getResource());
 			if (oldChecks == null)

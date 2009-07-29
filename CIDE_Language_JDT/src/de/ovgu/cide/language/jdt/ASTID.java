@@ -1,7 +1,9 @@
 package de.ovgu.cide.language.jdt;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.WeakHashMap;
 
 import org.eclipse.jdt.core.dom.ASTNode;
@@ -49,7 +51,9 @@ public class ASTID implements Serializable {
 	// this.id = id;
 	// }
 
-	private static final WeakHashMap<ASTNode, ASTID> cache = new WeakHashMap<ASTNode, ASTID>();
+	private static final Map<ASTNode, ASTID> cache = Collections
+			.synchronizedMap(new WeakHashMap<ASTNode, ASTID>());
+
 
 	public static String id(ASTNode node) {
 		ASTID id = cache.get(node);
@@ -134,11 +138,11 @@ public class ASTID implements Serializable {
 				ConstructorInvocation.ARGUMENTS_PROPERTY,
 				ClassInstanceCreation.ARGUMENTS_PROPERTY,
 				SuperConstructorInvocation.ARGUMENTS_PROPERTY,
-				SuperMethodInvocation.ARGUMENTS_PROPERTY};
+				SuperMethodInvocation.ARGUMENTS_PROPERTY };
 		for (ChildListPropertyDescriptor prop : enumLists) {
 			if (node.getLocationInParent() == prop) {
-				List<?> childList = (List<?>) node.getParent().getStructuralProperty(
-						prop);
+				List<?> childList = (List<?>) node.getParent()
+						.getStructuralProperty(prop);
 				int idx = childList.indexOf(node);
 				id += "[" + idx + "]";
 			}
@@ -252,8 +256,8 @@ public class ASTID implements Serializable {
 				TryStatement.CATCH_CLAUSES_PROPERTY };
 		for (ChildListPropertyDescriptor prop : enumLists) {
 			if (node.getLocationInParent() == prop) {
-				List<?> childList = (List<?>) node.getParent().getStructuralProperty(
-						prop);
+				List<?> childList = (List<?>) node.getParent()
+						.getStructuralProperty(prop);
 				int idx = childList.indexOf(node);
 				id += "[" + idx + "]";
 			}

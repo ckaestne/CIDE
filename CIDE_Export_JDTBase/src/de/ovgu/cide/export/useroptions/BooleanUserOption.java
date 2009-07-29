@@ -20,19 +20,16 @@ public class BooleanUserOption extends AbstractUserOption implements
 		return value;
 	}
 
-	@Override
 	public void createUI(Composite parent) {
 		final Button checkbox = new Button(parent, SWT.CHECK);
 		checkbox.setText(getName());
 		checkbox.setSelection(value);
 		checkbox.addSelectionListener(new SelectionListener() {
 
-			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
 				value = checkbox.getSelection();
 			}
 
-			@Override
 			public void widgetSelected(SelectionEvent e) {
 				value = checkbox.getSelection();
 			}

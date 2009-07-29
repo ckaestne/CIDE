@@ -1,5 +1,130 @@
 <project name="Generated">
   <target name="fetch.svn.all">
-    <!-- use pluginbuilder editor to change content -->
+    <antcall target="svn.co">
+      <param name="target" value="features"/>
+      <param name="element.id" value="de.ovgu.cide.core"/>
+      <param name="project.name" value="/CIDE_Deploy_Feature_Core"/>
+      <param name="url" value="https://faracvs.cs.uni-magdeburg.de/svn/ckaestne-coloredIDE/trunk"/>
+    </antcall>
+    <antcall target="svn.co">
+      <param name="target" value="plugins"/>
+      <param name="element.id" value="de.ovgu.cide.ast"/>
+      <param name="project.name" value="/CIDE2_ast"/>
+      <param name="url" value="https://faracvs.cs.uni-magdeburg.de/svn/ckaestne-coloredIDE/trunk"/>
+    </antcall>
+    <antcall target="svn.co">
+      <param name="target" value="plugins"/>
+      <param name="element.id" value="de.ovgu.cide.core"/>
+      <param name="project.name" value="/CIDE2"/>
+      <param name="url" value="https://faracvs.cs.uni-magdeburg.de/svn/ckaestne-coloredIDE/trunk"/>
+    </antcall>
+    <antcall target="svn.co">
+      <param name="target" value="plugins"/>
+      <param name="element.id" value="de.ovgu.cide.fm.list"/>
+      <param name="project.name" value="/CIDE_FM_List"/>
+      <param name="url" value="https://faracvs.cs.uni-magdeburg.de/svn/ckaestne-coloredIDE/trunk"/>
+    </antcall>
+    <antcall target="svn.co">
+      <param name="target" value="plugins"/>
+      <param name="element.id" value="de.ovgu.cide.language.bali"/>
+      <param name="project.name" value="/CIDE_Language_Bali"/>
+      <param name="url" value="https://faracvs.cs.uni-magdeburg.de/svn/ckaestne-coloredIDE/trunk"/>
+    </antcall>
+    <antcall target="svn.co">
+      <param name="target" value="plugins"/>
+      <param name="element.id" value="de.ovgu.cide.language.properties"/>
+      <param name="project.name" value="/CIDE_Language_Properties"/>
+      <param name="url" value="https://faracvs.cs.uni-magdeburg.de/svn/ckaestne-coloredIDE/trunk"/>
+    </antcall>
+    <antcall target="svn.co">
+      <param name="target" value="plugins"/>
+      <param name="element.id" value="de.ovgu.cide.language.xml"/>
+      <param name="project.name" value="/CIDE_Language_XML_plain"/>
+      <param name="url" value="https://faracvs.cs.uni-magdeburg.de/svn/ckaestne-coloredIDE/trunk"/>
+    </antcall>
+    <antcall target="svn.co">
+      <param name="target" value="plugins"/>
+      <param name="element.id" value="de.ovgu.cide.typing"/>
+      <param name="project.name" value="/CIDE2_TypeChecking"/>
+      <param name="url" value="https://faracvs.cs.uni-magdeburg.de/svn/ckaestne-coloredIDE/trunk"/>
+    </antcall>
+    <antcall target="svn.co">
+      <param name="target" value="plugins"/>
+      <param name="element.id" value="de.ovgu.cide.doc"/>
+      <param name="project.name" value="/CIDE_Doc"/>
+      <param name="url" value="https://faracvs.cs.uni-magdeburg.de/svn/ckaestne-coloredIDE/trunk"/>
+    </antcall>
+    <antcall target="svn.co">
+      <param name="target" value="features"/>
+      <param name="element.id" value="de.ovgu.cide.guidsl"/>
+      <param name="project.name" value="/CIDE_Deploy_Feature_GUIDSL"/>
+      <param name="url" value="https://faracvs.cs.uni-magdeburg.de/svn/ckaestne-coloredIDE/trunk"/>
+    </antcall>
+    <antcall target="svn.co">
+      <param name="target" value="plugins"/>
+      <param name="element.id" value="de.ovgu.cide.fm.guidsl"/>
+      <param name="project.name" value="/CIDE_FM_guidsl"/>
+      <param name="url" value="https://faracvs.cs.uni-magdeburg.de/svn/ckaestne-coloredIDE/trunk"/>
+    </antcall>
+    <antcall target="svn.co">
+      <param name="target" value="plugins"/>
+      <param name="element.id" value="de.ovgu.featureide.fm.core"/>
+      <param name="project.name" value="/plugins/de.ovgu.featureide.fm.core"/>
+      <param name="url" value="https://faracvs.cs.uni-magdeburg.de/svn/tthuem-FeatureIDE/trunk"/>
+    </antcall>
+    <antcall target="svn.co">
+      <param name="target" value="plugins"/>
+      <param name="element.id" value="de.ovgu.featureide.fm.ui"/>
+      <param name="project.name" value="/plugins/de.ovgu.featureide.fm.ui"/>
+      <param name="url" value="https://faracvs.cs.uni-magdeburg.de/svn/tthuem-FeatureIDE/trunk"/>
+    </antcall>
+    <antcall target="svn.co">
+      <param name="target" value="features"/>
+      <param name="element.id" value="de.ovgu.cide.jdt"/>
+      <param name="project.name" value="/CIDE_Deploy_Feature_JDT"/>
+      <param name="url" value="https://faracvs.cs.uni-magdeburg.de/svn/ckaestne-coloredIDE/trunk"/>
+    </antcall>
+    <antcall target="svn.co">
+      <param name="target" value="plugins"/>
+      <param name="element.id" value="de.ovgu.cide.language.jdt"/>
+      <param name="project.name" value="/CIDE_Language_JDT"/>
+      <param name="url" value="https://faracvs.cs.uni-magdeburg.de/svn/ckaestne-coloredIDE/trunk"/>
+    </antcall>
+    <antcall target="svn.co">
+      <param name="target" value="plugins"/>
+      <param name="element.id" value="de.ovgu.cide.import.jak"/>
+      <param name="project.name" value="/CIDE_Import_Jak"/>
+      <param name="url" value="https://faracvs.cs.uni-magdeburg.de/svn/ckaestne-coloredIDE/trunk"/>
+    </antcall>
+    <antcall target="svn.co">
+      <param name="target" value="plugins"/>
+      <param name="element.id" value="de.ovgu.cide.export.jdt"/>
+      <param name="project.name" value="/CIDE_Export_JDTBase"/>
+      <param name="url" value="https://faracvs.cs.uni-magdeburg.de/svn/ckaestne-coloredIDE/trunk"/>
+    </antcall>
+    <antcall target="svn.co">
+      <param name="target" value="plugins"/>
+      <param name="element.id" value="de.ovgu.cide.export.physical"/>
+      <param name="project.name" value="/CIDE_Export_Physical"/>
+      <param name="url" value="https://faracvs.cs.uni-magdeburg.de/svn/ckaestne-coloredIDE/trunk"/>
+    </antcall>
+    <antcall target="svn.co">
+      <param name="target" value="plugins"/>
+      <param name="element.id" value="de.ovgu.cide.export.virtual"/>
+      <param name="project.name" value="/CIDE_Export_Virtual"/>
+      <param name="url" value="https://faracvs.cs.uni-magdeburg.de/svn/ckaestne-coloredIDE/trunk"/>
+    </antcall>
+    <antcall target="svn.co">
+      <param name="target" value="features"/>
+      <param name="element.id" value="de.ovgu.cide.samples"/>
+      <param name="project.name" value="/CIDE_Deploy_Feature_Samples"/>
+      <param name="url" value="https://faracvs.cs.uni-magdeburg.de/svn/ckaestne-coloredIDE/trunk"/>
+    </antcall>
+    <antcall target="svn.co">
+      <param name="target" value="plugins"/>
+      <param name="element.id" value="de.ovgu.cide.samples"/>
+      <param name="project.name" value="/CIDE_Samples"/>
+      <param name="url" value="https://faracvs.cs.uni-magdeburg.de/svn/ckaestne-coloredIDE/trunk"/>
+    </antcall>
   </target>
 </project>
