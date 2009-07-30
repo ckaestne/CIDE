@@ -56,13 +56,13 @@ public class ColoredEditorExtensions {
 		ISourceViewer getSourceViewerR();
 
 		ISelectionProvider getSelectionProvider();
-		
+
 		IDocumentProvider getDocumentProvider();
-		
+
 		IDocument getDocument();
-		
+
 		IEditorInput getEditorInput();
-		
+
 		void doSave(IProgressMonitor progressMonitor);
 	}
 
@@ -71,7 +71,8 @@ public class ColoredEditorExtensions {
 	}
 
 	private IColoredEditor editor;
-//	private AlternativeAnnotationManager altAnnotationManager;
+
+	// private AlternativeAnnotationManager altAnnotationManager;
 
 	public ColoredEditorExtensions(IColoredEditor editor) {
 		this.editor = editor;
@@ -185,53 +186,63 @@ public class ColoredEditorExtensions {
 
 		return result;
 	}
-	
+
 	public IDocument getDocument() {
 		return editor.getDocument();
 	}
-	
+
 	public IAnnotationModel getAnnotationModel() {
-		return editor.getDocumentProvider().getAnnotationModel(editor.getEditorInput());
+		return editor.getDocumentProvider().getAnnotationModel(
+				editor.getEditorInput());
 	}
-	
-//	public AlternativeAnnotationManager getAltAnnotationManager() {
-////		return altAnnotationManager;
-//	}
-	
+
+	// public AlternativeAnnotationManager getAltAnnotationManager() {
+	// // return altAnnotationManager;
+	// }
+
 	public void fillContextMenu(IMenuManager menu) {
 		if (!editor.isDirty()) {
 			ColoredSourceFile sourceFile = editor.getSourceFile();
-			
+
 			if (sourceFile != null) {
-				SelectionActionsContext context = 
-					new SelectionActionsContext(sourceFile, editor.getSelectionProvider().getSelection(), this, !sourceFile.alternativesArePossible());
+				SelectionActionsContext context = new SelectionActionsContext(
+						sourceFile, editor.getSelectionProvider()
+								.getSelection(), this, !sourceFile
+								.alternativesArePossible());
 				IFeatureModel fm = sourceFile.getFeatureModel();
-				
+
 				if (context.canColorNodes()) {
-					List<IFeature> visibleFeatures = new ArrayList<IFeature>(fm.getVisibleFeatures());
+					List<IFeature> visibleFeatures = new ArrayList<IFeature>(fm
+							.getVisibleFeatures());
 					Collections.sort(visibleFeatures);
 
+					if (ToggleTextColorAction.lastFeature != null)
+						menu.add(new ToggleLastColorAction(context,
+								ToggleTextColorAction.lastFeature));
 					for (IFeature feature : visibleFeatures) {
 						menu.add(new ToggleTextColorAction(context, feature));
 					}
 
-					menu.add(new ToggleAllFeatureSubmenu(context, fm.getFeatures()));
+					menu.add(new ToggleAllFeatureSubmenu(context, fm
+							.getFeatures()));
 					menu.add(new NewFeatureAction(context, fm));
 				}
 
 				if (editor instanceof IProjectionColoredEditor)
-					menu.add(new ColorProjectionSubmenu((IProjectionColoredEditor) editor, context));
-				
+					menu.add(new ColorProjectionSubmenu(
+							(IProjectionColoredEditor) editor, context));
+
 				if (context.canCreateAlternatives()) {
 					MenuManager mm = new MenuManager("Alternative code");
 					menu.add(mm);
 
-//					// Eine Alternative soll nur dann angelegt werden können, wenn das aktive Codefragment min. eine Farbe hat,
-//					// die es nicht von einem Elternknoten erbt.
-//					if (context.nodesHaveNonInheritedColors())
-//						mm.add(new CreateAlternativeAction(context));
-//					
-//					mm.add(new SwitchAlternativeSubmenu(context));
+					// // Eine Alternative soll nur dann angelegt werden können,
+					// wenn das aktive Codefragment min. eine Farbe hat,
+					// // die es nicht von einem Elternknoten erbt.
+					// if (context.nodesHaveNonInheritedColors())
+					// mm.add(new CreateAlternativeAction(context));
+					//					
+					// mm.add(new SwitchAlternativeSubmenu(context));
 				}
 			}
 		}
@@ -248,19 +259,20 @@ public class ColoredEditorExtensions {
 
 		parent.layout();
 	}
-	
+
 	public void installAlternativeAnnotations() {
-//		altAnnotationManager = new AlternativeAnnotationManager(getAnnotationModel());		
-//		try {
-//			if (editor.getSourceFile().isColored())
-//			altAnnotationManager.setAnnotations(editor.getSourceFile().getAltFeatureManager().getAlternativeNodesWithActiveParent());
-//		} catch (CoreException e) {
-//			markCoreException(e);
-//		} catch (ParseException e) {
-//			markParseException(e);
-//		}
+		// altAnnotationManager = new
+		// AlternativeAnnotationManager(getAnnotationModel());
+		// try {
+		// if (editor.getSourceFile().isColored())
+		// altAnnotationManager.setAnnotations(editor.getSourceFile().getAltFeatureManager().getAlternativeNodesWithActiveParent());
+		// } catch (CoreException e) {
+		// markCoreException(e);
+		// } catch (ParseException e) {
+		// markParseException(e);
+		// }
 	}
-	
+
 	public ColorCacheManager getColorCacheManager() {
 		return keepColorManager;
 	}
@@ -268,11 +280,11 @@ public class ColoredEditorExtensions {
 	public void initKeepColorManager() {
 		keepColorManager = new ColorCacheManager(editor);
 	}
-	
+
 	public void invalidateTextPresentation() {
 		editor.getSourceViewerR().invalidateTextPresentation();
 	}
-	
+
 	public void save() {
 		editor.doSave(null);
 	}
