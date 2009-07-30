@@ -9,6 +9,7 @@ import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 
 import cide.gast.ISourceFile;
+import cide.gast.SourceFileAdapter;
 import cide.gparser.ParseException;
 import cide.languages.ILanguageParser;
 

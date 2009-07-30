@@ -1,4 +1,4 @@
-package de.ovgu.cide.language.jdt;
+package cide.gast;
 
 import java.util.List;
 
@@ -15,7 +15,7 @@ import cide.gast.Property;
  */
 public class SourceFileAdapter implements ISourceFile {
 
-	private IASTNode ast;
+	public IASTNode ast;
 
 	public SourceFileAdapter(IASTNode ast) {
 		this.ast = ast;

@@ -73,6 +73,7 @@ import org.eclipse.ui.texteditor.ITextEditor;
 import cide.gast.IASTNode;
 import cide.gast.ISourceFile;
 import cide.gast.Property;
+import cide.gast.SourceFileAdapter;
 import de.ovgu.cide.ASTColorChangedEvent;
 import de.ovgu.cide.CIDECorePlugin;
 import de.ovgu.cide.ChangeType;
@@ -584,7 +585,9 @@ public class ASTView extends ViewPart implements IShowInSource {
 		setContentDescription("Open a Java editor and press the 'Show AST of active editor' toolbar button"); //$NON-NLS-1$
 	}
 
-	private void resetView(ISourceFile root) {
+	private void resetView(IASTNode root) {
+		if (root instanceof SourceFileAdapter)
+			root = ((SourceFileAdapter) root).ast;
 		if (root != null)
 			fViewer.setInput(new ASTViewContentProvider.RootCapsle(root));
 		else
@@ -826,8 +829,8 @@ public class ASTView extends ViewPart implements IShowInSource {
 				.setChecked(fContentProvider.isFilterNonOptional);
 		ColoredIDEImages.setImageDescriptors(fFilterNonOptionalAction,
 				ColoredIDEImages.INTERACTION);
-//		fFilterNonOptionalAction
-//				.setActionDefinitionId("de.ovgu.cide.astview.filternonoptional"); //$NON-NLS-1$
+		// fFilterNonOptionalAction
+		//				.setActionDefinitionId("de.ovgu.cide.astview.filternonoptional"); //$NON-NLS-1$
 		// ColoredIDEImages.setImageDescriptors(fFocusAction,
 		// ColoredIDEImages.SETFOCUS);
 
@@ -926,9 +929,7 @@ public class ASTView extends ViewPart implements IShowInSource {
 		int offset = textSelection.getOffset();
 		int length = textSelection.getLength();
 
-		NodeFinder finder = new NodeFinder(offset, length);
-		fRoot.accept(finder);
-		IASTNode covering = finder.getCoveringNode();
+		IASTNode covering = NodeFinder.perform(fRoot, offset, length);
 		if (covering != null) {
 			fViewer.reveal(covering);
 			fViewer.setSelection(new StructuredSelection(covering));
