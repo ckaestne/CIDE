@@ -8,6 +8,7 @@ import java.util.WeakHashMap;
 
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
+import org.eclipse.jdt.core.dom.ArrayInitializer;
 import org.eclipse.jdt.core.dom.Block;
 import org.eclipse.jdt.core.dom.ChildListPropertyDescriptor;
 import org.eclipse.jdt.core.dom.ClassInstanceCreation;
@@ -81,6 +82,11 @@ public class ASTID implements Serializable {
 		if (node.getParent() instanceof Block) {
 			Block block = (Block) node.getParent();
 			int idx = block.statements().indexOf(node);
+			id += "[" + idx + "]";
+		}
+		if (node.getParent() instanceof ArrayInitializer) {
+			ArrayInitializer block = (ArrayInitializer) node.getParent();
+			int idx = block.expressions().indexOf(node);
 			id += "[" + idx + "]";
 		}
 		if (node.getLocationInParent() != null && node.getParent() != null) {
