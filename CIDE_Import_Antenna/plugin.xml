@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+	<extension point="org.eclipse.ui.actionSets">
+		<actionSet id="importantenna" label="CIDE" visible="true">
+			<action class="de.ovgu.cide.importantenna.ImportAntennaAnnotationsAction"
+				id="coloride.importantenna" label="Import from Antenna"
+				menubarPath="colorMenu/colorGroup" style="push" />
+
+		</actionSet>
+	</extension>
+</plugin>
