@@ -24,7 +24,8 @@ import de.ovgu.cide.features.IFeature;
 import de.ovgu.cide.features.source.ColoredSourceFile;
 import de.ovgu.cide.features.source.ColoredSourceFileIteratorJob;
 
-public class CollectInteractionsJob extends ColoredSourceFileIteratorJob {
+public class CollectStatisticsAndInteractionsJob extends
+		ColoredSourceFileIteratorJob {
 
 	public static class InteractionPosition {
 		InteractionPosition(IASTNode node, IFile file) {
@@ -69,7 +70,7 @@ public class CollectInteractionsJob extends ColoredSourceFileIteratorJob {
 
 	private int fieldCount = 0;
 
-	public CollectInteractionsJob(IProject project, Tree resultTree) {
+	public CollectStatisticsAndInteractionsJob(IProject project, Tree resultTree) {
 		super(project, "Collecting Interactions",
 				"Collecting Interactions from");
 		this.tree = resultTree;
@@ -104,12 +105,19 @@ public class CollectInteractionsJob extends ColoredSourceFileIteratorJob {
 
 				/**
 				 * collect general statistics
+				 * 
+				 * annotation counts only if neither parent nor previous sibling
+				 * already has it
 				 */
 				@Override
 				public boolean visit(IASTNode node) {
-					// annotation counts only if neither parent nor previous
-					// sibling already has it
-					if (!source.getColorManager().getOwnColors(node).isEmpty()) {
+					// own colors cleared by parent colors, in case they overlap
+					Set<IFeature> ownColors = new HashSet<IFeature>(source.getColorManager()
+							.getOwnColors(node));
+					if (node.getParent() != null)
+						ownColors.removeAll(source.getColorManager().getColors(
+								node.getParent()));
+					if (!ownColors.isEmpty()) {
 						IASTNode previousSibling = findPreviousSibling(node);
 						if (previousSibling == null
 								|| !sameColors(previousSibling, node))
@@ -135,9 +143,10 @@ public class CollectInteractionsJob extends ColoredSourceFileIteratorJob {
 
 				private boolean sameColors(IASTNode previousSibling,
 						IASTNode node) {
-					return source.getColorManager().getOwnColors(node).equals(
-							source.getColorManager().getOwnColors(
-									previousSibling));
+					return source.getColorManager().getColors(node)
+							.equals(
+									source.getColorManager().getColors(
+											previousSibling));
 				}
 			});
 		} catch (ParseException e) {

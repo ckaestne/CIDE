@@ -26,7 +26,7 @@ import org.eclipse.ui.texteditor.ITextEditor;
 
 import de.ovgu.cide.ColoredIDEImages;
 import de.ovgu.cide.editor.ColoredTextEditor;
-import de.ovgu.cide.tools.interactionanalyzer.CollectInteractionsJob.InteractionPosition;
+import de.ovgu.cide.tools.interactionanalyzer.CollectStatisticsAndInteractionsJob.InteractionPosition;
 import de.ovgu.cide.utils.EditorUtility;
 
 
@@ -89,7 +89,7 @@ public class InteractionsView extends ViewPart {
 	private void makeActions() {
 		refreshAction = new Action() {
 			public void run() {
-				CollectInteractionsJob job = new CollectInteractionsJob(
+				CollectStatisticsAndInteractionsJob job = new CollectStatisticsAndInteractionsJob(
 						getActiveProject(), tree);
 				job.setUser(true);
 				job.schedule();

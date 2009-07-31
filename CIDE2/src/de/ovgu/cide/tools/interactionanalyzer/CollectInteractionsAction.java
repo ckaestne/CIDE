@@ -14,7 +14,7 @@ public class CollectInteractionsAction extends ColoredSourceFileIteratorAction {
 			view = part.getSite().getPage().showView(
 					InteractionsView.VIEW_ID);
 			if (view instanceof InteractionsView)
-				return new CollectInteractionsJob(p[0],
+				return new CollectStatisticsAndInteractionsJob(p[0],
 						((InteractionsView) view).tree);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

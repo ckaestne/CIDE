@@ -12,12 +12,12 @@
 
 	<extension point="org.eclipse.ui.views">
 		<view name="ASTView" icon="icons/view.gif" category="coloride"
-			class="de.ovgu.cide.astview.ASTView" id="coloredide.ASTView">
+			class="de.ovgu.cide.astview.ASTView" id="de.ovgu.cide.core.view.ASTView">
 		</view>
 		<category id="coloride" name="CIDE" />
 		<view category="coloride"
 			class="de.ovgu.cide.tools.interactionanalyzer.InteractionsView" icon="icons/interaction.GIF"
-			id="de.ovgu.cide.core.view.interactions" name="Feature Interactions">
+			id="de.ovgu.cide.core.view.interactions" name="Statistics / Feature Interactions">
 		</view>
 		<view allowMultiple="true" category="coloride"
 			class="de.ovgu.cide.tools.featureview.FeatureView" id="de.ovgu.cide.core.view.features"
@@ -29,8 +29,14 @@
 
 	<extension point="org.eclipse.ui.perspectiveExtensions">
 		<perspectiveExtension targetID="org.eclipse.jdt.ui.JavaPerspective">
-			<viewShortcut id="org.eclipse.jdt.astview.views.ASTView">
+			<viewShortcut id="de.ovgu.cide.core.view.ASTView">
 			</viewShortcut>
+   <viewShortcut
+         id="de.ovgu.cide.core.view.features">
+   </viewShortcut>
+   <viewShortcut
+         id="de.ovgu.cide.core.view.interactions">
+   </viewShortcut>
 		</perspectiveExtension>
 	</extension>
 	<extension point="org.eclipse.ui.actionSets">
