@@ -403,7 +403,7 @@ public class ColoredHighlightingReconciler implements IJavaReconcilingListener,
 	 * Schedule a background job for retrieving the AST and reconciling the
 	 * Semantic Highlighting model.
 	 */
-	private void scheduleJob() {
+	void scheduleJob() {
 		final IJavaElement element = fEditor.getInputJavaElement();
 		assert element instanceof ICompilationUnit;
 

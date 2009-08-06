@@ -3,9 +3,15 @@
 <plugin>
 
 	<extension point="org.eclipse.ui.actionSets">
-		<actionSet id="importantenna" label="CIDE" visible="true">
-			<action class="de.ovgu.cide.importantenna.ImportAntennaAnnotationsAction"
-				id="coloride.importantenna" label="Import from Antenna"
+		<actionSet id="importantennaproject" label="CIDE" visible="true">
+			<action class="de.ovgu.cide.importantenna.ImportAntennaProjectAnnotationsAction"
+				id="coloride.importantenna" label="Import Open Projects from Antenna (experimental)"
+				menubarPath="colorMenu/colorGroup" style="push" />
+
+		</actionSet>
+			<actionSet id="importantennafile" label="CIDE" visible="true">
+			<action class="de.ovgu.cide.importantenna.ImportAntennaFileAnnotationsAction"
+				id="coloride.importantenna" label="Import Current File from Antenna (experimental)"
 				menubarPath="colorMenu/colorGroup" style="push" />
 
 		</actionSet>

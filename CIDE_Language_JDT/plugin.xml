@@ -71,4 +71,13 @@
 
      </actionSet>
   </extension>
+ <extension
+       point="org.eclipse.jdt.core.compilationParticipant">
+    <compilationParticipant
+          class="de.ovgu.cide.typing.jdt.JDTProfiler"
+          createsProblems="false"
+          id="de.ovgu.cide.typing.jdt.JDTProfiler"
+          modifiesEnvironment="false">
+    </compilationParticipant>
+ </extension>
 </plugin>

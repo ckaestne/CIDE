@@ -70,7 +70,7 @@ public class ColoredHighlightingManager implements IPropertyChangeListener {
 	private ColoredHighlightingPresenter fPresenter;
 
 	/** Semantic highlighting reconciler */
-	private ColoredHighlightingReconciler fReconciler;
+	ColoredHighlightingReconciler fReconciler;
 
 	/** The editor */
 	private ColoredCompilationUnitEditor fEditor;

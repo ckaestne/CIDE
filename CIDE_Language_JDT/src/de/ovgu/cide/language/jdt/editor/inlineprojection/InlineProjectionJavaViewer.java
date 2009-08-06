@@ -2016,4 +2016,6 @@ public class InlineProjectionJavaViewer extends JavaSourceViewer implements
 			}
 		}
 	}
+	
+	
 }

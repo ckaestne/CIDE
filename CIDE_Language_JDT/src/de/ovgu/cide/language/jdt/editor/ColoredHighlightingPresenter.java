@@ -492,7 +492,7 @@ public class ColoredHighlightingPresenter implements ITextPresentationListener,
 		// checkOrdering("new positions: ", fPositions); //$NON-NLS-1$
 
 		if (textPresentation != null)
-			fSourceViewer.changeTextPresentation(textPresentation, false);
+			fSourceViewer.changeTextPresentation(textPresentation, true);
 		else
 			fSourceViewer.invalidateTextPresentation();
 	}

@@ -1,6 +1,7 @@
 package de.ovgu.cide.language.jdt.editor;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.jdt.core.ITypeRoot;
@@ -10,18 +11,15 @@ import org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditor;
 import org.eclipse.jdt.internal.ui.javaeditor.JavaSourceViewer;
 import org.eclipse.jdt.internal.ui.text.java.IJavaReconcilingListener;
 import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.source.AnnotationRulerColumn;
 import org.eclipse.jface.text.source.CompositeRuler;
 import org.eclipse.jface.text.source.IAnnotationAccess;
 import org.eclipse.jface.text.source.IAnnotationModel;
-import org.eclipse.jface.text.source.IOverviewRuler;
 import org.eclipse.jface.text.source.ISourceViewer;
-import org.eclipse.jface.text.source.IVerticalRuler;
-import org.eclipse.jface.text.source.projection.ProjectionViewer;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.IEditorInput;
 
 import de.ovgu.cide.ColoredIDEImages;
 import de.ovgu.cide.af.AlternativeAnnotation;
@@ -33,14 +31,13 @@ import de.ovgu.cide.features.FeatureModelManager;
 import de.ovgu.cide.features.FeatureModelNotFoundException;
 import de.ovgu.cide.features.IFeatureModel;
 import de.ovgu.cide.features.source.ColoredSourceFile;
-import de.ovgu.cide.language.jdt.editor.inlineprojection.InlineProjectionJavaViewer;
-import de.ovgu.cide.language.jdt.editor.inlineprojection.InlineProjectionSupport;
 
 @SuppressWarnings("restriction")
-public class ColoredCompilationUnitEditor extends CompilationUnitEditor implements IProjectionColoredEditor {
+public class ColoredCompilationUnitEditor extends CompilationUnitEditor
+		implements IProjectionColoredEditor {
 
 	public static final String EDITOR_ID = "de.ovgu.cide.ColoredCompilationUnitEditor";
-	
+
 	private final ColoredEditorExtensions editorExtension;
 	private IAnnotationAccess annotationAccess;
 
@@ -75,23 +72,26 @@ public class ColoredCompilationUnitEditor extends CompilationUnitEditor implemen
 		}
 		return null;
 	}
-	
+
 	@Override
 	protected CompositeRuler createCompositeRuler() {
 		annotationAccess = new AnnotationMarkerAccess();
-		IAnnotationModel annotationModel = getDocumentProvider().getAnnotationModel(getEditorInput());
-        AnnotationRulerColumn annotationRulerCol = new AnnotationRulerColumn(annotationModel, 16, annotationAccess);
-        annotationRulerCol.addAnnotationType(AlternativeAnnotation.ALTERNATIVE_TYPE);
-        
-        CompositeRuler compositeRuler = new CompositeRuler();
-        compositeRuler.setModel(annotationModel);
-        compositeRuler.addDecorator(0, annotationRulerCol);
-        
-        return compositeRuler;
+		IAnnotationModel annotationModel = getDocumentProvider()
+				.getAnnotationModel(getEditorInput());
+		AnnotationRulerColumn annotationRulerCol = new AnnotationRulerColumn(
+				annotationModel, 16, annotationAccess);
+		annotationRulerCol
+				.addAnnotationType(AlternativeAnnotation.ALTERNATIVE_TYPE);
+
+		CompositeRuler compositeRuler = new CompositeRuler();
+		compositeRuler.setModel(annotationModel);
+		compositeRuler.addDecorator(0, annotationRulerCol);
+
+		return compositeRuler;
 	}
 
 	private void installCodeColoring() {
-		if (fCodeColorManager == null) {
+		if (fCodeColorManager == null && getSourceViewer()!=null) {
 
 			ColoredSourceFile source = getSourceFile();
 			assert source.isColored();
@@ -104,6 +104,8 @@ public class ColoredCompilationUnitEditor extends CompilationUnitEditor implemen
 							.getDefault().getJavaTextTools().getColorManager(),
 					getPreferenceStore(), colorManager);
 		}
+		if (fCodeColorManager != null)
+			fCodeColorManager.fReconciler.scheduleJob();
 	}
 
 	/**
@@ -132,7 +134,8 @@ public class ColoredCompilationUnitEditor extends CompilationUnitEditor implemen
 
 	}
 
-	private ListenerList fReconcilingListeners = new ListenerList(ListenerList.IDENTITY);
+	private ListenerList fReconcilingListeners = new ListenerList(
+			ListenerList.IDENTITY);
 
 	private ProjectionColorManager projectionColorManager;
 
@@ -159,24 +162,25 @@ public class ColoredCompilationUnitEditor extends CompilationUnitEditor implemen
 	@Override
 	public void editorContextMenuAboutToShow(IMenuManager menu) {
 		editorExtension.fillContextMenu(menu);
-//		ColoredSourceFile sourceFile = getSourceFile();
-//		ToggleTextColorContext context = new ToggleTextColorContext(sourceFile,
-//				this.getSelectionProvider().getSelection());
-//		try {
-//			List<IFeature> visibleFeatures = new ArrayList<IFeature>(sourceFile
-//					.getFeatureModel().getVisibleFeatures());
-//			Collections.sort(visibleFeatures);
-//			for (IFeature feature : visibleFeatures) {
-//				menu.add(new ToggleTextColorAction(context, feature));
-//			}
-//			menu.add(new ToggleAllFeatureSubmenu(context, sourceFile
-//					.getFeatureModel().getFeatures()));
-//		} catch (JavaModelException e) {
-//			e.printStackTrace();
-//		}
-//		menu.add(new ColorRefAction(sourceFile.getResource()));
-//
-//		menu.add(new ColorProjectionSubmenu(this, context));
+		// ColoredSourceFile sourceFile = getSourceFile();
+		// ToggleTextColorContext context = new
+		// ToggleTextColorContext(sourceFile,
+		// this.getSelectionProvider().getSelection());
+		// try {
+		// List<IFeature> visibleFeatures = new ArrayList<IFeature>(sourceFile
+		// .getFeatureModel().getVisibleFeatures());
+		// Collections.sort(visibleFeatures);
+		// for (IFeature feature : visibleFeatures) {
+		// menu.add(new ToggleTextColorAction(context, feature));
+		// }
+		// menu.add(new ToggleAllFeatureSubmenu(context, sourceFile
+		// .getFeatureModel().getFeatures()));
+		// } catch (JavaModelException e) {
+		// e.printStackTrace();
+		// }
+		// menu.add(new ColorRefAction(sourceFile.getResource()));
+		//
+		// menu.add(new ColorProjectionSubmenu(this, context));
 
 		super.editorContextMenuAboutToShow(menu);
 	}
@@ -190,16 +194,16 @@ public class ColoredCompilationUnitEditor extends CompilationUnitEditor implemen
 			return super.getTitleImage();
 	}
 
-//	TODO: disabled inline projection
-//	protected JavaSourceViewer createJavaSourceViewer(Composite parent,
-//			IVerticalRuler verticalRuler, IOverviewRuler overviewRuler,
-//			boolean isOverviewRulerVisible, int styles, IPreferenceStore store) {
-//		InlineProjectionJavaViewer viewer = new InlineProjectionJavaViewer(
-//				parent, verticalRuler, getOverviewRuler(),
-//				isOverviewRulerVisible(), styles, store);
-//
-//		return viewer;
-//	}
+	// TODO: disabled inline projection
+	// protected JavaSourceViewer createJavaSourceViewer(Composite parent,
+	// IVerticalRuler verticalRuler, IOverviewRuler overviewRuler,
+	// boolean isOverviewRulerVisible, int styles, IPreferenceStore store) {
+	// InlineProjectionJavaViewer viewer = new InlineProjectionJavaViewer(
+	// parent, verticalRuler, getOverviewRuler(),
+	// isOverviewRulerVisible(), styles, store);
+	//
+	// return viewer;
+	// }
 
 	@Override
 	public void createPartControl(Composite parent) {
@@ -209,22 +213,24 @@ public class ColoredCompilationUnitEditor extends CompilationUnitEditor implemen
 		if (isMarkingOccurrences())
 			uninstallOccurrencesFinder();
 
-//		InlineProjectionJavaViewer viewer = (InlineProjectionJavaViewer) getViewer();
-//
-//		InlineProjectionSupport projectionSupport = new InlineProjectionSupport(
-//				viewer, getAnnotationAccess(), getSharedColors());
-//		projectionSupport.install();TODO: disabled inline projection
-//		viewer.doOperation(ProjectionViewer.TOGGLE);
-//
-//		viewer.disableProjection();
-//		viewer.enableInlineProjection();
+		// InlineProjectionJavaViewer viewer = (InlineProjectionJavaViewer)
+		// getViewer();
+		//
+		// InlineProjectionSupport projectionSupport = new
+		// InlineProjectionSupport(
+		// viewer, getAnnotationAccess(), getSharedColors());
+		// projectionSupport.install();TODO: disabled inline projection
+		// viewer.doOperation(ProjectionViewer.TOGGLE);
+		//
+		// viewer.disableProjection();
+		// viewer.enableInlineProjection();
 
 		editorExtension.createErrorPanel(parent);
 		editorExtension.alignErrorPanel(parent);
 		editorExtension.initKeepColorManager();
-//		editorExtension.installAlternativeAnnotations();
+		// editorExtension.installAlternativeAnnotations();
 	}
-	
+
 	public IDocument getDocument() {
 		return getSourceViewer().getDocument();
 	}
@@ -249,5 +255,11 @@ public class ColoredCompilationUnitEditor extends CompilationUnitEditor implemen
 		super.doSave(progressMonitor);
 
 		editorExtension.afterSave(wasDirty);
+	}
+	
+	@Override
+	protected void doSetInput(IEditorInput input) throws CoreException {
+		super.doSetInput(input);
+		installCodeColoring();
 	}
 }
