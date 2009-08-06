@@ -6,6 +6,7 @@
 	<taskdef resource="org/pluginbuilder/anttasks/pluginbuildertasks.properties" classpath="build-files/pluginbuilder-anttasks.jar" />
 	
 	<GetHostName />
+	<echo>hostname: ${hostname}</echo>
 	<property file="build_${hostname}.properties" />
 	<property file="build_local.properties" />
 	<property name="eclipse.installation.dir" value="${eclipseDir}"/>
