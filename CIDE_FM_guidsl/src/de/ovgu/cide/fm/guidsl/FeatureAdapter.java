@@ -59,15 +59,20 @@ public class FeatureAdapter implements IFeatureWithID {
 
 	@Override
 	public int hashCode() {
-		return getName().hashCode();
+		long value = getId();
+		return (int) (value ^ (value >>> 32));// see Long.hashCode;
 	}
 
 	@Override
+	/** 
+	 * two features are the same if they have the same ID (no comparison on the name!)
+	 */
 	public boolean equals(Object obj) {
 		if (obj instanceof FeatureAdapter)
-			return feature.equals(((FeatureAdapter) obj).feature);
+			return getId() == ((FeatureAdapter) obj).getId();
 		if (obj instanceof Feature)
-			return feature.equals(obj);
+			return getId() == model.extraAttributeStorage
+					.getFeatureId((Feature) obj);
 		return super.equals(obj);
 	}
 
