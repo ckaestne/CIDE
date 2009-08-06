@@ -3,13 +3,13 @@ package de.ovgu.cide.export.physical;
 import org.eclipse.core.resources.IProject;
 
 import de.ovgu.cide.export.BaseExportJob;
-import de.ovgu.cide.export.CIDEExportWizard;
+import de.ovgu.cide.export.CIDEExportTargetWizard;
 import de.ovgu.cide.export.physical.aspectj.Export2AspectJJob;
 import de.ovgu.cide.export.physical.internal.AspectJOptions;
 import de.ovgu.cide.export.physical.internal.IPhysicalOptions;
 import de.ovgu.cide.features.FeatureModelNotFoundException;
 
-public class ExportAspectJWizard extends CIDEExportWizard<IPhysicalOptions> {
+public class ExportAspectJWizard extends CIDEExportTargetWizard<IPhysicalOptions> {
 
 	public ExportAspectJWizard() {
 		super(new AspectJOptions());
