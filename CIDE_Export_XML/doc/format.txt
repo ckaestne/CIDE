@@ -1,0 +1,57 @@
+A project consists of three parts
+
+a) the source code (src directory)
+b) a feature model (model.m)
+c) annotations (annotations.xml)
+
+
+Feature model
+-------------
+
+
+Description of the Feature Model format see:
+
+http://wwwiti.cs.uni-magdeburg.de/iti_db/lehre/epmd/2008/misc/guidsl.html
+
+A parser for this format, written in Java, can be provided.
+
+
+
+Annotations
+-----------
+
+All annotations are written in a single annotations.xml file for better parsing. 
+The annotations reference the feature names from the feature model.
+
+
+In the current format, a file is split into non-overlapping fragments. So if there is an outer annotation on a class with feature X and an inner annotation on a method with feature Y, there will be three fragments: one before the method annotated with X, one describing the method annotated with X *and* Y, and a third one after the method annotated with X. That is, as a developer, you do not have to care about nesting or overlapping.
+If you need a different format (e.g., where only the original annotations are stored) contact me.
+
+
+Generally the file has a very simple, self-explaining structure:
+
+<project name="...">
+	<folder name="x">
+		<feature>x</feature>
+		<file "file.java">
+			<feature>x</feature>
+			<fragment offset="11" length="23"><feature>x</feature></fragment>
+		</file>
+	...
+	
+
+The DTD specification:
+	
+<!ELEMENT project (feature|folder|file)*>
+<!ATTLIST project   name   CDATA    #REQUIRED >
+<!ELEMENT folder (feature|folder|file)*>
+<!ATTLIST folder name   CDATA    #REQUIRED >
+<!ELEMENT file (feature|fragment)*>
+<!ATTLIST file  name   CDATA    #REQUIRED >
+<!ELEMENT fragment (feature)*>
+<!ATTLIST fragment  offset   CDATA    #REQUIRED  length   CDATA    #REQUIRED >
+<!ELEMENT feature (#PCDATA)>	 	 
+
+
+
+
