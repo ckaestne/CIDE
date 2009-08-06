@@ -7,14 +7,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
 
+import org.eclipse.jdt.core.dom.CharacterLiteral;
 import org.eclipse.jdt.core.dom.ChildListPropertyDescriptor;
 import org.eclipse.jdt.core.dom.ChildPropertyDescriptor;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.FieldDeclaration;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
+import org.eclipse.jdt.core.dom.Modifier;
+import org.eclipse.jdt.core.dom.NumberLiteral;
+import org.eclipse.jdt.core.dom.PrimitiveType;
+import org.eclipse.jdt.core.dom.SimpleName;
 import org.eclipse.jdt.core.dom.SimplePropertyDescriptor;
 import org.eclipse.jdt.core.dom.Statement;
+import org.eclipse.jdt.core.dom.StringLiteral;
 import org.eclipse.jdt.core.dom.StructuralPropertyDescriptor;
+import org.eclipse.jdt.core.dom.TextElement;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 
 import cide.gast.ASTNode;
@@ -138,9 +145,12 @@ public class ASTBridge {
 			if (e_prop.isSimpleProperty()) {
 				Property prop = bridgeSimpleProperty(e_node,
 						(SimplePropertyDescriptor) e_prop);
-				if (ASTColorInheritance.notInheritedProperties.contains(e_prop))
-					wrappee = join(wrappee, prop.getChildren());
-				c_props.add(prop);
+				if (prop != null) {
+					if (ASTColorInheritance.notInheritedProperties
+							.contains(e_prop))
+						wrappee = join(wrappee, prop.getChildren());
+					c_props.add(prop);
+				}
 			} else if (e_prop.isChildListProperty()) {
 				Property prop = bridgeChildListProperty(e_node,
 						(ChildListPropertyDescriptor) e_prop);
@@ -150,9 +160,12 @@ public class ASTBridge {
 			} else if (e_prop.isChildProperty()) {
 				Property prop = bridgeChildProperty(e_node,
 						(ChildPropertyDescriptor) e_prop);
-				if (ASTColorInheritance.notInheritedProperties.contains(e_prop))
-					wrappee = join(wrappee, prop.getChildren());
-				c_props.add(prop);
+				if (prop != null) {
+					if (ASTColorInheritance.notInheritedProperties
+							.contains(e_prop))
+						wrappee = join(wrappee, prop.getChildren());
+					c_props.add(prop);
+				}
 			}
 
 		}
@@ -206,9 +219,11 @@ public class ASTBridge {
 		assert o != null;
 		if (o instanceof org.eclipse.jdt.core.dom.ASTNode)
 			child = bridgeASTNode((org.eclipse.jdt.core.dom.ASTNode) o);
-		else
+		else if (e_node instanceof Modifier ||e_node instanceof PrimitiveType|| e_node instanceof SimpleName|| e_node instanceof NumberLiteral|| e_node instanceof CharacterLiteral || e_node instanceof StringLiteral || e_node instanceof TextElement)
 			child = new ASTTextNode(o.toString(), new SimpleToken(e_node
 					.getStartPosition(), e_node.getLength()));
+		else
+			return null;
 
 		return new PropertyOne<ASTNode>(prop.getId(), child);
 	}
@@ -233,7 +248,7 @@ public class ASTBridge {
 			org.eclipse.jdt.core.dom.ASTNode e_node,
 			ChildListPropertyDescriptor prop) {
 		Object e_object = e_node.getStructuralProperty(prop);
-		assert e_object instanceof List;
+		assert e_object instanceof List<?>;
 		List<?> e_childList = (List<?>) e_object;
 		ArrayList<ASTNode> c_children = new ArrayList<ASTNode>();
 		for (Object e_child : e_childList) {
