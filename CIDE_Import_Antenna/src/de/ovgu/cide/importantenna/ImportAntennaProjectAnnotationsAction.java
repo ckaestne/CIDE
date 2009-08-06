@@ -31,7 +31,7 @@ import de.ovgu.cide.features.source.ColoredSourceFile;
  * @author ckaestne
  * 
  */
-public class ImportAntennaAnnotationsAction implements
+public class ImportAntennaProjectAnnotationsAction implements
 		IWorkbenchWindowActionDelegate, IObjectActionDelegate,
 		IEditorActionDelegate {
 	final List<IProject> projects = new ArrayList<IProject>();

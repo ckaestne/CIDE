@@ -180,9 +180,12 @@ public class CIDEAnnotationParser implements IResourceVisitor {
 					offset += ifdefOffset + 1;
 				}
 				if (ifdefOffset < 0 || endifOffset < ifdefOffset) {
-					AnnotationMarker start = annotationStack.pop();
-					start.endPosition = findEnd(content, endifOffset) + offset;
-					annotations.add(0, start);
+					if (!annotationStack.isEmpty()) {
+						AnnotationMarker start = annotationStack.pop();
+						start.endPosition = findEnd(content, endifOffset)
+								+ offset;
+						annotations.add(0, start);
+					}
 					content = content.substring(endifOffset + 1);
 					offset += endifOffset + 1;
 				}
