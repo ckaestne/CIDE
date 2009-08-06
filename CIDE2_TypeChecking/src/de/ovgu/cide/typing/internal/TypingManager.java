@@ -209,7 +209,7 @@ public class TypingManager {
 				markWelltyped(check);
 
 		}
-		DebugTyping.print();// debug only
+		
 		monitor2.done();
 	}
 

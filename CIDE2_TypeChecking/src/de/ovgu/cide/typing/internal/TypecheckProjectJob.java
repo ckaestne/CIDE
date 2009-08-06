@@ -15,6 +15,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 
 import de.ovgu.cide.typing.internal.manager.TypingExtensionManager;
+import de.ovgu.cide.typing.model.DebugTyping;
 import de.ovgu.cide.typing.model.ITypingProvider;
 
 /**
@@ -40,24 +41,29 @@ class TypecheckProjectJob extends WorkspaceJob {
 		if (monitor.isCanceled())
 			return Status.CANCEL_STATUS;
 
-		for (IProject project : projects) if (project.isOpen()){
-			monitor.subTask("Checking "+project.getName());
-			
-			// delete old markers
-			project.deleteMarkers(TypingMarkerFactory.MARKER_TYPE_ID, true,
-					IResource.DEPTH_INFINITE);
+		for (IProject project : projects)
+			if (project.isOpen()) {
+				monitor.subTask("Checking " + project.getName());
 
-			List<ITypingProvider> typingProviders = TypingExtensionManager
-					.getInstance().getTypingProviders(project);
-			TypingExtensionManager.registerListener(typingProviders,
-					typingManager.listener);
-			for (ITypingProvider typingProvider : typingProviders) {
-				typingProvider.updateAll(monitor);
+				// delete old markers
+				project.deleteMarkers(TypingMarkerFactory.MARKER_TYPE_ID, true,
+						IResource.DEPTH_INFINITE);
+
+				DebugTyping.reset();
+				long s = System.currentTimeMillis();
+				List<ITypingProvider> typingProviders = TypingExtensionManager
+						.getInstance().getTypingProviders(project);
+				TypingExtensionManager.registerListener(typingProviders,
+						typingManager.listener);
+				for (ITypingProvider typingProvider : typingProviders) {
+					typingProvider.updateAll(monitor);
+				}
+				System.out.println("Typing SPL " + project + " in "
+						+ (System.currentTimeMillis() - s) + " ms");
+				DebugTyping.print();// debug only
 			}
-		}
 		// monitor.worked(5);
 		return Status.OK_STATUS;
 	}
-	
-	
+
 }
