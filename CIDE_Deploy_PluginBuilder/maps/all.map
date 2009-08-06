@@ -17,5 +17,6 @@ plugin@de.ovgu.cide.import.jak=COPY,C:/Users/ckaestne/Documents/uni/cide,CIDE_Im
 plugin@de.ovgu.cide.export.jdt=COPY,C:/Users/ckaestne/Documents/uni/cide,CIDE_Export_JDTBase
 plugin@de.ovgu.cide.export.physical=COPY,C:/Users/ckaestne/Documents/uni/cide,CIDE_Export_Physical
 plugin@de.ovgu.cide.export.virtual=COPY,C:/Users/ckaestne/Documents/uni/cide,CIDE_Export_Virtual
+plugin@de.ovgu.cide.export.xml=COPY,C:/Users/ckaestne/Documents/uni/cide,CIDE_Export_XML
 feature@de.ovgu.cide.samples=COPY,C:/Users/ckaestne/Documents/uni/cide,CIDE_Deploy_Feature_Samples
 plugin@de.ovgu.cide.samples=COPY,C:/Users/ckaestne/Documents/uni/cide,CIDE_Samples

@@ -115,6 +115,12 @@
       <param name="url" value="https://faracvs.cs.uni-magdeburg.de/svn/ckaestne-coloredIDE/trunk"/>
     </antcall>
     <antcall target="svn.co">
+      <param name="target" value="plugins"/>
+      <param name="element.id" value="de.ovgu.cide.export.xml"/>
+      <param name="project.name" value="/CIDE_Export_XML"/>
+      <param name="url" value="https://faracvs.cs.uni-magdeburg.de/svn/ckaestne-coloredIDE/trunk"/>
+    </antcall>
+    <antcall target="svn.co">
       <param name="target" value="features"/>
       <param name="element.id" value="de.ovgu.cide.samples"/>
       <param name="project.name" value="/CIDE_Deploy_Feature_Samples"/>
