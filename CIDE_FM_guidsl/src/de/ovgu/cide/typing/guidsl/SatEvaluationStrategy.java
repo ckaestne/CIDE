@@ -33,6 +33,7 @@ public class SatEvaluationStrategy extends AbstractCachingEvaluationStrategy {
 	public boolean implies(IFeatureModel featureModel, Set<IFeature> source,
 			Set<IFeature> target) {
 
+		DebugTyping.debug_requests++;
 		// if (source.containall(target))
 		// return true;
 
@@ -51,6 +52,7 @@ public class SatEvaluationStrategy extends AbstractCachingEvaluationStrategy {
 	@Override
 	protected boolean calcImplies(IFeatureModel featureModel,
 			Set<IFeature> source, Set<IFeature> target) {
+		DebugTyping.debug_cache_miss++;
 		// ignore empty feature models
 		assert featureModel instanceof FeatureModelProxy;
 
