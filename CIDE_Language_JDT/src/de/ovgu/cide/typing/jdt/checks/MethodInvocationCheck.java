@@ -2,33 +2,15 @@ package de.ovgu.cide.typing.jdt.checks;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.jdt.core.Flags;
-import org.eclipse.jdt.core.IJavaElement;
-import org.eclipse.jdt.core.IMethod;
-import org.eclipse.jdt.core.IType;
-import org.eclipse.jdt.core.ITypeHierarchy;
-import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.jdt.core.dom.ASTNode;
-import org.eclipse.jdt.core.dom.CompilationUnit;
-import org.eclipse.jdt.core.dom.IBinding;
 import org.eclipse.jdt.core.dom.IMethodBinding;
-import org.eclipse.jdt.internal.corext.util.JavaModelUtil;
-import org.eclipse.jdt.internal.ui.callhierarchy.MethodWrapperWorkbenchAdapter;
 
 import cide.gast.IASTNode;
-import cide.gparser.ParseException;
 import de.ovgu.cide.features.IFeature;
 import de.ovgu.cide.features.source.ColoredSourceFile;
-import de.ovgu.cide.language.jdt.ASTBridge;
-import de.ovgu.cide.language.jdt.JDTParserWrapper;
 import de.ovgu.cide.typing.jdt.JDTTypingProvider;
-import de.ovgu.cide.typing.jdt.checks.resolutions.ASTBindingFinder;
 import de.ovgu.cide.typing.jdt.checks.resolutions.ASTBindingFinderHelper;
 import de.ovgu.cide.typing.jdt.checks.resolutions.AbstractJDTTypingCheckWithResolution;
 import de.ovgu.cide.typing.jdt.checks.util.OverridenMethodFinder;
