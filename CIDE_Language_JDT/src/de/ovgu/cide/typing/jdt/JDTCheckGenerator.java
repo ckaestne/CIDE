@@ -1,6 +1,10 @@
 package de.ovgu.cide.typing.jdt;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.jdt.core.dom.ASTNode;
@@ -13,7 +17,9 @@ import org.eclipse.jdt.core.dom.IMethodBinding;
 import org.eclipse.jdt.core.dom.ITypeBinding;
 import org.eclipse.jdt.core.dom.IVariableBinding;
 import org.eclipse.jdt.core.dom.ImportDeclaration;
+import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.MethodInvocation;
+import org.eclipse.jdt.core.dom.Modifier;
 import org.eclipse.jdt.core.dom.Name;
 import org.eclipse.jdt.core.dom.ParameterizedType;
 import org.eclipse.jdt.core.dom.PrimitiveType;
@@ -35,9 +41,12 @@ import de.ovgu.cide.language.jdt.ASTBridge;
 import de.ovgu.cide.typing.jdt.checks.FieldAccessCheck;
 import de.ovgu.cide.typing.jdt.checks.ImportTargetCheck;
 import de.ovgu.cide.typing.jdt.checks.LocalVariableReferenceCheck;
+import de.ovgu.cide.typing.jdt.checks.MethodDeclarationCheck;
 import de.ovgu.cide.typing.jdt.checks.MethodInvocationCheck;
 import de.ovgu.cide.typing.jdt.checks.TypeImportedCheck;
 import de.ovgu.cide.typing.jdt.checks.TypeReferenceCheck;
+import de.ovgu.cide.typing.jdt.checks.util.CheckUtils;
+import de.ovgu.cide.typing.jdt.checks.util.InterfacePathItem;
 import de.ovgu.cide.typing.model.ITypingCheck;
 
 /**
@@ -177,6 +186,7 @@ class JDTCheckGenerator_Methods extends JDTCheckGenerator_FieldAccess {
 		super(file, jdtTypingProvider, checks);
 	}
 
+	/* METHOD INVOCATION PART */
 	@Override
 	public boolean visit(MethodInvocation node) {
 		IMethodBinding binding = node.resolveMethodBinding();
@@ -220,6 +230,53 @@ class JDTCheckGenerator_Methods extends JDTCheckGenerator_FieldAccess {
 
 		}
 	}
+	
+	/* METHOD DECLARATION PART */
+	@Override
+	public boolean visit(MethodDeclaration node) {
+		IMethodBinding binding = node.resolveBinding();
+		
+		handleMethodDeclaration(node, binding);
+		return super.visit(node);
+	}
+	
+	private void handleMethodDeclaration(ASTNode node, IMethodBinding binding) {
+		if (binding == null)
+			return;
+		
+		//check if method is abstract
+		if (Modifier.isAbstract(binding.getModifiers())) 
+			return;
+		
+		 ITypeBinding declTypeBinding = binding.getDeclaringClass();
+		
+		 //check only for classes
+		 if (declTypeBinding == null || !declTypeBinding.isClass() )
+		    return; 
+		    
+	    List<InterfacePathItem> targetMethodKeys = new ArrayList<InterfacePathItem>();
+	    Set<String> checkedInterfaces = new HashSet<String>(); 
+	    
+	    //(recursively) collects all keys of methods in abstract classes which belongs to this declaration
+	    CheckUtils.collectSimilarMethodKeysInSuperClasses(binding, declTypeBinding.getSuperclass(), targetMethodKeys, checkedInterfaces);    
+	   
+	    //(recursively) collects all keys of methods in interfaces which belongs to this declaration
+	    CheckUtils.collectSimilarMethodKeysInInterfaces(binding, declTypeBinding.getInterfaces(), targetMethodKeys, checkedInterfaces);    	    
+	
+	    //the set should contain at least one abstract method
+	    if (targetMethodKeys.size() == 0)
+	    	return;
+	    
+	    checks.add(new MethodDeclarationCheck(file, jdtTypingProvider,
+			bridge(node), binding, targetMethodKeys));
+		
+	}
+	
+	
+	
+	
+
+	
 
 	/*	*//**
 	 * util function
