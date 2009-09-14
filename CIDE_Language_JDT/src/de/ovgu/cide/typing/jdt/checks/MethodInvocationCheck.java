@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.jdt.core.dom.IMethodBinding;
+import org.eclipse.jdt.core.dom.ITypeBinding;
 
 import cide.gast.IASTNode;
 import de.ovgu.cide.features.IFeature;
@@ -13,7 +14,7 @@ import de.ovgu.cide.features.source.ColoredSourceFile;
 import de.ovgu.cide.typing.jdt.JDTTypingProvider;
 import de.ovgu.cide.typing.jdt.checks.resolutions.ASTBindingFinderHelper;
 import de.ovgu.cide.typing.jdt.checks.resolutions.AbstractJDTTypingCheckWithResolution;
-import de.ovgu.cide.typing.jdt.checks.util.OverridenMethodFinder;
+import de.ovgu.cide.typing.jdt.checks.util.CheckUtils;
 import de.ovgu.cide.typing.model.IEvaluationStrategy;
 import de.ovgu.cide.typing.model.ITypingMarkerResolution;
 
@@ -45,16 +46,15 @@ public class MethodInvocationCheck extends AbstractJDTTypingCheckWithResolution 
 		
 		//checks if target method overrides other methods for which the "implies condition" is true
 		List<String> overMethodKeys = new ArrayList<String>();
+
 		
 		//get overriden method keys
-		OverridenMethodFinder.findAllOverriddenMethodKeys(targetMethod, overMethodKeys);
+		CheckUtils.collectOverridenMethodKeysInSuperClasses(targetMethod, overMethodKeys);
 		
-		//the targetMethod(Declaration) overrides at least one method(Declaration) 			
+		//checks "OR" condition for all found keys		
 		for (String tmpKey: overMethodKeys) {
-			
-			System.out.println("CHECK: " + tmpKey);
-			
-			//check following condition for each overriden method
+
+			//checks for each overriden method the implies condition
 			if (strategy.implies(file.getFeatureModel(), file.getColorManager()
 					.getColors(source), typingProvider.getBindingColors()
 					.getColors(tmpKey))) 
@@ -64,6 +64,7 @@ public class MethodInvocationCheck extends AbstractJDTTypingCheckWithResolution 
 		return false;
 	
 	}
+	
 
 	public String getErrorMessage() {
 		return "Invoking method which is not present in some variants: "
