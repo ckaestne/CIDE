@@ -48,13 +48,13 @@ public class MethodInvocationCheck extends AbstractJDTTypingCheckWithResolution 
 		List<String> overMethodKeys = new ArrayList<String>();
 
 		
-		//get overriden method keys
-		CheckUtils.collectOverridenMethodKeysInSuperClasses(targetMethod, overMethodKeys);
+		//get overridden method keys
+		CheckUtils.collectOverriddenMethodKeysInSuperClasses(targetMethod, overMethodKeys);
 		
 		//checks "OR" condition for all found keys		
 		for (String tmpKey: overMethodKeys) {
 
-			//checks for each overriden method the implies condition
+			//checks for each overridden method the implies condition
 			if (strategy.implies(file.getFeatureModel(), file.getColorManager()
 					.getColors(source), typingProvider.getBindingColors()
 					.getColors(tmpKey))) 

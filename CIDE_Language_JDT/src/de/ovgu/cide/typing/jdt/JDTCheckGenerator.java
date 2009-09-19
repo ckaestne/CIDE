@@ -31,6 +31,7 @@ import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 import org.eclipse.jdt.core.dom.SuperConstructorInvocation;
 import org.eclipse.jdt.core.dom.SuperMethodInvocation;
 import org.eclipse.jdt.core.dom.Type;
+import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.VariableDeclaration;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 import org.eclipse.jdt.core.dom.WildcardType;
@@ -40,13 +41,18 @@ import de.ovgu.cide.features.source.ColoredSourceFile;
 import de.ovgu.cide.language.jdt.ASTBridge;
 import de.ovgu.cide.typing.jdt.checks.FieldAccessCheck;
 import de.ovgu.cide.typing.jdt.checks.ImportTargetCheck;
+import de.ovgu.cide.typing.jdt.checks.InheritedMethodExceptionCheck;
+import de.ovgu.cide.typing.jdt.checks.InheritedMethodNameCheck;
 import de.ovgu.cide.typing.jdt.checks.LocalVariableReferenceCheck;
-import de.ovgu.cide.typing.jdt.checks.MethodDeclarationCheck;
+import de.ovgu.cide.typing.jdt.checks.MethodExceptionImplementationCheck;
+import de.ovgu.cide.typing.jdt.checks.MethodNameImplementationCheck;
 import de.ovgu.cide.typing.jdt.checks.MethodInvocationCheck;
+import de.ovgu.cide.typing.jdt.checks.InheritedMethodParameterCheck;
+import de.ovgu.cide.typing.jdt.checks.MethodParameterImplementationCheck;
 import de.ovgu.cide.typing.jdt.checks.TypeImportedCheck;
 import de.ovgu.cide.typing.jdt.checks.TypeReferenceCheck;
 import de.ovgu.cide.typing.jdt.checks.util.CheckUtils;
-import de.ovgu.cide.typing.jdt.checks.util.InterfacePathItem;
+import de.ovgu.cide.typing.jdt.checks.util.MethodPathItem;
 import de.ovgu.cide.typing.model.ITypingCheck;
 
 /**
@@ -58,7 +64,7 @@ import de.ovgu.cide.typing.model.ITypingCheck;
  * TODO: overriding and parameters currently not implemented, several other
  * checks from ASE paper maybe missing
  * 
- * @author cKaestner
+ * @author cKaestner, aDreiling
  * 
  */
 
@@ -111,6 +117,7 @@ class JDTCheckGenerator_LocalVariables extends JDTCheckGenerator_Imports {
 
 	private void visitVD(VariableDeclaration node) {
 		IVariableBinding binding = node.resolveBinding();
+
 		if (binding != null)
 			knownVariableDeclarations.put(binding, bridge(node));
 	}
@@ -230,53 +237,167 @@ class JDTCheckGenerator_Methods extends JDTCheckGenerator_FieldAccess {
 
 		}
 	}
-	
+
 	/* METHOD DECLARATION PART */
 	@Override
 	public boolean visit(MethodDeclaration node) {
 		IMethodBinding binding = node.resolveBinding();
-		
-		handleMethodDeclaration(node, binding);
+
+		List<MethodPathItem> inhMethods = new ArrayList<MethodPathItem>();
+
+		boolean foundInhMethods = initializeAndCollectInhData(binding,
+				inhMethods);
+
+		if (foundInhMethods) {
+
+			handleInheritedAbstractMethodImplementation(node, binding,
+					inhMethods);
+			handleOverridingRelationshipViolation(node, binding, inhMethods);
+		}
+
 		return super.visit(node);
 	}
-	
-	private void handleMethodDeclaration(ASTNode node, IMethodBinding binding) {
-		if (binding == null)
-			return;
-		
-		//check if method is abstract
-		if (Modifier.isAbstract(binding.getModifiers())) 
-			return;
-		
-		 ITypeBinding declTypeBinding = binding.getDeclaringClass();
-		
-		 //check only for classes
-		 if (declTypeBinding == null || !declTypeBinding.isClass() )
-		    return; 
-		    
-	    List<InterfacePathItem> targetMethodKeys = new ArrayList<InterfacePathItem>();
-	    Set<String> checkedInterfaces = new HashSet<String>(); 
-	    
-	    //(recursively) collects all keys of methods in abstract classes which belongs to this declaration
-	    CheckUtils.collectSimilarMethodKeysInSuperClasses(binding, declTypeBinding.getSuperclass(), targetMethodKeys, checkedInterfaces);    
-	   
-	    //(recursively) collects all keys of methods in interfaces which belongs to this declaration
-	    CheckUtils.collectSimilarMethodKeysInInterfaces(binding, declTypeBinding.getInterfaces(), targetMethodKeys, checkedInterfaces);    	    
-	
-	    //the set should contain at least one abstract method
-	    if (targetMethodKeys.size() == 0)
-	    	return;
-	    
-	    checks.add(new MethodDeclarationCheck(file, jdtTypingProvider,
-			bridge(node), binding, targetMethodKeys));
-		
-	}
-	
-	
-	
-	
 
-	
+	private boolean initializeAndCollectInhData(IMethodBinding binding,
+			List<MethodPathItem> inhMethods) {
+		if (binding == null)
+			return false;
+
+		// check if method is abstract
+		if (Modifier.isAbstract(binding.getModifiers()))
+			return false;
+
+		ITypeBinding declTypeBinding = binding.getDeclaringClass();
+
+		// check only for classes
+		if (declTypeBinding == null || !declTypeBinding.isClass())
+			return false;
+
+		Set<String> checkedInterfaces = new HashSet<String>();
+
+		// (recursively) collects all keys of methods in abstract classes which
+		// belongs to this declaration
+		CheckUtils.collectSimilarMethodKeysInSuperClasses(binding,
+				declTypeBinding.getSuperclass(), inhMethods, checkedInterfaces);
+
+		// (recursively) collects all keys of methods in interfaces which
+		// belongs to this declaration
+		CheckUtils.collectSimilarMethodKeysInInterfaces(binding,
+				declTypeBinding.getInterfaces(), inhMethods, checkedInterfaces);
+
+		// the set should contain at least one inherited method
+		if (inhMethods.size() == 0)
+			return false;
+
+		return true;
+	}
+
+	/**
+	 * generate checks accordingly.
+	 * 
+	 * @param node
+	 * @param binding
+	 * @param declTypeBinding
+	 */
+	private void handleInheritedAbstractMethodImplementation(
+			MethodDeclaration node, IMethodBinding methodBinding,
+			List<MethodPathItem> inhMethods) {
+
+		// add check for method name
+		checks.add(new MethodNameImplementationCheck(file, jdtTypingProvider,
+				bridge(node), methodBinding, inhMethods));
+
+		//add checks for parameters
+		List parameterList = node.parameters();
+
+		for (int j = 0; j < parameterList.size(); j++) {
+
+			checks.add(new MethodParameterImplementationCheck(file,
+					jdtTypingProvider,
+					bridge((SingleVariableDeclaration) parameterList.get(j)),
+					methodBinding, j, inhMethods));
+
+		}
+
+		// add checks for exceptions
+		List exceptionList = node.thrownExceptions();
+		Name curExcNode;
+		for (int i = 0; i < exceptionList.size(); i++) {
+
+			curExcNode = (Name) exceptionList.get(i);
+			ITypeBinding curExcBinding = curExcNode.resolveTypeBinding();
+
+			if (curExcBinding == null)
+				continue;
+
+			checks.add(new MethodExceptionImplementationCheck(file,
+					jdtTypingProvider, bridge(curExcNode), methodBinding,
+					curExcBinding.getKey(), inhMethods));
+
+		}
+
+	}
+
+	private void handleOverridingRelationshipViolation(MethodDeclaration node,
+			IMethodBinding methodBinding, List<MethodPathItem> inhMethods) {
+
+		// add check for method name
+		checks.add(new InheritedMethodNameCheck(file, jdtTypingProvider,
+				bridge(node), methodBinding.getName(), inhMethods));
+
+		// add checks for exceptions
+		List parameterList = node.parameters();
+
+		// build for each parameter a list of paramters keys which are
+		// overridden
+		for (int j = 0; j < parameterList.size(); j++) {
+
+			List<String> curParamList = new ArrayList<String>();
+			for (MethodPathItem curItem : inhMethods) {
+
+				if (curItem.isAbstract())
+					continue;
+
+				curParamList.add(curItem.getInheritedParamKeys().get(j));
+
+			}
+
+			checks.add(new InheritedMethodParameterCheck(file,
+					jdtTypingProvider,
+					bridge((SingleVariableDeclaration) parameterList.get(j)),
+					methodBinding.getName(), methodBinding, curParamList));
+
+		}
+
+		// get all keys of method exceptions in super classes which are cast
+		// compatible to exceptions of "node"
+
+		// get first overridden item
+		MethodPathItem superItem = CheckUtils
+				.getFirstNonAbstractItem(inhMethods);
+
+		if (superItem == null)
+			return;
+
+		// the list should contain at least one overridden exception key
+		List exceptionList = node.thrownExceptions();
+		Name curExcNode;
+		for (int i = 0; i < exceptionList.size(); i++) {
+
+			curExcNode = (Name) exceptionList.get(i);
+			ITypeBinding curExcBinding = curExcNode.resolveTypeBinding();
+
+			if (curExcBinding == null)
+				continue;
+
+			checks.add(new InheritedMethodExceptionCheck(file,
+					jdtTypingProvider, bridge(curExcNode), curExcBinding
+							.getName(), superItem.getInheritedExceptionKeys(
+							methodBinding).get(curExcBinding.getKey())));
+
+		}
+
+	}
 
 	/*	*//**
 	 * util function

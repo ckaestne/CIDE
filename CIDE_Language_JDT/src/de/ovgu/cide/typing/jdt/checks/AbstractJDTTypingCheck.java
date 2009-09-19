@@ -17,17 +17,15 @@ public abstract class AbstractJDTTypingCheck implements ITypingCheck {
 		this.typingProvider = typingProvider;
 	}
 
-	
-
-	public final ColoredSourceFile getFile() {
+	public ColoredSourceFile getFile() {
 		return file;
 	}
 
-	public final Severity getSeverity() {
+	public Severity getSeverity() {
 		return Severity.ERROR;
 	}
 
-	public final IASTNode getSource() {
+	public IASTNode getSource() {
 		return source;
 	}
 
