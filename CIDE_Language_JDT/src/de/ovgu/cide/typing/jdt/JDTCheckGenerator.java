@@ -44,11 +44,11 @@ import de.ovgu.cide.typing.jdt.checks.ImportTargetCheck;
 import de.ovgu.cide.typing.jdt.checks.InheritedMethodExceptionCheck;
 import de.ovgu.cide.typing.jdt.checks.InheritedMethodNameCheck;
 import de.ovgu.cide.typing.jdt.checks.LocalVariableReferenceCheck;
-import de.ovgu.cide.typing.jdt.checks.MethodExceptionImplementationCheck;
-import de.ovgu.cide.typing.jdt.checks.MethodNameImplementationCheck;
+import de.ovgu.cide.typing.jdt.checks.MethodImplementationExceptionCheck;
+import de.ovgu.cide.typing.jdt.checks.MethodImplementationNameCheck;
 import de.ovgu.cide.typing.jdt.checks.MethodInvocationCheck;
 import de.ovgu.cide.typing.jdt.checks.InheritedMethodParameterCheck;
-import de.ovgu.cide.typing.jdt.checks.MethodParameterImplementationCheck;
+import de.ovgu.cide.typing.jdt.checks.MethodImplementationParameterCheck;
 import de.ovgu.cide.typing.jdt.checks.TypeImportedCheck;
 import de.ovgu.cide.typing.jdt.checks.TypeReferenceCheck;
 import de.ovgu.cide.typing.jdt.checks.util.CheckUtils;
@@ -232,8 +232,12 @@ class JDTCheckGenerator_Methods extends JDTCheckGenerator_FieldAccess {
 
 	private void handleMethodCall(ASTNode node, IMethodBinding binding) {
 		if (binding != null) {
+			
+			//name check
 			checks.add(new MethodInvocationCheck(file, jdtTypingProvider,
 					bridge(node), binding));
+			
+			//handle parameters
 
 		}
 	}
@@ -304,7 +308,7 @@ class JDTCheckGenerator_Methods extends JDTCheckGenerator_FieldAccess {
 			List<MethodPathItem> inhMethods) {
 
 		// add check for method name
-		checks.add(new MethodNameImplementationCheck(file, jdtTypingProvider,
+		checks.add(new MethodImplementationNameCheck(file, jdtTypingProvider,
 				bridge(node), methodBinding, inhMethods));
 
 		//add checks for parameters
@@ -312,7 +316,7 @@ class JDTCheckGenerator_Methods extends JDTCheckGenerator_FieldAccess {
 
 		for (int j = 0; j < parameterList.size(); j++) {
 
-			checks.add(new MethodParameterImplementationCheck(file,
+			checks.add(new MethodImplementationParameterCheck(file,
 					jdtTypingProvider,
 					bridge((SingleVariableDeclaration) parameterList.get(j)),
 					methodBinding, j, inhMethods));
@@ -330,7 +334,7 @@ class JDTCheckGenerator_Methods extends JDTCheckGenerator_FieldAccess {
 			if (curExcBinding == null)
 				continue;
 
-			checks.add(new MethodExceptionImplementationCheck(file,
+			checks.add(new MethodImplementationExceptionCheck(file,
 					jdtTypingProvider, bridge(curExcNode), methodBinding,
 					curExcBinding.getKey(), inhMethods));
 

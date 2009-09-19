@@ -19,13 +19,13 @@ import de.ovgu.cide.typing.model.IEvaluationStrategy;
  * @author adreilin
  * 
  */
-public class MethodParameterImplementationCheck extends AbstractJDTTypingCheck {
+public class MethodImplementationParameterCheck extends AbstractJDTTypingCheck {
 
 	private final int paramIndex;
 	private final List<MethodPathItem> inherMethods;
 	private final String name;
 
-	public MethodParameterImplementationCheck(ColoredSourceFile file,
+	public MethodImplementationParameterCheck(ColoredSourceFile file,
 			JDTTypingProvider typingProvider, IASTNode source,
 			IMethodBinding methodBinding, int paramIndex, List<MethodPathItem> inherMethods) {
 		super(file, typingProvider, source);
@@ -71,7 +71,7 @@ public class MethodParameterImplementationCheck extends AbstractJDTTypingCheck {
 	}
 
 	public String getProblemType() {
-		return "de.ovgu.cide.typing.jdt.methodparameterimplementation";
+		return "de.ovgu.cide.typing.jdt.methodimplementationparameter";
 	}
 
 }
