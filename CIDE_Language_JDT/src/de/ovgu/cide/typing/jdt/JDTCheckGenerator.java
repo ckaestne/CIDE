@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.jdt.core.dom.ASTNode;
@@ -31,7 +30,6 @@ import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 import org.eclipse.jdt.core.dom.SuperConstructorInvocation;
 import org.eclipse.jdt.core.dom.SuperMethodInvocation;
 import org.eclipse.jdt.core.dom.Type;
-import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.VariableDeclaration;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 import org.eclipse.jdt.core.dom.WildcardType;
@@ -40,15 +38,15 @@ import cide.gast.IASTNode;
 import de.ovgu.cide.features.source.ColoredSourceFile;
 import de.ovgu.cide.language.jdt.ASTBridge;
 import de.ovgu.cide.typing.jdt.checks.FieldAccessCheck;
+import de.ovgu.cide.typing.jdt.checks.FieldAssignmentCheck;
 import de.ovgu.cide.typing.jdt.checks.ImportTargetCheck;
 import de.ovgu.cide.typing.jdt.checks.InheritedMethodExceptionCheck;
-import de.ovgu.cide.typing.jdt.checks.InheritedMethodNameCheck;
+import de.ovgu.cide.typing.jdt.checks.InheritedMethodCheck;
 import de.ovgu.cide.typing.jdt.checks.LocalVariableReferenceCheck;
 import de.ovgu.cide.typing.jdt.checks.MethodImplementationExceptionCheck;
 import de.ovgu.cide.typing.jdt.checks.MethodImplementationNameCheck;
-import de.ovgu.cide.typing.jdt.checks.MethodInvocationCheck;
-import de.ovgu.cide.typing.jdt.checks.InheritedMethodParameterCheck;
 import de.ovgu.cide.typing.jdt.checks.MethodImplementationParameterCheck;
+import de.ovgu.cide.typing.jdt.checks.MethodInvocationCheck;
 import de.ovgu.cide.typing.jdt.checks.TypeImportedCheck;
 import de.ovgu.cide.typing.jdt.checks.TypeReferenceCheck;
 import de.ovgu.cide.typing.jdt.checks.util.CheckUtils;
@@ -61,7 +59,7 @@ import de.ovgu.cide.typing.model.ITypingCheck;
  * 
  * split into subclasses for different concerns
  * 
- * TODO: overriding and parameters currently not implemented, several other
+ * TODO: several other
  * checks from ASE paper maybe missing
  * 
  * @author cKaestner, aDreiling
@@ -197,7 +195,8 @@ class JDTCheckGenerator_Methods extends JDTCheckGenerator_FieldAccess {
 	@Override
 	public boolean visit(MethodInvocation node) {
 		IMethodBinding binding = node.resolveMethodBinding();
-		handleMethodCall(node, binding);
+		List args = node.arguments();
+		handleMethodCall(node, binding, args);
 
 		return super.visit(node);
 	}
@@ -205,41 +204,43 @@ class JDTCheckGenerator_Methods extends JDTCheckGenerator_FieldAccess {
 	@Override
 	public boolean visit(ConstructorInvocation node) {
 		IMethodBinding binding = node.resolveConstructorBinding();
-		handleMethodCall(node, binding);
+		List args = node.arguments();
+		handleMethodCall(node, binding, args);
 		return super.visit(node);
 	}
 
 	@Override
 	public boolean visit(ClassInstanceCreation node) {
 		IMethodBinding binding = node.resolveConstructorBinding();
-		handleMethodCall(node, binding);
+		List args = node.arguments();
+		handleMethodCall(node, binding, args);
 		return super.visit(node);
 	}
 
 	@Override
 	public boolean visit(SuperConstructorInvocation node) {
 		IMethodBinding binding = node.resolveConstructorBinding();
-		handleMethodCall(node, binding);
+		List args = node.arguments();
+		handleMethodCall(node, binding, args);
 		return super.visit(node);
 	}
 
 	@Override
 	public boolean visit(SuperMethodInvocation node) {
 		IMethodBinding binding = node.resolveMethodBinding();
-		handleMethodCall(node, binding);
+		List args = node.arguments();
+		handleMethodCall(node, binding, args);
 		return super.visit(node);
 	}
 
-	private void handleMethodCall(ASTNode node, IMethodBinding binding) {
-		if (binding != null) {
+	private void handleMethodCall(ASTNode node, IMethodBinding methodBinding, List arguments) {
+		if (methodBinding == null) 
+			return;
 			
-			//name check
-			checks.add(new MethodInvocationCheck(file, jdtTypingProvider,
-					bridge(node), binding));
-			
-			//handle parameters
+		//name check
+		checks.add(new MethodInvocationCheck(file, jdtTypingProvider,
+				bridge(node), CheckUtils.getIASTNodeList(arguments), methodBinding));	
 
-		}
 	}
 
 	/* METHOD DECLARATION PART */
@@ -345,44 +346,19 @@ class JDTCheckGenerator_Methods extends JDTCheckGenerator_FieldAccess {
 	private void handleOverridingRelationshipViolation(MethodDeclaration node,
 			IMethodBinding methodBinding, List<MethodPathItem> inhMethods) {
 
-		// add check for method name
-		checks.add(new InheritedMethodNameCheck(file, jdtTypingProvider,
-				bridge(node), methodBinding.getName(), inhMethods));
-
-		// add checks for exceptions
-		List parameterList = node.parameters();
-
-		// build for each parameter a list of paramters keys which are
-		// overridden
-		for (int j = 0; j < parameterList.size(); j++) {
-
-			List<String> curParamList = new ArrayList<String>();
-			for (MethodPathItem curItem : inhMethods) {
-
-				if (curItem.isAbstract())
-					continue;
-
-				curParamList.add(curItem.getInheritedParamKeys().get(j));
-
-			}
-
-			checks.add(new InheritedMethodParameterCheck(file,
-					jdtTypingProvider,
-					bridge((SingleVariableDeclaration) parameterList.get(j)),
-					methodBinding.getName(), methodBinding, curParamList));
-
-		}
-
-		// get all keys of method exceptions in super classes which are cast
-		// compatible to exceptions of "node"
-
 		// get first overridden item
 		MethodPathItem superItem = CheckUtils
 				.getFirstNonAbstractItem(inhMethods);
 
 		if (superItem == null)
 			return;
+		
+		// add check for method name and params
+		checks.add(new InheritedMethodCheck(file, jdtTypingProvider,
+				bridge(node), CheckUtils.getIASTNodeList(node.parameters()), methodBinding.getName(), superItem));
 
+		// get all keys of method exceptions in super classes which are cast
+		// compatible to exceptions of "node"
 		// the list should contain at least one overridden exception key
 		List exceptionList = node.thrownExceptions();
 		Name curExcNode;
@@ -431,13 +407,32 @@ class JDTCheckGenerator_FieldAccess extends JDTCheckGenerator_Base {
 	protected void visitName(Name node) {
 		IBinding binding = node.resolveBinding();
 
-		if (binding instanceof IVariableBinding
+		if (binding != null && binding instanceof IVariableBinding
 				&& ((IVariableBinding) binding).isField()) {
-
-			checks.add(new FieldAccessCheck(file, jdtTypingProvider,
-					bridge(node), (IVariableBinding) binding));
+			handleFieldChecks(node, (IVariableBinding) binding);
 		}
+		
 		super.visitName(node);
+	}
+	
+	private void handleFieldChecks(Name node, IVariableBinding binding) {
+		
+		//add field access check
+		checks.add(new FieldAccessCheck(file, jdtTypingProvider,
+				bridge(node),  binding));
+		
+		//add assignment check for final fields
+		if (Modifier.isFinal((binding).getModifiers())) {
+			
+			ITypeBinding declClass = binding.getDeclaringClass();
+			
+			if (declClass != null && declClass.isFromSource())
+				checks.add(new FieldAssignmentCheck(file, jdtTypingProvider,
+					bridge(node), binding));
+			
+		}
+
+		
 	}
 }
 

@@ -48,7 +48,7 @@ public class MethodImplementationParameterCheck extends AbstractJDTTypingCheck {
 				continue;
 							
 
-			// we have found one overriden method for which "target -> source"
+			// we have found one overridden method for which "target -> source"
 			// is false
 
 			// checks if current item is abstract

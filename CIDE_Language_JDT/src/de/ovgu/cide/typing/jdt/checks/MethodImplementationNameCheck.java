@@ -26,7 +26,7 @@ public class MethodImplementationNameCheck extends
 	private final String name;
 
 	public MethodImplementationNameCheck(ColoredSourceFile file,
-			JDTTypingProvider typingProvider, IASTNode source,
+			JDTTypingProvider typingProvider, IASTNode source, 
 			IMethodBinding sourceBinding, List<MethodPathItem> inherMethods) {
 		super(file, typingProvider, source);
 		this.inherMethods = inherMethods;

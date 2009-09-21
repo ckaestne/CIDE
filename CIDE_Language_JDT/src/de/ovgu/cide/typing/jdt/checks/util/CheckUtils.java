@@ -4,9 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.jdt.core.dom.ASTNode;
+import org.eclipse.jdt.core.dom.Expression;
 import org.eclipse.jdt.core.dom.IMethodBinding;
 import org.eclipse.jdt.core.dom.ITypeBinding;
 import org.eclipse.jdt.core.dom.Modifier;
+
+import cide.gast.IASTNode;
+import de.ovgu.cide.language.jdt.ASTBridge;
 
 /**
  * provides some methods for check preparation
@@ -15,6 +20,18 @@ import org.eclipse.jdt.core.dom.Modifier;
  * 
  */
 public class CheckUtils /* extends ASTVisitor */{
+	
+	public static List<IASTNode> getIASTNodeList(List list) {
+
+		ArrayList<IASTNode> l = new ArrayList<IASTNode>();
+		for (int j = 0; j < list.size(); j++) {
+			l.add(ASTBridge.bridge((ASTNode)list.get(j)));
+		}
+		
+		
+		return l;
+		
+	}
 
 	public static MethodPathItem getFirstNonAbstractItem(
 			List<MethodPathItem> inherMethods) {
@@ -34,21 +51,21 @@ public class CheckUtils /* extends ASTVisitor */{
 	}
 
 	public static void collectOverriddenMethodKeysInSuperClasses(
-			IMethodBinding methodBinding, List<String> keys) {
+			IMethodBinding methodBinding, List<MethodPathItem> inherMethods) {
 		ITypeBinding declTypeBinding = methodBinding.getDeclaringClass();
 
 		// check only for classes
 		if (declTypeBinding == null || !declTypeBinding.isClass())
 			return;
 
-		List<MethodPathItem> methodBindings = new ArrayList<MethodPathItem>();
+//		List<MethodPathItem> methodBindings = new ArrayList<MethodPathItem>();
 
 		collectOverriddenMethodsInSuperClasses(methodBinding, declTypeBinding
-				.getSuperclass(), methodBindings);
+				.getSuperclass(), inherMethods);
 
-		for (MethodPathItem tmpItem : methodBindings) {
-			keys.add(tmpItem.getKey());
-		}
+//		for (MethodPathItem tmpItem : methodBindings) {
+//			keys.add(tmpItem.getKey());
+//		}
 
 	}
 
@@ -315,6 +332,114 @@ public class CheckUtils /* extends ASTVisitor */{
 	// }
 	//
 	// }	
+	
+	
+	
+//BACKUP
+
+//		private List<String> findAllOverriddenMethodKeys(IMethod method) {
+//			try {
+//				IType type = method.getDeclaringType();
+//				ITypeHierarchy hierarchy = type.newSupertypeHierarchy(null);
+//
+//
+//				ArrayList<String> keys = new ArrayList<String>();
+//				
+//				while ((type = hierarchy.getSuperclass(type)) != null) {
+//					
+//					//TEST
+//					
+//					IMethod[] overriddenMethods = type.findMethods(method);
+//					if (overriddenMethods!=null && overriddenMethods.length>0) {
+//						for (int j = 0; j < overriddenMethods.length; j++) {
+//							IMethod tmpMethod = overriddenMethods[j];
+//																	
+//							//check also the return type
+//							if (!tmpMethod.getReturnType().equals(method.getReturnType()))
+//								continue;
+//							
+//							//check also the exception handling type
+//							String[] tmpExeps = tmpMethod.getExceptionTypes();
+//							String[] methExeps = method.getExceptionTypes();
+//							
+//							if  (tmpExeps.length != methExeps.length)
+//								continue;
+//							
+//							HashSet<String> compareSet = new HashSet<String>();
+//							for (int k = 0; k < methExeps.length; k++) 
+//								compareSet.add(methExeps[k]);			
+//							
+//							for (int k = 0; k < tmpExeps.length; k++) {
+//								if (!compareSet.remove(tmpExeps[k]))
+//									break;
+//							}
+//							
+//							if (!compareSet.isEmpty())
+//								continue;
+//								
+//							
+//							//check modifier flag
+//							//super method must be at least package default
+//							if (Flags.isPrivate(tmpMethod.getFlags()))
+//								continue;
+//							
+//							//check visibility reducing conditions
+//							if (Flags.isPublic(tmpMethod.getFlags()) && !Flags.isPublic(method.getFlags()) )
+//								continue;
+//							if (Flags.isProtected(tmpMethod.getFlags()) && ! (Flags.isPublic(method.getFlags()) || Flags.isProtected(method.getFlags())))
+//								continue;
+//							if (Flags.isPackageDefault(tmpMethod.getFlags()) && Flags.isPrivate(method.getFlags()))
+//								continue;
+//							
+//							
+//							System.out.println("RETURNTYPE: " + tmpMethod.getReturnType());
+//							
+//							//TEST
+//							CompilationUnit ast = getAST(tmpMethod);
+//							if (ast == null)
+//								return null;
+	//
+//							ASTBindingFinder bindingFinder = new ASTBindingFinder(tmpMethod.getKey());
+//							ast.accept(bindingFinder);
+//							
+//							ASTNode result = bindingFinder.getResult();
+//							System.out.println("ASTNODE:" + result);
+//							if (result == null)
+//								return null;
+	//
+//							
+//							
+//							IMethod[] meths =  type.getMethods();
+//							for(IMethod m: meths) {
+//								System.out.println(" ===> " + m.getKey());
+//							}
+//							
+//							//TEST
+//							
+//							//method overrides tmpMethod, add the tmpMethod - key accordingly	
+//							keys.add(tmpMethod.getKey());
+//							
+//						}
+//					}
+//				}
+	//
+//				return keys.size() > 0 ? keys : null;
+//				
+//			} catch (JavaModelException e) {
+//				return null;
+//			}
+//		}
+		
+//		private IMethod getIMethod(IMethodBinding methodBinding) {
+//			
+//			IJavaElement javaElement = methodBinding.getJavaElement();
+//			
+//			if (!(javaElement instanceof IMethod)) 
+//				return null;
+//			
+//			return ((IMethod)javaElement);
+//		}
+
 	
 	/*
 	 * BACKUP OVERRIDING SOLUTION II
