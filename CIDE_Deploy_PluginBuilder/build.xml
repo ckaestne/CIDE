@@ -6,7 +6,6 @@
 	<taskdef resource="org/pluginbuilder/anttasks/pluginbuildertasks.properties" classpath="build-files/pluginbuilder-anttasks.jar" />
 	
 	<GetHostName />
-	<echo>hostname: ${hostname}</echo>
 	<property file="build_${hostname}.properties" />
 	<property file="build_local.properties" />
 	<property name="eclipse.installation.dir" value="${eclipseDir}"/>
@@ -186,6 +185,11 @@
 	</target>
 	
 	<target name="main" description="Run the main target of customTargets.xml. Return status 0,1,2 for Success, Build Failure and Test Failure">
+	    <echo message="os.name:          ${os.name}"          />
+	    <echo message="basdir:           ${basedir}"          />
+	    <echo message="ant.file:         ${ant.file}"         />
+	    <echo message="ant.project.name: ${ant.project.name}" />
+	    <echo message="ant.java.version: ${ant.java.version}" />
 		<property name="buildTarget" value="main"/>
 		<antcall target="-build"/>
 
