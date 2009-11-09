@@ -55,26 +55,36 @@ class DisciplinedAnnotations:
 	__conditionals = ['if', 'ifdef', 'ifndef', 'else', 'elif', 'endif']
 	__conditions   = ['if', 'ifdef', 'ifndef']
 	##################################################
-	disciplined=0;
-	undisciplined=0;
 
 	def __init__(self):
 		oparser = OptionParser()
 		oparser.add_option('-d', '--dir', dest='dir',
 				help='input directory (mandatory)')
-		group = OptionGroup(oparser, 'Result',
+		oparser.add_option('-c', '--check', dest='check', type='int',
+				default=1, help='pattern check (default=1)')
+		groupc = OptionGroup(oparser, 'Check',
+				'This option allows to set the patterns, that are '
+				'checked during the program run: '
+				'(1) check sibling '
+				'(2) check else '
+		)
+		oparser.add_option_group(groupc)
+		groupr = OptionGroup(oparser, 'Result',
 				'This program counts the number of the disciplined '
 				'cpp usage in software projects. To this end, it '
 				'checks xml representations of header and source '
 				'files and returns the number of disciplined ifdefs '
 				'in those. Disciplined annotations are: '
 		)
-		oparser.add_option_group(group)
+		oparser.add_option_group(groupr)
 		(self.opts, self.args) = oparser.parse_args()
 
 		if not self.opts.dir:
 			oparser.print_help()
 			sys.exit(-1)
+
+		self.disciplined = 0
+		self.undisciplined = 0
 		self.checkFiles()
 
 	def __getIfdefAnnotations__(self, root):
@@ -92,16 +102,12 @@ class DisciplinedAnnotations:
 
 		return treeifdefs
 
-	def __checkDiscipline__(self, treeifdefs):
-		'''This method checks for a given list of ifdef nodes, whether
-		corresponding ifdefs are siblings. Using ifdef disciplined all
-		nodes in e.g. if-elif-else-endif are siblings. Sibling property
-		is transitive.'''
+	def __createListFromTreeifdefs__(self, treeifdefs):
+		'''This method returns a list representation for the input treeifdefs
+		(xml-objects). Corresponding #ifdef elements are in one sublist.'''
 
-		if not treeifdefs: return
+		if not treeifdefs: return []
 
-		# create a list of lists with corresponding ifdefs out of the
-		# input list, which represents a tree
 		listifdefs = list()
 		workerlist = list()
 		for nifdef in treeifdefs:
@@ -118,27 +124,97 @@ class DisciplinedAnnotations:
 			else:
 				print('ERROR: tag (%s) unknown!' % tag)
 
-		# the the sibling property of the first element against the
-		# rest of the lists
+		return listifdefs
+
+	PATSIB = 0 # 1 << 0 => 1
+	def __checkSiblingPattern__(self, listifdefs):
+		'''This method returns a tuple with (listdisciplined,
+		listundisciplined) #ifdef elements. The pattern works on the basis
+		of the sibling pattern. If the xml elements of #if-#elif-#else-#endif
+		are siblings, we determine them as disciplined.'''
+		listdisciplined = list()
+		listundisciplined = list()
+
 		for listcorifdef in listifdefs:
-			#print("checking ifdef")
 			nodeifdef = listcorifdef[0]
-			listcorifdef = listcorifdef[1:]
 			nodeifdefsibs = [sib for sib in nodeifdef.itersiblings()]
 
 			error=0;
-			for corifdef in listcorifdef:
+			for corifdef in listcorifdef[1:]:
 				if not corifdef in nodeifdefsibs:
-					#print('ERROR: node (%s) in line (%s) is not a sibling'
-					#		' of node (%s) in line (%s)!' % \
-					#		(corifdef.tag, corifdef.sourceline,
-					#		nodeifdef.tag, nodeifdef.sourceline))
 					error=1
 			if error==1:
-				DisciplinedAnnotations.undisciplined=DisciplinedAnnotations.undisciplined+1
+				listundisciplined.append(listcorifdef)
 			else:
-				DisciplinedAnnotations.disciplined=DisciplinedAnnotations.disciplined+1
+				listdisciplined.append(listcorifdef)
 
+		return (listdisciplined, listundisciplined)
+
+	PATELSE = 1 # 1 << 1 => 2
+	def __checkElsePattern__(self, listifdefs):
+		'''This method returns a tuple with (listdisciplined,
+		listundisciplined) #ifdef elements. The pattern matches the following
+		situation. The if-then in C is enframed by #if-#endif. The else part of
+		the if-then in C is not enframed. The sibling pattern does not work here
+		since the annatation cannot work properly here.'''
+		listdisciplined = list()
+		listundisciplined = list()
+
+		for ifdef in listifdefs:
+			if len(ifdef) != 2:
+				listundisciplined.append(ifdef)
+
+			# check that the endif is the first child of its parent and the parent
+			# is an else
+			endif = ifdef[1]
+			poselse = endif.getparent()
+			poselsetag = poselse.tag.split('}')[1]
+			if (poselsetag == 'else') or endif.getprevious() == None:
+				listdisciplined.append(ifdef)
+			else:
+				listundisciplined.append(ifdef)
+
+		return (listdisciplined, listundisciplined)
+
+#	PATXXX = 2 # 2 << 2 => 4
+#	def __checkXXXPattern__(self, listifdefs):
+#		''' documentation '''
+#		listdisciplined = list()
+#		listundisciplined = list()
+#
+#		for ifdef in listifdefs:
+#			pass
+#
+#		return (listdisciplined, listundisciplined)
+
+
+	def __checkDiscipline__(self, treeifdefs):
+		'''This method checks a number of patterns in the given treeifdefs.
+		The checks are in that order, that ifdef patterns not recognized
+		are passed to the next pattern.'''
+		listundisciplined = self.__createListFromTreeifdefs__(treeifdefs)
+		print('INFO: %s elements to check' % len(listundisciplined))
+
+		# check sibling pattern
+		if (self.opts.check & (1 << DisciplinedAnnotations.PATSIB)):
+			listifdefs = list(listundisciplined)
+			(listdisciplined, listundisciplined) = self.__checkSiblingPattern__(listifdefs)
+			self.disciplined += len(listdisciplined)
+
+		# check else pattern
+		if (self.opts.check & (1 << DisciplinedAnnotations.PATELSE)):
+			listifdefs = list(listundisciplined)
+			(listdisciplined, listundisciplined) = self.__checkElsePattern__(listifdefs)
+			self.disciplined += len(listdisciplined)
+
+		# check XXX pattern
+		# if (self.opts.check & (1 << DisciplinedAnnotations.PATXXX)):
+		#	listifdefs = list(undisciplined)
+		#	(listdisciplined, listundisciplined) = self.__checkXXXPattern__(listifdefs)
+		#	self.disciplined += len(listdisciplined)
+
+		# wrap up listundisciplined
+		self.undisciplined += len(listundisciplined)
 
 	def checkFile(self, file):
 		print('INFO: processing (%s)' % file)
@@ -151,18 +227,21 @@ class DisciplinedAnnotations:
 		# get root of the xml and iterate over it
 		root = tree.getroot()
 		treeifdefs = self.__getIfdefAnnotations__(root)
-		olddis=DisciplinedAnnotations.disciplined;
-		oldundis=DisciplinedAnnotations.undisciplined;
+		olddis = self.disciplined
+		oldundis = self.undisciplined;
 		self.__checkDiscipline__(treeifdefs)
-		print(["Disciplined annotations: ",DisciplinedAnnotations.disciplined-olddis,"Undisciplined annotations: ",DisciplinedAnnotations.undisciplined-oldundis])
+		print(["Disciplined annotations: ", self.disciplined-olddis,
+				"Undisciplined annotations: ", self.undisciplined-oldundis])
 
 	def checkFiles(self):
 		xmlfiles = returnFileNames(self.opts.dir, ['.xml'])
 		for xmlfile in  xmlfiles:
 			self.checkFile(xmlfile)
-		print(["Total Disciplined annotations: ",DisciplinedAnnotations.disciplined,"Undisciplined annotations: ",DisciplinedAnnotations.undisciplined,"Ratio: ",DisciplinedAnnotations.disciplined/(0.0+DisciplinedAnnotations.disciplined+DisciplinedAnnotations.undisciplined)])
-		f=open("disciplined_stats.txt","a")
-		print f.write(self.opts.dir+","+str(DisciplinedAnnotations.disciplined)+","+str(DisciplinedAnnotations.undisciplined)+"\n")
+		print(["Total Disciplined annotations: ", self.disciplined,
+				"Undisciplined annotations: ", self.undisciplined,
+				"Ratio: ", self.disciplined/(0.0+self.disciplined+self.undisciplined)])
+		f = open("disciplined_stats.txt","a")
+		f.write(self.opts.dir+","+str(self.disciplined)+","+str(self.undisciplined)+"\n")
 
 ##################################################
 if __name__ == '__main__':
