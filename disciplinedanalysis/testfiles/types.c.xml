@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="testfiles" filename="types.c"><function><type><name>int</name></type> <name>main</name><parameter_list>(<param><decl><type><name>int</name></type> <name>argc</name></decl></param>, <param><decl><type><name>char</name>**</type> <name>argv</name></decl></param>)</parameter_list> <block>{
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr><name>A</name></expr></cpp:if>
+	<decl_stmt><decl><type><name>int</name></type>
+<cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
+	<name>float</name>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+	<name>k</name></decl>;</decl_stmt>
+	<return>return <expr>0</expr>;</return>
+}</block></function>
+</unit>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="testfiles" filename="functions.c"><cpp:ifdef>#<cpp:directive>ifdef</cpp:directive> <name>A</name></cpp:ifdef>
+<function><type><name>void</name></type> <name>foo</name><parameter_list>()</parameter_list> <block>{
+}</block></function>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+
+<cpp:if>#<cpp:directive>if</cpp:directive></cpp:if>
+<function><type><name>void</name></type> <name>foo1</name><parameter_list>()</parameter_list> <block>{
+}</block></function>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+</unit>

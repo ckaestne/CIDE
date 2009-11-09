@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="testfiles" filename="sortedlist.c"><cpp:include>#<cpp:directive>include</cpp:directive> <cpp:file>&lt;stdio.h&gt;</cpp:file></cpp:include>
+<cpp:include>#<cpp:directive>include</cpp:directive> <cpp:file>&lt;stdlib.h&gt;</cpp:file></cpp:include>
+
+<cpp:define>#<cpp:directive>define</cpp:directive> <name>NOSORT</name> 0</cpp:define>
+<cpp:define>#<cpp:directive>define</cpp:directive> <name>INSERTIONSORT</name> 1</cpp:define>
+<cpp:define>#<cpp:directive>define</cpp:directive> <name>BUBBLESORT</name> 2</cpp:define>
+
+<cpp:define>#<cpp:directive>define</cpp:directive> <name>DLINKED</name> 1</cpp:define>
+<cpp:define>#<cpp:directive>define</cpp:directive> <name>SORTALGO</name> <name>INSERTIONSORT</name></cpp:define>
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr><name>SORTALGO</name> != <name>NOSORT</name></expr></cpp:if>
+<cpp:define>#<cpp:directive>define</cpp:directive> <name>SORTORDER</name> 1</cpp:define>
+<comment type="line">// SORTORDER == 0   -&gt; upward</comment>
+<comment type="line">// SORTORDER == 1   -&gt; downward</comment>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+
+<typedef>typedef <type><struct>struct <name>T_node</name> <block>{<public type="default">
+	<decl_stmt><decl><type><name>int</name></type> <name>item</name></decl>;</decl_stmt>
+	<decl_stmt><decl><type>struct <name>T_node</name> *</type><name>next</name></decl>;</decl_stmt>
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr><name>DLINKED</name></expr></cpp:if>
+	<decl_stmt><decl><type>struct <name>T_node</name> *</type><name>prev</name></decl>;</decl_stmt>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+</public>}</block></struct></type> <name>node</name>;</typedef>
+
+<decl_stmt><decl><type><name>node</name>*</type> <name>first</name> =<init> <expr><name>NULL</name></expr></init></decl>;</decl_stmt>
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr><name>DLINKED</name></expr></cpp:if>
+<decl_stmt><decl><type><name>node</name>*</type> <name>last</name> =<init> <expr><name>NULL</name></expr></init></decl>;</decl_stmt>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+
+<function_decl><type><name>node</name>*</type> <name>initNode</name><parameter_list>(<param><decl><type><name>int</name></type> <name>item</name></decl></param>)</parameter_list>;</function_decl>
+<function_decl><type><name>void</name></type> <name>insert</name><parameter_list>(<param><decl><type><name>node</name>*</type> <name>elem</name></decl></param>)</parameter_list>;</function_decl>
+<function_decl><type><name>void</name></type> <name>iterate</name><parameter_list>()</parameter_list>;</function_decl>
+<function_decl><type><name>void</name></type> <name>deleteAll</name><parameter_list>()</parameter_list>;</function_decl>
+
+<function><type><name>node</name>*</type> <name>initNode</name><parameter_list>(<param><decl><type><name>int</name></type> <name>item</name></decl></param>)</parameter_list> <block>{
+	<decl_stmt><decl><type><name>node</name></type>* new</decl>;</decl_stmt>
+	<expr_stmt><expr>new = (<name>node</name>*)<call><name>malloc</name><argument_list>(<argument><expr><call><name>sizeof</name><argument_list>(<argument><expr><name>node</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+	<expr_stmt><expr>new-&gt;<name>item</name> = <name>item</name></expr>;</expr_stmt>
+	<expr_stmt><expr>new-&gt;<name>next</name> = <name>NULL</name></expr>;</expr_stmt>
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr><name>DLINKED</name></expr></cpp:if>
+	<expr_stmt><expr>new-&gt;<name>prev</name> = <name>NULL</name></expr>;</expr_stmt>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+}</block></function>
+
+<function><type><name>void</name></type> <name>insert</name><parameter_list>(<param><decl><type><name>node</name>*</type> <name>elem</name></decl></param>)</parameter_list> <block>{
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr><name>SORTALGO</name> == <name>BUBBLESORT</name> || <name>SORTALGO</name> == <name>INSERTIONSORT</name></expr></cpp:if>
+	<decl_stmt><decl><type><name>node</name> *</type><name>a</name> =<init> <expr><name>NULL</name></expr></init></decl>;</decl_stmt>
+	<decl_stmt><decl><type><name>node</name> *</type><name>b</name> =<init> <expr><name>NULL</name></expr></init></decl>;</decl_stmt>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr><name>SORTALGO</name> == <name>BUBBLESORT</name></expr></cpp:if>
+	<decl_stmt><decl><type><name>node</name> *</type><name>c</name> =<init> <expr><name>NULL</name></expr></init></decl>;</decl_stmt>
+	<decl_stmt><decl><type><name>node</name> *</type><name>e</name> =<init> <expr><name>NULL</name></expr></init></decl>;</decl_stmt>
+	<decl_stmt><decl><type><name>node</name> *</type><name>tmp</name> =<init> <expr><name>NULL</name></expr></init></decl>;</decl_stmt>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+
+	<if>if <condition>(<expr><name>NULL</name> == <name>first</name></expr>)</condition><then> <block>{
+		<expr_stmt><expr><name>first</name> = <name>elem</name></expr>;</expr_stmt>
+	}</block></then> <else>else <block>{
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr><name>SORTALGO</name> == <name>INSERTIONSORT</name></expr></cpp:if>
+		<expr_stmt><expr><name>a</name> = <name>first</name></expr>;</expr_stmt>
+		<expr_stmt><expr><name>b</name> = <name>first</name>-&gt;<name>next</name></expr>;</expr_stmt>
+
+		<if>if <condition>(<expr><name>first</name>-&gt;<name>item</name>
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr><name>SORTORDER</name> == 0</expr></cpp:if>
+			&gt;
+<cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
+			&lt;
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+			<name>elem</name>-&gt;<name>item</name></expr>)</condition><then> <block>{
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+			<expr_stmt><expr><name>elem</name>-&gt;<name>next</name> = <name>first</name></expr>;</expr_stmt>
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr><name>DLINKED</name></expr></cpp:if>
+			<expr_stmt><expr><name>first</name>-&gt;<name>prev</name> = <name>elem</name></expr>;</expr_stmt>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+			<expr_stmt><expr><name>first</name> = <name>elem</name></expr>;</expr_stmt>
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr><name>SORTALGO</name> == <name>INSERTIONSORT</name></expr></cpp:if>
+			<return>return;</return>
+		}</block></then></if>
+		<while>while <condition>(<expr><name>NULL</name> != <name>b</name> &amp;&amp; <name>b</name>-&gt;<name>item</name>
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr><name>SORTORDER</name> == 0</expr></cpp:if>
+			&lt;
+<cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
+			&gt;
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+			<name>elem</name>-&gt;<name>item</name></expr>)</condition> <block>{
+			<expr_stmt><expr><name>a</name> = <name>a</name>-&gt;<name>next</name></expr>;</expr_stmt>
+			<expr_stmt><expr><name>b</name> = <name>b</name>-&gt;<name>next</name></expr>;</expr_stmt>
+		}</block></while>
+		<expr_stmt><expr><name>a</name>-&gt;<name>next</name> = <name>elem</name></expr>;</expr_stmt>
+		<expr_stmt><expr><name>elem</name>-&gt;<name>next</name> = <name>b</name></expr>;</expr_stmt>
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr><name>DLINKED</name></expr></cpp:if>
+		<expr_stmt><expr><name>elem</name>-&gt;<name>prev</name> = <name>a</name></expr>;</expr_stmt>
+		<if>if <condition>(<expr><name>NULL</name> != <name>b</name></expr>)</condition><then>
+			<expr_stmt><expr><name>b</name>-&gt;<name>prev</name> = <name>elem</name></expr>;</expr_stmt></then></if>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+	}</block></else></if>
+
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr><name>SORTALGO</name> == <name>BUBBLESORT</name></expr></cpp:if>
+	<while>while<condition>(<expr><name>e</name> != <name>first</name>-&gt;<name>next</name></expr>)</condition> <block>{
+		<expr_stmt><expr><name>c</name> = <name>a</name> = <name>first</name></expr>;</expr_stmt>
+		<expr_stmt><expr><name>b</name> = <name>a</name>-&gt;<name>next</name></expr>;</expr_stmt>
+		<while>while<condition>(<expr><name>a</name> != <name>e</name></expr>)</condition> <block>{
+			<if>if<condition>(<expr><name>a</name>-&gt;<name>item</name>
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr><name>SORTORDER</name> == 0</expr></cpp:if>
+				&gt;
+<cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
+				&lt;
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+				<name>b</name>-&gt;<name>item</name></expr>)</condition><then> <block>{
+				<if>if <condition>(<expr><name>a</name> == <name>first</name></expr>)</condition><then> <block>{
+					<expr_stmt><expr><name>tmp</name> = <name>b</name> -&gt; <name>next</name></expr>;</expr_stmt>
+					<expr_stmt><expr><name>b</name>-&gt;<name>next</name> = <name>a</name></expr>;</expr_stmt>
+					<expr_stmt><expr><name>a</name>-&gt;<name>next</name> = <name>tmp</name></expr>;</expr_stmt>
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr><name>DLINKED</name></expr></cpp:if>
+					<expr_stmt><expr><name>a</name>-&gt;<name>prev</name> = <name>b</name></expr>;</expr_stmt>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+					<expr_stmt><expr><name>first</name> = <name>b</name></expr>;</expr_stmt>
+					<expr_stmt><expr><name>c</name> = <name>b</name></expr>;</expr_stmt>
+				}</block></then> <else>else <block>{
+					<expr_stmt><expr><name>tmp</name> = <name>b</name>-&gt;<name>next</name></expr>;</expr_stmt>
+					<expr_stmt><expr><name>b</name>-&gt;<name>next</name> = <name>a</name></expr>;</expr_stmt>
+					<expr_stmt><expr><name>a</name>-&gt;<name>next</name> = <name>tmp</name></expr>;</expr_stmt>
+					<expr_stmt><expr><name>c</name>-&gt;<name>next</name> = <name>b</name></expr>;</expr_stmt>
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr><name>DLINKED</name></expr></cpp:if>
+					<expr_stmt><expr><name>b</name>-&gt;<name>prev</name> = <name>c</name></expr>;</expr_stmt>
+					<expr_stmt><expr><name>a</name>-&gt;<name>prev</name> = <name>b</name></expr>;</expr_stmt>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+					<expr_stmt><expr><name>c</name> = <name>b</name></expr>;</expr_stmt>
+				}</block></else></if>
+			}</block></then> <else>else <block>{
+				<expr_stmt><expr><name>c</name> = <name>a</name></expr>;</expr_stmt>
+				<expr_stmt><expr><name>a</name> = <name>a</name>-&gt;<name>next</name></expr>;</expr_stmt>
+			}</block></else></if>
+			<expr_stmt><expr><name>b</name> = <name>a</name>-&gt;<name>next</name></expr>;</expr_stmt>
+			<if>if <condition>(<expr><name>b</name> == <name>e</name></expr>)</condition><then>
+				<expr_stmt><expr><name>e</name> = <name>a</name></expr>;</expr_stmt></then></if>
+		}</block></while>
+	}</block></while>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+}</block></function>
+
+<function><type><name>void</name></type> <name>iterate</name><parameter_list>()</parameter_list> <block>{
+	<decl_stmt><decl><type><name>node</name>*</type> <name>cur</name> =<init> <expr><name>first</name></expr></init></decl>;</decl_stmt>
+	<decl_stmt><decl><type><name>unsigned</name> <name>char</name></type> <name>i</name> =<init> <expr>1</expr></init></decl>;</decl_stmt>
+
+	<while>while <condition>(<expr><name>NULL</name> != <name>cur</name></expr>)</condition> <block>{
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr><name>DLINKED</name></expr></cpp:if>
+		<expr_stmt><expr><call><name>printf</name><argument_list>(<argument><expr>"%2d. prev %10p [%10p : %2d] next %10p\n"</expr></argument>, <argument><expr><name>i</name>++</expr></argument>, <argument><expr><name>cur</name>-&gt;<name>prev</name></expr></argument>, <argument><expr><name>cur</name></expr></argument>, <argument><expr><name>cur</name>-&gt;<name>item</name></expr></argument>, <argument><expr><name>cur</name>-&gt;<name>next</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+<cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
+		<expr_stmt><expr><call><name>printf</name><argument_list>(<argument><expr>"%2d. [%10p : %2d] next %10p\n"</expr></argument>, <argument><expr><name>i</name>++</expr></argument>, <argument><expr><name>cur</name></expr></argument>, <argument><expr><name>cur</name>-&gt;<name>item</name></expr></argument>, <argument><expr><name>cur</name>-&gt;<name>next</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+		<expr_stmt><expr><name>cur</name> = <name>cur</name>-&gt;<name>next</name></expr>;</expr_stmt>
+	}</block></while>
+}</block></function>
+
+<function><type><name>void</name></type> <name>deleteAll</name><parameter_list>()</parameter_list> <block>{
+	<decl_stmt><decl><type><name>node</name>*</type> <name>one</name></decl>;</decl_stmt>
+	<decl_stmt><decl><type><name>node</name>*</type> <name>two</name></decl>;</decl_stmt>
+
+	<if>if <condition>(<expr><name>NULL</name> == <name>first</name></expr>)</condition><then>
+		<return>return;</return></then></if>
+
+	<expr_stmt><expr><name>one</name> = <name>first</name></expr>;</expr_stmt>
+	<expr_stmt><expr><name>two</name> = <name>first</name>-&gt;<name>next</name></expr>;</expr_stmt>
+
+	<while>while <condition>(<expr><name>NULL</name> != <name>two</name></expr>)</condition> <block>{
+		<expr_stmt><expr><name>one</name> = <name>two</name></expr>;</expr_stmt>
+		<expr_stmt><expr><name>two</name> = <name>two</name>-&gt;<name>next</name></expr>;</expr_stmt>
+		<expr_stmt><expr><name>one</name>-&gt;<name>next</name> = <name>NULL</name></expr>;</expr_stmt>
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr><name>DLINKED</name></expr></cpp:if>
+		<if>if <condition>(<expr><name>two</name> != <name>NULL</name></expr>)</condition><then>
+			<expr_stmt><expr><name>two</name>-&gt;<name>prev</name> = <name>NULL</name></expr>;</expr_stmt></then></if>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+		<expr_stmt><expr><call><name>free</name><argument_list>(<argument><expr><name>one</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+	}</block></while>
+}</block></function>
+
+<function><type><name>int</name></type> <name>main</name><parameter_list>(<param><decl><type><name>void</name></type></decl></param>)</parameter_list> <block>{
+	<decl_stmt><decl><type><name>int</name></type> <name><name>test</name><index>[]</index></name> =<init> <expr><block>{<expr>8</expr>, <expr>3</expr>, <expr>2</expr>, <expr>6</expr>, <expr>1</expr>, <expr>5</expr>, <expr>4</expr>, <expr>7</expr>, <expr>9</expr>, <expr>0</expr>}</block></expr></init></decl>;</decl_stmt>
+	<decl_stmt><decl><type><name>int</name></type> <name>i</name> =<init> <expr>0</expr></init></decl>;</decl_stmt>
+
+	<comment type="block">/* insert some numbers into the linked list */</comment>
+	<for>for(<init><expr><name>i</name> = 0</expr>;</init> <condition><expr><name>i</name> &lt; 10</expr>;</condition> <incr><expr><name>i</name>++</expr></incr>) <block>{
+		<expr_stmt><expr><call><name>insert</name><argument_list>(<argument><expr><call><name>initNode</name><argument_list>(<argument><expr><name><name>test</name><index>[<expr><name>i</name></expr>]</index></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+	}</block></for>
+	<expr_stmt><expr><call><name>iterate</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+	<expr_stmt><expr><call><name>deleteAll</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+	<return>return <expr>0</expr>;</return>
+}</block></function>
+</unit>
