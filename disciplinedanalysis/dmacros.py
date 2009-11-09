@@ -85,6 +85,7 @@ class DisciplinedAnnotations:
 
 		self.disciplined = 0
 		self.undisciplined = 0
+		self.loc=0
 		self.checkFiles()
 
 	def __getIfdefAnnotations__(self, root):
@@ -150,6 +151,38 @@ class DisciplinedAnnotations:
 
 		return (listdisciplined, listundisciplined)
 
+	def __getParentTag__(self, tag):
+		parent = tag.getparent()
+		return parent.tag.split('}')[1]	
+
+	PATTLS = 2 # 1 << 0 => 1
+	def __checkStrictTLSPattern__(self, listifdefs):
+		'''like sibling pattern, but only top level and statement elements are considered disciplined'''
+		listdisciplined = list()
+		listundisciplined = list()
+
+		for listcorifdef in listifdefs:
+			nodeifdef = listcorifdef[0]
+			nodeifdefsibs = [sib for sib in nodeifdef.itersiblings()]
+
+			error=0
+			for corifdef in listcorifdef[1:]:
+				if not corifdef in nodeifdefsibs:
+					error=1
+
+			if error==0:
+				parenttag = self.__getParentTag__(nodeifdef)
+				if not parenttag in ['unit','block','public']:
+					print parenttag+', line '+str(nodeifdef.getparent().sourceline)
+					error=1
+						
+			if error==1:
+				listundisciplined.append(listcorifdef)
+			else:
+				listdisciplined.append(listcorifdef)
+
+		return (listdisciplined, listundisciplined)	
+
 	PATELSE = 1 # 1 << 1 => 2
 	def __checkElsePattern__(self, listifdefs):
 		'''This method returns a tuple with (listdisciplined,
@@ -170,6 +203,7 @@ class DisciplinedAnnotations:
 			poselse = endif.getparent()
 			poselsetag = poselse.tag.split('}')[1]
 			if (poselsetag == 'else') or endif.getprevious() == None:
+				#print "found disciplined else patter"
 				listdisciplined.append(ifdef)
 			else:
 				listundisciplined.append(ifdef)
@@ -207,6 +241,12 @@ class DisciplinedAnnotations:
 			(listdisciplined, listundisciplined) = self.__checkElsePattern__(listifdefs)
 			self.disciplined += len(listdisciplined)
 
+		# check TLS pattern
+		if (self.opts.check & (1 << DisciplinedAnnotations.PATTLS)):
+			listifdefs = list(listundisciplined)
+			(listdisciplined, listundisciplined) = self.__checkStrictTLSPattern__(listifdefs)
+			self.disciplined += len(listdisciplined)
+
 		# check XXX pattern
 		# if (self.opts.check & (1 << DisciplinedAnnotations.PATXXX)):
 		#	listifdefs = list(undisciplined)
@@ -218,11 +258,17 @@ class DisciplinedAnnotations:
 
 	def checkFile(self, file):
 		print('INFO: processing (%s)' % file)
+
 		try:
 			tree = etree.parse(file)
+
+			f = open(file, 'r')
 		except etree.XMLSyntaxError:
 			print('ERROR: file (%s) is not valid. Skipping it.' % file)
 			return
+
+		#get LOC
+		self.loc=self.loc+len(f.readlines())-2;
 
 		# get root of the xml and iterate over it
 		root = tree.getroot()
@@ -241,7 +287,8 @@ class DisciplinedAnnotations:
 				"Undisciplined annotations: ", self.undisciplined,
 				"Ratio: ", self.disciplined/(0.0+self.disciplined+self.undisciplined)])
 		f = open("disciplined_stats.txt","a")
-		f.write(self.opts.dir+","+str(self.disciplined)+","+str(self.undisciplined)+"\n")
+		#file,disciplined,undisciplined,loc
+		f.write(self.opts.dir+","+str(self.disciplined)+","+str(self.undisciplined)+","+str(self.loc)+"\n")
 
 ##################################################
 if __name__ == '__main__':
