@@ -16,6 +16,11 @@ public class ParserTests extends TestCase {
 		parse("a<b").Expression();
 		parse("a>b").RelationalExpression();
 	}
+	
+	public void testUnicode() throws ParseException{
+		parse("if (x == '\uFFFF') {}").Statement();
+	}
+	
 	private Java15Parser parse(String x) {
 		Java15Parser p = new Java15Parser( new ByteArrayInputStream(x.getBytes()));
 		return p;
