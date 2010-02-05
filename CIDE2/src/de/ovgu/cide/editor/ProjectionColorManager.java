@@ -37,8 +37,9 @@ public class ProjectionColorManager implements IProjectionColorManager {
 	public Set<IFeature> getExpandedColors() {
 		ColoredSourceFile sourceFile = editor.getSourceFile();
 		IFeatureModel fm = sourceFile.getFeatureModel();
-		Set<IFeature> visibleFeatures = new HashSet<IFeature>(fm
-				.getVisibleFeatures());
+		Set<IFeature> visibleFeatures = new HashSet<IFeature>(
+				ColorRepairer.hideInvisibleCode ? fm.getFeatures() : fm
+						.getVisibleFeatures());
 		visibleFeatures.removeAll(collapsedColors);
 
 		return visibleFeatures;

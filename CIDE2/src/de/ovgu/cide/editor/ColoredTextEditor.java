@@ -254,6 +254,7 @@ public class ColoredTextEditor extends AbstractDecoratedTextEditor implements
 		if (event.anyChangeOf(ChangeType.VISIBILITY)) {
 			for (Change change : event.getChanges()) {
 				if (change.type == ChangeType.VISIBILITY)
+					if (!ColorRepairer.hideInvisibleCode)
 					if (change.feature.isVisible())
 						getProjectionColorManager().expandColor(change.feature);
 					else

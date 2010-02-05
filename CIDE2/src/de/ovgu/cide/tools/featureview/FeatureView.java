@@ -127,6 +127,8 @@ public class FeatureView extends ViewPart {
 	public static final String VIEW_ID = "de.ovgu.cide.core.view.features";
 
 	private Action filterAction;
+	private Action selectAllAction;
+	private Action selectNoneAction;
 	private Action renameAction;
 	private Action selectColorAction;
 	private Action findFeatureCodeAction;
@@ -342,6 +344,8 @@ public class FeatureView extends ViewPart {
 
 	private void fillLocalToolBar(IToolBarManager manager) {
 		manager.add(filterAction);
+		manager.add(selectAllAction);
+		manager.add(selectNoneAction);
 	}
 
 	private void makeActions() {
@@ -354,6 +358,23 @@ public class FeatureView extends ViewPart {
 		filterAction.setToolTipText("Hide invisible features");
 		ColoredIDEImages.setImageDescriptors(filterAction,
 				ColoredIDEImages.INTERACTION);
+
+		selectAllAction = new Action("Select All", IAction.AS_PUSH_BUTTON) {
+			public void run() {
+				selectAll(true);
+			}
+		};
+		selectAllAction.setText("Select All");
+		ColoredIDEImages.setImageDescriptors(selectAllAction,
+				ColoredIDEImages.CHECKED_IMAGE);
+		selectNoneAction = new Action("Select None", IAction.AS_PUSH_BUTTON) {
+			public void run() {
+				selectAll(false);
+			}
+		};
+		selectNoneAction.setText("Select None");
+		ColoredIDEImages.setImageDescriptors(selectNoneAction,
+				ColoredIDEImages.UNCHECKED_IMAGE);
 
 		renameAction = new Action("Rename...") {
 			public void run() {
@@ -416,6 +437,13 @@ public class FeatureView extends ViewPart {
 				super.run();
 			}
 		};
+	}
+
+	protected void selectAll(boolean visible) {
+		for (IFeature feature:featureModel.getFeatures()){
+			feature.setVisible(visible);
+		}
+		updateValidPanel();
 	}
 
 	protected IFeature getSelectedFeature() {

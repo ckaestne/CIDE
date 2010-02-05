@@ -1,7 +1,5 @@
 package de.ovgu.cide.navigator;
 
-import java.util.Arrays;
-
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 

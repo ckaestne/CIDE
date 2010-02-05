@@ -6,6 +6,7 @@ import java.util.Set;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.Separator;
 
 import de.ovgu.cide.editor.ColoredEditorExtensions.IProjectionColoredEditor;
 import de.ovgu.cide.features.IFeature;
@@ -72,6 +73,20 @@ public class ColorProjectionSubmenu extends MenuManager implements
 
 	}
 
+	public class HideInvisibleCodeAction extends Action {
+
+		public HideInvisibleCodeAction(IProjectionColoredEditor editor) {
+
+			super("Hide invisible code");
+			this.setChecked(ColorRepairer.hideInvisibleCode);
+		}
+
+		@Override
+		public void run() {
+			ColorRepairer.hideInvisibleCode = !ColorRepairer.hideInvisibleCode;
+		}
+	}
+
 	public ColorProjectionSubmenu(IProjectionColoredEditor editor,
 			SelectionActionsContext context) {
 
@@ -84,8 +99,11 @@ public class ColorProjectionSubmenu extends MenuManager implements
 			this.add(new ToggleColorProjectionAction(editor, feature,
 					expandedColors.contains(feature)));
 		}
+		this.add(new Separator());
 		this.add(new ExpandAllAction(editor));
 		this.add(new CollapseAllAction(editor));
+		this.add(new Separator());
+		this.add(new HideInvisibleCodeAction(editor));
 
 	}
 }

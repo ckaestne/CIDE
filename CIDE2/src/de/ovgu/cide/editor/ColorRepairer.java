@@ -30,7 +30,7 @@ public class ColorRepairer implements IPresentationRepairer {
 	private final ColoredSourceFile sourceFile;
 	private ColoredTextEditor editor;
 	// currently just deactivated
-	private boolean hideInvisibleCode = false;
+	public static boolean hideInvisibleCode = true;
 
 	public ColorRepairer(ColoredSourceFile sourceFile, ColoredTextEditor editor) {
 		this.sourceFile = sourceFile;
