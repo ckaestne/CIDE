@@ -6,11 +6,11 @@ import cide.greferences.*;
 import java.util.*;
 
 public class ArrayDimsAndInits1 extends ArrayDimsAndInits {
-  public ArrayDimsAndInits1(Expression expression, ArrayList<Expression> expression1, ArrayList<ASTTextNode> text449, Token firstToken, Token lastToken) {
+  public ArrayDimsAndInits1(Expression expression, ArrayList<Expression> expression1, ArrayList<ASTTextNode> text77, Token firstToken, Token lastToken) {
     super(new Property[] {
       new PropertyOne<Expression>("expression", expression),
       new PropertyZeroOrMore<Expression>("expression1", expression1),
-      new PropertyZeroOrMore<ASTTextNode>("text449", text449)
+      new PropertyZeroOrMore<ASTTextNode>("text77", text77)
     }, firstToken, lastToken);
   }
   public ArrayDimsAndInits1(Property[] properties, IToken firstToken, IToken lastToken) {
@@ -25,7 +25,7 @@ public class ArrayDimsAndInits1 extends ArrayDimsAndInits {
   public ArrayList<Expression> getExpression1() {
     return ((PropertyZeroOrMore<Expression>)getProperty("expression1")).getValue();
   }
-  public ArrayList<ASTTextNode> getText449() {
-    return ((PropertyZeroOrMore<ASTTextNode>)getProperty("text449")).getValue();
+  public ArrayList<ASTTextNode> getText77() {
+    return ((PropertyZeroOrMore<ASTTextNode>)getProperty("text77")).getValue();
   }
 }

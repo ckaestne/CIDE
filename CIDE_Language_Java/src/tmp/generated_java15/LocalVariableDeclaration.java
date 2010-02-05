@@ -6,9 +6,9 @@ import cide.greferences.*;
 import java.util.*;
 
 public class LocalVariableDeclaration extends GenASTNode {
-  public LocalVariableDeclaration(ASTTextNode text451, Type type, VariableDeclarator variableDeclarator, ArrayList<VariableDeclarator> variableDeclarator1, Token firstToken, Token lastToken) {
+  public LocalVariableDeclaration(ASTTextNode text79, Type type, VariableDeclarator variableDeclarator, ArrayList<VariableDeclarator> variableDeclarator1, Token firstToken, Token lastToken) {
     super(new Property[] {
-      new PropertyZeroOrOne<ASTTextNode>("text451", text451),
+      new PropertyZeroOrOne<ASTTextNode>("text79", text79),
       new PropertyOne<Type>("type", type),
       new PropertyOne<VariableDeclarator>("variableDeclarator", variableDeclarator),
       new PropertyZeroOrMore<VariableDeclarator>("variableDeclarator1", variableDeclarator1)
@@ -20,8 +20,8 @@ public class LocalVariableDeclaration extends GenASTNode {
   public IASTNode deepCopy() {
     return new LocalVariableDeclaration(cloneProperties(),firstToken,lastToken);
   }
-  public ASTTextNode getText451() {
-    return ((PropertyZeroOrOne<ASTTextNode>)getProperty("text451")).getValue();
+  public ASTTextNode getText79() {
+    return ((PropertyZeroOrOne<ASTTextNode>)getProperty("text79")).getValue();
   }
   public Type getType() {
     return ((PropertyOne<Type>)getProperty("type")).getValue();

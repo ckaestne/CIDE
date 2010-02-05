@@ -6,11 +6,11 @@ import cide.greferences.*;
 import java.util.*;
 
 public class MethodDeclarator extends GenASTNode {
-  public MethodDeclarator(ASTStringNode identifier, FormalParameters formalParameters, ArrayList<ASTTextNode> text393, Token firstToken, Token lastToken) {
+  public MethodDeclarator(ASTStringNode identifier, FormalParameters formalParameters, ArrayList<ASTTextNode> text21, Token firstToken, Token lastToken) {
     super(new Property[] {
       new PropertyOne<ASTStringNode>("identifier", identifier),
       new PropertyOne<FormalParameters>("formalParameters", formalParameters),
-      new PropertyZeroOrMore<ASTTextNode>("text393", text393)
+      new PropertyZeroOrMore<ASTTextNode>("text21", text21)
     }, firstToken, lastToken);
   }
   public MethodDeclarator(Property[] properties, IToken firstToken, IToken lastToken) {
@@ -25,7 +25,7 @@ public class MethodDeclarator extends GenASTNode {
   public FormalParameters getFormalParameters() {
     return ((PropertyOne<FormalParameters>)getProperty("formalParameters")).getValue();
   }
-  public ArrayList<ASTTextNode> getText393() {
-    return ((PropertyZeroOrMore<ASTTextNode>)getProperty("text393")).getValue();
+  public ArrayList<ASTTextNode> getText21() {
+    return ((PropertyZeroOrMore<ASTTextNode>)getProperty("text21")).getValue();
   }
 }

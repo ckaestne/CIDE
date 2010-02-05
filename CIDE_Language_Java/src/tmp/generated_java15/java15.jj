@@ -385,13 +385,13 @@ PackageDeclaration PackageDeclaration() : {
  ) }
 
 ImportDeclaration ImportDeclaration() : { 
-	ASTTextNode text373 = null;
+	ASTTextNode text1 = null;
 	Name name;
-	ASTTextNode text374 = null;
+	ASTTextNode text2 = null;
 	Token firstToken=token;
 } { (
-	"import" ["static" {text373=new ASTTextNode("static",new WToken(token));}] name=Name() [{text374=new ASTTextNode(new String[]{".","*"},new WToken(token));} "." "*"] ";" 
-	{return new ImportDeclaration(text373, name, text374, firstToken.next,token);}
+	"import" ["static" {text1=new ASTTextNode("static",new WToken(token));}] name=Name() [{text2=new ASTTextNode(new String[]{".","*"},new WToken(token));} "." "*"] ";" 
+	{return new ImportDeclaration(text1, name, text2, firstToken.next,token);}
  ) }
 
 Modifiers Modifiers() : { 
@@ -633,12 +633,12 @@ VariableDeclarator VariableDeclarator() : {
 VariableDeclaratorId VariableDeclaratorId() : { 
 	Token t;
 	ASTStringNode identifier;
-	ASTTextNode text390;
-	ArrayList<ASTTextNode> text390List = new ArrayList<ASTTextNode>();
+	ASTTextNode text18;
+	ArrayList<ASTTextNode> text18List = new ArrayList<ASTTextNode>();
 	Token firstToken=token;
 } { (
-	t=<IDENTIFIER>{identifier=new ASTStringNode(t.image,new WToken(t));} ("[" "]" {text390=new ASTTextNode(new String[]{"[","]"},new WToken(token));}{text390List.add(text390);})* 
-	{return new VariableDeclaratorId(identifier, text390List, firstToken.next,token);}
+	t=<IDENTIFIER>{identifier=new ASTStringNode(t.image,new WToken(t));} ("[" "]" {text18=new ASTTextNode(new String[]{"[","]"},new WToken(token));}{text18List.add(text18);})* 
+	{return new VariableDeclaratorId(identifier, text18List, firstToken.next,token);}
  ) }
 
 VariableInitializer VariableInitializer() : { 
@@ -654,11 +654,11 @@ VariableInitializer VariableInitializer() : {
 
 ArrayInitializer ArrayInitializer() : { 
 	ArrayInitializerInternal arrayInitializerInternal = null;
-	ASTTextNode text391 = null;
+	ASTTextNode text19 = null;
 	Token firstToken=token;
 } { (
-	"{" [arrayInitializerInternal=ArrayInitializerInternal()] ["," {text391=new ASTTextNode(",",new WToken(token));}] "}" 
-	{return new ArrayInitializer(arrayInitializerInternal, text391, firstToken.next,token);}
+	"{" [arrayInitializerInternal=ArrayInitializerInternal()] ["," {text19=new ASTTextNode(",",new WToken(token));}] "}" 
+	{return new ArrayInitializer(arrayInitializerInternal, text19, firstToken.next,token);}
  ) }
 
 ArrayInitializerInternal ArrayInitializerInternal() : { 
@@ -697,12 +697,12 @@ MethodDeclarator MethodDeclarator() : {
 	Token t;
 	ASTStringNode identifier;
 	FormalParameters formalParameters;
-	ASTTextNode text393;
-	ArrayList<ASTTextNode> text393List = new ArrayList<ASTTextNode>();
+	ASTTextNode text21;
+	ArrayList<ASTTextNode> text21List = new ArrayList<ASTTextNode>();
 	Token firstToken=token;
 } { (
-	t=<IDENTIFIER>{identifier=new ASTStringNode(t.image,new WToken(t));} formalParameters=FormalParameters() ("[" "]" {text393=new ASTTextNode(new String[]{"[","]"},new WToken(token));}{text393List.add(text393);})* 
-	{return new MethodDeclarator(identifier, formalParameters, text393List, firstToken.next,token);}
+	t=<IDENTIFIER>{identifier=new ASTStringNode(t.image,new WToken(t));} formalParameters=FormalParameters() ("[" "]" {text21=new ASTTextNode(new String[]{"[","]"},new WToken(token));}{text21List.add(text21);})* 
+	{return new MethodDeclarator(identifier, formalParameters, text21List, firstToken.next,token);}
  ) }
 
 FormalParameters FormalParameters() : { 
@@ -725,14 +725,14 @@ FormalParametersInternal FormalParametersInternal() : {
  ) }
 
 FormalParameter FormalParameter() : { 
-	ASTTextNode text394 = null;
+	ASTTextNode text22 = null;
 	Type type;
-	ASTTextNode text395 = null;
+	ASTTextNode text23 = null;
 	VariableDeclaratorId variableDeclaratorId;
 	Token firstToken=token;
 } { (
-	["final" {text394=new ASTTextNode("final",new WToken(token));}] type=Type() ["..." {text395=new ASTTextNode("...",new WToken(token));}] variableDeclaratorId=VariableDeclaratorId() 
-	{return new FormalParameter(text394, type, text395, variableDeclaratorId, firstToken.next,token);}
+	["final" {text22=new ASTTextNode("final",new WToken(token));}] type=Type() ["..." {text23=new ASTTextNode("...",new WToken(token));}] variableDeclaratorId=VariableDeclaratorId() 
+	{return new FormalParameter(text22, type, text23, variableDeclaratorId, firstToken.next,token);}
  ) }
 
 ConstructorDeclaration ConstructorDeclaration() : { 
@@ -763,12 +763,12 @@ ExplicitConstructorInvocation ExplicitConstructorInvocation() : {
  ) }
 
 Initializer Initializer() : { 
-	ASTTextNode text396 = null;
+	ASTTextNode text24 = null;
 	Block block;
 	Token firstToken=token;
 } { (
-	["static" {text396=new ASTTextNode("static",new WToken(token));}] block=Block() 
-	{return new Initializer(text396, block, firstToken.next,token);}
+	["static" {text24=new ASTTextNode("static",new WToken(token));}] block=Block() 
+	{return new Initializer(text24, block, firstToken.next,token);}
  ) }
 
 Type Type() : { 
@@ -784,17 +784,17 @@ Type Type() : {
 
 ReferenceTypeP ReferenceTypeP() : { 
 	PrimitiveType primitiveType;
-	ASTTextNode text397;
-	ArrayList<ASTTextNode> text397List = new ArrayList<ASTTextNode>();
+	ASTTextNode text25;
+	ArrayList<ASTTextNode> text25List = new ArrayList<ASTTextNode>();
 	ClassOrInterfaceType classOrInterfaceType;
-	ASTTextNode text398;
-	ArrayList<ASTTextNode> text398List = new ArrayList<ASTTextNode>();
+	ASTTextNode text26;
+	ArrayList<ASTTextNode> text26List = new ArrayList<ASTTextNode>();
 	Token firstToken=token;
 } { (
-	primitiveType=PrimitiveType() (LOOKAHEAD(2) "[" "]" {text397=new ASTTextNode(new String[]{"[","]"},new WToken(token));}{text397List.add(text397);})+ 
-	{return new ReferenceTypeP1(primitiveType, text397List, firstToken.next,token);} |
-	classOrInterfaceType=ClassOrInterfaceType() (LOOKAHEAD(2) "[" "]" {text398=new ASTTextNode(new String[]{"[","]"},new WToken(token));}{text398List.add(text398);})* 
-	{return new ReferenceTypeP2(classOrInterfaceType, text398List, firstToken.next,token);}
+	primitiveType=PrimitiveType() (LOOKAHEAD(2) "[" "]" {text25=new ASTTextNode(new String[]{"[","]"},new WToken(token));}{text25List.add(text25);})+ 
+	{return new ReferenceTypeP1(primitiveType, text25List, firstToken.next,token);} |
+	classOrInterfaceType=ClassOrInterfaceType() (LOOKAHEAD(2) "[" "]" {text26=new ASTTextNode(new String[]{"[","]"},new WToken(token));}{text26List.add(text26);})* 
+	{return new ReferenceTypeP2(classOrInterfaceType, text26List, firstToken.next,token);}
  ) }
 
 ClassOrInterfaceType ClassOrInterfaceType() : { 
@@ -1464,17 +1464,17 @@ ArrayDimsAndInits ArrayDimsAndInits() : {
 	Expression expression;
 	Expression expression1;
 	ArrayList<Expression> expression1List = new ArrayList<Expression>();
-	ASTTextNode text449;
-	ArrayList<ASTTextNode> text449List = new ArrayList<ASTTextNode>();
-	ASTTextNode text450;
-	ArrayList<ASTTextNode> text450List = new ArrayList<ASTTextNode>();
+	ASTTextNode text77;
+	ArrayList<ASTTextNode> text77List = new ArrayList<ASTTextNode>();
+	ASTTextNode text78;
+	ArrayList<ASTTextNode> text78List = new ArrayList<ASTTextNode>();
 	ArrayInitializer arrayInitializer;
 	Token firstToken=token;
 } { (
-	LOOKAHEAD(2) "[" expression=Expression() "]" (LOOKAHEAD(2) "[" expression1=Expression(){expression1List.add(expression1);} "]")* (LOOKAHEAD(2) "[" "]" {text449=new ASTTextNode(new String[]{"[","]"},new WToken(token));}{text449List.add(text449);})* 
-	{return new ArrayDimsAndInits1(expression, expression1List, text449List, firstToken.next,token);} |
-	("[" "]" {text450=new ASTTextNode(new String[]{"[","]"},new WToken(token));}{text450List.add(text450);})+ arrayInitializer=ArrayInitializer() 
-	{return new ArrayDimsAndInits2(text450List, arrayInitializer, firstToken.next,token);}
+	LOOKAHEAD(2) "[" expression=Expression() "]" (LOOKAHEAD(2) "[" expression1=Expression(){expression1List.add(expression1);} "]")* (LOOKAHEAD(2) "[" "]" {text77=new ASTTextNode(new String[]{"[","]"},new WToken(token));}{text77List.add(text77);})* 
+	{return new ArrayDimsAndInits1(expression, expression1List, text77List, firstToken.next,token);} |
+	("[" "]" {text78=new ASTTextNode(new String[]{"[","]"},new WToken(token));}{text78List.add(text78);})+ arrayInitializer=ArrayInitializer() 
+	{return new ArrayDimsAndInits2(text78List, arrayInitializer, firstToken.next,token);}
  ) }
 
 Statement Statement() : { 
@@ -1573,15 +1573,15 @@ BlockStatement BlockStatement() : {
  ) }
 
 LocalVariableDeclaration LocalVariableDeclaration() : { 
-	ASTTextNode text451 = null;
+	ASTTextNode text79 = null;
 	Type type;
 	VariableDeclarator variableDeclarator;
 	VariableDeclarator variableDeclarator1;
 	ArrayList<VariableDeclarator> variableDeclarator1List = new ArrayList<VariableDeclarator>();
 	Token firstToken=token;
 } { (
-	["final" {text451=new ASTTextNode("final",new WToken(token));}] type=Type() variableDeclarator=VariableDeclarator() ("," variableDeclarator1=VariableDeclarator(){variableDeclarator1List.add(variableDeclarator1);})* 
-	{return new LocalVariableDeclaration(text451, type, variableDeclarator, variableDeclarator1List, firstToken.next,token);}
+	["final" {text79=new ASTTextNode("final",new WToken(token));}] type=Type() variableDeclarator=VariableDeclarator() ("," variableDeclarator1=VariableDeclarator(){variableDeclarator1List.add(variableDeclarator1);})* 
+	{return new LocalVariableDeclaration(text79, type, variableDeclarator, variableDeclarator1List, firstToken.next,token);}
  ) }
 
 EmptyStatement EmptyStatement() : { 
@@ -1880,11 +1880,11 @@ MemberValueArrayInitializer MemberValueArrayInitializer() : {
 	MemberValue memberValue;
 	MemberValue memberValue1;
 	ArrayList<MemberValue> memberValue1List = new ArrayList<MemberValue>();
-	ASTTextNode text456 = null;
+	ASTTextNode text84 = null;
 	Token firstToken=token;
 } { (
-	"{" memberValue=MemberValue() (LOOKAHEAD(2) "," memberValue1=MemberValue(){memberValue1List.add(memberValue1);})* ["," {text456=new ASTTextNode(",",new WToken(token));}] "}" 
-	{return new MemberValueArrayInitializer(memberValue, memberValue1List, text456, firstToken.next,token);}
+	"{" memberValue=MemberValue() (LOOKAHEAD(2) "," memberValue1=MemberValue(){memberValue1List.add(memberValue1);})* ["," {text84=new ASTTextNode(",",new WToken(token));}] "}" 
+	{return new MemberValueArrayInitializer(memberValue, memberValue1List, text84, firstToken.next,token);}
  ) }
 
 AnnotationTypeDeclaration AnnotationTypeDeclaration() : { 
