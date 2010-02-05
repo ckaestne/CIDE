@@ -78,19 +78,13 @@
 
 	</extension>
 
-	<extension id="javaeditor" point="org.eclipse.ui.editors">
-		<editor name="Colored Text Editor" default="true" icon="icons/coloredj.gif"
-			class="de.ovgu.cide.editor.ColoredTextEditor" id="de.ovgu.cide.ColoredTextEditor">
-			<contentTypeBinding contentTypeId="de.ovgu.cide.coloredFile" />
-		</editor>
 
-	</extension>
 	<extension point="org.eclipse.ui.perspectives">
 		<perspective class="de.ovgu.cide.PerspectiveFactory" icon="icons/interaction.GIF"
 			id="ColoredIDE.perspective" name="CIDE" />
 	</extension>
 	<extension point="org.eclipse.core.contenttype.contentTypes">
-		<content-type file-extensions="*.lang" id="CIDE2.coloredFile"
+		<content-type file-extensions="*.lang" id="de.ovgu.cide.coloredFile"
 			name="Colored Source File" priority="normal">
 		</content-type>
 	</extension>
@@ -134,7 +128,7 @@
 	<extension point="org.eclipse.ui.navigator.viewer">
 		<viewerContentBinding viewerId="org.eclipse.ui.navigator.ProjectExplorer">
 			<includes>
-				<contentExtension pattern="coloredide.navigatorContentColorProvider">
+				<contentExtension pattern="de.ovgu.cide.navigatorContentColorProvider">
 				</contentExtension>
 			</includes>
 		</viewerContentBinding>
@@ -146,7 +140,7 @@
 		</viewer>
 		<viewerContentBinding viewerId="org.eclipse.ui.views.ResourceNavigator">
 			<includes>
-				<contentExtension pattern="coloredide.navigatorContentColorProvider">
+				<contentExtension pattern="de.ovgu.cide.navigatorContentColorProvider">
 				</contentExtension>
 			</includes>
 		</viewerContentBinding>
@@ -191,5 +185,12 @@
 	<extension point="org.eclipse.core.runtime.preferences">
 		<initializer class="de.ovgu.cide.preferences.PreferenceInitializer">
 		</initializer>
+	</extension>
+	<extension id="coloredTextEditor" point="org.eclipse.ui.editors">
+		<editor name="Colored Text Editor" default="true" icon="icons/coloredj.gif"
+			class="de.ovgu.cide.editor.ColoredTextEditor" id="de.ovgu.cide.ColoredTextEditor">
+			<contentTypeBinding contentTypeId="de.ovgu.cide.coloredFile" />
+		</editor>
+
 	</extension>
 </plugin>

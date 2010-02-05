@@ -82,6 +82,7 @@ public class CollectStatisticsAndInteractionsJob extends
 		try {
 			ISourceFile ast;
 			ast = source.getAST();
+			
 			ast.accept(new ASTVisitor() {
 				/**
 				 * collect derivative statistics

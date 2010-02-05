@@ -91,6 +91,8 @@ public class InteractionsView extends ViewPart {
 			public void run() {
 				CollectStatisticsAndInteractionsJob job = new CollectStatisticsAndInteractionsJob(
 						getActiveProject(), tree);
+//				CollectPageStatistics job = new CollectPageStatistics(
+//						getActiveProject(), tree);
 				job.setUser(true);
 				job.schedule();
 			}
