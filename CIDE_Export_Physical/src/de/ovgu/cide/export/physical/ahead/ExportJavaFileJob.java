@@ -273,7 +273,8 @@ public class ExportJavaFileJob extends BaseJavaFileExporter {
 	}
 
 	private String getFilename(TypeDeclaration type) {
-		return exporter.getOptions().getFilename(type.getName().getIdentifier());
+		return exporter.getOptions()
+				.getFilename(type.getName().getIdentifier());
 	}
 
 	private void createFilesForDerivative(JakCompilationUnit output,
@@ -300,11 +301,13 @@ public class ExportJavaFileJob extends BaseJavaFileExporter {
 				continue;
 
 			IFile targetFile;
+			String filename = exporter.getOptions().getFilename(
+					output.getInnerClassName(innerRef));
 			if (exporter.getOptions().getFlattenPackages())
-				targetFile = featureDir.getFile(output.getFilename(innerRef));
+				targetFile = featureDir.getFile(filename);
 			else
 				targetFile = featureDir.getFile(folder.getProjectRelativePath()
-						.append(output.getFilename(innerRef)));
+						.append(filename));
 			InputStream source = new ByteArrayInputStream(sourceStr.getBytes());
 			Export2JakJob.createFile(targetFile, source, monitor);
 		}

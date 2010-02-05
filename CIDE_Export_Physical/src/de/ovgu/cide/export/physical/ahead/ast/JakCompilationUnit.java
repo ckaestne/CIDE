@@ -114,12 +114,12 @@ public class JakCompilationUnit {
 		return pp.getResult();
 	}
 
-	public String getFilename() {
-		return getFilename(getRefinement());
-	}
+//	public String getFilename() {
+//		return getFilename(getRefinement());
+//	}
 
-	public String getFilename(JakClassRefinement innerClass) {
-		return innerClass.getName().getIdentifier() + ".jak";
+	public String getInnerClassName(JakClassRefinement innerClass) {
+		return innerClass.getName().getIdentifier();
 	}
 
 	public PackageDeclaration getPackage() {

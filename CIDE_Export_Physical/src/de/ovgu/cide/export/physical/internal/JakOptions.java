@@ -11,8 +11,10 @@ import de.ovgu.cide.export.useroptions.StringUserOption;
 
 public class JakOptions implements IPhysicalOptions {
 
-	BooleanUserOption derivativesInSubdirectories = new BooleanUserOption("Derivatives in subdirectories",true);
-	StringUserOption packagePrefix = new StringUserOption("Packages (prefix) to remove","");
+	BooleanUserOption derivativesInSubdirectories = new BooleanUserOption(
+			"Derivatives in subdirectories", true);
+	StringUserOption packagePrefix = new StringUserOption(
+			"Packages (prefix) to remove", "");
 
 	public boolean getFlattenPackages() {
 		return true;

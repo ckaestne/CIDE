@@ -94,7 +94,8 @@ public class RefactoringColorManager {
 	}
 
 	public void addColors(ASTNode node, Set<IFeature> colors) {
-		Set<IFeature> c = getColors(node);
+		Set<IFeature> c = new HashSet<IFeature>();
+		c.addAll(getColors(node));
 		c.addAll(colors);
 		setColors(node, c);
 	}
