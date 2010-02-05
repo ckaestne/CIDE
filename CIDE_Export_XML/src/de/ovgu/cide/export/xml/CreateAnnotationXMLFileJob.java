@@ -1,10 +1,14 @@
 package de.ovgu.cide.export.xml;
 
 import java.io.ByteArrayInputStream;
+import java.io.FileInputStream;
 import java.io.StringWriter;
 import java.util.List;
 import java.util.Set;
 
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.JTextPane;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
@@ -29,12 +33,14 @@ import org.w3c.dom.Element;
 import cide.gparser.ParseException;
 import de.ovgu.cide.editor.CodeSegment;
 import de.ovgu.cide.editor.CodeSegmentCalculator;
+import de.ovgu.cide.editor.NewFeatureAction;
 import de.ovgu.cide.features.FeatureModelManager;
 import de.ovgu.cide.features.FeatureModelNotFoundException;
 import de.ovgu.cide.features.IFeature;
 import de.ovgu.cide.features.IFeatureModel;
 import de.ovgu.cide.features.source.ColoredSourceFile;
 import de.ovgu.cide.features.source.DirectoryColorManager;
+import de.ovgu.cide.utils.StrUtils;
 
 public class CreateAnnotationXMLFileJob extends Job {
 
@@ -179,11 +185,19 @@ public class CreateAnnotationXMLFileJob extends Job {
 				Element fragmentNode = dom.createElement("fragment");
 				fragmentNode.setAttribute("offset", "" + segment.getOffset());
 				fragmentNode.setAttribute("length", "" + segment.getLength());
+//				fragmentNode.setAttribute("linefrom", "" + offsetToLine(source,segment.getOffset()));
+//				fragmentNode.setAttribute("linefrom", "" + offsetToLine(source,segment.getOffset()+segment.getLength()));
 				addAnnotations(dom, fragmentNode, segment.getColors());
 				parentNode.appendChild(fragmentNode);
 			}
 
 	}
+
+//	private JTextArea text =new JTextArea();
+//	private String offsetToLine(ColoredSourceFile source, int offset) {
+//		text.setText(StrUtils.strFromInputStream(new FileInputStream(source.getResource().)));
+//		source.getResource();
+//	}
 
 	private void addAnnotations(Document dom, Element parentNode,
 			Set<IFeature> colors) {
