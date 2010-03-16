@@ -74,8 +74,8 @@ public class CheckUtils /* extends ASTVisitor */{
 			List<MethodPathItem> inherMethods) {
 
 		if (sourceMethodBinding == null || inherMethods == null
-				|| superClassBinding == null
-				|| !superClassBinding.isFromSource())
+				|| superClassBinding == null)
+//				|| !superClassBinding.isFromSource())
 			return;
 
 		IMethodBinding[] methodBindings = superClassBinding
