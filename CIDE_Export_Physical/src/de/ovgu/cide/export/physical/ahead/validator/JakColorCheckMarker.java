@@ -8,7 +8,7 @@ import de.ovgu.cide.export.physical.ahead.UnsupportedColoring;
 
 public class JakColorCheckMarker {
 
-	public static final String TYPEID = "coloride.jakColorWarning";
+	public static final String TYPEID = "de.ovgu.cide.export.jak.jakColorWarning";
 
 	public static void createMarker(IResource resource, UnsupportedColoring u)
 			throws CoreException {

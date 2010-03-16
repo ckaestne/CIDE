@@ -4,7 +4,7 @@
 <extension
         point="org.eclipse.ui.actionSets">
      <actionSet
-           id="coloride.actionSet"
+           id="export.coloride.actionSet"
            label="Colors"
            visible="true">
           <action
@@ -37,5 +37,13 @@
             id="de.ovgu.cide.export.aspectj"
             name="Export to AspectJ">
       </wizard>
+   </extension>
+   <extension
+         id="de.ovgu.cide.export.jak.jakColorWarning"
+         name="Jak Export Warning"
+         point="org.eclipse.core.resources.markers">
+      <super
+            type="org.eclipse.jdt.core.problem">
+      </super>
    </extension>
 </plugin>

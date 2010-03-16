@@ -9,6 +9,7 @@ import org.eclipse.jdt.core.dom.ASTVisitor;
 import de.ovgu.cide.features.IFeature;
 import de.ovgu.cide.features.source.ColoredSourceFile;
 import de.ovgu.cide.language.jdt.AstidWrapper;
+import de.ovgu.cide.language.jdt.AstidWrapperWithParents;
 
 public class FeatureFinderVisitor extends ASTVisitor {
 	private ColoredSourceFile sourceFile;
@@ -22,7 +23,7 @@ public class FeatureFinderVisitor extends ASTVisitor {
 	@Override
 	public void preVisit(ASTNode node) {
 		Set<IFeature> colors = sourceFile.getColorManager().getColors(
-				new AstidWrapper(node));
+				new AstidWrapperWithParents(node));
 		this.seenColors.add(colors);
 		super.preVisit(node);
 	}

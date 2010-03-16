@@ -11,6 +11,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 
@@ -35,6 +36,9 @@ class JakColorCheckerJob extends ColoredSourceFileIteratorJob {
 
 	protected void processSource(ColoredSourceFile source)
 			throws JavaModelException, CoreException {
+		if (!JavaCore.isJavaLikeFileName(source.getResource().getName()))
+			return;
+
 		try {
 			CompilationUnit ast = JDTParserWrapper.parseJavaFile(source
 					.getResource());
