@@ -44,7 +44,7 @@ public class ImportTargetCheck extends AbstractJDTTypingCheckWithResolution {
 	}
 
 	private Set<IFeature> getTargetColor() {
-		Set<IFeature> targetColors = Collections.EMPTY_SET;
+		Set<IFeature> targetColors = Collections.emptySet();
 		if (targetBinding instanceof ITypeBinding) {
 			targetColors = typingProvider.getBindingColors().getColors(
 					(ITypeBinding) targetBinding);

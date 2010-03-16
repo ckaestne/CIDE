@@ -12,24 +12,24 @@ import cide.gast.Property;
 /**
  * careful, this is an ugly hack in matching the JDT AST and the gCIDE AST. Both
  * have the same IDs, but usually, you need to bridge the entire thing to get
- * parents etc right. With this wrapper you can circumvent the entire bridge and
- * just pass the ID wrapped in an IASTNode object. Be careful to use this only
- * in locations where it is guaranteed that only the ID and no parent is accessed 
- * (for example in the colormanager.getOwnColor).
+ * parents etc right.
+ * 
+ * this is an extension of ASTIDWrapper which wraps also all parents. It can
+ * hence be used in colormanager.getcolors.
  * 
  * You must know what you're doing when you use this class!
  * 
  * @author ckaestne
  * 
  */
-public class AstidWrapper implements IASTNode {
+public class AstidWrapperWithParents implements IASTNode {
 	private final String astid;
+	private final AstidWrapperWithParents parent;
 
-	public AstidWrapper(String astid) {
-		this.astid = astid;
-	}	
-	public AstidWrapper(ASTNode node) {
+	public AstidWrapperWithParents(ASTNode node) {
 		this.astid = ASTID.id(node);
+		this.parent = node.getParent() == null ? null
+				: new AstidWrapperWithParents(node.getParent());
 	}
 
 	public void accept(IASTVisitor visitor) {
@@ -61,7 +61,7 @@ public class AstidWrapper implements IASTNode {
 	}
 
 	public IASTNode getParent() {
-		return null;
+		return parent;
 	}
 
 	public List<Property> getProperties() {

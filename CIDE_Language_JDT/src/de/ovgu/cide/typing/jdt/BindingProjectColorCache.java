@@ -30,7 +30,7 @@ import cide.gparser.ParseException;
 import de.ovgu.cide.features.FeatureModelNotFoundException;
 import de.ovgu.cide.features.IFeature;
 import de.ovgu.cide.features.source.ColoredSourceFile;
-import de.ovgu.cide.language.jdt.AstidWrapper;
+import de.ovgu.cide.language.jdt.AstidWrapperWithParents;
 import de.ovgu.cide.language.jdt.JDTLanguageExtension;
 import de.ovgu.cide.language.jdt.JDTParserWrapper;
 
@@ -114,7 +114,7 @@ public class BindingProjectColorCache implements Serializable {
 
 			private Set<IFeature> getColor(final ColoredSourceFile file,
 					ASTNode node) {
-				return file.getColorManager().getColors(new AstidWrapper(node));
+				return file.getColorManager().getColors(new AstidWrapperWithParents(node));
 			}
 
 			private void update(HashMap<String, Set<IFeature>> map, String key,

@@ -5,14 +5,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.jdt.core.dom.Expression;
 import org.eclipse.jdt.core.dom.IMethodBinding;
-import org.eclipse.jdt.core.dom.ITypeBinding;
 
 import cide.gast.IASTNode;
 import de.ovgu.cide.features.IFeature;
 import de.ovgu.cide.features.source.ColoredSourceFile;
-import de.ovgu.cide.language.jdt.ASTBridge;
 import de.ovgu.cide.typing.jdt.BindingProjectColorCache;
 import de.ovgu.cide.typing.jdt.JDTTypingProvider;
 import de.ovgu.cide.typing.jdt.checks.resolutions.ASTBindingFinderHelper;

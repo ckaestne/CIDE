@@ -1,11 +1,9 @@
 package de.ovgu.cide.typing.jdt.checks;
 
-import java.awt.print.Paper;
 import java.util.List;
 
 import cide.gast.IASTNode;
 import de.ovgu.cide.features.source.ColoredSourceFile;
-import de.ovgu.cide.typing.jdt.BindingProjectColorCache;
 import de.ovgu.cide.typing.jdt.JDTTypingProvider;
 import de.ovgu.cide.typing.jdt.checks.util.MethodPathItem;
 import de.ovgu.cide.typing.model.IEvaluationStrategy;

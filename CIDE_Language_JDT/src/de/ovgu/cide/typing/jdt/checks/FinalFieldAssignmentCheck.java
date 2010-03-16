@@ -13,11 +13,11 @@ import de.ovgu.cide.typing.model.IEvaluationStrategy;
  * @author ckaestne & adreilin
  * 
  */
-public class FieldAssignmentCheck extends AbstractJDTTypingCheck {
+public class FinalFieldAssignmentCheck extends AbstractJDTTypingCheck {
 
 	private final IVariableBinding targetField;
 
-	public FieldAssignmentCheck(ColoredSourceFile file,
+	public FinalFieldAssignmentCheck(ColoredSourceFile file,
 			JDTTypingProvider typingProvider, IASTNode source,
 			IVariableBinding target) {
 		super(file, typingProvider, source);

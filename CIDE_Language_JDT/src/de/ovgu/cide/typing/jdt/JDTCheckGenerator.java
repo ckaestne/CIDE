@@ -38,7 +38,7 @@ import cide.gast.IASTNode;
 import de.ovgu.cide.features.source.ColoredSourceFile;
 import de.ovgu.cide.language.jdt.ASTBridge;
 import de.ovgu.cide.typing.jdt.checks.FieldAccessCheck;
-import de.ovgu.cide.typing.jdt.checks.FieldAssignmentCheck;
+import de.ovgu.cide.typing.jdt.checks.FinalFieldAssignmentCheck;
 import de.ovgu.cide.typing.jdt.checks.ImportTargetCheck;
 import de.ovgu.cide.typing.jdt.checks.InheritedMethodExceptionCheck;
 import de.ovgu.cide.typing.jdt.checks.InheritedMethodCheck;
@@ -307,39 +307,39 @@ class JDTCheckGenerator_Methods extends JDTCheckGenerator_FieldAccess {
 	private void handleInheritedAbstractMethodImplementation(
 			MethodDeclaration node, IMethodBinding methodBinding,
 			List<MethodPathItem> inhMethods) {
-
-		// add check for method name
-		checks.add(new MethodImplementationNameCheck(file, jdtTypingProvider,
-				bridge(node), methodBinding, inhMethods));
-
-		//add checks for parameters
-		List parameterList = node.parameters();
-
-		for (int j = 0; j < parameterList.size(); j++) {
-
-			checks.add(new MethodImplementationParameterCheck(file,
-					jdtTypingProvider,
-					bridge((SingleVariableDeclaration) parameterList.get(j)),
-					methodBinding, j, inhMethods));
-
-		}
-
-		// add checks for exceptions
-		List exceptionList = node.thrownExceptions();
-		Name curExcNode;
-		for (int i = 0; i < exceptionList.size(); i++) {
-
-			curExcNode = (Name) exceptionList.get(i);
-			ITypeBinding curExcBinding = curExcNode.resolveTypeBinding();
-
-			if (curExcBinding == null)
-				continue;
-
-			checks.add(new MethodImplementationExceptionCheck(file,
-					jdtTypingProvider, bridge(curExcNode), methodBinding,
-					curExcBinding.getKey(), inhMethods));
-
-		}
+//currently deactivated, see Bug #74
+//		// add check for method name
+//		checks.add(new MethodImplementationNameCheck(file, jdtTypingProvider,
+//				bridge(node), methodBinding, inhMethods));
+//
+//		//add checks for parameters
+//		List parameterList = node.parameters();
+//
+//		for (int j = 0; j < parameterList.size(); j++) {
+//
+//			checks.add(new MethodImplementationParameterCheck(file,
+//					jdtTypingProvider,
+//					bridge((SingleVariableDeclaration) parameterList.get(j)),
+//					methodBinding, j, inhMethods));
+//
+//		}
+//
+//		// add checks for exceptions
+//		List exceptionList = node.thrownExceptions();
+//		Name curExcNode;
+//		for (int i = 0; i < exceptionList.size(); i++) {
+//
+//			curExcNode = (Name) exceptionList.get(i);
+//			ITypeBinding curExcBinding = curExcNode.resolveTypeBinding();
+//
+//			if (curExcBinding == null)
+//				continue;
+//
+//			checks.add(new MethodImplementationExceptionCheck(file,
+//					jdtTypingProvider, bridge(curExcNode), methodBinding,
+//					curExcBinding.getKey(), inhMethods));
+//
+//		}
 
 	}
 
@@ -415,22 +415,23 @@ class JDTCheckGenerator_FieldAccess extends JDTCheckGenerator_Base {
 		super.visitName(node);
 	}
 	
-	private void handleFieldChecks(Name node, IVariableBinding binding) {
+	private void handleFieldChecks(Name fieldRef, IVariableBinding fieldBinding) {
 		
 		//add field access check
 		checks.add(new FieldAccessCheck(file, jdtTypingProvider,
-				bridge(node),  binding));
+				bridge(fieldRef),  fieldBinding));
 		
-		//add assignment check for final fields
-		if (Modifier.isFinal((binding).getModifiers())) {
-			
-			ITypeBinding declClass = binding.getDeclaringClass();
-			
-			if (declClass != null && declClass.isFromSource())
-				checks.add(new FieldAssignmentCheck(file, jdtTypingProvider,
-					bridge(node), binding));
-			
-		}
+		//@ckaestne: versteh ich nicht, see Bug #74, leads to misleading bug reports
+//		//add assignment check for final fields
+//		if (Modifier.isFinal((fieldBinding).getModifiers())) {
+//			
+//			ITypeBinding declClass = fieldBinding.getDeclaringClass();
+//			
+//			if (declClass != null && declClass.isFromSource())
+//				checks.add(new FinalFieldAssignmentCheck(file, jdtTypingProvider,
+//					bridge(fieldRef), fieldBinding));
+//			
+//		}
 
 		
 	}

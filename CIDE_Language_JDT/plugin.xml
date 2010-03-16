@@ -61,13 +61,6 @@
               id="menu_AstView.action3"
               label="Organize Imports"
               menubarPath="colorMenu/colorGroup"/>
-          <action
-                class="coloredide.export2jak.validator.CheckColorsForJakExportAction"
-                id="coloredide.export.jak.CheckColors"
-                label="Check Colors for Jak Export"
-                menubarPath="colorMenu/colorGroup"
-                style="push">
-          </action>
 
      </actionSet>
   </extension>
