@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: CIDE Manifest Language
+Bundle-SymbolicName: de.ovgu.cide.language.manifest;singleton:=true
+Bundle-Version: 0.1.0.qualifier
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-Vendor: Christian Kaestner, University of Magdeburg
+Require-Bundle: de.ovgu.cide.ast;bundle-version="2.1.0",
+ de.ovgu.cide.core;bundle-version="2.1.0",
+ de.ovgu.cide.language.jdt;bundle-version="2.1.0",
+ de.ovgu.cide.typing;bundle-version="2.1.0"
+Export-Package: de.ovgu.cide.language.manifest,   tmp
