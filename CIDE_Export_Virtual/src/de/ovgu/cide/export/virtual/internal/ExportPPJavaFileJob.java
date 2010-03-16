@@ -14,6 +14,7 @@ import org.eclipse.jdt.core.dom.CompilationUnit;
 import cide.gparser.ParseException;
 import de.ovgu.cide.export.BaseExportJob;
 import de.ovgu.cide.export.BaseJavaFileExporter;
+import de.ovgu.cide.export.CopiedNaiveASTFlattener;
 import de.ovgu.cide.features.FeatureModelNotFoundException;
 import de.ovgu.cide.features.source.ColoredSourceFile;
 import de.ovgu.cide.language.jdt.JDTParserWrapper;
@@ -59,8 +60,8 @@ public class ExportPPJavaFileJob extends BaseJavaFileExporter {
 	private String renderASTPP(ColoredSourceFile sourceFile)
 			throws JavaModelException, CoreException, ParseException {
 		CompilationUnit ast = JDTParserWrapper.parseCompilationUnit(compUnit);
-		PPPrettyPrinter pp = new PPPrettyPrinter(sourceFile.getColorManager(),
-				sourceFile.getProject(), options);
+		ast=options.refactorAST(ast,sourceFile);
+		CopiedNaiveASTFlattener pp = options.getPrettyPrinter(sourceFile);
 		ast.accept(pp);
 		return pp.getResult();
 	}

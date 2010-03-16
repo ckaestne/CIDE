@@ -3,8 +3,12 @@ package de.ovgu.cide.export.virtual.internal;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.jdt.core.dom.CompilationUnit;
+
+import de.ovgu.cide.export.CopiedNaiveASTFlattener;
 import de.ovgu.cide.export.useroptions.IUserOption;
 import de.ovgu.cide.features.IFeature;
+import de.ovgu.cide.features.source.ColoredSourceFile;
 
 public class CPPExportOptions implements IPPExportOptions {
 	public String getStartInstruction(Set<IFeature> features) {
@@ -38,4 +42,12 @@ public class CPPExportOptions implements IPPExportOptions {
 		return null;
 	}
 
+	public CopiedNaiveASTFlattener getPrettyPrinter(ColoredSourceFile sourceFile) {
+		return new PPPrettyPrinter(sourceFile.getColorManager(), sourceFile
+				.getProject(), this);
+	}
+
+	public CompilationUnit refactorAST(CompilationUnit root, ColoredSourceFile source) {
+		return root;
+	}
 }

@@ -5,8 +5,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.jdt.core.dom.CompilationUnit;
+
+import de.ovgu.cide.export.CopiedNaiveASTFlattener;
 import de.ovgu.cide.export.useroptions.IUserOption;
 import de.ovgu.cide.features.IFeature;
+import de.ovgu.cide.features.source.ColoredSourceFile;
 
 public class MungeExportOptions implements IPPExportOptions {
 
@@ -44,6 +48,16 @@ public class MungeExportOptions implements IPPExportOptions {
 
 	public List<IUserOption> getUserOptions() {
 		return null;
+	}
+
+	public CopiedNaiveASTFlattener getPrettyPrinter(ColoredSourceFile sourceFile) {
+		return new PPPrettyPrinter(sourceFile.getColorManager(), sourceFile
+				.getProject(), this);
+	}
+
+	public CompilationUnit refactorAST(CompilationUnit root,
+			ColoredSourceFile sourceFile) {
+		return root;
 	}
 
 }

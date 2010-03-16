@@ -1,5 +1,8 @@
 package de.ovgu.cide.export.virtual.internal;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -9,6 +12,7 @@ import org.eclipse.jdt.core.ICompilationUnit;
 
 import de.ovgu.cide.export.BaseExportJob;
 import de.ovgu.cide.features.FeatureModelNotFoundException;
+import de.ovgu.cide.features.IFeature;
 
 public class Export2PPJob extends BaseExportJob {
 
@@ -44,4 +48,5 @@ public class Export2PPJob extends BaseExportJob {
 		baseFolder = targetProject.getFolder("java");
 		createFolder(baseFolder, monitor);
 	}
+
 }

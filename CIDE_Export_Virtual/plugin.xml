@@ -21,6 +21,12 @@
             id="de.ovgu.cide.export.antenna"
             name="Export to #ifdef (Antenna)">
       </wizard>      
+       <wizard
+            category="de.ovgu.cide.export"
+            class="de.ovgu.cide.export.virtual.ExportJavaIfWizard"
+            id="de.ovgu.cide.export.javaif"
+            name="Export to If Statements (Native Java)">
+      </wizard>    
    </extension>
 
 </plugin>
