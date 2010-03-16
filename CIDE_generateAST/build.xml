@@ -116,7 +116,12 @@
 			<param name="directory" value="${basedir}\..\CIDE_Language_Python\src" />
 		</antcall>
 	</target>
-	<!-- <target name="xhtml">
+	<target name="manifest">
+			<antcall target="createlang">
+				<param name="language" value="manifest" />
+				<param name="directory" value="${basedir}\..\CIDE_Language_Manifest\src" />
+			</antcall>
+		</target>	<!-- <target name="xhtml">
 		<antcall target="createlang">
 			<param name="language" value="xhtml" />
 			<param name="directory" value="${basedir}\..\CIDE_Language_XML_concrete\src" />
