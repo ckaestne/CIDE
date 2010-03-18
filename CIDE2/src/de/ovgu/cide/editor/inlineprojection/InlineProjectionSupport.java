@@ -96,8 +96,8 @@ public class InlineProjectionSupport {
 						Point p = textWidget.getLocationAtOffset(offset + 1);
 
 						Color c = gc.getForeground();
-						if (annotation instanceof ColoredInlineProjectionAnnotation) {
-							Set<IFeature> colors = ((ColoredInlineProjectionAnnotation) annotation)
+						if (annotation instanceof AbstractColoredInlineProjectionAnnotation) {
+							Set<IFeature> colors = ((AbstractColoredInlineProjectionAnnotation) annotation)
 									.getColors();
 							Color combinedColor = ColorHelper
 									.getCombinedColor(colors);

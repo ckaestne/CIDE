@@ -44,7 +44,9 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 
-@SuppressWarnings(value={"unchecked"})
+import de.ovgu.cide.editor.ColoredTextEditor;
+
+@SuppressWarnings(value = { "unchecked" })
 public class InlineProjectionSourceViewer extends ProjectionViewer implements
 		ITextViewerExtension5 {
 
@@ -55,14 +57,17 @@ public class InlineProjectionSourceViewer extends ProjectionViewer implements
 			IAnnotationModelListenerExtension {
 
 		/*
-		 * @see org.eclipse.jface.text.source.IAnnotationModelListener#modelChanged(org.eclipse.jface.text.source.IAnnotationModel)
+		 * @see
+		 * org.eclipse.jface.text.source.IAnnotationModelListener#modelChanged
+		 * (org.eclipse.jface.text.source.IAnnotationModel)
 		 */
 		public void modelChanged(IAnnotationModel model) {
 			processModelChanged(model, null);
 		}
 
 		/*
-		 * @see org.eclipse.jface.text.source.IAnnotationModelListenerExtension#modelChanged(org.eclipse.jface.text.source.AnnotationModelEvent)
+		 * @seeorg.eclipse.jface.text.source.IAnnotationModelListenerExtension#
+		 * modelChanged(org.eclipse.jface.text.source.AnnotationModelEvent)
 		 */
 		public void modelChanged(AnnotationModelEvent event) {
 			processModelChanged(event.getAnnotationModel(), event);
@@ -117,13 +122,17 @@ public class InlineProjectionSourceViewer extends ProjectionViewer implements
 		}
 
 		/*
-		 * @see org.eclipse.jface.text.IDocumentListener#documentAboutToBeChanged(org.eclipse.jface.text.DocumentEvent)
+		 * @see
+		 * org.eclipse.jface.text.IDocumentListener#documentAboutToBeChanged
+		 * (org.eclipse.jface.text.DocumentEvent)
 		 */
 		public void documentAboutToBeChanged(DocumentEvent event) {
 		}
 
 		/*
-		 * @see org.eclipse.jface.text.IDocumentListener#documentChanged(org.eclipse.jface.text.DocumentEvent)
+		 * @see
+		 * org.eclipse.jface.text.IDocumentListener#documentChanged(org.eclipse
+		 * .jface.text.DocumentEvent)
 		 */
 		public void documentChanged(DocumentEvent event) {
 			fExecutionTrigger.removeDocumentListener(this);
@@ -293,6 +302,8 @@ public class InlineProjectionSourceViewer extends ProjectionViewer implements
 	 */
 	private int fDeletedLines;
 
+	private ProjectionAnnotationsCalculator projectionAnnotationCalculator;
+
 	/**
 	 * Creates a new projection source viewer.
 	 * 
@@ -306,12 +317,20 @@ public class InlineProjectionSourceViewer extends ProjectionViewer implements
 	 *            <code>true</code> if the overview ruler should be shown
 	 * @param styles
 	 *            the SWT style bits
+	 * @param editor
+	 * @param projectionAnnotationCalculator
 	 * @param fPreferenceStore
 	 */
 	public InlineProjectionSourceViewer(Composite parent, IVerticalRuler ruler,
 			IOverviewRuler overviewRuler, boolean showsAnnotationOverview,
-			int styles) {
+			int styles, ColoredTextEditor editor) {
 		super(parent, ruler, overviewRuler, showsAnnotationOverview, styles);
+		this.projectionAnnotationCalculator = new ProjectionAnnotationsCalculator(
+				editor);
+	}
+
+	public ProjectionAnnotationsCalculator getProjectionAnnotationCalculator() {
+		return projectionAnnotationCalculator;
 	}
 
 	/**
@@ -360,8 +379,10 @@ public class InlineProjectionSourceViewer extends ProjectionViewer implements
 	}
 
 	/*
-	 * @see org.eclipse.jface.text.source.SourceViewer#setDocument(org.eclipse.jface.text.IDocument,
-	 *      org.eclipse.jface.text.source.IAnnotationModel, int, int)
+	 * @see
+	 * org.eclipse.jface.text.source.SourceViewer#setDocument(org.eclipse.jface
+	 * .text.IDocument, org.eclipse.jface.text.source.IAnnotationModel, int,
+	 * int)
 	 */
 	public void setDocument(IDocument document,
 			IAnnotationModel annotationModel, int modelRangeOffset,
@@ -381,6 +402,8 @@ public class InlineProjectionSourceViewer extends ProjectionViewer implements
 			fInlineProjectionAnnotationModel = null;
 		}
 
+		projectionAnnotationCalculator.calculateProjectionAnnotations();
+
 		super.setDocument(document, annotationModel, modelRangeOffset,
 				modelRangeLength);
 
@@ -389,7 +412,9 @@ public class InlineProjectionSourceViewer extends ProjectionViewer implements
 	}
 
 	/*
-	 * @see org.eclipse.jface.text.source.SourceViewer#createVisualAnnotationModel(org.eclipse.jface.text.source.IAnnotationModel)
+	 * @see
+	 * org.eclipse.jface.text.source.SourceViewer#createVisualAnnotationModel
+	 * (org.eclipse.jface.text.source.IAnnotationModel)
 	 */
 	protected IAnnotationModel createVisualAnnotationModel(
 			IAnnotationModel annotationModel) {
@@ -619,8 +644,8 @@ public class InlineProjectionSourceViewer extends ProjectionViewer implements
 
 	/**
 	 * Returns the first line offset &lt;= <code>offset</code>. If
-	 * <code>testLastLine</code> is <code>true</code> and the offset is on
-	 * last line then <code>offset</code> is returned.
+	 * <code>testLastLine</code> is <code>true</code> and the offset is on last
+	 * line then <code>offset</code> is returned.
 	 * 
 	 * @param document
 	 *            the document
@@ -658,7 +683,9 @@ public class InlineProjectionSourceViewer extends ProjectionViewer implements
 	}
 
 	/*
-	 * @see org.eclipse.jface.text.TextViewer#setVisibleDocument(org.eclipse.jface.text.IDocument)
+	 * @see
+	 * org.eclipse.jface.text.TextViewer#setVisibleDocument(org.eclipse.jface
+	 * .text.IDocument)
 	 */
 	protected void setVisibleDocument(IDocument document) {
 		if (!isInlineProjectionMode()) {
@@ -695,7 +722,8 @@ public class InlineProjectionSourceViewer extends ProjectionViewer implements
 	}
 
 	/*
-	 * @see org.eclipse.jface.text.ITextViewer#overlapsWithVisibleRegion(int,int)
+	 * @see
+	 * org.eclipse.jface.text.ITextViewer#overlapsWithVisibleRegion(int,int)
 	 */
 	public boolean overlapsWithVisibleRegion(int offset, int length) {
 		disableProjection();
@@ -929,8 +957,8 @@ public class InlineProjectionSourceViewer extends ProjectionViewer implements
 
 	/**
 	 * Adapts the slave visual document of this viewer to the changes described
-	 * in the annotation model event. When the event is <code>null</code>,
-	 * this is identical to a world change event.
+	 * in the annotation model event. When the event is <code>null</code>, this
+	 * is identical to a world change event.
 	 * 
 	 * @param event
 	 *            the annotation model event or <code>null</code>
@@ -1135,8 +1163,8 @@ public class InlineProjectionSourceViewer extends ProjectionViewer implements
 	 * 
 	 * @param position
 	 *            the position
-	 * @return the ranges that must be collapsed, or <code>null</code> if
-	 *         there are none
+	 * @return the ranges that must be collapsed, or <code>null</code> if there
+	 *         are none
 	 * @since 3.1
 	 */
 	IRegion[] computeCollapsedRegions(Position position) {
@@ -1397,6 +1425,7 @@ public class InlineProjectionSourceViewer extends ProjectionViewer implements
 
 	/*
 	 * @see org.eclipse.jface.text.source.SourceViewer#handleDispose()
+	 * 
 	 * @since 3.0
 	 */
 	protected void handleDispose() {
@@ -1405,7 +1434,9 @@ public class InlineProjectionSourceViewer extends ProjectionViewer implements
 	}
 
 	/*
-	 * @see org.eclipse.jface.text.TextViewer#handleVisibleDocumentAboutToBeChanged(org.eclipse.jface.text.DocumentEvent)
+	 * @see
+	 * org.eclipse.jface.text.TextViewer#handleVisibleDocumentAboutToBeChanged
+	 * (org.eclipse.jface.text.DocumentEvent)
 	 */
 	protected void handleVisibleDocumentChanged(DocumentEvent event) {
 		if (fHandleInlineProjectionChanges
@@ -1446,7 +1477,10 @@ public class InlineProjectionSourceViewer extends ProjectionViewer implements
 	}
 
 	/*
-	 * @see org.eclipse.jface.text.TextViewer#handleVisibleDocumentAboutToBeChanged(org.eclipse.jface.text.DocumentEvent)
+	 * @see
+	 * org.eclipse.jface.text.TextViewer#handleVisibleDocumentAboutToBeChanged
+	 * (org.eclipse.jface.text.DocumentEvent)
+	 * 
 	 * @since 3.1
 	 */
 	protected void handleVisibleDocumentAboutToBeChanged(DocumentEvent event) {
@@ -1465,7 +1499,9 @@ public class InlineProjectionSourceViewer extends ProjectionViewer implements
 	}
 
 	/*
-	 * @see org.eclipse.jface.text.ITextViewerExtension5#getCoveredModelRanges(org.eclipse.jface.text.IRegion)
+	 * @see
+	 * org.eclipse.jface.text.ITextViewerExtension5#getCoveredModelRanges(org
+	 * .eclipse.jface.text.IRegion)
 	 */
 	public IRegion[] getCoveredModelRanges(IRegion modelRange) {
 		if (fInformationMapping == null)
@@ -1700,15 +1736,14 @@ public class InlineProjectionSourceViewer extends ProjectionViewer implements
 			textWidget.setSelection(widgetCaret);
 	}
 
-	
-//	@Override
-//	public IRegion modelRange2WidgetRange(IRegion widgetRange) {
-//		// TODO Auto-generated method stub
-//		IRegion result = super.modelRange2WidgetRange(widgetRange);
-//		System.out.println(widgetRange+" -> "+result);
-//		return result;
-//	}
-	
+	// @Override
+	// public IRegion modelRange2WidgetRange(IRegion widgetRange) {
+	// // TODO Auto-generated method stub
+	// IRegion result = super.modelRange2WidgetRange(widgetRange);
+	// System.out.println(widgetRange+" -> "+result);
+	// return result;
+	// }
+
 	/**
 	 * Adapts the behavior of the super class to respect line based folding.
 	 * 
@@ -1830,7 +1865,7 @@ public class InlineProjectionSourceViewer extends ProjectionViewer implements
 
 	/*
 	 * @see org.eclipse.jface.text.TextViewer#findAndSelect(int,
-	 *      java.lang.String, boolean, boolean, boolean, boolean)
+	 * java.lang.String, boolean, boolean, boolean, boolean)
 	 */
 	protected int findAndSelect(int startPosition, String findString,
 			boolean forwardSearch, boolean caseSensitive, boolean wholeWord,
@@ -1865,7 +1900,7 @@ public class InlineProjectionSourceViewer extends ProjectionViewer implements
 
 	/*
 	 * @see org.eclipse.jface.text.TextViewer#findAndSelectInRange(int,
-	 *      java.lang.String, boolean, boolean, boolean, int, int, boolean)
+	 * java.lang.String, boolean, boolean, boolean, int, int, boolean)
 	 */
 	protected int findAndSelectInRange(int startPosition, String findString,
 			boolean forwardSearch, boolean caseSensitive, boolean wholeWord,

@@ -8,7 +8,7 @@ import java.util.Set;
 
 import org.eclipse.jface.text.source.Annotation;
 
-import de.ovgu.cide.editor.IProjectionColorManager;
+import de.ovgu.cide.editor.inlineprojection.IProjectionColorManager;
 import de.ovgu.cide.features.IFeature;
 import de.ovgu.cide.features.source.ColoredSourceFile;
 import de.ovgu.cide.language.jdt.editor.inlineprojection.ColoredInlineProjectionAnnotation;
@@ -37,27 +37,27 @@ public class ProjectionColorManager implements IProjectionColorManager {
 
 	public void expandColor(IFeature color) {
 		collapsedColors.remove(color);
-		updateProjectionAnnotations();
+		updateProjectionAnnotationVisibility();
 	}
 
 	public void collapseColor(IFeature color) {
 		collapsedColors.add(color);
-		updateProjectionAnnotations();
+		updateProjectionAnnotationVisibility();
 	}
 
 	public void expandAllColors() {
 		collapsedColors.clear();
-		updateProjectionAnnotations();
+		updateProjectionAnnotationVisibility();
 	}
 	public void collapseAllColors() {
 		ColoredSourceFile source = editor.getSourceFile();
 		
 		collapsedColors.addAll(source.getFeatureModel()
 				.getVisibleFeatures());
-		updateProjectionAnnotations();
+		updateProjectionAnnotationVisibility();
 	}
 
-	protected void updateProjectionAnnotations() {
+	public void updateProjectionAnnotationVisibility() {
 		InlineProjectionJavaViewer viewer = (InlineProjectionJavaViewer) editor
 				.getViewer();
 		InlineProjectionAnnotationModel annotationModel = viewer

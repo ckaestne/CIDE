@@ -23,14 +23,21 @@ import cide.gparser.TokenMgrError;
 import de.ovgu.cide.features.IFeature;
 import de.ovgu.cide.features.source.ColoredSourceFile;
 import de.ovgu.cide.features.source.SourceFileColorManager;
+import de.ovgu.cide.tools.featureview.ProjectionKindManager;
 import de.ovgu.cide.utils.ColorHelper;
 
+/**
+ * class responsible to paint the background color in the correct locations
+ * 
+ * @author ckaestne
+ * 
+ */
 public class ColorRepairer implements IPresentationRepairer {
 
 	private final ColoredSourceFile sourceFile;
 	private ColoredTextEditor editor;
+
 	// currently just deactivated
-	public static boolean hideInvisibleCode = true;
 
 	public ColorRepairer(ColoredSourceFile sourceFile, ColoredTextEditor editor) {
 		this.sourceFile = sourceFile;
@@ -39,7 +46,7 @@ public class ColorRepairer implements IPresentationRepairer {
 
 	public void createPresentation(TextPresentation presentation,
 			ITypedRegion damage) {
-		if (sourceFile==null || !sourceFile.isColored()) {
+		if (sourceFile == null || !sourceFile.isColored()) {
 			editor.markNotColored();
 			return;
 		}
@@ -56,7 +63,9 @@ public class ColorRepairer implements IPresentationRepairer {
 				List<CodeSegment> segments = CodeSegmentCalculator
 						.getCodeSegments(root, sourceFile.getColorManager());
 
-				if (hideInvisibleCode)
+				if (!ProjectionKindManager.isVariantView()
+						&& editor.getProjectionColorManager()
+								.isProjectionActive())
 					segments = grayInvisibleCode(segments, root, sourceFile
 							.getColorManager(), sourceFile.getFeatureModel()
 							.getVisibleFeatures());

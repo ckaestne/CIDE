@@ -26,6 +26,7 @@ import de.ovgu.cide.alternativefeatures.AlternativeAnnotation;
 import de.ovgu.cide.configuration.jdt.JDTColorManagerBridge;
 import de.ovgu.cide.editor.AnnotationMarkerAccess;
 import de.ovgu.cide.editor.ColoredEditorExtensions;
+import de.ovgu.cide.editor.ColoredEditorExtensions.IColoredEditor;
 import de.ovgu.cide.editor.ColoredEditorExtensions.IProjectionColoredEditor;
 import de.ovgu.cide.features.FeatureModelManager;
 import de.ovgu.cide.features.FeatureModelNotFoundException;
@@ -34,7 +35,7 @@ import de.ovgu.cide.features.source.ColoredSourceFile;
 
 @SuppressWarnings("restriction")
 public class ColoredCompilationUnitEditor extends CompilationUnitEditor
-		implements IProjectionColoredEditor {
+		implements IColoredEditor {
 
 	public static final String EDITOR_ID = "de.ovgu.cide.ColoredCompilationUnitEditor";
 
@@ -91,7 +92,7 @@ public class ColoredCompilationUnitEditor extends CompilationUnitEditor
 	}
 
 	private void installCodeColoring() {
-		if (fCodeColorManager == null && getSourceViewer()!=null) {
+		if (fCodeColorManager == null && getSourceViewer() != null) {
 
 			ColoredSourceFile source = getSourceFile();
 			assert source.isColored();
@@ -256,10 +257,17 @@ public class ColoredCompilationUnitEditor extends CompilationUnitEditor
 
 		editorExtension.afterSave(wasDirty);
 	}
-	
+
 	@Override
 	protected void doSetInput(IEditorInput input) throws CoreException {
 		super.doSetInput(input);
 		installCodeColoring();
+	}
+
+	/**
+	 * projections/views deactivated for now
+	 */
+	public boolean supportsProjection() {
+		return false;
 	}
 }

@@ -8,6 +8,8 @@ import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.action.ActionContributionItem;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.text.IDocument;
@@ -16,9 +18,9 @@ import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.layout.FormAttachment;
-import org.eclipse.swt.layout.FormData;
-import org.eclipse.swt.layout.FormLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -26,8 +28,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 
-import cide.gparser.ParseException;
-import de.ovgu.cide.alternativefeatures.AlternativeAnnotationManager;
+import de.ovgu.cide.editor.inlineprojection.IProjectionColorManager;
 import de.ovgu.cide.editor.keepcolors.ColorCacheManager;
 import de.ovgu.cide.features.IFeature;
 import de.ovgu.cide.features.IFeatureModel;
@@ -46,6 +47,12 @@ import de.ovgu.cide.languages.LanguageExtensionProxy;
  */
 public class ColoredEditorExtensions {
 
+	/**
+	 * functionality to be provided by all editors
+	 * 
+	 * @author ckaestne
+	 * 
+	 */
 	public static interface IColoredEditor {
 		ColoredSourceFile getSourceFile();
 
@@ -66,8 +73,17 @@ public class ColoredEditorExtensions {
 		void doSave(IProgressMonitor progressMonitor);
 	}
 
+	/**
+	 * not all editors may support projections/views. if they do, they must
+	 * implement IProjectionColoredEditor in addition to IColoredEditor
+	 * 
+	 * @author ckaestne
+	 * 
+	 */
 	public static interface IProjectionColoredEditor extends IColoredEditor {
 		IProjectionColorManager getProjectionColorManager();
+
+		IAction getToggleProjectionAction();
 	}
 
 	private IColoredEditor editor;
@@ -82,6 +98,8 @@ public class ColoredEditorExtensions {
 	private Control mainControl;
 	private String errDetails;
 	ColorCacheManager keepColorManager;
+	private Button detailsBtn;
+	private Text errorState;
 	private static Color RED = Display.getCurrent().getSystemColor(
 			SWT.COLOR_RED);
 	private static Color GREEN = Display.getCurrent().getSystemColor(
@@ -92,22 +110,48 @@ public class ColoredEditorExtensions {
 			SWT.COLOR_INFO_BACKGROUND);
 
 	public void createErrorPanel(final Composite parent) {
-		final FormLayout fl = new FormLayout();
-		fl.spacing = 4;
-		parent.setLayout(fl);
+		GridLayout layout = new GridLayout(
+				editor instanceof IProjectionColoredEditor ? 4 : 3, false);
+		layout.verticalSpacing = 4;
+		layout.marginWidth = layout.marginHeight = 0;
+		parent.setLayout(layout);
 
-		errorLabel = new Text(parent, SWT.MULTI | SWT.V_SCROLL | SWT.WRAP
-				| SWT.READ_ONLY);
+		errorState = new Text(parent, SWT.READ_ONLY);
+		errorState.setText("");
+		GridData esD = new GridData(5, 5);
+		esD.horizontalIndent = esD.verticalIndent = 4;
+		errorState.setLayoutData(esD);
+
+		errorLabel = new Text(parent, SWT.READ_ONLY);
 		errorLabel.setText("Errormessage goes here");
-		// errorPanel.setLayout(new FillLayout(SWT.HORIZONTAL));
+		GridData elD = new GridData(GridData.FILL_HORIZONTAL);
+		elD.grabExcessHorizontalSpace = true;
+		errorLabel.setLayoutData(elD);
 
-		FormData erFD = new FormData(-1, 50);
-		erFD.right = new FormAttachment(100, 0);
-		erFD.left = new FormAttachment(0, 0);
-		erFD.top = new FormAttachment(0, 0);
-		errorLabel.setLayoutData(erFD);
+		detailsBtn = new Button(parent, SWT.PUSH);
+		detailsBtn.setText("Details");
 
+		if (editor instanceof IProjectionColoredEditor) {
+			new ActionContributionItem(((IProjectionColoredEditor) editor)
+					.getToggleProjectionAction()).fill(parent);
+
+		}
 		updateErrorPanel();
+	}
+
+	public void alignErrorPanel(Composite parent) {
+		mainControl = parent.getChildren()[0];
+
+		GridData data = new GridData(GridData.FILL_VERTICAL);
+		data.horizontalSpan = editor instanceof IProjectionColoredEditor ? 4
+				: 3;
+		data.grabExcessHorizontalSpace = true;
+		data.grabExcessVerticalSpace = true;
+		data.verticalAlignment = SWT.FILL;
+		data.horizontalAlignment = SWT.FILL;
+		mainControl.setLayoutData(data);
+
+		parent.layout();
 	}
 
 	public void markFileEdited() {
@@ -167,8 +211,11 @@ public class ColoredEditorExtensions {
 			errorLabel.setText(errMsg
 					+ (errDetails == null || errDetails.length() == 0 ? ""
 							: "\n\n" + errDetails));
-			errorLabel.setBackground(errClr);
+			errorState.setBackground(errClr);
 			errorLabel.update();
+			errorState.update();
+			detailsBtn
+					.setEnabled(errDetails != null && errDetails.length() > 0);
 		}
 	}
 
@@ -246,18 +293,6 @@ public class ColoredEditorExtensions {
 				}
 			}
 		}
-	}
-
-	public void alignErrorPanel(Composite parent) {
-		mainControl = parent.getChildren()[0];
-		FormData data = new FormData();
-		data.left = new FormAttachment(0, 0);
-		data.right = new FormAttachment(100, 0);
-		data.top = new FormAttachment(errorLabel);
-		data.bottom = new FormAttachment(100, 0);
-		mainControl.setLayoutData(data);
-
-		parent.layout();
 	}
 
 	public void installAlternativeAnnotations() {

@@ -13,9 +13,10 @@ import cide.gast.IASTNode;
 import de.ovgu.cide.ASTColorChangedEvent;
 import de.ovgu.cide.CIDECorePlugin;
 import de.ovgu.cide.alternativefeatures.Alternative;
+import de.ovgu.cide.editor.IColorProvider;
 import de.ovgu.cide.features.IFeature;
 
-public class SourceFileColorManager extends AbstractColorManager {
+public class SourceFileColorManager extends AbstractColorManager implements IColorProvider {
 
 	private final DirectoryColorManager directoryColorManager;
 	private final ColoredSourceFile source;
@@ -63,6 +64,11 @@ public class SourceFileColorManager extends AbstractColorManager {
 		}
 
 		return ownColors;
+	}
+
+	public void addColors(IASTNode node, Set<IFeature> colors) {
+		for (IFeature color : colors)
+			addColor(node, color);
 	}
 
 	public boolean addColor(IASTNode node, IFeature color) {

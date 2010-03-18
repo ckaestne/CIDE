@@ -12,6 +12,7 @@ Export-Package: de.ovgu.cide,
  de.ovgu.cide.configuration;uses:="org.apache.tools.ant",
  de.ovgu.cide.configuration.defaultconf,
  de.ovgu.cide.editor,
+ de.ovgu.cide.editor.inlineprojection,
  de.ovgu.cide.features;
   uses:="coloredide,
    org.eclipse.core.runtime,

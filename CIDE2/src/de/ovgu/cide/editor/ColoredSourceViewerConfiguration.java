@@ -10,8 +10,6 @@ import org.eclipse.jface.text.ITextHover;
 import org.eclipse.jface.text.presentation.IPresentationReconciler;
 import org.eclipse.jface.text.presentation.IPresentationRepairer;
 import org.eclipse.jface.text.presentation.PresentationReconciler;
-import org.eclipse.jface.text.reconciler.IReconciler;
-import org.eclipse.jface.text.reconciler.MonoReconciler;
 import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.jface.text.source.IAnnotationHover;
 import org.eclipse.jface.text.source.IAnnotationModel;
@@ -19,7 +17,6 @@ import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.SourceViewerConfiguration;
 
 import de.ovgu.cide.alternativefeatures.AlternativeAnnotation;
-import de.ovgu.cide.editor.inlineprojection.ProjectionReconcilingStrategy;
 import de.ovgu.cide.features.source.ColoredSourceFile;
 
 public class ColoredSourceViewerConfiguration extends SourceViewerConfiguration {
@@ -125,16 +122,16 @@ public class ColoredSourceViewerConfiguration extends SourceViewerConfiguration 
 		};
 	}
 
-	IReconciler reconciler = null;
-
-	@Override
-	public IReconciler getReconciler(ISourceViewer sourceViewer) {
-		if (reconciler == null) {
-			ProjectionReconcilingStrategy strategy = new ProjectionReconcilingStrategy();
-			strategy.setEditor(editor);
-
-			reconciler = new MonoReconciler(strategy, false);
-		}
-		return reconciler;
-	}
+//	IReconciler reconciler = null;
+//
+//	@Override
+//	public IReconciler getReconciler(ISourceViewer sourceViewer) {
+//		if (reconciler == null) {
+//			ProjectionReconcilingStrategy strategy = new ProjectionReconcilingStrategy();
+//			strategy.setEditor(editor);
+//
+//			reconciler = new MonoReconciler(strategy, false);
+//		}
+//		return reconciler;
+//	}
 }

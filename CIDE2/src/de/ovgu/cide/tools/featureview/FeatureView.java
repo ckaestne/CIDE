@@ -52,6 +52,8 @@ import de.ovgu.cide.features.FeatureModelManager;
 import de.ovgu.cide.features.FeatureModelNotFoundException;
 import de.ovgu.cide.features.IFeature;
 import de.ovgu.cide.features.IFeatureModel;
+import de.ovgu.cide.features.utils.AbstractToggleProjectionAction;
+import de.ovgu.cide.features.utils.ToggleAllFeatureVisibility;
 import de.ovgu.cide.utils.ColorHelper;
 import de.ovgu.cide.utils.EditorUtility;
 
@@ -360,30 +362,29 @@ public class FeatureView extends ViewPart {
 	}
 
 	private void makeActions() {
-		filterAction = new Action("Filter", IAction.AS_CHECK_BOX) {
+		filterAction = new AbstractToggleProjectionAction() {
 			public void run() {
 				redraw();
 			}
 		};
-		filterAction.setText("Filter");
-		filterAction.setToolTipText("Hide unchecked features");
-		ColoredIDEImages.setImageDescriptors(filterAction,
-				ColoredIDEImages.INTERACTION);
 
-		selectAllAction = new Action("Select All", IAction.AS_PUSH_BUTTON) {
+		selectAllAction = new ToggleAllFeatureVisibility(featureModel, true) {
+			@Override
 			public void run() {
-				selectAll(true);
+				super.run();
+				updateValidPanel();
 			}
 		};
-		selectAllAction.setText("Select All");
 		ColoredIDEImages.setImageDescriptors(selectAllAction,
 				ColoredIDEImages.CHECKED_IMAGE);
-		selectNoneAction = new Action("Select None", IAction.AS_PUSH_BUTTON) {
+
+		selectNoneAction = new ToggleAllFeatureVisibility(featureModel, false) {
+			@Override
 			public void run() {
-				selectAll(false);
+				super.run();
+				updateValidPanel();
 			}
 		};
-		selectNoneAction.setText("Select None");
 		ColoredIDEImages.setImageDescriptors(selectNoneAction,
 				ColoredIDEImages.UNCHECKED_IMAGE);
 

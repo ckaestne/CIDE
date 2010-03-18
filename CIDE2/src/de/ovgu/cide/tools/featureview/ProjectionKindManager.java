@@ -59,4 +59,8 @@ public class ProjectionKindManager {
 		return list;
 	}
 
+	public static boolean isVariantView() {
+		return getInstance().getProjectionKind()==ProjectionKind.VARIANT;
+	}
+
 }

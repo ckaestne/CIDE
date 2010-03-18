@@ -5,6 +5,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextViewerExtension2;
@@ -34,6 +35,7 @@ import de.ovgu.cide.alternativefeatures.AlternativeAnnotation;
 import de.ovgu.cide.editor.ColoredEditorExtensions.IProjectionColoredEditor;
 import de.ovgu.cide.editor.inlineprojection.InlineProjectionSourceViewer;
 import de.ovgu.cide.editor.inlineprojection.InlineProjectionSupport;
+import de.ovgu.cide.editor.inlineprojection.ProjectionColorManager;
 import de.ovgu.cide.features.FeatureModelManager;
 import de.ovgu.cide.features.FeatureModelNotFoundException;
 import de.ovgu.cide.features.IFeatureModel;
@@ -109,8 +111,9 @@ public class ColoredTextEditor extends AbstractDecoratedTextEditor implements
 	@Override
 	protected ISourceViewer createSourceViewer(Composite parent,
 			IVerticalRuler ruler, int styles) {
+
 		viewer = new InlineProjectionSourceViewer(parent, ruler,
-				getOverviewRuler(), isOverviewRulerVisible(), styles);
+				getOverviewRuler(), isOverviewRulerVisible(), styles, this);
 
 		// Könnte man einkommentieren, um blaue squigglys unter die
 		// Codefragmente zu malen, zu denen es Alternativen gibt.
@@ -168,7 +171,7 @@ public class ColoredTextEditor extends AbstractDecoratedTextEditor implements
 		getSourceViewerI().disableProjection();
 		getSourceViewerI().enableInlineProjection();
 
-		// error panel
+		// errorpanel
 		editorExtension.createErrorPanel(parent);
 		editorExtension.alignErrorPanel(parent);
 
@@ -222,6 +225,9 @@ public class ColoredTextEditor extends AbstractDecoratedTextEditor implements
 		super.doSave(progressMonitor);
 
 		editorExtension.afterSave(wasDirty);
+		if (wasDirty)
+			getSourceViewerI().getProjectionAnnotationCalculator()
+					.calculateProjectionAnnotations();
 	}
 
 	public ProjectionColorManager getProjectionColorManager() {
@@ -254,14 +260,13 @@ public class ColoredTextEditor extends AbstractDecoratedTextEditor implements
 		if (event.anyChangeOf(ChangeType.VISIBILITY)) {
 			for (Change change : event.getChanges()) {
 				if (change.type == ChangeType.VISIBILITY)
-					if (!ColorRepairer.hideInvisibleCode)
-					if (change.feature.isVisible())
-						getProjectionColorManager().expandColor(change.feature);
-					else
-						getProjectionColorManager().collapseColor(
-								change.feature);
+					getProjectionColorManager()
+							.updateProjectionAnnotationVisibility();
 			}
 		}
+		if (event.getNewProjectionKind() != null)
+			getSourceViewerI().getProjectionAnnotationCalculator()
+					.calculateProjectionAnnotations();
 
 		// redraw on color or visibility changes in the feature model
 		if (event.anyChangeOf(ChangeType.COLOR)
@@ -291,5 +296,9 @@ public class ColoredTextEditor extends AbstractDecoratedTextEditor implements
 
 	public InlineProjectionSourceViewer getViewer() {
 		return viewer;
+	}
+
+	public IAction getToggleProjectionAction() {
+		return getProjectionColorManager().getAction();
 	}
 }

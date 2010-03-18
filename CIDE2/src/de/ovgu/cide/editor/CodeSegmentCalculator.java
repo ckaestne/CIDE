@@ -11,13 +11,12 @@ import cide.gast.ASTVisitor;
 import cide.gast.IASTNode;
 import cide.gast.IASTVisitor;
 import de.ovgu.cide.features.IFeature;
-import de.ovgu.cide.features.source.SourceFileColorManager;
 
 public class CodeSegmentCalculator {
 	protected static final Set<IFeature> NOCOLORS = new HashSet<IFeature>();
 
 	public static List<CodeSegment> getCodeSegments(IASTNode ast,
-			final SourceFileColorManager colorManager) {
+			final IColorProvider colorManager) {
 		final Stack<CodeSegment> stack = new Stack<CodeSegment>();
 		final List<CodeSegment> list = new ArrayList<CodeSegment>();
 
