@@ -54,27 +54,95 @@
 	<extension point="org.eclipse.ui.popupMenus">
 		<objectContribution adaptable="false"
 			id="coloredide.projectContributions" objectClass="org.eclipse.core.resources.IProject">
-			<menu id="coloride.menu1" label="CIDE" path="additions">
+			<menu
+         icon="icons/interaction.GIF"
+         id="coloride.menu1"
+         label="CIDE"
+         path="additions">
 				<separator name="cideGroup" />
 			</menu>
 			<menu id="ColoredIDE.menu2" label="Analysis" path="coloride.menu1/cideGroup">
 				<separator name="group2" />
 			</menu>
-			<action class="de.ovgu.cide.configuration.CreateConfigurationAction"
-				enablesFor="1" id="coloride.newAction" label="Generate Variant..."
-				menubarPath="coloride.menu1/cideGroup" />
-
+   <action
+         class="de.ovgu.cide.configuration.CreateConfigurationAction"
+         enablesFor="1"
+         id="coloride.newAction"
+         label="Generate Variant..."
+         menubarPath="coloride.menu1/cideGroup">
+   </action>
 			<action
 				class="de.ovgu.cide.tools.interactionanalyzer.CollectInteractionsAction"
 				id="AstView.action4" label="Collect Interactions" menubarPath="coloride.menu1/gcideGroup">
 			</action>
+     <action
+           class="de.ovgu.cide.natures.DeinstallNatureAction"
+           enablesFor="1"
+           id="de.ovgu.cide.nature.deinstall"
+           label="Disable CIDE for this project"
+           menubarPath="coloride.menu1/gcideGroup">
+     </action>
+   <visibility>
+      <and>
+         <objectState
+               name="nature"
+               value="de.ovgu.cide.core.CIDEProjectNature">
+         </objectState>
+         <objectState
+               name="open"
+               value="true">
+         </objectState>
+      </and>
+   </visibility>
 		</objectContribution>
 		<objectContribution adaptable="true"
 			id="coloredide.resourceContributions" objectClass="org.eclipse.core.resources.IResource">
 			<action class="de.ovgu.cide.navigator.SetColorPopup"
 				enablesFor="+" id="ColoredIDE.SetResourceColor" label="Set File/Directory Color"
 				menubarPath="group.open" />
+   <visibility>
+         <objectState
+               name="projectNature"
+               value="de.ovgu.cide.core.CIDEProjectNature">
+         </objectState>
+   </visibility>
 		</objectContribution>
+  <objectContribution
+        adaptable="false"
+        id="de.ovgu.cide.projectmenu"
+        objectClass="org.eclipse.core.resources.IProject">
+     <action
+           class="de.ovgu.cide.natures.InstallNatureAction"
+           enablesFor="1"
+           icon="icons/nature.gif"
+           id="de.ovgu.cide.nature.install"
+           label="Enable CIDE for this project..."
+           menubarPath="coloride.menu1/cideGroup">
+     </action>
+     <visibility>
+        <and>
+           <objectState
+                 name="open"
+                 value="true">
+           </objectState>
+           <not>
+              <objectState
+                    name="nature"
+                    value="de.ovgu.cide.core.CIDEProjectNature">
+              </objectState>
+           </not>
+        </and>
+     </visibility>
+     <menu
+           icon="icons/interaction.GIF"
+           id="coloride.menu1"
+           label="CIDE"
+           path="additions">
+        <separator
+              name="cideGroup">
+        </separator>
+     </menu>
+  </objectContribution>
 
 	</extension>
 
@@ -193,4 +261,22 @@
 		</editor>
 
 	</extension>
+ <extension
+       id="CIDEProjectNature"
+       name="CIDE Nature"
+       point="org.eclipse.core.resources.natures">
+    <runtime>
+       <run
+             class="de.ovgu.cide.nature.CIDEProjectNature">
+       </run>
+    </runtime>
+ </extension>
+ <extension
+       point="org.eclipse.ui.ide.projectNatureImages">
+    <image
+          icon="icons/nature.gif"
+          id="de.ovgu.cide.coreCIDENatureImage"
+          natureId="de.ovgu.cide.core.CIDEProjectNature">
+    </image>
+ </extension>
 </plugin>

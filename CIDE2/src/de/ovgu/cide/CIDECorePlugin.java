@@ -19,9 +19,12 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.ISaveContext;
 import org.eclipse.core.resources.ISaveParticipant;
@@ -32,13 +35,12 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
-
 import de.ovgu.cide.features.source.FileColorChangeListener;
+import de.ovgu.cide.nature.CIDEProjectNature;
 import de.ovgu.cide.navigator.FileColorUpdater;
 
 public class CIDECorePlugin extends AbstractUIPlugin {
@@ -91,6 +93,17 @@ public class CIDECorePlugin extends AbstractUIPlugin {
 		log(multi);
 	}
 
+	public static boolean isCIDEProject(IProject project) {
+		try {
+			IProjectDescription description = project.getDescription();
+			return Arrays.asList(description.getNatureIds()).contains(
+					CIDEProjectNature.NATURE_ID);
+		} catch (CoreException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
 	public static void log(String message, Throwable e) {
 		log(new Status(IStatus.ERROR, getPluginId(), IStatus.ERROR, message, e));
 	}
@@ -120,7 +133,6 @@ public class CIDECorePlugin extends AbstractUIPlugin {
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
-
 
 		ResourcesPlugin.getWorkspace().addResourceChangeListener(
 				fileColorChangeListener);

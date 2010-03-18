@@ -18,6 +18,19 @@
 			<action class="de.ovgu.cide.fm.list.editor.ExportFeatureModelAction"
 				enablesFor="1" id="coloride.exportToGuidsl" label="Export to GUIDSL Model... (list)"
 				menubarPath="coloride.menu1/cideGroup" />
+		
+		 <visibility>
+      <and>
+         <objectState
+               name="nature"
+               value="de.ovgu.cide.core.CIDEProjectNature">
+         </objectState>
+         <objectState
+               name="open"
+               value="true">
+         </objectState>
+      </and>
+   </visibility>
 		</objectContribution>
 
 	</extension>

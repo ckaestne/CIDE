@@ -27,7 +27,18 @@
               id="coloride.editFeatureNames_guidsl"
               label="Edit Features... (guidsl)"
               menubarPath="coloride.menu1/cideGroup"/>
-      
+       <visibility>
+      <and>
+         <objectState
+               name="nature"
+               value="de.ovgu.cide.core.CIDEProjectNature">
+         </objectState>
+         <objectState
+               name="open"
+               value="true">
+         </objectState>
+      </and>
+   </visibility>
      </objectContribution>
  
   </extension>

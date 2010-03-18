@@ -34,7 +34,18 @@
 
 			<action class="de.ovgu.cide.typing.internal.ForceValidationAction"
 				id="forceValidation" label="Force Full Type Check" menubarPath="coloride.menu1/cideGroup" />
-
+ <visibility>
+      <and>
+         <objectState
+               name="nature"
+               value="de.ovgu.cide.core.CIDEProjectNature">
+         </objectState>
+         <objectState
+               name="open"
+               value="true">
+         </objectState>
+      </and>
+   </visibility>
 		</objectContribution>
 
 
