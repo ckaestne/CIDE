@@ -7,6 +7,7 @@ import java.util.EventObject;
 import org.eclipse.core.resources.IProject;
 
 import de.ovgu.cide.features.IFeature;
+import de.ovgu.cide.tools.featureview.ProjectionKindManager.ProjectionKind;
 
 public class ColorListChangedEvent extends EventObject {
 
@@ -15,6 +16,8 @@ public class ColorListChangedEvent extends EventObject {
 	private final Collection<Change> changes;
 
 	private final IProject project;
+
+	private ProjectionKind projectionKind = null;
 
 	public ColorListChangedEvent(Object source, IProject project,
 			Collection<Change> changes) {
@@ -36,6 +39,20 @@ public class ColorListChangedEvent extends EventObject {
 		this.project = project;
 	}
 
+	/**
+	 * projectionkind changes
+	 * 
+	 * @param source
+	 * @param projectionKind
+	 */
+	public ColorListChangedEvent(Object source, IProject project,
+			ProjectionKind projectionKind) {
+		super(source);
+		this.changes = Collections.emptySet();
+		this.project = project;
+		this.projectionKind = projectionKind;
+	}
+
 	public Collection<Change> getChanges() {
 		return changes;
 	}
@@ -51,4 +68,7 @@ public class ColorListChangedEvent extends EventObject {
 		return false;
 	}
 
+	public ProjectionKind getNewProjectionKind() {
+		return projectionKind;
+	}
 }

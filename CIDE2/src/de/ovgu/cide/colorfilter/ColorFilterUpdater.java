@@ -7,7 +7,6 @@ import java.util.Set;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.swt.widgets.Display;
 
@@ -28,7 +27,7 @@ import de.ovgu.cide.IColorChangeListener;
 public class ColorFilterUpdater implements IColorChangeListener {
 
 	private StructuredViewer viewer;
-	private IAction filterAction;
+	private EnableColorFilterAction filterAction;
 
 	ColorFilterUpdater(EnableColorFilterAction action, StructuredViewer viewer) {
 		this.viewer = viewer;
@@ -67,10 +66,15 @@ public class ColorFilterUpdater implements IColorChangeListener {
 	}
 
 	public void colorListChanged(ColorListChangedEvent event) {
-		if (filterAction.isChecked())
+		if (filterAction.isChecked()) {
+			// colors or feature selection changed?
 			if (event.anyChangeOf(ChangeType.COLOR)
 					|| event.anyChangeOf(ChangeType.VISIBILITY))
 				update(Collections.singleton(event.getProject()));
+			// projection changed?
+			if (event.getNewProjectionKind() != null)
+				filterAction.updateFilter(true, event.getNewProjectionKind());
+		}
 	}
 
 }

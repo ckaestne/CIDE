@@ -49,6 +49,9 @@ public class ColoredIDEImages {
 	// ---- Helper methods to access icons on the file system
 	// --------------------------------------
 
+	/**
+	 * loads icon from c and d subdirectories!
+	 */
 	public static void setImageDescriptors(IAction action, String type) {
 		ImageDescriptor id = create("d", type); //$NON-NLS-1$
 		if (id != null)
@@ -71,7 +74,8 @@ public class ColoredIDEImages {
 	}
 
 	/*
-	 * Since 3.1.1. Load from icon paths with $NL$
+	 * Since 3.1.1. Load from icon paths with $NL$ (from c and d
+	 * subdirectories!)
 	 */
 	public static ImageDescriptor createImageDescriptor(Bundle bundle,
 			IPath path) {

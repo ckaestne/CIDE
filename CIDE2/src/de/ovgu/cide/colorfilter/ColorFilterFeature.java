@@ -18,6 +18,8 @@ import de.ovgu.cide.features.IFeature;
 import de.ovgu.cide.features.IFeatureModel;
 import de.ovgu.cide.features.source.ColoredSourceFile;
 import de.ovgu.cide.features.source.DirectoryColorManager;
+import de.ovgu.cide.tools.featureview.ProjectionKindManager;
+import de.ovgu.cide.tools.featureview.ProjectionKindManager.ProjectionKind;
 
 /**
  * shows only files and folders that contain at least one of the visible
@@ -29,7 +31,9 @@ import de.ovgu.cide.features.source.DirectoryColorManager;
  * @author cKaestner
  * 
  */
-public class ColorFilter2 extends ViewerFilter {
+public class ColorFilterFeature extends ViewerFilter {
+
+	
 
 	@Override
 	public Object[] filter(Viewer viewer, Object parent, Object[] elements) {
@@ -93,10 +97,9 @@ public class ColorFilter2 extends ViewerFilter {
 			// projects without feature model are always visible
 			return true;
 		}
-		Collection<IFeature> expectedColors = featureModel
-				.getVisibleFeatures();
+		Collection<IFeature> expectedColors = featureModel.getVisibleFeatures();
 		DirectoryColorManager dirColorManager = DirectoryColorManager
-				.getColoredDirectoryManager(folder,featureModel);
+				.getColoredDirectoryManager(folder, featureModel);
 
 		if (overlap(dirColorManager.getFolderColors(), expectedColors))
 			return true;

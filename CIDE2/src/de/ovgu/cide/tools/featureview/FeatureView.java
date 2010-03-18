@@ -55,6 +55,13 @@ import de.ovgu.cide.features.IFeatureModel;
 import de.ovgu.cide.utils.ColorHelper;
 import de.ovgu.cide.utils.EditorUtility;
 
+/**
+ * list of all features. can be used to manipulate features and to control views
+ * (projection)
+ * 
+ * @author ckaestne
+ * 
+ */
 public class FeatureView extends ViewPart {
 
 	private class ActiveProjectListner implements IPartListener {
@@ -240,8 +247,6 @@ public class FeatureView extends ViewPart {
 	private IProject project;
 	private IFeatureModel featureModel;
 
-	private Menu featureContextMenu;
-
 	private MenuManager featureContextMenuMgr;
 
 	private void setProject(IProject newProject) {
@@ -326,6 +331,7 @@ public class FeatureView extends ViewPart {
 	private void contributeToActionBars() {
 		IActionBars bars = getViewSite().getActionBars();
 		fillLocalToolBar(bars.getToolBarManager());
+		fillMenuBar(bars.getMenuManager());
 	}
 
 	private void fillContextMenu(IMenuManager manager) {
@@ -348,6 +354,11 @@ public class FeatureView extends ViewPart {
 		manager.add(selectNoneAction);
 	}
 
+	private void fillMenuBar(IMenuManager manager) {
+		for (Action a : ProjectionKindManager.getInstance().getActions())
+			manager.add(a);
+	}
+
 	private void makeActions() {
 		filterAction = new Action("Filter", IAction.AS_CHECK_BOX) {
 			public void run() {
@@ -355,7 +366,7 @@ public class FeatureView extends ViewPart {
 			}
 		};
 		filterAction.setText("Filter");
-		filterAction.setToolTipText("Hide invisible features");
+		filterAction.setToolTipText("Hide unchecked features");
 		ColoredIDEImages.setImageDescriptors(filterAction,
 				ColoredIDEImages.INTERACTION);
 
@@ -440,7 +451,7 @@ public class FeatureView extends ViewPart {
 	}
 
 	protected void selectAll(boolean visible) {
-		for (IFeature feature:featureModel.getFeatures()){
+		for (IFeature feature : featureModel.getFeatures()) {
 			feature.setVisible(visible);
 		}
 		updateValidPanel();

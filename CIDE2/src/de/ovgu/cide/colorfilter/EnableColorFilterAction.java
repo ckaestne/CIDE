@@ -16,23 +16,26 @@ import org.eclipse.ui.navigator.CommonNavigator;
 import org.eclipse.ui.views.navigator.ResourceNavigator;
 
 import de.ovgu.cide.CIDECorePlugin;
+import de.ovgu.cide.tools.featureview.ProjectionKindManager;
+import de.ovgu.cide.tools.featureview.ProjectionKindManager.ProjectionKind;
 
 public class EnableColorFilterAction extends Action implements
 		IViewActionDelegate {
 
 	private StructuredViewer viewer = null;
 	private Map<StructuredViewer, List<ViewerFilter>> previousFilters = new HashMap<StructuredViewer, List<ViewerFilter>>();
-	private ViewerFilter interestFilter = new ColorFilter2();
-	private ColorFilterUpdater updater=null;
+	private ViewerFilter projectionVariantFilter = new ColorFilterVariant();
+	private ViewerFilter projectionFeatureFilter = new ColorFilterFeature();
+	private ColorFilterUpdater updater = null;
 
 	public void init(IViewPart view) {
 		if (view instanceof ResourceNavigator) {
 			viewer = ((ResourceNavigator) view).getTreeViewer();
-			updater=new ColorFilterUpdater(this,viewer);
+			updater = new ColorFilterUpdater(this, viewer);
 		}
 		if (view instanceof CommonNavigator) {
 			viewer = ((CommonNavigator) view).getCommonViewer();
-			updater=new ColorFilterUpdater(this,viewer);
+			updater = new ColorFilterUpdater(this, viewer);
 		}
 
 	}
@@ -40,34 +43,30 @@ public class EnableColorFilterAction extends Action implements
 	public void run(IAction action) {
 		setChecked(action.isChecked());
 
-		updateFilter(isChecked());
+		updateFilter(isChecked(), ProjectionKindManager.getInstance()
+				.getProjectionKind());
 	}
 
-	private void updateFilter(boolean install) {
+	void updateFilter(boolean install, ProjectionKind projectionKind) {
 		if (viewer == null)
 			return;
 		try {
 			viewer.getControl().setRedraw(false);
 			previousFilters.put(viewer, Arrays.asList(viewer.getFilters()));
 
-			// if (viewPart != null && manageFilters) {
-			// Set<ViewerFilter> toAdd = new HashSet<ViewerFilter>();
-			// // Set<Class<?>> excludedFilters = getPreservedFilterClasses();
-			// // for (ViewerFilter filter : previousFilters.get(viewer)) {
-			// // if (excludedFilters.contains(filter.getClass())) {
-			// // toAdd.add(filter);
-			// // }
-			// // }
-			//
-			// toAdd.add(interestFilter);
-			// viewer.setFilters(toAdd.toArray(new ViewerFilter[toAdd.size()]));
-			// } else {
-			if (install){
-				viewer.addFilter(interestFilter);
+			if (install) {
+				if (projectionKind == ProjectionKind.VARIANT) {
+					viewer.removeFilter(projectionFeatureFilter);
+					viewer.addFilter(projectionVariantFilter);
+				} else {
+					viewer.removeFilter(projectionVariantFilter);
+					viewer.addFilter(projectionFeatureFilter);
+				}
+				CIDECorePlugin.getDefault().removeColorChangeListener(updater);
 				CIDECorePlugin.getDefault().addColorChangeListener(updater);
-			}
-			else{
-				viewer.removeFilter(interestFilter);
+			} else {
+				viewer.removeFilter(projectionVariantFilter);
+				viewer.removeFilter(projectionFeatureFilter);
 				CIDECorePlugin.getDefault().removeColorChangeListener(updater);
 			}
 			// }

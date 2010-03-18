@@ -16,7 +16,7 @@
 		</view>
 		<category id="coloride" name="CIDE" />
 		<view category="coloride"
-			class="de.ovgu.cide.tools.interactionanalyzer.InteractionsView" icon="icons/interaction.GIF"
+			class="de.ovgu.cide.tools.interactionanalyzer.InteractionsView" icon="icons/interaction.gif"
 			id="de.ovgu.cide.core.view.interactions" name="Statistics / Feature Interactions">
 		</view>
 		<view allowMultiple="true" category="coloride"
@@ -55,7 +55,7 @@
 		<objectContribution adaptable="false"
 			id="coloredide.projectContributions" objectClass="org.eclipse.core.resources.IProject">
 			<menu
-         icon="icons/interaction.GIF"
+         icon="icons/interaction.gif"
          id="coloride.menu1"
          label="CIDE"
          path="additions">
@@ -76,7 +76,7 @@
 				id="AstView.action4" label="Collect Interactions" menubarPath="coloride.menu1/gcideGroup">
 			</action>
      <action
-           class="de.ovgu.cide.natures.DeinstallNatureAction"
+           class="de.ovgu.cide.nature.DeinstallNatureAction"
            enablesFor="1"
            id="de.ovgu.cide.nature.deinstall"
            label="Disable CIDE for this project"
@@ -112,7 +112,7 @@
         id="de.ovgu.cide.projectmenu"
         objectClass="org.eclipse.core.resources.IProject">
      <action
-           class="de.ovgu.cide.natures.InstallNatureAction"
+           class="de.ovgu.cide.nature.InstallNatureAction"
            enablesFor="1"
            icon="icons/nature.gif"
            id="de.ovgu.cide.nature.install"
@@ -134,7 +134,7 @@
         </and>
      </visibility>
      <menu
-           icon="icons/interaction.GIF"
+           icon="icons/interaction.gif"
            id="coloride.menu1"
            label="CIDE"
            path="additions">
@@ -148,7 +148,7 @@
 
 
 	<extension point="org.eclipse.ui.perspectives">
-		<perspective class="de.ovgu.cide.PerspectiveFactory" icon="icons/interaction.GIF"
+		<perspective class="de.ovgu.cide.PerspectiveFactory" icon="icons/interaction.gif"
 			id="ColoredIDE.perspective" name="CIDE" />
 	</extension>
 	<extension point="org.eclipse.core.contenttype.contentTypes">
@@ -235,10 +235,11 @@
 		<viewContribution id="de.ovgu.cide.ColorFilter"
 			targetID="org.eclipse.ui.navigator.ProjectExplorer">
 			<action class="de.ovgu.cide.colorfilter.EnableColorFilterAction"
-				enablesFor="*" icon="icons/interaction.GIF" id="de.ovgu.cide.ColorFilter.Button"
-				label="Focus on selected features" menubarPath="cide" state="false"
-				style="toggle" toolbarPath="cide" tooltip="Focus on selected features">
+				enablesFor="*" icon="icons/interaction.gif" id="de.ovgu.cide.views.enable"
+				label="View on selected features/variant" menubarPath="cide" state="false"
+				style="toggle" toolbarPath="cide" tooltip="View on selected features: Hides all files that do not contain code of the selected features.">
 			</action>
+
 		</viewContribution>
 	</extension>
 	<extension point="org.eclipse.ui.ide.resourceFilters">
