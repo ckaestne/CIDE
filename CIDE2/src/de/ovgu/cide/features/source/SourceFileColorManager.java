@@ -12,7 +12,7 @@ import cide.gast.ASTWrappers;
 import cide.gast.IASTNode;
 import de.ovgu.cide.ASTColorChangedEvent;
 import de.ovgu.cide.CIDECorePlugin;
-import de.ovgu.cide.af.Alternative;
+import de.ovgu.cide.alternativefeatures.Alternative;
 import de.ovgu.cide.features.IFeature;
 
 public class SourceFileColorManager extends AbstractColorManager {

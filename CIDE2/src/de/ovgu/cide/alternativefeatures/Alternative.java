@@ -1,4 +1,4 @@
-package de.ovgu.cide.af;
+package de.ovgu.cide.alternativefeatures;
 
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -13,6 +13,10 @@ import de.ovgu.cide.features.source.ColoredSourceFile;
 import de.ovgu.cide.languages.LanguageExtensionProxy;
 
 /**
+ * NOTE: the entire functionality for alternative features was implemented as part of a master's thesis
+ * (available in German here: http://wwwiti.cs.uni-magdeburg.de/~ckaestne/thesisrosenthal.pdf)
+ * the functionality has been deactivated mostly, but the code is still included.
+ * 
  * Einfache Struktur zur Repraesentation einer Alternative, z.B. eines alternativen Sourcecode-Fragments.
  * 
  * ACHTUNG: Es sind je nach Anwendungssituation nicht immer alle Felder befüllt! Ist nicht schön, aber

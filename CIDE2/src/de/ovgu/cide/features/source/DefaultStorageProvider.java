@@ -21,7 +21,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 
-import de.ovgu.cide.af.Alternative;
+import de.ovgu.cide.alternativefeatures.Alternative;
 import de.ovgu.cide.features.Feature;
 import de.ovgu.cide.features.FeatureModelNotFoundException;
 import de.ovgu.cide.features.IFeature;

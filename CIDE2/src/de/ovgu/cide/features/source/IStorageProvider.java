@@ -8,7 +8,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 
-import de.ovgu.cide.af.Alternative;
+import de.ovgu.cide.alternativefeatures.Alternative;
 import de.ovgu.cide.features.IFeature;
 import de.ovgu.cide.features.IFeatureModel;
 import de.ovgu.cide.features.IFeatureModelWithID;

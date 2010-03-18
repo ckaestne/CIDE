@@ -1,4 +1,4 @@
-package de.ovgu.cide.af;
+package de.ovgu.cide.alternativefeatures;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
@@ -17,9 +17,16 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+/**
+ * * NOTE: the entire functionality for alternative features was implemented as
+ * part of a master's thesis (available in German here:
+ * http://wwwiti.cs.uni-magdeburg.de/~ckaestne/thesisrosenthal.pdf) the
+ * functionality has been deactivated mostly, but the code is still included.
+ * 
+ */
 public class MetaExpressionEditor {
 
-	private Shell sShell = null;  //  @jve:decl-index=0:visual-constraint="-40,50"
+	private Shell sShell = null; // @jve:decl-index=0:visual-constraint="-40,50"
 	private Text alt1 = null;
 	private Text alt2 = null;
 	private Label defaultLabel = null;
@@ -51,6 +58,7 @@ public class MetaExpressionEditor {
 	private Button button4 = null;
 	private Button button5 = null;
 	private StyledText styledText = null;
+
 	/**
 	 * This method initializes sShell
 	 */
@@ -65,11 +73,12 @@ public class MetaExpressionEditor {
 		newbutton = new Button(sShell, SWT.NONE);
 		newbutton.setText("New Alternative");
 		createComposite1();
-		
+
 	}
+
 	/**
-	 * This method initializes composite	
-	 *
+	 * This method initializes composite
+	 * 
 	 */
 	private void createComposite() {
 		GridData gridData3 = new GridData();
@@ -111,8 +120,10 @@ public class MetaExpressionEditor {
 		composite.setLayout(gridLayout2);
 		text = new Text(composite, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL);
 		text.setEnabled(false);
-		text.setFont(new Font(Display.getDefault(), "Courier New", 8, SWT.NORMAL));
-		text.setText("start.addAdjacent(end);\nend.addAdjacent(start);// undirected\nstart.setWeight(weight);\nend.addWeight(weight);\nreturn (EdgeIfc) start;");
+		text.setFont(new Font(Display.getDefault(), "Courier New", 8,
+				SWT.NORMAL));
+		text
+				.setText("start.addAdjacent(end);\nend.addAdjacent(start);// undirected\nstart.setWeight(weight);\nend.addWeight(weight);\nreturn (EdgeIfc) start;");
 		text.setLayoutData(gridData2);
 		label = new Label(composite, SWT.NONE);
 		label.setText("default");
@@ -120,8 +131,10 @@ public class MetaExpressionEditor {
 		Label filler1 = new Label(composite, SWT.NONE);
 		Label filler2 = new Label(composite, SWT.NONE);
 		styledText = new StyledText(composite, SWT.BORDER | SWT.V_SCROLL);
-		styledText.setFont(new Font(Display.getDefault(), "Courier New", 8, SWT.NORMAL));
-		styledText.setText("Neighbor e = new Neighbor(end, weight);\naddEdge(start, e);\nreturn e;");
+		styledText.setFont(new Font(Display.getDefault(), "Courier New", 8,
+				SWT.NORMAL));
+		styledText
+				.setText("Neighbor e = new Neighbor(end, weight);\naddEdge(start, e);\nreturn e;");
 		styledText.setLayoutData(gridData3);
 		label1 = new Label(composite, SWT.NONE);
 		label1.setText("Feature(s):");
@@ -134,10 +147,13 @@ public class MetaExpressionEditor {
 		button2 = new Button(composite, SWT.NONE);
 		button2.setText("Select...");
 		button4 = new Button(composite, SWT.NONE);
-		button4.setImage(new Image(Display.getCurrent(), getClass().getResourceAsStream("/delete_icon.gif")));
+		button4.setImage(new Image(Display.getCurrent(), getClass()
+				.getResourceAsStream("/delete_icon.gif")));
 		text12 = new StyledText(composite, SWT.BORDER | SWT.V_SCROLL);
-		text12.setFont(new Font(Display.getDefault(), "Courier New", 8, SWT.NORMAL));
-		text12.setText("Edge theEdge = new Edge(start, end, weight);\nedges.add(theEdge);\nstart.addNeighbor(new Neighbor(end, theEdge));\nend.addNeighbor(new Neighbor(start, theEdge));// undirected\nreturn theEdge;");
+		text12.setFont(new Font(Display.getDefault(), "Courier New", 8,
+				SWT.NORMAL));
+		text12
+				.setText("Edge theEdge = new Edge(start, end, weight);\nedges.add(theEdge);\nstart.addNeighbor(new Neighbor(end, theEdge));\nend.addNeighbor(new Neighbor(start, theEdge));// undirected\nreturn theEdge;");
 		text12.setLayoutData(gridData4);
 		label2 = new Label(composite, SWT.NONE);
 		label2.setText("Feature(s):");
@@ -150,11 +166,13 @@ public class MetaExpressionEditor {
 		button3 = new Button(composite, SWT.NONE);
 		button3.setText("Select...");
 		button5 = new Button(composite, SWT.NONE);
-		button5.setImage(new Image(Display.getCurrent(), getClass().getResourceAsStream("/delete_icon.gif")));
+		button5.setImage(new Image(Display.getCurrent(), getClass()
+				.getResourceAsStream("/delete_icon.gif")));
 	}
+
 	/**
-	 * This method initializes composite1	
-	 *
+	 * This method initializes composite1
+	 * 
 	 */
 	private void createComposite1() {
 		GridData gridData1 = new GridData();
@@ -173,16 +191,17 @@ public class MetaExpressionEditor {
 	public static void main(String[] args) throws InterruptedException {
 		MetaExpressionEditor mee = new MetaExpressionEditor();
 		mee.createSShell();
-		StyleRange style = new StyleRange(36,6,null,new Color(Display.getDefault(), new RGB(128, 128, 196)));
+		StyleRange style = new StyleRange(36, 6, null, new Color(Display
+				.getDefault(), new RGB(128, 128, 196)));
 		mee.text12.setStyleRange(style);
-		StyleRange style2 = new StyleRange(31,6,null,new Color(Display.getDefault(), new RGB(128, 128, 196)));
+		StyleRange style2 = new StyleRange(31, 6, null, new Color(Display
+				.getDefault(), new RGB(128, 128, 196)));
 		mee.styledText.setStyleRange(style2);
 		mee.sShell.open();
-		while( !mee.sShell.isDisposed())
-	    {
-	      if(!mee.sShell.getDisplay().readAndDispatch()) 
-	    	  mee.sShell.getDisplay().sleep();
-	    }
+		while (!mee.sShell.isDisposed()) {
+			if (!mee.sShell.getDisplay().readAndDispatch())
+				mee.sShell.getDisplay().sleep();
+		}
 		mee.sShell.getDisplay().dispose();
 	}
 }

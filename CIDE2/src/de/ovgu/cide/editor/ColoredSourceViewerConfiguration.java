@@ -18,7 +18,7 @@ import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.SourceViewerConfiguration;
 
-import de.ovgu.cide.af.AlternativeAnnotation;
+import de.ovgu.cide.alternativefeatures.AlternativeAnnotation;
 import de.ovgu.cide.editor.inlineprojection.ProjectionReconcilingStrategy;
 import de.ovgu.cide.features.source.ColoredSourceFile;
 

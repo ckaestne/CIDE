@@ -30,7 +30,7 @@ import de.ovgu.cide.ColorListChangedEvent;
 import de.ovgu.cide.ColoredIDEImages;
 import de.ovgu.cide.FileColorChangedEvent;
 import de.ovgu.cide.IColorChangeListener;
-import de.ovgu.cide.af.AlternativeAnnotation;
+import de.ovgu.cide.alternativefeatures.AlternativeAnnotation;
 import de.ovgu.cide.editor.ColoredEditorExtensions.IProjectionColoredEditor;
 import de.ovgu.cide.editor.inlineprojection.InlineProjectionSourceViewer;
 import de.ovgu.cide.editor.inlineprojection.InlineProjectionSupport;

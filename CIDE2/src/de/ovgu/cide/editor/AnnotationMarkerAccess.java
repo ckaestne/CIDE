@@ -11,7 +11,7 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Canvas;
 
 import de.ovgu.cide.ColoredIDEImages;
-import de.ovgu.cide.af.AlternativeAnnotation;
+import de.ovgu.cide.alternativefeatures.AlternativeAnnotation;
 
 /**
  * Ermöglicht Annotationen in Form von Markern auf den vertical ruler zu setzen.

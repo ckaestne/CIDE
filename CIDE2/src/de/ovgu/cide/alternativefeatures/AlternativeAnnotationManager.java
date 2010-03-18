@@ -1,4 +1,4 @@
-package de.ovgu.cide.af;
+package de.ovgu.cide.alternativefeatures;
 
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -11,6 +11,10 @@ import org.eclipse.jface.text.source.IAnnotationModel;
 import cide.gast.IASTNode;
 
 /**
+ * NOTE: the entire functionality for alternative features was implemented as part of a master's thesis
+ * (available in German here: http://wwwiti.cs.uni-magdeburg.de/~ckaestne/thesisrosenthal.pdf)
+ * the functionality has been deactivated mostly, but the code is still included.
+ * 
  * Manager for annotations (not coloring, but a marker on the vertical ruler) that indicate the existance of alternative code-fragments.
  * 
  * @author Malte Rosenthal

@@ -1,4 +1,4 @@
-package de.ovgu.cide.af;
+package de.ovgu.cide.alternativefeatures;
 
 import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.swt.graphics.Image;
@@ -6,6 +6,10 @@ import org.eclipse.swt.graphics.Image;
 import de.ovgu.cide.ColoredIDEImages;
 
 /**
+ * NOTE: the entire functionality for alternative features was implemented as part of a master's thesis
+ * (available in German here: http://wwwiti.cs.uni-magdeburg.de/~ckaestne/thesisrosenthal.pdf)
+ * the functionality has been deactivated mostly, but the code is still included.
+
  * Annotation (not coloring, but a marker on the vertical ruler) that indicates the existance of alternative code-fragments.
  * 
  * @author Malte Rosenthal

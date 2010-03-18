@@ -15,7 +15,7 @@ import cide.gparser.ParseException;
 import cide.gparser.TokenMgrError;
 import cide.languages.ILanguageExtension;
 import cide.languages.ILanguageParser;
-import de.ovgu.cide.af.AlternativeFeatureManager;
+import de.ovgu.cide.alternativefeatures.AlternativeFeatureManager;
 import de.ovgu.cide.features.FeatureModelManager;
 import de.ovgu.cide.features.FeatureModelNotFoundException;
 import de.ovgu.cide.features.IFeatureModel;

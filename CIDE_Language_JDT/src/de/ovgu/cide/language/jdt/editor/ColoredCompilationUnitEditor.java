@@ -22,7 +22,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorInput;
 
 import de.ovgu.cide.ColoredIDEImages;
-import de.ovgu.cide.af.AlternativeAnnotation;
+import de.ovgu.cide.alternativefeatures.AlternativeAnnotation;
 import de.ovgu.cide.configuration.jdt.JDTColorManagerBridge;
 import de.ovgu.cide.editor.AnnotationMarkerAccess;
 import de.ovgu.cide.editor.ColoredEditorExtensions;
