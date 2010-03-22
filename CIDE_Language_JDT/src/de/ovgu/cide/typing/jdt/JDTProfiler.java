@@ -20,7 +20,7 @@ public class JDTProfiler extends CompilationParticipant {
 	@Override
 	public void buildFinished(IJavaProject project) {
 		super.buildFinished(project);
-		System.out.println("Compiled " + project + " in "
+		System.out.println("Compiled " + project.getProject().getName() + " in "
 				+ (System.currentTimeMillis() - start) + " ms");
 	}
 
