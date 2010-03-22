@@ -14,26 +14,14 @@
 		<attribute name="de.ovgu.cide.core.typing.problem.problemdata" />
 	</extension>
 
-	<extension point="org.eclipse.ui.actionSets">
-		<actionSet id="typechecking" label="CIDE" visible="true">
-			<action class="de.ovgu.cide.typing.internal.ForceValidationAction"
-				id="coloride.validator.ForceValidationAction" label="Force Full Type Check"
-				menubarPath="colorMenu/colorGroup" style="push"
-				tooltip="Force type check for full project " />
-
-		</actionSet>
-	</extension>
 
 
 	<extension point="org.eclipse.ui.popupMenus">
 		<objectContribution adaptable="false"
 			id="coloredide.projectContributions" objectClass="org.eclipse.core.resources.IProject">
-			<menu id="coloride.menu1" label="CIDE" path="additions">
-				<separator name="cideGroup" />
-			</menu>
 
 			<action class="de.ovgu.cide.typing.internal.ForceValidationAction"
-				id="forceValidation" label="Force Full Type Check" menubarPath="coloride.menu1/cideGroup" />
+				id="forceValidation" label="Force Full Type Check" menubarPath="de.ovgu.cide.projectmenu/main" />
  <visibility>
       <and>
          <objectState
@@ -50,22 +38,7 @@
 
 
 	</extension>
- <extension
-       point="org.eclipse.ui.editorActions">
-    <editorContribution
-          id="coloride.coloredEditorActions"
-          targetID="de.ovgu.cide.ColoredTextEditor">
-       <action
-             class="de.ovgu.cide.typing.internal.ForceValidationAction"
-             icon="icons/sample.gif"
-             id="coloride.validator.ForceValidationAction"
-             label="Force Full Type Check"
-             style="push"
-             toolbarPath="Normal/additions"
-             tooltip="Force type check for full project ">
-       </action>
-    </editorContribution>
- </extension>
+
  <extension
        point="org.eclipse.ui.ide.markerResolution">
     <markerResolutionGenerator

@@ -39,48 +39,49 @@
    </viewShortcut>
 		</perspectiveExtension>
 	</extension>
-	<extension point="org.eclipse.ui.actionSets">
-		<actionSet id="coloride.actionSet" label="CIDE" visible="true">
-			<menu id="colorMenu" label="Colors">
-				<separator name="colorGroup" />
-			</menu>
-			<action
-				class="de.ovgu.cide.tools.interactionanalyzer.CollectInteractionsAction"
-				id="menu_AstView.action4" label="Collect Interactions" menubarPath="colorMenu/colorGroup">
-			</action>
-
-		</actionSet>
-	</extension>
 	<extension point="org.eclipse.ui.popupMenus">
 		<objectContribution adaptable="false"
 			id="coloredide.projectContributions" objectClass="org.eclipse.core.resources.IProject">
 			<menu
          icon="icons/interaction.gif"
-         id="coloride.menu1"
+         id="de.ovgu.cide.projectmenu"
          label="CIDE"
          path="additions">
-				<separator name="cideGroup" />
+				<separator name="generate" />
+    <separator
+          name="main">
+    </separator>
+    <separator
+          name="experimental">
+    </separator>
+    <separator
+          name="disable">
+    </separator>
 			</menu>
-			<menu id="ColoredIDE.menu2" label="Analysis" path="coloride.menu1/cideGroup">
-				<separator name="group2" />
-			</menu>
+   <menu
+         id="de.ovgu.cide.projectmenu.experimental"
+         label="Experimental"
+         path="de.ovgu.cide.projectmenu/experimental">
+      <separator
+            name="main">
+      </separator>
+   </menu>
    <action
          class="de.ovgu.cide.configuration.CreateConfigurationAction"
          enablesFor="1"
          id="coloride.newAction"
          label="Generate Variant..."
-         menubarPath="coloride.menu1/cideGroup">
+         menubarPath="de.ovgu.cide.projectmenu/generate">
    </action>
 			<action
 				class="de.ovgu.cide.tools.interactionanalyzer.CollectInteractionsAction"
-				id="AstView.action4" label="Collect Interactions" menubarPath="coloride.menu1/gcideGroup">
+				id="AstView.action4" label="Collect Interactions/Statistics" menubarPath="de.ovgu.cide.projectmenu/main">
 			</action>
      <action
            class="de.ovgu.cide.nature.DeinstallNatureAction"
-           enablesFor="1"
            id="de.ovgu.cide.nature.deinstall"
-           label="Disable CIDE for this project"
-           menubarPath="coloride.menu1/gcideGroup">
+           label="Disable CIDE"
+           menubarPath="de.ovgu.cide.projectmenu/disable">
      </action>
    <visibility>
       <and>
@@ -113,11 +114,10 @@
         objectClass="org.eclipse.core.resources.IProject">
      <action
            class="de.ovgu.cide.nature.InstallNatureAction"
-           enablesFor="1"
            icon="icons/nature.gif"
            id="de.ovgu.cide.nature.install"
            label="Enable CIDE for this project..."
-           menubarPath="coloride.menu1/cideGroup">
+           menubarPath="de.ovgu.cide.projectmenu/main">
      </action>
      <visibility>
         <and>
@@ -135,11 +135,11 @@
      </visibility>
      <menu
            icon="icons/interaction.gif"
-           id="coloride.menu1"
+           id="de.ovgu.cide.projectmenu"
            label="CIDE"
            path="additions">
         <separator
-              name="cideGroup">
+              name="main">
         </separator>
      </menu>
   </objectContribution>
@@ -213,14 +213,7 @@
 			</includes>
 		</viewerContentBinding>
 	</extension>
-	<extension point="org.eclipse.ui.popupMenus">
-		<viewerContribution id="CIDE2.viewerContribution1"
-			targetID="coloredide.navigatorpopup">
-			<action class="de.ovgu.cide.navigator.SetColorPopup" id="CIDE2.action1"
-				label="label">
-			</action>
-		</viewerContribution>
-	</extension>
+	
 	<extension point="org.eclipse.ant.core.antTasks">
 		<antTask class="coloredide.configuration.ConfGenTask"
 			eclipseRuntime="true" headless="false" library="lib/antSupport.jar"

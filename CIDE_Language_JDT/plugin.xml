@@ -51,20 +51,6 @@
                    </typingProvider>
                 </extension>
  <extension
-        point="org.eclipse.ui.actionSets">
-     <actionSet
-           id="jdt"
-           label="Colors"
-           visible="true">
-        <action
-              class="de.ovgu.cide.typing.jdt.organizeimports.OrganizeAllImportsAction"
-              id="menu_AstView.action3"
-              label="Organize Imports"
-              menubarPath="colorMenu/colorGroup"/>
-
-     </actionSet>
-  </extension>
- <extension
        point="org.eclipse.jdt.core.compilationParticipant">
     <compilationParticipant
           class="de.ovgu.cide.typing.jdt.JDTProfiler"
@@ -73,4 +59,26 @@
           modifiesEnvironment="false">
     </compilationParticipant>
  </extension>
+ <extension point="org.eclipse.ui.popupMenus">
+		<objectContribution adaptable="false"
+			id="coloredide.projectContributions" objectClass="org.eclipse.core.resources.IProject">
+
+			<action class="de.ovgu.cide.typing.jdt.organizeimports.OrganizeAllImportsAction"
+				id="organizeimportcolors" label="Organize Import Colors" menubarPath="de.ovgu.cide.projectmenu/de.ovgu.cide.projectmenu.experimental/main" />
+ <visibility>
+      <and>
+         <objectState
+               name="nature"
+               value="de.ovgu.cide.core.CIDEProjectNature">
+         </objectState>
+         <objectState
+               name="open"
+               value="true">
+         </objectState>
+      </and>
+   </visibility>
+		</objectContribution>
+
+
+	</extension>
 </plugin>

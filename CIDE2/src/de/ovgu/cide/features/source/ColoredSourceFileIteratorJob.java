@@ -14,6 +14,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 
+import de.ovgu.cide.CIDECorePlugin;
 import de.ovgu.cide.features.FeatureModelManager;
 import de.ovgu.cide.features.IFeatureModel;
 
@@ -45,7 +46,7 @@ public abstract class ColoredSourceFileIteratorJob extends WorkspaceJob {
 			throws CoreException {
 		List<IProject> projects = new ArrayList<IProject>();
 		for (IProject project : this.projects) {
-			if (project.exists() && project.isOpen())
+			if (project.exists() && project.isOpen() && CIDECorePlugin.isCIDEProject(project))
 				projects.add(project);
 		}
 

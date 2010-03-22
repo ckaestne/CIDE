@@ -2,18 +2,27 @@
 <?eclipse version="3.4"?>
 <plugin>
 
-	<extension point="org.eclipse.ui.actionSets">
-		<actionSet id="importantennaproject" label="CIDE" visible="true">
+	
+	<extension point="org.eclipse.ui.popupMenus">
+		<objectContribution adaptable="false"
+			id="coloredide.projectContributions" objectClass="org.eclipse.core.resources.IProject">
+
 			<action class="de.ovgu.cide.importantenna.ImportAntennaProjectAnnotationsAction"
-				id="coloride.importantenna" label="Import Open Projects from Antenna (experimental)"
-				menubarPath="colorMenu/colorGroup" style="push" />
+				id="importAntennaProject" label="Import from Antenna" menubarPath="de.ovgu.cide.projectmenu/de.ovgu.cide.projectmenu.experimental/main" />
+ <visibility>
+      <and>
+         <objectState
+               name="nature"
+               value="de.ovgu.cide.core.CIDEProjectNature">
+         </objectState>
+         <objectState
+               name="open"
+               value="true">
+         </objectState>
+      </and>
+   </visibility>
+		</objectContribution>
 
-		</actionSet>
-			<actionSet id="importantennafile" label="CIDE" visible="true">
-			<action class="de.ovgu.cide.importantenna.ImportAntennaFileAnnotationsAction"
-				id="coloride.importantenna" label="Import Current File from Antenna (experimental)"
-				menubarPath="colorMenu/colorGroup" style="push" />
 
-		</actionSet>
 	</extension>
 </plugin>

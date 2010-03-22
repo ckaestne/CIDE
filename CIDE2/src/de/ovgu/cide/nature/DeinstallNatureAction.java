@@ -8,18 +8,12 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IObjectActionDelegate;
-import org.eclipse.ui.IWorkbenchPart;
 
+import de.ovgu.cide.utils.AbstractCIDEProjectAction;
 
-public class DeinstallNatureAction implements IObjectActionDelegate {
-
-	private final List<IProject> resources = new ArrayList<IProject>();
-
-	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
-	}
+public class DeinstallNatureAction extends AbstractCIDEProjectAction implements
+		IObjectActionDelegate {
 
 	public void run(IAction action) {
 		for (IProject project : resources)
@@ -36,17 +30,5 @@ public class DeinstallNatureAction implements IObjectActionDelegate {
 				e.printStackTrace();
 				// Something went wrong
 			}
-	}
-
-	public void selectionChanged(IAction action, ISelection selection) {
-		resources.clear();
-		if (selection instanceof IStructuredSelection) {
-			for (Object selected : ((IStructuredSelection) selection).toArray()) {
-				if (selected instanceof IProject) {
-					resources.add((IProject) selected);
-				}
-
-			}
-		}
 	}
 }

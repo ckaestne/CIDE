@@ -15,18 +15,12 @@
            adaptable="false"
            id="coloredide.projectContributions"
            objectClass="org.eclipse.core.resources.IProject">
-        <menu
-              id="coloride.menu1"
-              label="CIDE"
-              path="additions">
-           <separator name="cideGroup"/>
-        </menu>
        <action
               class="de.ovgu.cide.fm.guidsl.EditFeatureModelAction"
               enablesFor="1"
               id="coloride.editFeatureNames_guidsl"
               label="Edit Features... (guidsl)"
-              menubarPath="coloride.menu1/cideGroup"/>
+              menubarPath="de.ovgu.cide.projectmenu/main"/>
        <visibility>
       <and>
          <objectState
