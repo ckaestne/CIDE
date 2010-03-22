@@ -171,6 +171,8 @@ public class ColoredTextEditor extends AbstractDecoratedTextEditor implements
 		getSourceViewerI().disableProjection();
 		getSourceViewerI().enableInlineProjection();
 
+		getSourceViewerI().getProjectionAnnotationCalculator().calculateProjectionAnnotations();
+		
 		// errorpanel
 		editorExtension.createErrorPanel(parent);
 		editorExtension.alignErrorPanel(parent);

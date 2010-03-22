@@ -10,22 +10,23 @@ import de.ovgu.cide.features.IFeature;
 public abstract class AbstractColoredInlineProjectionAnnotation extends
 		InlineProjectionAnnotation {
 
-	private IProject project;
+	private final IProject project;
+	private final ProjectionColorManager projectionColorManager;
+	protected final Set<IFeature> colors;
+	private final Position position;
 
 	public AbstractColoredInlineProjectionAnnotation(Set<IFeature> features,
-			IProject project, Position pos) {
+			IProject project, Position pos,
+			ProjectionColorManager projectionColorManager) {
 		this.colors = features;
 		this.project = project;
 		this.position = pos;
+		this.projectionColorManager = projectionColorManager;
 	}
 
-	protected Set<IFeature> colors;
-
-	private Position position;
-
-	public void setColors(Set<IFeature> colors) {
-		this.colors = colors;
-	}
+	// public void setColors(Set<IFeature> colors) {
+	// this.colors = colors;
+	// }
 
 	/**
 	 * automatically fold or unfold based on the global feature selection for
@@ -36,6 +37,8 @@ public abstract class AbstractColoredInlineProjectionAnnotation extends
 	public abstract boolean adjustCollapsing(Set<IFeature> selectedColors);
 
 	protected boolean setExpanded(boolean expanded) {
+		if (!projectionColorManager.isProjectionActive())
+			expanded = true;
 		if (isCollapsed() && expanded) {
 			this.markExpanded();
 			return true;
@@ -45,10 +48,6 @@ public abstract class AbstractColoredInlineProjectionAnnotation extends
 			return true;
 		}
 		return false;
-	}
-
-	public void setPosition(Position pos) {
-		this.position = pos;
 	}
 
 	public Position getPosition() {

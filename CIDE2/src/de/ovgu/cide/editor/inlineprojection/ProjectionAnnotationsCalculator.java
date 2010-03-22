@@ -1,17 +1,14 @@
 package de.ovgu.cide.editor.inlineprojection;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-import java.util.Stack;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.source.Annotation;
@@ -51,8 +48,9 @@ public class ProjectionAnnotationsCalculator {
 	}
 
 	private final ColoredTextEditor editor;
-	private List<CodeSegment> fAddedPositions = new ArrayList<CodeSegment>();
-	private List<CodeSegment> fRemovedPositions = new ArrayList<CodeSegment>();
+	// private List<CodeSegment> fAddedPositions = new ArrayList<CodeSegment>();
+	// private List<CodeSegment> fRemovedPositions = new
+	// ArrayList<CodeSegment>();
 	private List<AbstractColoredInlineProjectionAnnotation> oldAnnotations = new ArrayList<AbstractColoredInlineProjectionAnnotation>();
 
 	public void calculateProjectionAnnotations() {
@@ -84,8 +82,9 @@ public class ProjectionAnnotationsCalculator {
 	}
 
 	private void calculateProjectionAnnotationsOnAST_Variant(ISourceFile ast) {
-		calculatePositions(new IASTNode[] { ast });
-		updateInlineProjectionAnnotations(fAddedPositions, editor);
+		List<CodeSegment> segments = calculatePositions(new IASTNode[] { ast });
+		updateInlineProjectionAnnotations(segments, editor,
+				new AnnotationFactory_VariantView());
 	}
 
 	/**
@@ -97,23 +96,25 @@ public class ProjectionAnnotationsCalculator {
 	 * 
 	 * @param subtrees
 	 *            the AST subtrees
+	 * @return
 	 */
-	private void calculatePositions(IASTNode[] subtrees) {
+	private List<CodeSegment> calculatePositions(IASTNode[] subtrees) {
 		List<CodeSegment> list = new ArrayList<CodeSegment>();
 		for (int i = 0, n = subtrees.length; i < n; i++)
 			list.addAll(CodeSegmentCalculator.getCodeSegments(subtrees[i],
 					editor.getSourceFile().getColorManager()));
 		// subtrees[i].accept(fCollector);
 		deleteEmptySegments(list);
-		fAddedPositions.addAll(list);
-		List<CodeSegment> oldPositions = fRemovedPositions;
-		List<CodeSegment> newPositions = list;
-		for (int i = 0, n = oldPositions.size(); i < n; i++) {
-			CodeSegment current = oldPositions.get(i);
-			if (current != null)
-				newPositions.add(current);
-		}
-		fRemovedPositions = newPositions;
+		return list;
+		// fAddedPositions.addAll(list);
+		// List<CodeSegment> oldPositions = fRemovedPositions;
+		// List<CodeSegment> newPositions = list;
+		// for (int i = 0, n = oldPositions.size(); i < n; i++) {
+		// CodeSegment current = oldPositions.get(i);
+		// if (current != null)
+		// newPositions.add(current);
+		// }
+		// fRemovedPositions = newPositions;
 	}
 
 	private void deleteEmptySegments(List<CodeSegment> list) {
@@ -124,41 +125,59 @@ public class ProjectionAnnotationsCalculator {
 		}
 	}
 
-	protected void updateInlineProjectionAnnotations(
-			List<CodeSegment> addedPositions, ColoredTextEditor editor) {
-		if (ProjectionKindManager.isVariantView())
-			updateInlineProjectionAnnotations_VariantView(addedPositions,
-					editor);
-		else
-			updateInlineProjectionAnnotations_FeatureView(addedPositions,
-					editor);
+	private static abstract class AnnotationFactory {
+		abstract AbstractColoredInlineProjectionAnnotation newAnnotation(
+				Set<IFeature> features, IProject project, Position pos,
+				ProjectionColorManager projectionColorManager);
+	}
+
+	private static class AnnotationFactory_VariantView extends
+			AnnotationFactory {
+		AbstractColoredInlineProjectionAnnotation newAnnotation(
+				Set<IFeature> features, IProject project, Position pos,
+				ProjectionColorManager projectionColorManager) {
+			return new ColoredInlineVariantProjectionAnnotation(features,
+					project, pos, projectionColorManager);
+		}
+	}
+
+	private static class AnnotationFactory_FeatureView extends
+			AnnotationFactory {
+		AbstractColoredInlineProjectionAnnotation newAnnotation(
+				Set<IFeature> features, IProject project, Position pos,
+				ProjectionColorManager projectionColorManager) {
+			return new ColoredInlineFeatureProjectionAnnotation(features,
+					project, pos, projectionColorManager);
+		}
 	}
 
 	/**
-	 * calculates which fragments can be projected. depends on the kind of view
+	 * after calculating the segments to hide (updatedPositions), this creates
+	 * the according annotations and sets visibility
 	 * 
-	 * @param addedPositions
+	 * @param updatedPositions
 	 * @param editor
 	 */
-	protected void updateInlineProjectionAnnotations_VariantView(
-			List<CodeSegment> addedPositions, ColoredTextEditor editor) {
+	protected void updateInlineProjectionAnnotations(
+			List<CodeSegment> updatedPositions, ColoredTextEditor editor,
+			AnnotationFactory factory) {
 
 		InlineProjectionAnnotationModel annotationModel = editor.getViewer()
 				.getInlineProjectionAnnotationModel();
 
-		AbstractColoredInlineProjectionAnnotation[] annotations = new AbstractColoredInlineProjectionAnnotation[addedPositions
+		AbstractColoredInlineProjectionAnnotation[] annotations = new AbstractColoredInlineProjectionAnnotation[updatedPositions
 				.size()];
 
 		// this will hold the new annotations along
 		// with their corresponding positions
 		HashMap<AbstractColoredInlineProjectionAnnotation, Position> newAnnotations = new HashMap<AbstractColoredInlineProjectionAnnotation, Position>();
-		addedPositions = new ArrayList<CodeSegment>(addedPositions);
+		updatedPositions = new ArrayList<CodeSegment>(updatedPositions);
 		ArrayList<AbstractColoredInlineProjectionAnnotation> knownPositions = new ArrayList<AbstractColoredInlineProjectionAnnotation>(
 				oldAnnotations);
 		ArrayList<AbstractColoredInlineProjectionAnnotation> savedPositions = new ArrayList<AbstractColoredInlineProjectionAnnotation>();
 
 		// move unchanged segments from known to saved (those are not deleted)
-		for (Iterator<CodeSegment> i = addedPositions.iterator(); i.hasNext();) {
+		for (Iterator<CodeSegment> i = updatedPositions.iterator(); i.hasNext();) {
 			CodeSegment seg = i.next();
 			for (Iterator<AbstractColoredInlineProjectionAnnotation> a = knownPositions
 					.iterator(); a.hasNext();) {
@@ -174,12 +193,13 @@ public class ProjectionAnnotationsCalculator {
 
 		}
 
-		for (int i = 0; i < addedPositions.size(); i++) {
-			Position pos = new Position(addedPositions.get(i).offset,
-					addedPositions.get(i).length);
-			AbstractColoredInlineProjectionAnnotation annotation = new ColoredInlineVariantProjectionAnnotation(
-					addedPositions.get(i).getColors(), editor.getSourceFile()
-							.getProject(), pos);
+		for (int i = 0; i < updatedPositions.size(); i++) {
+			Position pos = new Position(updatedPositions.get(i).offset,
+					updatedPositions.get(i).length);
+			AbstractColoredInlineProjectionAnnotation annotation = factory
+					.newAnnotation(updatedPositions.get(i).getColors(), editor
+							.getSourceFile().getProject(), pos, editor
+							.getProjectionColorManager());
 			annotation.adjustCollapsing(editor.getFeatureModel()
 					.getVisibleFeatures());
 			newAnnotations.put(annotation, pos);
@@ -211,28 +231,29 @@ public class ProjectionAnnotationsCalculator {
 	 * annotations.
 	 * 
 	 */
-	protected void updateInlineProjectionAnnotations_FeatureView(
-			List<CodeSegment> addedPositions, ColoredTextEditor editor2) {
-
-		List<Set<IFeature>> featuresPerLine;
-
-	}
-
 	private void calculateProjectionAnnotationsOnAST_Feature(ISourceFile ast,
 			final SourceFileColorManager colorManager, String fileContent) {
 
-		List<CodeSegment> segments = calcSegments_Feature(ast, colorManager);
-		cleanSegments(segments, fileContent);
+		List<CodeSegment> plainSegments = calcSegments_Feature(ast,
+				colorManager);
+		cleanSegments(plainSegments, fileContent);
 
+		List<CodeSegment> lineSegments = new ArrayList<CodeSegment>();
 		// map segments to lines
 		int posStart = 0;
 		int length = nextLineBreak(fileContent);
 		while (length > 0) {
 			String line = fileContent.substring(0, length);
 
+			Set<IFeature> color = determineLineColors(posStart, posStart
+					+ length, line.toCharArray(), plainSegments);
+
 			System.out.println("segment " + posStart + " - "
-					+ (posStart + length) + ": " + line + " -- "
-					+ checkSegment(posStart, posStart + length, segments));
+					+ (posStart + length) + ": " + line + " -- " + color);
+
+			// if (!color.isEmpty())
+			lineSegments.add(new CodeSegment(posStart, posStart + length,
+					color, false));
 
 			fileContent = fileContent.substring(length);
 			posStart += length;
@@ -240,7 +261,13 @@ public class ProjectionAnnotationsCalculator {
 			length = nextLineBreak(fileContent);
 		}
 
-		System.out.println(segments);
+		System.out.println(plainSegments);
+
+		// TODO die segmentierung funktioniert nicht gut, da sie zuviel
+		// whitespace mit einschliesst. kann man das eleganter loesen?
+
+		updateInlineProjectionAnnotations(lineSegments, editor,
+				new AnnotationFactory_FeatureView());
 	}
 
 	/**
@@ -264,18 +291,40 @@ public class ProjectionAnnotationsCalculator {
 
 	}
 
-	private Set<IFeature> checkSegment(int start, int end,
+	/**
+	 * checks all non-white characters in a line for colors
+	 * 
+	 * @param offset
+	 * @param end
+	 * @param line
+	 * @param segments
+	 * @return
+	 */
+	private Set<IFeature> determineLineColors(int offset, int end, char[] line,
 			List<CodeSegment> segments) {
 
-		Set<IFeature> result = new HashSet<IFeature>();
+		// determine relevant segments first, for performance
+		List<CodeSegment> relevantSegments = new ArrayList<CodeSegment>();
 		for (CodeSegment seg : segments)
-			if (seg.offset < end && seg.endPosition() >= start)
-				result.addAll(seg.getColors());
+			if (seg.offset < end && seg.endPosition() >= offset)
+				relevantSegments.add(seg);
+
+		// check every character in the line
+		Set<IFeature> result = new HashSet<IFeature>();
+		for (int i = 0; i < line.length; i++) {
+			char c = line[i];
+			if (!Character.isWhitespace(c)) {
+				int charPos = offset + i;
+				for (CodeSegment seg : relevantSegments)
+					if (charPos >= seg.offset && charPos < seg.endPosition())
+						result.addAll(seg.getColors());
+			}
+		}
 
 		return result;
 	}
 
-	private int nextLineBreak(String fileContent) {
+	private static int nextLineBreak(String fileContent) {
 		int n = fileContent.indexOf('\n');
 		int nr = fileContent.indexOf("\r\n");
 		int r = fileContent.indexOf('\r');
@@ -305,14 +354,16 @@ public class ProjectionAnnotationsCalculator {
 					nodeColors.get(node).addAll(colorManager.getColors(node));
 			}
 		});
-		
-		// step2a: propagate to all children (because we no longer have inheritance) 
-		//TODO wrappers not yet considered!
+
+		// step2a: propagate to all children (because we no longer have
+		// inheritance)
+		// TODO wrappers not yet considered!
 		ast.accept(new ASTVisitor() {
 			@Override
 			public boolean visit(IASTNode node) {
 				if (node.getParent() != null)
-					nodeColors.get(node).addAll(nodeColors.get(node.getParent()));
+					nodeColors.get(node).addAll(
+							nodeColors.get(node.getParent()));
 				return true;
 			}
 		});

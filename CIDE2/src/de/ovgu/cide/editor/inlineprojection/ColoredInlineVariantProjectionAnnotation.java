@@ -11,8 +11,8 @@ public class ColoredInlineVariantProjectionAnnotation extends
 		AbstractColoredInlineProjectionAnnotation {
 
 	public ColoredInlineVariantProjectionAnnotation(Set<IFeature> features,
-			IProject project, Position pos) {
-		super(features, project, pos);
+			IProject project, Position pos, ProjectionColorManager projectionColorManager) {
+		super(features, project, pos, projectionColorManager);
 		
 	}
 

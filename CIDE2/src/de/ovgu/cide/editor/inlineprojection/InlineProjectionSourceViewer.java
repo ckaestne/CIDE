@@ -402,13 +402,15 @@ public class InlineProjectionSourceViewer extends ProjectionViewer implements
 			fInlineProjectionAnnotationModel = null;
 		}
 
-		projectionAnnotationCalculator.calculateProjectionAnnotations();
-
 		super.setDocument(document, annotationModel, modelRangeOffset,
 				modelRangeLength);
 
 		if (wasProjectionEnabled && document != null)
 			enableInlineProjection();
+
+		if (wasProjectionEnabled && document != null)
+			projectionAnnotationCalculator.calculateProjectionAnnotations();
+
 	}
 
 	/*
