@@ -9,7 +9,6 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.swt.widgets.Shell;
 
-
 import com.ps.consul.eclipse.ui.mapping.Mapping;
 import com.ps.consul.eclipse.ui.mapping.Rule;
 import com.ps.consul.eclipse.ui.mapping.Util;

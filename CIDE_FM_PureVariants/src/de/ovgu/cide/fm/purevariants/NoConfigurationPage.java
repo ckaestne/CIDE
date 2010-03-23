@@ -25,12 +25,12 @@ public class NoConfigurationPage extends AbstractConfigurationPage {
 
 	@Override
 	public Set<IFeature> getNotSelectedFeatures() {
-		return Collections.EMPTY_SET;
+		return Collections.emptySet();
 	}
 
 	@Override
 	public Set<IFeature> getSelectedFeatures() {
-		return Collections.EMPTY_SET;
+		return Collections.emptySet();
 	}
 
 }

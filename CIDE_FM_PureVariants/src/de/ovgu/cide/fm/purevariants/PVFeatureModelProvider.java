@@ -6,7 +6,6 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 
-
 import com.ps.consul.eclipse.ui.mapping.Mapping;
 import com.ps.consul.eclipse.ui.mapping.Util;
 
@@ -67,6 +66,13 @@ public class PVFeatureModelProvider implements IFeatureModelProvider {
 		fm = new PVFeatureModel(mapping, project);
 		cache.put(project, fm);
 		return fm;
+	}
+
+	/**
+	 * no additional files in project
+	 */
+	public boolean isFeatureModelFile(IFile file) {
+		return false;
 	}
 
 }

@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -17,7 +18,7 @@ import com.ps.consul.eclipse.ui.mapping.Mapping;
 import com.ps.consul.eclipse.ui.mapping.Rule;
 import com.ps.xml.ID;
 
-import de.ovgu.cide.af.Alternative;
+import de.ovgu.cide.alternativefeatures.Alternative;
 import de.ovgu.cide.features.IFeature;
 import de.ovgu.cide.features.IFeatureModel;
 import de.ovgu.cide.features.IFeatureModelWithID;
@@ -172,6 +173,13 @@ public class PVStorage implements IStorageProvider {
 			Object annotatedResource, Alternative alternative,
 			Map<String, String> id2oldText) {
 		// TODO Auto-generated method stub
+		return false;
+	}
+
+	/**
+	 * no additional files in project
+	 */
+	public boolean isColorStorageFile(IFile file) {
 		return false;
 	}
 
