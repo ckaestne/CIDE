@@ -2,7 +2,7 @@
 <feature
       id="de.ovgu.cide.samples"
       label="CIDE: Examples (Optional)"
-      version="2.1.0.qualifier"
+      version="2.2.0.qualifier"
       provider-name="Christian Kaestner / University of Magdeburg">
 
    <description url="http://www.fosd.de/cide">
@@ -47,7 +47,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
          id="de.ovgu.cide.samples"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="2.2.0.qualifier"
          unpack="false"/>
 
 </feature>
