@@ -2,7 +2,7 @@
 <feature
       id="de.ovgu.cide.morelanguages"
       label="CIDE: Language Pack (Optional)"
-      version="2.1.0.qualifier"
+      version="2.2.0.qualifier"
       provider-name="Christian Kaestner / University of Magdeburg">
 
    <description url="http://www.fosd.de/cide">
@@ -119,6 +119,13 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 
    <plugin
          id="de.ovgu.cide.language.python"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="de.ovgu.cide.language.manifest"
          download-size="0"
          install-size="0"
          version="0.0.0"
