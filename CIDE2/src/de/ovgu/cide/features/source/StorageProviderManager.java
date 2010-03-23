@@ -60,8 +60,9 @@ public class StorageProviderManager {
 							configurationElement));
 		}
 
-		storageProviders
-				.add(new DefaultStorageProvider().new DefaultStorageProviderProxy());
+		assert !storageProviders.isEmpty();
+//		storageProviders
+//				.add(new DefaultStorageProvider().new DefaultStorageProviderProxy());
 	}
 
 	/**

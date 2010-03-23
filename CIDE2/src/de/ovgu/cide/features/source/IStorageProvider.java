@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -19,9 +20,20 @@ public interface IStorageProvider {
 	 * stores the annotation map to a disk, database, external program or
 	 * whatever
 	 * 
+	 * @param project
+	 * @param annotatedResource
+	 * @param annotations
+	 * @param isOptional
+	 *            only needed for alternatives
+	 * @param parentIDs
+	 *            only needed for alternatives
+	 * @param monitor
 	 * @return whether storage has been successful
+	 * @throws CoreException
 	 */
-	boolean storeAnnotations(IProject project, Object annotatedResource, Map<String, Set<IFeature>> annotations, Map<String, Boolean> isOptional,
+	boolean storeAnnotations(IProject project, Object annotatedResource,
+			Map<String, Set<IFeature>> annotations,
+			Map<String, Boolean> isOptional,
 			Map<String, List<String>> parentIDs, IProgressMonitor monitor)
 			throws CoreException;
 
@@ -35,21 +47,28 @@ public interface IStorageProvider {
 	 */
 	Map<String, Set<IFeature>> readAnnotations(IProject project,
 			Object annotatedResource, IFeatureModel featureModel);
-	
+
 	/**
+	 * used only for alternatives. not used currently.
+	 * 
 	 * stores the given alternative
 	 * 
 	 * @return whether storage has been successful
 	 */
-	boolean storeNewAlternative(IProject project, Object annotatedResource, Alternative alternative, Map<String, String> id2oldText);
-	
+	boolean storeNewAlternative(IProject project, Object annotatedResource,
+			Alternative alternative, Map<String, String> id2oldText);
+
 	/**
+	 * used only for alternatives. not used currently.
+	 * 
 	 * Retrieves all alternatives for all AST-nodes.
+	 * 
 	 * @param project
 	 * @param annotatedResource
 	 * @return
 	 */
-	Map<String, List<Alternative>> getAllAlternatives(IProject project, Object annotatedResource, IFeatureModelWithID featureModel);
+	Map<String, List<Alternative>> getAllAlternatives(IProject project,
+			Object annotatedResource, IFeatureModelWithID featureModel);
 
 	/**
 	 * returns whether this storage manager can be used with the given feature
@@ -59,19 +78,34 @@ public interface IStorageProvider {
 	 * @return
 	 */
 	boolean isCompatible(IFeatureModel featureModel);
-	
+
 	/**
+	 * used only for alternatives. not used currently.
+	 * 
 	 * Activates the given alternative
+	 * 
 	 * @param project
 	 * @param annotatedResource
 	 * @param astID
 	 * @param altID
 	 * @return
 	 */
-	boolean activateAlternative(IProject project, Object annotatedResource, Alternative alternative, Map<String, String> id2oldText);
-	
+	boolean activateAlternative(IProject project, Object annotatedResource,
+			Alternative alternative, Map<String, String> id2oldText);
+
 	/**
+	 * used only for alternatives. not used currently.
+	 * 
 	 * @return If the storage provider can handle alternatives
 	 */
 	boolean canHandleAlternatives();
+
+	/**
+	 * determines whether the given file is a part of the color storage system
+	 * (e.g., .color and .dircolor files)
+	 * 
+	 * @param file
+	 * @return
+	 */
+	boolean isColorStorageFile(IFile file);
 }

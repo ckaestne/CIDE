@@ -21,8 +21,9 @@ import de.ovgu.cide.features.FeatureModelManager;
 import de.ovgu.cide.features.IFeature;
 import de.ovgu.cide.features.IFeatureModel;
 import de.ovgu.cide.features.source.ColoredSourceFile;
-import de.ovgu.cide.features.source.DefaultStorageProvider;
 import de.ovgu.cide.features.source.DirectoryColorManager;
+import de.ovgu.cide.features.source.IStorageProvider;
+import de.ovgu.cide.features.source.StorageProviderManager;
 
 public class CreateConfigurationJob extends WorkspaceJob {
 
@@ -35,6 +36,8 @@ public class CreateConfigurationJob extends WorkspaceJob {
 	private final IProject targetProject;
 
 	private IFeatureModel featureModel;
+
+	private IStorageProvider storageProvider;
 
 	public CreateConfigurationJob(IProject sourceProject,
 			Set<IFeature> selectedFeatures, String projectName) {
@@ -73,6 +76,8 @@ public class CreateConfigurationJob extends WorkspaceJob {
 
 		featureModel = FeatureModelManager.getInstance().getFeatureModelCore(
 				sourceProject);
+		storageProvider = StorageProviderManager.getInstance()
+				.getStorageProvider(sourceProject, featureModel);
 
 		configureProject(sourceProject, targetProject, monitor);
 
@@ -126,11 +131,9 @@ public class CreateConfigurationJob extends WorkspaceJob {
 		if (monitor.isCanceled())
 			return;
 
-		if ("color".equals(file.getFileExtension()))
+		if (FeatureModelManager.getInstance().isFeatureModelFile(file))
 			return;
-		if ("colors".equals(file.getFileExtension()))
-			return;
-		if (DefaultStorageProvider.DIRCOLOR_FILENAME.equals(file.getName()))
+		if (storageProvider.isColorStorageFile(file))
 			return;
 
 		// check whether the whole file is colored and should be removed

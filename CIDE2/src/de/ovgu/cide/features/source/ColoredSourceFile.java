@@ -91,6 +91,7 @@ public class ColoredSourceFile {
 
 	public ISourceFile getAST() throws CoreException, ParseException {
 		assert isColored() : "cannot create AST because file is not colored";
+		if (!isColored()) return null;
 
 		if (astRef != null) {
 			ISourceFile r = astRef.get();

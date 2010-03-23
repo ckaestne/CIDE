@@ -1,5 +1,6 @@
 package de.ovgu.cide.features;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 
 /**
@@ -27,4 +28,13 @@ public interface IFeatureModelProvider {
 	IFeatureModel getFeatureModel(IProject project)
 			throws FeatureModelNotFoundException;
 
+	/**
+	 * returns whether a given file belongs to the feature model representation
+	 * 
+	 * used to exclude such files from certain operations
+	 * 
+	 * @param file
+	 * @return
+	 */
+	boolean isFeatureModelFile(IFile file);
 }

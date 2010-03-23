@@ -1,5 +1,6 @@
 package de.ovgu.cide.features;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -45,6 +46,12 @@ public class FeatureModelProviderProxy implements IFeatureModelProvider {
 		if (target == null)
 			loadTarget();
 		return target.getFeatureModel(project);
+	}
+
+	public boolean isFeatureModelFile(IFile file) {
+		if (target == null)
+			loadTarget();
+		return target.isFeatureModelFile(file);
 	}
 
 }

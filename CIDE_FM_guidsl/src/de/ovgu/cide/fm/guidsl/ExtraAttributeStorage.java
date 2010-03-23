@@ -1,11 +1,7 @@
 package de.ovgu.cide.fm.guidsl;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -79,13 +75,13 @@ public class ExtraAttributeStorage {
 
 	public void setFeatureColor(Feature feature, RGB color) {
 		featureColors.put(getFeatureId(feature), color);
-		featureModel.fireFeatureChanged(feature,ChangeType.COLOR);
+		featureModel.fireFeatureChanged(feature, ChangeType.COLOR);
 		save();
 	}
 
 	public void setFeatureVisibile(Feature feature, boolean isVisible) {
 		featureVisibility.put(getFeatureId(feature), isVisible);
-		featureModel.fireFeatureChanged(feature,ChangeType.VISIBILITY);
+		featureModel.fireFeatureChanged(feature, ChangeType.VISIBILITY);
 		save();
 	}
 
@@ -102,6 +98,7 @@ public class ExtraAttributeStorage {
 
 	private final static long serialVersionUID = 1L;
 
+	@SuppressWarnings("unchecked")
 	private void load() {
 		featureIds = new HashMap<String, Long>();
 		featureColors = new HashMap<Long, RGB>();
@@ -112,17 +109,26 @@ public class ExtraAttributeStorage {
 				return;
 
 			InputStream is = file.getContents(true);
-			ObjectInputStream out = new ObjectInputStream(is);
-			try {
-				long version = out.readLong();
-				if (version != serialVersionUID)
-					return;
+			boolean isXML = is.read() == '<';
+			is = file.getContents(true);
 
-				featureIds = (Map<String, Long>) out.readObject();
-				featureColors = (Map<Long, RGB>) out.readObject();
-				featureVisibility = (Map<Long, Boolean>) out.readObject();
-			} finally {
-				out.close();
+			if (isXML) {
+				XMLReaderWriter.readFile(is, featureIds, featureColors,
+						featureVisibility);
+			} else {
+				// legacy mechanism
+				ObjectInputStream out = new ObjectInputStream(is);
+				try {
+					long version = out.readLong();
+					if (version != serialVersionUID)
+						return;
+
+					featureIds = (Map<String, Long>) out.readObject();
+					featureColors = (Map<Long, RGB>) out.readObject();
+					featureVisibility = (Map<Long, Boolean>) out.readObject();
+				} finally {
+					out.close();
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -131,23 +137,22 @@ public class ExtraAttributeStorage {
 
 	private boolean save() {
 		try {
-			ByteArrayOutputStream b = new ByteArrayOutputStream();
-			ObjectOutputStream out = new ObjectOutputStream(b);
-			out.writeLong(serialVersionUID);
-			out.writeObject(featureIds);
-			out.writeObject(featureColors);
-			out.writeObject(featureVisibility);
-			out.close();
-			ByteArrayInputStream source = new ByteArrayInputStream(b
-					.toByteArray());
+			// ByteArrayOutputStream b = new ByteArrayOutputStream();
+			// ObjectOutputStream out = new ObjectOutputStream(b);
+			// out.writeLong(serialVersionUID);
+			// out.writeObject(featureIds);
+			// out.writeObject(featureColors);
+			// out.writeObject(featureVisibility);
+			// out.close();
+			// ByteArrayInputStream source = new ByteArrayInputStream(b
+			// .toByteArray());
+			InputStream source = XMLReaderWriter.writeFile(featureIds,
+					featureColors, featureVisibility);
 			if (!file.exists())
 				file.create(source, true, null);
 			else
 				file.setContents(source, true, true, null);
 			return true;
-		} catch (IOException e) {
-			e.printStackTrace();
-			return false;
 		} catch (CoreException e) {
 			e.printStackTrace();
 			return false;

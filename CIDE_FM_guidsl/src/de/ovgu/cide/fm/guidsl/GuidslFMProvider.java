@@ -1,5 +1,6 @@
 package de.ovgu.cide.fm.guidsl;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 
 import de.ovgu.cide.features.FeatureModelNotFoundException;
@@ -21,6 +22,11 @@ public class GuidslFMProvider implements IFeatureModelProvider {
 	public IFeatureModel getFeatureModel(IProject project)
 			throws FeatureModelNotFoundException {
 		return new FeatureModelProxy(project);
+	}
+
+	public boolean isFeatureModelFile(IFile file) {
+		return file.getName().equals("model.m")
+				|| file.getName().equals("model.colors");
 	}
 
 }

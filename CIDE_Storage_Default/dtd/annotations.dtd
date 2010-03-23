@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- container element -->
+<!ELEMENT annotations (key*)>
+
+
+<!--for each AST node one of these keys is added which maps the ASTID to all featureids
+
+@param name = ASTID
+@param features = comma separated list of feature ids (long, >=0)-->
+<!ELEMENT key EMPTY>
+<!ATTLIST key
+	name CDATA #REQUIRED 
+	features CDATA #REQUIRED>

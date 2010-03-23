@@ -3,6 +3,7 @@ package de.ovgu.cide.features;
 import java.util.List;
 import java.util.WeakHashMap;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -94,5 +95,9 @@ public class FeatureModelManager extends
 
 	public List<FeatureModelProviderProxy> getFeatureModelProviders() {
 		return getProviders();
+	}
+
+	public boolean isFeatureModelFile(IFile file) {
+		return getActiveFeatureModelProvider().isFeatureModelFile(file);
 	}
 }

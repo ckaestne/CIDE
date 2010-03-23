@@ -84,7 +84,7 @@ public abstract class ColoredSourceFileIteratorJob extends WorkspaceJob {
 		monitor.done();
 	}
 
-	private void processContainer(IContainer container,
+	protected void processContainer(IContainer container,
 			IFeatureModel featureModel, IProgressMonitor monitor)
 			throws CoreException {
 		if (monitor.isCanceled())

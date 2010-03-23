@@ -95,6 +95,12 @@
          </objectState>
       </and>
    </visibility>
+   <action
+         class="de.ovgu.cide.utils.ColorFileUpdater"
+         id="de.ovgu.cide.tools.updatecolorfiles"
+         label="Update Color Files"
+         menubarPath="de.ovgu.cide.projectmenu/de.ovgu.cide.projectmenu.experimental/main">
+   </action>
 		</objectContribution>
 		<objectContribution adaptable="true"
 			id="coloredide.resourceContributions" objectClass="org.eclipse.core.resources.IResource">

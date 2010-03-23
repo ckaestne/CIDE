@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!ELEMENT featuremodelattributes (featureattr*)>
+
+
+<!--for each feature (identified by name) we store 
+* an id (long), 
+* a color (rgb value as long, (blue << 16) | (green << 8) | red) and 
+* whether it is selected (true or false, default = true)-->
+<!ELEMENT featureattr EMPTY>
+<!ATTLIST featureattr
+	name CDATA #REQUIRED
+	id CDATA #REQUIRED
+	color CDATA #IMPLIED
+	selected CDATA #IMPLIED>

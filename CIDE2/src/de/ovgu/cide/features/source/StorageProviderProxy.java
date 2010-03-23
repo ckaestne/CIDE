@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -29,32 +30,49 @@ public class StorageProviderProxy implements IStorageProvider {
 		return target.readAnnotations(project, annotatedResource, featureModel);
 	}
 
-	public boolean storeAnnotations(IProject project, Object annotatedResource, Map<String, Set<IFeature>> annotations, 
-			Map<String, Boolean> isOptional, Map<String, List<String>> parentIDs, IProgressMonitor monitor)
+	public boolean storeAnnotations(IProject project, Object annotatedResource,
+			Map<String, Set<IFeature>> annotations,
+			Map<String, Boolean> isOptional,
+			Map<String, List<String>> parentIDs, IProgressMonitor monitor)
 			throws CoreException {
 		if (target == null)
 			loadTarget();
-		return target.storeAnnotations(project, annotatedResource, annotations, isOptional, parentIDs, monitor);
+		return target.storeAnnotations(project, annotatedResource, annotations,
+				isOptional, parentIDs, monitor);
 	}
-	
-	public boolean activateAlternative(IProject project, Object annotatedResource, Alternative alternative, Map<String, String> id2oldText) {
+
+	public boolean isColorStorageFile(IFile file) {
 		if (target == null)
 			loadTarget();
-		return target.activateAlternative(project, annotatedResource, alternative, id2oldText);
+		return target.isColorStorageFile(file);
 	}
-	
-	public boolean storeNewAlternative(IProject project, Object annotatedResource, Alternative alternative, Map<String, String> id2oldText) {
+
+	public boolean activateAlternative(IProject project,
+			Object annotatedResource, Alternative alternative,
+			Map<String, String> id2oldText) {
 		if (target == null)
 			loadTarget();
-		return target.storeNewAlternative(project, annotatedResource, alternative, id2oldText);
+		return target.activateAlternative(project, annotatedResource,
+				alternative, id2oldText);
 	}
-	
-	public Map<String, List<Alternative>> getAllAlternatives(IProject project, Object annotatedResource, IFeatureModelWithID featureModel) {
+
+	public boolean storeNewAlternative(IProject project,
+			Object annotatedResource, Alternative alternative,
+			Map<String, String> id2oldText) {
 		if (target == null)
 			loadTarget();
-		return target.getAllAlternatives(project, annotatedResource, featureModel);
+		return target.storeNewAlternative(project, annotatedResource,
+				alternative, id2oldText);
 	}
-	
+
+	public Map<String, List<Alternative>> getAllAlternatives(IProject project,
+			Object annotatedResource, IFeatureModelWithID featureModel) {
+		if (target == null)
+			loadTarget();
+		return target.getAllAlternatives(project, annotatedResource,
+				featureModel);
+	}
+
 	public boolean canHandleAlternatives() {
 		if (target == null)
 			loadTarget();
@@ -97,4 +115,5 @@ public class StorageProviderProxy implements IStorageProvider {
 	public String getId() {
 		return id;
 	}
+
 }

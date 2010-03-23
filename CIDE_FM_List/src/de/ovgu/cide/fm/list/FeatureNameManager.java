@@ -20,7 +20,6 @@ import org.eclipse.swt.graphics.RGB;
 
 import de.ovgu.cide.ChangeType;
 import de.ovgu.cide.ColorListChangedEvent;
-import de.ovgu.cide.features.Feature;
 
 /**
  * one feature name manager per project. per project association of feature-id
@@ -30,7 +29,6 @@ import de.ovgu.cide.features.Feature;
  * @author cKaestner
  * 
  */
-@SuppressWarnings("deprecation")
 public class FeatureNameManager {
 
 
@@ -74,10 +72,10 @@ public class FeatureNameManager {
 			if (entry.getKey() instanceof FixedFeature)
 				if (((FixedFeature) entry.getKey()).equals(feature))
 					return entry.getValue();
-		for (Map.Entry<?, T> entry : map.entrySet())
-			if (entry.getKey() instanceof Feature)
-				if (((Feature) entry.getKey()).getId() == feature.getId())
-					return entry.getValue();
+//		for (Map.Entry<?, T> entry : map.entrySet())
+//			if (entry.getKey() instanceof Feature)
+//				if (((Feature) entry.getKey()).getId() == feature.getId())
+//					return entry.getValue();
 
 		return null;
 	}

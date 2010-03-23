@@ -70,4 +70,5 @@ public interface IFeatureModel {
 	 * @return new feature or null
 	 */
 	IFeature createNewFeature() throws UnsupportedOperationException;
+	
 }

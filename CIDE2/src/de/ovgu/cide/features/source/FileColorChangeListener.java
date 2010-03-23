@@ -18,6 +18,9 @@ import de.ovgu.cide.FileColorChangedEvent;
  * FileColorChangedEvent events (which are used to update the colors and filters
  * in the view)
  * 
+ * hack that works only with the default color provider. TODO find a better
+ * solution
+ * 
  * @author ckaestne
  * 
  */
@@ -46,7 +49,7 @@ public class FileColorChangeListener implements IResourceChangeListener {
 			if (((delta.getKind() & (IResourceDelta.ADDED | IResourceDelta.REMOVED)) > 0)
 					|| ((delta.getFlags() & (IResourceDelta.CONTENT)) > 0))
 				if (delta.getResource().getName().equals(
-						DefaultStorageProvider.DIRCOLOR_FILENAME)) {
+						".dircolors")) {
 					IContainer updatedFolder = delta.getResource().getParent();
 					if (updatedFolder != null)
 						folders.add(updatedFolder);

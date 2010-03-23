@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="de.ovgu.cide.core.colorStorageProvider">
+      <storageProvider
+            id="de.ovgu.cide.storage.default"
+            name="Default Storage Provider"
+            provider="de.ovgu.cide.storage.def.DefaultStorageProvider">
+      </storageProvider>
+   </extension>
+
+</plugin>

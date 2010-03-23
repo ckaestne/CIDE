@@ -18,8 +18,6 @@ import de.ovgu.cide.features.IFeature;
 import de.ovgu.cide.features.IFeatureModel;
 import de.ovgu.cide.features.source.ColoredSourceFile;
 import de.ovgu.cide.features.source.DirectoryColorManager;
-import de.ovgu.cide.tools.featureview.ProjectionKindManager;
-import de.ovgu.cide.tools.featureview.ProjectionKindManager.ProjectionKind;
 
 /**
  * shows only files and folders that contain at least one of the visible
