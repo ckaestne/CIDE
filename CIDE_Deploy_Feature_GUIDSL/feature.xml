@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="de.ovgu.cide.guidsl"
-      label="CIDE: GUIDSL Feature Model (Optional)"
-      version="2.1.0.qualifier"
+      label="CIDE: GUIDSL Feature Model (Recommended)"
+      version="2.2.0.qualifier"
       provider-name="Christian Kaestner / University of Magdeburg">
 
    <description url="http://www.fosd.de/cide">
@@ -38,6 +38,11 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
       <discovery label="guidsl Documentation" url="http://www.cs.utexas.edu/users/dsb/fopdocs/guidsl.html"/>
    </url>
 
+   <includes
+         id="de.ovgu.featureide.featuremodeling"
+         version="2.4.0"
+         name="FeatureIDE Feature Model"/>
+
    <requires>
       <import feature="de.ovgu.cide.core" version="2.0.1" match="greaterOrEqual"/>
       <import feature="org.eclipse.jdt" version="3.4.0" match="greaterOrEqual"/>
@@ -47,21 +52,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
          id="de.ovgu.cide.fm.guidsl"
          download-size="0"
          install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="de.ovgu.featureide.fm.core"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="de.ovgu.featureide.fm.ui"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
+         version="2.2.0.qualifier"
          unpack="false"/>
 
 </feature>
