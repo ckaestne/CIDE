@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: CIDE Export for Virutal Separation
 Bundle-Vendor: Christian Kaestner, University of Magdeburg
 Bundle-SymbolicName: de.ovgu.cide.export.virtual;singleton:=true
-Bundle-Version: 2.1.0.qualifier
+Bundle-Version: 2.2.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: de.ovgu.cide.ast;bundle-version="2.1.0",
  de.ovgu.cide.core;bundle-version="2.1.0",
