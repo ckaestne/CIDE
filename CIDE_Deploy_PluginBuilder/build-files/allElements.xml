@@ -12,10 +12,6 @@
 		</ant>
 		<ant antfile="${genericTargets}" target="${target}">
 			<property name="type" value="feature" />
-			<property name="id" value="de.ovgu.cide.guidsl" />
-		</ant>
-		<ant antfile="${genericTargets}" target="${target}">
-			<property name="type" value="feature" />
 			<property name="id" value="de.ovgu.cide.jdt" />
 		</ant>
 		<ant antfile="${genericTargets}" target="${target}">
@@ -34,11 +30,6 @@
 	
 	<!-- generated assemble targets -->	     
 	<target name="assemble.de.ovgu.cide.core">
-		<ant antfile="${assembleScriptName}" dir="${buildDirectory}">
-			<property name="zipargs" value="" />
-		</ant>
-	</target>
-	<target name="assemble.de.ovgu.cide.guidsl">
 		<ant antfile="${assembleScriptName}" dir="${buildDirectory}">
 			<property name="zipargs" value="" />
 		</ant>
@@ -109,6 +100,21 @@
 	<target name="assemble.org.eclipse.pde.build.container.feature.macosx.carbon.x86">
  		<ant antfile="${assembleScriptName}" dir="${buildDirectory}">			
  			<property name="archiveName" value="${archiveNamePrefix}-macosx.carbon.x86.zip"/>
+		</ant>
+	</target>
+	<target name="assemble.org.eclipse.pde.build.container.feature.macosx.cocoa.ppc">
+ 		<ant antfile="${assembleScriptName}" dir="${buildDirectory}">			
+ 			<property name="archiveName" value="${archiveNamePrefix}-macosx.cocoa.ppc.zip"/>
+		</ant>
+	</target>	
+	<target name="assemble.org.eclipse.pde.build.container.feature.macosx.cocoa.x86">
+ 		<ant antfile="${assembleScriptName}" dir="${buildDirectory}">			
+ 			<property name="archiveName" value="${archiveNamePrefix}-macosx.cocoa.x86.zip"/>
+		</ant>
+	</target>	
+	<target name="assemble.org.eclipse.pde.build.container.feature.macosx.cocoa.x86_64">
+ 		<ant antfile="${assembleScriptName}" dir="${buildDirectory}">			
+ 			<property name="archiveName" value="${archiveNamePrefix}-macosx.cocoa.x86_64.zip"/>
 		</ant>
 	</target>	
 </project>
