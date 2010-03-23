@@ -1,10 +1,8 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: CIDE_Import_Antenna
-Bundle-SymbolicName: CIDE_Import_Antenna;singleton:=true
-Bundle-Version: 1.0.0.qualifier
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6,
- J2SE-1.5
+Bundle-Name: CIDE Import for Antenna
+Bundle-SymbolicName: de.ovgu.cide.import.antenna;singleton:=true
+Bundle-Version: 2.2.0.qualifier
 Require-Bundle: org.eclipse.core.resources;bundle-version="3.5.0",
  org.eclipse.jdt.core;bundle-version="3.5.0",
  de.ovgu.cide.ast;bundle-version="2.1.0",
@@ -14,3 +12,4 @@ Require-Bundle: org.eclipse.core.resources;bundle-version="3.5.0",
  org.eclipse.jface,
  org.eclipse.ui;bundle-version="3.5.0",
  org.eclipse.ui.editors
+Bundle-Vendor: Christian Kaestner, University of Magdeburg
