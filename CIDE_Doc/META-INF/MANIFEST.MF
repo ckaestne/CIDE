@@ -2,6 +2,6 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: CIDE Documentation
 Bundle-SymbolicName: de.ovgu.cide.doc;singleton:=true
-Bundle-Version: 2.1.0.qualifier
+Bundle-Version: 2.2.0.qualifier
 Bundle-Vendor: Christian Kaestner, University of Magdeburg
 Require-Bundle: de.ovgu.cide.core;bundle-version="2.1.0"
