@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: CIDE Language Plugin for ECMAScript
 Bundle-SymbolicName: de.ovgu.cide.language.ecmascript;singleton:=true
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 2.2.0.qualifier
 Require-Bundle: de.ovgu.cide.core,
  de.ovgu.cide.ast
 Bundle-Vendor: Christian Kaestner, University of Magdeburg
