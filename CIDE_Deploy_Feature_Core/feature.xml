@@ -2,7 +2,7 @@
 <feature
       id="de.ovgu.cide.core"
       label="CIDE Core (Required)"
-      version="2.1.0.qualifier"
+      version="2.2.0.qualifier"
       provider-name="Christian Kaestner / University of Magdeburg">
 
    <description url="http://www.fosd.de/cide">
@@ -56,56 +56,63 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
          id="de.ovgu.cide.ast"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="2.2.0.qualifier"
          unpack="false"/>
 
    <plugin
          id="de.ovgu.cide.core"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="2.2.0.qualifier"
          unpack="false"/>
 
    <plugin
          id="de.ovgu.cide.fm.list"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="2.2.0.qualifier"
          unpack="false"/>
 
    <plugin
          id="de.ovgu.cide.language.bali"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="2.2.0.qualifier"
          unpack="false"/>
 
    <plugin
          id="de.ovgu.cide.language.properties"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="2.2.0.qualifier"
          unpack="false"/>
 
    <plugin
          id="de.ovgu.cide.language.xml"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="2.2.0.qualifier"
          unpack="false"/>
 
    <plugin
          id="de.ovgu.cide.typing"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="2.2.0.qualifier"
          unpack="false"/>
 
    <plugin
          id="de.ovgu.cide.doc"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="2.2.0.qualifier"
+         unpack="false"/>
+
+   <plugin
+         id="de.ovgu.cide.storage.default"
+         download-size="0"
+         install-size="0"
+         version="2.2.0.qualifier"
          unpack="false"/>
 
 </feature>
