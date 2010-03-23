@@ -2,7 +2,7 @@
 <feature
       id="de.ovgu.cide.jdt"
       label="CIDE: Advanced Java Support (Recommended)"
-      version="2.1.0.qualifier"
+      version="2.2.0.qualifier"
       provider-name="Christian Kaestner / University of Magdeburg">
 
    <description url="http://www.fosd.de/cide">
@@ -47,42 +47,49 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
          id="de.ovgu.cide.language.jdt"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="2.2.0.qualifier"
          unpack="false"/>
 
    <plugin
          id="de.ovgu.cide.import.jak"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="2.2.0.qualifier"
          unpack="false"/>
 
    <plugin
          id="de.ovgu.cide.export.jdt"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="2.2.0.qualifier"
          unpack="false"/>
 
    <plugin
          id="de.ovgu.cide.export.physical"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="2.2.0.qualifier"
          unpack="false"/>
 
    <plugin
          id="de.ovgu.cide.export.virtual"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="2.2.0.qualifier"
          unpack="false"/>
 
    <plugin
          id="de.ovgu.cide.export.xml"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="2.2.0.qualifier"
+         unpack="false"/>
+
+   <plugin
+         id="de.ovgu.cide.import.antenna"
+         download-size="0"
+         install-size="0"
+         version="2.2.0.qualifier"
          unpack="false"/>
 
 </feature>
