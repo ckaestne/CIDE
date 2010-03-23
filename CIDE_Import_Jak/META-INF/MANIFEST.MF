@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: CIDE Import for FeatureHouse
 Bundle-SymbolicName: de.ovgu.cide.import.jak;singleton:=true
-Bundle-Version: 2.1.0.qualifier
+Bundle-Version: 2.2.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: de.ovgu.cide.ast;bundle-version="2.1.0",
  de.ovgu.cide.core;bundle-version="2.1.0",
@@ -12,7 +12,7 @@ Require-Bundle: de.ovgu.cide.ast;bundle-version="2.1.0",
  org.eclipse.core.runtime;bundle-version="3.4.0",
  org.eclipse.text;bundle-version="3.4.0",
  org.eclipse.ui;bundle-version="3.4.1",
- de.ovgu.featureide.fm.core;bundle-version="2.3.0";resolution:=optional
+ de.ovgu.featureide.fm.core;bundle-version="2.3.0"
 Bundle-ClassPath: .,
  lib/FeatureHouse-0.2.jar
 Bundle-Vendor: Christian Kaestner, University of Magdeburg
