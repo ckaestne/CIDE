@@ -2,11 +2,11 @@
 <feature
       id="de.ovgu.cide.purevariantsconnector"
       label="CIDE: pure::variants connector (Optional)"
-      version="2.1.0.qualifier"
+      version="2.2.0.qualifier"
       provider-name="Christian Kaestner / University of Magdeburg">
 
    <description url="http://www.fosd.de/cide">
-      Connector to integrate CIDE with pure::variants. Requires an up to date pure::variants version with the new Mapping API.
+      Connector to integrate CIDE with pure::variants. Requires an installation of pure::variants (www.pure-systems.com).
    </description>
 
    <copyright>
@@ -34,6 +34,8 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 
    <url>
       <update label="CIDE Update Site" url="http://wwwiti.cs.uni-magdeburg.de/iti_db/research/cide/update/"/>
+      <discovery label="Pure Systems" url="http://www.pure-systems.com"/>
+      <discovery label="Pure::variants Update Site" url="http://www.pure-systems.com/pvce-update/"/>
    </url>
 
    <requires>
@@ -49,7 +51,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
          id="de.ovgu.cide.fm.purevariants"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="2.2.0.qualifier"
          unpack="false"/>
 
 </feature>
