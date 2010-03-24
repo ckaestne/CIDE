@@ -3,18 +3,31 @@
 <repository name='CIDE Update Site' type='org.eclipse.equinox.p2.artifact.repository.simpleRepository' version='1.0.0'>
   <properties size='2'>
     <property name='p2.compressed' value='false'/>
-    <property name='p2.timestamp' value='1245772661560'/>
+    <property name='p2.timestamp' value='1269436589971'/>
   </properties>
   <mappings size='3'>
     <rule filter='(&amp; (classifier=osgi.bundle))' output='${repoUrl}/plugins/${id}_${version}.jar'/>
     <rule filter='(&amp; (classifier=binary))' output='${repoUrl}/binary/${id}_${version}'/>
     <rule filter='(&amp; (classifier=org.eclipse.update.feature))' output='${repoUrl}/features/${id}_${version}.jar'/>
   </mappings>
-  <artifacts size='105'>
+  <artifacts size='145'>
+    <artifact classifier='osgi.bundle' id='de.ovgu.featureide.fm.ui' version='2.4.0.201003041050'>
+      <properties size='3'>
+        <property name='artifact.size' value='154776'/>
+        <property name='download.size' value='154776'/>
+        <property name='download.md5' value='e3278b9e4416b368cd63beca78521c29'/>
+      </properties>
+    </artifact>
     <artifact classifier='org.eclipse.update.feature' id='de.ovgu.cide.samples' version='2.1.0.200906231752'>
       <properties size='2'>
         <property name='download.contentType' value='application/zip'/>
         <property name='download.size' value='1245'/>
+      </properties>
+    </artifact>
+    <artifact classifier='osgi.bundle' id='de.ovgu.cide.storage.default' version='2.2.0.201003241414'>
+      <properties size='2'>
+        <property name='artifact.size' value='4096'/>
+        <property name='download.size' value='13540'/>
       </properties>
     </artifact>
     <artifact classifier='osgi.bundle' id='de.ovgu.cide.language.python' version='0.1.0.200906231756'>
@@ -23,16 +36,22 @@
         <property name='download.size' value='303687'/>
       </properties>
     </artifact>
+    <artifact classifier='osgi.bundle' id='de.ovgu.cide.samples' version='2.1.0.200906231756'>
+      <properties size='2'>
+        <property name='artifact.size' value='4096'/>
+        <property name='download.size' value='2214383'/>
+      </properties>
+    </artifact>
     <artifact classifier='osgi.bundle' id='de.ovgu.cide.language.c' version='1.0.0.200906231752'>
       <properties size='2'>
         <property name='artifact.size' value='4096'/>
         <property name='download.size' value='248876'/>
       </properties>
     </artifact>
-    <artifact classifier='osgi.bundle' id='de.ovgu.cide.samples' version='2.1.0.200906231756'>
+    <artifact classifier='org.eclipse.update.feature' id='de.ovgu.cide.jdt' version='2.1.0.200906231756'>
       <properties size='2'>
-        <property name='artifact.size' value='4096'/>
-        <property name='download.size' value='2214383'/>
+        <property name='download.contentType' value='application/zip'/>
+        <property name='download.size' value='1342'/>
       </properties>
     </artifact>
     <artifact classifier='osgi.bundle' id='de.ovgu.cide.language.cs' version='1.0.0.200906231756'>
@@ -41,10 +60,10 @@
         <property name='download.size' value='507406'/>
       </properties>
     </artifact>
-    <artifact classifier='org.eclipse.update.feature' id='de.ovgu.cide.jdt' version='2.1.0.200906231756'>
+    <artifact classifier='osgi.bundle' id='de.ovgu.cide.import.jak' version='2.2.0.201003241414'>
       <properties size='2'>
-        <property name='download.contentType' value='application/zip'/>
-        <property name='download.size' value='1342'/>
+        <property name='artifact.size' value='4096'/>
+        <property name='download.size' value='9513821'/>
       </properties>
     </artifact>
     <artifact classifier='osgi.bundle' id='de.ovgu.cide.export.physical' version='2.1.0.200906231756'>
@@ -71,16 +90,22 @@
         <property name='download.size' value='326384'/>
       </properties>
     </artifact>
+    <artifact classifier='osgi.bundle' id='de.ovgu.cide.language.xml' version='1.0.0.200906231756'>
+      <properties size='2'>
+        <property name='artifact.size' value='4096'/>
+        <property name='download.size' value='96553'/>
+      </properties>
+    </artifact>
     <artifact classifier='osgi.bundle' id='de.ovgu.cide.fm.guidsl' version='2.1.0.200906231756'>
       <properties size='2'>
         <property name='artifact.size' value='4096'/>
         <property name='download.size' value='25221'/>
       </properties>
     </artifact>
-    <artifact classifier='osgi.bundle' id='de.ovgu.cide.language.xml' version='1.0.0.200906231756'>
+    <artifact classifier='org.eclipse.update.feature' id='de.ovgu.cide.core' version='2.2.0.201003241414'>
       <properties size='2'>
-        <property name='artifact.size' value='4096'/>
-        <property name='download.size' value='96553'/>
+        <property name='download.contentType' value='application/zip'/>
+        <property name='download.size' value='1681'/>
       </properties>
     </artifact>
     <artifact classifier='osgi.bundle' id='de.ovgu.featureide.fm.ui' version='2.3.1.200906231752'>
@@ -93,6 +118,12 @@
       <properties size='2'>
         <property name='artifact.size' value='4096'/>
         <property name='download.size' value='507409'/>
+      </properties>
+    </artifact>
+    <artifact classifier='osgi.bundle' id='de.ovgu.cide.export.xml' version='2.2.0.201003241414'>
+      <properties size='2'>
+        <property name='artifact.size' value='4096'/>
+        <property name='download.size' value='14332'/>
       </properties>
     </artifact>
     <artifact classifier='osgi.bundle' id='de.ovgu.cide.language.gcide' version='1.0.0.200906231555'>
@@ -113,10 +144,28 @@
         <property name='download.size' value='236807'/>
       </properties>
     </artifact>
+    <artifact classifier='osgi.bundle' id='de.ovgu.cide.ast' version='2.2.0.201003241414'>
+      <properties size='2'>
+        <property name='artifact.size' value='4096'/>
+        <property name='download.size' value='36711'/>
+      </properties>
+    </artifact>
+    <artifact classifier='osgi.bundle' id='de.ovgu.cide.language.manifest' version='2.2.0.201003241414'>
+      <properties size='2'>
+        <property name='artifact.size' value='4096'/>
+        <property name='download.size' value='32158'/>
+      </properties>
+    </artifact>
     <artifact classifier='org.eclipse.update.feature' id='de.ovgu.cide.morelanguages' version='2.1.0.200906231752'>
       <properties size='2'>
         <property name='download.contentType' value='application/zip'/>
         <property name='download.size' value='1376'/>
+      </properties>
+    </artifact>
+    <artifact classifier='osgi.bundle' id='de.ovgu.cide.language.bali' version='2.2.0.201003241414'>
+      <properties size='2'>
+        <property name='artifact.size' value='4096'/>
+        <property name='download.size' value='99088'/>
       </properties>
     </artifact>
     <artifact classifier='osgi.bundle' id='de.ovgu.cide.language.antlr' version='1.0.0.200906231756'>
@@ -149,6 +198,12 @@
         <property name='download.size' value='174369'/>
       </properties>
     </artifact>
+    <artifact classifier='osgi.bundle' id='de.ovgu.cide.language.capprox' version='2.2.0.201003241414'>
+      <properties size='2'>
+        <property name='artifact.size' value='4096'/>
+        <property name='download.size' value='172146'/>
+      </properties>
+    </artifact>
     <artifact classifier='osgi.bundle' id='de.ovgu.cide.ast' version='2.1.0.200906231756'>
       <properties size='2'>
         <property name='artifact.size' value='4096'/>
@@ -167,6 +222,25 @@
         <property name='download.size' value='139587'/>
       </properties>
     </artifact>
+    <artifact classifier='org.eclipse.update.feature' id='de.ovgu.cide.purevariantsconnector' version='2.2.0.201003241414'>
+      <properties size='2'>
+        <property name='download.contentType' value='application/zip'/>
+        <property name='download.size' value='1262'/>
+      </properties>
+    </artifact>
+    <artifact classifier='osgi.bundle' id='de.ovgu.cide.language.javacc' version='2.2.0.201003241414'>
+      <properties size='2'>
+        <property name='artifact.size' value='4096'/>
+        <property name='download.size' value='464549'/>
+      </properties>
+    </artifact>
+    <artifact classifier='org.eclipse.update.feature' id='de.ovgu.featureide.featuremodeling' version='2.4.0.201003041050'>
+      <properties size='3'>
+        <property name='artifact.size' value='0'/>
+        <property name='download.size' value='7656'/>
+        <property name='download.contentType' value='application/zip'/>
+      </properties>
+    </artifact>
     <artifact classifier='osgi.bundle' id='de.ovgu.cide.language.javacc' version='1.0.0.200906231555'>
       <properties size='2'>
         <property name='artifact.size' value='4096'/>
@@ -179,10 +253,16 @@
         <property name='download.size' value='1221'/>
       </properties>
     </artifact>
-    <artifact classifier='osgi.bundle' id='de.ovgu.cide.export.virtual' version='2.1.0.200906231752'>
+    <artifact classifier='osgi.bundle' id='de.ovgu.cide.export.virtual' version='2.2.0.201003241414'>
       <properties size='2'>
         <property name='artifact.size' value='4096'/>
-        <property name='download.size' value='11305'/>
+        <property name='download.size' value='24475'/>
+      </properties>
+    </artifact>
+    <artifact classifier='osgi.bundle' id='de.ovgu.cide.fm.guidsl' version='2.2.0.201003241414'>
+      <properties size='2'>
+        <property name='artifact.size' value='4096'/>
+        <property name='download.size' value='29104'/>
       </properties>
     </artifact>
     <artifact classifier='osgi.bundle' id='de.ovgu.cide.typing' version='2.1.0.200906231752'>
@@ -191,16 +271,28 @@
         <property name='download.size' value='43744'/>
       </properties>
     </artifact>
-    <artifact classifier='osgi.bundle' id='de.ovgu.cide.export.physical' version='2.1.0.200906231555'>
+    <artifact classifier='osgi.bundle' id='de.ovgu.cide.export.virtual' version='2.1.0.200906231752'>
       <properties size='2'>
         <property name='artifact.size' value='4096'/>
-        <property name='download.size' value='145503'/>
+        <property name='download.size' value='11305'/>
+      </properties>
+    </artifact>
+    <artifact classifier='osgi.bundle' id='de.ovgu.cide.language.cppapprox' version='2.2.0.201003241414'>
+      <properties size='2'>
+        <property name='artifact.size' value='4096'/>
+        <property name='download.size' value='233792'/>
       </properties>
     </artifact>
     <artifact classifier='osgi.bundle' id='de.ovgu.featureide.fm.core' version='2.3.1.200906231555'>
       <properties size='2'>
         <property name='artifact.size' value='4096'/>
         <property name='download.size' value='692313'/>
+      </properties>
+    </artifact>
+    <artifact classifier='osgi.bundle' id='de.ovgu.cide.export.physical' version='2.1.0.200906231555'>
+      <properties size='2'>
+        <property name='artifact.size' value='4096'/>
+        <property name='download.size' value='145503'/>
       </properties>
     </artifact>
     <artifact classifier='osgi.bundle' id='de.ovgu.cide.doc' version='2.1.0.200906231555'>
@@ -221,16 +313,40 @@
         <property name='download.size' value='608857'/>
       </properties>
     </artifact>
+    <artifact classifier='osgi.bundle' id='de.ovgu.featureide.fm.ui' version='2.3.1.200906231756'>
+      <properties size='2'>
+        <property name='artifact.size' value='4096'/>
+        <property name='download.size' value='123220'/>
+      </properties>
+    </artifact>
     <artifact classifier='osgi.bundle' id='de.ovgu.cide.language.java' version='2.1.0.200906231756'>
       <properties size='2'>
         <property name='artifact.size' value='4096'/>
         <property name='download.size' value='383416'/>
       </properties>
     </artifact>
-    <artifact classifier='osgi.bundle' id='de.ovgu.featureide.fm.ui' version='2.3.1.200906231756'>
+    <artifact classifier='osgi.bundle' id='de.ovgu.cide.language.haskell' version='2.2.0.201003241414'>
       <properties size='2'>
         <property name='artifact.size' value='4096'/>
-        <property name='download.size' value='123220'/>
+        <property name='download.size' value='387858'/>
+      </properties>
+    </artifact>
+    <artifact classifier='osgi.bundle' id='de.ovgu.cide.language.c' version='2.2.0.201003241414'>
+      <properties size='2'>
+        <property name='artifact.size' value='4096'/>
+        <property name='download.size' value='245795'/>
+      </properties>
+    </artifact>
+    <artifact classifier='osgi.bundle' id='de.ovgu.cide.language.antlr' version='2.2.0.201003241414'>
+      <properties size='2'>
+        <property name='artifact.size' value='4096'/>
+        <property name='download.size' value='53974'/>
+      </properties>
+    </artifact>
+    <artifact classifier='osgi.bundle' id='de.ovgu.cide.fm.purevariants' version='2.2.0.201003241414'>
+      <properties size='2'>
+        <property name='artifact.size' value='4096'/>
+        <property name='download.size' value='16987'/>
       </properties>
     </artifact>
     <artifact classifier='osgi.bundle' id='de.ovgu.cide.core' version='2.1.0.200906231555'>
@@ -249,6 +365,12 @@
       <properties size='2'>
         <property name='artifact.size' value='4096'/>
         <property name='download.size' value='383414'/>
+      </properties>
+    </artifact>
+    <artifact classifier='osgi.bundle' id='de.ovgu.cide.typing' version='2.2.0.201003241414'>
+      <properties size='2'>
+        <property name='artifact.size' value='4096'/>
+        <property name='download.size' value='42990'/>
       </properties>
     </artifact>
     <artifact classifier='osgi.bundle' id='de.ovgu.cide.samples' version='2.1.0.200906231555'>
@@ -275,10 +397,40 @@
         <property name='download.size' value='43744'/>
       </properties>
     </artifact>
+    <artifact classifier='osgi.bundle' id='de.ovgu.cide.samples' version='2.2.0.201003241414'>
+      <properties size='2'>
+        <property name='artifact.size' value='4096'/>
+        <property name='download.size' value='2204291'/>
+      </properties>
+    </artifact>
     <artifact classifier='org.eclipse.update.feature' id='de.ovgu.cide.jdt' version='2.1.0.200906231555'>
       <properties size='2'>
         <property name='download.contentType' value='application/zip'/>
         <property name='download.size' value='1342'/>
+      </properties>
+    </artifact>
+    <artifact classifier='org.eclipse.update.feature' id='de.ovgu.cide.guidsl' version='2.2.0.201003241414'>
+      <properties size='2'>
+        <property name='download.contentType' value='application/zip'/>
+        <property name='download.size' value='1313'/>
+      </properties>
+    </artifact>
+    <artifact classifier='org.eclipse.update.feature' id='de.ovgu.cide.morelanguages' version='2.2.0.201003241414'>
+      <properties size='2'>
+        <property name='download.contentType' value='application/zip'/>
+        <property name='download.size' value='1373'/>
+      </properties>
+    </artifact>
+    <artifact classifier='osgi.bundle' id='de.ovgu.cide.export.jdt' version='2.2.0.201003241414'>
+      <properties size='2'>
+        <property name='artifact.size' value='4096'/>
+        <property name='download.size' value='29340'/>
+      </properties>
+    </artifact>
+    <artifact classifier='osgi.bundle' id='de.ovgu.cide.language.gcide' version='2.2.0.201003241414'>
+      <properties size='2'>
+        <property name='artifact.size' value='4096'/>
+        <property name='download.size' value='82203'/>
       </properties>
     </artifact>
     <artifact classifier='org.eclipse.update.feature' id='de.ovgu.cide.purevariantsconnector' version='2.1.0.200906231555'>
@@ -305,10 +457,22 @@
         <property name='download.size' value='16907'/>
       </properties>
     </artifact>
+    <artifact classifier='osgi.bundle' id='de.ovgu.cide.language.python' version='2.1.0.201003241414'>
+      <properties size='2'>
+        <property name='artifact.size' value='4096'/>
+        <property name='download.size' value='110554'/>
+      </properties>
+    </artifact>
     <artifact classifier='osgi.bundle' id='de.ovgu.cide.language.jdt' version='2.1.0.200906231555'>
       <properties size='2'>
         <property name='artifact.size' value='4096'/>
         <property name='download.size' value='139602'/>
+      </properties>
+    </artifact>
+    <artifact classifier='osgi.bundle' id='de.ovgu.cide.language.properties' version='2.2.0.201003241414'>
+      <properties size='2'>
+        <property name='artifact.size' value='4096'/>
+        <property name='download.size' value='13839'/>
       </properties>
     </artifact>
     <artifact classifier='org.eclipse.update.feature' id='de.ovgu.cide.guidsl' version='2.1.0.200906231752'>
@@ -335,6 +499,12 @@
         <property name='download.size' value='25221'/>
       </properties>
     </artifact>
+    <artifact classifier='org.eclipse.update.feature' id='de.ovgu.cide.samples' version='2.2.0.201003241414'>
+      <properties size='2'>
+        <property name='download.contentType' value='application/zip'/>
+        <property name='download.size' value='1246'/>
+      </properties>
+    </artifact>
     <artifact classifier='osgi.bundle' id='de.ovgu.featureide.fm.core' version='2.3.1.200906231752'>
       <properties size='2'>
         <property name='artifact.size' value='4096'/>
@@ -345,6 +515,12 @@
       <properties size='2'>
         <property name='artifact.size' value='4096'/>
         <property name='download.size' value='9486096'/>
+      </properties>
+    </artifact>
+    <artifact classifier='osgi.bundle' id='de.ovgu.cide.language.ecmascript' version='2.2.0.201003241414'>
+      <properties size='2'>
+        <property name='artifact.size' value='4096'/>
+        <property name='download.size' value='322706'/>
       </properties>
     </artifact>
     <artifact classifier='osgi.bundle' id='de.ovgu.cide.language.jdt' version='2.1.0.200906231756'>
@@ -429,6 +605,12 @@
       <properties size='2'>
         <property name='download.contentType' value='application/zip'/>
         <property name='download.size' value='1376'/>
+      </properties>
+    </artifact>
+    <artifact classifier='osgi.bundle' id='de.ovgu.cide.language.jdt' version='2.2.0.201003241414'>
+      <properties size='2'>
+        <property name='artifact.size' value='4096'/>
+        <property name='download.size' value='156846'/>
       </properties>
     </artifact>
     <artifact classifier='osgi.bundle' id='de.ovgu.cide.export.jdt' version='2.1.0.200906231756'>
@@ -521,10 +703,28 @@
         <property name='download.size' value='35446'/>
       </properties>
     </artifact>
+    <artifact classifier='osgi.bundle' id='de.ovgu.cide.core' version='2.2.0.201003241414'>
+      <properties size='2'>
+        <property name='artifact.size' value='4096'/>
+        <property name='download.size' value='657743'/>
+      </properties>
+    </artifact>
     <artifact classifier='osgi.bundle' id='de.ovgu.cide.language.antlr' version='1.0.0.200906231555'>
       <properties size='2'>
         <property name='artifact.size' value='4096'/>
         <property name='download.size' value='54979'/>
+      </properties>
+    </artifact>
+    <artifact classifier='osgi.bundle' id='de.ovgu.cide.fm.list' version='2.2.0.201003241414'>
+      <properties size='2'>
+        <property name='artifact.size' value='4096'/>
+        <property name='download.size' value='30643'/>
+      </properties>
+    </artifact>
+    <artifact classifier='osgi.bundle' id='de.ovgu.cide.language.cs' version='2.2.0.201003241414'>
+      <properties size='2'>
+        <property name='artifact.size' value='4096'/>
+        <property name='download.size' value='503056'/>
       </properties>
     </artifact>
     <artifact classifier='osgi.bundle' id='de.ovgu.cide.language.python' version='0.1.0.200906231752'>
@@ -545,6 +745,12 @@
         <property name='download.size' value='31283'/>
       </properties>
     </artifact>
+    <artifact classifier='osgi.bundle' id='de.ovgu.cide.doc' version='2.2.0.201003241414'>
+      <properties size='2'>
+        <property name='artifact.size' value='4096'/>
+        <property name='download.size' value='16113'/>
+      </properties>
+    </artifact>
     <artifact classifier='osgi.bundle' id='de.ovgu.cide.language.properties' version='1.0.0.200906231756'>
       <properties size='2'>
         <property name='artifact.size' value='4096'/>
@@ -555,6 +761,12 @@
       <properties size='2'>
         <property name='artifact.size' value='4096'/>
         <property name='download.size' value='9486096'/>
+      </properties>
+    </artifact>
+    <artifact classifier='osgi.bundle' id='de.ovgu.cide.language.java' version='2.2.0.201003241414'>
+      <properties size='2'>
+        <property name='artifact.size' value='4096'/>
+        <property name='download.size' value='360576'/>
       </properties>
     </artifact>
     <artifact classifier='osgi.bundle' id='de.ovgu.cide.fm.guidsl' version='2.1.0.200906231555'>
@@ -581,6 +793,19 @@
         <property name='download.size' value='174369'/>
       </properties>
     </artifact>
+    <artifact classifier='osgi.bundle' id='de.ovgu.featureide.fm.core' version='2.4.0.201003041050'>
+      <properties size='3'>
+        <property name='artifact.size' value='694712'/>
+        <property name='download.size' value='694712'/>
+        <property name='download.md5' value='8d42139f6b2fdbcb800c6280bf2268af'/>
+      </properties>
+    </artifact>
+    <artifact classifier='osgi.bundle' id='de.ovgu.cide.export.physical' version='2.2.0.201003241414'>
+      <properties size='2'>
+        <property name='artifact.size' value='4096'/>
+        <property name='download.size' value='140864'/>
+      </properties>
+    </artifact>
     <artifact classifier='osgi.bundle' id='de.ovgu.cide.doc' version='2.1.0.200906231752'>
       <properties size='2'>
         <property name='artifact.size' value='4096'/>
@@ -597,6 +822,12 @@
       <properties size='2'>
         <property name='artifact.size' value='4096'/>
         <property name='download.size' value='11305'/>
+      </properties>
+    </artifact>
+    <artifact classifier='osgi.bundle' id='de.ovgu.cide.import.antenna' version='2.2.0.201003241414'>
+      <properties size='2'>
+        <property name='artifact.size' value='4096'/>
+        <property name='download.size' value='11068'/>
       </properties>
     </artifact>
     <artifact classifier='osgi.bundle' id='de.ovgu.cide.fm.purevariants' version='2.1.0.200906231756'>
@@ -623,10 +854,10 @@
         <property name='download.size' value='96554'/>
       </properties>
     </artifact>
-    <artifact classifier='org.eclipse.update.feature' id='de.ovgu.cide.purevariantsconnector' version='2.1.0.200906231752'>
+    <artifact classifier='osgi.bundle' id='de.ovgu.cide.language.xml' version='2.2.0.201003241414'>
       <properties size='2'>
-        <property name='download.contentType' value='application/zip'/>
-        <property name='download.size' value='1221'/>
+        <property name='artifact.size' value='4096'/>
+        <property name='download.size' value='94361'/>
       </properties>
     </artifact>
     <artifact classifier='osgi.bundle' id='de.ovgu.cide.language.cs' version='1.0.0.200906231752'>
@@ -635,10 +866,22 @@
         <property name='download.size' value='507406'/>
       </properties>
     </artifact>
+    <artifact classifier='org.eclipse.update.feature' id='de.ovgu.cide.purevariantsconnector' version='2.1.0.200906231752'>
+      <properties size='2'>
+        <property name='download.contentType' value='application/zip'/>
+        <property name='download.size' value='1221'/>
+      </properties>
+    </artifact>
     <artifact classifier='osgi.bundle' id='de.ovgu.cide.language.antlr' version='1.0.0.200906231752'>
       <properties size='2'>
         <property name='artifact.size' value='4096'/>
         <property name='download.size' value='54981'/>
+      </properties>
+    </artifact>
+    <artifact classifier='org.eclipse.update.feature' id='de.ovgu.cide.jdt' version='2.2.0.201003241414'>
+      <properties size='2'>
+        <property name='download.contentType' value='application/zip'/>
+        <property name='download.size' value='1374'/>
       </properties>
     </artifact>
   </artifacts>

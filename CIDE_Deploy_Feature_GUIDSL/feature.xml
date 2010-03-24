@@ -40,8 +40,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 
    <includes
          id="de.ovgu.featureide.featuremodeling"
-         version="2.4.0"
-         name="FeatureIDE Feature Model"/>
+         version="0.0.0"/>
 
    <requires>
       <import feature="de.ovgu.cide.core" version="2.0.1" match="greaterOrEqual"/>
