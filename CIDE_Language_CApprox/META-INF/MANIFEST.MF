@@ -5,6 +5,5 @@ Bundle-SymbolicName: de.ovgu.cide.language.capprox;singleton:=true
 Bundle-Version: 2.2.0.qualifier
 Export-Package: tmp.generated_capprox
 Require-Bundle: de.ovgu.cide.ast,
- de.ovgu.cide.core,
- org.junit4;bundle-version="4.5.0";resolution:=optional
+ de.ovgu.cide.core
 Bundle-Vendor: Christian Kaestner, University of Magdeburg
