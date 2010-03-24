@@ -58,7 +58,7 @@ public abstract class CFJTypingCheck implements ITypingCheck {
 		return Severity.ERROR;
 	}
 	
-	@Override
+	
 	public IASTNode getSource() {
 		return source;
 	}

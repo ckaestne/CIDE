@@ -43,10 +43,8 @@ public class CFJTypingProvider extends AbstractFileBasedTypingProvider {
 			final CFJTypingManager typingManager = !handleAlternatives ? new CFJTypingManager(file) : null;
 			
 			file.getAST().accept(new IASTVisitor() {
-				@Override
 				public void postVisit(IASTNode node) { }
 
-				@Override
 				public boolean visit(IASTNode node) {
 					if (node != null) {
 						if (node instanceof MethodDeclaration) {
@@ -78,10 +76,8 @@ public class CFJTypingProvider extends AbstractFileBasedTypingProvider {
 		return checks;
 	}
 
-	@Override
 	public void prepareReevaluation(Collection<ColoredSourceFile> files, IProgressMonitor monitor) { }
 
-	@Override
 	public void prepareReevaluationAll(IProgressMonitor monitor) { }
 	
 	@Override

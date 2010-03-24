@@ -23,10 +23,10 @@ public class FindTypeDeclarationVisitor implements IASTVisitor {
 		return typeDeclaration;
 	}
 
-	@Override
+	
 	public void postVisit(IASTNode node) { }
 	
-	@Override
+	
 	public boolean visit(IASTNode node) {
 		if (continueSearch && (node instanceof TypeDeclaration) && (identifier.equals(((TypeDeclaration) node).getIdentifier().getValue()))) {
 			typeDeclaration = (TypeDeclaration) node;

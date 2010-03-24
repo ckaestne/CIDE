@@ -28,7 +28,6 @@ public class CFJMethodTypingCheck extends CFJTypingCheck {
 		this.methodDeclaration = methodDeclaration;
 	}
 
-	@Override
 	public boolean evaluate(IEvaluationStrategy strategy) {
 		IFeatureModel fm = file.getFeatureModel();
 		SourceFileColorManager colorManager = file.getColorManager();
@@ -84,7 +83,6 @@ public class CFJMethodTypingCheck extends CFJTypingCheck {
 		return true;
 	}
 
-	@Override
 	public String getProblemType() {
 		return "de.ovgu.cide.typing.fj.methodtyping";
 	}

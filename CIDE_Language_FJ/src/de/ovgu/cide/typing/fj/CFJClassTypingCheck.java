@@ -37,8 +37,7 @@ public class CFJClassTypingCheck extends CFJTypingCheck {
 		this.typeDeclaration = typeDeclaration;
 	}
 
-	@Override
-	public boolean evaluate(IEvaluationStrategy strategy) {
+public boolean evaluate(IEvaluationStrategy strategy) {
 		
 		// (L.2) wird hier nicht direkt geprüft, da es mittelbar über die Konstruktor-Checks mitgeprüft wird
 		
@@ -331,7 +330,6 @@ public class CFJClassTypingCheck extends CFJTypingCheck {
 		return ((nrOwnFields == nrFieldAssigns) && (nrFieldAssigns == nrOwnConstructorParameters));
 	}
 
-	@Override
 	public String getProblemType() {
 		return "de.ovgu.cide.typing.fj.classtyping";
 	}
