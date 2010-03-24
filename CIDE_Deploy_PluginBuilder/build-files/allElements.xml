@@ -22,6 +22,14 @@
 			<property name="type" value="feature" />
 			<property name="id" value="de.ovgu.cide.samples" />
 		</ant>
+		<ant antfile="${genericTargets}" target="${target}">
+			<property name="type" value="feature" />
+			<property name="id" value="de.ovgu.cide.guidsl" />
+		</ant>
+		<ant antfile="${genericTargets}" target="${target}">
+			<property name="type" value="feature" />
+			<property name="id" value="de.ovgu.cide.purevariantsconnector" />
+		</ant>
 		
 	</target>
 
@@ -86,6 +94,34 @@
 		</ant>
 	</target>
 	<target name="assemble.de.ovgu.cide.samples.group.group.group">
+		<ant antfile="${assembleScriptName}" dir="${buildDirectory}">
+			<property name="zipargs" value="" />
+		</ant>
+	</target>	<target name="assemble.de.ovgu.cide.guidsl">
+		<ant antfile="${assembleScriptName}" dir="${buildDirectory}">
+			<property name="zipargs" value="" />
+		</ant>
+	</target>
+	<target name="assemble.de.ovgu.cide.guidsl.p2">
+		<ant antfile="${assembleScriptName}" dir="${buildDirectory}">
+			<property name="zipargs" value="" />
+		</ant>
+	</target>
+	<target name="assemble.de.ovgu.cide.guidsl.group.group.group">
+		<ant antfile="${assembleScriptName}" dir="${buildDirectory}">
+			<property name="zipargs" value="" />
+		</ant>
+	</target>	<target name="assemble.de.ovgu.cide.purevariantsconnector">
+		<ant antfile="${assembleScriptName}" dir="${buildDirectory}">
+			<property name="zipargs" value="" />
+		</ant>
+	</target>
+	<target name="assemble.de.ovgu.cide.purevariantsconnector.p2">
+		<ant antfile="${assembleScriptName}" dir="${buildDirectory}">
+			<property name="zipargs" value="" />
+		</ant>
+	</target>
+	<target name="assemble.de.ovgu.cide.purevariantsconnector.group.group.group">
 		<ant antfile="${assembleScriptName}" dir="${buildDirectory}">
 			<property name="zipargs" value="" />
 		</ant>

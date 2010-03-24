@@ -31,3 +31,7 @@ plugin@de.ovgu.cide.language.python=COPY,/vol1/teamcity_itidb/TeamCity/buildAgen
 plugin@de.ovgu.cide.language.manifest=COPY,/vol1/teamcity_itidb/TeamCity/buildAgent/work/cide,CIDE_Language_Manifest
 feature@de.ovgu.cide.samples=COPY,/vol1/teamcity_itidb/TeamCity/buildAgent/work/cide,CIDE_Deploy_Feature_Samples
 plugin@de.ovgu.cide.samples=COPY,/vol1/teamcity_itidb/TeamCity/buildAgent/work/cide,CIDE_Samples
+feature@de.ovgu.cide.guidsl=COPY,/vol1/teamcity_itidb/TeamCity/buildAgent/work/cide,CIDE_Deploy_Feature_GUIDSL
+plugin@de.ovgu.cide.fm.guidsl=COPY,/vol1/teamcity_itidb/TeamCity/buildAgent/work/cide,CIDE_FM_guidsl
+feature@de.ovgu.cide.purevariantsconnector=COPY,/vol1/teamcity_itidb/TeamCity/buildAgent/work/cide,CIDE_Deploy_Feature_PV
+plugin@de.ovgu.cide.fm.purevariants=COPY,/vol1/teamcity_itidb/TeamCity/buildAgent/work/cide,CIDE_FM_PureVariants
