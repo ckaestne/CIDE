@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: CIDE_Language_CPPApprox_test
+Bundle-SymbolicName: de.ovgu.cide.language.cppapprox-test
+Bundle-Version: 1.0.0.qualifier
+Fragment-Host: de.ovgu.cide.language.cppapprox;bundle-version="2.2.0"
+Require-Bundle: de.ovgu.cide.ast,
+ de.ovgu.cide.core,
+ org.junit4;bundle-version="4.5.0";resolution:=optional
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
