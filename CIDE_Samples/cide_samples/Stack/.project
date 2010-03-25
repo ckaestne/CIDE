@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+	<name>Stack</name>
+		<comment>
+		[description]Simple Stack example to illustrate CIDE's features.[/description]
+		[requirementcategory] 
+			[categoryname]de.ovgu.cide.languages[/categoryname]
+			[requirement]
+				[pluginid]de.ovgu.cide.language.jdt[/pluginid] 
+				[errormsg]CIDE Java 1.6 (Eclipse JDT based) Language Extension is not installed or disabled.[/errormsg] 
+			[/requirement]
+		[/requirementcategory]
+		[requirementcategory]
+			[categoryname]de.ovgu.cide.features[/categoryname]
+			[requirement]
+				[pluginid]de.ovgu.cide.fm.guidsl[/pluginid] 
+				[errormsg]CIDE guidsl Feature Model Plugin is not installed or disabled.[/errormsg] 
+			[/requirement]
+		[/requirementcategory]
+	</comment>
+	<projects>
+	</projects>
+	<buildSpec>
+		<buildCommand>
+			<name>org.eclipse.jdt.core.javabuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+	</buildSpec>
+	<natures>
+		<nature>org.eclipse.jdt.core.javanature</nature>
+		<nature>de.ovgu.cide.core.CIDEProjectNature</nature>
+	</natures>
+</projectDescription>

@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><!DOCTYPE featuremodelattributes SYSTEM "featuremodelattributes.dtd">
+<featuremodelattributes><featureattr name="Logging" id="2" selected="true"/><featureattr name="SPL" id="6" selected="true"/><featureattr name="Statistics" id="3" selected="true"/><featureattr name="PP" id="4" selected="true"/><featureattr name="P" id="5" selected="true"/><featureattr name="Locking" id="1" selected="true"/></featuremodelattributes>
