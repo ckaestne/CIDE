@@ -35,5 +35,6 @@
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 		<nature>net.sourceforge.metrics.nature</nature>
+		<nature>de.ovgu.cide.core.CIDEProjectNature</nature>
 	</natures>
 </projectDescription>
