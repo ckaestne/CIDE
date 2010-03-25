@@ -9,7 +9,7 @@ import de.ovgu.cide.features.IFeatureModel;
 public class ToggleAllFeatureVisibility extends Action {
 
 	private final IFeatureModel featureModel;
-	private final boolean visible;
+	protected final boolean visible;
 
 	public ToggleAllFeatureVisibility(IFeatureModel featureModel, boolean select) {
 

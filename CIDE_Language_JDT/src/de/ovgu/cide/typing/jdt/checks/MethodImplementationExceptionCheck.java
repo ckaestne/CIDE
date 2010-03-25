@@ -1,5 +1,6 @@
 package de.ovgu.cide.typing.jdt.checks;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.jdt.core.dom.IMethodBinding;
@@ -48,7 +49,6 @@ public class MethodImplementationExceptionCheck extends AbstractJDTTypingCheck {
 			boolean excImplies = false;
 			for (String tmpKey : tmpItem.getInheritedExceptionKeys(
 					methodBinding).get(excKey)) {
-
 				// checks for each overridden method the implies condition
 				if (strategy.implies(file.getFeatureModel(), file
 						.getColorManager().getColors(source), typingProvider

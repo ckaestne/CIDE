@@ -48,25 +48,34 @@ public class EvaluationStrategyProxy implements IEvaluationStrategy {
 		return target.equal(featureModel, source, targete);
 	}
 
+	public boolean equal(IFeatureModel featureModel, Set<IFeature> context,
+			Set<IFeature> source, Set<IFeature> targete) {
+		if (target == null)
+			loadTarget();
+		return target.equal(featureModel, context, source, targete);
+	}
+
 	public boolean implies(IFeatureModel featureModel, Set<IFeature> source,
 			Set<IFeature> targete) {
 		if (target == null)
 			loadTarget();
 		return target.implies(featureModel, source, targete);
 	}
-	
-	public boolean areMutualExclusive(IFeatureModel featureModel, Set<IFeature> context, List<Set<IFeature>> featureSets) {
+
+	public boolean areMutualExclusive(IFeatureModel featureModel,
+			Set<IFeature> context, List<Set<IFeature>> featureSets) {
 		if (target == null)
 			loadTarget();
 		return target.areMutualExclusive(featureModel, context, featureSets);
 	}
-	
-	public boolean mayBeMissing(IFeatureModel featureModel, Set<IFeature> context, List<Set<IFeature>> featureSets) {
+
+	public boolean mayBeMissing(IFeatureModel featureModel,
+			Set<IFeature> context, List<Set<IFeature>> featureSets) {
 		if (target == null)
 			loadTarget();
 		return target.mayBeMissing(featureModel, context, featureSets);
 	}
-	
+
 	public boolean exists(IFeatureModel featureModel, Set<IFeature> features) {
 		if (target == null)
 			loadTarget();
@@ -82,4 +91,5 @@ public class EvaluationStrategyProxy implements IEvaluationStrategy {
 			loadTarget();
 		target.clearCache(featureModel);
 	}
+
 }

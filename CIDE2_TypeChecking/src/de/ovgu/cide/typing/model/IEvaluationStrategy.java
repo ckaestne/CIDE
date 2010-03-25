@@ -30,7 +30,8 @@ public interface IEvaluationStrategy {
 	 *         false if there is any variant in which source occurs but not
 	 *         target
 	 */
-	boolean implies(IFeatureModel featureModel, Set<IFeature> source, Set<IFeature> target);
+	boolean implies(IFeatureModel featureModel, Set<IFeature> source,
+			Set<IFeature> target);
 
 	/**
 	 * annotation on source is equivalent to the annotation on target
@@ -41,14 +42,33 @@ public interface IEvaluationStrategy {
 	 * @param target
 	 * @return true if source and target occur in exactly the same variants
 	 */
-	boolean equal(IFeatureModel featureModel, Set<IFeature> source, Set<IFeature> target);
-	
+	boolean equal(IFeatureModel featureModel, Set<IFeature> source,
+			Set<IFeature> target);
+
 	/**
-	 * Checks whether there exists a set of features that is valid within the feature model, so that all given features are present.
+	 * annotation on source is equivalent to the annotation on target under the
+	 * given context ("for the subset of variants in which context is true,
+	 * source and target are present in the same variants" , C implies (A
+	 * implies B and B implies A)).
+	 * 
+	 * (when two contexts are needed (A and B implies (C equals D)), it is
+	 * sufficient to provide the union of both contexts as context)
+	 * 
+	 * @param context
+	 *            a condition that must be true when comparing source and target
+	 * @param source
+	 * @param target
+	 * @return true if source and target occur in exactly the same variants
+	 */
+	boolean equal(IFeatureModel featureModel, Set<IFeature> context,
+			Set<IFeature> source, Set<IFeature> target);
+
+	/**
+	 * Checks whether there exists a set of features that is valid within the
+	 * feature model, so that all given features are present.
 	 * 
 	 * In detail it is checked whether there exists a set F of features so that
-	 * 		eval(FM, F) AND eval(feature_1, F) AND eval(feature_n, F)
-	 * is true.
+	 * eval(FM, F) AND eval(feature_1, F) AND eval(feature_n, F) is true.
 	 * 
 	 * @param featureModel
 	 * @param features
@@ -56,54 +76,55 @@ public interface IEvaluationStrategy {
 	 * @return true if there exists such a set of features || false, otherwise
 	 */
 	boolean exists(IFeatureModel featureModel, Set<IFeature> features);
-	
+
 	/**
-	 * Checks whether the given featureSets are mutually exclusive in the given context and for the current feature model.
+	 * Checks whether the given featureSets are mutually exclusive in the given
+	 * context and for the current feature model.
 	 * 
-	 * In detail it is checked whether
-	 * 		FM => (context => (at most one of the featureSets are present))
-	 * is a tautology.
+	 * In detail it is checked whether FM => (context => (at most one of the
+	 * featureSets are present)) is a tautology.
 	 * 
-	 * Here is an example for a truth table of "at most one the featureSets are present" for three feature sets A, B and C:
+	 * Here is an example for a truth table of
+	 * "at most one the featureSets are present" for three feature sets A, B and
+	 * C:
 	 * 
-	 * A	B	 C		result
-	 * ------------------------
-	 * T	T	 T		  F
-	 * T	T	 F		  F
-	 * T	F	 T		  F
-	 * T	F	 F		  T
-	 * F	T	 T		  F
-	 * F	T	 F		  T
-	 * F	F	 T		  T
-	 * F	F	 F		  T
+	 * A B C result ------------------------ T T T F T T F F T F T F T F F T F T
+	 * T F F T F T F F T T F F F T
 	 * 
-	 * If you want to check XOR(featureSet_1, ..., featureSet_n) you can call areMutualExclusive() && !mayBeMissing().
+	 * If you want to check XOR(featureSet_1, ..., featureSet_n) you can call
+	 * areMutualExclusive() && !mayBeMissing().
 	 * 
 	 * @param featureModel
 	 * @param context
 	 * @param featureSets
 	 * 
-	 * @return true, if the feature sets are mutually exclusive || false, otherwise
+	 * @return true, if the feature sets are mutually exclusive || false,
+	 *         otherwise
 	 */
-	boolean areMutualExclusive(IFeatureModel featureModel, Set<IFeature> context, List<Set<IFeature>> featureSets);
-	
+	boolean areMutualExclusive(IFeatureModel featureModel,
+			Set<IFeature> context, List<Set<IFeature>> featureSets);
+
 	/**
-	 * Checks whether there exists a set of features that is valid within the feature model and the given context, so that none of the given
-	 * feature sets are present, i.e. evaluate to true.
+	 * Checks whether there exists a set of features that is valid within the
+	 * feature model and the given context, so that none of the given feature
+	 * sets are present, i.e. evaluate to true.
 	 * 
 	 * In detail it is checked whether there exists a set F of features so that
-	 * 		eval(FM, F) AND eval(context, F) AND NOT(eval(featureSet_1, F)) AND ... AND NOT(eval(featureSet_n, F))
-	 * is true.
+	 * eval(FM, F) AND eval(context, F) AND NOT(eval(featureSet_1, F)) AND ...
+	 * AND NOT(eval(featureSet_n, F)) is true.
 	 * 
-	 * If you want to check XOR(featureSet_1, ..., featureSet_n) you can call areMutualExclusive() && !mayBeMissing().
+	 * If you want to check XOR(featureSet_1, ..., featureSet_n) you can call
+	 * areMutualExclusive() && !mayBeMissing().
 	 * 
 	 * @param featureModel
 	 * @param context
 	 * @param featureSets
 	 * 
-	 * @return true, if there exists such a set of features, i.e. if the code-fragment may be missing || false, otherwise
+	 * @return true, if there exists such a set of features, i.e. if the
+	 *         code-fragment may be missing || false, otherwise
 	 */
-	boolean mayBeMissing(IFeatureModel featureModel, Set<IFeature> context, List<Set<IFeature>> featureSets);
+	boolean mayBeMissing(IFeatureModel featureModel, Set<IFeature> context,
+			List<Set<IFeature>> featureSets);
 
 	/**
 	 * information for caching models that the feature model has changed and the

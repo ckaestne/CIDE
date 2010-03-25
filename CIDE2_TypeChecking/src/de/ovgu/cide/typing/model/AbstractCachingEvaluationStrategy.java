@@ -1,6 +1,7 @@
 package de.ovgu.cide.typing.model;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.WeakHashMap;
@@ -29,6 +30,18 @@ public abstract class AbstractCachingEvaluationStrategy implements
 			Set<IFeature> target) {
 		return implies(featureModel, source, target)
 				&& implies(featureModel, target, source);
+	}
+
+	public boolean equal(IFeatureModel featureModel, Set<IFeature> context,
+			Set<IFeature> source, Set<IFeature> target) {
+
+		HashSet<IFeature> sourceWithContext = new HashSet<IFeature>(source);
+		sourceWithContext.addAll(context);
+		HashSet<IFeature> targetWithContext = new HashSet<IFeature>(target);
+		targetWithContext.addAll(context);
+
+		return implies(featureModel, sourceWithContext, target)
+				&& implies(featureModel, targetWithContext, source);
 	}
 
 	/**

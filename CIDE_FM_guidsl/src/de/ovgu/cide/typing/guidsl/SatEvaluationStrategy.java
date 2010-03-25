@@ -86,6 +86,8 @@ public class SatEvaluationStrategy extends AbstractCachingEvaluationStrategy {
 			return true;
 		}
 	}
+	
+	
 
 	public boolean areMutualExclusive(IFeatureModel featureModel,
 			Set<IFeature> context, List<Set<IFeature>> featureSets) {
@@ -168,4 +170,6 @@ public class SatEvaluationStrategy extends AbstractCachingEvaluationStrategy {
 
 		return guidslFeatures;
 	}
+
+	
 }

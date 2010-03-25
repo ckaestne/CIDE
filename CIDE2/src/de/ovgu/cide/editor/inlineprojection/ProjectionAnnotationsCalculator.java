@@ -278,7 +278,7 @@ public class ProjectionAnnotationsCalculator {
 	 */
 	private void cleanSegments(List<CodeSegment> segments, String fileContent) {
 		for (Iterator<CodeSegment> iterator = segments.iterator(); iterator
-				.hasNext();) {
+				.hasNext();) try{
 			CodeSegment codeSegment = iterator.next();
 			String code = fileContent.substring(codeSegment.offset, codeSegment
 					.endPosition());
@@ -287,7 +287,7 @@ public class ProjectionAnnotationsCalculator {
 					+ codeSegment.getColors());
 			if (code.trim().length() == 0)
 				iterator.remove();
-		}
+		}catch (StringIndexOutOfBoundsException e){}
 
 	}
 

@@ -370,7 +370,9 @@ public class FeatureView extends ViewPart {
 		selectAllAction = new ToggleAllFeatureVisibility(featureModel, true) {
 			@Override
 			public void run() {
-				super.run();
+				for (IFeature feature : featureModel.getFeatures()) {
+					feature.setVisible(visible);
+				}
 				updateValidPanel();
 			}
 		};
@@ -380,7 +382,9 @@ public class FeatureView extends ViewPart {
 		selectNoneAction = new ToggleAllFeatureVisibility(featureModel, false) {
 			@Override
 			public void run() {
-				super.run();
+				for (IFeature feature : featureModel.getFeatures()) {
+					feature.setVisible(visible);
+				}
 				updateValidPanel();
 			}
 		};

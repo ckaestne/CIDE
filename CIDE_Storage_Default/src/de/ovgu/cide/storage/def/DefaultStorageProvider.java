@@ -62,14 +62,13 @@ public class DefaultStorageProvider implements IStorageProvider {
 				return new HashMap<String, Set<IFeature>>();
 
 			InputStream is = colorFile.getContents(true);
-			boolean isXML=is.read() == '<';
-			
+			boolean isXML = is.read() == '<';
+
 			is = colorFile.getContents(true);
 			// check for XML file
-			if (isXML) 
+			if (isXML)
 				return CIDEXMLReader.loadFeatureMap(new InputStreamReader(is),
 						(IFeatureModelWithID) featureModel);
-			
 
 			// otherwise legacy formats
 			ObjectInputStream out = new ObjectInputStream(is);
@@ -114,8 +113,8 @@ public class DefaultStorageProvider implements IStorageProvider {
 		assert project != null;
 		IFile colorFile = getColorFile(annotatedResource);
 
-		boolean skipStorage = annotations.isEmpty() && !colorFile.exists();
-		if (!skipStorage) {
+		boolean skipStorage = !containsColors(annotations);
+		if (!skipStorage || colorFile.exists()) {
 			InputStream source = new CIDEXMLWriter()
 					.serializeAnnotations(annotations);
 			if (!colorFile.exists())
@@ -123,11 +122,18 @@ public class DefaultStorageProvider implements IStorageProvider {
 			else
 				colorFile.setContents(source, true, true, monitor);
 			// System.out.println("saving color file " + colorFile);
-		} else {
-			if (colorFile.exists())
-				colorFile.delete(true, monitor);
 		}
+		if (skipStorage && colorFile.exists())
+			colorFile.delete(true, false, monitor);
+
 		return true;
+	}
+
+	private boolean containsColors(Map<String, Set<IFeature>> annotations) {
+		for (Set<IFeature> colors : annotations.values())
+			if (!colors.isEmpty())
+				return true;
+		return false;
 	}
 
 	public boolean isCompatible(IFeatureModel featureModel) {

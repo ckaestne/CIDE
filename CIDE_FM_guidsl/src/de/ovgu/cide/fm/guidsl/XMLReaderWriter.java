@@ -152,7 +152,7 @@ public class XMLReaderWriter {
 	}
 
 	protected static RGB getRGB(long color) {
-		return new RGB(color & 255, (color >> 8) & 255, (color >> 16) & 255);
+		return new RGB((byte)color & 255,(byte) (color >> 8) & 255, (byte)(color >> 16) & 255);
 	}
 
 	protected static long getLong(RGB color) {
