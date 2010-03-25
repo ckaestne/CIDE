@@ -23,5 +23,6 @@
 	<buildSpec>
 	</buildSpec>
 	<natures>
+		<nature>de.ovgu.cide.core.CIDEProjectNature</nature>
 	</natures>
 </projectDescription>
