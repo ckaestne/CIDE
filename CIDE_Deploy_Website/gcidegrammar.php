@@ -12,7 +12,7 @@
   
   
   
-  <title>The gCIDE Grammar Specification Language</title>
+  <title>The FeatureBNF Grammar Specification Language (formerly gCIDE)</title>
   <link href="ar.css" rel="stylesheet" type="text/css" />
 
 
@@ -29,7 +29,7 @@
 	
 	
 	
-<h1>The gCIDE Grammar Specification Language</h1>
+<h1>The FeatureBNF Grammar Specification Language (formerly gCIDE)</h1>
 
 
 
@@ -38,7 +38,7 @@
 
 
 
-<p>To create a language plug-in for <a href="http://wwwiti.cs.uni-magdeburg.de/iti_db/research/cide">CIDE</a>, the gCIDE grammar for that language is processed by <em>astgen</em>. 
+<p>To create a language plug-in for <a href="http://wwwiti.cs.uni-magdeburg.de/iti_db/research/cide">CIDE</a>, the FeatureBNF grammar for that language is processed by <em>astgen</em>. 
 This tool generates classes for an AST and a JavaCC grammar, that has to be subsequentially processed
 by <a href="https://javacc.dev.java.net">JavaCC</a> to create a parser. Finally the generated classes are adapted for the 
 <em>de.ovgu.cide.core.language</em> extension point using the <em>ILanguageExtension</em> interface.</p>

@@ -39,8 +39,12 @@ margin-top:8px;
 	font-size: 90%;
 	font-family: "Courier New", Courier, monospace;
 }
-.abstract {
+p {
 	text-align: justify;
+	width: 85%;
+}
+.ccontainer {
+	text-align: center;
 	width: 85%;
 }
 .link {
@@ -64,6 +68,8 @@ samp {
 	font-size: 90%;
 	font-family: "Courier New", Courier, monospace;
 }
+
+body {font-family: Helvetica,Arial,sans-serif;line-height:148%}
 
 // a:link { color:#0066FF; text-decoration:none; }
 // a:visited { color:#0066FF; text-decoration:none; }
