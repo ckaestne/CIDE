@@ -248,8 +248,8 @@ public class ProjectionAnnotationsCalculator {
 			Set<IFeature> color = determineLineColors(posStart, posStart
 					+ length, line.toCharArray(), plainSegments);
 
-			System.out.println("segment " + posStart + " - "
-					+ (posStart + length) + ": " + line + " -- " + color);
+//			System.out.println("segment " + posStart + " - "
+//					+ (posStart + length) + ": " + line + " -- " + color);
 
 			// if (!color.isEmpty())
 			lineSegments.add(new CodeSegment(posStart, posStart + length,
@@ -261,7 +261,7 @@ public class ProjectionAnnotationsCalculator {
 			length = nextLineBreak(fileContent);
 		}
 
-		System.out.println(plainSegments);
+//		System.out.println(plainSegments);
 
 		// TODO die segmentierung funktioniert nicht gut, da sie zuviel
 		// whitespace mit einschliesst. kann man das eleganter loesen?
@@ -282,9 +282,9 @@ public class ProjectionAnnotationsCalculator {
 			CodeSegment codeSegment = iterator.next();
 			String code = fileContent.substring(codeSegment.offset, codeSegment
 					.endPosition());
-			System.out.println("SEG: " + codeSegment.offset + " - "
-					+ codeSegment.endPosition() + " \"" + code + "\" "
-					+ codeSegment.getColors());
+//			System.out.println("SEG: " + codeSegment.offset + " - "
+//					+ codeSegment.endPosition() + " \"" + code + "\" "
+//					+ codeSegment.getColors());
 			if (code.trim().length() == 0)
 				iterator.remove();
 		}catch (StringIndexOutOfBoundsException e){}
