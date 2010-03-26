@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+
+<project name="MobileMedia OO - Version 8" default="full-build" basedir=".">
+
+	<!-- Define all relevant properties here. -->
+    <property name="workspace.dir" location="${basedir}"/> 
+
+	<property file="labBuild.properties"/>
+
+	<property name="antenna.jar" location="${antenna.home}\\antenna-bin-0.9.12.jar"/> 
+	
+	<!-- Define core MIDP libraries -->
+	<!-- MIDP 1.0 CLDC 1.0 -->
+	<property name="midpapi10.jar" location="${wtk.home}\lib\midpapi10.jar"/> 
+	<property name="cldcapi10.jar" location="${wtk.home}\lib\cldcapi10.jar"/>    
+
+	<!-- MIDP 2.0 CLDC 1.1 -->
+	<property name="midpapi20.jar" location="${wtk.home}\lib\midpapi20.jar"/> 
+	<property name="cldcapi11.jar" location="${wtk.home}\lib\cldcapi11.jar"/> 
+
+	<!-- Define Third Party and optional MIDP Libraries -->		
+	<property name="wma.jar" location="${wtk.home}/lib/wma20.jar"/> 
+	<property name="mmapi.jar" location="${wtk.home}/lib/mmapi.jar"/>
+	<property name="midpapi21.jar" location="${wtk.home}/lib/midpapi21.jar"/>
+	<property name="jsr75.jar" location="${wtk.home}/lib/jsr75.jar"/>
+	
+	<!-- Set the classpath to be used -->
+	<!-- <property name="build.classpath" value="${midpapi20.jar};${cldcapi11.jar};${wma.jar};${mmapi.jar};${jsr75.jar};${moto730.zip};${siemensLib.zip};${blackberryLib.jar};${antenna.jar}"/>-->
+	<property name="build.classpath" value="${midpapi20.jar};${cldcapi11.jar};${wma.jar};${midpapi21.jar};${mmapi.jar};${antenna.jar}"/>
+	
+	<!-- Directories created or used during the build process -->
+	
+	<property name="midp-preprocessed.dir" location="${workspace.dir}/midp-preprocessed"/> 
+	<property name="midp-compiled.dir" location="${workspace.dir}/midp-compiled"/> 
+	<property name="src.dir" location="${workspace.dir}/src"/> 
+	<property name="preverified.dir" location="${workspace.dir}/preverified"/> 
+	<property name="jar.dir" location="${workspace.dir}/jars"/> 
+	<property name="images.dir" location="${workspace.dir}/images"/> 
+
+	<!-- This resource is required for Antenna based tasks -->
+	<!--    <taskdef resource="antenna.properties" classpath="${antenna.jar}"/> -->
+	<taskdef resource="antenna.properties" classpath="C:\user\research\MobileMedia\Antenna\antenna-bin-0.9.15-beta.jar"/>
+    <!-- ============================================================= -->
+    <!-- Full Build (Default Target)								-->
+    <!-- ============================================================= -->
+ 	<target name="full-build">
+		<antcall target="clean" />
+ 		<antcall target="midp-preprocess" />
+		<antcall target="midp-compile" />
+ 		<antcall target="copy-image-files" />
+		<antcall target="midp-preverify" />
+		<antcall target="make-jar" />
+    </target>
+				
+    <!-- ============================================================= -->
+    <!-- Clean all targets                                     			-->
+    <!-- ============================================================= -->
+    <target name="clean" description="clean and create classes/jar dir, .ajesym files">
+      <!-- Delete all the directories and their contents -->
+      <delete quiet="on" dir="${preverified.dir}"/>
+      <delete quiet="on" dir="${midp-compiled.dir}"/>
+      <delete quiet="on" dir="${midp-preprocessed.dir}"/>
+
+      <!-- Update the jar, don't delete it. This is only required for the 
+           Motorola application, which needs the extra property in the jad file -->    	
+      <delete quiet="on">
+	        <fileset dir="${jar.dir}" excludes="**/*.jad"/>
+      </delete>
+
+      <delete quiet="on">
+        <fileset dir="${workspace.dir}" includes="**/*.ajesym"/>
+      </delete>
+    	
+      <!-- Recreate the directories we just deleted -->
+      <mkdir dir="${preverified.dir}"/>
+      <mkdir dir="${midp-preprocessed.dir}/src"/>
+      <mkdir dir="${midp-compiled.dir}"/>
+      <mkdir dir="${jar.dir}"/>
+    </target>
+	
+    <!-- ============================================================= -->
+    <!-- PreProcess MIDP classes using antenna J2ME Preprocessor	   -->
+    <!-- ============================================================= -->
+    <target name="midp-preprocess">
+		<wtkpreprocess srcdir="${src.dir}" destdir="${midp-preprocessed.dir}/src" symbols="${preprocessor.symbols}" verbose="true" indent="false"/>
+    </target>
+
+    <!-- ============================================================= -->
+    <!-- Compile MIDP classes using standard midp (javac) compiler		-->
+    <!-- ============================================================= -->
+    <target name="midp-compile">
+    	<!-- NOTE: This is not used anymore. It has been replaced by the AspectJ Compiler Task -->
+    	
+    	<!-- For Motorola Build, only update jad so it includes property: iDEN-Midlet-Phone: MainUIMidlet10 -->
+        <wtkjad jadfile="${jar.dir}/${jad.name}" jarfile="${midp-compiled.dir}/${jar.name}" name="${midlet.name}" update="true" vendor="Lancaster University" version="1.0.0">
+            <midlet name="${midlet.name}" class="${main.class}"/>
+        </wtkjad>
+
+        <!-- Compile everything, but don't preverify (yet}. Use bootclasspath to override MIDP 1.0/CLDC 1.0 apis-->
+        <wtkbuild srcdir="${midp-preprocessed.dir}" destdir="${midp-compiled.dir}" preverify="true" bootclasspath="${build.classpath};" >
+        	<includesfile name="MobileMediaCompileList.lst"/>        	
+        </wtkbuild>
+
+    	<!-- Package the compiled classes into a JAR and JAD file -->
+    	<!-- Don't need to do this here
+    	<wtkpackage jarfile="${midp-compiled.dir}/${jar.name}" jadfile="${jar.dir}/${jad.name}" obfuscate="false" preverify="false" >
+            <fileset dir="${workspace.dir}" includes="${main.class}.class"/>
+        </wtkpackage>
+		-->
+    </target>
+
+	<!-- ============================================================= -->
+    <!-- Copy Image Files so they are bundled with the jar file       -->
+    <!-- ============================================================= -->		
+	<target name="copy-image-files">
+      	<mkdir dir="${preverified.dir}/images"/>
+  		<copy todir="${preverified.dir}/images">
+    		<fileset dir="${images.dir}"/>
+  		</copy>
+	</target>	
+		
+	<!-- ============================================================= -->
+    <!-- Preverify MIDP classes,                                       -->
+    <!-- ============================================================= -->	
+	<target name="midp-preverify">
+        <wtkpreverify srcdir="${midp-compiled.dir}" destdir="${preverified.dir}" classpath="${build.classpath};" />
+    </target>
+
+	<!-- ============================================================= -->
+    <!-- Generate the final JAR file that will run on MIDP devices and update JAD-->
+    <!-- ============================================================= -->		
+	<target name="make-jar">
+		<!-- Package the compiled classes into a JAR and JAD file -->
+    	<wtkpackage jarfile="${jar.dir}/${jar.name}" jadfile="${jar.dir}/${jad.name}" basedir="${preverified.dir}" obfuscate="false" preverify="false" >
+        </wtkpackage>
+	</target>
+	
+	<!-- ============================================================= -->
+    <!-- Convert Jar file for Palm OS using Sun MIDP converter -->
+    <!-- ============================================================= -->		
+	<target name="make-prc">
+		<!-- <wtkmakeprc jadfile="${jar.dir}/${jad.name}" prcfile="${midlet.name}.prc"/> -->
+		<exec executable="${palm.midp.home}/palmConverter.bat">
+		  <arg line="${jar.dir}\${jad.name} ${jar.dir}\${jar.name}"/>
+		</exec>
+	</target>
+				
+	<!-- ============================================================= -->
+    <!-- Run the Midlet in the standard Phone Emulator 					-->
+    <!-- ============================================================= -->		
+	<target name="run-default-phone-emulator">
+		<!-- Start the MIDlet suite -->
+		<wtkrun jadfile="jars/${jad.name}" device="DefaultColorPhone" wait="true"/>
+	</target>    		
+</project>

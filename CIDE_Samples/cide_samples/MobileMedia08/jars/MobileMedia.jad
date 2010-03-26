@@ -1,0 +1,6 @@
+MIDlet-Jar-URL: MobileMedia.jar
+MIDlet-Jar-Size: 1410885
+MIDlet-Name: MobileMedia
+MIDlet-Vendor: Lancaster University
+MIDlet-Version: 1.0.0
+MIDlet-1: MobileMedia, , lancs.mobilemedia.core.ui.MainUIMidlet

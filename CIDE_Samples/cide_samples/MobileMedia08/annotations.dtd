@@ -1,0 +1,9 @@
+<!ELEMENT project (feature|folder|file)*>
+<!ATTLIST project   name   CDATA    #REQUIRED >
+<!ELEMENT folder (feature|folder|file)*>
+<!ATTLIST folder name   CDATA    #REQUIRED >
+<!ELEMENT file (feature|fragment)*>
+<!ATTLIST file  name   CDATA    #REQUIRED >
+<!ELEMENT fragment (feature)*>
+<!ATTLIST fragment  offset   CDATA    #REQUIRED  length   CDATA    #REQUIRED >
+<!ELEMENT feature (#PCDATA)>

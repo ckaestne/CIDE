@@ -1,0 +1,77 @@
+interesting nesting in MainUIMidlet
+
+		// #if (includeMMAPI && includePhotoAlbum)|| (includePhotoAlbum && includeVideo)
+		// [NC] Added in the scenario 07
+		selectcontroller = new SelectMediaController(this, imageModel, album);
+		selectcontroller.setNextController(imageRootController);
+			
+		// #ifdef includePhotoAlbum
+		// [NC] Added in the scenario 08
+		selectcontroller.setImageAlbumData(imageModel);
+		selectcontroller.setImageController(imageRootController);
+		//#endif
+		
+		// #ifdef includeMMAPI
+		// [NC] Added in the scenario 08
+		selectcontroller.setMusicAlbumData(musicModel);
+		selectcontroller.setMusicController(musicRootController);
+		//#endif
+			
+		// #ifdef includeVideo
+		// [NC] Added in the scenario 08
+		selectcontroller.setVideoAlbumData(videoModel);
+		selectcontroller.setVideoController(videoRootController);
+		//#endif
+		
+		//#elif includeMMAPI && includeVideo
+		selectcontroller = new SelectMediaController(this, musicModel, albumMusic);
+		selectcontroller.setNextController(musicRootController);
+	
+		// #ifdef includeMMAPI
+		// [NC] Added in the scenario 08
+		selectcontroller.setMusicAlbumData(musicModel);
+		selectcontroller.setMusicController(musicRootController);
+		//#endif
+		
+		// #ifdef includeVideo
+		// [NC] Added in the scenario 08
+		selectcontroller.setVideoAlbumData(videoModel);
+		selectcontroller.setVideoController(videoRootController);
+		//#endif
+		//#endif
+
+		
+		
+		
+alternative values (meta expressions)
+
+//#ifdef device_screen_176x205
+    
+    /** Screen Size**/
+	public static final int SCREEN_WIDTH  = 176;
+	public static final int SCREEN_HEIGHT = 205;
+    
+	//#elifdef device_screen_128x149
+	//#
+	//# /** Screen Size*/
+	//# public static final int SCREEN_WIDTH  = 128;
+	//# public static final int SCREEN_HEIGHT = 149;
+	//#
+	//#elifdef device_screen_132x176
+	//#
+	//# /** Screen Size*/
+	//# public static final int SCREEN_WIDTH  = 132;
+	//# public static final int SCREEN_HEIGHT = 176;
+	//#
+	//#endif		
+	
+	
+oder
+
+	//#if (includeMMAPI && includePhotoAlbum)||(includeMMAPI && includeVideo) || (includeVideo && includePhotoAlbum)
+	//[NC] Added in the scenario 07 and changed in scenario 8
+	public static final Command exitCommand = new Command("Back", Command.STOP, 2);
+	//#elif includePhotoAlbum || includeMMAPI || includeVideo
+	public static final Command exitCommand = new Command("Exit", Command.STOP, 2);
+	//#endif
+	

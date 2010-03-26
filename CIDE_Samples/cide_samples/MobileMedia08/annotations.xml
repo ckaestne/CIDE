@@ -1,0 +1,1630 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<!DOCTYPE project SYSTEM "annotations.dtd">
+<project name="MobileMedia08_OO">
+	<file name=".classpath" />
+	<folder name=".eclipseme.tmp">
+		<folder name="emulation">
+			<file name="MobileMedia07_OO.jad" />
+			<file name="MobileMedia07_OO.jar" />
+			<file name="MobileMedia08_OO.jad" />
+			<file name="MobileMedia08_OO.jar" />
+		</folder>
+	</folder>
+	<file name=".project" />
+	<file name="MobileMediaCompileList.lst" />
+	<file name="annotations.xml" />
+	<folder name="bin">
+		<file name="LocMetrics.css" />
+		<file name="LocMetrics.html" />
+		<file name="LocMetricsCommentWords.csv" />
+		<file name="LocMetricsFiles.csv" />
+		<file name="LocMetricsFolders.csv" />
+		<file name="LocMetricsPie.jpg" />
+		<file name="LocMetricsPie.png" />
+		<folder name="lancs">
+			<folder name="mobilemedia">
+				<folder name="core">
+					<folder name="comms">
+						<file name="BaseMessaging.class" />
+					</folder>
+					<folder name="threads">
+						<file name="BaseThread.class" />
+					</folder>
+					<folder name="ui">
+						<file name="MainUIMidlet.class" />
+						<file name="MainUIMidlet.java.color" />
+						<folder name="controller">
+							<file name=".dircolors" />
+							<file name="AbstractController.class" />
+							<file name="AlbumController.class" />
+							<file name="AlbumController.java.color" />
+							<file name="BaseController.class" />
+							<file name="BaseController.java.color" />
+							<file name="ControllerInterface.class" />
+							<file name="MediaController.class" />
+							<file name="MediaController.java.color" />
+							<file name="MediaListController.class" />
+							<file name="MediaListController.java.color" />
+							<file name="MusicPlayController.class" />
+							<file name="MusicPlayController.java.color" />
+							<file name="PhotoViewController.class" />
+							<file name="PhotoViewController.java.color" />
+							<file name="PlayVideoController.class" />
+							<file name="PlayVideoController.java.color" />
+							<file name="ScreenSingleton.class" />
+							<file name="ScreenSingleton.java.color" />
+							<file name="SelectMediaController.class" />
+							<file name="SelectMediaController.java.color" />
+							<file name="VideoCaptureController.class" />
+							<file name="VideoCaptureController.java.color" />
+						</folder>
+						<folder name="datamodel">
+							<file name=".dircolors" />
+							<file name="AlbumData.class" />
+							<file name="AlbumData.java.color" />
+							<file name="ImageAlbumData.class" />
+							<file name="ImageAlbumData.java.color" />
+							<file name="ImageMediaAccessor.class" />
+							<file name="ImageMediaAccessor.java.color" />
+							<file name="MediaAccessor.class" />
+							<file name="MediaAccessor.java.color" />
+							<file name="MediaData.class" />
+							<file name="MediaData.java.color" />
+							<file name="MusicAlbumData.class" />
+							<file name="MusicAlbumData.java.color" />
+							<file name="MusicMediaAccessor.class" />
+							<file name="MusicMediaAccessor.java.color" />
+							<file name="VideoAlbumData.class" />
+							<file name="VideoAlbumData.java.color" />
+							<file name="VideoMediaAccessor.class" />
+							<file name="VideoMediaAccessor.java.color" />
+						</folder>
+						<folder name="screens">
+							<file name=".cvsignore" />
+							<file name=".dircolors" />
+							<file name="AddMediaToAlbum.class" />
+							<file name="AddMediaToAlbum.java.color" />
+							<file name="AlbumListScreen.class" />
+							<file name="AlbumListScreen.java.color" />
+							<file name="CaptureVideoScreen.class" />
+							<file name="CaptureVideoScreen.java.color" />
+							<file name="MediaListScreen.class" />
+							<file name="MediaListScreen.java.color" />
+							<file name="NewLabelScreen.class" />
+							<file name="NewLabelScreen.java.color" />
+							<file name="PasswordScreen.class" />
+							<file name="PasswordScreen.java.color" />
+							<file name="PhotoViewScreen.class" />
+							<file name="PhotoViewScreen.java.color" />
+							<file name="PlayMediaScreen.class" />
+							<file name="PlayMediaScreen.java.color" />
+							<file name="PlayVideoScreen.class" />
+							<file name="PlayVideoScreen.java.color" />
+							<file name="SelectTypeOfMedia.class" />
+							<file name="SelectTypeOfMedia.java.color" />
+						</folder>
+					</folder>
+					<folder name="util">
+						<file name=".dircolors" />
+						<file name="Constants.class" />
+						<file name="Constants.java.color" />
+						<file name="MediaUtil.class" />
+						<file name="MediaUtil.java.color" />
+						<file name="MusicMediaUtil.class" />
+					</folder>
+				</folder>
+				<folder name="lib">
+					<folder name="exceptions">
+						<file name="ImageNotFoundException.class" />
+						<file name="ImagePathNotValidException.class" />
+						<file name="InvalidArrayFormatException.class" />
+						<file name="InvalidImageDataException.class" />
+						<file name="InvalidImageFormatException.class" />
+						<file name="InvalidPhotoAlbumNameException.class" />
+						<file name="PersistenceMechanismException.class" />
+						<file name="UnavailablePhotoAlbumException.class" />
+					</folder>
+				</folder>
+				<folder name="sms">
+					<file name=".dircolors" />
+					<file name="NetworkScreen.class" />
+					<file name="SmsMessaging.class" />
+					<file name="SmsReceiverController.class" />
+					<file name="SmsReceiverThread.class" />
+					<file name="SmsSenderController.class" />
+					<file name="SmsSenderThread.class" />
+				</folder>
+			</folder>
+		</folder>
+	</folder>
+	<file name="build.xml" />
+	<folder name="images">
+		<file name="Duke1.PNG" />
+		<file name="Gail1.PNG" />
+		<file name="Gosling1.PNG" />
+		<file name="Gregor1.PNG" />
+		<file name="Java.png" />
+		<file name="Kdvolder1.PNG" />
+		<file name="Penguin.png" />
+		<file name="Thumbs.db" />
+		<file name="Tucan.png" />
+		<file name="applause.wav" />
+		<file name="baby.wav" />
+		<file name="bong.wav" />
+		<file name="cabeza.mid" />
+		<file name="fish.mpg" />
+		<file name="frogs.mp3" />
+		<file name="jump.wav" />
+		<file name="laughter.wav" />
+		<file name="printer.wav" />
+		<file name="sydharbour.mp4" />
+		<file name="ubcLogo.PNG" />
+	</folder>
+	<folder name="jars">
+		<file name="MobileMedia.jad" />
+		<file name="MobileMedia.jar" />
+	</folder>
+	<file name="labBuild.properties" />
+	<file name="model.colors" />
+	<file name="model.m" />
+	<file name="observations.txt" />
+	<folder name="preverified">
+		<folder name="images">
+			<file name="Duke1.PNG" />
+			<file name="Gail1.PNG" />
+			<file name="Gosling1.PNG" />
+			<file name="Gregor1.PNG" />
+			<file name="Java.png" />
+			<file name="Kdvolder1.PNG" />
+			<file name="Penguin.png" />
+			<file name="Thumbs.db" />
+			<file name="Tucan.png" />
+			<file name="applause.wav" />
+			<file name="baby.wav" />
+			<file name="bong.wav" />
+			<file name="cabeza.mid" />
+			<file name="fish.mpg" />
+			<file name="frogs.mp3" />
+			<file name="jump.wav" />
+			<file name="laughter.wav" />
+			<file name="printer.wav" />
+			<file name="sydharbour.mp4" />
+			<file name="ubcLogo.PNG" />
+		</folder>
+	</folder>
+	<folder name="src">
+		<file name="LocMetrics.css" />
+		<file name="LocMetrics.html" />
+		<file name="LocMetricsCommentWords.csv" />
+		<file name="LocMetricsFiles.csv" />
+		<file name="LocMetricsFolders.csv" />
+		<file name="LocMetricsPie.jpg" />
+		<file name="LocMetricsPie.png" />
+		<folder name="lancs">
+			<folder name="mobilemedia">
+				<folder name="core">
+					<folder name="comms">
+						<file name="BaseMessaging.java" />
+					</folder>
+					<folder name="threads">
+						<file name="BaseThread.java" />
+					</folder>
+					<folder name="ui">
+						<file name="MainUIMidlet.java">
+							<fragment length="58" offset="550">
+								<feature>includeVideo</feature>
+							</fragment>
+							<fragment length="58" offset="681">
+								<feature>includePhotoAlbum</feature>
+							</fragment>
+							<fragment length="58" offset="807">
+								<feature>includeMMAPI</feature>
+							</fragment>
+							<fragment length="66" offset="1083">
+								<feature>x_misc</feature>
+							</fragment>
+							<fragment length="59" offset="1151">
+								<feature>x_misc</feature>
+							</fragment>
+							<fragment length="51" offset="1252">
+								<feature>includeSmsFeature</feature>
+							</fragment>
+							<fragment length="47" offset="1305">
+								<feature>includeSmsFeature</feature>
+							</fragment>
+							<fragment length="43" offset="2391">
+								<feature>includePhotoAlbum</feature>
+							</fragment>
+							<fragment length="29" offset="2437">
+								<feature>includePhotoAlbum</feature>
+							</fragment>
+							<fragment length="43" offset="2542">
+								<feature>includeMMAPI</feature>
+							</fragment>
+							<fragment length="29" offset="2588">
+								<feature>includeMMAPI</feature>
+							</fragment>
+							<fragment length="43" offset="2693">
+								<feature>includeVideo</feature>
+							</fragment>
+							<fragment length="29" offset="2739">
+								<feature>includeVideo</feature>
+							</fragment>
+							<fragment length="34" offset="3114">
+								<feature>includePhotoAlbum</feature>
+							</fragment>
+							<fragment length="46" offset="3154">
+								<feature>includePhotoAlbum</feature>
+							</fragment>
+							<fragment length="66" offset="3204">
+								<feature>includePhotoAlbum</feature>
+							</fragment>
+							<fragment length="91" offset="3342">
+								<feature>includePhotoAlbum</feature>
+							</fragment>
+							<fragment length="59" offset="3437">
+								<feature>includePhotoAlbum</feature>
+							</fragment>
+							<fragment length="79" offset="3504">
+								<feature>includePhotoAlbum</feature>
+							</fragment>
+							<fragment length="55" offset="3587">
+								<feature>includePhotoAlbum</feature>
+							</fragment>
+							<fragment length="42" offset="3646">
+								<feature>includePhotoAlbum</feature>
+							</fragment>
+							<fragment length="34" offset="3770">
+								<feature>includeMMAPI</feature>
+							</fragment>
+							<fragment length="51" offset="3812">
+								<feature>includeMMAPI</feature>
+							</fragment>
+							<fragment length="71" offset="3867">
+								<feature>includeMMAPI</feature>
+							</fragment>
+							<fragment length="96" offset="3946">
+								<feature>includeMMAPI</feature>
+							</fragment>
+							<fragment length="59" offset="4046">
+								<feature>includeMMAPI</feature>
+							</fragment>
+							<fragment length="89" offset="4113">
+								<feature>includeMMAPI</feature>
+							</fragment>
+							<fragment length="60" offset="4206">
+								<feature>includeMMAPI</feature>
+							</fragment>
+							<fragment length="52" offset="4270">
+								<feature>includeMMAPI</feature>
+							</fragment>
+							<fragment length="34" offset="4404">
+								<feature>includeVideo</feature>
+							</fragment>
+							<fragment length="51" offset="4446">
+								<feature>includeVideo</feature>
+							</fragment>
+							<fragment length="71" offset="4501">
+								<feature>includeVideo</feature>
+							</fragment>
+							<fragment length="96" offset="4580">
+								<feature>includeVideo</feature>
+							</fragment>
+							<fragment length="59" offset="4680">
+								<feature>includeVideo</feature>
+							</fragment>
+							<fragment length="89" offset="4747">
+								<feature>includeVideo</feature>
+							</fragment>
+							<fragment length="60" offset="4840">
+								<feature>includeVideo</feature>
+							</fragment>
+							<fragment length="52" offset="4904">
+								<feature>includeVideo</feature>
+							</fragment>
+							<fragment length="86" offset="5041">
+								<feature>includeSmsFeature</feature>
+							</fragment>
+							<fragment length="46" offset="5131">
+								<feature>includeSmsFeature</feature>
+							</fragment>
+							<fragment length="84" offset="5181">
+								<feature>includeSmsFeature</feature>
+							</fragment>
+							<fragment length="65" offset="5269">
+								<feature>includeSmsFeature</feature>
+							</fragment>
+							<fragment length="25" offset="5338">
+								<feature>includeSmsFeature</feature>
+							</fragment>
+							<fragment length="92" offset="5503">
+								<feature>x_PhotoAlbumAndVideoOrMusic</feature>
+							</fragment>
+							<fragment length="56" offset="5599">
+								<feature>x_PhotoAlbumAndVideoOrMusic</feature>
+							</fragment>
+							<fragment length="47" offset="5731">
+								<feature>x_PhotoAlbumAndVideoOrMusic</feature>
+								<feature>includePhotoAlbum</feature>
+							</fragment>
+							<fragment length="57" offset="5782">
+								<feature>x_PhotoAlbumAndVideoOrMusic</feature>
+								<feature>includePhotoAlbum</feature>
+							</fragment>
+							<fragment length="47" offset="5921">
+								<feature>x_PhotoAlbumAndVideoOrMusic</feature>
+								<feature>includeMMAPI</feature>
+							</fragment>
+							<fragment length="57" offset="5972">
+								<feature>x_PhotoAlbumAndVideoOrMusic</feature>
+								<feature>includeMMAPI</feature>
+							</fragment>
+							<fragment length="47" offset="6112">
+								<feature>x_PhotoAlbumAndVideoOrMusic</feature>
+								<feature>includeVideo</feature>
+							</fragment>
+							<fragment length="57" offset="6163">
+								<feature>x_PhotoAlbumAndVideoOrMusic</feature>
+								<feature>includeVideo</feature>
+							</fragment>
+							<fragment length="98" offset="6280">
+								<feature>x_MusicAndVideo</feature>
+							</fragment>
+							<fragment length="57" offset="6382">
+								<feature>x_MusicAndVideo</feature>
+							</fragment>
+							<fragment length="48" offset="6508">
+								<feature>x_MusicAndVideo</feature>
+								<feature>includeMMAPI</feature>
+							</fragment>
+							<fragment length="58" offset="6560">
+								<feature>x_MusicAndVideo</feature>
+								<feature>includeMMAPI</feature>
+							</fragment>
+							<fragment length="48" offset="6700">
+								<feature>x_MusicAndVideo</feature>
+								<feature>includeVideo</feature>
+							</fragment>
+							<fragment length="58" offset="6752">
+								<feature>x_MusicAndVideo</feature>
+								<feature>includeVideo</feature>
+							</fragment>
+							<fragment length="55" offset="6958">
+								<feature>x_misc</feature>
+							</fragment>
+							<fragment length="22" offset="7017">
+								<feature>x_misc</feature>
+							</fragment>
+							<fragment length="48" offset="7043">
+								<feature>x_PhotoAlbumAndVideoOrMusic</feature>
+								<feature>x_misc</feature>
+							</fragment>
+							<fragment length="49" offset="7095">
+								<feature>x_MusicAndVideo</feature>
+								<feature>x_misc</feature>
+							</fragment>
+							<fragment length="48" offset="7148">
+								<feature>x_misc</feature>
+							</fragment>
+							<fragment length="54" offset="7200">
+								<feature>x_misc</feature>
+							</fragment>
+							<fragment length="37" offset="7289">
+								<feature>x_notMisc</feature>
+								<feature>includePhotoAlbum</feature>
+							</fragment>
+							<fragment length="37" offset="7354">
+								<feature>x_notMisc</feature>
+								<feature>includeMMAPI</feature>
+							</fragment>
+							<fragment length="37" offset="7419">
+								<feature>x_notMisc</feature>
+								<feature>includeVideo</feature>
+							</fragment>
+						</file>
+						<file name="MainUIMidlet.java.color" />
+						<folder name="controller">
+							<file name=".dircolors" />
+							<file name="AbstractController.java" />
+							<file name="AlbumController.java">
+								<fragment length="56" offset="879">
+									<feature>includePrivacy</feature>
+								</fragment>
+								<fragment length="40" offset="1174">
+									<feature>includePrivacy</feature>
+								</fragment>
+								<fragment length="39" offset="1217">
+									<feature>includePrivacy</feature>
+								</fragment>
+								<fragment length="35" offset="1259">
+									<feature>includePrivacy</feature>
+								</fragment>
+								<fragment length="14" offset="3686">
+									<feature>includePrivacy</feature>
+								</fragment>
+								<fragment length="68" offset="3706">
+									<feature>includePrivacy</feature>
+								</fragment>
+								<fragment length="51" offset="3780">
+									<feature>includePrivacy</feature>
+								</fragment>
+								<fragment length="588" offset="3839">
+									<feature>includePrivacy</feature>
+								</fragment>
+								<fragment length="362" offset="4448">
+									<feature>x_NotPrivacy</feature>
+								</fragment>
+								<fragment length="21" offset="4815">
+									<feature>x_NotPrivacy</feature>
+								</fragment>
+								<fragment length="950" offset="5651">
+									<feature>includePrivacy</feature>
+								</fragment>
+								<fragment length="3135" offset="7457">
+									<feature>includePrivacy</feature>
+								</fragment>
+							</file>
+							<file name="AlbumController.java.color" />
+							<file name="BaseController.java">
+								<fragment length="187" offset="3745">
+									<feature>includePhotoAlbum</feature>
+									<feature>includeMMAPI</feature>
+								</fragment>
+							</file>
+							<file name="BaseController.java.color" />
+							<file name="ControllerInterface.java" />
+							<file name="MediaController.java">
+								<fragment length="58" offset="913">
+									<feature>includePhotoAlbum</feature>
+								</fragment>
+								<fragment length="38" offset="973">
+									<feature>includePhotoAlbum</feature>
+								</fragment>
+								<fragment length="58" offset="1131">
+									<feature>includeVideo</feature>
+								</fragment>
+								<fragment length="58" offset="1402">
+									<feature>includeMMAPI</feature>
+								</fragment>
+								<fragment length="57" offset="1462">
+									<feature>includeMMAPI</feature>
+								</fragment>
+								<fragment length="60" offset="1719">
+									<feature>x_CapturePhotoOrVideo</feature>
+								</fragment>
+								<fragment length="57" offset="1909">
+									<feature>includeVideo</feature>
+								</fragment>
+								<fragment length="57" offset="2041">
+									<feature>includePhotoAlbum</feature>
+								</fragment>
+								<fragment length="49" offset="2187">
+									<feature>includeSmsFeature</feature>
+								</fragment>
+								<fragment length="187" offset="3151">
+									<feature>includePhotoAlbum</feature>
+								</fragment>
+								<fragment length="39" offset="3338">
+									<feature>includeSorting</feature>
+									<feature>includePhotoAlbum</feature>
+								</fragment>
+								<fragment length="115" offset="3377">
+									<feature>includePhotoAlbum</feature>
+								</fragment>
+								<fragment length="139" offset="3574">
+									<feature>includeMMAPI</feature>
+								</fragment>
+								<fragment length="145" offset="3797">
+									<feature>includeVideo</feature>
+								</fragment>
+								<fragment length="421" offset="4024">
+									<feature>captureVideo</feature>
+								</fragment>
+								<fragment length="461" offset="4525">
+									<feature>capturePhoto</feature>
+								</fragment>
+								<fragment length="538" offset="5296">
+									<feature>includeMMAPI</feature>
+								</fragment>
+								<fragment length="268" offset="6793">
+									<feature>includeMMAPI</feature>
+								</fragment>
+								<fragment length="325" offset="9042">
+									<feature>includeSorting</feature>
+								</fragment>
+								<fragment length="245" offset="12499">
+									<feature>includeMMAPI</feature>
+								</fragment>
+								<fragment length="39" offset="12744">
+									<feature>includeSorting</feature>
+									<feature>includeMMAPI</feature>
+								</fragment>
+								<fragment length="611" offset="12783">
+									<feature>includeMMAPI</feature>
+								</fragment>
+								<fragment length="43" offset="13394">
+									<feature>includeMMAPI</feature>
+									<feature>includeCopyPhoto</feature>
+								</fragment>
+								<fragment length="632" offset="13437">
+									<feature>includeMMAPI</feature>
+								</fragment>
+								<fragment length="250" offset="14149">
+									<feature>includeVideo</feature>
+								</fragment>
+								<fragment length="39" offset="14399">
+									<feature>includeSorting</feature>
+									<feature>includeVideo</feature>
+								</fragment>
+								<fragment length="645" offset="14438">
+									<feature>includeVideo</feature>
+								</fragment>
+								<fragment length="43" offset="15083">
+									<feature>includeVideo</feature>
+									<feature>includeCopyPhoto</feature>
+								</fragment>
+								<fragment length="632" offset="15126">
+									<feature>includeVideo</feature>
+								</fragment>
+								<fragment length="953" offset="15837">
+									<feature>includeSorting</feature>
+								</fragment>
+								<fragment length="1332" offset="17485">
+									<feature>includePhotoAlbum</feature>
+								</fragment>
+								<fragment length="127" offset="18817">
+									<feature>includePhotoAlbum</feature>
+									<feature>x_CopyPhotoOrSMS</feature>
+								</fragment>
+								<fragment length="4" offset="18944">
+									<feature>includePhotoAlbum</feature>
+								</fragment>
+								<fragment length="45" offset="18948">
+									<feature>includePhotoAlbum</feature>
+									<feature>x_CopyPhotoOrSMS</feature>
+								</fragment>
+								<fragment length="4" offset="18993">
+									<feature>includePhotoAlbum</feature>
+								</fragment>
+								<fragment length="36" offset="18997">
+									<feature>includePhotoAlbum</feature>
+									<feature>x_CopyPhotoOrSMS</feature>
+								</fragment>
+								<fragment length="4" offset="19033">
+									<feature>includePhotoAlbum</feature>
+								</fragment>
+								<fragment length="28" offset="19037">
+									<feature>includePhotoAlbum</feature>
+									<feature>x_CopyPhotoOrSMS</feature>
+								</fragment>
+								<fragment length="189" offset="19065">
+									<feature>includePhotoAlbum</feature>
+								</fragment>
+								<fragment length="130" offset="19254">
+									<feature>includePhotoAlbum</feature>
+									<feature>includeSmsFeature</feature>
+								</fragment>
+								<fragment length="48" offset="19384">
+									<feature>includePhotoAlbum</feature>
+								</fragment>
+								<fragment length="48" offset="19432">
+									<feature>includePhotoAlbum</feature>
+									<feature>includeSmsFeature</feature>
+								</fragment>
+								<fragment length="4" offset="19480">
+									<feature>includePhotoAlbum</feature>
+								</fragment>
+								<fragment length="39" offset="19484">
+									<feature>includePhotoAlbum</feature>
+									<feature>includeSmsFeature</feature>
+								</fragment>
+								<fragment length="4" offset="19523">
+									<feature>includePhotoAlbum</feature>
+								</fragment>
+								<fragment length="31" offset="19527">
+									<feature>includePhotoAlbum</feature>
+									<feature>includeSmsFeature</feature>
+								</fragment>
+								<fragment length="47" offset="19558">
+									<feature>includePhotoAlbum</feature>
+								</fragment>
+							</file>
+							<file name="MediaController.java.color" />
+							<file name="MediaListController.java">
+								<fragment length="58" offset="619">
+									<feature>includeVideo</feature>
+								</fragment>
+								<fragment length="58" offset="752">
+									<feature>includePhotoAlbum</feature>
+								</fragment>
+								<fragment length="58" offset="878">
+									<feature>includeMMAPI</feature>
+								</fragment>
+								<fragment length="56" offset="1148">
+									<feature>includePrivacy</feature>
+								</fragment>
+								<fragment length="19" offset="1886">
+									<feature>includePrivacy</feature>
+								</fragment>
+								<fragment length="61" offset="2296">
+									<feature>includePrivacy</feature>
+								</fragment>
+								<fragment length="41" offset="2363">
+									<feature>includePrivacy</feature>
+								</fragment>
+								<fragment length="371" offset="2411">
+									<feature>includePrivacy</feature>
+								</fragment>
+								<fragment length="51" offset="2802">
+									<feature>x_NotPrivacy</feature>
+								</fragment>
+								<fragment length="80" offset="2860">
+									<feature>x_NotPrivacy</feature>
+								</fragment>
+								<fragment length="562" offset="3017">
+									<feature>includePrivacy</feature>
+								</fragment>
+								<fragment length="109" offset="4355">
+									<feature>includePhotoAlbum</feature>
+								</fragment>
+								<fragment length="109" offset="4543">
+									<feature>includeMMAPI</feature>
+								</fragment>
+								<fragment length="109" offset="4732">
+									<feature>includeVideo</feature>
+								</fragment>
+								<fragment length="40" offset="5492">
+									<feature>includeSorting</feature>
+								</fragment>
+								<fragment length="220" offset="6335">
+									<feature>includeSorting</feature>
+								</fragment>
+								<fragment length="510" offset="6563">
+									<feature>includeSorting</feature>
+								</fragment>
+							</file>
+							<file name="MediaListController.java.color" />
+							<file name="MusicPlayController.java">
+								<feature>includeMMAPI</feature>
+								<fragment length="1158" offset="0">
+									<feature>includeMMAPI</feature>
+								</fragment>
+								<fragment length="25" offset="1158">
+									<feature>includeMMAPI</feature>
+									<feature>includeCopyPhoto</feature>
+								</fragment>
+								<fragment length="1187" offset="1183">
+									<feature>includeMMAPI</feature>
+								</fragment>
+								<fragment length="348" offset="2370">
+									<feature>includeMMAPI</feature>
+									<feature>includeCopyPhoto</feature>
+								</fragment>
+								<fragment length="2" offset="2718">
+									<feature>includeMMAPI</feature>
+								</fragment>
+								<fragment length="1783" offset="2720">
+									<feature>includeMMAPI</feature>
+									<feature>includeCopyPhoto</feature>
+								</fragment>
+								<fragment length="107" offset="4503">
+									<feature>includeMMAPI</feature>
+								</fragment>
+								<fragment length="55" offset="4610">
+									<feature>includeMMAPI</feature>
+									<feature>includeCopyPhoto</feature>
+								</fragment>
+								<fragment length="5" offset="4665">
+									<feature>includeMMAPI</feature>
+								</fragment>
+								<fragment length="79" offset="4670">
+									<feature>includeMMAPI</feature>
+									<feature>includeCopyPhoto</feature>
+								</fragment>
+								<fragment length="26" offset="4749">
+									<feature>includeMMAPI</feature>
+								</fragment>
+							</file>
+							<file name="MusicPlayController.java.color" />
+							<file name="PhotoViewController.java">
+								<feature>x_CopyPhotoOrSMSOrCapturePhoto</feature>
+								<fragment length="741" offset="0">
+									<feature>x_CopyPhotoOrSMSOrCapturePhoto</feature>
+								</fragment>
+								<fragment length="60" offset="741">
+									<feature>x_CopyPhotoOrSMSOrCapturePhoto</feature>
+									<feature>x_CapturePhotoOrVideo</feature>
+								</fragment>
+								<fragment length="2" offset="801">
+									<feature>x_CopyPhotoOrSMSOrCapturePhoto</feature>
+								</fragment>
+								<fragment length="57" offset="803">
+									<feature>x_CopyPhotoOrSMSOrCapturePhoto</feature>
+									<feature>includePhotoAlbum</feature>
+								</fragment>
+								<fragment length="548" offset="860">
+									<feature>x_CopyPhotoOrSMSOrCapturePhoto</feature>
+								</fragment>
+								<fragment length="40" offset="1408">
+									<feature>x_CopyPhotoOrSMSOrCapturePhoto</feature>
+									<feature>capturePhoto</feature>
+								</fragment>
+								<fragment length="1077" offset="1448">
+									<feature>x_CopyPhotoOrSMSOrCapturePhoto</feature>
+								</fragment>
+								<fragment length="156" offset="2525">
+									<feature>x_CopyPhotoOrSMSOrCapturePhoto</feature>
+									<feature>includeSmsFeature</feature>
+								</fragment>
+								<fragment length="358" offset="2681">
+									<feature>x_CopyPhotoOrSMSOrCapturePhoto</feature>
+								</fragment>
+								<fragment length="79" offset="3039">
+									<feature>x_CopyPhotoOrSMSOrCapturePhoto</feature>
+									<feature>x_SMSOrCapturePhoto</feature>
+								</fragment>
+								<fragment length="12" offset="3118">
+									<feature>x_CopyPhotoOrSMSOrCapturePhoto</feature>
+								</fragment>
+								<fragment length="44" offset="3130">
+									<feature>x_CopyPhotoOrSMSOrCapturePhoto</feature>
+									<feature>x_SMSOrCapturePhoto</feature>
+								</fragment>
+								<fragment length="345" offset="3174">
+									<feature>x_CopyPhotoOrSMSOrCapturePhoto</feature>
+								</fragment>
+								<fragment length="284" offset="3519">
+									<feature>x_CopyPhotoOrSMSOrCapturePhoto</feature>
+								</fragment>
+								<fragment length="89" offset="3803">
+									<feature>x_CopyPhotoOrSMSOrCapturePhoto</feature>
+									<feature>x_SMSOrCapturePhoto</feature>
+								</fragment>
+								<fragment length="158" offset="3892">
+									<feature>x_CopyPhotoOrSMSOrCapturePhoto</feature>
+								</fragment>
+								<fragment length="118" offset="4050">
+									<feature>x_CopyPhotoOrSMSOrCapturePhoto</feature>
+									<feature>x_SMSOrCapturePhoto</feature>
+								</fragment>
+								<fragment length="50" offset="4168">
+									<feature>x_CopyPhotoOrSMSOrCapturePhoto</feature>
+									<feature>includeCopyPhoto</feature>
+								</fragment>
+								<fragment length="1316" offset="4218">
+									<feature>x_CopyPhotoOrSMSOrCapturePhoto</feature>
+								</fragment>
+								<fragment length="651" offset="5534">
+									<feature>x_CopyPhotoOrSMSOrCapturePhoto</feature>
+									<feature>capturePhoto</feature>
+								</fragment>
+								<fragment length="515" offset="6185">
+									<feature>x_CopyPhotoOrSMSOrCapturePhoto</feature>
+								</fragment>
+								<fragment length="75" offset="6700">
+									<feature>x_CopyPhotoOrSMSOrCapturePhoto</feature>
+									<feature>capturePhoto</feature>
+								</fragment>
+								<fragment length="5" offset="6775">
+									<feature>x_CopyPhotoOrSMSOrCapturePhoto</feature>
+								</fragment>
+								<fragment length="107" offset="6780">
+									<feature>x_CopyPhotoOrSMSOrCapturePhoto</feature>
+									<feature>capturePhoto</feature>
+								</fragment>
+								<fragment length="26" offset="6887">
+									<feature>x_CopyPhotoOrSMSOrCapturePhoto</feature>
+								</fragment>
+							</file>
+							<file name="PhotoViewController.java.color" />
+							<file name="PlayVideoController.java">
+								<feature>includeVideo</feature>
+								<fragment length="1123" offset="0">
+									<feature>includeVideo</feature>
+								</fragment>
+								<fragment length="25" offset="1123">
+									<feature>includeVideo</feature>
+									<feature>includeCopyPhoto</feature>
+								</fragment>
+								<fragment length="1188" offset="1148">
+									<feature>includeVideo</feature>
+								</fragment>
+								<fragment length="348" offset="2336">
+									<feature>includeVideo</feature>
+									<feature>includeCopyPhoto</feature>
+								</fragment>
+								<fragment length="2" offset="2684">
+									<feature>includeVideo</feature>
+								</fragment>
+								<fragment length="1772" offset="2686">
+									<feature>includeVideo</feature>
+									<feature>includeCopyPhoto</feature>
+								</fragment>
+								<fragment length="107" offset="4458">
+									<feature>includeVideo</feature>
+								</fragment>
+								<fragment length="55" offset="4565">
+									<feature>includeVideo</feature>
+									<feature>includeCopyPhoto</feature>
+								</fragment>
+								<fragment length="5" offset="4620">
+									<feature>includeVideo</feature>
+								</fragment>
+								<fragment length="79" offset="4625">
+									<feature>includeVideo</feature>
+									<feature>includeCopyPhoto</feature>
+								</fragment>
+								<fragment length="26" offset="4704">
+									<feature>includeVideo</feature>
+								</fragment>
+							</file>
+							<file name="PlayVideoController.java.color" />
+							<file name="ScreenSingleton.java">
+								<fragment length="59" offset="347">
+									<feature>x_misc</feature>
+								</fragment>
+								<fragment length="37" offset="1144">
+									<feature>x_misc</feature>
+								</fragment>
+								<fragment length="65" offset="1187">
+									<feature>x_misc</feature>
+								</fragment>
+								<fragment length="78" offset="1258">
+									<feature>x_misc</feature>
+								</fragment>
+							</file>
+							<file name="ScreenSingleton.java.color" />
+							<file name="SelectMediaController.java">
+								<feature>x_misc</feature>
+								<fragment length="593" offset="0">
+									<feature>x_misc</feature>
+								</fragment>
+								<fragment length="31" offset="593">
+									<feature>includePhotoAlbum</feature>
+									<feature>x_misc</feature>
+								</fragment>
+								<fragment length="3" offset="624">
+									<feature>x_misc</feature>
+								</fragment>
+								<fragment length="25" offset="627">
+									<feature>includePhotoAlbum</feature>
+									<feature>x_misc</feature>
+								</fragment>
+								<fragment length="77" offset="652">
+									<feature>x_misc</feature>
+								</fragment>
+								<fragment length="31" offset="729">
+									<feature>includeMMAPI</feature>
+									<feature>x_misc</feature>
+								</fragment>
+								<fragment length="3" offset="760">
+									<feature>x_misc</feature>
+								</fragment>
+								<fragment length="25" offset="763">
+									<feature>includeMMAPI</feature>
+									<feature>x_misc</feature>
+								</fragment>
+								<fragment length="77" offset="788">
+									<feature>x_misc</feature>
+								</fragment>
+								<fragment length="31" offset="865">
+									<feature>includeVideo</feature>
+									<feature>x_misc</feature>
+								</fragment>
+								<fragment length="3" offset="896">
+									<feature>x_misc</feature>
+								</fragment>
+								<fragment length="25" offset="899">
+									<feature>includeVideo</feature>
+									<feature>x_misc</feature>
+								</fragment>
+								<fragment length="299" offset="924">
+									<feature>x_misc</feature>
+								</fragment>
+								<fragment length="75" offset="1223">
+									<feature>includePhotoAlbum</feature>
+									<feature>x_misc</feature>
+								</fragment>
+								<fragment length="5" offset="1298">
+									<feature>x_misc</feature>
+								</fragment>
+								<fragment length="111" offset="1303">
+									<feature>includePhotoAlbum</feature>
+									<feature>x_misc</feature>
+								</fragment>
+								<fragment length="5" offset="1414">
+									<feature>x_misc</feature>
+								</fragment>
+								<fragment length="68" offset="1419">
+									<feature>includePhotoAlbum</feature>
+									<feature>x_misc</feature>
+								</fragment>
+								<fragment length="5" offset="1487">
+									<feature>x_misc</feature>
+								</fragment>
+								<fragment length="102" offset="1492">
+									<feature>includePhotoAlbum</feature>
+									<feature>x_misc</feature>
+								</fragment>
+								<fragment length="76" offset="1594">
+									<feature>x_misc</feature>
+								</fragment>
+								<fragment length="75" offset="1670">
+									<feature>includeMMAPI</feature>
+									<feature>x_misc</feature>
+								</fragment>
+								<fragment length="5" offset="1745">
+									<feature>x_misc</feature>
+								</fragment>
+								<fragment length="111" offset="1750">
+									<feature>includeMMAPI</feature>
+									<feature>x_misc</feature>
+								</fragment>
+								<fragment length="5" offset="1861">
+									<feature>x_misc</feature>
+								</fragment>
+								<fragment length="68" offset="1866">
+									<feature>includeMMAPI</feature>
+									<feature>x_misc</feature>
+								</fragment>
+								<fragment length="5" offset="1934">
+									<feature>x_misc</feature>
+								</fragment>
+								<fragment length="102" offset="1939">
+									<feature>includeMMAPI</feature>
+									<feature>x_misc</feature>
+								</fragment>
+								<fragment length="77" offset="2041">
+									<feature>x_misc</feature>
+								</fragment>
+								<fragment length="75" offset="2118">
+									<feature>includeVideo</feature>
+									<feature>x_misc</feature>
+								</fragment>
+								<fragment length="5" offset="2193">
+									<feature>x_misc</feature>
+								</fragment>
+								<fragment length="111" offset="2198">
+									<feature>includeVideo</feature>
+									<feature>x_misc</feature>
+								</fragment>
+								<fragment length="5" offset="2309">
+									<feature>x_misc</feature>
+								</fragment>
+								<fragment length="68" offset="2314">
+									<feature>includeVideo</feature>
+									<feature>x_misc</feature>
+								</fragment>
+								<fragment length="5" offset="2382">
+									<feature>x_misc</feature>
+								</fragment>
+								<fragment length="102" offset="2387">
+									<feature>includeVideo</feature>
+									<feature>x_misc</feature>
+								</fragment>
+								<fragment length="372" offset="2489">
+									<feature>x_misc</feature>
+								</fragment>
+								<fragment length="105" offset="2861">
+									<feature>includePhotoAlbum</feature>
+									<feature>x_misc</feature>
+								</fragment>
+								<fragment length="92" offset="2966">
+									<feature>x_misc</feature>
+								</fragment>
+								<fragment length="104" offset="3058">
+									<feature>includeMMAPI</feature>
+									<feature>x_misc</feature>
+								</fragment>
+								<fragment length="89" offset="3162">
+									<feature>x_misc</feature>
+								</fragment>
+								<fragment length="105" offset="3251">
+									<feature>includeVideo</feature>
+									<feature>x_misc</feature>
+								</fragment>
+								<fragment length="89" offset="3356">
+									<feature>x_misc</feature>
+								</fragment>
+							</file>
+							<file name="SelectMediaController.java.color" />
+							<file name="VideoCaptureController.java">
+								<feature>captureVideo</feature>
+								<fragment length="2631" offset="0">
+									<feature>captureVideo</feature>
+								</fragment>
+							</file>
+							<file name="VideoCaptureController.java.color" />
+						</folder>
+						<folder name="datamodel">
+							<file name=".dircolors" />
+							<file name="AlbumData.java">
+								<fragment length="110" offset="2918">
+									<feature>includePrivacy</feature>
+								</fragment>
+								<fragment length="98" offset="3080">
+									<feature>includePrivacy</feature>
+								</fragment>
+								<fragment length="324" offset="3779">
+									<feature>includeCopyPhoto</feature>
+								</fragment>
+								<fragment length="438" offset="6236">
+									<feature>includeVideo</feature>
+								</fragment>
+								<fragment length="444" offset="6768">
+									<feature>x_SMSOrCapturePhoto</feature>
+								</fragment>
+							</file>
+							<file name="AlbumData.java.color" />
+							<file name="ImageAlbumData.java">
+								<feature>includePhotoAlbum</feature>
+								<fragment length="1263" offset="0">
+									<feature>includePhotoAlbum</feature>
+								</fragment>
+							</file>
+							<file name="ImageAlbumData.java.color" />
+							<file name="ImageMediaAccessor.java">
+								<feature>includePhotoAlbum</feature>
+								<fragment length="2757" offset="0">
+									<feature>includePhotoAlbum</feature>
+								</fragment>
+								<fragment length="307" offset="2757">
+									<feature>includePhotoAlbum</feature>
+									<feature>x_SMSOrCapturePhoto</feature>
+								</fragment>
+								<fragment length="578" offset="3064">
+									<feature>includePhotoAlbum</feature>
+								</fragment>
+							</file>
+							<file name="ImageMediaAccessor.java.color" />
+							<file name="MediaAccessor.java">
+								<fragment length="32" offset="1942">
+									<feature>includePrivacy</feature>
+								</fragment>
+								<fragment length="343" offset="6392">
+									<feature>includePrivacy</feature>
+								</fragment>
+								<fragment length="316" offset="6746">
+									<feature>includePrivacy</feature>
+								</fragment>
+								<fragment length="1042" offset="7108">
+									<feature>includeCopyPhoto</feature>
+								</fragment>
+							</file>
+							<file name="MediaAccessor.java.color" />
+							<file name="MediaData.java">
+								<fragment length="30" offset="853">
+									<feature>includeSorting</feature>
+								</fragment>
+								<fragment length="41" offset="1093">
+									<feature>x_MusicOrVideo</feature>
+								</fragment>
+								<fragment length="43" offset="1137">
+									<feature>x_MusicOrVideo</feature>
+								</fragment>
+								<fragment length="42" offset="1183">
+									<feature>x_MusicOrVideo</feature>
+								</fragment>
+								<fragment length="25" offset="1266">
+									<feature>x_MusicOrVideo</feature>
+								</fragment>
+								<fragment length="114" offset="3184">
+									<feature>includeSorting</feature>
+								</fragment>
+								<fragment length="139" offset="3303">
+									<feature>includeSorting</feature>
+								</fragment>
+								<fragment length="106" offset="3448">
+									<feature>includeSorting</feature>
+								</fragment>
+								<fragment length="80" offset="3645">
+									<feature>x_MusicOrVideo</feature>
+								</fragment>
+								<fragment length="98" offset="3731">
+									<feature>x_MusicOrVideo</feature>
+								</fragment>
+							</file>
+							<file name="MediaData.java.color" />
+							<file name="MusicAlbumData.java">
+								<fragment length="44" offset="58">
+									<feature>includeMMAPI</feature>
+								</fragment>
+								<fragment length="36" offset="106">
+									<feature>includeMMAPI</feature>
+								</fragment>
+								<fragment length="27" offset="144">
+									<feature>includeMMAPI</feature>
+								</fragment>
+								<fragment length="63" offset="175">
+									<feature>includeMMAPI</feature>
+								</fragment>
+								<fragment length="70" offset="240">
+									<feature>includeMMAPI</feature>
+								</fragment>
+								<fragment length="885" offset="314">
+									<feature>includeMMAPI</feature>
+								</fragment>
+							</file>
+							<file name="MusicAlbumData.java.color" />
+							<file name="MusicMediaAccessor.java">
+								<feature>x_MusicOrVideo</feature>
+								<fragment length="863" offset="0">
+									<feature>x_MusicOrVideo</feature>
+								</fragment>
+								<fragment length="165" offset="863">
+									<feature>includeVideo</feature>
+									<feature>x_MusicOrVideo</feature>
+								</fragment>
+								<fragment length="2465" offset="1028">
+									<feature>x_MusicOrVideo</feature>
+								</fragment>
+							</file>
+							<file name="MusicMediaAccessor.java.color" />
+							<file name="VideoAlbumData.java">
+								<feature>includeVideo</feature>
+								<fragment length="1062" offset="0">
+									<feature>includeVideo</feature>
+								</fragment>
+							</file>
+							<file name="VideoAlbumData.java.color" />
+							<file name="VideoMediaAccessor.java">
+								<feature>includeVideo</feature>
+								<fragment length="2121" offset="0">
+									<feature>includeVideo</feature>
+								</fragment>
+							</file>
+							<file name="VideoMediaAccessor.java.color" />
+						</folder>
+						<folder name="screens">
+							<file name=".cvsignore" />
+							<file name=".dircolors" />
+							<file name="AddMediaToAlbum.java">
+								<fragment length="75" offset="432">
+									<feature>includeMMAPI</feature>
+								</fragment>
+								<fragment length="28" offset="644">
+									<feature>x_SMSOrCapturePhotoOrCaptureVideo</feature>
+								</fragment>
+								<fragment length="22" offset="904">
+									<feature>includeMMAPI</feature>
+								</fragment>
+								<fragment length="65" offset="1728">
+									<feature>includeMMAPI</feature>
+								</fragment>
+								<fragment length="63" offset="2058">
+									<feature>x_SMSOrCapturePhotoOrCaptureVideo</feature>
+								</fragment>
+								<fragment length="90" offset="2126">
+									<feature>x_SMSOrCapturePhotoOrCaptureVideo</feature>
+								</fragment>
+							</file>
+							<file name="AddMediaToAlbum.java.color" />
+							<file name="AlbumListScreen.java">
+								<fragment length="54" offset="599">
+									<feature>x_PhotoAlbumOrMusicOrVideo</feature>
+								</fragment>
+								<fragment length="5" offset="653">
+									<feature>x_misc</feature>
+									<feature>x_PhotoAlbumOrMusicOrVideo</feature>
+								</fragment>
+								<fragment length="6" offset="658">
+									<feature>x_PhotoAlbumOrMusicOrVideo</feature>
+								</fragment>
+								<fragment length="7" offset="664">
+									<feature>x_misc</feature>
+									<feature>x_PhotoAlbumOrMusicOrVideo</feature>
+								</fragment>
+								<fragment length="19" offset="671">
+									<feature>x_PhotoAlbumOrMusicOrVideo</feature>
+								</fragment>
+								<fragment length="87" offset="1239">
+									<feature>includePrivacy</feature>
+								</fragment>
+								<fragment length="29" offset="1718">
+									<feature>includePrivacy</feature>
+								</fragment>
+							</file>
+							<file name="AlbumListScreen.java.color" />
+							<file name="CaptureVideoScreen.java">
+								<feature>x_CapturePhotoOrVideo</feature>
+								<fragment length="1050" offset="0">
+									<feature>x_CapturePhotoOrVideo</feature>
+								</fragment>
+								<fragment length="62" offset="1050">
+									<feature>x_CapturePhotoOrVideo</feature>
+									<feature>captureVideo</feature>
+								</fragment>
+								<fragment length="3" offset="1112">
+									<feature>x_CapturePhotoOrVideo</feature>
+								</fragment>
+								<fragment length="60" offset="1115">
+									<feature>x_CapturePhotoOrVideo</feature>
+									<feature>captureVideo</feature>
+								</fragment>
+								<fragment length="77" offset="1175">
+									<feature>x_CapturePhotoOrVideo</feature>
+								</fragment>
+								<fragment length="71" offset="1252">
+									<feature>capturePhoto</feature>
+									<feature>x_CapturePhotoOrVideo</feature>
+								</fragment>
+								<fragment length="1193" offset="1323">
+									<feature>x_CapturePhotoOrVideo</feature>
+								</fragment>
+								<fragment length="92" offset="2516">
+									<feature>x_CapturePhotoOrVideo</feature>
+									<feature>captureVideo</feature>
+								</fragment>
+								<fragment length="82" offset="2608">
+									<feature>x_CapturePhotoOrVideo</feature>
+								</fragment>
+								<fragment length="69" offset="2690">
+									<feature>capturePhoto</feature>
+									<feature>x_CapturePhotoOrVideo</feature>
+								</fragment>
+								<fragment length="110" offset="2759">
+									<feature>x_CapturePhotoOrVideo</feature>
+								</fragment>
+								<fragment length="434" offset="2869">
+									<feature>x_CapturePhotoOrVideo</feature>
+									<feature>captureVideo</feature>
+								</fragment>
+								<fragment length="6" offset="3303">
+									<feature>x_CapturePhotoOrVideo</feature>
+								</fragment>
+								<fragment length="201" offset="3309">
+									<feature>x_CapturePhotoOrVideo</feature>
+									<feature>captureVideo</feature>
+								</fragment>
+								<fragment length="3" offset="3510">
+									<feature>x_CapturePhotoOrVideo</feature>
+								</fragment>
+								<fragment length="72" offset="3513">
+									<feature>x_CapturePhotoOrVideo</feature>
+									<feature>captureVideo</feature>
+								</fragment>
+								<fragment length="77" offset="3585">
+									<feature>x_CapturePhotoOrVideo</feature>
+								</fragment>
+								<fragment length="348" offset="3662">
+									<feature>capturePhoto</feature>
+									<feature>x_CapturePhotoOrVideo</feature>
+								</fragment>
+								<fragment length="460" offset="4010">
+									<feature>x_CapturePhotoOrVideo</feature>
+								</fragment>
+							</file>
+							<file name="CaptureVideoScreen.java.color" />
+							<file name="MediaListScreen.java">
+								<fragment length="79" offset="873">
+									<feature>includePhotoAlbum</feature>
+								</fragment>
+								<fragment length="79" offset="1029">
+									<feature>includeMMAPI</feature>
+								</fragment>
+								<fragment length="90" offset="1185">
+									<feature>includeVideo</feature>
+								</fragment>
+								<fragment length="96" offset="1352">
+									<feature>captureVideo</feature>
+								</fragment>
+								<fragment length="96" offset="1525">
+									<feature>capturePhoto</feature>
+								</fragment>
+								<fragment length="88" offset="2047">
+									<feature>includeSorting</feature>
+								</fragment>
+								<fragment length="91" offset="2219">
+									<feature>includeFavourites</feature>
+								</fragment>
+								<fragment length="98" offset="2313">
+									<feature>includeFavourites</feature>
+								</fragment>
+								<fragment length="64" offset="2904">
+									<feature>includePhotoAlbum</feature>
+								</fragment>
+								<fragment length="64" offset="3047">
+									<feature>includeMMAPI</feature>
+								</fragment>
+								<fragment length="76" offset="3190">
+									<feature>includeVideo</feature>
+								</fragment>
+								<fragment length="81" offset="3345">
+									<feature>captureVideo</feature>
+								</fragment>
+								<fragment length="81" offset="3503">
+									<feature>capturePhoto</feature>
+								</fragment>
+								<fragment length="29" offset="3782">
+									<feature>includeSorting</feature>
+								</fragment>
+								<fragment length="33" offset="3900">
+									<feature>includeFavourites</feature>
+								</fragment>
+								<fragment length="38" offset="3937">
+									<feature>includeFavourites</feature>
+								</fragment>
+							</file>
+							<file name="MediaListScreen.java.color" />
+							<file name="NewLabelScreen.java">
+								<fragment length="42" offset="911">
+									<feature>includePrivacy</feature>
+								</fragment>
+								<fragment length="44" offset="969">
+									<feature>x_NotPrivacy</feature>
+								</fragment>
+							</file>
+							<file name="NewLabelScreen.java.color" />
+							<file name="PasswordScreen.java">
+								<feature>includePrivacy</feature>
+								<fragment length="980" offset="0">
+									<feature>includePrivacy</feature>
+								</fragment>
+							</file>
+							<file name="PasswordScreen.java.color" />
+							<file name="PhotoViewScreen.java">
+								<feature>includePhotoAlbum</feature>
+								<fragment length="620" offset="0">
+									<feature>includePhotoAlbum</feature>
+								</fragment>
+								<fragment length="24" offset="620">
+									<feature>includePhotoAlbum</feature>
+									<feature>includeSmsFeature</feature>
+								</fragment>
+								<fragment length="185" offset="644">
+									<feature>includePhotoAlbum</feature>
+								</fragment>
+								<fragment length="79" offset="829">
+									<feature>includePhotoAlbum</feature>
+									<feature>x_CopyPhotoOrSMS</feature>
+								</fragment>
+								<fragment length="82" offset="908">
+									<feature>includePhotoAlbum</feature>
+								</fragment>
+								<fragment length="95" offset="990">
+									<feature>includePhotoAlbum</feature>
+									<feature>includeSmsFeature</feature>
+								</fragment>
+								<fragment length="3" offset="1085">
+									<feature>includePhotoAlbum</feature>
+								</fragment>
+								<fragment length="32" offset="1088">
+									<feature>includePhotoAlbum</feature>
+									<feature>includeSmsFeature</feature>
+								</fragment>
+								<fragment length="272" offset="1120">
+									<feature>includePhotoAlbum</feature>
+								</fragment>
+								<fragment length="29" offset="1392">
+									<feature>includePhotoAlbum</feature>
+									<feature>x_CopyPhotoOrSMS</feature>
+								</fragment>
+								<fragment length="86" offset="1421">
+									<feature>includePhotoAlbum</feature>
+								</fragment>
+								<fragment length="32" offset="1507">
+									<feature>includePhotoAlbum</feature>
+									<feature>includeSmsFeature</feature>
+								</fragment>
+								<fragment length="703" offset="1539">
+									<feature>includePhotoAlbum</feature>
+								</fragment>
+								<fragment length="57" offset="2242">
+									<feature>includePhotoAlbum</feature>
+									<feature>includeSmsFeature</feature>
+								</fragment>
+								<fragment length="6" offset="2299">
+									<feature>includePhotoAlbum</feature>
+								</fragment>
+								<fragment length="50" offset="2305">
+									<feature>includePhotoAlbum</feature>
+									<feature>includeSmsFeature</feature>
+								</fragment>
+								<fragment length="6" offset="2355">
+									<feature>includePhotoAlbum</feature>
+								</fragment>
+								<fragment length="51" offset="2361">
+									<feature>includePhotoAlbum</feature>
+									<feature>includeSmsFeature</feature>
+								</fragment>
+								<fragment length="6" offset="2412">
+									<feature>includePhotoAlbum</feature>
+								</fragment>
+								<fragment length="72" offset="2418">
+									<feature>includePhotoAlbum</feature>
+									<feature>includeSmsFeature</feature>
+								</fragment>
+								<fragment length="25" offset="2490">
+									<feature>includePhotoAlbum</feature>
+								</fragment>
+							</file>
+							<file name="PhotoViewScreen.java.color" />
+							<file name="PlayMediaScreen.java">
+								<feature>includeMMAPI</feature>
+								<fragment length="1213" offset="0">
+									<feature>includeMMAPI</feature>
+								</fragment>
+								<fragment length="72" offset="1213">
+									<feature>includeMMAPI</feature>
+									<feature>includeCopyPhoto</feature>
+								</fragment>
+								<fragment length="1048" offset="1285">
+									<feature>includeMMAPI</feature>
+								</fragment>
+								<fragment length="22" offset="2333">
+									<feature>includeMMAPI</feature>
+									<feature>includeCopyPhoto</feature>
+								</fragment>
+								<fragment length="1473" offset="2355">
+									<feature>includeMMAPI</feature>
+								</fragment>
+							</file>
+							<file name="PlayMediaScreen.java.color" />
+							<file name="PlayVideoScreen.java">
+								<feature>includeVideo</feature>
+								<fragment length="982" offset="0">
+									<feature>includeVideo</feature>
+								</fragment>
+								<fragment length="72" offset="982">
+									<feature>includeVideo</feature>
+									<feature>includeCopyPhoto</feature>
+								</fragment>
+								<fragment length="897" offset="1054">
+									<feature>includeVideo</feature>
+								</fragment>
+								<fragment length="22" offset="1951">
+									<feature>includeVideo</feature>
+									<feature>includeCopyPhoto</feature>
+								</fragment>
+								<fragment length="217" offset="1973">
+									<feature>includeVideo</feature>
+								</fragment>
+								<fragment length="96" offset="2190">
+									<feature>includeVideo</feature>
+									<feature>simulatePlayVideo</feature>
+								</fragment>
+								<fragment length="23" offset="2286">
+									<feature>includeVideo</feature>
+								</fragment>
+								<fragment length="49" offset="2309">
+									<feature>includeVideo</feature>
+									<feature>x_notSimulatePlayVideo</feature>
+								</fragment>
+								<fragment length="1661" offset="2358">
+									<feature>includeVideo</feature>
+								</fragment>
+							</file>
+							<file name="PlayVideoScreen.java.color" />
+							<file name="SelectTypeOfMedia.java">
+								<feature>x_misc</feature>
+								<fragment length="1189" offset="0">
+									<feature>x_misc</feature>
+								</fragment>
+								<fragment length="28" offset="1189">
+									<feature>includePhotoAlbum</feature>
+									<feature>x_misc</feature>
+								</fragment>
+								<fragment length="82" offset="1217">
+									<feature>x_misc</feature>
+								</fragment>
+								<fragment length="27" offset="1299">
+									<feature>includeMMAPI</feature>
+									<feature>x_misc</feature>
+								</fragment>
+								<fragment length="82" offset="1326">
+									<feature>x_misc</feature>
+								</fragment>
+								<fragment length="28" offset="1408">
+									<feature>includeVideo</feature>
+									<feature>x_misc</feature>
+								</fragment>
+								<fragment length="29" offset="1436">
+									<feature>x_misc</feature>
+								</fragment>
+							</file>
+							<file name="SelectTypeOfMedia.java.color" />
+						</folder>
+					</folder>
+					<folder name="util">
+						<file name=".dircolors" />
+						<file name="Constants.java" />
+						<file name="Constants.java.color" />
+						<file name="MediaUtil.java">
+							<fragment length="25" offset="4391">
+								<feature>includeFavourites</feature>
+							</fragment>
+							<fragment length="26" offset="4421">
+								<feature>includeFavourites</feature>
+							</fragment>
+							<fragment length="51" offset="4452">
+								<feature>includeFavourites</feature>
+							</fragment>
+							<fragment length="54" offset="4508">
+								<feature>includeFavourites</feature>
+							</fragment>
+							<fragment length="79" offset="4572">
+								<feature>includeFavourites</feature>
+							</fragment>
+							<fragment length="26" offset="4743">
+								<feature>includeSorting</feature>
+							</fragment>
+							<fragment length="51" offset="4774">
+								<feature>includeSorting</feature>
+							</fragment>
+							<fragment length="54" offset="4835">
+								<feature>includeSorting</feature>
+							</fragment>
+							<fragment length="22" offset="4899">
+								<feature>includeSorting</feature>
+							</fragment>
+							<fragment length="177" offset="4926">
+								<feature>includeSorting</feature>
+							</fragment>
+							<fragment length="25" offset="5277">
+								<feature>includeFavourites</feature>
+							</fragment>
+							<fragment length="35" offset="5355">
+								<feature>includeSorting</feature>
+							</fragment>
+							<fragment length="42" offset="6914">
+								<feature>includeFavourites</feature>
+							</fragment>
+							<fragment length="110" offset="6961">
+								<feature>includeFavourites</feature>
+							</fragment>
+							<fragment length="42" offset="7154">
+								<feature>includeSorting</feature>
+							</fragment>
+							<fragment length="57" offset="7201">
+								<feature>includeSorting</feature>
+							</fragment>
+						</file>
+						<file name="MediaUtil.java.color" />
+						<file name="MusicMediaUtil.java">
+							<feature>x_MusicOrVideo</feature>
+							<fragment length="1774" offset="0">
+								<feature>x_MusicOrVideo</feature>
+							</fragment>
+						</file>
+					</folder>
+				</folder>
+				<folder name="lib">
+					<folder name="exceptions">
+						<file name="ImageNotFoundException.java" />
+						<file name="ImagePathNotValidException.java" />
+						<file name="InvalidArrayFormatException.java" />
+						<file name="InvalidImageDataException.java" />
+						<file name="InvalidImageFormatException.java" />
+						<file name="InvalidPhotoAlbumNameException.java" />
+						<file name="PersistenceMechanismException.java" />
+						<file name="UnavailablePhotoAlbumException.java" />
+					</folder>
+				</folder>
+				<folder name="sms">
+					<file name=".dircolors" />
+					<file name="NetworkScreen.java" />
+					<file name="SmsMessaging.java" />
+					<file name="SmsReceiverController.java">
+						<feature>includeSmsFeature</feature>
+						<fragment length="3067" offset="0">
+							<feature>includeSmsFeature</feature>
+						</fragment>
+					</file>
+					<file name="SmsReceiverThread.java">
+						<feature>includeSmsFeature</feature>
+						<fragment length="3437" offset="0">
+							<feature>includeSmsFeature</feature>
+						</fragment>
+					</file>
+					<file name="SmsSenderController.java">
+						<feature>includeSmsFeature</feature>
+						<fragment length="3917" offset="0">
+							<feature>includeSmsFeature</feature>
+						</fragment>
+					</file>
+					<file name="SmsSenderThread.java" />
+				</folder>
+			</folder>
+		</folder>
+	</folder>
+</project>
