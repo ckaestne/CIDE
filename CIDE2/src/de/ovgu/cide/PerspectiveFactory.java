@@ -25,6 +25,8 @@ import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
 import org.eclipse.ui.navigator.resources.ProjectExplorer;
 
+import de.ovgu.cide.tools.featureview.FeatureView;
+
 public class PerspectiveFactory implements IPerspectiveFactory {
 
 	public void createInitialLayout(IPageLayout layout) {
@@ -48,6 +50,7 @@ public class PerspectiveFactory implements IPerspectiveFactory {
 				IPageLayout.RIGHT, 0.75f, editorArea);
 		right.addView(IPageLayout.ID_OUTLINE);
 		right.addView(CIDECorePlugin.ID_ASTVIEW);
+		right.addView(FeatureView.VIEW_ID);
 	}
 
 }
