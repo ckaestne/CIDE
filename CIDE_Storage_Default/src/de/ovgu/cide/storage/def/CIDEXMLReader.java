@@ -78,6 +78,9 @@ public class CIDEXMLReader {
 											.getFeature(id);
 									if (feature != null)
 										features.add(feature);
+									else
+										System.out.println("Unknown feature (xml): "
+												+ id);
 								}
 							}
 							result.put(key, features);

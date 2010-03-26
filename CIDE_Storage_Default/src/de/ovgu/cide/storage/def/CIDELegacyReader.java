@@ -7,7 +7,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import de.ovgu.cide.features.Feature;
+import coloredide.features.Feature;
+
 import de.ovgu.cide.features.FeatureModelNotFoundException;
 import de.ovgu.cide.features.IFeature;
 import de.ovgu.cide.features.IFeatureModelWithID;
@@ -51,6 +52,8 @@ public class CIDELegacyReader {
 					IFeature feature = featureModel.getFeature(id.getId());
 					if (feature != null)
 						features.add(feature);
+					else
+						System.out.println("Unknown feature (legacy): "+id.getId());
 				}
 				if (!features.isEmpty())
 					result.put(entry.getKey(), features);

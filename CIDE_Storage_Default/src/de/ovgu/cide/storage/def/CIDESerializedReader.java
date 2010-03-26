@@ -48,6 +48,9 @@ public class CIDESerializedReader {
 					IFeature feature = featureModel.getFeature(id);
 					if (feature != null)
 						features.add(feature);
+					else
+						System.out.println("Unknown feature: "
+								+ id);
 				}
 				if (!features.isEmpty())
 					result.put(entry.getKey(), features);

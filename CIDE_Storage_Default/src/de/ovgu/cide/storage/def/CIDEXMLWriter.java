@@ -38,7 +38,7 @@ public class CIDEXMLWriter {
 			serializer.setOutputProperty(OutputKeys.ENCODING, "ISO-8859-1");
 			serializer.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM,
 					"annotations.dtd");
-			serializer.setOutputProperty(OutputKeys.INDENT, "false");
+			serializer.setOutputProperty(OutputKeys.INDENT, "yes");
 			hd.setResult(streamResult);
 			hd.startDocument();
 			// annotations tag.

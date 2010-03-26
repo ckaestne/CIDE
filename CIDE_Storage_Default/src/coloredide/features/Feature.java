@@ -1,4 +1,4 @@
-package de.ovgu.cide.features;
+package coloredide.features;
 
 import java.io.IOException;
 import java.io.Serializable;
