@@ -1,0 +1,28 @@
+## FieldDetailsContents.vm
+## JEDI Project 
+## Author: Roberto E. Lopez-Herrejon
+## Last update: November 30, 2002
+
+
+\#foreach($field in $listFields)
+
+  #foreach($layoutElement in $layoutList)
+
+  <!-- $layoutElement  -->
+   #include($layoutElement)
+
+  #end     ## of for each
+	
+   </DL>
+   </P>
+   <HR>
+   <BR>
+
+  <BR>
+
+\#end   ## of foreach
+
+## End of FieldDetailsContents.vm
+
+
+

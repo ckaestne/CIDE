@@ -1,0 +1,507 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Java Matrix</title>
+</head>
+
+<body>
+
+<h1 align="center"><font face="Arial" color="#0000FF">Java Tools</font></h1>
+<p><font face="Arial">The Java Tools matrix is a three-dimensional origami 
+matrix that is used to synthesize most of the Jak tools in AHEAD. The way to understand it is by looking at the AHEAD logo, 
+which is a vertical plane (matrix) with a horizontal plan (matrix) perpendicular 
+to it.&nbsp; The vertical plane is the Java Matrix, the horizontal plane is the 
+AST-Language Matrix.&nbsp; Where they join is at the ast row (<font color="#FF00FF">in purple</font>).</font></p>
+<blockquote>
+  <p><font face="Arial">Note: in the ast row of the Java Matrix, you'll see 
+  names like ast-jak2java, ast-jampack, etc.&nbsp; When the AST-Language matrix 
+  is folded by rows, an equation is defined for each of the columns.&nbsp; The 
+  names of these columns are ast-jak2java, ast-jampack, etc.&nbsp; These 
+  equations are substituted into the ast row of the Java matrix.</font></p>
+</blockquote>
+<p><font face="Arial">Rows of each matrix are language features {core, lang, 
+java, ...} and columns are tools { parser, jak2java, jampack, ... }.&nbsp; The 
+exception is the grammar column.&nbsp; This column contains only grammar files 
+which are composed to produce a single composite grammar.&nbsp; From this 
+grammar, the build/java/syntax layer is generated, along with the parser for 
+this grammar.&nbsp; As the build/java/syntax layer and parser are shared across 
+all tools, it's represented by a separate column parser.&nbsp; (In effect, the 
+grammar column derives the parser column).</font></p>
+<h1 align="center"><font face="Arial" color="#0000FF">Java Matrix</font></h1>
+<table border="1" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="114%" height="298">
+  <tr>
+    <td width="23%" height="19">&nbsp;</td>
+    <td width="10%" height="19"><font face="Arial" size="2" color="#0000FF">
+    grammar</font></td>
+    <td width="10%" height="19"><font face="Arial" size="2" color="#0000FF">
+    parser</font></td>
+    <td width="10%" height="19"><font face="Arial" size="2" color="#0000FF">
+    support</font></td>
+    <td width="10%" height="19"><font face="Arial" size="2" color="#0000FF">
+    jak2java</font></td>
+    <td width="10%" height="19"><font face="Arial" size="2" color="#0000FF">
+    jampack</font></td>
+    <td width="10%" height="19"><font face="Arial" size="2" color="#0000FF">
+    mixin</font></td>
+    <td width="10%" height="19"><font face="Arial" size="2" color="#0000FF">
+    mmatrix</font></td>
+    <td width="10%" height="19"><font face="Arial" size="2" color="#0000FF">
+    unmixin</font></td>
+    <td width="10%" height="19"><font face="Arial" size="2" color="#0000FF">
+    bcjak2java</font></td>
+    <td width="10%" height="19"><font face="Arial" size="2" color="#0000FF">
+    jrename</font></td>
+  </tr>
+  <tr>
+    <td width="23%" height="10" bgcolor="#00FF00">
+    <font face="Arial" size="2" color="#0000FF">java</font></td>
+    <td width="10%" height="10" bgcolor="#00FF00"><font face="Arial" size="2">
+    dsl/java/JavaGram</font></td>
+    <td width="10%" height="4" bgcolor="#00FF00"><font face="Arial" size="2">dsl/kernel
+    <font color="#FF0000"><b>build/java/syntax<br>
+    </b></font>dsl/java/Java</font></td>
+    <td width="10%" height="4" bgcolor="#00FF00"><font face="Arial" size="2">dsl/java/Comments dsl/java/StringAST</font></td>
+    <td width="10%" height="10" bgcolor="#00FF00"><font face="Arial" size="2">
+    dsl/java/sortfd </font></td>
+    <td width="10%" height="10" bgcolor="#00FF00"><font face="Arial" size="2">
+    dsl/java/sortfd </font></td>
+    <td width="10%" height="10" bgcolor="#00FF00">&nbsp;</td>
+    <td width="10%" height="10" bgcolor="#00FF00"><font face="Arial" size="2">
+    &nbsp;dsl/java/linenum </font></td>
+    <td width="10%" height="10" bgcolor="#00FF00">&nbsp;</td>
+    <td width="10%" height="10" bgcolor="#00FF00"><font face="Arial" size="2">
+    dsl/java/sortfd </font></td>
+    <td width="10%" height="10" bgcolor="#00FF00">&nbsp;</td>
+  </tr>
+  <tr>
+    <td width="23%" height="16" bgcolor="#FF00FF">
+    <font face="Arial" size="2" color="#0000FF">ast</font></td>
+    <td width="10%" height="16" bgcolor="#FF00FF"><font face="Arial" size="2">
+    dsl/java/AstGram</font></td>
+    <td width="10%" height="16" bgcolor="#FF00FF">&nbsp;</td>
+    <td width="10%" height="16" bgcolor="#FF00FF">&nbsp;</td>
+    <td width="10%" height="16" bgcolor="#FF00FF"><font face="Arial" size="2">
+    ast-jak2java</font></td>
+    <td width="10%" height="16" bgcolor="#FF00FF"><font face="Arial" size="2">
+    ast-jampack</font></td>
+    <td width="10%" height="16" bgcolor="#FF00FF"><font face="Arial" size="2">
+    ast-mixin</font></td>
+    <td width="10%" height="16" bgcolor="#FF00FF"><font face="Arial" size="2">
+    ast-mmatrix</font></td>
+    <td width="10%" height="16" bgcolor="#FF00FF"><font face="Arial" size="2">
+    ast-unmixin</font></td>
+    <td width="10%" height="16" bgcolor="#FF00FF"><font face="Arial" size="2">
+    ast-bcjak2java</font></td>
+    <td width="10%" height="16" bgcolor="#FF00FF"><font face="Arial" size="2">
+    ast-jrename</font></td>
+  </tr>
+  <tr>
+    <td width="23%" height="16"><font face="Arial" size="2" color="#0000FF">
+    gscope</font></td>
+    <td width="10%" height="16"><font face="Arial" size="2">dsl/java/GscopeGram</font></td>
+    <td width="10%" height="16"></td>
+    <td width="10%" height="16"></td>
+    <td width="10%" height="16"><font face="Arial" size="2">dsl/java/gscope</font></td>
+    <td width="10%" height="16"><font face="Arial" size="2">dsl/java/preprocessGscope</font></td>
+    <td width="10%" height="16"></td>
+    <td width="10%" height="16"><font face="Arial" size="2">dsl/java/mmGscope</font></td>
+    <td width="10%" height="16"></td>
+    <td width="10%" height="16"><font face="Arial" size="2">dsl/java/gscope</font></td>
+    <td width="10%" height="16"><font face="Arial" size="2">dsl/java/gscopeError</font></td>
+  </tr>
+  <tr>
+    <td width="23%" height="57" bgcolor="#FFFF00">
+    <font face="Arial" size="2" color="#0000FF">base</font></td>
+    <td width="10%" height="57" bgcolor="#FFFF00"><font face="Arial" size="2">
+    dsl/java/AheadGram</font></td>
+    <td width="10%" height="57" bgcolor="#FFFF00">&nbsp;</td>
+    <td width="10%" height="57" bgcolor="#FFFF00">&nbsp;</td>
+    <td width="10%" height="57" bgcolor="#FFFF00"><font face="Arial" size="2">&nbsp;dsl/java/j2jBase</font></td>
+    <td width="10%" height="57" bgcolor="#FFFF00"><font face="Arial" size="2">
+    dsl/java/CommonBase dsl/java/CommonError dsl/java/preprocess</font></td>
+    <td width="10%" height="57" bgcolor="#FFFF00"><font face="Arial" size="2">
+    dsl/java/CommonBase dsl/java/CommonError<br>
+    dsl/java/mixinbase</font></td>
+    <td width="10%" height="57" bgcolor="#FFFF00"><font face="Arial" size="2">
+    dsl/java/Basemm</font></td>
+    <td width="10%" height="57" bgcolor="#FFFF00"><font face="Arial" size="2">
+    dsl/java/unmixinbase</font></td>
+    <td width="10%" height="57" bgcolor="#FFFF00"><font face="Arial" size="2">
+    dsl/java/bcAhead</font></td>
+    <td width="10%" height="57" bgcolor="#FFFF00"><font face="Arial" size="2">
+    dsl/java/jrenBase</font></td>
+  </tr>
+  <tr>
+    <td width="23%" height="19" bgcolor="#FFFF00">
+    <font face="Arial" size="2" color="#0000FF">source</font></td>
+    <td width="10%" height="19" bgcolor="#FFFF00"><font face="Arial" size="2">
+    dsl/java/SourceGram</font></td>
+    <td width="10%" height="19" bgcolor="#FFFF00">&nbsp;</td>
+    <td width="10%" height="19" bgcolor="#FFFF00">&nbsp;</td>
+    <td width="10%" height="19" bgcolor="#FFFF00">&nbsp;</td>
+    <td width="10%" height="19" bgcolor="#FFFF00"><font face="Arial" size="2">
+    dsl/java/SourceError</font></td>
+    <td width="10%" height="19" bgcolor="#FFFF00">&nbsp;</td>
+    <td width="10%" height="19" bgcolor="#FFFF00"><font face="Arial" size="2">
+    dsl/java/SourceMM</font></td>
+    <td width="10%" height="19" bgcolor="#FFFF00">&nbsp;</td>
+    <td width="10%" height="19" bgcolor="#FFFF00">&nbsp;</td>
+    <td width="10%" height="19" bgcolor="#FFFF00"><font face="Arial" size="2">
+    dsl/java/SourceError</font></td>
+  </tr>
+  <tr>
+    <td width="23%" height="19" bgcolor="#FFFF00">
+    <font face="Arial" size="2" color="#0000FF">local-id</font></td>
+    <td width="10%" height="19" bgcolor="#FFFF00"><font face="Arial" size="2">
+    dsl/java/LocalIdGram</font></td>
+    <td width="10%" height="19" bgcolor="#FFFF00">&nbsp;</td>
+    <td width="10%" height="19" bgcolor="#FFFF00">&nbsp;</td>
+    <td width="10%" height="19" bgcolor="#FFFF00"><font face="Arial" size="2">
+    dsl/java/LocalIdError</font></td>
+    <td width="10%" height="19" bgcolor="#FFFF00"><font face="Arial" size="2">
+    dsl/java/LocalId</font></td>
+    <td width="10%" height="19" bgcolor="#FFFF00"><font face="Arial" size="2">
+    dsl/java/LocalId</font></td>
+    <td width="10%" height="19" bgcolor="#FFFF00">&nbsp;</td>
+    <td width="10%" height="19" bgcolor="#FFFF00">&nbsp;</td>
+    <td width="10%" height="19" bgcolor="#FFFF00"><font face="Arial" size="2">
+    dsl/java/LocalIdError</font></td>
+    <td width="10%" height="19" bgcolor="#FFFF00"><font face="Arial" size="2">
+    dsl/java/LocalIdError</font></td>
+  </tr>
+  <tr>
+    <td width="23%" height="19" bgcolor="#FFFF00">
+    <font face="Arial" size="2" color="#0000FF">layer</font></td>
+    <td width="10%" height="19" bgcolor="#FFFF00"><font face="Arial" size="2">
+    dsl/java/LayerGram</font></td>
+    <td width="10%" height="19" bgcolor="#FFFF00">&nbsp;</td>
+    <td width="10%" height="19" bgcolor="#FFFF00">&nbsp;</td>
+    <td width="10%" height="19" bgcolor="#FFFF00"><font face="Arial" size="2">
+    dsl/java/AspectTrans</font></td>
+    <td width="10%" height="19" bgcolor="#FFFF00"><font face="Arial" size="2">
+    dsl/java/AspectDecl</font></td>
+    <td width="10%" height="19" bgcolor="#FFFF00"><font face="Arial" size="2">
+    dsl/java/AspectDecl</font></td>
+    <td width="10%" height="19" bgcolor="#FFFF00">&nbsp;</td>
+    <td width="10%" height="19" bgcolor="#FFFF00">&nbsp;</td>
+    <td width="10%" height="19" bgcolor="#FFFF00"><font face="Arial" size="2">
+    dsl/java/bcLayer</font></td>
+    <td width="10%" height="19" bgcolor="#FFFF00"><font face="Arial" size="2">
+    dsl/java/layerError</font></td>
+  </tr>
+  <tr>
+    <td width="23%" height="19" bgcolor="#00FFFF">
+    <font face="Arial" size="2" color="#0000FF">sm</font></td>
+    <td width="10%" height="19" bgcolor="#00FFFF"><font face="Arial" size="2">
+    dsl/java/SmGram</font></td>
+    <td width="10%" height="19" bgcolor="#00FFFF">&nbsp;</td>
+    <td width="10%" height="19" bgcolor="#00FFFF">&nbsp;</td>
+    <td width="10%" height="19" bgcolor="#00FFFF"><font face="Arial" size="2">&nbsp;dsl/java/sm5</font></td>
+    <td width="10%" height="19" bgcolor="#00FFFF">&nbsp;</td>
+    <td width="10%" height="19" bgcolor="#00FFFF">&nbsp;</td>
+    <td width="10%" height="19" bgcolor="#00FFFF">&nbsp;</td>
+    <td width="10%" height="19" bgcolor="#00FFFF">&nbsp;</td>
+    <td width="10%" height="19" bgcolor="#00FFFF"><font face="Arial" size="2">
+    dsl/java/sm5 dsl/java/bcsm5</font></td>
+    <td width="10%" height="19" bgcolor="#00FFFF"><font face="Arial" size="2">
+    dsl/java/smError</font></td>
+  </tr>
+  <tr>
+    <td width="23%" height="38" bgcolor="#C0C0C0">
+    <font face="Arial" size="2" color="#0000FF">compose-class</font></td>
+    <td width="10%" height="38" bgcolor="#C0C0C0"><font face="Arial" size="2">
+    dsl/java/ClassXGram</font></td>
+    <td width="10%" height="38" bgcolor="#C0C0C0">&nbsp;</td>
+    <td width="10%" height="38" bgcolor="#C0C0C0">&nbsp;</td>
+    <td width="10%" height="38" bgcolor="#C0C0C0"><font face="Arial" size="2">
+    dsl/java/j2jClassx</font></td>
+    <td width="10%" height="38" bgcolor="#C0C0C0"><font face="Arial" size="2">
+    dsl/java/CompClass</font></td>
+    <td width="10%" height="38" bgcolor="#C0C0C0"><font face="Arial" size="2">
+    dsl/java/mixinClass</font></td>
+    <td width="10%" height="38" bgcolor="#C0C0C0"><font face="Arial" size="2">&nbsp;dsl/java/Classmm</font></td>
+    <td width="10%" height="38" bgcolor="#C0C0C0"><font face="Arial" size="2">
+    dsl/java/unmixinclass</font></td>
+    <td width="10%" height="38" bgcolor="#C0C0C0"><font face="Arial" size="2">
+    dsl/java/bcClassx</font></td>
+    <td width="10%" height="38" bgcolor="#C0C0C0"><font face="Arial" size="2">
+    dsl/java/ClassxError</font></td>
+  </tr>
+  <tr>
+    <td width="23%" height="38" bgcolor="#C0C0C0">
+    <font face="Arial" size="2" color="#0000FF">compose-int</font></td>
+    <td width="10%" height="38" bgcolor="#C0C0C0"><font face="Arial" size="2">
+    dsl/java/IntXGram</font></td>
+    <td width="10%" height="38" bgcolor="#C0C0C0">&nbsp;</td>
+    <td width="10%" height="38" bgcolor="#C0C0C0">&nbsp;</td>
+    <td width="10%" height="38" bgcolor="#C0C0C0"><font face="Arial" size="2">
+    dsl/java/j2jIntx</font></td>
+    <td width="10%" height="38" bgcolor="#C0C0C0"><font face="Arial" size="2">
+    dsl/java/CompInt</font></td>
+    <td width="10%" height="38" bgcolor="#C0C0C0"><font face="Arial" size="2">
+    dsl/java/mixinInt</font></td>
+    <td width="10%" height="38" bgcolor="#C0C0C0"><font face="Arial" size="2">
+    dsl/java/Intmm</font></td>
+    <td width="10%" height="38" bgcolor="#C0C0C0"><font face="Arial" size="2">
+    dsl/java/unmixinint</font></td>
+    <td width="10%" height="38" bgcolor="#C0C0C0"><font face="Arial" size="2">&nbsp;dsl/java/bcIntx</font></td>
+    <td width="10%" height="38" bgcolor="#C0C0C0"><font face="Arial" size="2">
+    dsl/java/IntxError<br>
+&nbsp;</font></td>
+  </tr>
+  <tr>
+    <td width="23%" height="38" bgcolor="#C0C0C0">
+    <font face="Arial" size="2" color="#0000FF">compose-sm</font></td>
+    <td width="10%" height="38" bgcolor="#C0C0C0"><font face="Arial" size="2">
+    dsl/java/SmXGram</font></td>
+    <td width="10%" height="38" bgcolor="#C0C0C0">&nbsp;</td>
+    <td width="10%" height="38" bgcolor="#C0C0C0">&nbsp;</td>
+    <td width="10%" height="38" bgcolor="#C0C0C0"><font face="Arial" size="2">&nbsp;dsl/java/j2jSmx</font></td>
+    <td width="10%" height="38" bgcolor="#C0C0C0"><font face="Arial" size="2">
+    dsl/java/CompSm</font></td>
+    <td width="10%" height="38" bgcolor="#C0C0C0"><font face="Arial" size="2">
+    dsl/java/mixinSm</font></td>
+    <td width="10%" height="38" bgcolor="#C0C0C0"><font face="Arial" size="2">
+    dsl/java/Sm2mm</font></td>
+    <td width="10%" height="38" bgcolor="#C0C0C0"><font face="Arial" size="2">&nbsp;dsl/java/unmixinsm</font></td>
+    <td width="10%" height="38" bgcolor="#C0C0C0"><font face="Arial" size="2">
+    dsl/java/bcSmx</font></td>
+    <td width="10%" height="38" bgcolor="#C0C0C0"><font face="Arial" size="2">
+    dsl/java/SmxError</font></td>
+  </tr>
+  <tr>
+    <td width="23%" height="10"><font face="Arial" size="2" color="#0000FF">ant</font></td>
+    <td width="10%" height="10"></td>
+    <td width="10%" height="10"></td>
+    <td width="10%" height="10"></td>
+    <td width="10%" height="10"><font face="Arial" size="2">dsl/support/antDerive</font></td>
+    <td width="10%" height="10"><font face="Arial" size="2">dsl/support/antCompose</font></td>
+    <td width="10%" height="10"><font face="Arial" size="2">dsl/support/antCompose</font></td>
+    <td width="10%" height="10"><font face="Arial" size="2">dsl/support/antDerive</font></td>
+    <td width="10%" height="10"><font face="Arial" size="2">dsl/support/antDerive</font></td>
+    <td width="10%" height="10"><font face="Arial" size="2">dsl/support/antDerive</font></td>
+    <td width="10%" height="10"><font face="Arial" size="2">dsl/support/antDerive</font></td>
+  </tr>
+</table>
+<h1 align="center"><font face="Arial" color="#0000FF">AST-Language Interaction 
+Matrix</font></h1>
+<table border="1" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="100%">
+  <tr>
+    <td width="10%">&nbsp;</td>
+    <td width="10%"><font face="Arial" size="2" color="#0000FF">ast-grammar</font></td>
+    <td width="10%"><font face="Arial" size="2" color="#0000FF">ast-parser
+    </font></td>
+    <td width="10%"><font face="Arial" size="2" color="#0000FF">ast-support</font></td>
+    <td width="10%"><font face="Arial" size="2" color="#0000FF">ast-jak2java</font></td>
+    <td width="10%"><font face="Arial" size="2" color="#0000FF">ast-jampack</font></td>
+    <td width="10%"><font face="Arial" size="2" color="#0000FF">ast-mixin</font></td>
+    <td width="10%"><font face="Arial" size="2" color="#0000FF">ast-mmatrix</font></td>
+    <td width="10%"><font face="Arial" size="2" color="#0000FF">ast-unmixin</font></td>
+    <td width="10%"><font face="Arial" size="2" color="#0000FF">ast-bcjak2java</font></td>
+    <td width="10%"><font face="Arial" size="2" color="#0000FF">ast-jrename</font></td>
+  </tr>
+  <tr>
+    <td width="10%" bgcolor="#00FF00">
+    <font face="Arial" size="2" color="#0000FF">java</font></td>
+    <td width="10%" bgcolor="#00FF00">&nbsp;</td>
+    <td width="10%" bgcolor="#00FF00">&nbsp;</td>
+    <td width="10%" bgcolor="#00FF00">&nbsp;</td>
+    <td width="10%" bgcolor="#00FF00"><font face="Arial" size="2">&nbsp;</font></td>
+    <td width="10%" bgcolor="#00FF00"><font face="Arial" size="2">&nbsp;</font></td>
+    <td width="10%" bgcolor="#00FF00"><font face="Arial" size="2">&nbsp;</font></td>
+    <td width="10%" bgcolor="#00FF00"><font face="Arial" size="2">&nbsp;</font></td>
+    <td width="10%" bgcolor="#00FF00"><font face="Arial" size="2">&nbsp;</font></td>
+    <td width="10%" bgcolor="#00FF00"><font face="Arial" size="2">&nbsp;</font></td>
+    <td width="10%" bgcolor="#00FF00"><font face="Arial" size="2">&nbsp;</font></td>
+  </tr>
+  <tr>
+    <td width="10%"><font face="Arial" size="2" color="#0000FF">ast</font></td>
+    <td width="10%">&nbsp;</td>
+    <td width="10%">&nbsp;</td>
+    <td width="10%">&nbsp;</td>
+    <td width="10%"><font face="Arial" size="2">dsl/java/ast</font></td>
+    <td width="10%">&nbsp;</td>
+    <td width="10%">&nbsp;</td>
+    <td width="10%">&nbsp;</td>
+    <td width="10%">&nbsp;</td>
+    <td width="10%"><font face="Arial" size="2">dsl/java/ast</font></td>
+    <td width="10%"><font face="Arial" size="2">dsl/java/astError</font></td>
+  </tr>
+  <tr>
+    <td width="10%"><font face="Arial" size="2" color="#0000FF">gscope</font></td>
+    <td width="10%">&nbsp;</td>
+    <td width="10%">&nbsp;</td>
+    <td width="10%">&nbsp;</td>
+    <td width="10%">&nbsp;</td>
+    <td width="10%">&nbsp;</td>
+    <td width="10%">&nbsp;</td>
+    <td width="10%">&nbsp;</td>
+    <td width="10%">&nbsp;</td>
+    <td width="10%">&nbsp;</td>
+    <td width="10%">&nbsp;</td>
+  </tr>
+  <tr>
+    <td width="10%" bgcolor="#FFFF00">
+    <font face="Arial" size="2" color="#0000FF">base</font></td>
+    <td width="10%" bgcolor="#FFFF00">&nbsp;</td>
+    <td width="10%" bgcolor="#FFFF00">&nbsp;</td>
+    <td width="10%" bgcolor="#FFFF00">&nbsp;</td>
+    <td width="10%" bgcolor="#FFFF00"><font face="Arial" size="2">dsl/java/j2jast</font></td>
+    <td width="10%" bgcolor="#FFFF00"><font face="Arial" size="2">dsl/java/CommonErrorAst</font></td>
+    <td width="10%" bgcolor="#FFFF00"><font face="Arial" size="2">dsl/java/CommonErrorAst</font></td>
+    <td width="10%" bgcolor="#FFFF00"><font face="Arial" size="2">dsl/java/mmAst</font></td>
+    <td width="10%" bgcolor="#FFFF00"><font face="Arial" size="2">dsl/java/unmixinbaseAst</font></td>
+    <td width="10%" bgcolor="#FFFF00">&nbsp;</td>
+    <td width="10%" bgcolor="#FFFF00">&nbsp;</td>
+  </tr>
+  <tr>
+    <td width="10%" bgcolor="#FFFF00">
+    <font face="Arial" size="2" color="#0000FF">source</font></td>
+    <td width="10%" bgcolor="#FFFF00">&nbsp;</td>
+    <td width="10%" bgcolor="#FFFF00">&nbsp;</td>
+    <td width="10%" bgcolor="#FFFF00">&nbsp;</td>
+    <td width="10%" bgcolor="#FFFF00">&nbsp;</td>
+    <td width="10%" bgcolor="#FFFF00">&nbsp;</td>
+    <td width="10%" bgcolor="#FFFF00">&nbsp;</td>
+    <td width="10%" bgcolor="#FFFF00">&nbsp;</td>
+    <td width="10%" bgcolor="#FFFF00">&nbsp;</td>
+    <td width="10%" bgcolor="#FFFF00">&nbsp;</td>
+    <td width="10%" bgcolor="#FFFF00">&nbsp;</td>
+  </tr>
+  <tr>
+    <td width="10%" bgcolor="#FFFF00">
+    <font face="Arial" size="2" color="#0000FF">local-id</font></td>
+    <td width="10%" bgcolor="#FFFF00">&nbsp;</td>
+    <td width="10%" bgcolor="#FFFF00">&nbsp;</td>
+    <td width="10%" bgcolor="#FFFF00">&nbsp;</td>
+    <td width="10%" bgcolor="#FFFF00">&nbsp;</td>
+    <td width="10%" bgcolor="#FFFF00"><font face="Arial" size="2">dsl/java/LocalIdAst</font></td>
+    <td width="10%" bgcolor="#FFFF00"><font face="Arial" size="2">dsl/java/LocalIdAst</font></td>
+    <td width="10%" bgcolor="#FFFF00">&nbsp;</td>
+    <td width="10%" bgcolor="#FFFF00">&nbsp;</td>
+    <td width="10%" bgcolor="#FFFF00">&nbsp;</td>
+    <td width="10%" bgcolor="#FFFF00">&nbsp;</td>
+  </tr>
+  <tr>
+    <td width="10%" bgcolor="#FFFF00">
+    <font face="Arial" size="2" color="#0000FF">layer</font></td>
+    <td width="10%" bgcolor="#FFFF00">&nbsp;</td>
+    <td width="10%" bgcolor="#FFFF00">&nbsp;</td>
+    <td width="10%" bgcolor="#FFFF00">&nbsp;</td>
+    <td width="10%" bgcolor="#FFFF00">&nbsp;</td>
+    <td width="10%" bgcolor="#FFFF00">&nbsp;</td>
+    <td width="10%" bgcolor="#FFFF00">&nbsp;</td>
+    <td width="10%" bgcolor="#FFFF00">&nbsp;</td>
+    <td width="10%" bgcolor="#FFFF00">&nbsp;</td>
+    <td width="10%" bgcolor="#FFFF00">&nbsp;</td>
+    <td width="10%" bgcolor="#FFFF00">&nbsp;</td>
+  </tr>
+  <tr>
+    <td width="10%" bgcolor="#00FFFF">
+    <font face="Arial" size="2" color="#0000FF">sm</font></td>
+    <td width="10%" bgcolor="#00FFFF">&nbsp;</td>
+    <td width="10%" bgcolor="#00FFFF">&nbsp;</td>
+    <td width="10%" bgcolor="#00FFFF">&nbsp;</td>
+    <td width="10%" bgcolor="#00FFFF">&nbsp;</td>
+    <td width="10%" bgcolor="#00FFFF">&nbsp;</td>
+    <td width="10%" bgcolor="#00FFFF">&nbsp;</td>
+    <td width="10%" bgcolor="#00FFFF">&nbsp;</td>
+    <td width="10%" bgcolor="#00FFFF">&nbsp;</td>
+    <td width="10%" bgcolor="#00FFFF">&nbsp;</td>
+    <td width="10%" bgcolor="#00FFFF">&nbsp;</td>
+  </tr>
+  <tr>
+    <td width="10%" bgcolor="#C0C0C0">
+    <font face="Arial" size="2" color="#0000FF">compose-class</font></td>
+    <td width="10%" bgcolor="#C0C0C0">&nbsp;</td>
+    <td width="10%" bgcolor="#C0C0C0">&nbsp;</td>
+    <td width="10%" bgcolor="#C0C0C0">&nbsp;</td>
+    <td width="10%" bgcolor="#C0C0C0">&nbsp;</td>
+    <td width="10%" bgcolor="#C0C0C0"><font face="Arial" size="2">dsl/java/CompClassAst</font></td>
+    <td width="10%" bgcolor="#C0C0C0">&nbsp;</td>
+    <td width="10%" bgcolor="#C0C0C0">&nbsp;</td>
+    <td width="10%" bgcolor="#C0C0C0">&nbsp;</td>
+    <td width="10%" bgcolor="#C0C0C0">&nbsp;</td>
+    <td width="10%" bgcolor="#C0C0C0">&nbsp;</td>
+  </tr>
+  <tr>
+    <td width="10%" bgcolor="#C0C0C0">
+    <font face="Arial" size="2" color="#0000FF">compose-int</font></td>
+    <td width="10%" bgcolor="#C0C0C0">&nbsp;</td>
+    <td width="10%" bgcolor="#C0C0C0">&nbsp;</td>
+    <td width="10%" bgcolor="#C0C0C0">&nbsp;</td>
+    <td width="10%" bgcolor="#C0C0C0">&nbsp;</td>
+    <td width="10%" bgcolor="#C0C0C0">&nbsp;</td>
+    <td width="10%" bgcolor="#C0C0C0">&nbsp;</td>
+    <td width="10%" bgcolor="#C0C0C0">&nbsp;</td>
+    <td width="10%" bgcolor="#C0C0C0">&nbsp;</td>
+    <td width="10%" bgcolor="#C0C0C0">&nbsp;</td>
+    <td width="10%" bgcolor="#C0C0C0">&nbsp;</td>
+  </tr>
+  <tr>
+    <td width="10%" bgcolor="#C0C0C0">
+    <font face="Arial" size="2" color="#0000FF">compose-sm</font></td>
+    <td width="10%" bgcolor="#C0C0C0">&nbsp;</td>
+    <td width="10%" bgcolor="#C0C0C0">&nbsp;</td>
+    <td width="10%" bgcolor="#C0C0C0">&nbsp;</td>
+    <td width="10%" bgcolor="#C0C0C0">&nbsp;</td>
+    <td width="10%" bgcolor="#C0C0C0">&nbsp;</td>
+    <td width="10%" bgcolor="#C0C0C0">&nbsp;</td>
+    <td width="10%" bgcolor="#C0C0C0">&nbsp;</td>
+    <td width="10%" bgcolor="#C0C0C0">&nbsp;</td>
+    <td width="10%" bgcolor="#C0C0C0">&nbsp;</td>
+    <td width="10%" bgcolor="#C0C0C0">&nbsp;</td>
+  </tr>
+  <tr>
+    <td width="10%"><font face="Arial" size="2" color="#0000FF">ant</font></td>
+    <td width="10%">&nbsp;</td>
+    <td width="10%">&nbsp;</td>
+    <td width="10%">&nbsp;</td>
+    <td width="10%">&nbsp;</td>
+    <td width="10%">&nbsp;</td>
+    <td width="10%">&nbsp;</td>
+    <td width="10%">&nbsp;</td>
+    <td width="10%">&nbsp;</td>
+    <td width="10%">&nbsp;</td>
+    <td width="10%">&nbsp;</td>
+  </tr>
+</table>
+<h1><font face="Arial" color="#0000FF">Synthesizing Tools</font></h1>
+<p><font face="Arial">A tool is synthesized by specifying 3 equations, one per 
+dimension.&nbsp; As it turns out, two of the dimensions of this matrix are 
+identical.&nbsp; That is, the dimensions of this matrix are language x tools x 
+language.&nbsp; So only 2 equations are needed to specify any particular tool.</font></p>
+<p><font face="Arial">Only 3 language equations are currently supported:</font></p>
+<ol>
+  <li><font face="Arial">all = java AST BASE sm COMPOSE compose-sm ant</font></li>
+  <li><font face="Arial">cat = java BASE sm COMPOSE compose-sm ant</font></li>
+  <li><font face="Arial">utcs = java AST BASE COMPOSE ant</font></li>
+</ol>
+<p><font face="Arial">where AST, BASE, and COMPOSE are local variables:</font></p>
+<ul>
+  <li><font face="Arial">AST = ast gscope</font></li>
+  <li><font face="Arial">BASE = base source local-id layer</font></li>
+  <li><font face="Arial">COMPOSE = compose-class compose-int</font></li>
+</ul>
+<p><font face="Arial">The default language is &quot;all&quot;.</font></p>
+<p><font face="Arial">Seven tools are currently being built.&nbsp; Their 
+equations are:</font></p>
+<ol>
+  <li><font face="Arial">jak2javaTool = parser support jak2java</font></li>
+  <li><font face="Arial">jampackTool&nbsp; = parser support jampack</font></li>
+  <li><font face="Arial">mixinTool&nbsp;&nbsp; = parser support mixin</font></li>
+  <li><font face="Arial">mmatrixTool&nbsp; = parser mmatrix</font></li>
+  <li><font face="Arial">unmixinTool&nbsp; = parser support unmixin</font></li>
+  <li><font face="Arial">bcjak2javaTool&nbsp; = parser support bcjak2java</font></li>
+  <li><font face="Arial">jrenameTool&nbsp; = parser support&nbsp; jrename</font></li>
+</ol>
+<p><font face="Arial">To see the fully expanded equations, look in 
+fop/ahead/build/java/tools.equations.</font></p>
+
+</body>
+
+</html>

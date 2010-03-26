@@ -1,0 +1,46 @@
+## OtherwiseTransitions.vm
+## JEDI Project
+## HTML Template for otherwise transitions declarations
+## Author: Roberto E. Lopez-Herrejon
+## Last update: November 10, 2002
+## Otherwise Transitions of State Machine
+
+## Other State Clause of State Machine
+
+#if ($otherwiseStateFlag == "true")
+  <A NAME="other_clause"> <!-- --> </A>
+  <TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+  <TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">  
+  <TD COLSPAN=1>
+   <FONT SIZE="+2">
+   <B> Other Clause </B>
+   </FONT>
+  </TD>
+  </TR>
+  </TABLE>
+
+  #foreach($otherwise in $listOtherwises)
+   <H3>
+    <A NAME="otherwise.name()other_clause"><!-- --></A>
+     otherwise_state.name()    
+   </H3>
+	
+   <UL>	
+   #foreach($otherclass in $otherwise.classes())
+    <LI>
+	#set($reference = ".html")
+       <A HREF="$otherclass.name()$reference"> 
+          $otherclass.name() 
+       </A>
+    </LI>		  			
+   #end  ## for all the innerclasses
+   </UL>
+   <HR>
+	  
+  } // for all the states
+ 
+ #end    ## for all the states
+  
+ <BR>	  	
+
+#end

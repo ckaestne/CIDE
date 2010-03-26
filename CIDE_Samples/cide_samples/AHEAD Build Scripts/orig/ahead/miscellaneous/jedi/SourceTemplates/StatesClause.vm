@@ -1,0 +1,30 @@
+## StatesClause.vm
+## JEDI Project
+## HTML Template for the States Clause of a state machine
+## Author: Roberto E. Lopez-Herrejon
+## Last update: November 12, 2002
+
+## States Clause of State Machine
+
+#if ($statesClauseFlag == "true")
+   <TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+   <TR BGCOLOR="#CCCCFF" CLASS="TableSubHeadingColor">
+     <TD>
+      <FONT SIZE="+2">
+	<B> States </B>
+      </FONT>
+     </TD>	
+   </TR>
+
+    <TR BGCOLOR="white" CLASS="TableRowColor">
+    <TD>
+     <CODE>  
+      #foreach($astate in $listStatesClause)
+	$astate &nbsp;
+      #end
+     </CODE>
+    </TD>
+    </TR>
+  </TABLE>
+  <BR>
+#end

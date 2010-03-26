@@ -1,0 +1,609 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <title>The bali2jak Tool</title>
+  </head>
+
+  <body bgcolor="white">
+
+      <table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%">
+	  <tr>
+	    <td WIDTH="78">
+	      <font face="Verdana">
+		<img border="0" src="images/FopButton3.jpg" width="80" height="64">
+	      </font>
+	    </td>
+	    <td WIDTH="688" BGCOLOR="#00FFFF">
+	      <h1>
+		<font face="Arial" color="#0000FF">
+		  The <kbd>bali2jak</kbd> Tool
+		</font>
+	      </h1>
+	    </td>
+	  </tr>
+      </table>
+
+      <p>
+	The <kbd>bali2jak</kbd> tool is a command-line application that
+	generates a <em>parse-tree layer</em> from a <kbd>Bali</kbd> grammar
+	file.
+	This document describes how <kbd>bali2jak</kbd> is invoked and it
+	briefly describes the classes generated in the parse-tree layer.
+	The reader should be familiar with
+	<a href="bali.pdf">the Bali language documentation</a>
+        and
+	<a href="HowTo.html">the HowTo guide</a>.
+      </p>
+
+      <ul>
+	<li><a href="#Invoking">Invoking <kbd>bali2jak</kbd></a></li>
+	<li><a href="#Generated">Generated Class Files</kbd></a></li>
+	<li><a href="#Example">Example (with Generated Code!)</kbd></a></li>
+      </ul>
+
+      <table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#ffff00">
+	  <tr>
+	    <td WIDTH="788">
+	      <h2>
+		<font face="Arial" color="#0000FF">
+		  <a name="Invoking">Invoking <kbd>bali2jak</kbd></a>
+		</font>
+	      </h2>
+	    </td>
+	  </tr>
+      </table>
+
+      <p>
+	The <kbd>bali2jak</kbd> tool accepts a single Bali grammar file as
+	input and it produces an entire directory of generated Jak source
+	files.  Each Jak source file contains a class definition as described
+	in the next section.  For now, we concentrate on the command
+	invocation.
+      </p>
+      <p>
+	Suppose the Bali input grammar is in <kbd>grammar.b</kbd> and the
+	generated files are to be placed into directory <kbd>parse</kbd>.
+	Then, an appropriate command would be:
+      </p>
+      <blockquote>
+	<kbd>bali2jak grammar.b -directory parse</kbd>
+      </blockquote>
+      <p>
+	That's it!  This produces a layer in directory <kbd>parse</kbd>,
+	creating the directory if necessary.  In this example, the layer is not
+	given an explicit name.  In general, though, the <kbd>bali2jak</kbd>
+	command can accept an optional <kbd>-layer</kbd> option that specifies
+	a layer name.  For example, if the layer is supposed to be named
+	<kbd>syntax</kbd>, that can be accomplished with the following command:
+      </p>
+      <blockquote>
+	<kbd>bali2jak grammar.b -directory parse -layer syntax</kbd>
+      </blockquote>
+      <p>
+	At this point, you've seen all there is to <kbd>bali2jak</kbd>
+	invocation.  The command has only three arguments: (1)&nbsp;The input
+	file name, which is required; (2)&nbsp;The output directory name, which
+	is optional and which defaults to the current directory; and
+	(3)&nbsp;An optional layer name argument, which has no default.
+      </p>
+
+      <table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#ffff00">
+	  <tr>
+	    <td WIDTH="788">
+	      <h2>
+		<font face="Arial" color="#0000FF">
+		  <a name="Generated">Generated Class Files</kbd></a>
+		</font>
+	      </h2>
+	    </td>
+	  </tr>
+      </table>
+
+    <p>
+      This section should be read in combination with the older
+      <a href="AST.html">abstract syntax tree documentation</a> (AST).
+      The AST document is slightly outdated, but is essentially correct.
+      Eventually, that document will be merged with this one but, for now,
+      both should be read to get a full understanding of the generated
+      classes.
+    </p>
+    <p>
+      When <kbd>bali2jak</kbd> generates classes from a Bali grammar file, it
+      builds inheritance hierarchies in a class framework for the
+      non-terminal symbols defined by Bali grammar rules.  Each type of Bali
+      production specifies slightly different parts of the framework and this
+      section describes the mapping of the Bali productions to the class
+      framework.  We assume the reader is familiar with the four kinds of
+      Bali grammar productions: (1)&nbsp;Named productions;
+      (2)&nbsp;Sub-productions (also called <em>unnamed productions</em> or
+      <em>unnamed rules</em>); (3)&nbsp;Simple lists; and (4)&nbsp;Complex
+      lists.
+    </p>
+    <p>
+      Briefly, every Bali non-terminal symbol corresponds to a class
+      definition in the generated code.  The classes generated for rules with
+      list productions will be concrete, but all other classes corresponding
+      to non-terminal symbols will be abstract.  The only other concrete
+      classes to be generated will be those corresponding to named
+      productions and to list elements.  Generated classes will differ in
+      their contents and in their inheritance hierarchy.  Details are given
+      in the paragraphs below where we assume that <kbd>bali2jak</kbd>
+      was invoked as follows:
+    </p>
+    <blockquote>
+      <kbd>bali2jak grammar.b -directory parse -layer syntax</kbd>
+    </blockquote>
+    <p>
+      <strong>Named productions.</strong>
+
+      Each named production corresponds to a concrete class in the class
+      framework.  For example, we have the following rule that contains one
+      named production:
+    </p>
+    <blockquote>
+      <code>
+	If : "if" Test ThenClause [ElseClause] :: IfNode ;
+      </code>
+    </blockquote>
+    <p>
+      Then <kbd>bali2jak</kbd> will generate a concrete class named
+      <a href="grammar/parse/IfNode.html"><kbd>IfNode</kbd></a>
+      to correspond to this production.  Further, since the rule
+      <kbd>If</kbd> is a non-terminal that <em>doesn't</em> specify a list
+      production, an abstract class named <kbd>If</kbd> will be generated for
+      this rule.  Finally, <kbd>IfNode</kbd> will be defined as a sub-class
+      of <kbd>If</kbd>.
+    </p>
+    <p>
+      The <kbd>IfNode</kbd> class will be generated with only a default
+      constructor, but several methods will be generated.  Arguably, the most
+      important method is an initializer named <kbd>setParms</kbd> which has
+      four arguments, one corresponding to each primitive element in the named
+      production.  Method <kbd>setParms</kbd> allocates the <kbd>arg</kbd>
+      array of non-terminals, the <kbd>tok</kbd> array of terminals, and the
+      arguments are placed into the appropriate position in those arrays.  The
+      code generated for <kbd>IfNode</kbd>'s <kbd>setParms</kbd> method is as
+      follows:
+    </p>
+    <blockquote>
+<pre>
+final public static int ARG_LENGTH = 3 ;
+final public static int TOK_LENGTH = 1 ;
+
+public IfNode setParms
+(AstToken tok0, Test arg0, ThenClause arg1, AstOptNode arg2) { 
+    arg = new AstNode [ARG_LENGTH] ;
+    tok = new AstTokenInterface [TOK_LENGTH] ;
+        
+    tok [0] = tok0 ;              /* "if" */
+    arg [0] = arg0 ;              /* Test */
+    arg [1] = arg1 ;              /* ThenClause */
+    arg [2] = arg2 ;              /* [ElseClause] */
+        
+    InitChildren () ;
+    return (IfNode) this ;
+}
+</pre>
+    </blockquote>
+    <p>
+      Every named production will have a <kbd>setParms</kbd> method that
+      accepts the productions primitive elements as arguments and initializes
+      the two arrays <kbd>arg</kbd> and <kbd>tok</kbd>.  Similarly, every named
+      production will contain a <kbd>printorder</kbd> method that specifies
+      which arguments to <kbd>setParms</kbd> are terminals and which are
+      non-terminals.  The <kbd>printorder</kbd> method returns a
+      <kbd>boolean</kbd> array that's the same length as <kbd>setParm</kbd>'s
+      argument list and the entries in the returned array are <kbd>true</kbd>
+      exactly when the corresponding <kbd>setParm</kbd> argument is a terminal.
+      Here's the <kbd>printorder</kbd> method for <kbd>IfNode</kbd>:
+    </p>
+    <blockquote>
+<pre>
+public boolean[] printorder () { 
+    return new boolean[] {true, false, false, false} ;
+}
+</pre>
+    </blockquote>
+    <p>
+      Finally, each class generated for a named production contains an accessor
+      method for <em>each unique named primitive element</em>.  For example,
+      the <kbd>If</kbd> production has three named primitive elements:
+      <kbd>Test</kbd>, <kbd>ThenClause</kbd> and <kbd>ElseClause</kbd>.  All of
+      these names are unique within this production, so <kbd>bali2jak</kbd>
+      will generate an accessor method for each one.  The remaining primitive
+      element is a quoted string that hasn't been assigned a name, so no
+      accessor method will be generated for it.  Here are <kbd>IfNode</kbd>'s
+      three accessors:
+    </p>
+    <blockquote>
+<pre>
+public ElseClause getElseClause () { 
+    AstNode node = arg[2].arg [0] ;
+    return (node != null) ? (ElseClause) node : null ;
+}
+
+public Test getTest () { 
+    return (Test) arg [0] ;
+}
+
+public ThenClause getThenClause () { 
+    return (ThenClause) arg [1] ;
+}
+</pre>
+    </blockquote>
+    <p>
+      Note that all accessors return typed nodes.  Further, for optional
+      elements such as <kbd>ElseClause</kbd>, the corresponding accessor method
+      returns a <kbd>null</kbd> if the element wasn't present.
+    </p>
+
+    <p>
+      <strong>Sub-productions:</strong>
+
+      Consider the following rule that has two sub-productions:
+    </p>
+    <blockquote><kbd>Statement : Assignment | Control ;</kbd></blockquote>
+    <p>
+      This example specifies that the two non-terminals <kbd>Assignment</kbd>
+      and <kbd>Control</kbd> derive from non-terminal <kbd>Statement</kbd>.
+      This relationship is reflected in the class framework by defining
+      abstract classes <kbd>Assignment</kbd> and <kbd>Control</kbd> that
+      extend class <kbd>Statement</kbd>.  Here are the two generated classes:
+    </p>
+    <blockquote>
+<pre>
+abstract public class Assignment extends Statement { }
+
+abstract public class Control extends Statement { }
+</pre>
+    </blockquote>
+    <p>
+      Similar classes are generated for all sub-productions.
+      Note that there are no methods generated within these classes.
+    </p>
+
+    <p>
+      <strong>Simple lists:</strong>
+
+      A simple list is a rule with exactly one production as shown below:
+    </p>
+    <blockquote><kbd>Simple : (Symbol)+ ;</kbd></blockquote>
+    <p>
+      In this case, two classes are generated for rule <kbd>Simple</kbd>: A
+      class <kbd>Simple</kbd> that extends kernel class <kbd>AstList</kbd>, and
+      a class <kbd>SimpleElem</kbd> that extends <kbd>AstListNode</kbd>.  The
+      <kbd>Simple</kbd> class represents the list itself and it inherits
+
+      <a href="AST_Cursors.html#Traversing%20Lists">standard list-traversal
+      methods</a> although it adds no new methods.
+
+      On the other hand, the <kbd>SimpleElem</kbd> class represents the
+      elements within the list.  It contains two generated methods: An
+      initializer method <kbd>setParms</kbd> that initializes the element
+      with a <kbd>Symbol</kbd> primitive; and an accessor method that returns
+      the <kbd>Symbol</kbd> primitive from the list element.  Here's the
+      generated code for <kbd>Simple</kbd> and <kbd>SimpleElem</kbd>:
+    </p>
+    <blockquote>
+<pre>
+public class Simple extends AstList { }
+
+public class SimpleElem extends AstListNode {
+
+    public Symbol getSymbol () { 
+        return (Symbol) arg [0] ;
+    }
+
+    public SimpleElem setParms (Symbol arg0) { 
+        Super(AstNode).setParms (arg0) ; /* Symbol */
+        return (SimpleElem) this ;
+    }
+
+}
+</pre>
+    </blockquote>
+    <p>
+      Note that the methods generated for <kbd>SimpleElem</kbd> are similar
+      to methods generated for named productions.
+    </p>
+
+    <p>
+      <strong>Complex lists:</strong>
+
+      A complex list is similar to a simple list in some key respects.
+      First, a rule defining a complex list can have exactly one complex list
+      production as shown in the following example:
+    </p>
+    <blockquote><kbd>Program : Statement (";" Statement)* ;</kbd></blockquote>
+    <p>
+      The general form of a complex list production is a <em>leading</em>
+      primitive followed by zero or more <em>trailing</em> primitives, all
+      separated by some a <em>separator</em> primitive.  In the example above,
+      the leading primitive is of the same type as the trailing primitives,
+      though this is not required.  As with a simple list, <kbd>bali2jak</kbd>
+      generates two classes: One representing the list itself and another
+      representing the elements of the list.  For our example, the
+      <kbd>Program</kbd> class represents the list and class
+      <kbd>ProgramElem</kbd> represents a list element.
+      Here are the two classes generated for our example:
+    </p>
+    <blockquote>
+<pre>
+public class Program extends AstList { }
+
+public class ProgramElem extends AstListNode {
+
+    public Statement getStatement () { 
+        return (Statement) arg [0] ;
+    }
+
+    public ProgramElem setParms (AstToken tok0, Statement arg0) { 
+        tok = new AstToken [1] ;
+        tok [0] = tok0 ;              /* ";" */
+        return setParms (arg0) ;      /* Statement */
+    }
+
+    public ProgramElem setParms (Statement arg0) { 
+        Super(AstNode).setParms (arg0) ; /* Statement */
+        return (ProgramElem) this ;
+    }
+
+}
+</pre>
+    </blockquote>
+    <p>
+      Again, the <kbd>Program</kbd> is an empty class and the
+      <kbd>ProgramElem</kbd> class contains an accessor method to return the
+      list element.  However, <kbd>ProgramElem</kbd> contains <em>two</em>
+      initializer methods with different signatures.  The <kbd>setParms</kbd>
+      method with a single argument is used to initialize the leading element
+      of the list while the two-argument version initializes a trailing
+      element <em>with its preceding separator element</em>.
+    </p>
+    <p>
+    </p>
+    <p>
+    </p>
+
+
+      <table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#ffff00">
+	  <tr>
+	    <td WIDTH="788">
+	      <h2>
+		<font face="Arial" color="#0000FF">
+		  <a name="Example">Example (with Generated Code!)</a>
+		</font>
+	      </h2>
+	    </td>
+	  </tr>
+      </table>
+
+      <p>
+	This section contains a fully worked-out example.  First, we show a
+	complete listing of the example grammar, some of which was used in the
+	previous sections.  We make no representation that this is a useful
+	grammar!
+      </p>
+      <blockquote>
+<table border="2">
+<tr>
+<th halign="center"><strong><kbd>grammar.b</kbd></strong></th>
+</tr>
+<tr>
+<td valign="top">
+<pre>
+TOKEN : {
+    &lt;COMPARISON : "==" | "!="&gt;
+    | &lt;IDENTIFIER : &lt;LETTER&gt; (&lt;LETTER&gt; | &lt;DIGIT&gt;)*&gt;
+    | &lt;INTEGER : &lt;DIGIT&gt; &lt;DIGIT&gt;*&gt;
+    | &lt;#LETTER: ["a"-"z", "A"-"Z"]&gt;
+    | &lt;#DIGIT: ["0"-"9"]&gt;
+}
+
+Program : Statement (";" Statement)* ;
+
+Statement : Assignment | Control ;
+
+Assignment : IDENTIFIER "=" Expression :: AssignmentNode ;
+
+Expression : Operand [Addition] :: ExpressionNode ;
+
+Operand : IDENTIFIER :: IdentifierOperand
+	| INTEGER :: IntegerOperand ;
+
+Addition : "+" Expression :: AdditionNode ;
+
+Control : If | While ;
+
+If : "if" Test ThenClause [ElseClause] :: IfNode ;
+
+Test : "(" Expression COMPARISON Expression ")" :: TestNode ;
+
+ThenClause : "then" Assignment :: ThenNode ;
+
+ElseClause : "else" Assignment :: ElseNode ;
+
+While : "while" Test "do" Assignment :: WhileNode ;
+</pre>
+</td>
+</tr>
+</table>
+      </blockquote>
+      <p>
+	The files generated from this grammar by <kbd>bali2jak</kbd> are
+	shown below.  Please follow a link to see the generated code for
+	each class:
+      </p>
+
+      <blockquote>
+      <table border="2">
+	<tr>
+	    <th colspan="5">
+	      Generated with command<br>
+	      <kbd>bali2jak grammar.b -directory parse -layer syntax</kbd>
+	    </th>
+	  </tr>
+	  <tr>
+	    <td>
+	      <a href="grammar/parse/Addition.html">
+		<kbd>Addition</kbd>
+	      </a>
+	    </td>
+	    <td>
+	      <a
+		 href="grammar/parse/ElseClause.html">
+		<kbd>ElseClause</kbd>
+	      </a>
+	    </td>
+	    <td>
+	      <a href="grammar/parse/If.html">
+		<kbd>If</kbd>
+	      </a>
+	    </td>
+	    <td>
+	      <a
+		 href="grammar/parse/ProgramElem.html">
+		<kbd>ProgramElem</kbd>
+	      </a>
+	    </td>
+	    <td>
+	      <a
+		 href="grammar/parse/ThenClause.html">
+		<kbd>ThenClause</kbd>
+	      </a>
+	    </td>
+	  </tr>
+	  <tr>
+	    <td>
+	      <a
+		 href="grammar/parse/AdditionNode.html">
+		<kbd>AdditionNode</kbd>
+	      </a>
+	    </td>
+	    <td>
+	      <a
+		 href="grammar/parse/ElseNode.html">
+		<kbd>ElseNode</kbd>
+	      </a>
+	    </td>
+	    <td>
+	      <a
+		 href="grammar/parse/IfNode.html">
+		<kbd>IfNode</kbd>
+	      </a>
+	    </td>
+	    <td>
+	      <a
+		 href="grammar/parse/Statement.html">
+		<kbd>Statement</kbd>
+	      </a>
+	    </td>
+	    <td>
+	      <a
+		 href="grammar/parse/ThenNode.html">
+		<kbd>ThenNode</kbd>
+	      </a>
+	    </td>
+	  </tr>
+	  <tr>
+	    <td>
+	      <a
+		 href="grammar/parse/Assignment.html">
+		<kbd>Assignment</kbd>
+	      </a>
+	    </td>
+	    <td>
+	      <a
+		 href="grammar/parse/Expression.html">
+		<kbd>Expression</kbd>
+	      </a>
+	    </td>
+	    <td>
+	      <a href="grammar/parse/IntegerOperand.html">
+		<kbd>IntegerOperand</kbd>
+	      </a>
+	    </td>
+	    <td>
+	      <a href="grammar/parse/Test.html">
+		<kbd>Test</kbd>
+	      </a>
+	    </td>
+	    <td>
+	      <a
+		 href="grammar/parse/While.html">
+		<kbd>While</kbd>
+	      </a>
+	    </td>
+	  </tr>
+	  <tr>
+	    <td>
+	      <a
+		 href="grammar/parse/AssignmentNode.html">
+		<kbd>AssignmentNode</kbd>
+	      </a>
+	    </td>
+	    <td>
+	      <a
+		 href="grammar/parse/ExpressionNode.html">
+		<kbd>ExpressionNode</kbd>
+	      </a>
+	    </td>
+	    <td>
+	      <a href="grammar/parse/Operand.html">
+		<kbd>Operand</kbd>
+	      </a>
+	    </td>
+	    <td>
+	      <a
+		 href="grammar/parse/TestNode.html">
+		<kbd>TestNode</kbd>
+	      </a>
+	    </td>
+	    <td>
+	      <a
+		 href="grammar/parse/WhileNode.html">
+		<kbd>WhileNode</kbd>
+	      </a>
+	    </td>
+	  </tr>
+	  <tr>
+	    <td>
+	      <a href="grammar/parse/Control.html">
+		<kbd>Control</kbd>
+	      </a>
+	    </td>
+	    <td>
+	      <a href="grammar/parse/IdentifierOperand.html">
+		<kbd>IdentifierOperand</kbd>
+	      </a>
+	    </td>
+	    <td>
+	      <a
+		 href="grammar/parse/Program.html">
+		<kbd>Program</kbd>
+	      </a>
+	    </td>
+	    <td colspan="2">&nbsp;</td>
+	  </tr>
+      </table>
+      </blockquote>
+
+    <hr>
+      <p><b><a href="index.html">ATS Home Page</a></b></p>
+      <p>
+	<b>
+	  Copyright © Software Systems Generator Research Group.
+	  All rights reserved.
+	<br>
+<!-- Created: Wed Apr 30 16:23:08 CDT 2003 -->
+<!-- hhmts start -->
+Last modified: Thu May  1 13:25:08 CDT 2003
+<!-- hhmts end -->
+	</b>
+      <address>
+	<a href="mailto:sarvela@cs.utexas.edu">Jacob Sarvela</a>
+      </address>
+      </p>
+
+  </body>
+</html>

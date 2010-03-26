@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+<project name="Configuration of XML for Building Compiler Tools" default="configure">
+
+ <description>
+  
+ (C) The University of Texas at Austin
+
+ Options:
+
+ -Dproject.name=&lt;tool-name&gt;
+   this defines the tool that is being built
+   an Template.equation file must be exist in equations/ directory
+
+ -Ddir.output=&lt;directory in which generated xml file to be stored&gt;
+
+ </description>
+
+    <!-- ================================================================= -->
+    <!-- PROJECT PROPERTIES:                                               -->
+    <!-- ================================================================= -->
+
+    <property name="project.name"   value="Template"/>
+    <!-- - - - - - - - - - - - - - - - - -->
+    <!-- The owner of the software, such -->
+    <!-- as the copyright owner.  Also   -->
+    <!-- may be used to generate text to -->
+    <!-- be read by a human.             -->
+    <!-- - - - - - - - - - - - - - - - - -->
+
+
+    <property 
+        name="dir.output"
+	location="${user.dir}"/>
+
+    <property
+        name="project.owner"
+        value="The University of Texas at Austin"/>
+
+    <property name="project.title"   value="Configuration of XML for building compiler tools"/>
+	 <property name="project.version" value="v2003.01.18"/>
+	 <property name="file.target"     location="${dir.output}/${project.name}.xml"/>
+
+    <target
+        name="configure"
+        description="">
+		  <echo message="${file.target}"/>
+		  <copy file = "Template.xml" tofile = "${file.target}"/>
+		  <replace file="${file.target}" token="Template" value="${project.name}"/>
+	
+    </target>
+</project>
+    

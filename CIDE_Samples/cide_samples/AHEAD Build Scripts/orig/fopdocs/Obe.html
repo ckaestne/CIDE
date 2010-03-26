@@ -1,0 +1,218 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>The Obe Tool</title>
+</head>
+
+<body>
+
+<p>&nbsp;</p>
+
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%">
+  <tr>
+    <td WIDTH="78">
+    <img border="0" src="images/FopButton3.jpg" width="80" height="64"></td>
+    <td WIDTH="688" BGCOLOR="#00FFFF"><h1><font face="Arial" color="#0000FF">The
+      Obe Tool</font></h1>
+    </td>
+  </tr>
+</table>
+
+<blockquote>
+
+<p><b><font face="Arial" color="#FF0000">Note: with the advent of .equations 
+(plural!) files, the encoding of Origami matrices has changed.&nbsp; As a 
+consequence, the Obe tool, as currently described is no longer be supported.&nbsp; 
+Eventually, a new version of Obe, one that reads and writes .equations files, 
+will be substituted.</font></b></p>
+</blockquote>
+
+<p><font face="Arial">Creating, viewing, and maintaining an Origami matrix is 
+very unpleasant. <b>obe</b> (short for Origami browser)<b> </b>&nbsp;is a tool 
+that allows you to define, view, and edit an Origami matrix.&nbsp; Its command 
+line invocation is:</font></p>
+<blockquote>
+  <pre>&gt; obe &lt;path-to-origami-directory&gt;</pre>
+</blockquote>
+
+  <p><font face="Arial">No argument needs to be given if obe is run in the 
+  Origami directory.&nbsp; The following sections define how obe is used:</font></p>
+<ul>
+  <li><font face="Arial"><a href="#Defining an origami.properties file">defining 
+  an origami.properties file</a></font></li>
+  <li><font face="Arial">
+  <a href="#Defining and Viewing Metadata for each Dimension">defining and 
+  viewing metadata for each dimension</a></font></li>
+  <li><font face="Arial">
+  <a href="#Defining and Viewing Data for each Matrix Entry">defining and 
+  viewing data for each matrix entry</a></font></li>
+  <li><font face="Arial"><a href="#Folding a Matrix">folding a matrix</a></font></li>
+  <li><font face="Arial"><a href="#Editing Files">editing files</a></font></li>
+</ul>
+
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FFFF00">
+  <tr>
+    <td WIDTH="788"><h2><font face="Arial" color="#0000FF">
+    <a name="Defining an origami.properties file">Defining an origami.properties 
+    file</a></font></h2>
+    </td>
+  </tr>
+</table>
+
+<p><font face="Arial">An origami matrix is a 2-dimensional array of AHEAD 
+features.&nbsp; (More generally, it is a n-dimensional array, but obe can only 
+deal with 2-D matrices).&nbsp; When obe runs, it looks in the origami directory 
+for an origami.properties file.&nbsp; This file contains the definitions of the 
+units for each dimension and the file types that can appear in each entry of the 
+array.&nbsp; An origami.properties file has the form:</font></p>
+<blockquote>
+  <pre><font face="Courier New"># origami.properties file has 4 properties; metaFileTypes is optional 
+# rowNames : list of row names separated by blanks
+# colNames : list of column names separated by blanks
+# fileTypes: list of files that can appear in an origami directory
+# metaFileTypes: list of files (beyond mexplain.txt, mrules.drc) that
+# define row/column metadata 
+
+rowNames=insert delete 
+fileTypes=eqn.equation explain.txt 
+colNames=singly doubly</font></pre>
+</blockquote>
+<p><font face="Arial">As noted above, you must define up to 4 properties, where 
+the first three are mandatory:</font></p>
+<ul>
+  <li><font face="Arial">rowNames -- this is a list of row names for the matrix.&nbsp; 
+  In the example, there are 2 rows: insert and delete.</font></li>
+  <li><font face="Arial">colNames -- this is a list of column names for the 
+  matrix. In the example, there are 2 columns: singly doubly</font></li>
+  <li><font face="Arial">fileTypes -- what file types can be defined in a matrix 
+  entry. In the example, 2 files, whose names are eqn.equation and explain.txt, 
+  can be defined for each matrix entry.</font></li>
+  <li><font face="Arial">metaFileTypes -- list of files (in addition to 
+  explain.txt and rules.drc) that can be defined for each dimension.</font></li>
+</ul>
+<p><font face="Arial">You can define this property file by hand, or you can use
+<b>obe</b>.&nbsp; Using <b>obe</b>, the <b>Data Entry</b> panel is used to enter 
+a name.&nbsp; By clicking on the <b>add</b> button in the appropriate column, 
+will add the name to that column.&nbsp; Once a column has been selected, each 
+carriage return that is typed when entering a name will add that name to that 
+column.&nbsp; In this way, a column of names can be entered quickly. Use the <b>
+upd</b> button to change the name of a selected entry; use <b>del</b> to delete 
+a selected entry.</font></p>
+<p><font face="Arial">Notice that in the Rows and Columns list, there are 
+SUMrows and SUMcols entries.&nbsp; These are special obe entries that allow you 
+to view the meta files of computed rows and columns. (The only interesting 
+computed meta data are design rules, if in fact design rules per each row or 
+column unit are defined).</font></p>
+<p><font face="Arial">&nbsp;When you're done, make sure to save this definition 
+by clicking on the <b>write properties file</b> button.&nbsp; If you need to 
+reload the last saved version of the properties file, click <b>reload properties</b> 
+file. Now proceed to the
+<b>Dimension Definition</b> tab.</font></p>
+<p><img border="0" src="images/ObeTab1.jpg" width="874" height="515"></p>
+
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FFFF00">
+  <tr>
+    <td WIDTH="788"><h2><font face="Arial" color="#0000FF">
+    <a name="Defining and Viewing Metadata for each Dimension">Defining and 
+    Viewing Metadata for each Dimension</a></font></h2>
+    </td>
+  </tr>
+</table>
+
+<p><font face="Arial">For each metafile (defined by in the previous tab), you 
+can define its contents.&nbsp; Click on the desired row or column unit, and dial 
+in the file type in the combo box on the right, and the contents of the file is 
+displayed in the text area.&nbsp; (The contents of the <b>mexplain.txt</b> for 
+the singly column is shown below).&nbsp; You can save, reload, or delete a file 
+by clicking on the appropriate button.</font></p>
+<p><font face="Arial">Normally, you want to define design rules for composing 
+each dimension. Once you have finished entering this information (all of which 
+is optional), proceed to the <b>Entry Definition</b> tab.</font></p>
+<p><img border="0" src="images/ObeTab2.jpg" width="874" height="515"></p>
+
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FFFF00">
+  <tr>
+    <td WIDTH="788"><h2><font face="Arial" color="#0000FF">
+    <a name="Defining and Viewing Data for each Matrix Entry">Defining and 
+    Viewing Data for each Matrix Entry</a></font></h2>
+    </td>
+  </tr>
+</table>
+
+<p><font face="Arial">This is the most useful tab of <b>obe</b>.&nbsp; It allows 
+you to select a matrix entry, and view any of the files that have been defined 
+for that entry.&nbsp; Just click the entry of the matrix on the left, dial the 
+file type in on the right.&nbsp; You can edit, save, reload, and delete this 
+file.&nbsp; Note an &quot;X&quot; in a matrix entry denotes that a file of the designated 
+type is defined for that entry.&nbsp; (Deleting this file will remove the &quot;X&quot;).</font></p>
+<p><img border="0" src="images/ObeTab3.jpg" width="874" height="515"></p>
+
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FFFF00">
+  <tr>
+    <td WIDTH="788"><h2><font face="Arial"><a name="Folding a Matrix">Folding a 
+    Matrix</a></font></h2>
+    </td>
+  </tr>
+</table>
+
+<p><font face="Arial"><b>obe</b> can be used to fold a matrix.&nbsp; First, 
+enter an equation file for both the row and column.&nbsp; The <b>Open...</b> 
+button provides a file chooser.&nbsp; If you don't have an equation file, you 
+can type the equation in the text field and push <b>Create File</b>.&nbsp; It 
+will store the equation in <b>Row.equation</b> or <b>Column.equation</b> 
+(depending which <b>Create File</b> button you push).</font></p>
+<p><font face="Arial">Next, you can compose individual dimensions by the <b>Row 
+Dim</b> or <b>Col Dim</b> buttons.&nbsp; Basically, models have been created for 
+each dimension, and composing them will compose their metadata files.&nbsp; (If 
+design rules are specified, then you can verify the correctness of the equation 
+for each dimension).</font></p>
+<p><font face="Arial">To fold the matrix by rows, click the <b>Rows</b> button.&nbsp; 
+This will create a model/directory <b>SUMrows</b>, whose contents you can view 
+via the <b>Entry Definition</b> tab.&nbsp; To fold this result by columns, click 
+the <b>Then Cols</b> button.&nbsp; This will create a model/directory <b>Both</b>, 
+whose contents you can view in the <b>(SUMrows, SUMcols)</b> element of the 
+matrix. Note: clicking <b>Rows</b> followed by <b>Then Cols</b> is important, as 
+the other way around won't work.</font></p>
+<p><font face="Arial">To fold the matrix by columns, click the <b>Cols</b> 
+button.&nbsp; This will create a model/directory <b>SUMcols</b>, whose contents 
+you can view via the <b>Entry Definition</b> tab.&nbsp; To fold this result by 
+columns, click the <b>Then Rows</b> button.&nbsp; This will create a 
+model/directory <b>Both</b>, whose contents you can view in the <b>(SUMrows, 
+SUMcols)</b> element of the matrix.&nbsp; Note that composing by columns and 
+then rows yields an equivalent (although not identical) result to composing by 
+rows then columns. Note: clicking <b>Cols</b> followed by <b>Then Rows</b> is 
+important, as the other way around won't work.</font></p>
+<p><font face="Arial">During each composition, the output of composer is shown 
+in the <b>Standard Out</b> and <b>Standard Err</b> windows below.</font></p>
+<p><img border="0" src="images/ObeTab4.jpg" width="874" height="515"></p>
+
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FFFF00">
+  <tr>
+    <td WIDTH="788"><h2><font face="Arial"><a name="Editing Files">Editing Files</a></font></h2>
+    </td>
+  </tr>
+</table>
+
+<p><font face="Arial">The File Editing tab is for editing arbitrary text files, 
+and should be useful for defining and viewing equation files on the fly.&nbsp; 
+Files to be opened are selected via a file chooser when clicking the Open 
+button.&nbsp; The absolute path of the file is displayed; this name is used as 
+the identifier of the file that is to be saved, saved as, reloaded, or deleted 
+(via the buttons at the bottom of the panel).</font></p>
+<p><img border="0" src="images/ObeTab5.jpg" width="874" height="515"></p>
+<p>&nbsp;</p>
+<hr>
+<p><b><font face="Arial"><a href="index.html">ATS Home Page</a></font></b></p>
+<p><font face="Arial"><b>Copyright © Software Systems Generator Research Group. 
+All rights reserved.</b> <br>
+<b>Revised:&nbsp;<!--webbot bot="TimeStamp" s-format="%B %d, %Y" s-type="EDITED" startspan -->January 25, 2006<!--webbot bot="TimeStamp" endspan i-checksum="31592" -->.</b>
+</font></p>
+<p>&nbsp;</p>
+
+</body>
+
+</html>

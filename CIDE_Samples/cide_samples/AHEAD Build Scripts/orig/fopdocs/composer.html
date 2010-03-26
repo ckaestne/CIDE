@@ -1,0 +1,2198 @@
+<html>
+
+<head>
+  <title>The Composer Tool</title>
+</head>
+
+<body bgcolor="white">
+
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%">
+  <tr>
+    <td WIDTH="78">
+      <font face="Verdana">
+	  <img border="0" src="images/FopButton3.jpg" width="80" height="64">
+      </font>
+    </td>
+    <td WIDTH="688" BGCOLOR="#00FFFF">
+      <h1>
+	<font face="Arial" color="#0000FF">
+	  The Composer Tool
+        </font>
+       </h1>
+    </td>
+  </tr>
+</table>
+
+<p>
+The <strong>composer</strong> is a command-line tool
+to compose files or directories
+by invoking type-specific composition functions
+on its operands.
+Some of the composition functions are implemented by
+other <a href="Composition.html">composition tools</a>
+while others are handled internally by the <strong>composer</strong> itself.
+Together,
+the composition functions encompass
+several different
+<a href="#Supported File Types">file types</a>,
+including <strong><code>.jak</code></strong> files, <strong><code>.properties</code></strong> files,
+and directories.
+</p>
+
+<p>
+The <strong>composer</strong>'s most important use
+is to
+<a href="#Composing Layers">compose directory hierarchies</a>
+representing entire layers.
+In this mode,
+the <strong>composer</strong> recursively descends the hierarchies,
+identifying and composing matching files within the hierarchies.
+This document discusses the use of <strong>composer</strong>
+with special attention to the composition of layers.
+</p>
+
+<ul>
+  <li><font face="Arial">
+    <a href="#Composer Basics">
+      <strong>composer</strong> basics
+    </a></font></li>
+  <li><font face="Arial">
+    <a href="#Composition Overview">
+      composition overview
+    </a></font></li>
+  <li><font face="Arial">
+    <a href="#Composing Layers">
+      composing layers (directory hierarchies)
+    </a></font></li>
+  <li><font face="Arial">
+    <a href="#Equation Files">
+      basic equation files
+    </a></font></li>
+  <li><font face="Arial">
+    <a href="#Complex Equations Files">
+      more complex equations files
+    </a></font></li>
+  <li><font face="Arial">
+    <a href="#Composer Configuration">
+    <strong>composer</strong> configuration
+    </a></font></li>
+  <li><font face="Arial">
+    <a href="#Supported File Types">
+    supported file types
+    </a></font></li>
+  <li><font face="Arial">
+    <a href="#Command-Line Invocation">
+    command-line invocation
+    </a></font></li>
+  <li><font face="Arial">
+    <a href="#Programmatic Invocation">
+    programmatic invocation
+    </a></font></li>
+</ul>
+<br>
+
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#ffff00">
+  <tr>
+    <td WIDTH="788">
+      <h2>
+       <font face="Arial" color="#0000FF">
+	 <a name="Composer Basics">Composer Basics</a>
+       </font>
+      </h2>
+    </td>
+  </tr>
+</table>
+
+<p>
+At a minimum,
+the <strong>composer</strong> requires
+one or more <em>source</em> operands listing
+files or directories
+to be composed
+and a <em>target</em>
+naming the file or directory into which to place the result.
+The source operands and the target may be specified
+in one of two ways.
+
+First,
+the target can be specified explicitly using the <code>--target</code> option,
+while the source operands can also be specified explicitly
+as non-option arguments.
+Here's an example command line
+of this type
+with two source arguments,
+<code>base.jak</code>
+and
+<code>refinement.jak</code>:
+</p>
+
+<blockquote>
+<pre>composer --target=result.jak base.jak refinement.jak
+</pre>
+</blockquote>
+
+<p>
+Alternatively,
+both the sources and target
+can be provided in an <em>equation file</em>
+specified via the <code>--equation</code> option.
+If a file named <code>result.jak.equation</code>
+is defined to contain two whitespace-separated operands,
+<code>base.jak</code>
+and
+<code>refinement.jak</code>
+<em>in that order</em>,
+then the same effect as above can be achieved
+with the following command line:
+</p>
+
+<blockquote>
+<pre>composer --equation=result.jak
+</pre>
+</blockquote>
+
+<p>
+In this command,
+the value of the <code>--equation</code> option
+specifies the <em>base name</em>
+of the equation file.
+The base name is <em>also</em> used as the default target name
+and
+the <code>--target</code> option can be used to override this default.
+More information can be found in the
+<a href="#Equation Files">equation files section</a>.
+</p>
+
+<p>
+Now,
+what does the <strong>composer</strong> do
+when invoked with the above command?
+If <code>base.jak</code> and <code>refinement.jak</code> are readable files,
+the <strong>composer</strong> uses the file extension <strong><code>.jak</code></strong>
+to recognize that the source <a href="#Supported File Types">file types</a>
+are those of <em>Jak source</em> files.
+In general,
+there may be multiple source types
+which will be resolved into a common type,
+if possible.
+Then,
+the common type is used to select a composition method.
+In this case,
+since <code>base.jak</code> and <code>refinement.jak</code>
+are both of type <strong><code>.jak</code></strong>,
+the common type is also <strong><code>.jak</code></strong> and,
+by default,
+the <strong>composer</strong> is
+<a href="#Composer Configuration">configured</a>
+to invoke <strong><a href="Mixin.html">m</a></strong><a href="Mixin.html"><strong>ixin</strong></a>
+to compose <strong><code>.jak</code></strong> files.
+In this example,
+the resulting output would be written into
+the target,
+<code>result.jak</code>.
+</p>
+
+<p>
+There are some important points to note.
+First,
+the source arguments are listed in a specific order.
+The left-most source argument is the base of a composition
+and successive source arguments are refinements
+applied in order from left to right.
+Second,
+the source arguments may be of different types
+as long as they can be resolved to a common type.
+Third,
+the type of the <em>target</em> argument
+is <em>not</em> used in determining
+the common type of the source operands.
+In particular,
+it's perfectly valid to place the result of a composition
+into a file of a completely different type than that of the sources.
+</p>
+
+<p>
+Of course,
+the <strong>composer</strong> has other
+<a href="#Command-Line Invocation">command-line options</a>
+and it can be
+<a href="#Composer Configuration">configured</a>
+for several different compositions.
+Arguably,
+though,
+the most important composition handled by the <strong>composer</strong>
+is the
+<a href="#Composing Layers">composition of directory hierarchies</a>
+that represent layers.
+</p>
+
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#ffff00">
+  <tr>
+    <td WIDTH="788">
+      <h2>
+       <font face="Arial" color="#0000FF">
+	 <a name="Composition Overview">Composition Overview</a>
+       </font>
+      </h2>
+    </td>
+  </tr>
+</table>
+
+<p>
+In the example above,
+the composition of <strong><code>.jak</code></strong> files
+is handled by an external tool
+instead of an internal composition function.
+In the default <strong>composer</strong>
+<a href="#Composer Configuration">configuration</a>,
+<strong><code>.jak</code></strong> files are <em>primitive</em> operands
+as are all source files handled by external tools.
+More generally, though,
+the <strong>composer</strong> operates on <em>units</em>
+which may be directories, files or portions of files.
+Units are divided into two types:
+<em>primitives</em>,
+which are treated by the <strong>composer</strong> as opaque objects,
+and <em>collectives</em>,
+which are collections of <em>named units</em>.
+</p>
+
+<p>
+All compositions,
+whether of primitives or collectives,
+are determined via the method
+suggested in the
+<a href="#Composer Basics">previous section</a>.
+Given a list of <em>source</em> units,
+a <em>common type</em> is determined if possible.
+The common type is used to select a <em>composition function</em> via a
+<a href="#Composer Configuration">configuration file</a>.
+The source units are passed to the function for evaluation
+and the result is written to a <em>target</em> unit.
+If the source units are <em>collectives</em>,
+the composition function is a generalization
+of <em>inheritance</em>
+as implemented in object-oriented languages.
+</p>
+
+<p>
+Here's how collective composition works.
+Suppose there are two collectives,
+the <code>Base</code> and the <code>Refinement</code>,
+each containing uniquely named units called <em>members</em>.
+For example,
+the <code>Base</code> could contain members
+named <code>alpha</code> and <code>beta</code>,
+while the <code>Refinement</code> could contain members
+named <code>alpha</code>, <code>delta</code> and <code>gamma</code>.
+Conventionally,
+the member names are called <em>signatures</em>
+and the collection of signatures
+for a collective is called the <em>signature set</em>.
+In our example,
+the signature set for <code>Base</code> is
+{<code>alpha</code>, <code>beta</code>}
+while the signature set for <code>Refinement</code> is
+{<code>alpha</code>, <code>delta</code>, <code>gamma</code>}.
+</p>
+
+<p>
+Further,
+each member of a collective has an <em>assigned value</em>.
+For example,
+in object <code>Base</code>,
+suppose the member <code>alpha</code> has value 120.0
+while member <code>beta</code> has value 2718.
+It's conventional to use <em>dot notation</em>
+to refer to a member within a collective.
+For example, <code>Base.beta</code> refers
+to member <code>beta</code> within collective <code>Base</code>.
+</p>
+
+<p>
+Of course,
+the members of <code>Refinement</code> 
+also have assigned values.
+In the table below,
+the collectives <code>Base</code> and <code>Refinement</code>
+are depicted with their members
+where
+the possible signatures are listed in the last four rows
+while the assigned values for the members of <code>Base</code>
+and <code>Refinement</code>
+are shown in the second and third columns, respectively.
+The intersection of a signature's row
+and a collective's column
+is blank if the collective has no member with that signature.
+For example,
+<code>Refinement</code> has no member with signature <code>beta</code>,
+so the cell at the third column
+of the row for <code>beta</code> is left blank.
+</p>
+
+<blockquote>
+<table border="1" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" cellpadding="0">
+<caption>Collectives <code>Base</code> and <code>Refinement</code></caption>
+
+<tr>
+<th rowspan="2" valign="top">Signatures</th>
+<th colspan="2">Assigned Values</th>
+</tr>
+
+<tr>
+<th width="80"><code>Base</code></th>
+<th width="80"><code>Refinement</code></th>
+</tr>
+
+<tr>
+<td>alpha</td>
+<td align="right">120.0</td>
+<td align="right">123</td>
+</tr>
+
+<tr>
+<td>beta</td>
+<td align="right">2718</td>
+<td align="right">&nbsp;</td>
+</tr>
+
+<tr>
+<td>delta</td>
+<td align="right">&nbsp;</td>
+<td align="right">0.005</td>
+</tr>
+
+<tr>
+<td>gamma</td>
+<td align="right">&nbsp;</td>
+<td align="right">"label"</td>
+</tr>
+
+</table>
+</blockquote>
+
+<p>
+The composition of two collectives (the <em>sources</em>) is another
+collective (the <em>target</em>) which also contains uniquely named members.
+The target's signature set
+is the union of the signature sets of the sources.
+So,
+if the sources are <code>Base</code> and <code>Refinement</code>,
+the target's signature set is
+{<code>alpha</code>, <code>beta</code>, <code>delta</code>, <code>gamma</code>}.
+The values assigned to the target's members
+are calculated by <em>recursively applying composition</em>
+for each signature in the target's signature set.
+The operands for each recursive composition
+are found by taking corresponding members from the sources
+in the same order as the sources.
+For example,
+if collective <code>Target</code> is the composition
+of <code>Base</code> and <code>Refinement</code>,
+in that order,
+then the value of <code>Target.alpha</code> is found
+by composing <code>Base.alpha</code> and <code>Refinement.alpha</code>
+in that order.
+The composition function to use in the recursive invocation
+is again determined as described above
+and the procedure repeats until
+no further compositions of collectives remain.
+</p>
+
+<p>
+Here's a table showing the recursive compositions
+formed when composing <code>Base</code> and <code>Refinement</code>
+to yield collective <code>Target</code>.
+Only <code>Target.alpha</code> has two operands
+in the recursive composition
+since signature <code>alpha</code>
+is the only signature with members
+in both <code>Base</code> and <code>Refinement</code>.
+</p>
+
+<blockquote>
+
+<table border="1" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" cellpadding="0">
+<caption>Composing <code>Base</code> and <code>Refinement</code>
+into <code>Target</code></caption>
+
+<tr>
+<th rowspan="2" valign="top">Signatures</th>
+<th colspan="3">Assigned Values</th>
+</tr>
+
+<tr>
+<th width="80"><code>Base</code></th>
+<th width="80"><code>Refinement</code></th>
+<th width="120"><code>Target</code></th>
+</tr>
+
+<tr>
+<td>alpha</td>
+<td align="right">120.0</td>
+<td align="right">123</td>
+<td align="left">compose (120.0, 123)</td>
+</tr>
+
+<tr>
+<td>beta</td>
+<td align="right">2718</td>
+<td align="right">&nbsp;</td>
+<td align="left">compose (2718)</td>
+</tr>
+
+<tr>
+<td>delta</td>
+<td align="right">&nbsp;</td>
+<td align="right">0.005</td>
+<td align="left">compose (0.005)</td>
+</tr>
+
+<tr>
+<td>gamma</td>
+<td align="right">&nbsp;</td>
+<td align="right">"label"</td>
+<td align="left">compose ("label")</td>
+</tr>
+
+</table>
+</blockquote>
+
+<p>
+So far,
+the composition of numbers and strings 
+has been left undefined.
+To complete the example,
+let's suppose that strings are composed by concatenation
+and that numbers are composed by subtraction.
+Then,
+strings and numbers will be primitives and
+the final result of composing <code>Base</code> and <code>Refinement</code>,
+in that order,
+is shown in the table below.
+</p>
+
+<blockquote>
+
+<table border="1" cellspacing="1" style="border-collapse: collapse" bordercolor="#111111">
+<caption>Composing <code>Base</code> and <code>Refinement</code>
+into <code>Target</code></caption>
+
+<tr>
+<th rowspan="2" valign="top">Signatures</th>
+<th colspan="3">Assigned Values</th>
+</tr>
+
+<tr>
+<th width="80"><code>Base</code></th>
+<th width="80"><code>Refinement</code></th>
+<th width="80"><code>Target</code></th>
+</tr>
+
+<tr>
+<td>alpha</td>
+<td align="right">120.0</td>
+<td align="right">123</td>
+<td align="right">-3.0</td>
+</tr>
+
+<tr>
+<td>beta</td>
+<td align="right">2718</td>
+<td align="right">&nbsp;</td>
+<td align="right">2718</td>
+</tr>
+
+<tr>
+<td>delta</td>
+<td align="right">&nbsp;</td>
+<td align="right">0.005</td>
+<td align="right">0.005</td>
+</tr>
+
+<tr>
+<td>gamma</td>
+<td align="right">&nbsp;</td>
+<td align="right">"label"</td>
+<td align="right">"label"</td>
+</tr>
+
+</table>
+</blockquote>
+
+<p>
+It's important to note that composition
+is not usually commutative.
+For example,
+if the order of the above composition were reversed,
+the value of <code>Target.alpha</code> would be +3.0
+instead of -3.0.
+</p>
+
+<p>
+<a name="model path">
+<strong>Using the <em>model path</em></strong>.
+Source operands are often part
+of a <em>model</em>,
+a collection of related components
+used to define a product line.
+The <strong><code>composer</code></strong>
+supports the model viewpoint
+by providing a search path,
+called the <em>model path</em>,
+for source operands and other related files.
+This is a list of directories separated by the system-dependent
+<a href="http://java.sun.com/j2se/1.4.1/docs/api/java/io/File.html#pathSeparatorChar"><em>path separator character</em></a>.
+On Unix systems,
+the path separator character is "<code>:</code>"
+and,
+on Windows systems,
+it is "<code>;</code>".
+</a>
+</p>
+
+<p>
+A model path can be specified with the <code>--model</code>
+command-line parameter.
+For example,
+on a Unix system,
+the <strong><code>composer</code></strong> could be run as follows:
+</p>
+
+<blockquote>
+<pre>composer --model=myGUIComponents:/opt/components/GUI baseFrame editor
+</pre>
+</blockquote>
+
+<p>
+In this example,
+the <strong><code>composer</code></strong>
+would search for each of the two operands,
+<code>baseFrame</code>
+and <code>editor</code>,
+by first looking in the <code>myGUIComponents</code>
+directory,
+then in the <code>/opt/components/GUI</code> directory.
+Each search is done independently,
+so that <code>baseFrame</code>
+could be found in <code>/opt/components/GUI</code>
+while <code>editor</code>
+could be found in <code>myGUIComponents</code>.
+It's also possible to specify the model path
+by defining the property
+<a href="#composer.model.path"><code>composer.model.path</code></a>
+in a 
+<a href="#Composer Configuration">properties file</a>.
+</p>
+
+<p>
+<strong>Details of the model path search</strong>.
+The model path search
+is called <em>resolution</em>
+and it
+is similar
+to other path searches,
+such as the resolution
+of Java class files against the <code>CLASSPATH</code> environment variable.
+For example,
+only <em>relative</em> filenames
+are resolved against the model search path;
+an absolute filename
+is always used exactly as given.
+
+On the other hand,
+model path resolution differs
+from other path searches
+in two important ways.
+
+First,
+<em>any</em> relative filename,
+even those specifying a directory path,
+will be resolved against the model path.
+For example,
+the filename <code>dsl/bali/Data.jak</code>,
+which contains the directory path <code>dsl/bali</code>,
+will be resolved against the model path.
+
+Second,
+a source operand may be specified as a
+<code>file</code>
+<a href="http://java.sun.com/j2se/1.4.1/docs/api/java/net/URI.html">URI</a>.
+This means
+is that a "/" can always be used
+as the
+<a href="http://java.sun.com/j2se/1.4/docs/api/java/io/File.html#separatorChar">file separator character</a>
+in source operands,
+even on Windows systems
+where the file separator character is normally "\".
+</p>
+
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#ffff00">
+  <tr>
+
+    <td WIDTH="788">
+      <h2>
+       <font face="Arial" color="#0000FF">
+	 <a name="Composing Layers">Composing Layers (Directory Hierarchies)</a>
+       </font>
+      </h2>
+    </td>
+  </tr>
+</table>
+
+<p>
+In the <strong>composer</strong>,
+layers are implemented as directory hierarchies
+and directories are particular types of collectives.
+The members of a directory collective
+are the files within the directory
+and the signature of each file member
+is the name of the file.
+Composition of directories,
+then,
+is implemented as described in the
+<a href="#Composition Overview">previous section</a>.
+To ensure that this is clear,
+this section contains a fully described example.
+</p>
+
+<p>
+Suppose that the following
+<strong>composer</strong> command is issued
+where <code>base</code>, <code>refinement</code> and <code>packages</code>
+are all directories:
+</p>
+
+<blockquote>
+<pre>composer --target=project base refinement packages
+</pre>
+</blockquote>
+
+<p>
+Let's suppose that the directory <code>base</code>
+contains files <code>alf.jak</code> and <code>bet.jak</code>
+while directory <code>refinement</code>
+contains files <code>bet.jak</code> and <code>gam.jak</code>.
+Further,
+let's suppose that both <code>base</code> and <code>refinement</code>
+contain subdirectories named <code>network</code>
+each with a single file named <code>network.properties</code>.
+Finally,
+let's suppose that the directory <code>packages</code>
+contains one subdirectory named <code>network</code>
+with Java files named <code>Control.java</code>
+and <code>Link.java</code>.
+</p>
+
+<p>
+Viewing <code>base</code>, <code>refinement</code> and <code>packages</code>
+simply as collectives with member signatures determined by filenames
+results in the following tabular representation:
+</p>
+
+<blockquote>
+
+<table border="1" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" cellpadding="0">
+<caption>
+Collectives <code>base</code>, <code>refinement</code> and
+<code>packages</code>
+</caption>
+
+<tr>
+<th rowspan="2" valign="top">Signatures</th> <th colspan="3">Assigned
+Values</th>
+</tr>
+
+<tr>
+<th width="80"><code>base</code></th> <th
+width="80"><code>refinement</code></th> <th
+width="80"><code>packages</code></th>
+</tr>
+
+<tr>
+<td>alf.jak</td> <td align="center">a <strong><code>.jak</code></strong> file</td>
+<td align="center">&nbsp;</td> <td align="center">&nbsp;</td>
+</tr>
+
+<tr>
+<td>bet.jak</td> <td align="center">a <strong><code>.jak</code></strong> file</td>
+<td align="center">a <strong><code>.jak</code></strong> file</td> <td
+align="center">&nbsp;</td>
+</tr>
+
+<tr>
+<td>gam.jak</td> <td align="center">&nbsp;</td> <td align="center">a
+<strong><code>.jak</code></strong> file</td> <td align="center">&nbsp;</td>
+</tr>
+
+<tr>
+<td>network</td> <td align="center">a directory</td> <td
+align="center">a directory</td> <td align="center">a directory</td>
+</tr>
+
+</table>
+</blockquote>
+
+<p>
+Since the sources are all directories,
+the target, <code>project</code>,
+will be instantiated as a directory
+and its members will be computed
+by recursively applying composition
+across members of sources with the same signatures.
+This results in the following sequence
+of events initiated by the <strong>composer</strong>,
+including several recursive invocations of the <strong>composer</strong>:
+</p>
+
+<ul>
+<li>create directory <code>project</code> if it doesn't already exist;
+<li><code>composer --target=project/alf.jak base/alf.jak</code>
+<li><code>composer --target=project/bet.jak base/bet.jak refinement/beta.jak</code>
+<li><code>composer --target=project/gam.jak refinement/gam.jak</code>
+<li><code>composer --target=project/network base/network refinement/network packages/network</code>
+</ul>
+
+<p>
+The first three recursive invocations of <strong>composer</strong>
+act on <strong><code>.jak</code></strong> files which are primitives.
+However,
+the fourth invocation is on sub-directories of the original source directories.
+Since directories are collectives,
+the <strong>composer</strong> again applies composition of collectives
+to create the target sub-directory <code>project/network</code>.
+Here's a tabular representation
+of that composition:
+</p>
+
+<blockquote>
+
+<table border="1" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" cellpadding="0">
+<caption>
+Collectives <code>base/network</code>, <code>refinement/network</code> and
+<code>packages/network</code>
+</caption>
+
+<tr>
+<th rowspan="2" valign="top">Signatures</th> <th colspan="3">Assigned
+Values</th>
+</tr>
+
+<tr>
+<th width="140"><code>base/network</code></th>
+<th width="140"><code>refinement/network</code></th>
+<th width="140"><code>packages/network</code></th>
+</tr>
+
+<tr>
+<td>network.properties</td>
+<td align="center">a <strong><code>.properties</code></strong> file</td>
+<td align="center">a <strong><code>.properties</code></strong> file</td>
+<td align="center">&nbsp;</td>
+</tr>
+
+<tr>
+<td>Control.java</td>
+<td align="center">&nbsp;</td>
+<td align="center">&nbsp;</td>
+<td align="center">a <strong><code>.java</code></strong> file</td>
+</tr>
+
+<tr>
+<td>Link.java</td>
+<td align="center">&nbsp;</td>
+<td align="center">&nbsp;</td>
+<td align="center">a <strong><code>.java</code></strong> file</td>
+</tr>
+
+</table>
+</blockquote>
+
+<p>
+This results in the following sequence of events
+with three recursive invocations of the <strong>composer</strong>:
+</p>
+
+<ul>
+
+<li>
+create directory <code>project/network</code> if it doesn't already exist;
+</li>
+
+<li>
+<code>
+composer
+--target=project/network/network.properties
+beta/network/network.properties
+refinement/network/network.properties
+</code>
+</li>
+
+<li>
+<code>
+composer
+--target=project/network/Control.java
+packages/network/Control.java
+</code>
+</li>
+
+<li>
+<code>
+composer
+--target=project/network/Link.java
+packages/network/Link.java
+</code>
+</li>
+
+</ul>
+
+<p>
+At this point,
+all compositions are for primitives,
+so there are no further recursive invocations
+of the <strong>composer</strong>
+and no more compositions are performed.
+However,
+for top-level compositions of directories,
+the <strong>composer</strong> performs one final step.
+If (and only if)
+the target directory contains an
+<a href="http://jakarta.apache.org/ant/">Ant</a>
+build file named <code>build.xml</code>
+<em>and</em>
+if there were no errors in composition,
+then the <strong>composer</strong>
+will start the build tool,
+<a href="http://jakarta.apache.org/ant/">Ant</a>,
+with a command line such as the following:
+</p>
+
+<blockquote>
+<pre>ant -buildfile &lt;target-directory&gt;/build.xml
+</pre>
+</blockquote>
+
+<p>
+For the example above,
+the top-level target directory is
+<code>project</code>,
+so the command issued is:
+</p>
+
+<blockquote>
+<pre>ant -buildfile project/build.xml
+</pre>
+</blockquote>
+
+<p>
+For sophisticated builds,
+a <code>build.xml</code> file can be created
+as <em>the result of a recursive composition</em> performed
+while the target directory
+is being composed.
+Even though the <code>build.xml</code> file
+is generated by the composition itself,
+it will still be invoked in the final step
+as described above.
+A particularly useful method 
+for generating a <code>build.xml</code> file
+is as the result of composing <code>build.xml.vm</code> files
+in the source directories.
+With the default
+<a href="#Supported File Types">file type configuration</a>,
+<strong><code>.vm</code></strong> files
+are composed using 
+<a href="http://jakarta.apache.org/velocity/">Velocity</a>
+as described
+<a href="#VelocityFileUnit">below</a>.
+</p>
+
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#ffff00">
+  <tr>
+    <td WIDTH="788">
+      <h2>
+       <font face="Arial" color="#0000FF">
+	 <a name="Equation Files">Basic Equation Files</a>
+       </font>
+      </h2>
+    </td>
+  </tr>
+</table>
+
+<p>
+When composing large numbers of files,
+it's inconvenient to enter the operand names on the command line
+each time the composition is run.
+It's much easier, in this case,
+to enter the operand names <em>just once</em>
+into an <em>equation</em> file.
+Then,
+the <strong>composer</strong> can be invoked
+so as to read the operand names from the equation file.
+This section describes <em>basic equation files</em>
+which, in the default
+<a href="#Supported File Types">file type configuration</a>,
+are files with the <strong><code>.equation</code></strong> extension.
+A alternative format for more complex <em>equations files</em>
+is described in the
+<a href="#Complex Equations Files">next section</a>.
+</p>
+
+<p>
+Consider the example from the
+<a href="#Composing Layers">previous section</a>.
+There,
+three directory operands
+(<code>base</code>,
+<code>refinement</code> and
+<code>packages</code>)
+were being composed into target directory <code>project</code>.
+Now,
+suppose we create an equation file, <code>project.equation</code>,
+that contains the following lines:
+</p>
+
+<blockquote>
+<pre>base
+refinement
+packages
+</pre>
+</blockquote>
+
+<p>
+Then,
+the <strong>composer</strong>
+can be invoked with the following command line:
+</p>
+
+<blockquote>
+<pre>composer --equation=project
+</pre>
+</blockquote>
+
+<p>
+This command line specifies
+several pieces of information.
+First,
+the base name of the equation file is <code>project</code>,
+as given by the value of the <code>--equation</code> argument.
+If desired,
+it's also valid to specify <em>both</em> the base name,
+<code>project</code>,
+and the extension,
+<code>.equation</code>,
+as shown below:
+</p>
+
+<blockquote>
+<pre>composer --equation=project.equation
+</pre>
+</blockquote>
+
+<p>
+Either way,
+the <em>base name</em> of the equation file
+is also used to supply the second piece of information,
+<em>the default target name</em>.
+So the above command will place the result
+of the composition into a directory named <code>project</code>.
+The default can be overridden by supplying an additional
+<code>--target</code> argument.
+For example,
+</p>
+
+<blockquote>
+<pre>composer --equation=project --target=george
+</pre>
+</blockquote>
+
+<p>
+specifies that the composition result
+will be named <code>george</code> instead of <code>project</code>.
+</p>
+
+<p>
+Finally,
+the third set of information,
+the source operands,
+is read from the equation file.
+In this example,
+there are three source operands,
+one per line,
+in the equation file <code>project.equation</code>.
+Therefore,
+in this example,
+the following two command lines are equivalent:
+</p>
+
+<blockquote>
+<pre>composer --equation=project
+composer --target=project base refinement packages
+</pre>
+</blockquote>
+
+<p>
+<strong>Note:</strong>
+Comment lines can also be placed into equation files.
+If the first non-blank character on a line
+is a <code>#</code>,
+the line will be treated as a comment.
+</p>
+
+<p><strong>Composing equation files</strong>.
+So far,
+the examples have shown how equation files can be used
+to save typing.
+That's a bit boring, though useful.
+However,
+<em>equation files themselves can be composed</em>,
+which makes life much more interesting.
+This allows equation files
+to specify components
+that can be used in later compositions.
+Further,
+equation files implement a <em>form of inheritance</em>,
+allowing the <em>same set of equation files
+to be composed in different ways</em>
+to build different components.
+</p>
+
+<p>
+Here's how inheritance works.
+There's a keyword,
+<code>super</code>,
+that can be used as the name
+of an operand within an equation file.
+The <code>super</code> keyword
+specifies that a base list of operands
+be inserted into the operand list.
+To make this clear,
+suppose there are two equation files
+as shown in the table below:
+</p>
+
+<blockquote>
+<table border="1" cellspacing="1" style="border-collapse: collapse" bordercolor="#111111" cellpadding="1">
+<caption>
+Files <code>base.equation</code> and <code>packages.equation</code>
+</caption>
+
+<tr>
+<th align="left">File:</th>
+<th><code>base.equation</code></th>
+<th><code>packages.equation</code></th>
+</tr>
+
+<tr>
+<th align="left" valign="center">Contents:</th>
+<td>
+<table border="0">
+<tr><td><code>base</code></td></tr>
+<tr><td><code>refinement</code></td></tr>
+</table>
+</td>
+<td>
+<table border="0">
+<tr><td><code>super</code></td></tr>
+<tr><td><code>filesystem</code></td></tr>
+</table>
+</td>
+</tr>
+
+</table>
+</blockquote>
+
+<p>
+These two equation files can be composed.
+Here's an example command line for such a composition:
+</p>
+
+<blockquote>
+<pre>composer --target=result.equation base.equation packages.equation
+</pre>
+</blockquote>
+
+<p>
+The composition works from left-to-right.
+The contents of the first file,
+<code>base.equation</code>,
+provides the <em>base</em>
+to substitute for the <code>super</code> keyword
+in the second file,
+<code>packages.equation</code>.
+The result will be the following three lines
+</p>
+
+<blockquote>
+<pre>base
+refinement
+filesystem
+</pre>
+</blockquote>
+
+<p>
+which are written into the target file,
+<code>result.equation</code>.
+It's also possible to compose more than two equation files.
+For example,
+suppose there's another equation file,
+<code>network.equation</code>,
+with the following contents:
+</p>
+
+<blockquote>
+<pre>ip-v4
+tcp
+super
+ftp
+</pre>
+</blockquote>
+
+<p>
+In this file,
+the keyword <code>super</code> occupies
+the third line
+(in general,
+<code>super</code>
+can be at any position in an equation file).
+Now,
+to continue our example,
+suppose we compose these three equation files with the following command:
+</p>
+
+<blockquote>
+<pre>composer --target=result.equation base.equation packages.equation network.equation
+</pre>
+</blockquote>
+
+<p>
+The composition of the first two files,
+<code>base.equation</code> and <code>packages.equation</code>,
+is used as the <em>base</em>
+for substitution into the third file,
+<code>network.equation</code>.
+The result,
+written into file <code>result.equation</code>,
+will be the following lines:
+</p>
+
+<blockquote>
+<pre>ip-v4
+tcp
+base
+refinement
+filesystem
+ftp
+</blockquote>
+
+<p>
+<em>The order of composition is important!</em> Suppose we modified the above command line
+to reverse the last two operands,
+as shown below: </p>
+
+<blockquote>
+<pre>composer --target=result.equation base.equation network.equation packages.equation
+</pre>
+</blockquote>
+
+<p>
+Then,
+the lines written into the target file
+will be in a different order: </p>
+
+<blockquote>
+<pre>ip-v4
+tcp
+base
+refinement
+ftp
+filesystem
+</blockquote>
+
+<p>
+The operand order must be arranged
+so that the result is in the desired order.
+Assuming that the order is correct,
+the result is another equation file <em>that can be used in a following composition</em>.
+For example,
+the target of the previous composition
+could be used to specify another composition
+as follows: </p>
+
+<blockquote>
+<pre>composer --equation=result
+</pre>
+</blockquote>
+
+<p>
+The simple examples above give just a flavor
+of the possibilities.
+It's left to the reader to develop more sophisticated applications! </p>
+
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#ffff00">
+  <tr>
+    <td WIDTH="788">
+      <h2>
+       <font face="Arial" color="#0000FF">
+	 <a name="Complex Equations Files">More Complex Equations Files</a> </font></h2>
+    </td>
+  </tr>
+</table>
+
+<p>
+It's often the case that compositional designs are hierarchical,
+with applications being composed from sub-components
+which are themselves
+composed from smaller sub-components.
+Such designs can be represented with <strong><code>.equation</code></strong> files
+as described <a href="#Equation Files">above</a>.
+Sometimes,
+though,
+more compact representations are desired.
+These can be achieved with <strong><code>.equations</code></strong> (note the <em>plural</em>!)
+files as described in this section.
+
+The format for these files is the same as that specified <a href="http://java.sun.com/j2se/1.4.1/docs/api/java/util/Properties.html#load(java.io.InputStream)"><code>load</code></a> method for
+Java <a href="http://java.sun.com/j2se/1.4.1/docs/api/java/util/Properties.html">properties</a> files.
+
+In particular,
+a <em>comment line</em> can be included
+by beginning the line with a "#". </p>
+
+<p>
+For example,
+consider an application that is designed
+to run on a variety
+of different operating systems.
+Typically,
+such tools are composed
+of a portable component
+and a non-portable components that varies
+according to operating system.
+A design can insulate the portable component
+by providing an <a href="http://128.42.6.89/JavaResources/DesignPatterns/adapter.htm">adapter</a> to convert tool functions
+to O/S-dependent functions.
+It's natural to define
+an O/S adapter
+as a separate component,
+varying according to operating sytem,
+that is composed with the portable component
+to build a complete instance of the application.
+However,
+an O/S adapter is likely
+to be composed of several smaller components,
+as is the portable component.
+Here's a <strong><code>.equations</code></strong> file, <code>testVersion.equations</code>,
+that shows an example hierarchical design: </p>
+
+<blockquote>
+<pre># Base version with test stubs for the O/S adapter:
+#
+this = osAdapter portable
+osAdapter = os/test/adapter
+portable = support interface/command
+</pre>
+</blockquote>
+
+<p>
+Other than comments,
+an <strong><code>.equations</code></strong> file contains
+a set of <em>unordered</em> assignment statements
+where each assignment specifies a composition.
+In the example above,
+the left-hand side
+(the <em>key</em>)
+of each assignment defines a component
+to be the composition specified on the right-hand side
+(the <em>value</em>).
+The three components defined are <code>this</code>, <code>osAdapter</code> and <code>portable</code>.
+The keyword <code>this</code> designates the <em>root</em> assignment
+while the other assignments define
+sub-components to be combined into the root composition.
+Pictorially,
+the composition of <code>this</code> is hierarchical
+as shown below: </p>
+
+<center><img src="composer/testVersion.gif" width="561" height="282"></center>
+
+<p>
+The image above shows a <em>tree</em> with a single root named <code>this</code>;
+three <code>leaves</code> named <code>os/test/adapter</code>, <code>support</code> and <code>interface/command</code>;
+and two <code>internal nodes</code> named <code>osAdapter</code> and <code>portable</code>.
+The <em>evaluation</em> of <code>this</code> is the composition
+of all leaves <em>reachable</em> from <code>this</code>,
+in order from <em>left to right</em>.
+The <strong>composer</strong> performs this composition
+with the following command: </p>
+
+<blockquote>
+<pre>composer --equation=testVersion
+</pre>
+</blockquote>
+
+<p>
+The leaves are interpreted as <a href="http://java.sun.com/j2se/1.4.1/docs/api/java/net/URI.html">URI</a> names <em>relative</em> to the <a href="#model path"><em>model path</em></a>.
+
+As with <a href="#Equation Files">basic equation files</a>,
+the target name, <code>testVersion</code> is taken from the base name
+of the <strong><code>.equations</code></strong> file
+and
+the <code>--target</code> option can be used to override this default. </p>
+
+<p><strong>Composing <code>.equations</code> files</strong>.
+Additional power becomes available when <strong><code>.equations</code></strong> files
+are composed.
+Extending the above example,
+suppose there's another <strong><code>.equations</code></strong> file, <code>win2kFeatures.equations</code>,
+with the following content: </p>
+
+<blockquote>
+<pre>osAdapter = os/windows/common os/win2k/adapter
+</pre>
+</blockquote>
+
+<p>
+Refining <code>testVersion.equations</code> with <code>win2kFeatures.equations</code> can be done with the following command: </p>
+
+<blockquote>
+<pre>composer --target=win2kVersion.equations testVersion.equations win2kFeatures.equations
+</pre>
+</blockquote>
+
+<p>
+The result is a file, <code>win2kVersion.equations</code>,
+with content similar to that shown below: </p>
+
+<blockquote>
+<pre># Generated from [testVersion.equations, win2kFeatures.equations]
+#
+this = osAdapter portable
+osAdapter = os/windows/common os/win2k/adapter
+portable = support interface/command
+</pre>
+</blockquote>
+
+<p>
+Composition of <strong><code>.equations</code></strong> files
+is done by <em>inheriting assignments</em> where an assignment's
+signature is its <em>key</em>.
+In the above example,
+the last value assigned to key <code>osAdapter</code> was that defined in <code>win2kFeatures.equations</code>,
+so that is the value used in the result.
+The hierarchical structure of the resulting composition
+is shown in the following graph: </p>
+
+<center><img src="composer/win2kVersion.gif" width="601" height="342"></center>
+
+<p>
+Another keyword, <code>super</code>,
+can be used to modify this type of composition.
+If an operand on the right-hand side of an assignment
+has the form <code>super.<em>key</em></code>,
+then the previous value assigned to <code><em>key</em></code> to substituted at that point.
+Similarly,
+if <code>super</code> appears as an operand,
+then the previous value of <code>this</code> is substituted.
+As an example of the use of <code>super</code>,
+consider the files, <code>one.equations</code> and <code>two.equations</code>,
+shown below: </p>
+
+<blockquote>
+<table border="1" cellspacing="1" style="border-collapse: collapse" bordercolor="#111111" cellpadding="1">
+<caption>
+Files <code>one.equations</code> and <code>two.equations</code> </caption>
+
+<tr>
+<th align="left">File:</th>
+<th><code>one.equations</code></th>
+<th><code>two.equations</code></th>
+</tr>
+
+<tr>
+<th align="left" valign="center">Contents:</th>
+<td valign="top">
+<table border="0">
+<tr><td><code>a = alpha</code></td></tr>
+<tr><td><code>b = beta</code></td></tr>
+<tr><td><code>g = gamma</code></td></tr>
+<tr><td><code>this = a b g</code></td></tr>
+</table>
+</td>
+<td valign="top">
+<table border="0">
+<tr><td><code>a = aleph</code></td></tr>
+<tr><td><code>b = super.a baffle</code></td></tr>
+<tr><td><code>this = before super after</code></td></tr>
+</table>
+</td>
+</tr>
+
+</table>
+</blockquote>
+
+<p>
+In file <code>two.equations</code>,
+there are two instances of <code>super</code>.
+The first is <code>super.a</code> in the value of <code>b</code> and the second is simply <code>super</code> in the value of <code>t</code>.
+Composing these two files yields the following set
+of assignments: </p>
+
+<blockquote>
+<pre>a = aleph
+b = alpha baffle
+g = gamma
+this = before a b g after
+</pre>
+</blockquote>
+
+<p>
+Again,
+it's left to the reader to develop more sophisticated applications! </p>
+
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#ffff00">
+  <tr>
+    <td WIDTH="788">
+      <h2>
+       <font face="Arial" color="#0000FF">
+	 <a name="Composer Configuration">Composer Configuration</a> </font></h2>
+    </td>
+  </tr>
+</table>
+
+<p>
+There are two parts to configuring the <strong>composer</strong>.
+First,
+it's recommended that it be installed so that it has access
+to <a href="http://jakarta.apache.org/ant/">Ant</a> and <a href="http://java.sun.com/j2se/1.4/docs/tooldocs/tools.html#basic">Java</a> tools.
+Second,
+any non-standard properties,
+including <a href="#Supported File Types">file type</a> preferences,
+should be placed into a <strong>composer</strong> properties file.
+This section describes
+these two layers of configuration. </p>
+
+<p>
+<strong>Configuring <code>composer</code> for Ant and Java tools.</strong> Strictly speaking,
+it's not necessary to configure <strong>composer</strong> for Ant
+unless Ant is to be used in compositions.
+However,
+the standard distribution of the <strong>composer</strong> is defined
+to invoke Ant
+for top-level directory compositions
+as described <a href="#Composing Layers">previously</a>.
+The invocation is done via the <a href="http://java.sun.com/j2se/1.4/docs/api/java/lang/Runtime.html#exec(java.lang.String[])">java.lang.Runtime.exec</a> method 
+which finds and executes Ant <em>in a system-dependent fashion</em>.
+In general,
+it is recommended that Ant be installed
+in a directory in a standard system directory.
+If this is not possible,
+the location of Ant's executable
+can be specified
+via the <code>tool.ant</code> property
+in a <code>composer.properties</code> file
+or on the <strong>composer</strong> <a href="#Command-Line Invocation">command line</a>. </p>
+
+<p>
+Similarly,
+Ant may execute tasks
+that invoke Java tools such as <code>javac</code> and <code>java</code>.
+In order for this to be correctly done,
+the Java tools must be installed
+so that Ant can find and execute them.
+For recent versions of Java, Standard Edition,
+this is automatic <em>except</em> for Ant's external invocations of <code>java</code>,
+the Java virtual machine.
+Again,
+this is done via a <a href="http://java.sun.com/j2se/1.4/docs/api/java/lang/Runtime.html#exec(java.lang.String[])">java.lang.Runtime.exec</a> method
+and it is recommended that <code>java</code> be installed in a system directory.
+If this is not possible,
+the location of a <code>java</code> executable can be specified
+in Ant build files
+with the <code>jvm</code> attribute
+of the <a href="http://jakarta.apache.org/ant/manual/CoreTasks/java.html"><code>Java</code></a> task. </p>
+
+<p>
+<strong>Configuring <code>composer</code> properties.</strong> The <strong>composer</strong> uses several properties
+to control the details of its operation.
+Most properties specify file types
+as described in the <a href="#Supported File Types">next section</a>,
+but additional properties,
+as listed below,
+are used as well: </p>
+
+<ul>
+
+<li>
+<p>
+<a name="composer.directory.ignore">
+<strong><code>composer.directory.ignore</code></strong> specifies sub-directories that should be ignored
+during recursive invocations of <strong>composer</strong>.
+The property value is a pattern
+as described in the Java API documentation for the <a href="http://java.sun.com/j2se/1.4.1/docs/api/java/util/regex/Pattern.html"><code>Pattern</code></a> class.
+Sub-directories whose names match this pattern
+will be ignored by <strong>composer</strong> during <em>recursive invocations only</em>.
+A matching directory operand will <em>not be ignored</em> if it is explicitly named
+on the command line
+or within an equation file. </a></p>
+</li>
+
+<li>
+<p>
+<a name="composer.file.ignore">
+<strong><code>composer.file.ignore</code></strong> specifies <em>files</em> that should be ignored
+during recursive invocations of <strong>composer</strong>.
+The property value is a pattern as per <a href="http://java.sun.com/j2se/1.4.1/docs/api/java/util/regex/Pattern.html"><code>Pattern</code></a> and it will be used <em>only</em> to match the names of non-directories.
+However,
+matching operands
+will be ignored by <strong>composer</strong> during <em>recursive invocations only</em>.
+Those on the command line
+or within an equation file will <em>not be ignored</em>. </a></p>
+</li>
+
+<li>
+<p>
+<strong><code>composer.layer.base</code></strong> specifies the base package path
+for <strong><code>.jak</code></strong> file compositions.
+If <code>composer.layer.base</code> is defined,
+the generated package name used in a target <strong><code>.jak</code></strong> file
+is the concatenation of the base path, a period
+and the relative path to the target file 
+(after replacing file separators with periods).
+For example,
+if <code>composer.layer.base</code> is defined
+to be <code>math.special</code> and the target <strong><code>.jak</code></strong> file
+is <code>matrix/Eigenvalue.jak</code>,
+the generated package name would be <code>math.special.matrix</code>.
+On the other hand,
+if <code>composer.layer.base</code> were <em>not</em> defined,
+the generated package name would be <code>matrix</code>. </p>
+</li>
+
+<li>
+<p>
+<a name="composer.model.path">
+<strong><code>composer.model.path</code></strong> specifies a search path for special files associated with a model.
+In the absence of an explicit definition,
+the search path is defined to be the working directory.
+Currently,
+this definition affects
+the search for
+property definitions and source operands.
+It also affects <a href="http://jakarta.apache.org/velocity/">Velocity</a> template compositions,
+which optionally include <code>.prefix</code> and <code>.suffix</code> files from the model path in their compositions. </a></p>
+</li>
+
+<li>
+<p>
+<strong><code>tool.ant</code></strong> specifies the location of the Ant executable.
+This is resolved by the <a href="http://java.sun.com/j2se/1.4/docs/api/java/lang/Runtime.html#exec(java.lang.String[])">java.lang.Runtime.exec</a> method.
+Typically,
+a fully-qualified path will specify the exact location of Ant,
+while an unqualified name
+will be resolved via a search in a system search path.
+The default value for <code>tool.ant</code> is the unqualified name <code>ant</code>. </p>
+</li>
+
+<li>
+<p>
+<strong><code>user.home</code></strong> specifies the location of user configuration files
+(see below).
+On Unix systems,
+this refers to the user's home directory.
+On Windows systems,
+unfortunately,
+the situation is more complicated
+since different versions of Windows
+place configuration files in different locations.
+One way that a user can discover the
+definition of <strong><code>user.home</code></strong> on a particular version of Windows
+is to compile and run the following Java program: </p>
+
+<blockquote>
+<pre>public class Home {
+
+    public static void main (String[] args) {
+	System.out.println (System.getProperty ("user.home")) ;
+    }
+
+}
+</pre>
+</blockquote>
+
+</li>
+
+</ul>
+
+<p>
+<a name="properties">
+All of the above properties,
+as well as <a href="#Supported File Types">file type</a> properties,
+are resolved by taking the first definition
+in the following list: </a></p>
+
+<ul>
+
+<li>Property definitions on the
+<a href="#Command-Line Invocation">command line</a>.
+
+<li>Property definitions in a <code>composer.properties</code> file
+found in the model search path specified
+via property <code>composer.model.path</code>.
+
+<li>Property definitions in a file named <code>.composer.properties</code>
+in the directory specified by property <code>user.home</code>
+
+<li>Property definitions internal to the <strong>composer</strong>.
+These are stored in a resource named <code>composer.properties</code>
+packaged with the <strong>composer</strong> distribution.
+
+</ul>
+
+<p>
+If a property is not found in the above list,
+it is undefined.
+The property files and resources referenced above,
+as well as embedded comments,
+must satisfy the format described in <a href="http://java.sun.com/j2se/1.4/docs/api/java/util/Properties.html#load(java.io.InputStream)">java.util.Properties.load</a>.
+As an example,
+here are the default <strong>composer</strong> definitions
+for <em>non-filetype</em> properties: </p>
+
+<blockquote>
+<pre>composer.directory.ignore : CVS
+composer.file.ignore      : .*~|#.*#|%.*%|[.]#.*|core
+
+tool.ant : ant
+</pre>
+</blockquote>
+
+<p>
+These are the only non-filetype defaults provided by the <strong>composer</strong> itself,
+though several other properties are
+defined by the <a href="http://java.sun.com/j2se/1.4.1/docs/api/java/lang/System.html#getProperties()">Java platform</a>.
+In particular,
+the default value for <strong>user.home</strong> is provided by the Java platform.
+File type properties are described <a href="#Supported File Types">below</a>,
+along with their <a href="#composer.properties/filetypes">defaults</a> as defined by the <strong>composer</strong>. </p>
+
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#ffff00">
+  <tr>
+    <td WIDTH="788">
+      <h2>
+       <font face="Arial" color="#0000FF">
+	 <a name="Supported File Types">Supported File Types</a> </font></h2>
+    </td>
+  </tr>
+</table>
+
+<p>
+Each unit processed 
+by the <strong>composer</strong> is assigned a type as defined by
+properties in the properties search described in the <a href="#Composer Configuration">previous section</a>.
+In detail,
+the unit's type is found via the following
+multi-stage search through the <a href="#properties">properties</a>: </p>
+
+<ul>
+
+<li>
+<p>
+First, each unit is assigned a <em>base</em> key.
+If the unit is a directory, the base key is <code>unit.directory</code> and, if the unit is a normal file, the base key is <code>unit.file</code>.
+Currently, the only units are either directories or files
+so these are the only base keys possible. </p>
+</li>
+
+<li>
+<p>
+Next, if the unit has an extension as part of its name, a property name is
+formed by appending the extension to the base key.
+For example, a file named <code>main.java</code> yields property name <code>unit.file.java</code> while a <em>directory</em> named <code>main.java</code> yields property <code>unit.directory.java</code>.
+If this property name has a value,
+the search terminates. </p>
+</li>
+
+<li>
+<p>
+Otherwise, the base key is used as a property name.
+If this property name has a value,
+the search terminates. </p>
+</li>
+
+<li>
+<p>
+Otherwise, the composer uses the value <code>FileUnit</code>. </p>
+</li>
+
+</ul>
+
+<p>
+The value found by the above search
+may be either a fully-qualified class name
+containing periods
+or an unqualified class name.
+An unqualified class name is converted
+to a fully-qualified name
+by prepending the package name <code>composer.unit</code>,
+which is a package distributed with the <strong>composer</strong>.
+In principle,
+a user could configure the <strong>composer</strong> to use file types other than those in <code>composer.unit</code>,
+but this is not currently recommended
+since the interfaces have not been finalized.
+However,
+the user is free to use any file type
+defined in <code>composer.unit</code>.
+Their descriptions follow: </p>
+
+<ul>
+
+<li>
+<p>
+An <strong><code>AdjoinFileUnit</code></strong> can be any regular file.
+Files of this type are composed
+by concatenating their contents
+in the same order as listed in the composition.
+A related file type is <strong><code>ReverseAdjoinFileUnit</code></strong>,
+described below. </p>
+</li>
+
+<li>
+<p>
+A <strong><code>DirectoryCollective</code></strong> can be any directory.
+Directories of this type are composed as described in <a href="#Composing Layers">Composing Layers (Directory Hierarchies)</a>. </p>
+</li>
+
+<li>
+<p>
+An <strong><code>EquationFileUnit</code></strong> can be any regular file containing an equation definition. </p>
+</li>
+
+<li>
+<p>
+A <strong><code>FileUnit</code></strong> can be any directory or regular file.
+Units of this type,
+when composed,
+are specifically defined to <em>produce an error</em>.
+This is the default type,
+so errors will occur for all units
+with extensions that are not explicitly assigned another type. </p>
+</li>
+
+<li>
+<p>
+An <strong><code>IgnoreFileUnit</code></strong> can be any directory or regular file.
+Units of this type,
+when composed,
+are specifically defined to <em>be ignored</em> and no output will be produced.
+Appropriate assignments of this file type,
+along with definitions of <a href="#composer.directory.ignore"><strong>composer.directory.ignore</strong></a> and <a href="#composer.file.ignore"><strong>composer.file.ignore</strong></a>,
+allow a precise specification
+of operands during recursive invocations of
+the <strong>composer</strong>. </p>
+</li>
+
+<li>
+<p>
+A <strong><code>JamPackFileUnit</code></strong> can be any regular file containing Jak source code.
+Files of this type are composed using the <a href="JamPack.html">JamPack</a> tool.
+A related file type is <strong><code>MixinFileUnit</code></strong>,
+described below. </p>
+</li>
+
+<li>
+<p>
+A <strong><code>LastFileUnit</code></strong> can be any regular file.
+Files of this type
+are composed by copying only the contents
+of the <em>last</em> file in the composition sources.
+All the other sources are ignored.
+This can be useful when composing configuration files
+from multiple layers
+since only the most refined configuration file will be copied. </p>
+</li>
+
+<li>
+<p>
+A <strong><code>MixinFileUnit</code></strong> can be any regular file containing Jak source code.
+Files of this type are composed using the <a href="Mixin.html">Mixin</a> tool.
+Refer also to <strong><code>JamPackFileUnit</code></strong>,
+described above. </p>
+</li>
+
+<li>
+<p>
+A <strong><code>PropertiesFileUnit</code></strong> can be any regular file containing property definitions as per <a href="http://java.sun.com/j2se/1.4/docs/api/java/util/Properties.html#load(java.io.InputStream)">java.util.Properties.load</a>.
+Property files are composed by,
+for each property in the source files,
+taking the last property definition in the source list.
+In other words,
+later property definitions override earlier ones. </p>
+</li>
+
+<li>
+<p>
+A <strong><code>ReverseAdjoinFileUnit</code></strong> can be any regular file.
+It is similar to the <code>AdjoinFileUnit</code> type,
+but files of this type are composed
+by concatenation in <em>reverse</em> order. </p>
+</li>
+
+<li>
+<p>
+A <strong><code>SingletonFileUnit</code></strong> can be any regular file.
+Compositions of these types are valid
+only if there is just one source file.
+In this case,
+the singleton file will be copied to the target.
+Compositions involving more than one source
+will cause an error. </p>
+</li>
+
+<li>
+<p>
+<a name="VelocityFileUnit">
+A <strong><code>VelocityFileUnit</code></strong> can be any regular file containing <a href="http://jakarta.apache.org/velocity/">Velocity</a> directives.
+Files of this type are composed in two stages
+to produce the <em>target file</em> and a <em>derived file</em>.
+In the first stage,
+the sources are concatenated as per <code>AdjoinFileUnit</code> and the result is written into the target.
+In the second stage,
+a Velocity template is formed
+by concatenating a <em>prefix</em> file,
+the target file from the first stage,
+and a <em>suffix</em> file.
+The prefix and suffix files are found by appending <code>.prefix</code> and <code>.suffix</code>, respectively,
+to the target's filename
+and searching for them
+in the <em>model path</em>.
+Velocity is used to evaluate the template
+and the output is written to a file named
+with the <em>base</em> name of the first-stage target. </a></p>
+
+<p>
+For example,
+if the target file is named <code>build.xml.vm</code>,
+the model path is searched
+for a file named <code>build.xml.vm.prefix</code> and,
+if found,
+it will form the first part of the Velocity template.
+Similarly,
+a file named <code>build.xml.vm.suffix</code> is sought to form the last part of the Velocity template.
+Finally,
+when Velocity expands the template,
+the output will be written to a file named <code>build.xml</code> in the same directory as the original target. </p>
+</li>
+
+</ul>
+
+<p>
+Any one of the above file types may be assigned to a <code>unit</code> property
+as described in the beginning of this section.
+For example,
+if the user wants <em>directories</em> named with an extension <strong><code>.tmp</code></strong> to be ignored,
+it would be appropriate to assign file type <strong><code>FileUnit</code></strong> to property <code>unit.directory.tmp</code>.
+The standard distribution of the <strong>composer</strong> has the following set of default type definitions: </p>
+
+<a name="composer.properties/filetypes">
+<blockquote>
+<pre>unit.directory          : DirectoryCollective
+
+unit.file               : FileUnit
+
+unit.file.b             : BaliComposerFileUnit
+unit.file.bak           : IgnoreFileUnit
+unit.file.BAK           : IgnoreFileUnit
+unit.file.drc           : DRCFileUnit
+unit.file.equation      : EquationFileUnit
+unit.file.equations     : EquationsFileUnit
+unit.file.jak           : MixinFileUnit
+unit.file.jar           : SingletonFileUnit
+unit.file.java          : SingletonFileUnit
+unit.file.prefix        : AdjoinFileUnit
+unit.file.properties    : PropertiesFileUnit
+unit.file.pyc           : IgnoreFileUnit
+unit.file.pyo           : IgnoreFileUnit
+unit.file.suffix        : ReverseAdjoinFileUnit
+unit.file.swp           : IgnoreFileUnit
+unit.file.timestamp     : IgnoreFileUnit
+unit.file.txt           : LastFileUnit
+unit.file.vm            : VelocityFileUnit
+</pre>
+</blockquote>
+</a>
+
+<p>
+Any or all of the above definitions can
+be overridden as described
+in the <a href="#Composer Configuration">configuration</a> section. </p>
+
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#ffff00">
+  <tr>
+    <td WIDTH="788">
+      <h2>
+       <font face="Arial" color="#0000FF">
+	 <a name="Command-Line Invocation">Command-Line Invocation</a> </font></h2>
+    </td>
+  </tr>
+</table>
+
+<p>
+The standard distribution of the <strong>composer</strong> includes an executable Jar file and a convenience script
+for <code>bash</code> shells
+under Linux or <a href="http://www.cygwin.com/">Cygwin</a>.
+This section describes the command-line use
+of the convenience script. </p>
+
+<p>
+In the standard distribution of the Jakarta Tool Suite (JTS),
+the <code>composer</code> script is created
+in the <code>bin</code> sub-directory of the JTS base directory.
+For ease of reference,
+the user may include this sub-directory
+in the executables search path
+for his or her system and,
+in the remainder of this section,
+this is assumed to be the case.
+Then,
+the basic form for the <code>composer</code> command is: </p>
+
+<blockquote>
+<pre>composer [&lt;option&gt; ...] &lt;source-file-or-directory&gt; ...
+</pre>
+</blockquote>
+
+<p>
+The <code>--target</code> option (see below) and
+at least one source argument must be given on the command line,
+but there can be as many additional source arguments as desired
+up to system limits.
+Each source argument
+will be resolved as described in <a href="#Supported File Types">Supported File Types</a>.
+In general ,
+a multiple source types will be resolved to a common type
+by finding the least common ancestor
+of their individual types
+in an inheritance hierarchy of file types.
+The common type will be used
+to select a composition function as described <a href="#Composer Basics">earlier</a>.
+Currently,
+however,
+the inheritance hierarchy has not been completely specified,
+so the wise user will ensure that all sources have the same type!
+It has been specified, however,
+that type <strong><code>FileUnit</code></strong> is the ancestor of all file and directory types
+while <strong><code>DirectoryCollective</code></strong> is an ancestor of all directory types. </p>
+
+<p>
+In addition to the source arguments,
+there may be <em>options</em> on the command line as well.
+These options are of two kinds.
+There are <em>Java</em> options
+for the Java virtual machine
+and there are <em>composer</em> options
+for the <strong>composer</strong> itself.
+The <code>composer</code> script separates the two kinds of options,
+passing the Java options to the virtual machine
+and the <em>composer</em> options to the <strong>composer</strong>.
+Here's a summary of the available options: </p>
+
+<p><strong>Java Options:</strong></p>
+
+<blockquote>
+<dl>
+
+<dt><code>-classpath</code> &lt;system-dependent-classpath&gt;</dt>
+<dd>
+This may be used to specify alternative locations
+for <strong>composer</strong> classes
+and the tools used by the <strong>composer</strong>.
+The default,
+which is to use the class path
+defined in the composer Jar file,
+is usually the recommended choice.
+The shortcut form <code>-cp</code>
+may also be used
+</dd>
+
+<dt><code>-D</code>&lt;property&gt;<code>=</code>&lt;value&gt; <dd>
+This is one way to specify property definitions on the command line.
+As described in the
+<a href="#Composer Configuration">Composer Configuration</a>
+section,
+properties defined on the command line
+override all other property definitions.
+</dd>
+
+<dt><code>-X</code>&lt;JVM-option&gt; <dd>
+Specifies a non-standard configuration option
+to the Java virtual machine.
+These are system-dependent options
+and the user should consult
+the Java documentation for his or her platform.
+</dd>
+
+</dl>
+
+<p>
+Some other Java options are available,
+but these are primarily for debugging
+and the casual user should avoid their use.
+The ultimate documentation for these
+is the <code>composer</code> script itself
+and the platform-specific documentation
+for the user's Java virtual machine. </p>
+
+</blockquote>
+
+<p><strong><code>composer</code> Options:</strong></p>
+
+<blockquote>
+
+<dl>
+
+<dt><code>--ant=</code>&lt;ant-executable&gt;</dt>
+<dd>
+This is an alternate method
+for defining the <code>tool.ant</code> property
+that specifies the location
+of the Ant executable.
+</dd>
+
+<dt><code>--equation=</code>&lt;equation-file&gt;</dt>
+<dd>
+Specifies an equation file from which the target and source operands can
+be derived.
+The base name of the file is all that needs to be provided;
+the extension ".equation" will added.
+The file contents may include
+comments and character escape sequences as per
+<a href="http://java.sun.com/j2se/1.4/docs/api/java/util/Properties.html#load(java.io.InputStream)">properties files</a>.
+After
+comment and escape processing, the source operands are listed in the file
+separated by whitespace and/or newlines.
+If no <code>--target</code> option is provided,
+the base name of the equation file is used as the target.
+</dd>
+
+<dt><code>--help</code></dt>
+<dd>
+This causes the <strong>composer</strong>
+to print a helpful message
+about the <em>composer</em> command-line parameters.
+Immediately after processing the <code>--help</code> option,
+the <strong>composer</strong>
+will exit without processing other command-line arguments.
+</dd>
+
+<dt><code>--ignore=</code>&lt;pattern&gt;</dt>
+<dd>
+This specifies an overriding value for the
+<a href="#composer.file.ignore"><strong>composer.file.ignore</strong></a>
+property,
+thus allowing a short-hand way to specify which files to be
+ignored during recursive invocations of <strong>composer</strong>.
+<em>For now, this option is not recommended</em>
+since its definition is not finalized.
+</dd>
+
+<dt><code>--layer=</code>&lt;base-layer-name&gt;</dt>
+<dd>
+This is an alternate method
+for defining the <code>composer.layer.base</code>
+property that specifies
+the base package name for <strong><code>.jak</code></strong> compositions.
+See the section on
+<a href="#Composer Configuration">Composer Configuration</a>
+for more details.
+</dd>
+
+<dt><code>--logging=</code>&lt;logging-level&gt; <dd>
+This selects how much detail to report during execution.
+The logging level may be one of
+<code>all</code> (prints every logging message),
+<code>fine</code> (prints all progress messages plus some debugging messages),
+<code>info</code> (prints messages about files created and destroyed),
+<code>warning</code> (prints messages about risky but not fatal situations),
+<code>severe</code> (prints messages only about fatal errors)
+or
+<code>off</code> (prints no logging messages).
+There are other levels possible
+(see
+<a href="http://java.sun.com/j2se/1.4/docs/api/java/util/logging/Level.html">java.util.Logging.Level</a>),
+but they aren't useful in the <strong>composer</strong>.
+
+<dt><code>--model=</code>&lt;model-search-path&gt; <dd>
+This is an alternate method
+for defining the
+<a href="#composer.model.path"><code>composer.model.path</code></a>
+property that specifies
+the search path used to find model files.
+See the section on
+<a href="#Composer Configuration">Composer Configuration</a>
+for details.
+</dd>
+
+<dt><code>--target=</code>&lt;target-file-or-directory&gt; <dd>
+A target is <em>required</em> by the <strong>composer</strong>
+and this option is one way to specify the destination of the composition.
+If this option is not present,
+but an equation file is specified via the <code>--equation</code>,
+then the composition target will be taken
+from the base name of the equation file.
+Regardless of how the target is determined,
+if the source operands are
+files the target will be a file and, if the operands are directories,
+the target will
+be a directory.
+If it already exists, its contents will be overwritten and,
+if it doesn't yet exist, it will be created.
+</dd>
+
+</dl>
+
+</blockquote>
+
+<p>
+Note that all <em>Java</em> options described above
+begin with one dash
+while the <em>composer</em> options
+described above
+begin with <em>two</em> dashes
+and follow <a href="http://www.pasc.org/">POSIX</a> conventions
+to specify values using an <code>=</code> symbol.
+Alternate forms are valid,
+but not recommended. </p>
+
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#ffff00">
+  <tr>
+    <td WIDTH="788">
+      <h2>
+       <font face="Arial" color="#0000FF">
+	 <a name="Programmatic Invocation">Programmatic Invocation</a> </font></h2>
+    </td>
+  </tr>
+</table>
+
+<p>
+The current version of <strong>composer</strong> is intended as a stand-alone program
+started via the <code>main</code> method in class <code>composer.Main</code>.
+This is because <strong>composer</strong> is evolving conceptually
+and internal packages, classes and methods
+are subject to frequent change.
+Therefore,
+the recommended method for invoking the <strong>composer</strong> programmatically is as an external program via the <a href="http://java.sun.com/j2se/1.4/docs/api/java/lang/Runtime.html"><code>java.lang.Runtime</code></a> class.</p>
+
+<hr>
+<p><font face="Verdana">
+<a href="index.html"> </a></font><b><font face="Arial"><a href="index.html">ATS Home Page</a></font></b></p>
+<p><font face="Arial"><b>Copyright © Software Systems Generator Research Group. 
+All rights reserved.</b> <br>
+<b>Revised:&nbsp;<!--webbot bot="TimeStamp" s-format="%B %d, %Y" s-type="EDITED" startspan -->April 17, 2003<!--webbot bot="TimeStamp" endspan i-checksum="17605" -->.</b> </font></p>
+<address><a href="mailto:sarvela@cs.utexas.edu">Jacob Sarvela</a></address>
+<!-- Created: Wed Mar 13 10:57:42 CST 2002 -->
+<!-- hhmts start -->
+Last modified: Thu Jan 30 09:22:07 CST 2003
+<!-- hhmts end -->
+
+</pre></body>
+</html>

@@ -1,0 +1,329 @@
+
+
+<head>
+<title>The mmatrix Tool</title>
+</head>
+
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%">
+  <tr>
+    <td WIDTH="78">
+    <img border="0" src="images/FopButton3.jpg" width="80" height="64"></td>
+    <td WIDTH="688" BGCOLOR="#00FFFF"><h1><font face="Arial" color="#0000FF">The
+      mmatrix Tool</font></h1>
+    </td>
+  </tr>
+</table>
+
+<hr>
+<p align="left"><font face="Arial">The <b>mmatrix</b>&nbsp; tool was created in
+response for tool support to classify .jak files in
+order to get a better overall view of an AHEAD design.&nbsp; As a general rule, 
+it is not called from the command line, but rather invoked by other AHEAD tools.</font></p>
+<ul>
+  <li>
+<p align="left"><font face="Arial"><a href="#Overview">Overview</a></font></p>
+  </li>
+  <li>
+<p align="left"><font face="Arial"><a href="#Example">Example</a></font></p>
+  </li>
+  <li>
+<p align="left"><font face="Arial"><a href="#Command-Line Invocation">
+Command-Line Invocation</a></font></p>
+  </li>
+  <li>
+<p align="left"><font face="Arial"><a href="#Programmatic Invocation">
+Programmatic Invocation</a></font></p>
+  </li>
+  <li>
+<p align="left"><font face="Arial"><a href="#Caveats">Caveats</a></font></p>
+  </li>
+</ul>
+
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FFFF00">
+  <tr>
+    <td WIDTH="788"><h2><a name="Overview"><font face="Arial" color="#0000FF">
+    Overview</font></a></h2>
+    </td>
+  </tr>
+</table>
+
+<p align="left"><font face="Arial"> <b>mmatrix</b>
+classifies .jak files and their contents into the following groups<b>:</b></font></p>
+<div align="center">
+  <center>
+  <table border="0" cellpadding="0" cellspacing="0" height="141">
+    <tr>
+      <td height="21"><font face="Arial"><b>&quot;C&quot;</b></font></td>
+      <td height="21"><font face="Arial">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font></td>
+      <td height="21"><font face="Arial">a class</font></td>
+    </tr>
+    <tr>
+      <td height="16"><font face="Arial"><b>&quot;I&quot;</b></font></td>
+      <td height="16"></td>
+      <td height="16"><font face="Arial">an interface</font></td>
+    </tr>
+    <tr>
+      <td height="21"><font face="Arial"><b>&quot;S&quot;</b></font></td>
+      <td height="21"></td>
+      <td height="21"><font face="Arial">a state machine</font></td>
+    </tr>
+    <tr>
+      <td height="21">&nbsp;</td>
+      <td height="21">&nbsp;</td>
+      <td height="21">&nbsp;</td>
+    </tr>
+    <tr>
+      <td height="21"><font face="Arial"><b>&quot;K&quot;</b></font></td>
+      <td height="21"></td>
+      <td height="21"><font face="Arial">a constructor</font></td>
+    </tr>
+    <tr>
+      <td height="21"><font face="Arial"><b>&quot;M&quot;</b></font></td>
+      <td height="21"></td>
+      <td height="21"><font face="Arial">a method</font></td>
+    </tr>
+    <tr>
+      <td height="20"><font face="Arial"><b>&quot;F&quot;</b></font></td>
+      <td height="20"></td>
+      <td height="20"><font face="Arial">a field</font></td>
+    </tr>
+    <tr>
+      <td height="21"><b><font face="Arial">&quot;S&quot;</font></b></td>
+      <td height="21">&nbsp;</td>
+      <td height="21"><font face="Arial">a state </font></td>
+    </tr>
+    <tr>
+      <td height="21"><b><font face="Arial">&quot;T&quot;</font></b></td>
+      <td height="21">&nbsp;</td>
+      <td height="21"><font face="Arial">a transition</font></td>
+    </tr>
+    <tr>
+      <td height="21">&nbsp;</td>
+      <td height="21">&nbsp;</td>
+      <td height="21">&nbsp;</td>
+    </tr>
+    <tr>
+      <td height="21"><b><font face="Arial">&quot;D&quot;</font></b></td>
+      <td height="21">&nbsp;</td>
+      <td height="21"><font face="Arial">defines C/I/S</font></td>
+    </tr>
+    <tr>
+      <td height="21"><b><font face="Arial">&quot;E&quot;</font></b></td>
+      <td height="21">&nbsp;</td>
+      <td height="21"><font face="Arial">defines and extends C/I/S</font></td>
+    </tr>
+    <tr>
+      <td height="21"><font face="Arial"><b>&quot;R&quot;</b></font></td>
+      <td height="21"></td>
+      <td height="21"><font face="Arial">refines C/I/S</font></td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p align="left"><font face="Arial"><b>mmatrix</b> outputs other information as 
+well.&nbsp; See the example below.</font></p>
+
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FFFF00">
+  <tr>
+    <td WIDTH="788"><h2><font face="Arial" color="#0000FF"><a name="Example">
+    Example</a></font></h2>
+    </td>
+  </tr>
+</table>
+
+<p align="left"><font face="Arial">Consider the following .jak file:</font></p>
+<div align="center">
+  <center>
+  <table border="1" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#000000" bgcolor="#C0C0C0">
+    <tr>
+      <td width="100%">
+      <pre>public class VoidTyp extends PrimitiveType {
+
+   final public static int ARG_LENGTH = 1 /* Kludge! */ ;
+   final public static int TOK_LENGTH = 1 ;
+
+   public boolean[] printorder () {
+      return new boolean[] {true} ;
+   }
+
+   public VoidTyp setParms (AstToken tok0) {
+      arg = new AstNode [ARG_LENGTH] ;
+      tok = new AstTokenInterface [TOK_LENGTH] ;
+      tok [0] = tok0 ; /* &quot;void&quot; */
+      InitChildren () ;
+      return (VoidTyp) this ;
+   }
+}</pre>
+      </td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p align="left"><font face="Arial">The output of mmatrix after it translates 
+this file into:</font></p>
+<div align="center">
+  <center>
+  <table border="1" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#000000" bgcolor="#C0C0C0">
+    <tr>
+      <td width="100%">
+      <pre>C E VoidTyp
+Line range (-1, -1)
+public endMods
+ beginKeys
+Classes :( PrimitiveType ):
+super :( PrimitiveType ):
+ endKeys
+ beginNest
+	F D ARG_LENGTH int
+	Line range (10, 10)
+	final public static endMods
+	 beginKeys
+	finalValue :( = 1 ):
+	 endKeys
+	F D TOK_LENGTH int
+	Line range (11, 11)
+	final public static endMods
+	 beginKeys
+	finalValue :( = 1 ):
+	 endKeys
+	M D printorder() boolean[]
+	Line range (13, 16)
+	public endMods
+	M D setParms(AstToken) VoidTyp
+	Line range (18, 27)
+	public endMods
+endNest</pre>
+      </td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p align="left"><font face="Arial">The above says:</font></p>
+<ul>
+  <li>
+<p align="left"><font face="Arial">VoidTyp is a class that extends another 
+class.</font></p>
+  </li>
+  <li>
+<p align="left"><font face="Arial">Line range (-1,-1) means the entire file</font></p>
+  </li>
+  <li>
+<p align="left"><font face="Arial">it is public and has PrimitiveType as its 
+superclass</font></p>
+  </li>
+  <li>
+<p align="left"><font face="Arial">Inside Voidtype is:</font></p>
+  <ul>
+    <li>
+<p align="left"><font face="Arial">public static int field ARG_LENGTH whose 
+definition is on line range (10,10) with final value =1</font></p>
+    </li>
+    <li>
+<p align="left"><font face="Arial">final public static int field TOK_LENGTH 
+whose definition is on line range (11,11) with final value =1</font></p>
+    </li>
+    <li>
+<p align="left"><font face="Arial">public boolean[] method printorder whose 
+definition is on line range (13,16)</font></p>
+    </li>
+    <li>
+<p align="left"><font face="Arial">public VoidTyp method setParms(AstToken) 
+whose defintion is on line range (18,27)</font></p>
+    </li>
+  </ul>
+  </li>
+</ul>
+
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FFFF00">
+  <tr>
+    <td WIDTH="788"><h2><font face="Arial" color="#0000FF">
+    <a name="Command-Line Invocation">Command-Line Invocation</a></font></h2>
+    </td>
+  </tr>
+</table>
+
+<p align="left"><font face="Arial">To call <b>mmatrix</b> from the command line,
+type:</font></p>
+<div align="left">
+  <blockquote>
+    <pre align="left"><font face="Courier New">&gt; mmatrix</font></pre>
+    <pre align="left"><font face="Courier New">mmatrix &lt;arguments&gt;
+-t (traverse directory ..)
+-c (remove unnecessary attributes)
+&lt;file&gt; (run mmatrix on input file)</font></pre>
+  </blockquote>
+</div>
+<p align="left"><font face="Arial">So a typical invocation of mmatrix is:</font></p>
+<blockquote>
+  <div align="left">
+    <pre><font face="Courier New">&gt; mmatrix</font></pre>
+  </div>
+</blockquote>
+  <div align="left">
+    <p align="left"><font face="Arial">The <b>-t</b> and <b>-c</b> options have 
+    recently been added to extract a simple parsable output for <b>mmatrix</b>.&nbsp; 
+    The -t option means consider the current directory a model directory, and 
+    recursively traverse this directory and its layers for all .jak files.&nbsp; 
+    Invoke <b>mmatrix</b> on each .jak file found.&nbsp; The <b>-c</b> option 
+    doesn't print finalValue and Classes output (which can be seen in the above 
+    example).&nbsp; The <a href="The_Bali_Language.html">bali grammar</a> of the 
+    mmatrix output in -tc mode is given in <a href="mmatrix-output-grammar.b">
+    this file</a>.</font></div>
+<div align="left">
+
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FFFF00">
+  <tr>
+    <td WIDTH="788"><h2><font face="Arial" color="#0000FF">
+    <a name="Programmatic Invocation">Programmatic Invocation</a></font></h2>
+    </td>
+  </tr>
+</table>
+
+</div>
+<p align="left"><font face="Arial">To call <b>mmatrix</b> from within a program,
+use:</font></p>
+<blockquote>
+  <div align="left">
+    <pre align="left"><font face="Courier New">import mmatrix.*;</font></pre>
+  </div>
+  <div align="left">
+    <pre align="left"><font face="Courier New">...</font></pre>
+  </div>
+  <div align="left">
+    <pre align="left"><font face="Courier New">try {
+   String out = mmatrix.Main.eval( &quot;file.jak&quot; );
+
+   // out = any of the above constants, which can be referenced by mmatrix.Constants.X,
+   // where X is Class, ExtendsClass, Interface, ExtendsInterface, StateMachine,
+</font>   //            ExtendsStateMachine, or Refines
+
+   // do something with out...
+}<font face="Courier New">
+catch (Exception e) {
+   System.out.println(&quot;error in processing file.jak&quot; );
+   System.out.println(e.getMessage());
+   System.exit(1);
+}</font></pre>
+  </div>
+</blockquote>
+<p align="left"><font face="Arial">In general, <b>mmatrix</b> was designed for 
+programmatic, rather than command-line use.&nbsp; It is the underlying tool used 
+by <a href="ModelExplorer.html">ModelExplorer</a>.</font></p>
+
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FFFF00">
+  <tr>
+    <td WIDTH="788"><h2><font color="#0000FF" face="Arial"><a name="Caveats">
+    Caveats</a></font></h2>
+    </td>
+  </tr>
+</table>
+
+<p><font face="Arial">It is possible that <b>mmatrix</b> doesn't harvest 
+information correctly on state machines.&nbsp; It has, however, been thoroughly 
+tested with classes and interfaces.</font></p>
+<hr>
+<p><b><font face="Arial"><a href="index.html">ATS Home Page</a></font></b></p>
+<p><font face="Arial"><b>Copyright © Software Systems Generator Research Group. 
+All rights reserved.</b> <br>
+<b>Revised:&nbsp;<!--webbot bot="TimeStamp" s-format="%B %d, %Y" s-type="EDITED" startspan -->January 25, 2006<!--webbot bot="TimeStamp" endspan i-checksum="31592" -->.</b>
+</font></p>

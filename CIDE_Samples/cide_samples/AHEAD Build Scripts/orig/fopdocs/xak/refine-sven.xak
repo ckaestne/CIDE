@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xak:refines xmlns:xak="http://www.atarix.org/xak" xak:artifact="myHtml">
+	<xak:extends xak:module="mUlOperations">
+		<xak:super xak:module="mUlOperations"/>
+		<li>Addition</li>		
+	</xak:extends>
+</xak:refines>

@@ -1,0 +1,5 @@
+# SPECIFIC TOOL DEFINITION:
+# Layer "requireBali2javacc" is tool-specific feature handling defined
+# in super equations file.
+#
+this = common4translator bali2javacc requireBali2javacc

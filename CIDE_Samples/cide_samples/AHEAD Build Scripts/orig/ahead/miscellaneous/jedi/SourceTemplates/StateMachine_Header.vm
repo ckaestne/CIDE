@@ -1,0 +1,29 @@
+## StateMachine_Header.vm
+## JEDI Project
+## HTML Template for the StateMachine header
+## Author: Roberto E. Lopez-Herrejon
+## Last update: November 30, 2002
+
+## Header comment
+  <P> $generator.descriptionComment($state.inlineTags()) </P> 
+
+  <P>
+  <DL>
+
+   ## For use with general templates	
+
+
+   ## Includes all the elements of the layout
+
+   #foreach($layoutElement in $layoutList)
+	<!-- $layoutElement  -->
+ 	#include($layoutElement)
+   #end     ## of for each
+
+
+  </DL>
+ </P>
+
+<HR>
+
+## End of StateMachine_Header.vm

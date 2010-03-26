@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE featuremodelattributes SYSTEM "featuremodelattributes.dtd">
+<featuremodelattributes>
+<featureattr name="SPL" id="13"/>
+<featureattr name="NutOS" id="6" selected="true"/>
+<featureattr name="LFU" id="2" selected="true"/>
+<featureattr name="OS" id="12"/>
+<featureattr name="NoIndex" id="9" selected="true"/>
+<featureattr name="LRU" id="3" selected="true"/>
+<featureattr name="Testing" id="7" selected="true"/>
+<featureattr name="Buffer" id="11"/>
+<featureattr name="Storage" id="14"/>
+<featureattr name="Index" id="10" selected="true"/>
+<featureattr name="Win" id="5" selected="true"/>
+<featureattr name="Write" id="4" selected="true"/>
+<featureattr name="InMemory" id="8" selected="true"/>
+</featuremodelattributes>

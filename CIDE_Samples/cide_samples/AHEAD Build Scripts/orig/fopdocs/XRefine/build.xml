@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="WebCalcBuildProcess" default="usage" basedir=".">
+	<property file="build.properties"/>	
+	<property name="webapp.src" value="src"/>
+	<property name="webapp.classes" value="classes"/>
+	<property name="webapp.deploy" value="deploy"/>
+	<property name="webapp.lib" value="lib"/>
+	<path id="classpath">
+		<pathelement location="${common.lib}/struts.jar"/>
+		<pathelement location="${common.lib}/servlet-api.jar"/>
+	</path>
+	<path id="srcpath">
+		<pathelement location="src"/>
+	</path>
+	<target name="init">
+		<tstamp/>
+	</target>
+	<target name="usage" description="Describes Ant usage">
+		<echo message=" Execute 'ant -projecthelp' for build file help"/>
+		<echo message=" Execute 'ant -help' for Ant help"/>
+	</target>
+	<target name="clean" description="Delete Generated Content for webapp">
+		<delete dir="${webapp.classes}"/>
+		<delete dir="${webapp.deploy}"/>
+	</target>
+	<target name="prepare" description="Prepare compilation">
+		<mkdir dir="${webapp.classes}"/>
+	</target>
+	<target name="compile" depends="prepare" description="Compile classes under classes">
+		<javac srcdir="${webapp.src}" destdir="${webapp.classes}" debug="on" deprecation="on" optimize="off" source="1.4">
+			<classpath refid="classpath"/>
+		</javac>
+	</target>
+	<target name="recompile" depends="clean, compile" description="Recompile All for webapp"/>
+	<target name="all" depends="compile" description="Make All"/>
+</project>

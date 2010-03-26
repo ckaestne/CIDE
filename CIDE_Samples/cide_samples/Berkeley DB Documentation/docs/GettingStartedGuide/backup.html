@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+    <title>Performing Backups</title>
+    <link rel="stylesheet" href="gettingStarted.css" type="text/css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.62.4" />
+    <link rel="home" href="index.html" title="Getting Started with Berkeley DB Java Edition" />
+    <link rel="up" href="backuprestore.html" title="Chapter 7. Backing up and Restoring Berkeley DB Java Edition Applications" />
+    <link rel="previous" href="backuprestore.html" title="Chapter 7. Backing up and Restoring Berkeley DB Java Edition Applications" />
+    <link rel="next" href="catastrophicrecovery.html" title="Performing Catastrophic Recovery" />
+  </head>
+  <body>
+    <div class="navheader">
+      <table width="100%" summary="Navigation header">
+        <tr>
+          <th colspan="3" align="center">Performing Backups</th>
+        </tr>
+        <tr>
+          <td width="20%" align="left"><a accesskey="p" href="backuprestore.html">Prev</a> </td>
+          <th width="60%" align="center">Chapter 7. Backing up and Restoring Berkeley DB Java Edition Applications</th>
+          <td width="20%" align="right"> <a accesskey="n" href="catastrophicrecovery.html">Next</a></td>
+        </tr>
+      </table>
+      <hr />
+    </div>
+    <div class="sect1" lang="en" xml:lang="en">
+      <div class="titlepage">
+        <div>
+          <div>
+            <h2 class="title" style="clear: both"><a id="backup"></a>Performing Backups</h2>
+          </div>
+        </div>
+        <div></div>
+      </div>
+      <p>
+            This section describes how to backup your JE database(s) such that catastrophic recovery is possible for
+            non-transactional applications. Note that this same material is repeated in the <i class="citetitle">JE Transactional
+            Processing Guide</i>, but for transactional applications. If you are writing transactional
+            applications, you may want to skip the rest of this chapter and go straight to that book.
+        </p>
+      <p>
+            To backup your database, you can either take a complete backup or a partial backup. A partial backup
+            is performed while database write operations are in progress. 
+        </p>
+      <p>
+            Do not confuse complete and partial backups with the concept of a full and incremental backup.  Both a
+            complete and a partial backup are full backups &#8211; you back up the entire database. The only difference
+            between them is how much of the contents of the in-memory cache are contained in them. On the other hand, 
+            an incremental backup is a backup of just those log files modified or created since the time of the last
+            backup.  Most backup software
+            is capable of performing both full and incremental backups for you.
+        </p>
+      <div class="sect2" lang="en" xml:lang="en">
+        <div class="titlepage">
+          <div>
+            <div>
+              <h3 class="title"><a id="partialBackup"></a>Performing a Partial Backup</h3>
+            </div>
+          </div>
+          <div></div>
+        </div>
+        <p>
+                To perform a partial backup of your JE databases, copy all log files 
+                (<tt class="filename">*.jdb</tt> files) from your environment directory to
+                your archival location or backup media. The files must be copied
+                n alphabetical order (numerical in effect). You do not have to 
+                stop any database operations in order to do this.
+            </p>
+        <p>
+                Note that any modifications made to the database
+                since the time of the last environment sync are not guaranteed to be contained in these log files.
+                In this case, you may want to consider running a complete backup in order to guarantee the availability
+                of all modifications made to your database.
+            </p>
+      </div>
+      <div class="sect2" lang="en" xml:lang="en">
+        <div class="titlepage">
+          <div>
+            <div>
+              <h3 class="title"><a id="completeBackup"></a>Performing a Complete Backup</h3>
+            </div>
+          </div>
+          <div></div>
+        </div>
+        <p>
+                A complete backup guarantees that you have captured the database in its entirety, including all contents
+                of your in-memory cache, at the moment that the
+                backup was taken. To do this, you must make sure that no write operations are in progress and all
+                database modifications have been written to your log files on disk.  To obtain a complete backup:
+			</p>
+        <div class="orderedlist">
+          <ol type="1">
+            <li>
+              <p>
+                        Stop writing your databases. If you are using transactions, commit or abort all on-going
+                        transactions. 
+                    </p>
+            </li>
+            <li>
+              <p>
+                        Run <tt class="methodname">Environment.sync()</tt> so as to
+                        ensure that all database modifications are written to disk. Note that cleanly closing your
+                        environment will also ensure that all database modifications are written to disk.
+                    </p>
+            </li>
+            <li>
+              <p>
+                        Copy all log files (<tt class="filename">*.jdb</tt>) from your environment directory to your archival
+                        location or backup media.
+                    </p>
+            </li>
+          </ol>
+        </div>
+        <p>
+                You can now resume normal database operations.
+            </p>
+      </div>
+    </div>
+    <div class="navfooter">
+      <hr />
+      <table width="100%" summary="Navigation footer">
+        <tr>
+          <td width="40%" align="left"><a accesskey="p" href="backuprestore.html">Prev</a> </td>
+          <td width="20%" align="center">
+            <a accesskey="u" href="backuprestore.html">Up</a>
+          </td>
+          <td width="40%" align="right"> <a accesskey="n" href="catastrophicrecovery.html">Next</a></td>
+        </tr>
+        <tr>
+          <td width="40%" align="left" valign="top">Chapter 7. Backing up and Restoring Berkeley DB Java Edition Applications </td>
+          <td width="20%" align="center">
+            <a accesskey="h" href="index.html">Home</a>
+          </td>
+          <td width="40%" align="right" valign="top"> Performing Catastrophic Recovery</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

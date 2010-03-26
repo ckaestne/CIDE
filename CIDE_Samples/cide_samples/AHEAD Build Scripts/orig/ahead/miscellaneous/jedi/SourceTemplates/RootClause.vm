@@ -1,0 +1,61 @@
+## RootClause.vm
+## JEDI Project
+## HTML Template for a State machine
+## Author: Roberto E. Lopez-Herrejon
+## Last update: November 10, 2002
+
+## Root Clause of State machine
+
+#if ($root == "true")
+ <A NAME="root_clause"><!-- --></A>
+ <TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+  <TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+    <TD COLSPAN=1>
+      <FONT SIZE="+2">
+       <B> Root Clause 
+       </B> 
+      </FONT>
+    </TD>
+  </TR>
+ </TABLE>
+
+ ## The delivery clause
+ <H3>
+ <A NAME=" $state.rootClauseName() Delivery_clause "> <!-- -->
+ </A> 
+  Delivery Clause
+ </H3>
+
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ <B> $state.rootClauseName() </B> &nbsp;
+   $state.getFullSignature()
+ <DL>
+  <DD>	 ## here it should got the message description
+ </DL>
+	
+		
+ ## The No Transition Clause stuff
+ <H3>    
+ <A NAME=" $state.rootClauseName() NoTransition_clause "> <!-- -->
+ </A>
+  No Transition Clause
+ </H3>
+
+ ## if there are transition classes
+ #if ($transitionFlag == "true")
+  <UL>
+
+  #foreach($transition in $listTransitions)
+    <LI>
+	#set($reference = ".html")
+      <a href="$transition.name()$reference"> 
+	$transition.name()
+      </a>
+    </LI>  
+  #end
+
+  </UL>  
+
+ #end  ## if there are transition classes
+
+#end ## if there is Root Clause

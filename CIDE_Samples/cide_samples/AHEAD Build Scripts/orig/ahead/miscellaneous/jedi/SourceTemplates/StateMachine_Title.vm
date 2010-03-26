@@ -1,0 +1,16 @@
+## StateMachine_Title.vm
+## JEDI Project
+## HTML Template for the Class/Interface
+## Author: Roberto E. Lopez-Herrejon
+## Last update: November 30, 2002
+
+
+<TITLE> 
+ State Machine  $state.name()  
+</TITLE> 
+
+## End of StateMachine_Title.vm
+
+
+
+

@@ -1,0 +1,20 @@
+## StateMachine_Modifiers.vm
+## JEDI Project
+## HTML Template for the State Machine
+## Author: Roberto E. Lopez-Herrejon
+## Last update: November 30, 2002
+
+<DT> $state.modifiers() 
+
+#foreach($layoutElement in $layoutList)
+<!-- $layoutElement  -->
+ #include($layoutElement)
+#end     ## of for each
+
+state machine 
+ <B> $state.name() 
+ </B> 
+
+</DT>
+
+## End of StateMachine_Modifiers.vm

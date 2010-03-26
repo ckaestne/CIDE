@@ -1,0 +1,887 @@
+<html><head><title>XAK and XML Refinement</title>
+	
+		
+		<link rel="stylesheet" type="text/css" href="xak_files/xak.css"></head><body>
+		<table id="mainlayout" width="100%">
+			<tbody><tr>
+				<td>
+					<table id="mTitle" width="100%">
+						<tbody><tr>
+<!--							<td WIDTH="10%">
+								<img border="0" alt="FOP" src="images/FopButton3.jpg" width="80" height="64" />
+							</td> -->
+							<td class="GPL_TITLE" width="90%">
+								XAK and XML Refinement
+							</td>
+						</tr>
+					</tbody></table>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<table id="mIntroduction">
+						<tbody><tr>
+							<td><div class="GPL_TEXT">
+								<b>XAK</b> (pronounced &#8220;sack&#8221;) is a tool for composing 
+								base and refinement documents in XML format. </div>
+							</td>
+						</tr>
+
+						<tr>
+							<td>
+								<span class="GPL_TEXT">This document contains sections on the following topics:</span>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<ul id="mMenu">
+									<li>
+										<span class="GPL_TEXT">
+											<a href="#Introduction">Introduction</a>
+										</span>
+									</li>
+									<li>
+										<span class="GPL_TEXT">
+											<a href="#XAK1">XAK</a>
+										</span>
+<!--										<ul>
+											<li>
+												<span class="GPL_TEXT">
+													<a href="#XAK1Constant">Constant document</a>
+												</span>
+											</li>
+											<li>
+												<span class="GPL_TEXT">
+													<a href="#XAK1Refine">Refinement document</a>
+												</span>
+											</li>
+											<li>
+												<span class="GPL_TEXT">
+													<a href="#XAK1Result">Result document</a>
+												</span>
+											</li>																																
+											<li>
+												<span class="GPL_TEXT">
+													<a href="#XAK1Operators">Operators</a>
+												</span>
+											</li>
+											<li>
+												<span class="GPL_TEXT">
+													<a href="#XAK1Cases">Cases</a>
+												</span>
+											</li>												
+											</li>
+											<li>
+												<span class="GPL_TEXT">
+													<a href="#CommandLine">Command Line invocation</a>
+												</span>
+											</li>
+										</ul> -->
+									</li>
+									<li>
+										<span class="GPL_TEXT">
+											<a href="#XAK2">XAK2</a>
+										</span>
+										</li>	
+										<li>
+												<span class="GPL_TEXT">
+													<a href="#mDownload">Download</a>
+												</span>
+											</li>											
+											<li>
+												<span class="GPL_TEXT">
+													<a href="#Reference">Reference</a>
+												</span>
+											</li>
+								</ul>
+							</td>
+						</tr>
+					</tbody></table>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<table id="mIntroduction">
+						<tbody><tr>
+							<td class="GPL_TITLE2">
+								<a name="Introduction">Introduction</a>
+							</td>
+						</tr>
+						<tr>
+							<td>		
+							<div class="GPL_TEXT">
+								The need for XAK arose when we were 
+								developing product lines for web applications 
+								using AHEAD [1]. An unusual characteristic of 
+								web applications is that a sizable fraction of 
+								their definition is not Java or Jak source, but 
+								rather XML specifications [2] (e.g., 
+								<a href="http://java.sun.com/products/jsp/">JSP</a>, HTML, and
+								<a href="http://struts.apache.org/">STRUTS</a> control flow files). Thus, 
+								it is common for a feature of a web application 
+								to contain XML documents (base or refinements) 
+								and Jak source (base or refinements). We began 
+								our work at a time when AHEAD did not have a 
+								language for XML document refinement and tool 
+								for XML document composition. This lead to the 
+								creation of XAK.</div></td>
+						</tr>
+
+					</tbody></table>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<table id="mXAK1">					
+						<tbody><tr>
+							<td class="GPL_TITLE2">
+								<a name="XAK1">XAK</a>
+							</td>
+						</tr>	
+						<tr>
+							<td>		
+							<div class="GPL_TEXT">
+						
+						We experimented with several ways to specify XML refinements. Initially
+						we viewed an XML document merely as a tree of nodes. To refine a tree, 
+						we used <a href="http://www.w3.org/TR/xpath">XPath</a> to identify a particular node, and used before, after, 
+						around, or override designators to insert a tree of XML nodes before, after, 
+						or around the target node, or to replace the tree rooted at that node. 
+						</div></td>
+						</tr>						
+						<tr>
+							<td>
+								&nbsp;</td>
+						</tr>
+					</tbody></table>
+				</td>
+			</tr>	
+			<tr>
+				<td>
+					<table id="mXAK1Example">
+						<tbody><tr>
+							<td class="GPL_TEXT">
+								<a name="XAK1Constant"><b>Constant Document</b></a>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<div class="GPL_TEXT">
+								A constant is any 
+								well-formed XML document/file that may or not 
+								have associated a schema or a DTD for validation.
+								The following is a fragment of typical example of a constant contained in file
+								<a href="http://www.onekin.org/xak/xak/base-build.xml">base-build.xml</a>.
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<div class="GPL_CODE">
+									<font color="#0000ff" size="1">&lt;</font><font color="#800000" size="1">project</font><font color="#ff0000" size="1"> 
+									name</font><font color="#0000ff" size="1">="</font><font size="1">FOPTools</font><font color="#0000ff" size="1">"</font><font color="#ff0000" size="1"> 
+									basedir</font><font color="#0000ff" size="1">="</font><font size="1">.</font><font color="#0000ff" size="1">"</font><font color="#ff0000" size="1"> 
+									default</font><font color="#0000ff" size="1">="</font><font size="1">all</font><font color="#0000ff" size="1">"&gt;</font><font size="1"></font><p><font size="1">&nbsp;
+									</font><font color="#0000ff" size="1">&lt;</font><font color="#800000" size="1">property</font><font color="#ff0000" size="1"> 
+									name</font><font color="#0000ff" size="1">="</font><font size="1">project.title</font><font color="#0000ff" size="1">"</font><font color="#ff0000" size="1"> 
+									value</font><font color="#0000ff" size="1">="</font><font size="1">FOP 
+									Tests</font><font color="#0000ff" size="1">"/&gt;</font></p>
+<font color="#0000ff" size="1">									</font><font size="1">
+									</font><p><font size="1">&nbsp; </font>
+									<font color="#0000ff" size="1">&lt;</font><font color="#800000" size="1">target</font><font color="#ff0000" size="1"> 
+									name</font><font color="#0000ff" size="1">="</font><font size="1">test.ahead</font><font color="#0000ff" size="1">"</font><font color="#ff0000" size="1"> 
+									depends</font><font color="#0000ff" size="1">="</font><font size="1">initialize,require</font><font color="#0000ff" size="1">"</font><font color="#ff0000" size="1"> 
+									description</font><font color="#0000ff" size="1">="</font><font size="1">Run 
+									tests on the AHEAD toolsuite</font><font color="#0000ff" size="1">"&gt;</font></p>
+<font color="#0000ff" size="1">									</font><font size="1">
+									</font><p><font color="#0000ff" size="1">&nbsp;&nbsp;&nbsp; 
+									&lt;</font><font color="#800000" size="1">path</font><font color="#ff0000" size="1"> 
+									id</font><font color="#0000ff" size="1">="</font><font size="1">id.path.test.ahead</font><font color="#0000ff" size="1">"&gt;</font></p>
+<font color="#0000ff" size="1">									</font><font size="1">
+									</font><p><font color="#0000ff" size="1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;</font><font color="#800000" size="1">fileset</font><font color="#ff0000" size="1"> 
+									dir</font><font color="#0000ff" size="1">="</font><font size="1">ahead/build/lib</font><font color="#0000ff" size="1">"&gt;</font></p>
+<font color="#0000ff" size="1">									</font><font size="1">
+									</font><p><font color="#0000ff" size="1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;</font><font color="#800000" size="1">include</font><font color="#ff0000" size="1"> 
+									name</font><font color="#0000ff" size="1">="</font><font size="1">balicomposer.jar</font><font color="#0000ff" size="1">"/&gt;</font></p>
+<font color="#0000ff" size="1">									</font><font size="1">
+									</font><p><font color="#0000ff" size="1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;</font><font color="#800000" size="1">include</font><font color="#ff0000" size="1"> 
+									name</font><font color="#0000ff" size="1">="</font><font size="1">bali2jak.jar</font><font color="#0000ff" size="1">"/&gt;</font></p>
+<font color="#0000ff" size="1">									</font><font size="1">
+									</font><p><font color="#0000ff" size="1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/</font><font color="#800000" size="1">fileset</font><font color="#0000ff" size="1">&gt;</font></p>
+<font color="#0000ff" size="1">									</font><font size="1">
+									</font><p><font color="#0000ff" size="1">&nbsp; 
+									 
+									</font>&nbsp; <font color="#0000ff" size="1">&lt;/</font><font color="#800000" size="1">path</font><font color="#0000ff" size="1">&gt;</font></p>
+<font color="#0000ff" size="1">									</font><font size="1">
+									</font><p><font color="#0000ff" size="1">&nbsp; 
+									&lt;!--</font><font color="#808080" size="1"> 
+									more code </font>
+									<font color="#0000ff" size="1">--&gt;</font></p>
+<font color="#0000ff" size="1">									</font><font size="1">
+									</font><p><font color="#0000ff" size="1">&nbsp; 
+									&lt;/</font><font color="#800000" size="1">target</font><font color="#0000ff" size="1">&gt;</font></p>
+<font color="#0000ff" size="1">									</font><p><font color="#0000ff" size="1">&lt;/</font><font color="#800000" size="1">project</font><font color="#0000ff" size="1">&gt;</font></p></div>
+							</td>
+						</tr>	
+						<tr>
+							<td>
+								<div class="GPL_TEXT">&nbsp; </div>
+							</td>
+						</tr>
+						<tr>
+							<td class="GPL_TEXT">
+								<a name="XAK1Refine"><b>Refinement Document</b></a>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<div class="GPL_TEXT">
+								A function is an extension to 
+								a constant file, which consists of a sequence of 
+								extension operations. The order in which they 
+								appear, from top to bottom, is the order in 
+								which they are applied to the constant file by 
+								the XAK composer.
+								A function file is validated with the schema
+								<a href="http://www.onekin.org/xak/xak/xak.xsd">xak.xsd</a> before 
+								proceeding to composition. This schema 
+								guarantees that the function follows the 
+								required structure that is explained in this 
+								section. There are several types of
+								<a href="#XAK1Operators">Explicit 
+								Operators</a> to realize extensions.
+								A well-formed XML file is 
+								considered a function if its root element is the 
+								tag <b>&lt;xr:refine&gt;</b> and follows the next 
+								pattern. 
+							</div></td>
+						</tr>
+						<tr>
+							<td>
+								<div class="GPL_TEXT">								
+								<p>The following fragment of file
+								<a href="http://www.onekin.org/xak/xak/ref-build.xml">ref-build.xml</a>
+								is a  refinement of previous constant document. 
+								First, <span class="GPL_CODE">xr:at</span> point to the element in the 
+								document expressed by an <span class="GPL_CODE">attribute</span>. Then, explicit 
+								<span class="GPL_CODE">xr:append</span> adds some content to the end of this element.</p></div>
+							</td>
+						</tr>	
+						<tr>
+							<td>
+								<div class="GPL_CODE">
+									<font color="#0000ff" size="1">&lt;</font><font color="#800000" size="1">xr:refine</font><font color="#0000ff" size="1">&gt;</font><font size="1"></font><p><font size="1">&nbsp;
+									</font><font color="#0000ff" size="1">&lt;</font><font color="#800000" size="1">xr:at</font><font color="#ff0000" size="1"> 
+									select</font><font color="#0000ff" size="1">="</font><font size="1">//target[@name='test.ahead']/path/fileset</font><font color="#0000ff" size="1">"&gt;</font></p>
+<font color="#0000ff" size="1">									</font><font size="1">
+									</font><p><font size="1">&nbsp;&nbsp;&nbsp; </font>
+									<font color="#0000ff" size="1">&lt;</font><font color="#800000" size="1">xr:append</font><font color="#0000ff" size="1">&gt;</font></p>
+<font color="#0000ff" size="1">									</font><font size="1">
+									</font><p><font size="1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </font>
+									<font color="#0000ff" size="1">&lt;</font><font color="#800000" size="1">include</font><font color="#ff0000" size="1"> 
+									name</font><font color="#0000ff" size="1">="</font><font size="1">bcjak2java.jar</font><font color="#0000ff" size="1">"/&gt;</font></p>
+<font color="#0000ff" size="1">									</font><font size="1">
+									</font><p><font color="#0000ff" size="1">&nbsp;&nbsp;&nbsp; 
+									&lt;/</font><font color="#800000" size="1">xr:append</font><font color="#0000ff" size="1">&gt;</font></p>
+<font color="#0000ff" size="1">									</font><font size="1">
+									</font><p><font color="#0000ff" size="1">&nbsp; 
+									&lt;/</font><font color="#800000" size="1">xr:at</font><font color="#0000ff" size="1">&gt;</font></p>
+<font color="#0000ff" size="1">									</font><p><font color="#0000ff" size="1">&lt;/</font><font color="#800000" size="1">xr:refine</font><font color="#0000ff" size="1">&gt;</font></p></div>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<div class="GPL_TEXT">&nbsp; </div>
+							</td>
+						</tr>						
+						<tr>
+							<td class="GPL_TEXT">
+								<a name="XAK1Result"><b>Resulting document</b></a>
+							</td>
+						</tr>
+						<tr>
+							<td class="GPL_TEXT">
+								The result of composing previous document refinement with document constant is shown below 
+								(file <a href="http://www.onekin.org/xak/xak/build.xml">build.xml</a>). 
+								Basically, a new <span class="GPL_CODE">include</span> element is appended to the end of
+								<span class="GPL_CODE">fileset</span>.
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<div class="GPL_CODE">
+									<font color="#0000ff" size="1">&lt;</font><font color="#800000" size="1">project</font><font color="#ff0000" size="1"> 
+									name</font><font color="#0000ff" size="1">="</font><font size="1">FOPTools</font><font color="#0000ff" size="1">"</font><font color="#ff0000" size="1"> 
+									basedir</font><font color="#0000ff" size="1">="</font><font size="1">.</font><font color="#0000ff" size="1">"</font><font color="#ff0000" size="1"> 
+									default</font><font color="#0000ff" size="1">="</font><font size="1">all</font><font color="#0000ff" size="1">"&gt;</font><font size="1"></font><p><font size="1">&nbsp;
+									</font><font color="#0000ff" size="1">&lt;</font><font color="#800000" size="1">property</font><font color="#ff0000" size="1"> 
+									name</font><font color="#0000ff" size="1">="</font><font size="1">project.title</font><font color="#0000ff" size="1">"</font><font color="#ff0000" size="1"> 
+									value</font><font color="#0000ff" size="1">="</font><font size="1">FOP 
+									Tests</font><font color="#0000ff" size="1">"/&gt;</font></p>
+<font color="#0000ff" size="1">									</font><font size="1">
+									</font><p><font size="1">&nbsp; </font>
+									<font color="#0000ff" size="1">&lt;</font><font color="#800000" size="1">target</font><font color="#ff0000" size="1"> 
+									name</font><font color="#0000ff" size="1">="</font><font size="1">test.ahead</font><font color="#0000ff" size="1">"</font><font color="#ff0000" size="1"> 
+									depends</font><font color="#0000ff" size="1">="</font><font size="1">initialize,require</font><font color="#0000ff" size="1">"</font><font color="#ff0000" size="1"> 
+									description</font><font color="#0000ff" size="1">="</font><font size="1">Run 
+									tests on the AHEAD toolsuite</font><font color="#0000ff" size="1">"&gt;</font></p>
+<font color="#0000ff" size="1">									</font><font size="1">
+									</font><p><font color="#0000ff" size="1">&nbsp;&nbsp;&nbsp; 
+									&lt;</font><font color="#800000" size="1">path</font><font color="#ff0000" size="1"> 
+									id</font><font color="#0000ff" size="1">="</font><font size="1">id.path.test.ahead</font><font color="#0000ff" size="1">"&gt;</font></p>
+<font color="#0000ff" size="1">									</font><font size="1">
+									</font><p><font color="#0000ff" size="1">&nbsp;&nbsp;&nbsp; 
+									 
+									</font>&nbsp; <font color="#0000ff" size="1">&lt;</font><font color="#800000" size="1">fileset</font><font color="#ff0000" size="1"> 
+									dir</font><font color="#0000ff" size="1">="</font><font size="1">ahead/build/lib</font><font color="#0000ff" size="1">"&gt;</font></p>
+<font color="#0000ff" size="1">									</font><font size="1">
+									</font><p><font color="#0000ff" size="1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;</font><font color="#800000" size="1">include</font><font color="#ff0000" size="1"> 
+									name</font><font color="#0000ff" size="1">="</font><font size="1">balicomposer.jar</font><font color="#0000ff" size="1">"/&gt;</font></p>
+<font color="#0000ff" size="1">									</font><font size="1">
+									</font><p><font color="#0000ff" size="1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;</font><font color="#800000" size="1">include</font><font color="#ff0000" size="1"> 
+									name</font><font color="#0000ff" size="1">="</font><font size="1">bali2jak.jar</font><font color="#0000ff" size="1">"/&gt;</font></p>
+									<p><font color="#0000ff" size="1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;</font><font color="#800000" size="1">include</font><font color="#ff0000" size="1"> 
+									name</font><font color="#0000ff" size="1">="</font><font size="1">bcjak2java.jar</font><font color="#0000ff" size="1">"/&gt;</font></p>
+									<font size="1">
+									</font><p><font color="#0000ff" size="1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/</font><font color="#800000" size="1">fileset</font><font color="#0000ff" size="1">&gt;</font></p>
+<font color="#0000ff" size="1">									</font><font size="1">
+									</font><p><font color="#0000ff" size="1">&nbsp;&nbsp;&nbsp; &lt;/</font><font color="#800000" size="1">path</font><font color="#0000ff" size="1">&gt;</font></p>
+<font color="#0000ff" size="1">									</font><font size="1">
+									</font><p><font color="#0000ff" size="1">&nbsp; 
+									&lt;!--</font><font color="#808080" size="1"> 
+									more code </font>
+									<font color="#0000ff" size="1">--&gt;</font></p>
+<font color="#0000ff" size="1">									</font><font size="1">
+									</font><p><font color="#0000ff" size="1">&nbsp; 
+									&lt;/</font><font color="#800000" size="1">target</font><font color="#0000ff" size="1">&gt;</font></p>
+<font color="#0000ff" size="1">									</font><p><font color="#0000ff" size="1">&lt;/</font><font color="#800000" size="1">project</font><font color="#0000ff" size="1">&gt;</font></p></div>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<div class="GPL_TEXT">&nbsp; </div>
+							</td>
+						</tr>					
+					</tbody></table>
+				</td>
+			</tr>
+					
+			<tr>
+				<td>
+					<table id="mOperators">
+						<tbody><tr>
+							<td class="GPL_TEXT">
+								<a name="XAK1Operators"><b>Operators</b></a>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<div class="GPL_TEXT">								
+								There are 4 explicit operations to realize Xml 
+								Refinement They are introduced below.</div>
+							</td>
+							</tr>
+	<tr>
+							<td>
+								<div class="GPL_CODE">
+									<ul>
+                                      <li>
+									<font color="#0000ff" size="2">&lt;</font><font color="#800000" size="1">xr:at</font><font color="#ff0000" size="1"> 
+									select</font><font color="#0000ff" size="1">="</font><font size="1">${XPath}</font><font color="#0000ff" size="1">"</font><font color="#0000ff" size="1">&gt;: 
+									</font>
+									<span class="GPL_TEXT">This operator points 
+										to an element in the document on which 
+                                      to 
+										perform  operations. The element is 
+										defined by the first occurrence of the 
+										XPath expression.</span></li>
+                                    </ul>
+                                </div>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<div class="GPL_CODE">
+									<ul>
+                                      <li>
+									<font color="#0000ff" size="2">&lt;</font><font color="#800000" size="1">xr:append</font><font color="#0000ff" size="1">&gt;: 
+									</font>
+									<span class="GPL_TEXT">This operator is used inside
+									<span class="GPL_CODE">xr:at</span>.
+It appends some content at the end of the selected
+element. The added content is defined as a children of <span class="GPL_CODE">xr:append</span>.
+									</span>
+									  </li>
+                                    </ul>
+									</div>
+							</td>
+						</tr>
+	<tr>
+							<td>
+								<div class="GPL_CODE">
+									<ul>
+                                      <li>
+									<font color="#0000ff" size="2">&lt;</font><font color="#800000" size="1">xr:prepend</font><font color="#0000ff" size="1">&gt;: 
+									</font>
+									<span class="GPL_TEXT">This operator is used inside
+									<span class="GPL_CODE">xr:at</span>.
+It prepends some content at the beginning of the content of the pointed
+element. The added content is defined as a children of <span class="GPL_CODE">xr:prepend</span>.
+									</span>
+									  </li>
+                                    </ul>
+									</div>
+							</td>
+						</tr>
+
+							<tr>
+							<td>
+								<div class="GPL_CODE">
+									<ul>
+                                      <li>
+									<font color="#0000ff" size="2">&lt;</font><font color="#800000" size="1">xr:override</font><font color="#ff0000" size="1"> 
+									select</font><font color="#0000ff" size="1">="</font><font size="1">${RelativeXPath}</font><font color="#0000ff" size="1">"</font><font color="#0000ff" size="1">&gt;: 
+									</font>
+									<span class="GPL_TEXT">This operator is used inside
+									<span class="GPL_CODE">xr:at</span>. 
+									This operator 
+									overrides the content of the element 
+										defined by the first occurrence of the 
+									relative 
+										XPath expression (note that this XPath 
+									is relative to the one defined by
+									<span class="GPL_CODE">xr:at</span>). The new content is defined as a children of <span class="GPL_CODE">xr:override</span>.
+									The use of this operator is discouraged or 
+									at least restricted because it removes 
+									previous content, and replaces it. So, use 
+									it with  caution.</span></li>
+                                    </ul>
+                                </div>
+									
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<div class="GPL_TEXT">&nbsp;</div>
+							</td>
+						</tr>						
+					</tbody></table>
+				</td>
+			</tr>	
+			<tr>
+				<td>
+					<table id="mCases">
+						<tbody><tr>
+							<td class="GPL_TEXT">
+								<a name="XAK1Cases"><b>Cases</b></a>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<div class="GPL_TEXT">
+An XML file can be either a constant or a function. Therefore there are
+4 different composition cases that have to be considered: </div>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<div class="GPL_TEXT">
+								<ul>
+									<li>function (constant) : the outcome is a 
+									constant file. </li>
+									<li>function2 (function1) : the outcome is a 
+									function file. It is obtained by appending 
+									the refinements in function2 to the 
+									refinements of function1. </li>
+									<li>constant (function) : AHEAD does not 
+									allow this. So, an error is raised.</li>
+									<li>constant2 (constant1) : AHEAD does not 
+									allow this. So, an error is raised.</li>
+								</ul>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<div class="GPL_TEXT">&nbsp;</div>
+							</td>
+						</tr>						
+					</tbody></table>
+				</td>
+			</tr>	
+			<tr>
+				<td>
+					<table id="mCommandLine" height="219">
+						<tbody><tr>
+							<td class="GPL_TEXT" height="19">
+								<a name="CommandLine"><b>Command Line</b></a>
+							</td>
+						</tr>
+						<tr>
+							<td height="18">
+								<div class="GPL_TEXT">
+								The following are the command arguments to call 
+								the xak:</div>
+							</td>
+						</tr>
+						<tr>
+							<td height="64">
+								<blockquote>
+								<div class="GPL_CODE">
+								Usage xak [options] -o outputFile<br>
+								-c file1 file2 file3 ...<br>
+								Composes xml files in order ... 
+								file3(file2(file1))</div>
+							    </blockquote>
+							</td>
+						</tr>						
+						<tr>
+							<td height="18">
+								<div class="GPL_TEXT">
+								Example to compose <a href="http://www.onekin.org/xak/xak/base-build.xml">base-build.xml 
+								</a>(constant) and <a href="http://www.onekin.org/xak/xak/ref-build.xml">ref-build.xml</a> (function), 
+								the result is in <a href="http://www.onekin.org/xak/xak/build.xml">build.xml</a>.
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td height="16">
+								<div class="GPL_CODE">
+								xak -c base-build.xml ref-build.xml -o build.xml
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td height="18">
+								<div class="GPL_TEXT">
+								Example to compose <a href="http://www.onekin.org/xak/xak/base-index.html">base-index.html 
+								</a>(constant) and <a href="http://www.onekin.org/xak/xak/ref-index.html">ref-index.html</a> (function), 
+								the result is in <a href="http://www.onekin.org/xak/xak/index.html">index.html</a>.
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td height="16">
+								<div class="GPL_CODE">
+								xak -c base-index.html ref-index.html -o index.html
+								</div>
+							</td>
+						</tr>							
+						<tr>
+							<td height="18">
+								<div class="GPL_TEXT">&nbsp;</div>
+							</td>
+						</tr>
+					</tbody></table>
+				</td>
+			</tr>			
+			<tr>
+				<td>
+					<table id="mLimitations">					
+						<tbody><tr>
+							<td class="GPL_TEXT">
+								<a name="Limitations"><b>Limitations</b></a>
+							</td>
+						</tr>				
+						<tr>
+							<td>
+								<span class="GPL_TEXT">
+								To our surprise, we discovered that this approach did not work well in some situations. 
+								The problem is that an XPath specification is given relative to a base 
+								document, but once the base document is refined (i.e., the addition or 
+								replacement of nodes), a path specification may no longer be correct.
+								In reflecting on how AHEAD works, we realized that AHEAD avoids similar 
+								problems by imposing a hierarchical module structure on its features and 
+								its artifacts. This enables (i) each module to be extended in a standard
+								way and (ii) the hiding of module details that should not be exposed to refinement. 
+								</span>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								&nbsp;</td>
+						</tr>
+					</tbody></table>
+				</td>
+			</tr>
+		<tr>
+				<td>
+					<table id="mXAK2">					
+						<tbody><tr>
+							<td class="GPL_TITLE2">
+								<a name="XAK2">XAK 2</a>
+							</td>
+						</tr>				
+<!--						<tr>
+							<td>
+								<font color="#FF0000">[XAK2 tool is under 
+								development]</font></td>
+						</tr> -->
+						<tr>
+							<td>
+								<span class="GPL_TEXT">
+								Our solution was to impose a hierarchical module structure on an XML document. 
+								Instead of seeing a document as a tree rooted at node t1 in Figure 1a, we decomposed 
+								the tree into a tree of trees (e.g., trees rooted at nodes t1, t2, and t3 in Figure 1a), 
+								and then tagged each of these nodes with a <b>xak:module</b> attribute, so that our module 
+								abstraction of the original tree is a tree of modules (module m1 contains modules m2 
+								and m3 in Figure 1c).								
+								</span>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<img src="xak_files/xak.gif" border="0" width="149" height="59">
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<span class="GPL_TEXT">
+								Figure 1: XAK Module hierarchy</span>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								&nbsp;</td>
+						</tr>
+						<tr>
+							<td>
+								<div class="GPL_TEXT">
+								In general, a XAK module has a unique name and contains one or more consecutive 
+								subtrees that share the module root. Each subtree may contain any number of modules. 
+								Note that the modules of an XML document reflect a natural hierarchical partitioning 
+								into semantic units that can be refined (more on this shortly). As a concrete example, 
+								Figure 2 shows an XML document that defines a bibliography. The document is partitioned 
+								into modules (see <b>xak:module</b> attribute) which imposes a module structure (similar to Figure 1b). 
+								Note that all modules have unique names.								
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<blockquote>
+									<div class="GPL_CODE"><b><font size="1">&lt;</font><font color="#7f0000" size="1">bibliography</font><font color="#ff0000" size="1"> 
+										xak:artifact</font><font size="1">="myBib"&gt;</font></b><p><b><font size="1">&nbsp; 
+										&lt;</font><font color="#7f0000" size="1">paper</font><font color="#ff0000" size="1"> 
+										xak:module</font><font size="1">="mATSRefact"&gt;</font></b></p>
+<b><font size="1">										</font></b><p><b><font size="1">&nbsp;&nbsp;&nbsp; &lt;</font><font color="#7f0000" size="1">title</font><font size="1">&gt;Feature 
+										Refactoring ..&lt;/</font><font color="#7f0000" size="1">title</font><font size="1">&gt;</font></b></p>
+<b><font size="1">										</font></b><p><b><font size="1">&nbsp;&nbsp;&nbsp; &lt;</font><font color="#7f0000" size="1">date</font><font size="1">&gt;06-02-21 
+										11:30:45&lt;/</font><font color="#7f0000" size="1">date</font><font size="1">&gt;</font></b></p>
+<b><font size="1">										</font></b><p><b><font size="1">&nbsp;&nbsp;&nbsp; &lt;</font><font color="#7f0000" size="1">authors</font><font color="#ff0000" size="1"> 
+										xak:module</font><font size="1">="mATSAuthors"&gt;</font></b></p>
+<b><font size="1">										</font></b><p><b><font size="1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;</font><font color="#7f0000" size="1">author</font><font color="#ff0000" size="1"> 
+										id</font><font size="1">="1"&gt;</font></b></p>
+<b><font size="1">										</font></b><p><b><font size="1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+										&lt;</font><font color="#7f0000" size="1">name</font><font size="1">&gt;Oscar&lt;/</font><font color="#7f0000" size="1">name</font><font size="1">&gt;</font></b></p>
+<b><font size="1">										</font></b><p><b><font size="1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/</font><font color="#7f0000" size="1">author</font><font size="1">&gt;</font></b></p>
+<b><font size="1">										</font></b><p><b><font size="1">&nbsp;&nbsp;&nbsp; &lt;/</font><font color="#7f0000" size="1">authors</font><font size="1">&gt;</font></b></p>
+<b><font size="1">										</font></b><p><b><font size="1">&nbsp; &lt;/</font><font color="#7f0000" size="1">paper</font><font size="1">&gt;</font></b></p>
+<b><font size="1">										</font></b><p><b><font size="1">&nbsp; &lt;</font><font color="#7f0000" size="1">paper</font><font color="#ff0000" size="1"> 
+										xak:module</font><font size="1">="mXAKRef"&gt;</font></b></p>
+<b><font size="1">										</font></b><p><b><font size="1">&nbsp;&nbsp;&nbsp; &lt;!-- content 
+										collapsed --&gt;</font></b></p>
+<b><font size="1">										</font></b><p><b><font size="1">&nbsp; &lt;/</font><font color="#7f0000" size="1">paper</font><font size="1">&gt;</font></b></p>
+<b><font size="1">										</font><font color="#0000ff" size="1">
+										</font></b><p><b><font color="#0000ff" size="1">&lt;/</font><font color="#7f0000" size="1">bibliography</font><font color="#0000ff" size="1">&gt;</font></b></p></div>
+								</blockquote>
+							</td>
+						</tr>	
+						<tr>
+							<td>
+								<span class="GPL_TEXT">
+								Figure 2: XAK Base doc</span>
+							</td>
+						</tr>						
+						<tr>
+							<td>
+								&nbsp;
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<div class="GPL_TEXT">
+								We define a refinement of a XAK module by an operation that is similar to method refinement 
+								in the Jak language [1]. A refinement of the XAK document of Figure 2 is shown in Figure 3 
+								that appends a new author to the <b>mASTAuthors</b> module. The 
+                                <b>xak:super</b> node is a marker that 
+								indicates the place where the original module body is to be substituted. In general, a XAK 
+								refinement document can contain any number of <b>xak:module</b> refinements.
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<blockquote>
+									<div class="GPL_CODE"><b><font size="1">&lt;</font><font color="#7f0000" size="1">xak:refines</font><font color="#ff0000" size="1"> 
+										xak:artifact</font><font size="1">="myBib"&gt;</font></b><p><b><font size="1">&nbsp; 
+										&lt;</font><font color="#7f0000" size="1">xak:extends</font><font color="#ff0000" size="1"> 
+										xak:module</font><font size="1">="mATSAuthors"&gt;</font></b></p>
+<b><font size="1">										</font></b><p><b><font size="1">&nbsp;&nbsp;&nbsp; &lt;</font><font color="#7f0000" size="1">xak:super</font><font color="#ff0000" size="1"> 
+										xak:module</font><font size="1">="mATSAuthors"/&gt;</font></b></p>
+<b><font size="1">										</font></b><p><b><font size="1">&nbsp;&nbsp;&nbsp; &lt;</font><font color="#7f0000" size="1">author</font><font color="#ff0000" size="1"> 
+										id</font><font size="1">="2"&gt;</font></b></p>
+<b><font size="1">										</font></b><p><b><font size="1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;</font><font color="#7f0000" size="1">name</font><font size="1">&gt;Don&lt;/</font><font color="#7f0000" size="1">name</font><font size="1">&gt;</font></b></p>
+<b><font size="1">										</font></b><p><b><font size="1">&nbsp;&nbsp;&nbsp; &lt;/</font><font color="#7f0000" size="1">author</font><font size="1">&gt;</font></b></p>
+<b><font size="1">										</font></b><p><b><font size="1">&nbsp; &lt;/</font><font color="#7f0000" size="1">xak:extends</font><font size="1">&gt;</font></b></p>
+<b><font size="1">										</font><font color="#0000ff" size="1">
+										</font></b><p><b><font color="#0000ff" size="1">&lt;/</font><font color="#7f0000" size="1">xak:refines</font><font color="#0000ff" size="1">&gt;</font></b></p></div>
+								</blockquote>
+							</td>
+						</tr>						
+						<tr>
+							<td>
+								<span class="GPL_TEXT">
+								Figure 3: XAK Refinement</span></td>
+						</tr>
+						<tr>
+							<td>
+								&nbsp;</td>
+						</tr>
+						<tr>	
+							<td>
+								<div class="GPL_TEXT">
+								XAK is a tool that composes a base XAK document with zero or more refinements. (XAK also 
+								composes refinements into compound refinements). The result of composing the base document 
+								of Figure 2 and the refinement of Figure 3 is the document in Figure 4. Note that it is possible 
+								for a refinement to add new modules. In this example, only new content is added to an existing module. 
+								Thus, modular structure is unchanged.
+							</div>
+							</td>	
+						</tr>
+					
+						<tr>
+							<td>
+								<blockquote>
+									<div class="GPL_CODE"><b><font size="1">&lt;</font><font color="#7f0000" size="1">bibliography</font><font color="#ff0000" size="1"> 
+										xak:artifact</font><font size="1">="myBib"&gt;</font></b><p><b><font size="1">&nbsp; 
+										&lt;</font><font color="#7f0000" size="1">paper</font><font color="#ff0000" size="1"> 
+										xak:module</font><font size="1">="mATSRefactor"&gt;</font></b></p>
+<b><font size="1">										</font></b><p><b><font size="1">&nbsp;&nbsp;&nbsp; &lt;</font><font color="#7f0000" size="1">title</font><font size="1">&gt;Feature 
+										Refactoring ..&lt;/</font><font color="#7f0000" size="1">title</font><font size="1">&gt;</font></b></p>
+<b><font size="1">										</font></b><p><b><font size="1">&nbsp;&nbsp;&nbsp; &lt;</font><font color="#7f0000" size="1">date</font><font size="1">&gt;06-02-21 
+										11:30:45&lt;/</font><font color="#7f0000" size="1">date</font><font size="1">&gt;</font></b></p>
+<b><font size="1">										</font></b><p><b><font size="1">&nbsp;&nbsp;&nbsp; &lt;</font><font color="#7f0000" size="1">authors</font><font color="#ff0000" size="1"> 
+										xak:module</font><font size="1">="mATSAuthors"&gt;</font></b></p>
+<b><font size="1">										</font></b><p><b><font size="1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;</font><font color="#7f0000" size="1">author</font><font color="#ff0000" size="1"> 
+										id</font><font size="1">="1"&gt;</font></b></p>
+<b><font size="1">										</font></b><p><b><font size="1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+										&lt;</font><font color="#7f0000" size="1">name</font><font size="1">&gt;Oscar&lt;/</font><font color="#7f0000" size="1">name</font><font size="1">&gt;</font></b></p>
+<b><font size="1">										</font></b><p><b><font size="1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/</font><font color="#7f0000" size="1">author</font><font size="1">&gt;</font></b></p>
+<b><font size="1">										</font></b><p><b><font size="1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;</font><font color="#7f0000" size="1">author</font><font color="#ff0000" size="1"> 
+										id</font><font size="1">="2"&gt;</font></b></p>
+<b><font size="1">										</font></b><p><b><font size="1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+										&lt;</font><font color="#7f0000" size="1">name</font><font size="1">&gt;Don&lt;/</font><font color="#7f0000" size="1">name</font><font size="1">&gt;</font></b></p>
+<b><font size="1">										</font></b><p><b><font size="1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/</font><font color="#7f0000" size="1">author</font><font size="1">&gt;</font></b></p>
+<b><font size="1">										</font></b><p><b><font size="1">&nbsp;&nbsp;&nbsp; &lt;/</font><font color="#7f0000" size="1">authors</font><font size="1">&gt;</font></b></p>
+<b><font size="1">										</font></b><p><b><font size="1">&nbsp; &lt;/</font><font color="#7f0000" size="1">paper</font><font size="1">&gt;</font></b></p>
+<b><font size="1">										</font></b><p><b><font size="1">&nbsp; &lt;!--</font><font color="#7f7f7f" size="1"> 
+										content hidden --&gt;</font></b></p>
+<b><font color="#7f7f7f" size="1">										</font><font color="#0000ff" size="1">
+										</font></b><p><b><font color="#0000ff" size="1">&lt;/</font><font color="#7f0000" size="1">bibliography</font><font color="#0000ff" size="1">&gt;</font></b></p></div>
+								</blockquote>
+							</td>
+						</tr>
+					
+						<tr>
+							<td>
+								<span class="GPL_TEXT">
+								Figure 4: XAK Composition Result</span></td>
+						</tr>
+					
+						<tr>
+							<td>
+								&nbsp;
+							</td>
+						</tr>
+					
+						<tr>	
+							<td>
+								<div class="GPL_TEXT">
+								The result of a XAK composition is a XAK document. The underlying XML document is the XAK 
+								artifact with the <b>xak:module</b> attributes removed. 
+								XAK does have other functionalities such as 
+								schema extensions and validation. More details are presented in [3]. 
+								Note that the tool is under development, check
+								<a href="http://www.onekin.org/xak">XAK</a> for 
+								updates.</div>
+							</td>
+						</tr>						
+					</tbody></table>
+				</td>
+			</tr>			
+			
+			<tr>
+				<td>&nbsp;</td>
+			</tr>
+			
+			<tr>
+				<td>
+					<table id="mDownload" width="100%">					
+						<tbody><tr>
+							<td class="GPL_TITLE2">
+								<a name="download">Download</a>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<div class="GPL_TEXT">
+								We may release these tools open-sourcely when paper becomes published. 
+								Until then, please request to <a href="mailto:struji@ehu.es">Salva Trujillo</a> or <a href="mailto:felipe.anfurrutia@ehu.es">Felipe I. Anfurrutia</a>.
+							</div></td>
+						</tr>
+						<tr>
+							<td>
+								<ul>
+									<li><span class="GPL_TEXT">AHEAD - XAK joint distribution</span>
+									</li>
+									<li><span class="GPL_TEXT">XAK example application</span>
+									</li>
+								</ul>
+							</td>
+						</tr>
+					</tbody></table>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<table id="mReference">
+						<tbody><tr>
+							<td class="GPL_TITLE2">
+								<a name="Reference">Reference</a>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<div class="GPL_TEXT">
+								[1]&nbsp; O. Diaz, S. Trujillo, and F. I. 
+								Anfurrutia. Supporting production strategies as 
+								refinements of the production process. Sofware 
+								Product Line Conference (SPLC 2005), Rennes, 
+								France, 2005. SPLC.<p>[2]&nbsp; D. Batory, J.N. 
+								Sarvela, and A. Rauschmayer, &#8220;Scaling Step-Wise 
+								Refinement&#8221;. IEEE TSE, June 2004.</p>
+								<p>[3]&nbsp;
+F. I. Anfurrutia., O. Diaz, and S. Trujillo, On refining XML artifacts.
+Int. Conf. on Web Engineering (ICWE 2007), Como, Italy 2007</p>
+								</div>
+							</td>
+						</tr>
+					</tbody></table>
+				</td>
+			</tr>
+		</tbody></table>
+	<hr>
+<p>
+<b><font face="Arial"><a href="http://www.onekin.org/xak/index.html">ATS 
+		Home Page</a> | <a href="http://www.onekin.org/">Onekin</a></font></b>
+		<b><font face="Arial">| <a href="http://www.onekin.org/xak">XAK</a></font></b>
+		</p>
+<p><font face="Arial"><b>Copyright © Onekin Research Group. All rights reserved.</b>
+<br>
+<b>Revised: April 30th, 2007.</b>
+</font></p>
+<p><b><font face="Arial">Report questions/problems: <a href="mailto:struji@ehu.es">Salva Trujillo</a> | <a href="mailto:felipe.anfurrutia@ehu.es">Felipe I. Anfurrutia</a></font></b>
+		</p>
+	</body></html>

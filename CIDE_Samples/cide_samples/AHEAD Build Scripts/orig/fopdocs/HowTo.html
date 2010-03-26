@@ -1,0 +1,1007 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="GENERATOR" content="Microsoft FrontPage 5.0">
+   <title>How to Write a Translator Using AHEAD Tools</title>
+</head>
+<body bgcolor="#FFFFFF">
+
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%">
+  <tr>
+    <td WIDTH="78">
+      <font face="Verdana">
+	  <img border="0" src="images/FopButton3.jpg" width="80" height="64">
+      </font>
+    </td>
+    <td WIDTH="688" BGCOLOR="#00FFFF">
+      <h1>
+	<font color="#0000FF" face="Arial">How to Write a Translator Using AHEAD</font></h1>
+    </td>
+  </tr>
+</table>
+
+<p align="justify"><font face="Arial">AHEAD provides a comprehensive set of 
+tools for building <i>languages. </i>There are 
+two ways in which AHEAD can be used to build a language: either build a 
+translator 
+directly or develop a preprocessor which translates a  program of that language into a host 
+language (e.g., Java).&nbsp; The techniques for both are similar. </font></p>
+<p align="justify"><font face="Arial">In this chapter, we outline steps that 
+you will need to take to create an extensible language and its translator.&nbsp; The 
+introductory sections show how to specify and write a  translator; the last 
+section explains how to extend the translator in a feature-oriented way. </font></p>
+<ul>
+<li>
+<font face="Arial">
+<a href="#Customizing Template.xml">Customizing Template.xml </a></font></li>
+<li>
+<a href="#Appendix"><font face="Arial">Model Directory Creation</font></a></li>
+
+<li>
+<a href="#Host Language Specification"><font face="Arial">Host Language Specification</font></a></li>
+
+<li>
+<font face="Arial"><a href="#Writing Equation Files">Writing Equation Files</a></font></li>
+
+<li>
+<a href="#Building a Parser"><font face="Arial">Building 
+a Parser</font></a></li>
+
+<li>
+<font face="Arial"><a href="#Generating a Semantic Layer">Generating a Semantic Layer</a></font></li>
+
+<li>
+<font face="Arial">
+<a href="#Adding Semantic Actions">Adding Semantic 
+Actions</a> </font><ul>
+<li><font face="Arial"><a href="#Fixing Main">Fixing Main</a> </font></li>
+<li><font face="Arial"><a href="#Adding Actions for Arithmetic">Adding Actions 
+for Arithmetic&nbsp; </a></font></li>
+<li><font face="Arial"><a href="#Running Main">Running Main</a></font></li>
+</ul>
+
+</li>
+
+<li>
+<font face="Arial"><a href="#Extending the Calculator Language">Extending the Calculator Language</a></font></li>
+
+<li>
+<font face="Arial"><a href="#Appendix">Appendix: Cautions to take when Writing a 
+Grammar</a></font></li>
+</ul>
+
+<p><font face="Arial">Code for the examples in this section are found here
+<a href="Examples/MyCalcExample.zip">
+<img border="0" src="images/Code.gif" width="59" height="31"></a>.</font></p>
+
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#ffff00">
+  <tr>
+    <td WIDTH="788">
+      <h2>
+       <font face="Arial" color="#0000FF">
+	   <a name="Customizing Template.xml">Customizing Template.xml</a></font></h2>
+    </td>
+  </tr>
+</table>
+
+<p align="justify">
+<font face="Arial">The first step in creating a language or language extension 
+is to customize an <a href="http://jakarta.apache.org/ant/index.html">Ant</a> 
+XML file for building the language. We provide two ant XML files, 
+<a href="Template.xml">Template.xml</a> 
+and <a href="Configure.xml">Configure.xml</a>, for this purpose.
+<a href="Template.xml">Template.xml</a> is a template of Ant XML file; 
+<a href="Configure.xml">Configure.xml</a> takes <a href="Template.xml">Template.xml</a> 
+as input and generates an Ant XML file for a specific language.&nbsp; We name 
+our language mycalc in this example. In order for customizing an Ant XML file, run 
+command:</font></p>
+
+<p align="justify">
+<font face="Arial">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</font><font face="Verdana"><a href="file:///c:/fop/ahead"><font size="2">
+c:/ahead</font></a><font size="2"> &gt; ant -f %fopdocs%/Configure.xml&nbsp; -Dproject.name=&quot;mycalc&quot;</font></font></p>
+
+<p align="justify">
+<font face="Arial">where %fopdocs% is the path to the AHEAD/FOP documentation directory. The output of this command is an Ant XML file 
+c:/ahead/mycalc.xml. We 
+will use it to build our language and its extension in the following steps.<a href="http://jakarta.apache.org/ant/index.html">
+</a></font></p>
+
+<blockquote>
+
+<p align="justify">
+<font face="Arial" color="#FF0000">Note: we are generalizing Configure.xml so 
+that the full set of AHEAD directories are not necessary for building translators.</font></p>
+
+</blockquote>
+
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#ffff00">
+  <tr>
+    <td WIDTH="788">
+      <h2>
+       <a name="Component Directory Creation">
+       <font face="Arial" color="#0000FF">Model Directory Creation</font></a></h2>
+    </td>
+  </tr>
+</table>
+
+<p align="justify"><font face="Arial">The next step is to identify a model 
+directory within AHEAD.&nbsp; A model is a set of features called units.&nbsp; A language 
+specification is a unit or composition of units.&nbsp; If you are defining a language for the first time, you'll probably 
+have to create a new model directory.&nbsp; If you are creating a language 
+extension, then a model for the host language (i.e., the language to be 
+extended) must already exist. Once the model directory is known, create  
+a pair of subdirectories, one for language specification and another for 
+semantic actions. </font></p>
+<p align="justify"><font face="Arial">As an example, suppose we want to create a 
+language for a calculator.&nbsp; Suppose further this is a completely new 
+language.&nbsp; Our actions are to:</font></p>
+<ol>
+  <li>
+<p align="justify"><font face="Arial">Create a model directory.&nbsp; Suppose 
+the model name is Kalc.&nbsp; If so, create ahead/dsl/Kalc.</font></p>
+  </li>
+  <li>
+<p align="justify"><font face="Arial">Create a grammar 
+directory ahead/dsl/Kalc/calcGram in which we will place a specification of 
+our mycalc language grammar. </font></p>
+  </li>
+  <li>
+<p align="justify"><font face="Arial">Create a semantic directory ahead/dsl/Kalc/calcActions 
+in which we will place code for semantic actions.</font></p>
+  </li>
+</ol>
+<blockquote>
+  <p><font size="2" face="Courier">C:/ &gt; cd ahead/dsl<br>
+  <a href="file:///C:/fop/ahead/dsl">C:/ahead/dsl</a> &gt; mkdir Kalc<br>
+  <a href="file:///C:/fop/ahead/dsl">C:/ahead/dsl</a> &gt; cd Kalc<br>
+  <a href="file:///C:/fop">C:/ahead/dsl/Kalc</a> &gt; mkdir calcGram<br>
+  <a href="file:///C:/fop/ahead/dsl/Kalc/calc">C:/ahead/dsl/Kalc</a> &gt; mkdir 
+  calcActions</font></p>
+</blockquote>
+
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#ffff00">
+  <tr>
+    <td WIDTH="788">
+      <h2>
+       <a name="Host Language Specification"><font face="Arial" color="#0000FF">
+       Host Language Specification</font></a></h2>
+    </td>
+  </tr>
+</table>
+
+<p style="FONT-FAMILY: Verdana" align="justify"><font face="Arial">The next 
+step in building a translator is to write a <a href="The_Bali_Language.html">Bali grammar specification</a> of the 
+host language. Suppose we want to build a preprocessor for a postfix calculator 
+which only supports the add operator. Its 
+Bali grammar  is given in grammar.b (shown below):</font></p>
+<blockquote>
+
+  <pre><font face="Courier">// grammar.b : simple calculator
+
+// Simple tokens specified in simple format
+
+&quot;+&quot; PLUS
+
+// Regular expression tokens specified in JavaCC format
+
+TOKEN :
+{
+	&lt;INTEGER: [&quot;1&quot;-&quot;9&quot;] ([&quot;0&quot;-&quot;9&quot;])* &gt;
+}
+
+Actions : (Action)+
+;
+
+Action 	: INTEGER 	:: Push
+	| PLUS 		:: Plus
+	;</font>
+</pre>
+</blockquote>
+<p style="FONT-FAMILY: Verdana"><font face="Arial">Place grammar.b in directory ahead/dsl/Kalc/calcGram.&nbsp; </font></p>
+<blockquote>
+  <ul>
+    <li>
+  <p style="FONT-FAMILY: Verdana" align="justify"><font face="Arial"><font color="#ff0000">Be 
+  aware of a naming convention that AHEAD assumes: a Bali specification is 
+  always named grammar.b</font> </font></p>
+    </li>
+    <li>
+  <p style="FONT-FAMILY: Verdana" align="justify">
+  <font face="Arial"><font color="#ff0000">Bali grammar specifications don't have explicit 
+  precedence.&nbsp; 
+  Thus, it is harder to write infix grammars for, say, arithmetic expressions than it 
+  needs to be.&nbsp; You should be aware of this limitation  when designing 
+  your grammar.</font> </font></p>
+    </li>
+    <li>
+  <p style="FONT-FAMILY: Verdana" align="justify">
+  <font color="#FF0000"><font face="Arial">JavaCC is  a recursive-descent parser used by AHEAD and does not allow left recursion. 
+  Bali grammars are translated into JavaCC grammar, so it can not be 
+  left-recursive. See <a href="#Appendix">Appendix</a> for an example of a 
+  left-recursive grammar.</font></font></p>
+    </li>
+    <li>
+  <p style="FONT-FAMILY: Verdana" align="justify"><font color="#ff0000" face="Arial">Finally, note the Bali 
+  convention that names in all CAPITALS are token names &#8213; so don't try to use non-terminal production names that are all CAPITALS.</font></p>
+    </li>
+  </ul>
+</blockquote>
+
+  <p style="FONT-FAMILY: Verdana" align="justify"><font face="Arial"><b>Hints 
+  for writing grammars</b>:&nbsp; Remember that translating a grammar 
+  specification to code is a 2-stage process.&nbsp; First, the grammar.b file is 
+  translated to a grammar.jj file by the bali2javacc tool, and then the 
+  grammar.jj file is translated to a set of .java files by the javacc tool.&nbsp; 
+  You can incrementally debug your grammar by running:</font></p>
+    <blockquote>
+  <p style="FONT-FAMILY: Verdana" align="justify"><font face="Courier New">&gt; 
+  bali2javacc grammar.b<br>
+  <br>
+  // see if there are errors in translation</font></p>
+  <p style="FONT-FAMILY: Verdana" align="justify"><font face="Courier New">&gt; 
+  javacc grammar.jj</font></p>
+  <p style="FONT-FAMILY: Verdana" align="justify"><font face="Courier New">// 
+  see if javacc complains</font></p>
+    </blockquote>
+  <p style="FONT-FAMILY: Verdana" align="justify"><font face="Arial">If no 
+  errors are found in this process, you're grammar will produce a parser.&nbsp; 
+  If you do this, you'll see that a bunch of .java files (and a .jj file) have 
+  been created.&nbsp; Remember to delete these files, keeping only the .b file.&nbsp; 
+  If you keep them, composer will try to compose them with other files, and 
+  causing all sorts of problems that you don't need.</font></p>
+
+  <p style="FONT-FAMILY: Arial" align="justify">Here's another hint.&nbsp; To 
+  help disambiguate grammars, javacc uses lookaheads. Take a look at ahead/dsl/java/javaGram/grammar.b 
+  for examples.</p>
+
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#ffff00">
+  <tr>
+    <td WIDTH="788">
+      <h2>
+       <a name="Writing Equation Files"><font face="Arial" color="#0000FF">
+       Writing Equation Files</font></a></h2>
+    </td>
+  </tr>
+</table>
+
+  <p style="FONT-FAMILY: Arial" align="justify">AHEAD synthesizes a program by 
+  evaluating an equation. An equation file specifies the composition of all the grammar and semantic 
+  action layers 
+  that defines our translator, 
+  where the top-most layer is the base layer, are the following layers are 
+  refinements. Enter directory ahead/equations 
+  and create a mycalc.equation file, whose contents are:</p>
+
+  <p style="FONT-FAMILY: Arial" align="justify"><font face="Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+  dsl/kernel<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dsl/Kalc/calcGram<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <font color="#FF0000">build/dsl/Kalc/calcGram</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dsl/Kalc/calcActions</font></p>
+  <p style="FONT-FAMILY: Arial" align="justify">The <b>dsl/kernel</b> layer is 
+  the base layer for our calculator language, which is provided by AHEAD. Kernel 
+   
+  defines the classes relevant to parse tree structure, parse tree 
+  traversals, etc. <b>dsl/Kalc/calcGram</b> is the grammar layer for our language. As we 
+  did in the last section, we put a Bali grammar specification in this directory. 
+  <font color="#FF0000"><b>build/dsl/Kalc/calcGram</b></font> is a layer that is 
+  generated from <b>dsl/Kalc/calcGram</b> (by our <b>mycalc.xml</b> script) and 
+  is stored in the build/ directory of AHEAD. <b>dsl/Kalc/calcActions</b> 
+  is the semantic layer. This layer serves as a refinement to the grammar layer and 
+  defines the semantic actions for our grammar. We will use <b>
+  <a href="bali2layer.html">bali2layer</a></b> to generate a set of 
+  template classes for this layer. Semantic actions are added manually, as we 
+  will see in later sections.&nbsp; At this point, we have not defined the 
+  semantic actions of our grammar.</p>
+<blockquote>
+  <p style="FONT-FAMILY: Arial" align="justify"><font color="#FF0000">
+  <span style="background-color: #FFFFFF">Note the naming convention of equation 
+  files. If the language we are building is X, then the </span>
+  <span style="background-color: #FFFFFF">equation</span><span style="background-color: #FFFFFF"> 
+  files are always named as </span><span style="background-color: #FFFFFF">
+  X.equation</span><span style="background-color: #FFFFFF">. </span></font></p>
+</blockquote>
+
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#ffff00">
+  <tr>
+    <td WIDTH="788">
+      <h2>
+       <a name="Building a Parser"><font face="Arial" color="#0000FF">Building a 
+       Parser</font></a></h2>
+    </td>
+  </tr>
+</table>
+
+<p align="justify"><font face="Arial">Now we're ready to debug our grammar and 
+build a parser.&nbsp; To do so, use mycalc.xml:</font></p>
+<blockquote>
+  <pre><font face="Courier"><a href="file:///C:/fop/ahead">C:/ahead</a>&gt; ant -f mycalc.xml </font></pre>
+</blockquote>
+<p align="justify"><font face="Arial">Executing this ant command builds a parser 
+for mycalc language in directory ahead/build. The following steps are 
+automatically performed by mycalc.xml: </font></p>
+<ol>
+  <li>
+<p align="justify"><font face="Arial">The
+<a href="bali2jak.html">bali2jak</a> tool is applied to an equation. 
+It traverses each term in the equation, identifies all Bali grammar files X/grammar.b 
+(where X can be any path) and generates an inheritance lattice and parse 
+tree classes in the build/X directory.</font></p>
+  </li>
+  <li>
+<p align="justify"><font face="Arial"> 
+The 
+<a href="composer.html">composer tool</a> composes layers specified in an 
+equation file;  </font></p>
+  </li>
+  <li>
+<p align="justify"><font face="Arial">The <a href="bali2javacc.html"><kbd>
+<font face="Arial">bali2javacc</font></kbd></a> tool generates a Javacc 
+grammar file given the composed grammar file of step (2);  </font></p>
+  </li>
+  <li>
+<p align="justify"><font face="Arial">The javacc2java (i.e., javacc) tool generates a parser given a Javacc 
+grammar produced by step (3);</font></p>
+  </li>
+  <li>
+<p align="justify"><font face="Arial"> The <a href="j2j.html">jak2java tool </a>converts all Jak 
+files into Java source files; and</font></p>
+  </li>
+  <li>
+<p align="justify"><font face="Arial">All Java sources are compiled and  a JAR file 
+mycalc.jar 
+is build 
+in directory build/mycalc/lib. </font></p>
+  </li>
+  <li>
+<p align="justify"><font face="Arial">Bash and batch files are generated for 
+mycalc and placed in the ahead/build/bin directory.</font></p>
+  </li>
+</ol>
+<p align="justify"><font face="Arial">Now run mycalc:</font></p>
+<p align="justify"><font face="Verdana" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font face="Courier" size="2">C:/ahead&gt; 
+mycalc</font></p>
+<p align="justify"><font face="Arial">You'll notice that nothing happens.&nbsp; 
+Since the default Main class does nothing, you shouldn't be surprised.&nbsp; All 
+that we have done is to compile the specification of a grammar (and made sure 
+that our .b file was at least syntactically correct); no actions for the 
+calculator grammar rules have been defined.&nbsp; Our next step is to introduce 
+these actions. </font></p>
+
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#ffff00">
+  <tr>
+    <td WIDTH="788">
+      <h2>
+       <a name="Generating a Semantic Layer"><font face="Arial" color="#0000FF">
+       Generating a Semantic Layer</font></a></h2>
+    </td>
+  </tr>
+</table>
+
+<p align="justify">
+<font face="Arial">AHEAD provides a <a href="bali2layer.html">bali2layer tool</a> for this 
+purpose. Enter directory dsl/Kalc/calcActions and run bali2layer:</font></p>
+<p align="justify">
+<font face="Arial">&nbsp;&nbsp;&nbsp; </font><font face="Verdana" size="2">&nbsp;&nbsp;&nbsp; </font>
+<font face="Courier" size="2">
+<a href="file:///c:/fop/ahead/dsl/Kalc/calc/semantic">
+c:/ahead/dsl/Kalc/calcActions</a> &gt; bali2layer</font></p>
+<p align="justify">
+<font face="Arial">When bali2layer GUI appears, make selections as in Figure 1:</font></p>
+<ol>
+  <li>
+<p align="justify">
+<font face="Arial">Choose grammar.b in directory calcGram.</font></p>
+  </li>
+  <li>
+<p align="justify">
+<font face="Arial">Set name of the start production to be &quot;Actions&quot;.</font></p>
+  </li>
+  <li>
+<p align="justify">
+<font face="Arial">Select &quot;include kernel classes&quot; because we will be 
+adding a method &quot;execute(Stack)&quot; to every Kernel class.</font></p>
+  </li>
+  <li>
+<p align="justify">
+<font face="Arial">Select &quot;include main that uses std input&quot; because we want our 
+tool to have command-line inputs</font></p>
+  </li>
+  <li>
+<p align="justify">
+<font face="Arial">We want to perform an action on a parse tree. To do so, we 
+need to add a method to all parse tree classes. A postfix calculator needs to access a stack, we add an execute 
+method that takes a stack as an argument. In the &quot;Method Signature&quot; field, enter &quot;void execute(Stack S)&quot; and 
+then click &quot;Add&quot; button.  &nbsp;&nbsp;</font></p>
+  </li>
+</ol>
+<p align="center">
+<font face="Arial" size="2">&nbsp;<img border="0" src="images/HowTo1.jpg" width="353" height="390"></font></p>
+<p align="justify">
+<font face="Arial">Click on &quot;<i><b>Generate!</b></i>&quot; button and 
+bali2layer 
+produces a set of Jak 
+files, including Action.jak,  Main.jak, etc., one for each production in this 
+file, into calcActions directory. 
+</font></p>
+<blockquote>
+<p align="justify">
+<font face="Arial" color="#FF0000">Note: while this all sounds a bit mysterious, 
+it isn't.&nbsp; Given a grammar, bali2layer generates a set of &quot;template&quot; classes, 
+one per production in our grammar.&nbsp; Moreover, it can add methods to each of 
+the classes that it generates, and these methods will be used by us to add our 
+operations on parse trees.&nbsp; Further, we need a Main class. bali2layer does 
+all this for us.</font></p>
+</blockquote>
+<p align="justify">
+<font face="Arial">Note that since the execute method takes an argument of stack 
+variable, we need to fix the Main class before compiling. The Main class calls 
+the execute method, but by default execute method does not take any arguments. 
+To do this, edit Main.jak and look at the code after&nbsp; step 5.4 as 
+follow. The functionality of this code segment is to print the parsed input, 
+and call the execute method of each node in the parse tree:</font></p>
+<p align="justify">
+<font face="Arial">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</font><font face="Verdana" size="2">&nbsp; </font>
+<font size="2" face="Courier">&nbsp;&nbsp;&nbsp;&nbsp; // Step 5.4: Parse of 
+input command succeeded!<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ((Actions) 
+root).print();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+System.out.println();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ((Actions) 
+root).execute();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; pw.flush();
+</font></p>
+<p align="justify">
+<font face="Arial">Our repair is to create a Stack instance and pass it to the 
+execute method. The code is revised as follows:</font></p>
+<p align="justify">
+<font face="Arial">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</font><font size="2" face="Verdana">&nbsp; </font>
+<font size="2" face="Courier">&nbsp;&nbsp;&nbsp;&nbsp; // Step 5.4: Parse of 
+input command succeeded!<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+<font color="#FF0000">Stack S = new 
+Stack();</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ((Actions) 
+root).print();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+System.out.println();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ((Actions) 
+root).execute<font color="#FF0000">(S)</font>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; pw.flush();</font></p>
+<p align="justify">
+<font face="Arial">Now let's rebuild the language. In this step, we do not 
+modify grammar. All that we have done is to add a semantic layer, so the grammar 
+and syntax layer need not be changed.&nbsp; Now  rebuild the translator:</font></p>
+<p align="justify">
+<font face="Arial">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</font><font face="Courier"><font size="2">
+&nbsp;&nbsp;&nbsp;&nbsp; <a href="file:///c:/fop/ahead">C:/ahead</a></font><font size="2"> &gt; ant -f 
+mycalc.xml</font></font></p>
+<p align="justify"><font face="Arial">When you run mycalc.Main, you'll get a 
+prompt.&nbsp; Input is terminated with a line with a single dot (.) on it.&nbsp; When 
+input is parsed correctly, you'll see that the input command and its parse tree 
+are printed.&nbsp; Of course, this isn't the action that we want, but now we can 
+change it! </font></p>
+<p align="justify">
+<font face="Arial">&nbsp; </font><font size="2" face="Verdana">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font size="2" face="Courier">&nbsp;&nbsp;&nbsp;
+<a href="file:///C:/fop/ahead">C:/ahead</a> &gt; mycalc</font></p>
+<p align="justify">
+<font face="Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+mycalc Started...<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; mycalc&gt; 2 3 +<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &gt; .<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2 3 +<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Dump root<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0Actions<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+1ActionsElem<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+2Push<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+1ActionsElem<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+2Push<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+1ActionsElem<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+2Plush</font></p>
+<p align="justify">
+<font face="Arial">To exit from mycalc, type a dot (.).</font></p>
+<p align="justify"><font face="Arial">There is another option for supplying 
+input to mycalc other than command-line input.&nbsp; Built into mycalc.Main (and any 
+file produced by bali2layer) is the -f option which reads commands from an input 
+file.&nbsp; Thus, if our input file inputTest had the following lines: </font></p>
+<blockquote>
+  <blockquote>
+  <pre><font face="Courier">2 3 +
+.
+4 5 +
+.</font></pre>
+  </blockquote>
+</blockquote>
+<p align="justify"><font face="Arial">we could run mycalc.Main with this file as 
+input to create and print two parse trees: </font></p>
+<blockquote>
+  <blockquote>
+  <p><font face="Courier" size="2"><a href="file:///C:/fop/ahead/dsl">
+  C:/ahead/dsl</a> &gt; java -jar build/lib/mycalc.jar -f inputTest</font></p>
+  <p><font face="Courier" size="2">mycalc Started.<br>
+  <br>
+  mycalc&gt;<br>
+  2 3 +<br>
+  Dump root<br>
+  0Actions<br>
+&nbsp;1ActionsElem<br>
+&nbsp;&nbsp; 2Push<br>
+&nbsp;1ActionsElem<br>
+&nbsp;&nbsp; 2Push<br>
+&nbsp;1ActionsElem<br>
+&nbsp;&nbsp; 2Plus<br>
+  <br>
+  mycalc&gt;<br>
+  4 5 +<br>
+  Dump root<br>
+  0Actions<br>
+&nbsp;1ActionsElem<br>
+&nbsp; 2Push<br>
+&nbsp;1ActionsElem<br>
+&nbsp; 2Push<br>
+&nbsp;1ActionsElem<br>
+&nbsp; 2Plus</font></p>
+  </blockquote>
+</blockquote>
+
+  <p><font size="2" face="Arial"><b>Hints for using bali2layer</b>.&nbsp; 
+  Remember, every time you change the grammar of your language, you potentially 
+  have to re-run bali2layer to generate a standard set of class templates.&nbsp; 
+  I strongly recommend that you limit any changes that you make to bali2layer 
+  generated classes; use composer to add whatever extra methods/members you need 
+  to add.</font></p>
+
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#ffff00">
+  <tr>
+    <td WIDTH="788">
+      <h2>
+       <a name="Adding Semantic Actions"><font face="Arial" color="#0000FF">
+       Adding Semantic Actions</font></a></h2>
+    </td>
+  </tr>
+</table>
+
+<p align="justify"><font face="Arial">In this section, we  define semantic 
+actions for our mycalc language. There are two steps in adding the actions of the 
+calculator:(1) fixing main, and&nbsp; (2) add actions for arithmetic.</font></p>
+
+<table BORDER="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FF00FF">
+  <tr>
+    <td WIDTH="766"><h3><a name="Fixing Main">
+    <font face="Arial" color="#FFFFFF">Fixing Main</font></a></h3>
+    </td>
+  </tr>
+</table>
+
+<p align="justify"><font face="Arial">In order that our simple calculator 
+language computes a postfix arithmetic expression, we create a stack for Main 
+and pass it as an argument to the execute method in last section. We also need to 
+print out the contents of the stack after calculation, and delete all 
+undesirable actions included in Main class by default &#8213; dump the parser tree, 
+print out the parsed input. The code of steps 5.4 and 5.5 in Main.jak are as follows:</font></p>
+
+<p align="justify"><font face="Arial">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</font><font face="Century" size="2">&nbsp;</font><font size="2" face="Courier">&nbsp;&nbsp;&nbsp; 
+// Step 5.4: Parse of input command succeeded!<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Stack S = new Stack();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ((Actions) root).print();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; System.out.println();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ((Actions) 
+root).execute(S);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; pw.flush();<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Step 5.5: now dump the 
+parse tree<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // this code can be 
+removed for production systems<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; System.out.println(&quot;Dump 
+root&quot;);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; root.PrettyDump();</font></p>
+
+<p align="justify"><font face="Arial">We revise it as follows by replacing the 
+code for Section 5.4 and deleting Section 5.5.</font></p>
+
+<p align="justify"><font face="Arial">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</font><font size="2" face="Courier">&nbsp;&nbsp;&nbsp; // Step 5.4: Parse of 
+input command succeeded!<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Stack S = new Stack();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ((Actions) 
+root).execute(S);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; pw.flush();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Integer result = 
+(Integer) S.pop();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+System.out.println(result.intValue());</font></p>
+
+<p align="justify"><font face="Arial">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<br>
+Adding actions for computing arithmetic 
+values is straightforward. For each action, we define an execute(Stack s) method 
+that overrides the default (do-nothing) method with a meaningful action. Whenever 
+the parser sees an integer, it pushes the integer into the stack; </font></p>
+<blockquote>
+  <blockquote>
+  <pre><font face="Courier">To Push.jak:
+   public void execute(Stack S){
+      S.push( new Integer( tok[0].tokenName() ) );
+   }</font></pre>
+  </blockquote>
+</blockquote>
+<p align="justify"><font face="Arial">If the parser sees a plus operator, it 
+pops the topmost two integers, adds them, and pushes the result back into 
+the stack.&nbsp; </font></p>
+<blockquote>
+  <blockquote>
+  <p><font face="Courier">T</font><font face="Courier" size="2">o Plus.jak:<br>
+  &nbsp;&nbsp;&nbsp;public void execute(Stack S){ <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Integer arg1 
+  = (Integer) S.pop();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Integer arg2 
+  = (Integer) S.pop();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; int result = 
+  arg2.intValue() + arg1.intValue();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; S.push(new 
+  Integer(result));<br>
+&nbsp;&nbsp;&nbsp;}</font></p>
+  </blockquote>
+</blockquote>
+
+<table BORDER="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FF00FF">
+  <tr>
+    <td WIDTH="766"><h3><a name="Running Main">
+    <font face="Arial" color="#FFFFFF">Running Mycalc</font></a></h3>
+    </td>
+  </tr>
+</table>
+
+<p><font face="Verdana">Rebuild mycalc and run it: </font></p>
+<blockquote>
+  <blockquote>
+  <p><font face="Courier" size="2"><a href="file:///C:/fop/ahead">C:/ahead</a> &gt;mycalc<br>
+  mycalc Started...<br>
+  <br>
+  mycalc&gt; 1 3 +<br>
+  &gt; .<br>
+  4 <br>
+  mycalc&gt; 1 2 +<br>
+  &gt; .<br>
+  3</font></p>
+  </blockquote>
+</blockquote>
+
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FFFF00">
+  <tr>
+    <td WIDTH="788"><h2><font face="Arial">
+    <a name="Extending the Calculator Language">Extending the Calculator 
+    Language</a></font></h2>
+    </td>
+  </tr>
+</table>
+
+<p align="justify"><font face="Arial">Now suppose we want to add a minus operator 
+to our  language.&nbsp; The 
+way to do this is to create another layer, minus, in the Kalc 
+model. The Bali specification of the minus component lists the new 
+lexical tokens and the new grammar rules: </font></p>
+<p align="justify">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+<font face="Courier" size="2">// grammar.b : minus grammar<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &quot;-&quot; MINUS<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;require Action;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+//imports grammar rule defined elsewhere</font></p>
+
+<p align="justify">
+<font face="Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Action&nbsp; : MINUS :: Minus</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+;</p>
+
+<p align="justify">
+<font face="Arial">We  place this grammar specification in a grammar 
+directory, and create a semantic directory to hold semantic actions.</font></p>
+
+<p align="justify">
+<font size="2" face="Courier">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+C:/ &gt; cd ahead/dsl/Kalc<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="file:///C:/fop/ahead/dsl/Kalc">C:/ahead/dsl/Kalc</a> &gt; mkdir 
+minusGram<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="file:///C:/fop/ahead/dsl/Kalc">C:/ahead/dsl/Kalc</a> &gt; mkdir 
+minusActions</font></p>
+
+<p align="justify">
+<font face="Arial">Place grammar.b into directory ahead/dsl/Kalc/minusGram. Next, we add extensions to the 
+equation. Enter  ahead/equation, open mycalc.equation, and add those two 
+layers to lt. The contents of the mycalc.equation is now, where <b>
+<font color="#FF0000">build/dsl/Kalc/calcGram</font></b> and
+<font color="#FF0000"><b>build/dsl/Kalc/minusGram</b></font> are <b>
+<a href="bali2layer.html">bali2jak</a></b> generated layers:</font></p>
+
+<p align="justify">
+<font face="Arial">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </font><font face="Courier" size="2">dsl/kernel<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dsl/Kalc/calcGram<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<font color="#FF0000">build/dsl/Kalc/calcGram</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dsl/Kalc/calcActions<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dsl/Kalc/minusGram<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<font color="#FF0000">build/dsl/Kalc/minusGram</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dsl/Kalc/minusActions</font></p>
+
+<p align="justify">
+<font face="Arial">Now we need to add actions. First, we need to generate a set 
+of classes in which to add actions. We run bali2layer again:</font></p>
+
+<p align="justify">
+<font face="Arial">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</font><font size="2" face="Courier">&nbsp;&nbsp;
+<a href="file:///C:/fop/ahead/dsl/Kalc/minus/semantic">
+C:/ahead/dsl/Kalc/minusActions</a> &gt; bali2layer</font></p>
+
+<p align="center">
+<font face="Arial">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<img border="0" src="images/HowTo2.jpg" width="353" height="390"></font></p>
+
+<p align="justify">
+<font face="Arial">Since we already have a Main class and already have kernel 
+class extensions with an execute method, 
+we do not generate them again.&nbsp; All we need is to add an execute method with 
+a stack argument in each minusGram class. Make selections 
+as in the figure above, and click &quot;<i><b>Generate!</b></i>&quot; button. </font></p>
+
+<p align="justify">
+<font face="Arial">We define the execute method of the Minus class to pop the 
+top two arguments on the stack, subtract them, and place the result on the 
+stack.<br>
+</font>
+<font face="Verdana" size="2">
+  <br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  
+  </font>
+<font face="Courier" size="2">
+  To Minus.jak:<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+public void execute(Stack S){ <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+	Integer arg1 = (Integer) S.pop();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+Integer arg2 = (Integer) S.pop();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+int result = arg2.intValue() - arg1.intValue();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+S.push(new Integer(result));<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+}</font></p>
+
+<p align="justify">
+<font face="Arial">The last step is to build this extended language. Run 
+command &quot;<i><b>ant -f mycalc.xml</b></i>&quot; to do so.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</font> </p>
+
+<pre>	<font face="Courier"><a href="file:///C:/fop/ahead">C:/ahead</a> &gt;java </font><font size="2" face="Courier">-jar build/lib/mycalc.jar</font><font face="Courier">
+	mycalc Started...
+
+	mycalc&gt; 1 3 -
+&nbsp;	&gt; .
+	-2 
+	mycalc&gt; 2 5 +
+&nbsp;	&gt; .
+	7</font></pre>
+<p align="justify"><font face="Arial">In this manner, it is 
+possible to define and compose Kalc components to build a family of 
+calculator-related languages in a modular manner. </font></p>
+
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#ffff00">
+  <tr>
+    <td WIDTH="788">
+      <h2>
+       <font face="Arial" color="#0000FF"><a name="Appendix">APPENDIX: Cautions 
+       to Take When Writing a Grammar</a></font></h2>
+    </td>
+  </tr>
+</table>
+
+<table BORDER="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FF00FF">
+  <tr>
+    <td WIDTH="766"><h3><font face="Arial" color="#FFFFFF">Left-recursive 
+    Grammar</font></h3>
+    </td>
+  </tr>
+</table>
+
+<p><font face="Arial"><span lang="zh-cn">The following grammar specifies 
+language of infix arithmetic. For simplicity, we only define one operator--&quot;-&quot;.</span></font></p>
+<blockquote>
+<blockquote>
+<pre style="margin-top: 2; margin-bottom: 1"><span lang="zh-cn"><font face="Arial">      </font><font size="2" face="Courier">//grammar1</font></span></pre>
+<pre style="margin-top: 2; margin-bottom: 1"><font face="Courier" size="2"><span lang="zh-cn">   Expr</span>	:<span lang="zh-cn"> Expr  &quot; - &quot; Term</span>  ::Expr		<span lang="zh-cn">(1)</span></font></pre>
+<pre style="margin-top: 2; margin-bottom: 1"><font face="Courier" size="2">	;   </font></pre>
+<pre style="margin-top: 2; margin-bottom: 1"><font face="Courier" size="2"><span lang="zh-cn">&nbsp;&nbsp;</span> <span lang="zh-cn">Term</span>	:<span lang="zh-cn"> INTEGER</span>    :: Integ                	(2)</font></pre>
+<pre style="margin-top: 2; margin-bottom: 1"><font face="Courier" size="2">  	;</font></pre>
+</blockquote>
+</blockquote>
+<p><font face="Arial">T<span lang="zh-cn">he left-hand 
+side</span> (Expr)<span lang="zh-cn"> appears in the beginning of the right-hand side</span> 
+in production (1)<span lang="zh-cn">. Production (1) is left-recursive. A 
+recursive-descend parser is a top-down parser, which starts parsing </span>
+production (1) <span lang="zh-cn">&nbsp;from the start production (In our example, production (1)). The 
+problem with such a parser is that if it sees a left-recursive production, it 
+will end up in an infinite loop. In order that JavaCC can accept the language of 
+arithmetic expression with only a minus operator, we should eliminate left 
+recursion and rewrite the grammar as follows:</span></font></p>
+<blockquote>
+<pre style="margin-top: 1; margin-bottom: 1"><span lang="zh-cn"><font face="Arial">            </font></span><font size="2" face="Verdana">   </font><font size="2" face="Courier"><span lang="zh-cn">//grammar2</span></font></pre>
+<pre style="margin-top: 1; margin-bottom: 1"><font face="Courier" size="2"><span lang="zh-cn">        Expr&nbsp;</span>   : <span lang="zh-cn">Term Expr</span>L<span lang="zh-cn">&nbsp;&nbsp;&nbsp;</span> ::<span lang="zh-cn">&nbsp;&nbsp;</span>Term	<span lang="zh-cn">(3)</span></font></pre>
+<pre style="margin-top: 1; margin-bottom: 1"><font face="Courier" size="2">                ;</font></pre>
+<pre style="margin-top: 1; margin-bottom: 1"><font face="Courier" size="2"><span lang="zh-cn">        Expr</span>L	:<span lang="zh-cn"> &quot;-&quot; Expr</span>     </font><font size="2"> </font><font face="Courier" size="2">:: Minus	<span lang="zh-cn">(4)</span></font></pre>
+<pre style="margin-top: 1; margin-bottom: 1"><font face="Courier" size="2">       		| EMPTY         :: Empty	(5)</font></pre>
+<pre style="margin-top: 1; margin-bottom: 1"><font face="Courier" size="2">        	;</font></pre>
+<pre style="margin-top: 1; margin-bottom: 1"><font face="Courier" size="2"><span lang="zh-cn">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Term</span>	:<span lang="zh-cn"> INTEGER</span>       :: Integ	<span lang="zh-cn">(</span>6<span lang="zh-cn">)</span></font></pre>
+<pre style="margin-top: 1; margin-bottom: 1"><font face="Courier">		;</font></pre>
+</blockquote>
+<p><font face="Arial"><span lang="zh-cn">This makes the grammar more complex</span>, 
+but it is necessary for top-down parsers.<span lang="zh-cn"> </span>
+</font></p>
+<p align="justify"><font face="Arial"><span lang="zh-cn">Production</span>s<span lang="zh-cn"> (3)</span>, 
+(4)<span lang="zh-cn"> and (</span>5<span lang="zh-cn">) are less intuitive to 
+their left-recursive counterpart. Also, it is </span> trickier<span lang="zh-cn"> 
+to add semantic actions for grammar2. Grammar1</span>  <span lang="zh-cn">defines subtraction to be 
+left-associative,&nbsp; thus evaluation of an expression can be done bottom-up. 
+Grammar2 defines subtraction to be right-associative. In order to evaluate such 
+a expression from left to right, one has to do it top-down and remember the 
+result computed so far. </span> </font></p>
+
+<table BORDER="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FF00FF">
+  <tr>
+    <td WIDTH="766"><h3><font face="Arial" color="#FFFFFF">&nbsp;Non-LL(K) 
+    Grammars</font></h3>
+    </td>
+  </tr>
+</table>
+
+<p align="justify"><font face="Arial">Bali grammars must be LL(k) grammars, 
+except in one case &#8213; when the right-hand side has a named and a unnamed rules 
+that begins with the same terminal or non-terminal &#8213; the
+<a href="bali2jak.html"><kbd>bali2jak</kbd></a> tool factors 
+the right-hand side automatically. The following is an example is a non-LL(k) 
+grammars that Bali allows:</font></p>
+
+<blockquote>
+
+<p align="justify"><font face="Arial">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</font><font size="2" face="Courier">Expr</font><font size="2" face="Courier"> : 
+Term<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Term &quot;+&quot; Element&nbsp;&nbsp;&nbsp;&nbsp; 
+::&nbsp;&nbsp;&nbsp; Plus<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;</font></p>
+
+</blockquote>
+
+<p align="justify"><font face="Arial">Readers are advised to take cautions when 
+writing grammar extensions. An extension grammar may make the composed grammar 
+illegal for <a href="bali2javacc.html"><kbd>bali2javacc</kbd></a>. For example, if in the base grammar, we have a rule as 
+above and we want add a rule in the extension grammar:</font></p>
+<p align="justify"><font face="Arial">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</font><font size="2" face="Courier">Expr : Term &quot;-&quot; Element&nbsp;&nbsp;&nbsp;&nbsp; 
+::&nbsp;&nbsp;&nbsp; Minus<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;</font></p>
+<p align="justify"><font face="Arial">The <a href="bali2javacc.html"><kbd>bali2javacc</kbd></a> tool does not accept the 
+composed rule</font></p>
+<blockquote>
+<p align="justify"><font face="Arial">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</font><font size="2" face="Courier">Expr : Term &quot;+&quot; Element&nbsp;&nbsp;&nbsp;&nbsp; 
+::&nbsp;&nbsp;&nbsp; Plus<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Term &quot;-&quot; Element&nbsp;&nbsp;&nbsp;&nbsp; 
+::&nbsp;&nbsp;&nbsp; Minus<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Term <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;&nbsp; </font></p>
+</blockquote>
+<p align="justify"><font face="Arial">In this case, rules in base and extension 
+grammar should rewritten. In the base grammar, we should factor &quot;Term&quot;, and add 
+an intermediate rule:</font></p>
+<blockquote>
+<div align="justify">
+  <pre style="margin-top: 1; margin-bottom: 1"><font face="Arial">            </font><font size="2" face="Courier">Expr	: Term PlusOrMinus	::  Expr</font></pre>
+</div>
+<div align="justify">
+  <pre style="margin-top: 1; margin-bottom: 1"><font face="Courier" size="2">&nbsp;&nbsp;&nbsp;		;  </font></pre>
+</div>
+<div align="justify">
+  <pre style="margin-top: 1; margin-bottom: 1"><font face="Courier" size="2">      PlusOrMinus  : &quot;+&quot; Element     ::    Plus</font></pre>
+</div>
+<div align="justify">
+  <pre style="margin-top: 1; margin-bottom: 1"><font face="Courier" size="2">                   ; </font></pre>
+</div>
+</blockquote>
+<p align="justify" style="margin-top: 1; margin-bottom: 1"><font face="Arial">
+The extension rule should be rewritten as:</font></p>
+<p align="justify" style="margin-top: 1; margin-bottom: 1">
+<font face="Verdana" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </font>
+</p>
+<blockquote>
+<p align="justify" style="margin-top: 1; margin-bottom: 1">
+<font face="Verdana" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</font><font size="2" face="Courier">PlusOrMinus&nbsp; : &quot;-&quot; Element&nbsp;&nbsp;&nbsp;&nbsp; 
+::&nbsp;&nbsp;&nbsp; Minus</font></p>
+<p align="justify" style="margin-top: 1; margin-bottom: 1">
+<font face="Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+; </font></p>
+</blockquote>
+
+<table BORDER="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FF00FF">
+  <tr>
+    <td WIDTH="766"><h3><font face="Arial" color="#FFFFFF">Inheritance 
+    Hierarchies</font></h3>
+    </td>
+  </tr>
+</table>
+
+<p><font face="Arial">Readers should pay special attention to the inheritance 
+hierarchies when writing an extension grammar. For example, in a base grammar, 
+we have a rule:</font></p>
+<blockquote>
+<p style="margin-top: 1; margin-bottom: 1"><font face="Arial">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</font><font size="2" face="Courier">Sum&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : Element 
+(&quot;+&quot; Element)* </font></p>
+<p style="margin-top: 1; margin-bottom: 1"><font face="Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+;</font></p>
+<p style="margin-top: 1; margin-bottom: 1"><font face="Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp; 
+Element&nbsp; : INTEGER&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+:: Integ</font></p>
+<p style="margin-top: 1; margin-bottom: 1"><font face="Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ; </font></p>
+</blockquote>
+<p style="margin-top: 0; margin-bottom: 0">&nbsp;</p>
+<p style="margin-top: 0; margin-bottom: 0"><font face="Arial">Suppose Element 
+only appears in the two rules above. The
+<a href="bali2jak.html"><kbd>bali2jak</kbd></a>
+tool generates the <b><i>Element 
+</i></b>class 
+as a subclass to <i><b>AstNode</b></i> class in kernel layer. If the following 
+rule is in an extension grammar and is to be composed:</font></p>
+<p style="margin-top: 0; margin-bottom: 0"><font face="Arial">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</font></p>
+<blockquote>
+<p style="margin-top: 0; margin-bottom: 0"><font face="Arial">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</font><font size="2" face="Courier">Term&nbsp;&nbsp;&nbsp; : Element</font></p>
+<p style="margin-top: 0; margin-bottom: 0"><font face="Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+;</font></p>
+</blockquote>
+<p style="margin-top: 0; margin-bottom: 0"><font face="Arial">The <a href="bali2jak.html"><kbd>bali2jak</kbd></a> tool 
+will generate the <i>Element</i> class as a subclass of <i><b>Term</b></i>. We advise that user 
+avoid such extensions. Instead, users can introduce an intermediate no-terminal in 
+the extension grammar as follows:</font></p>
+<p style="margin-top: 0; margin-bottom: 0">&nbsp;</p>
+<blockquote>
+<p style="margin-top: 0; margin-bottom: 0"><font face="Arial">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</font><font size="2" face="Courier">&nbsp;Term&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+: Element ::AnElement</font></p>
+<p style="margin-top: 0; margin-bottom: 0"><font face="Courier" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </font></p>
+</blockquote>
+
+<hr>
+<p><font face="Arial">
+<a href="index.html">&nbsp;</a></font><b><font face="Arial"><a href="index.html">ATS Home Page</a></font></b></p>
+<p><font face="Arial"><b>Copyright © Software Systems Generator Research Group. 
+All rights reserved.</b> <br>
+<b>Revised:&nbsp;<!--webbot bot="TimeStamp" s-format="%m/%d/%y" s-type="EDITED" startspan -->12/11/05<!--webbot bot="TimeStamp" endspan i-checksum="12873" -->.</b>
+</font></p>
+
+</body>
+</html>

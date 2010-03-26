@@ -1,0 +1,27 @@
+## Class_Title.vm
+## JEDI Project
+## HTML Template for the Class/Interface
+## Author: Roberto E. Lopez-Herrejon
+## Last update: November 30, 2002
+
+
+<TITLE> 
+
+ #if($isClassFlag == "true")
+  Class 
+ #end
+
+ #if($isInterfaceFlag == "true")
+  Interface  
+ #end
+
+ $class.name()  
+
+</TITLE> 
+
+
+## End of Class_Title.vm
+
+
+
+

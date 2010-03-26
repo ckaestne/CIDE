@@ -1,0 +1,16 @@
+## SinceTags.vm
+## JEDI Project
+## HTML Template for Since Tags
+## Author: Roberto E. Lopez-Herrejon
+## Last update: November 30, 2002
+
+#set($sinceText = $generator.fullTextComment($doc, "@since"))
+   #if ($sinceText != "")
+      <DT>
+      <B> Since  </B> &nbsp;
+      <DD> $sinceText </DD>
+      <BR>
+#end
+
+## End of SinceTags.vm
+

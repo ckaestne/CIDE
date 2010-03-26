@@ -1,0 +1,6 @@
+grammar = super.grammar dsl/java/SmGram
+
+jak2java   = super.jak2java   dsl/java/sm5
+bcjak2java = super.bcjak2java dsl/java/sm5 dsl/java/bcsm5
+jak2aj     = super.jak2aj     dsl/java/sm5 dsl/java/bcsm5
+jrename    = super.jrename    dsl/java/smError

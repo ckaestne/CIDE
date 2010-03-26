@@ -1,0 +1,56 @@
+## Class_Relationships.vm
+## JEDI Project
+## HTML Template for the Class/Interface
+## Author: Roberto E. Lopez-Herrejon
+## Last update: November 30, 2002
+
+<DL> 
+
+## -- Modifiers
+
+ <DT> $class.modifiers() 
+
+  #foreach($layoutElement in $layoutList)
+
+	<!-- $layoutElement  -->
+
+ 	#include($layoutElement)
+
+
+   #end     ## of for each
+
+	
+   <B> $class.name() 
+   </B> 
+ </DT>
+
+## --- End of Modifiers
+
+## --- Superclass
+
+\#if ($superclass.name() != "")
+ <DT> extends $superclass.name() </DT>
+\#end
+
+## --- End of Superclass
+
+
+## --- Interfaces 
+
+\#if ($interfaces == "true")
+<DT> implements 
+ \#foreach($interface in $listInterfaces)
+   $interface.name() &nbsp;  
+ \#end
+</DT>
+\#end
+
+## -- End of Interface 
+
+</DL>
+
+
+
+## End of Class_Relationship s.vm
+
+

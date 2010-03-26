@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Refinement for 'build.xml' -->
+<xr:refine xmlns:xr="http://www.atarix.org/xmlRefinement" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.atarix.org/xmlRefinement">
+	<!-- @Add this target which depends on "compile" -->
+	<xr:at select="//project">
+		<xr:append>
+			<target name="prebuild" depends="compile" description="Copy files to prepare WAR file generation">
+				<mkdir dir="${webapp.deploy}/${webapp.name}"/>
+				<!-- Copy public_html content -->
+				<copy todir="${webapp.deploy}/${webapp.name}">
+					<fileset dir="public_html">
+						<include name="**"/>
+					</fileset>
+				</copy>
+				<!-- Copy classes -->
+				<copy todir="${webapp.deploy}/${webapp.name}/WEB-INF/classes">
+					<fileset dir="classes">
+						<include name="**"/>
+					</fileset>
+				</copy>
+				<!-- Copy libs -->
+				<copy todir="${webapp.deploy}/${webapp.name}/WEB-INF/lib">
+					<fileset dir="lib">
+						<exclude name="servlet-api.jar"/>
+						<exclude name="struts.jar"/>
+					</fileset>
+				</copy>
+			</target>
+			<!-- @Add this target which depends on "prebuild" -->
+			<target name="build" depends="prebuild" description="Generate packaged WAR file">
+				<!-- Create War -->
+				<zip destfile="${webapp.deploy}/${webapp.name}.war" basedir="${webapp.deploy}/${webapp.name}"/>
+			</target>
+			<!-- @Add this target which depends on "build" -->
+			<target name="deploy" depends="build" description="Generate packaged WAR file">
+				<delete dir="${tomcat.home}/webapps/${webapp.name}"/>
+				<delete file="${tomcat.home}/webapps/${webapp.name}.war"/>
+				<copy todir="${tomcat.home}/webapps" file="${webapp.deploy}/${webapp.name}.war"/>
+			</target>
+		</xr:append>
+	</xr:at>
+	<!-- @Override this target (change dependencies)  -->
+	<xr:at select="//project">
+		<xr:override select="target[@name='all']">
+			<target name="all" depends="deploy" description="Make All"/>
+		</xr:override>
+	</xr:at>
+</xr:refine>

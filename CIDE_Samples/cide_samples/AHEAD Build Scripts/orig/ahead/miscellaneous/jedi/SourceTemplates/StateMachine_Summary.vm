@@ -1,0 +1,11 @@
+## StateMachine_Summary.vm
+## JEDI Project
+## HTML Template for a State machine Summary
+## Author: Roberto E. Lopez-Herrejon
+## Last update: November 11, 2002
+
+#parse("SourceTemplates/MethodDetailsSm.vm")
+#parse("SourceTemplates/ConstructorDetailsSm.vm")
+#parse("SourceTemplates/FieldDetailsSm.vm")
+
+## End of StateMachine_Summary.vm

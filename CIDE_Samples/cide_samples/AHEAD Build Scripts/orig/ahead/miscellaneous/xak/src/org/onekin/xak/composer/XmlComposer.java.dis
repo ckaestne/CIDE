@@ -1,0 +1,284 @@
+/*
+ * Created on 19-mar-2005
+ *
+ */
+package org.onekin.xml.composer;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.util.ArrayList;
+
+import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
+import org.onekin.xml.refinement.XmlRefinement;
+
+/**
+ * @author Salva
+ *
+ */
+public class XmlComposer 
+{    
+    // Define a static logger variable so that it references the
+    // Logger instance named "XmlComposer".
+    static Logger logger = Logger.getLogger(XmlComposer.class);     
+    /**
+     * Private fields
+     */
+    private String _sEquationName ;
+    //private File _fEquation ;
+    
+    // private String _sArtifactName ;
+
+    private String _sLayersBaseDir ;
+    private String _sXRefineHome ;
+    
+    private ArrayList _layers ;
+    private String[] _sExtensions = new String[]{".xml",".jsp",".tld",".rdf",".xsl",".xslt",".xcd",".xsd",".xcf",".MF",".scxml"} ;
+    
+    /**
+     * 
+     */
+    public XmlComposer(String sEquationName, String sArtifactName, 
+                       String sLayersBaseDir, String sXRefineHome)
+    {     
+        _sEquationName = sEquationName ;
+        // Este hay que quitar para generalizar        
+        // _sArtifactName = sArtifactName ;        
+        
+        _sLayersBaseDir = sLayersBaseDir ;        
+        _sXRefineHome = sXRefineHome ;
+        try {
+            File fPathLayers = new File (_sLayersBaseDir) ;
+            _sLayersBaseDir = fPathLayers.getCanonicalPath() ;
+            System.out.println("_sLayersBaseDir = " + _sLayersBaseDir) ;
+
+            File fPathXRefineHome = new File (_sXRefineHome) ;
+            _sXRefineHome = fPathXRefineHome.getCanonicalPath() ;
+            System.out.println("_sXRefineHome = " + _sXRefineHome) ;            
+            
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+        this.initLogger() ;
+        File fEquation = new File (_sLayersBaseDir + File.separator + _sEquationName + ".equation") ;
+        LayerEquation _layerEquation = new LayerEquation (fEquation) ;
+        _layers = _layerEquation.getLayers() ;
+        return ;
+    }
+    /**
+     * This method composes equation
+     * @return
+     */
+    public boolean compose () 
+    {
+        String sExtensions = "" ;
+        for (int i = 0; i < _sExtensions.length; i++)
+        {
+            sExtensions += _sExtensions[i] ;
+            if ((_sExtensions.length + 1) != i) sExtensions += " | " ;            
+        }
+        logger.debug("Composing LAYERS [Extensions: " + sExtensions + "]") ;
+        FileSearcher fs = new FileSearcher (_sExtensions) ;
+        String sBaseLayer = _sLayersBaseDir + File.separator + _layers.get(0) ;
+        String sEndLayer = _sLayersBaseDir + File.separator + _sEquationName ;
+
+        // First, remove artifacts copied by Batory's composer. This a problem because it keeps the last file
+        // in the layer hierarchy. So, inconsistent xr:Refine files remain, and produces problem while trying to refine.
+        ArrayList artifactEndLayerList = fs.search(sEndLayer) ;
+        for (int i = 0; i < artifactEndLayerList.size(); i++)
+        {
+            File fileRemove = (File)artifactEndLayerList.get(i) ;
+            try
+            {
+                String sFileName = fileRemove.getCanonicalPath() ;
+                if (fileRemove.delete()) logger.debug("DELETE Artifact: '"+ sFileName + "'") ;
+                else logger.debug("Some problems when removing artifact: '"+ sFileName + "'") ;            
+            }
+            catch (Exception e)
+            {
+                logger.debug("Some problems when removing artifacts") ;
+            }                        
+        }
+        // Copy initial files in BASE LAYER to END LAYER
+         // Search for files to be refined in BASE LAYER        
+        ArrayList artifactList = fs.search(sBaseLayer) ;
+        logger.debug("BASE artifacts:") ;
+        for (int i = 0; i < artifactList.size(); i++)
+        {
+            logger.debug(String.valueOf(i) + ": '" + artifactList.get(i) + "'") ;
+        }
+         // Copy filtered files in BASE LAYER to END LAYER
+        this.copyArray(artifactList, sBaseLayer, sEndLayer) ;
+        // Search artifacts to refine in END-LAYER
+        artifactList = fs.search(sEndLayer) ;
+
+        // Then, refine layers artifacts        
+        XmlRefinement xmlref = new XmlRefinement (_sXRefineHome) ;
+        try 
+        {
+	        // For each layer
+	        if (_layers.size()>0) 
+	            for (int i = 1; i < _layers.size(); i++)
+	        {	            
+	            // Search for files/artifacts to be refined in i LAYER            
+	            ArrayList artifactListLayer = fs.search(_sLayersBaseDir + File.separator + _layers.get(i)) ;
+	            // For each refinable artifact
+	            logger.debug("COMPOSING LAYER [i: " + String.valueOf(i) + " | name: " + _layers.get(i) +
+	            			 " | Artifacts number: " + String.valueOf(artifactListLayer.size()) + "]" ) ;
+	            for (int j = 0; j < artifactListLayer.size(); j++)
+	            {	                
+	                // if artifact in base -> refine
+	                File fBaseArtifact ;
+	                // logger.debug("file ") ;
+	                File fRefineArtifact = (File)artifactListLayer.get(j) ;
+	                logger.debug("Artifact Refinement [j: " + String.valueOf(j) + File.separator + String.valueOf(i) + 
+	                             "] [file: '" + fRefineArtifact.getName() + "']") ;
+	                if ((fBaseArtifact=isArtifact(fRefineArtifact,artifactList))!=null)
+	                {
+	                    // Refine it	                    
+	                    String sRefineFile = fRefineArtifact.getCanonicalPath() ;
+	                    String sOutputFile = fBaseArtifact.getCanonicalPath() ;
+	                    logger.debug("REFINING file: '"  + fRefineArtifact.getCanonicalPath() + "'") ;	                    
+	                    xmlref.refine(sOutputFile, sRefineFile, sOutputFile) ;                  
+	                }
+	                else // if not in base -> copy to base
+	                {
+	                    String sRefineFile = fRefineArtifact.getCanonicalPath() ;
+	                    String sRefineDir = _sLayersBaseDir + File.separator + _layers.get(i) ;
+	                    String sRelativePathFile = this.getRelativePath(sRefineFile, sRefineDir) ;
+	                    String sOutputFile = sEndLayer + sRelativePathFile ;	                    
+	                    File fileEndArtifact = new File (sOutputFile) ;
+	                    logger.debug("COPYING (not in Base file)") ; 
+	                    this.copy(fRefineArtifact, fileEndArtifact) ;
+	                    // Add to refinable artifact List >>> 
+	                    artifactList.add(fileEndArtifact) ;	                    
+	                }                                
+	            }                        
+	        }
+        } catch (Exception e) {
+            System.out.println("Some error happened while refining");
+            logger.debug("Some error happened while refining");
+        }
+        return true ;
+    }
+    /**
+     * This method compares two string (file paths) and returns its difference
+     * @param sFile
+     * @param sDir
+     * @return String
+     */
+    public String getRelativePath (String sFile, String sDir)
+    {   
+        logger.debug("sFile: " + sFile) ;
+        logger.debug("sDir:  " + sDir) ;
+        if (sFile.startsWith(sDir))
+        {
+            int index = sFile.compareTo(sDir) ;
+            String sRelative = sFile.substring(sDir.length()) ;
+            logger.debug("sRelative:  " + sRelative) ;
+            return sRelative ;
+            // return sFile.substring(sDir.length()) ;
+        }                
+        return null ;
+    }
+    /**
+     * This method checks whether a given artifact file is in the given list
+     * @param fileArtifact File This param indicates file artifact
+     * @param arrayList This param contains an array of file artifact
+     * @return File The method returns the artifact in the array that match with fileArtifact
+     */
+    public File isArtifact (File fileArtifact, ArrayList arrayList)
+    {
+        String sArtifactFileName = fileArtifact.getName() ;
+        for (int i = 0; i < arrayList.size(); i++)
+        {
+            File fileCurrent = (File)arrayList.get(i) ;
+            String sCurrentArtifactFileName = fileCurrent.getName() ;
+            logger.debug("Is '" + fileCurrent.getAbsolutePath() + "' equal to '" + fileArtifact.getAbsolutePath() + "' ??") ;
+            logger.debug("Is '" + sCurrentArtifactFileName + "' equal to '" + sArtifactFileName + "' ??") ;
+            if (sArtifactFileName.equalsIgnoreCase(sCurrentArtifactFileName)) return fileCurrent ;
+        }
+        return null ;
+    }
+    /**
+     * This method copies an array of files (with complete path) from 
+     * a given source directory to another given destination directory
+     * @param arrayList ArrayList The array of files File
+     * @param sSourceDir String The source directory
+     * @param sDestinationDir String The destination directory
+     * @return boolean
+     */    
+    private boolean copyArray (ArrayList arrayList, String sSourceDir, String sDestinationDir)
+    {
+        for (int i = 0; i < arrayList.size(); i++)
+        {
+            File fSourceFile = (File) arrayList.get(i) ;
+            String sSourceFile = fSourceFile.getAbsolutePath() ;
+            String sRelativePathFile = this.getRelativePath(sSourceFile, sSourceDir) ;
+            String sDestinationFile = sDestinationDir + File.separator + sRelativePathFile ;
+            File fDestinationFile = new File (sDestinationFile) ;          
+            try 
+            {
+                this.copy(fSourceFile, fDestinationFile) ;   
+            } 
+            catch (Exception e) {
+                logger.error ("Some error occurs while copying file '" + sSourceFile + "' to file: '" + sDestinationFile) ;
+            }
+        }
+        return true ;
+    }
+    /**
+     * This method copies source file to destination
+     * @param fIn
+     * @param fOut
+     * @return
+     * @throws Exception
+     */
+    public boolean copy(File fIn, File fOut) throws Exception 
+    {
+        logger.debug("COPYING file: '" + fIn.getAbsolutePath() + "'\n     to file: '" + fOut.getAbsolutePath()) ;
+        FileInputStream fis  = new FileInputStream(fIn);
+        FileOutputStream fos = new FileOutputStream(fOut);
+        byte[] buf = new byte[1024];
+        int i = 0;
+        while((i=fis.read(buf))!=-1) {
+          fos.write(buf, 0, i);
+          }
+        fis.close();
+        fos.close();
+        return true ;
+        }  
+    /**
+     * This method logs a message
+     * @param sMessage
+     * @deprecated
+     */
+/*    public String log (String sMessage)
+    {
+        System.out.println(sMessage+"\n");
+        return sMessage ;
+    } */
+    /**
+     * This method initializes logger
+     */
+    private void initLogger () 
+    {
+      // Initialize + Configure Logger 
+      String sLog4JFile = _sXRefineHome + "/log/log4j.properties" ;
+      PropertyConfigurator.configure(sLog4JFile) ;
+      logger.debug("Logger Conf File [file name: " + sLog4JFile + "']");
+      return ;
+    }
+    public static void main(String[] args)
+    {        
+        System.out.println("Equation name is: \"" + args[0] + "\"") ;
+        System.out.println("Artifact filter is: \"" + args[1] + "\"") ;
+        System.out.println("Layers Base dir is: \"" + args[2] + "\"") ;
+        System.out.println("XRefine home dir is: \"" + args[3] + "\"\n") ;
+        // Add if-else to check in-params
+        XmlComposer xmlComposer = new XmlComposer (args[0],args[1],args[2],args[3]) ;        
+        xmlComposer.compose() ;
+    }
+    
+}

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema
+  xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+<!-- Schema definition for XML Composition Tool Function Refinements -->
+ 
+<!-- Last Update: June 20, 2003 4 pm -->
+
+<!-- Features:
+  * Allows mixed contents insider after, replace, instead
+-->
+
+<!-- function element -->
+<xs:element name="function">
+  <xs:complexType>
+     <xs:sequence minOccurs="1">
+        <!-- Choice one of the following refinement types -->
+        <xs:choice minOccurs="0" maxOccurs="unbounded"> 
+	   <xs:element ref="refine"/> 
+           <xs:element ref="before"/> 
+           <xs:element ref="replace"/>
+           <xs:element ref="after"/>
+        </xs:choice> 
+     </xs:sequence>
+  </xs:complexType>
+</xs:element>
+
+<!-- refine element -->
+<xs:element name="refine">
+ <xs:complexType>
+  <!-- Body of refine has only one element of any type         -->
+  <!-- This is the way to add new tags to the refined elements -->
+  <!-- For now I dont validate the super tag here              -->
+  <xs:sequence>	
+   <xs:any minOccurs="1" maxOccurs="1" processContents="skip"/>
+  </xs:sequence>
+
+  <!-- Attributes path, tag, and separator -->
+  <xs:attribute name="path" type="xs:string" use="required"/>
+  <xs:attribute name="tag" type="tagPolicy" use="optional"/>
+  <xs:attribute name="separator" type="xs:string" use="optional"/> 
+ </xs:complexType>
+</xs:element>
+
+<!-- defines the types of tag policies to be append, prepend, override -->
+<xs:simpleType name="tagPolicy">
+ <xs:restriction base="xs:string">
+   <xs:pattern value="append|prepend|override"/>
+ </xs:restriction>
+</xs:simpleType>
+	
+<!-- before element -->
+<xs:element name="before">
+ <xs:complexType mixed="true">
+  <!-- It can have any body inside -->
+  <xs:sequence>
+    <xs:any maxOccurs="unbounded" processContents="skip"/>
+  </xs:sequence>
+
+  <!-- Attribute -->
+  <xs:attribute name="path" type="xs:string" use="required"/>
+ </xs:complexType>
+</xs:element>
+
+
+<!-- after element -->
+<xs:element name="after">
+ <xs:complexType mixed="true">
+  <!-- It can have any body inside -->
+  <xs:sequence>
+    <xs:any maxOccurs="unbounded" processContents="skip"/>
+  </xs:sequence>
+
+  <!-- Attribute -->
+  <xs:attribute name="path" type="xs:string" use="required"/>
+ </xs:complexType>
+</xs:element>
+
+<!-- replace element -->
+<xs:element name="replace">
+ <xs:complexType mixed="true">
+  <!-- It can have any body inside -->
+  <xs:sequence> 
+    <xs:any maxOccurs="unbounded" processContents="skip"/>
+  </xs:sequence> 
+
+  <!-- Attribute -->
+  <xs:attribute name="path" type="xs:string" use="required"/>
+  </xs:complexType>
+</xs:element>
+
+</xs:schema>

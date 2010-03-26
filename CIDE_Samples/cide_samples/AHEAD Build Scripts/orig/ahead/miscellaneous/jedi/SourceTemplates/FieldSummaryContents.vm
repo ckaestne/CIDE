@@ -1,0 +1,25 @@
+## FieldSummaryContents.vm
+## JEDI Project 
+## Author: Roberto E. Lopez-Herrejon
+## Last update: November 30, 2002
+
+
+#foreach($field in $listFields)
+<TR BGCOLOR="white" CLASS="TableRowColor"> 
+	<TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	<FONT SIZE="-1"> 
+	<CODE> $field.modifiers() $field.type() </CODE> 
+	</FONT>	
+	</TD> 
+	<TD>
+	<CODE> <B> $field.name() </B> </CODE> 
+ 	<BR> $field.comment().textFirstSentenceTags()
+ 	</TD> 	
+</TR> 
+#end
+
+## End of FieldSummaryContents.vm
+
+
+
+

@@ -1,0 +1,146 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Bali 2</title>
+</head>
+
+<body>
+
+<h1 align="center"><font face="Arial" color="#0000FF">The Bali Matrix</font></h1>
+
+<p align="left"><font face="Arial">The Bali Matrix is a two-dimensional Origami 
+matrix that is used to synthesize the bali2jak, bali2javacc, balicomposer, and 
+bali2layer tools.&nbsp; This is the simplest of the two origami matrices used in 
+building AHEAD.</font></p>
+
+<p align="left"><font face="Arial">The Bali Matrix is shown below:</font></p>
+<div align="center">
+  <center>
+  <table border="1" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111">
+    <tr>
+      <td width="183">&nbsp;</td>
+      <td width="183"><font face="Arial" color="#0000FF">Base</font></td>
+      <td width="166"><font face="Arial" color="#0000FF">CodeGen</font></td>
+      <td width="210"><font face="Arial" color="#0000FF">Bali2jak</font></td>
+      <td width="193"><font face="Arial" color="#0000FF">bali2javacc</font></td>
+      <td width="202"><font face="Arial" color="#0000FF">BaliComposer</font></td>
+      <td width="198"><font face="Arial" color="#0000FF">bali2layer</font></td>
+    </tr>
+    <tr>
+      <td width="183"><font face="Arial" color="#0000FF">Core</font></td>
+      <td width="183"><font face="Arial">dsl/kernel <br>
+      <b>build/bali/bali </b><br>
+      dsl/bali/bali <br>
+      dsl/bali/visitor <br>
+      dsl/bali/collect </font></td>
+      <td width="166"><font face="Arial">dsl/support/codegen</font></td>
+      <td width="210"><font face="Arial">dsl/bali/bali2jak</font></td>
+      <td width="193"><font face="Arial">dsl/bali/bali2javacc</font></td>
+      <td width="202"><font face="Arial">dsl/bali/composer</font></td>
+      <td width="198"><font face="Arial">dsl/bali/bali2layerOptions<br>
+      dsl/bali/bali2layer<br>
+      dsl/bali/bali2layerGUI</font></td>
+    </tr>
+    <tr>
+      <td width="183"><font face="Arial" color="#0000FF">withRequireFeature</font></td>
+      <td width="183"><font face="Arial"><b>build/bali/require</b><br>
+      dsl/bali/require</font></td>
+      <td width="166">&nbsp;</td>
+      <td width="210"><font face="Arial">dsl/bali/requireComposer</font></td>
+      <td width="193"><font face="Arial">dsl/bali/requireBali2javacc</font></td>
+      <td width="202"><font face="Arial">dsl/bali/requireComposer</font></td>
+      <td width="198">&nbsp;</td>
+    </tr>
+    <tr>
+      <td width="183"><font face="Arial" color="#0000FF">withoutRequireFeature</font></td>
+      <td width="183">&nbsp;</td>
+      <td width="166">&nbsp;</td>
+      <td width="210">&nbsp;</td>
+      <td width="193">&nbsp;</td>
+      <td width="202">&nbsp;</td>
+      <td width="198">&nbsp;</td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p align="left"><font face="Arial">The <b>bold</b> names denote layers that are 
+generated.</font></p>
+<h1 align="center"><b><font face="Arial" color="#0000FF">Dimensional Equations</font></b></h1>
+<p align="left"><font face="Arial">A tool is specified by a pair of dimensional 
+equations.&nbsp; One equation defines the language dialect (i.e., a composition 
+of rows), the other defines the tool itself (i.e., a composition of columns).</font></p>
+<p align="left"><font face="Arial">There are only two language dialects:</font></p>
+<ul>
+  <li>
+  <p align="left"><font face="Arial">With = Core withRequireFeature</font></li>
+  <li>
+  <p align="left"><font face="Arial">Without = Core withoutREquireFeature</font></li>
+  <li>
+  <p align="left"><font face="Arial">Note: the first term (Core) is the 
+  inner-most in an AHEAD equation.&nbsp; (This is a legacy decision of AHEAD 
+  that continues to haunt me).</font></li>
+</ul>
+<p align="left"><font face="Arial">There are 4 tool equations, again the first 
+term (Base) is the innermost term of AHEAD expression.</font></p>
+<ul>
+  <li><font face="Arial">bali2layer tool = Base CodeGen bali2layer</font></li>
+  <li><font face="Arial">bali2javacc Tool = Base CodeGen bali2javacc</font></li>
+  <li><font face="Arial">bali2layer tool = Base CodeGen bali2layer </font></li>
+  <li><font face="Arial">baliComposer Tool = Base composer</font></li>
+</ul>
+<p><font face="Arial">So, to see the matrix that is folded (summed) to produce 
+the <b>bali2layer</b> tool for the With language: take the above matrix, remove 
+the unneeded columns and rows:</font></p>
+<div align="center">
+  <center>
+  <table border="1" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111">
+    <tr>
+      <td width="5">&nbsp;</td>
+      <td width="1"><font face="Arial" color="#0000FF">Base</font></td>
+      <td width="1"><font face="Arial" color="#0000FF">CodeGen</font></td>
+      <td width="85"><font face="Arial" color="#0000FF">bali2layer</font></td>
+    </tr>
+    <tr>
+      <td width="5"><font face="Arial" color="#0000FF">Core</font></td>
+      <td width="1"><font face="Arial">dsl/kernel <br>
+      <b>build/bali/bali </b><br>
+      dsl/bali/bali <br>
+      dsl/bali/visitor <br>
+      dsl/bali/collect </font></td>
+      <td width="1"><font face="Arial">dsl/support/codegen</font></td>
+      <td width="85"><font face="Arial">dsl/bali/bali2layerOptions<br>
+      dsl/bali/bali2layer<br>
+      dsl/bali/bali2layerGUI</font></td>
+    </tr>
+    <tr>
+      <td width="5"><font face="Arial" color="#0000FF">withRequireFeature</font></td>
+      <td width="1"><font face="Arial"><b>build/bali/require</b><br>
+      dsl/bali/require</font></td>
+      <td width="1"></td>
+      <td width="85">&nbsp;</td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p><font face="Arial">Next, either sum the rows, then columns:</font></p>
+<blockquote>
+  <p><font face="Arial">bali2layer = dsl/kernel <b>build/bali/bali </b>dsl/bali/bali 
+  dsl/bali/visitor dsl/bali/collect <b>build/bali/require</b> dsl/bali/require 
+  dsl/support/codegen dsl/bali/bali2layerOptionsdsl/bali/bali2layer dsl/bali/bali2layerGUI</font></p>
+</blockquote>
+<p><font face="Arial">OR equivalently, sum the columns and then the rows:</font></p>
+<blockquote>
+  <p><font face="Arial">bali2layer = dsl/kernel <b>build/bali/bali </b>dsl/bali/bali 
+  dsl/bali/visitor dsl/bali/collect dsl/support/codegendsl/bali/bali2layerOptionsdsl/bali/bali2layerdsl/bali/bali2layerGUi
+  <b>build/bali/require</b>dsl/bali/require</font></p>
+</blockquote>
+<p><font face="Arial">It is this equivalence of the above two equations that 
+needs to be proven/demonstrated.</font></p>
+
+</body>
+
+</html>

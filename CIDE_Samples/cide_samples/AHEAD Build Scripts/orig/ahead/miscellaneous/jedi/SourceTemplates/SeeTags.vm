@@ -1,0 +1,20 @@
+## SeeTags.vm
+## JEDI Project
+## HTML Template for See Tags
+## Author: Roberto E. Lopez-Herrejon
+## Last update: November 30, 2002
+
+#set($counter = 0)
+#foreach($sees in $doc.comment().seeTags())
+    #if ($counter == 0)
+	<DT> <B> See also </B> 
+    #end
+    <DD>
+    $sees.text() 
+    
+    #set($counter = $counter + 1)
+#end
+
+
+## End of SeeTags.vm
+

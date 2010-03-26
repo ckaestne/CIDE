@@ -1,0 +1,13 @@
+## Overrides.vm
+## JEDI Project
+## Author: Roberto E. Lopez-Herrejon
+## Last update: November 30, 2002
+
+ ## From Base
+  #if ($isOverridesFlag == "true")
+    overrides	
+  #end
+
+
+## End of Overrides.vm
+

@@ -1,0 +1,21 @@
+## Class_Interface.vm
+## JEDI Project
+## Author: Roberto E. Lopez-Herrejon
+## Last update: November 30, 2002
+
+<H2> 
+ #if($isClassFlag == "true")
+  <B> Class </B>
+ #end
+
+ #if($isInterfaceFlag == "true")
+  <B> Interface </B>
+ #end
+   $class.name() 
+</H2>
+
+## End of Class_Interface.vm
+
+
+
+

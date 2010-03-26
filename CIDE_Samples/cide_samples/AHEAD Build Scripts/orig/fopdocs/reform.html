@@ -1,0 +1,254 @@
+
+
+<head>
+<title>The reform (Pretty Printing) Tool</title>
+</head>
+
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%">
+  <tr>
+    <td WIDTH="78">
+    <img border="0" src="images/FopButton3.jpg" width="80" height="64"></td>
+    <td WIDTH="688" BGCOLOR="#00FFFF"><h3><font size="+3" color="#8000FF" face="Arial">The 
+       
+      Reform (Pretty Printing) Tool</font></h3>
+    </td>
+  </tr>
+</table>
+
+<p><b><font face="Arial">Reform</font></b><font face="Arial"> is a tool that formats <b>.java</b> 
+and <b>.jak  
+</b>files to produce prettier versions of these files  
+according to a uniform format specified by users.&nbsp;This document  
+discusses detailed use and features of <b>Reform</b>.</font></p> 
+<ul> 
+  <li><font face="Arial"><a href="#FormatTool Features"><i>Reform features</i></a></font> 
+    <ul> 
+      <li><font face="Arial"><a href="#Indentation"><i>Indentation</i></a></font></li> 
+      <li><font face="Arial"><a href="#Parenthesis Style"><i>Parenthesis Style</i></a></font></li> 
+      <li><font face="Arial"><a href="#Brace Style"><i>Brace Style</i></a></font></li> 
+      <li><font face="Arial"><a href="#Comments Processing"><i>Comments
+        Processing</i></a></font></li> 
+    </ul> 
+  </li> 
+  <li><font face="Arial"><a href="#Architecture"><i>Architecture</i></a></font></li> 
+  <li><font face="Arial"><a href="#command-line options"><i>Command-line options</i></a></font></li>
+</ul>
+
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FFFF00">
+  <tr>
+    <td WIDTH="788"><h2><font face="Arial"><a href="#FormatTool Features" name="FormatTool features">
+    Reform 
+      features</a></font></h2>
+    </td>
+  </tr>
+</table>
+
+<p><font face="Arial">Features of Reform include indentation, parenthesis
+style transformation, brace style transformation and comments processing.</font></p>
+  
+<table BORDER="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FF00FF">  
+  <tr>  
+    <td WIDTH="766"><h3><a name="Indentation"><font face="Arial" color="#FFFFFF">Indentation</font></a></h3>  
+    </td>  
+  </tr>  
+</table>  
+  
+<p><font face="Arial">The tool will determine places in source files where
+indentations are needed and generate a Tab indent for each place. Users can
+specify the desired tabular size of the source code to process with <a href="#command-line options">command-line
+options</a>, and each Tab indent will be replaced with the specified number of
+white spaces. (Our experiences have indicated that around 4 spaces for
+indentation is optimal)</font></p>  
+<p><font face="Courier New">public class Preferences {<br>
+---&gt;//~ Constructors
+............................................................<br>
+<br>
+---&gt;private Preferences() {}<br>
+<br>
+---&gt;//~ Methods
+.................................................................<br>
+<br>
+---&gt;public static void main( String[] args ) {<br>
+-------&gt;int s;<br>
+-------&gt;for (int i=1; i&lt;10; i++) {<br>
+-----------&gt;s += i;<br>
+-------&gt;}<br>
+.................................................................<br>
+---&gt;}<br>
+}<br>
+</font></p>
+  
+<table BORDER="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FF00FF">  
+  <tr>  
+    <td WIDTH="766"><h3><a name="Parenthesis Style"><font face="Arial" color="#FFFFFF">Parenthesis
+      Style</font></a></h3>  
+    </td>  
+  </tr>  
+</table>  
+  
+<p><font face="Arial">This feature applies to parentheses in expressions and
+method invocations. One white space will be inserted after an open parenthesis
+and before a close parenthesis.</font></p>  
+<p><font face="Courier New">n = a * ( b + c );</font></p>
+<p><font face="Courier New">String s = line.substring( i, i+2 );</font></p>
+<p><font face="Courier New">Foo aFoo = new Foo();<br>
+</font></p>
+  
+<table BORDER="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FF00FF">  
+  <tr>  
+    <td WIDTH="766"><h3><a name="Brace Style"><font face="Arial" color="#FFFFFF">Brace
+      Style</font></a></h3>  
+    </td>  
+  </tr>  
+</table>  
+  
+<p><font face="Arial">This feature controls how the enclosing block delimeters -
+opening and closing curly brace - are printed. It uses the Sun indent style.</font></p>  
+<p><font face="Courier New">if ( !isDone ) <span class="bold"><b>{</b></span>&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp; doSomething();&nbsp;&nbsp;<br>
+<span class="bold"><b>}</b></span><br>
+else <span class="bold"><b>{</b></span><br>
+&nbsp;&nbsp;&nbsp; System.err.println( &quot;Finished&quot; );&nbsp;&nbsp;&nbsp;<br>
+<span class="bold"><b>}</b></span><br>
+</font></p>
+  
+<table BORDER="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FF00FF">  
+  <tr>  
+    <td WIDTH="766"><h3><a name="Comments Processing"><font face="Arial" color="#FFFFFF">Comments
+      Processing</font></a></h3>  
+    </td>  
+  </tr>  
+</table>  
+  
+<p><font face="Arial">Comments have two types: stand-alone comments which takes
+one or more lines or in-line (or end-of-the-line) comments. For in-line
+comments, the tool will keep them unchanged; for stand-alone comments, the toll
+will align them up to the corresponding code segments.</font></p>  
+<p><font face="Courier New">---&gt;// calculate Method&nbsp;<br>
+---&gt;// this method calculates the sum of<br>
+---&gt;// first n positive integers<br>
+---&gt;public int calculate( int n ) {<br>
+-------&gt;int sum = 0;<br>
+-------&gt;// test if n is less than 1;<br>
+-------&gt;// if so return immediately<br>
+-------&gt;if ( n &lt; 1 )<br>
+-----------&gt;return sum;<br>
+-------&gt;for (int i=1; i&lt;=n; i++) {&nbsp; //loop from 1 to n<br>
+-----------&gt;sum += i;<br>
+-------&gt;}<br>
+-------&gt;return sum;<br>
+---&gt;}</font></p>
+<p><font face="Arial">JavaDoc comments, which are stand-alone comments, are
+comments that start with &quot;/**&quot; and end with &quot;*/&quot;. If <i>layer-name
+(-n)</i> option is set (see <a href="#command-line options">command-line options</a>),
+the tool will detect JavaDoc comments and augment it with <i>@layer&lt;layer-name&gt;</i>
+decoration, if such a decoration does not exist already. For example,&nbsp;</font></p>
+<p><font face="Courier New">/** ...........<br>
+&nbsp;*&nbsp; ...........<br>
+&nbsp;*/</font></p>
+<p><font face="Courier New"><br>
+</font><font face="Arial">will be re-written as</font></p>
+<p><font face="Courier New">/** ...........<br>
+&nbsp;*&nbsp; ...........<br>
+&nbsp;*@layer&lt;<i>layer-name</i>&gt;<br>
+&nbsp;*/</font></p>
+  
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FFFF00">  
+  <tr>  
+    <td WIDTH="788"><h2><font face="Arial" color="#0000FF"><a name="Architecture">Architecture</a></font></h2> 
+    </td> 
+  </tr> 
+</table> 
+ 
+<p><font face="Arial">Reform is written in a layered-structure. Since the  
+tool must handle source files of different grammars, a layer is constructed for  
+each grammar. Besides these grammar-specific layers, the tool also contain a non  
+grammar-specific layer to perform some common tasks.</font></p> 
+<ul> 
+  <li><font face="Arial">Non grammar-specific layer</font> 
+    <ul> 
+  <li><font face="Arial"><i>FormatBase</i></font>: <font face="Arial">establishes  
+    the framework of the tool and handles tasks that are common to all grammars,  
+    e.g. command line argument processing</font></li> 
+    </ul> 
+  </li> 
+  <li><font face="Arial">Grammar-specific layers</font> 
+    <ul> 
+  <li><font face="Arial"><i>FormatJava</i></font>: <font face="Arial">specifies  
+    actions for formatting <i>Java</i> grammar code</font></li> 
+  <li><font face="Arial"><i>FormatAst</i></font>: <font face="Arial">specifies  
+    actions for formatting <i>ast</i> grammar code</font></li> 
+  <li><font face="Arial"><i>FormatGscope</i></font>: <font face="Arial">specifies  
+    actions for formatting <i>gscope</i> grammar code</font></li> 
+  <li><font face="Arial"><i>FormatAhead</i></font>: <font face="Arial">specifies  
+    actions for formatting <i>Ahead</i> grammar code</font></li> 
+  <li><font face="Arial"><i>FormatSource</i></font>: <font face="Arial">specifies  
+    actions for formatting <i>Source</i> grammar code</font></li> 
+  <li><font face="Arial"><i>FormatLocalId</i></font>: <font face="Arial">specifies  
+    actions for formatting <i>LocalId</i> grammar code</font></li> 
+  <li><font face="Arial"><i>FormatLayer</i></font>: <font face="Arial">specifies  
+    actions for formatting <i>Layer</i> grammar code</font></li> 
+    </ul> 
+    <ul> 
+  <li><font face="Arial"><i>FormatSm</i></font>: <font face="Arial">specifies  
+    actions for formatting <i>Sm</i> grammar code</font></li> 
+  <li><font face="Arial"><i>FormatClassX</i></font>: <font face="Arial">specifies  
+    actions for formatting <i>ClassX</i> grammar code</font></li> 
+  <li><font face="Arial"><i>FormatIntX</i></font>: <font face="Arial">specifies  
+    actions for formatting <i>IntX</i> grammar code</font></li> 
+  <li><font face="Arial"><i>FormatSmX</i></font>: <font face="Arial">specifies  
+    actions for formatting <i>SmX</i> grammar code</font></li> 
+    </ul> 
+  </li> 
+</ul> 
+ 
+<p><font face="Arial">All these layers must sit above <i>kernel</i>, <i>Java</i>  
+and <i>Comments</i> layers which are part of the existing JTS system. The  
+following graph shows the architecture of FormatTool:</font></p> 
+<p><img border="0" src="images/formattool.gif" width="673" height="645"></p>
+ 
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FFFF00"> 
+  <tr> 
+    <td WIDTH="788"><h2><font face="Arial"><a href="#Command Line Invocation" name="command-line options">Command-line 
+      options</a></font></h2> 
+    </td> 
+  </tr> 
+</table> 
+ 
+<p><font face="Arial">To call <b>Reform</b> from the command line:</font></p>
+<blockquote>
+  <pre><font size="3" face="Courier New">&gt; java Reform.Main [-t number] [-l number] [-n string] [-s] [-verbose] [-quiet]  &lt;list of 1 or more files to format&gt;</font></pre>
+</blockquote>
+<p><font face="Arial">or</font></p>
+  <pre>    <font size="3" face="Courier New">&gt; java Reform.Main [-t number] [-l number] [-n string] [-s] [-verbose] [-quiet] -d directory -e extension</font></pre>
+<p><font face="Arial">where:</font></p>
+<ul>
+  <li><font face="Arial">option -t : number of white spaces for a Tab</font>
+  <li><font face="Arial">option -l : maximum number of consecutive white lines
+    in the program</font></li>
+  <li><font face="Arial">option -n : layer name to be added into JavaDoc
+    comments</font></li>
+  <li><font face="Arial">option -s : safe mode - prompt before replacing file 
+  archives</font></li>
+  <li><font face="Arial">option -verbose : enables verbose output (default)</font></li>
+  <li><font face="Arial">option -quiet : disables verbose output</font></li>
+  <li><font face="Arial">option -d : source directory to be RECURSIVELY 
+  searched; will void source file argument(s)</font></li>
+  <li><font face="Arial">option -e : source file extension to be searched; will 
+  void source file argument(s)<br>
+&nbsp;</font></li>
+</ul>
+<p><font face="Arial">The tool will format the list of given files and backup
+old (un-formatted) copies by appending ~ to the end of the file names. For
+example, if a file is named <i>Foo.jak</i>, the tool will save its old copy as <i>Foo.Jak~</i></font></p> 
+<p><font face="Arial">While formatting a file, if the tool finds its backup copy
+under the same directory, it will force replacing the backup (when -f option is 
+set) or ask the user whether to skip the file (when -f option is not set).</font></p> 
+  
+<hr>  
+  
+<p><b><font face="Arial"><a href="index.html">ATS Home Page</a></font></b></p>
+<p><font face="Arial"><b>Copyright © Software Systems Generator Research Group. 
+All rights reserved.</b> <br>
+<b>Revised:&nbsp;<!--webbot bot="TimeStamp" s-format="%B %d, %Y" s-type="EDITED" startspan -->January 25, 2006<!--webbot bot="TimeStamp" endspan i-checksum="31592" -->.</b>
+</font></p>

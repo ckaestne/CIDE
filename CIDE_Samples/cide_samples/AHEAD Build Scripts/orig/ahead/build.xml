@@ -1,0 +1,1351 @@
+<?xml version="1.0"?>
+
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+<project default='all' name='The AHEAD Tool Suite'>
+  <description>
+ Builds the AHEAD tool suite.
+ (C) 2002-2003 Jacob Neal Sarvela and The University of Texas at Austin
+
+ Options:
+
+ -Doption.bali=&lt;feature-set&gt; (default is "withRequireFeature")
+  Specifies the feature set for the Bali tools.  Currently, there are two
+  feature sets: "withRequireFeature" and "withoutRequireFeature".  The first
+  implements the "require" statement while the second supports only the
+  original Bali syntax.
+
+ -Doption.java=&lt;feature-set&gt; (default is "all")
+  Specifies the feature set for the extended-Java tools.  Currently, there are
+  three feature sets: "all", "cat" and "utcs".  Option "cat" includes the state
+  machine sub-language in the tools.  Option "utcs" includes the syntax-tree
+  manipulation sub-language and generation scoping.  Option "all" includes both
+  the previous feature sets.
+
+ Options (supported by Ant):
+
+ -Dbuild.sysclasspath=&lt;search-choice&gt; (default is "ignore")
+  Specifies how CLASSPATH relates to the class paths used by tasks in this
+  build file.  There are four choices:
+    first .... CLASSPATH takes priority, then build file class paths;
+    last ..... build file class paths take priority, then CLASSPATH;
+    ignore ... CLASSPATH is ignored, only build file class paths are used;
+    only ..... build file class paths are ignored, only CLASSPATH is used.
+ </description>
+
+<!-- ================================================================= -->
+
+
+<!-- OPTIONS PROPERTIES:                                               -->
+
+
+<!-- ================================================================= -->
+
+  <property value='withRequireFeature' name='option.bali' />
+  <property value='all' name='option.java' />
+
+<!-- ================================================================= -->
+
+
+<!-- PROJECT DEFINITIONS AND PROPERTIES:                               -->
+
+
+<!-- ================================================================= -->
+
+  <property value='Jacob Neal Sarvela' name='project.author' />
+  <property value='ahead' name='project.name' />
+  <property value='AHEAD' name='project.Name' />
+  <property value='The University of Texas at Austin' name='project.owner' />
+  <property value='(C) 2002-2003 ${project.author} and ${project.owner}' name='project.copyright' />
+  <property value='The AHEAD Tool Suite' name='project.title' />
+  <property value='v2007.07.17' name='project.version' />
+
+<!-- ================================================================= -->
+
+
+<!-- STATIC DIRECTORY AND FILE PROPERTIES:                             -->
+
+
+<!-- ================================================================= -->
+
+
+<!-- - - - - - - - - - - - - - - -->
+
+
+<!-- Build Hierarchy for Tools:  -->
+
+
+<!-- - - - - - - - - - - - - - - -->
+
+  <property location='${basedir}/build' name='dir.build' />
+  <property location='${dir.build}/bin' name='dir.build.bin' />
+  <property location='${dir.build}/lib' name='dir.build.lib' />
+
+<!-- - - - - - - - - - - - - - - -->
+
+
+<!-- Source Code Hierarchies:    -->
+
+
+<!-- - - - - - - - - - - - - - - -->
+
+  <property location='${basedir}/standalone' name='dir.standalone' />
+  <property location='${dir.standalone}/applybali2jak' name='dir.applybali2jak' />
+  <property location='${dir.standalone}/composer' name='dir.composer' />
+  <property location='${dir.standalone}/Jakarta' name='dir.jakarta' />
+  <property location='${dir.standalone}/obe' name='dir.obe' />
+  <property location='${dir.standalone}/mix' name='dir.mix' />
+  <property location='${dir.standalone}/unmix' name='dir.unmix' />
+  <property location='${dir.standalone}/xak' name='dir.xak' />
+  <property location='${dir.standalone}/ModelExplorer' name='dir.modelexplorer' />
+  <property location='${dir.standalone}/safegen' name='dir.safegen' />
+  <property location='${dir.standalone}/orthotest' name='dir.orthotest' />
+  <property location='${dir.standalone}/XC' name='dir.xc' />
+
+<!-- - - - - - - - - - - - - - - -->
+
+
+<!-- External Libraries & Tools: -->
+
+
+<!-- - - - - - - - - - - - - - - -->
+
+  <property location='${ant.home}' name='dir.ant' />
+  <property location='${dir.ant}/lib' name='dir.ant.lib' />
+  <property location='${basedir}/miscellaneous' name='dir.external' />
+  <property location='${dir.external}/bin' name='dir.external.bin' />
+  <property location='${dir.external}/lib' name='dir.external.lib' />
+  <property location='${dir.external.bin}/make-bin' name='exec.make-bin' />
+  <property location='${dir.external.bin}/print-path' name='exec.print-path' />
+  <property location='${dir.external.bin}/run-tool' name='exec.run-tool' />
+
+<!-- ================================================================= -->
+
+
+<!-- PATH-RELATED DEFINITIONS:                                         -->
+
+
+<!-- (see also the targets "use.path.ant" and "use.path.class")        -->
+
+
+<!-- ================================================================= -->
+
+
+<!-- - - - - - - - - - - - - - - -->
+
+
+<!-- CLASSPATH Treatment:	     -->
+
+
+<!-- - - - - - - - - - - - - - - -->
+
+  <property value='ignore' name='build.sysclasspath' />
+
+<!-- ================================================================= -->
+
+
+<!-- OTHER STATIC DEFINITIONS:                                         -->
+
+
+<!-- ================================================================= -->
+
+
+<!-- ================================================================= -->
+
+
+<!-- TARGETS:                                                          -->
+
+
+<!-- ================================================================= -->
+
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+
+<!-- The "all" target builds all the tools for both extended Java and  -->
+
+
+<!-- Bali source languages.                                            -->
+
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+  <target description='Builds all currently-used tools.' depends='bali,java,standalone,bin' name='all' >
+	<antcall target="guidsl"/>
+	<antcall target="reform"/>
+  </target>
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+
+<!-- The "old" target builds all the deprecated (no-longer supported)  -->
+
+
+<!-- tools for both extended Java and Bali source languages.           -->
+
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+  <target description='Builds all deprecated tools.'  name='old' >
+	  <antcall target="mix"/>
+	  <antcall target="unmix"/>
+	  	<antcall target="drc"/>
+	  <antcall target="jedi"/>
+	  <antcall target="obe"/>
+	  <antcall target="xc"/>
+  </target>
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+
+<!-- The "applybali2jak" target builds a tool to map bali2jak onto an  -->
+
+
+<!-- equation file.                                                    -->
+
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+  <target description='Builds tool to map bali2jak across an equation file.' depends='bali' name='applybali2jak'>
+    <ant dir='${dir.applybali2jak}' target='jar' inheritall='false'>
+      <property value='${build.sysclasspath}' name='build.sysclasspath' />
+      <property location='${dir.build}/applybali2jak' name='dir.build' />
+      <property location='${dir.build.lib}' name='dir.lib' />
+      <property location='${dir.build.lib}/applybali2jak.jar' name='jar.build' />
+    </ant>
+  </target>
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+
+<!-- The "bali" target builds tools for the Bali source language.  For -->
+
+
+<!-- now, these include balicomposer, bali2jak and bali2javacc.        -->
+
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+  <target description='Builds tools for the Bali source language.' depends='use.jar.jakarta' name='bali'>
+    <ant inheritall='false' antfile='bali.xml'>
+      <property value='${build.sysclasspath}' name='build.sysclasspath' />
+      <property value='${option.bali}' name='option.features' />
+    </ant>
+  </target>
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+
+<!-- The "bctools" target builds the byte composer tools               -->
+
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+  <target description='Builds byte composer tools' name='bctools'>
+    <ant inheritall='false' antfile='bctools.xml'>
+      <property value='${build.sysclasspath}' name='build.sysclasspath' />
+    </ant>
+  </target>
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+
+<!-- The "bin" target creates scripts for tools in "dir.build.lib".    -->
+
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+  <target description='Builds scripts for tools in library directory.' depends='prepare' name='bin'>
+    <apply skipemptyfilesets='true' executable='env' parallel='true' taskname='===&gt;' type='file'>
+      <arg value='--' />
+      <arg file='${exec.make-bin}' />
+      <arg value='-directory' />
+      <arg file='${dir.build.bin}' />
+      <arg value='-script' />
+      <arg file='${exec.run-tool}' />
+      <arg value='--' />
+      <fileset dir='${dir.build.lib}'>
+        <include name='*.jar' />
+        <exclude name='ant.jar' />
+        <exclude name='jakarta.jar' />
+        <exclude name='velocity.jar' />
+        <exclude name='infozone-lexus.jar' />
+        <exclude name='infozone-tools.jar' />
+        <exclude name='log4j.jar' />
+        <exclude name='OnekinUtils-Standard.jar' />
+        <exclude name='saxon8.jar' />
+        <exclude name='saxon8-xpath.jar' />
+        <exclude name='xerces.jar' />
+        <exclude name='xercesImpl.jar' />
+        <exclude name='xml-apis.jar' />
+        <exclude name='bcel-5.1.jar' />
+        <exclude name='jdom.jar' />
+        <exclude name='sat4j.jar' />
+      </fileset>
+    </apply>
+  </target>
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+
+<!-- The "clean" target removes generated files other than those used  -->
+
+
+<!-- to define the build configuration, if any.	                   -->
+
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+  <target description='Deletes generated files and scratch files.' depends='initialize' name='clean'>
+    <patternset id='clean.patterns'>
+      <exclude name='**/CVS/**' />
+      <include name='**/*~' />
+      <include name='**/#*#' />
+      <include name='**/.#*' />
+      <include name='**/%*%' />
+      <include name='**/._*' />
+      <include name='**/*.bak' />
+      <include name='**/*.BAK' />
+      <include name='**/*.pyc' />
+      <include name='**/*.pyo' />
+      <include name='**/core' />
+    </patternset>
+    <delete includeEmptyDirs='true' quiet='true'>
+      <fileset dir='${dir.build}' />
+      <fileset dir='.' defaultexcludes='no'>
+        <include name='**/*.class' />
+        <patternset refid='clean.patterns' />
+      </fileset>
+    </delete>
+  </target>
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+
+<!-- The "composer" target builds the hierarchical composition driver. -->
+
+
+<!-- This tool is responsible for recursively descending hierarchies   -->
+
+
+<!-- of units, finding those with the same signature to compose.  The  -->
+
+
+<!-- primitives are composed with type-specific compositions, some of  -->
+
+
+<!-- which are handled by other tools built in this Ant script.        -->
+
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+  <target description='Builds the hierarchical composition driver.' depends='use.jar.balicomposer,use.jar.jakarta,use.jar.jampack,use.jar.mixin,use.jar.velocity,use.jar.mix' name='composer'>
+
+<!-- removed use.jar.xc from depends -->
+<antcall target="use.jar.drc"/>
+<antcall target="use.jar.xak"/>
+    <ant dir='${dir.composer}' target='jar' inheritall='false'>
+      <property value='${build.sysclasspath}' name='build.sysclasspath' />
+      <property location='${dir.build}/composer' name='dir.build' />
+      <property location='${dir.build.lib}' name='dir.lib' />
+      <property location='${dir.build.lib}/composer.jar' name='jar.build' />
+      <property location='${dir.external.lib}/velocity.jar' name='jar.velocity' />
+    </ant>
+  </target>
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+
+<!-- The "drc" target builds the design rule checker.  This tool uses  -->
+
+
+<!-- completely different grammar than the Bali or extended-Java tools -->
+
+
+<!-- so it is -not- part of their equation(s) structure.               -->
+
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+  <target description='Builds the design rule checking tool.' depends='use.jar.jakarta' name='drc'>
+    <ant inheritall='false' antfile='drc.xml'>
+      <property value='${build.sysclasspath}' name='build.sysclasspath' />
+      <property location='${dir.build.lib}/drc.jar' name='jar.build' />
+      <property value='file:jakarta.jar' name='uri.jar.jakarta' />
+    </ant>
+  </target>
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+
+<!-- The "initialize" target defines runtime properties such as time-  -->
+
+
+<!-- stamps and prints a start-up message, including the copyright.    -->
+
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+  <target name='initialize'>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+
+<!-- Timestamp properties:                                         -->
+
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+    <tstamp>
+      <format pattern='yyyy-MM-dd' property='initialize.date' />
+      <format pattern='HH:mm:ss' property='initialize.time' />
+      <format pattern='yyyy' property='initialize.year' />
+    </tstamp>
+    <property value='${initialize.date} ${initialize.time}' name='timestamp' />
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+
+<!-- Calculate range of years to put into copyright notice:        -->
+
+
+<!-- * cr.alpha ....... first year source was created;             -->
+
+
+<!-- * cr.omega ....... last year source was modified;             -->
+
+
+<!-- * cr.range ....... range of years for copyright.              -->
+
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+    <property value='1998' name='cr.alpha' />
+    <property value='${project.owner}' name='cr.owner' />
+    <condition value='${cr.alpha}' property='cr.range'>
+      <equals arg1='${cr.alpha}' arg2='${initialize.year}' />
+    </condition>
+    <condition value='${cr.alpha}-${initialize.year}' property='cr.range'>
+      <not>
+        <equals arg1='${cr.alpha}' arg2='${initialize.year}' />
+      </not>
+    </condition>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+
+<!-- Create copyright messages:                                    -->
+
+
+<!-- * copyright.base ... text with year(s) and owner;             -->
+
+
+<!-- * copyright.html ... for inclusion into HTML documents;       -->
+
+
+<!-- * copyright.text ... for inclusion into text documents.       -->
+
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+    <property value='${cr.range} ${cr.owner}' name='copyright.base' />
+    <property value='&#xA9; ${copyright.base}' name='copyright.html' />
+    <property value='(C) ${copyright.base}' name='copyright.text' />
+    <echo level='info' message='${project.title}; build.xml ${project.version}' />
+    <echo level='info' message='${copyright.text}' />
+    <echo level='info' message='' />
+    <echo level='info' message='Build begins ${timestamp}' />
+  </target>
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+
+<!-- The "jakarta" target builds the Jakarta library of Java packages. -->
+
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+  <target description='Builds the Jakarta pure Java library.' depends='prepare' name='jakarta'>
+    <ant dir='${dir.jakarta}' target='jar' inheritall='false'>
+      <property value='${build.sysclasspath}' name='build.sysclasspath' />
+      <property location='${dir.build}/jakarta' name='dir.build' />
+      <property location='${dir.build.lib}/jakarta.jar' name='jar.build' />
+    </ant>
+  </target>
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+
+<!-- The "java" target builds tools supporting extended Java source    -->
+
+
+<!-- languages.  For now, these include JamPack, jak2java, Mixin,      -->
+
+
+<!-- UnMixin and mmatrix.                                              -->
+
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+  <target description='Builds tools for the extended Java source languages.' depends='use.jar.jakarta' name='java'>
+    <ant inheritall='false' antfile='java.xml'>
+      <property value='${build.sysclasspath}' name='build.sysclasspath' />
+      <property value='${option.java}' name='option.features' />
+    </ant>
+  </target>
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+
+<!-- The "jedi" target builds the documentation tool.  This should be  -->
+
+
+<!-- be a temporary target, pending reorganization into Origami.       -->
+
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+  <target description='Builds the Jak language documentation tool.' depends='use.jar.jakarta' name='jedi'>
+    <ant inheritall='false' antfile='jedi.xml'>
+      <property value='${build.sysclasspath}' name='build.sysclasspath' />
+      <property location='${dir.build.lib}' name='dir.build.lib' />
+      <property location='${dir.build.lib}/jedi.jar' name='jar.build' />
+      <property value='file:jakarta.jar' name='uri.jar.jakarta' />
+    </ant>
+  </target>
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+
+<!-- The "jedi" target builds the documentation tool.  This should be  -->
+
+
+<!-- be a temporary target, pending reorganization into Origami.       -->
+
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+  <target description='Builds the declarative feature modeling tool.' depends='use.jar.jakarta' name='guidsl'>
+    <ant inheritall='false' antfile='guidsl.xml'>
+      <property value='${build.sysclasspath}' name='build.sysclasspath' />
+      <property location='${dir.build.lib}' name='dir.build.lib' />
+      <property location='${dir.build.lib}/guidsl.jar' name='jar.build' />
+      <property value='file:jakarta.jar' name='uri.jar.jakarta' />
+    </ant>
+  </target>
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+
+<!-- the "mix" target builds Don's C++ preprocessor composer           -->
+
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+  <target description='Builds the mix tool for C++ file composition.' depends='use.jar.jakarta' name='mix'>
+    <ant dir='${dir.mix}' target='jar' inheritall='false'>
+      <property value='${build.sysclasspath}' name='build.sysclasspath' />
+      <property location='${dir.build}/mix' name='dir.build' />
+      <property location='${dir.build.lib}' name='dir.lib' />
+      <property location='${dir.build.lib}/mix.jar' name='jar.build' />
+    </ant>
+  </target>
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+
+<!-- The "modelexplorer" target builds the graphical tool to explore   -->
+
+
+<!-- model directories.  It invokes other tools via Ant.               -->
+
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+  <target description='Builds the GUI frontend for model exploration.' depends='use.jar.mmatrix' name='modelexplorer'>
+    <ant dir='${dir.modelexplorer}' target='jar' inheritall='false'>
+      <property value='${build.sysclasspath}' name='build.sysclasspath' />
+      <property location='${dir.build}/modelexplorer' name='dir.build' />
+      <property location='${dir.build.lib}' name='dir.lib' />
+      <property location='${dir.build.lib}/modelexplorer.jar' name='jar.build' />
+    </ant>
+  </target>
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+
+<!-- The "safegen" target builds the graphical tool to explore   -->
+
+
+<!-- model directories.  It invokes other tools via Ant.               -->
+
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+  <target description='Builds the Safe Generation Validation Tool.' depends='guidsl' name='safegen'>
+    <ant dir='${dir.safegen}' target='jar' inheritall='false'>
+      <property value='${build.sysclasspath}' name='build.sysclasspath' />
+      <property location='${dir.build}/safegen' name='dir.build' />
+      <property location='${dir.build.lib}' name='dir.lib' />
+      <property location='${dir.build.lib}/safegen.jar' name='jar.build' />
+    </ant>
+  </target>
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+
+<!-- The "orthotest" target builds the graphical tool to explore   -->
+
+
+<!-- model directories.  It invokes other tools via Ant.               -->
+
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+  <target description='Builds the Orthogonality Validation Tool.' depends='guidsl' name='orthotest'>
+    <ant dir='${dir.orthotest}' target='jar' inheritall='false'>
+      <property value='${build.sysclasspath}' name='build.sysclasspath' />
+      <property location='${dir.build}/orthotest' name='dir.build' />
+      <property location='${dir.build.lib}' name='dir.lib' />
+      <property location='${dir.build.lib}/orthotest.jar' name='jar.build' />
+    </ant>
+  </target>
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+
+<!-- The "obe" target builds Don's tool to explore Origami matrices.   -->
+
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+  <target description='Builds the GUI frontend for model exploration.' depends='composer' name='obe'>
+    <ant dir='${dir.obe}' target='jar' inheritall='false'>
+      <property value='${build.sysclasspath}' name='build.sysclasspath' />
+      <property location='${dir.build}/obe' name='dir.build' />
+      <property location='${dir.build.lib}' name='dir.lib' />
+      <property location='${dir.build.lib}/obe.jar' name='jar.build' />
+    </ant>
+  </target>
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+
+<!-- The "prepare" target creates the output directory hierarchy.      -->
+
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+  <target depends='initialize' name='prepare'>
+    <mkdir dir='${dir.build}' />
+    <mkdir dir='${dir.build.bin}' />
+    <mkdir dir='${dir.build.lib}' />
+  </target>
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+
+<!-- The "reform" target builds the reformatting tool.  This should be -->
+
+
+<!-- be a temporary target, pending reorganization into Origami.       -->
+
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+  <target description='Builds the Jak language reformatting tool.' depends='use.jar.jakarta' name='reform'>
+    <ant inheritall='false' antfile='reform.xml'>
+      <property value='${build.sysclasspath}' name='build.sysclasspath' />
+      <property location='${dir.build.lib}/reform.jar' name='jar.build' />
+      <property value='file:jakarta.jar' name='uri.jar.jakarta' />
+    </ant>
+  </target>
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+
+<!-- the "unmix" target builds Don's C++ unmixin tool                  -->
+
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+  <target description='Builds the unmix tool for C++ file decomposition.' depends='use.jar.jakarta' name='unmix'>
+    <ant dir='${dir.unmix}' target='jar' inheritall='false'>
+      <property value='${build.sysclasspath}' name='build.sysclasspath' />
+      <property location='${dir.build}/unmix' name='dir.build' />
+      <property location='${dir.build.lib}' name='dir.lib' />
+      <property location='${dir.build.lib}/unmix.jar' name='jar.build' />
+    </ant>
+  </target>
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+
+<!-- The "standalone" target builds all the pure Java tools.  They are -->
+
+
+<!-- called "standalone" because they can, in principle, be build w/o  -->
+
+
+<!-- using any of the JTS/AHEAD language translators.  However, some   -->
+
+
+<!-- of them are -not- standalone at run-time!  Only Jakarta is able   -->
+
+
+<!-- to be used at run-time without involving Jak generated code.      -->
+
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+  <target description='Builds the standalone tools (composer, etc.)' depends='applybali2jak,composer,jakarta,safegen,orthotest' name='standalone' >
+  	<antcall target="bctools"/>
+  	<antcall target="modelexplorer"/>
+  </target>
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+
+<!-- The "use.*" targets prepare properties, environment variables and -->
+
+
+<!-- other resources for use by another target.  A target that uses a  -->
+
+
+<!-- resource specifies the usage by including a dependency on target  -->
+
+
+<!-- "use.
+<resource>" defined below (where "
+<resource>
+" is replaced by -->
+
+
+<!-- the actual resource name).                                        -->
+
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+
+<!-- Property "jar.bali2jak" specifies the location of the built Jar   -->
+
+
+<!-- file for the "bali2jak" tool, if it exists or can be built.       -->
+
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+  <target unless='jar.bali2jak' depends='use.jar.bali2jak:available' name='use.jar.bali2jak'>
+    <ant target='bali2jak' inheritall='false' antfile='bali.xml'>
+      <property value='${build.sysclasspath}' name='build.sysclasspath' />
+      <property value='${option.bali}' name='option.features' />
+    </ant>
+    <property location='${dir.build.lib}/bali2jak.jar' name='jar.bali2jak' />
+  </target>
+  <target depends='prepare' name='use.jar.bali2jak:available'>
+    <available value='${dir.build.lib}/bali2jak.jar' file='${dir.build.lib}/bali2jak.jar' type='file' property='jar.bali2jak' />
+  </target>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+
+<!-- Property "jar.bali2javacc" specifies the location of the Jar      -->
+
+
+<!-- file for the "bali2javacc" tool, if it exists or can be built.    -->
+
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+  <target unless='jar.bali2javacc' depends='use.jar.bali2javacc:available' name='use.jar.bali2javacc'>
+    <ant target='bali2javacc' inheritall='false' antfile='bali.xml'>
+      <property value='${build.sysclasspath}' name='build.sysclasspath' />
+      <property value='${option.bali}' name='option.features' />
+    </ant>
+    <property location='${dir.build.lib}/bali2javacc.jar' name='jar.bali2javacc' />
+  </target>
+  <target depends='prepare' name='use.jar.bali2javacc:available'>
+    <available value='${dir.build.lib}/bali2javacc.jar' file='${dir.build.lib}/bali2javacc.jar' type='file' property='jar.bali2javacc' />
+  </target>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+
+<!-- Property "jar.balicomposer" specifies the location of the Jar     -->
+
+
+<!-- file for the "balicomposer" tool, if it exists or can be built.   -->
+
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+  <target unless='jar.balicomposer' depends='use.jar.balicomposer:available' name='use.jar.balicomposer'>
+    <ant target='balicomposer' inheritall='false' antfile='bali.xml'>
+      <property value='${build.sysclasspath}' name='build.sysclasspath' />
+      <property value='${option.bali}' name='option.features' />
+    </ant>
+    <property location='${dir.build.lib}/balicomposer.jar' name='jar.balicomposer' />
+  </target>
+  <target depends='prepare' name='use.jar.balicomposer:available'>
+    <available value='${dir.build.lib}/balicomposer.jar' file='${dir.build.lib}/balicomposer.jar' type='file' property='jar.balicomposer' />
+  </target>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+
+<!-- Property "jar.bcjak2java" specifies the location of the built Jar -->
+
+
+<!-- file for the "bcjak2java" tool, if it exists or can be built.     -->
+
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+  <target unless='jar.bcjak2java' depends='use.jar.bcjak2java:available' name='use.jar.bcjak2java'>
+    <ant target='bcjak2java' inheritall='false' antfile='java.xml'>
+      <property value='${build.sysclasspath}' name='build.sysclasspath' />
+      <property value='${option.java}' name='option.features' />
+    </ant>
+    <property location='${dir.build.lib}/bcjak2java.jar' name='jar.bcjak2java' />
+  </target>
+  <target depends='prepare' name='use.jar.bcjak2java:available'>
+    <available value='${dir.build.lib}/bcjak2java.jar' file='${dir.build.lib}/bcjak2java.jar' type='file' property='jar.bcjak2java' />
+  </target>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+
+<!-- Property "jar.drc" specifies the location of the built Jar        -->
+
+
+<!-- file for the "drc" tool, if it exists or can be built.            -->
+
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+  <target unless='jar.drc' depends='use.jar.drc:available' name='use.jar.drc'>
+    <antcall inheritrefs='true' target='drc' inheritall='true' />
+    <property location='${dir.build.lib}/drc.jar' name='jar.drc' />
+  </target>
+  <target depends='prepare' name='use.jar.drc:available'>
+    <available value='${dir.build.lib}/drc.jar' file='${dir.build.lib}/drc.jar' type='file' property='jar.drc' />
+  </target>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+
+<!-- Property "jar.jak2aj" specifies the location of the built Jar -->
+
+
+<!-- file for the "jak2aj" tool, if it exists or can be built.     -->
+
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+  <target depends='use.jar.jak2aj:available' name='use.jar.jak2aj'>
+
+<!--  unless="jar.jak2aj" -->
+
+    <ant target='jak2aj' inheritall='false' antfile='java.xml'>
+      <property value='${build.sysclasspath}' name='build.sysclasspath' />
+      <property value='${option.java}' name='option.features' />
+    </ant>
+    <property location='${dir.build.lib}/jak2aj.jar' name='jar.jak2aj' />
+  </target>
+  <target depends='prepare' name='use.jar.jak2aj:available'>
+    <available value='${dir.build.lib}/jak2aj.jar' file='${dir.build.lib}/jak2aj.jar' type='file' property='jar.jak2aj' />
+  </target>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+
+<!-- Property "jar.jak2java" specifies the location of the built Jar   -->
+
+
+<!-- file for the "jak2java" tool, if it exists or can be built.       -->
+
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+  <target unless='jar.jak2java' depends='use.jar.jak2java:available' name='use.jar.jak2java'>
+    <ant target='jak2java' inheritall='false' antfile='java.xml'>
+      <property value='${build.sysclasspath}' name='build.sysclasspath' />
+      <property value='${option.java}' name='option.features' />
+    </ant>
+    <property location='${dir.build.lib}/jak2java.jar' name='jar.jak2java' />
+  </target>
+  <target depends='prepare' name='use.jar.jak2java:available'>
+    <available value='${dir.build.lib}/jak2java.jar' file='${dir.build.lib}/jak2java.jar' type='file' property='jar.jak2java' />
+  </target>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+
+<!-- Property "jar.jakarta" specifies the location of the built Jar    -->
+
+
+<!-- file for the "jakarta" tool, if it exists or can be built.        -->
+
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+  <target unless='jar.jakarta' depends='use.jar.jakarta:available' name='use.jar.jakarta'>
+    <antcall inheritrefs='true' target='jakarta' inheritall='true' />
+    <property location='${dir.build.lib}/jakarta.jar' name='jar.jakarta' />
+  </target>
+  <target depends='prepare' name='use.jar.jakarta:available'>
+    <available value='${dir.build.lib}/jakarta.jar' file='${dir.build.lib}/jakarta.jar' type='file' property='jar.jakarta' />
+  </target>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+
+<!-- Property "jar.jampack" specifies the location of the built Jar    -->
+
+
+<!-- file for the "jampack" tool, if it exists or can be built.        -->
+
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+  <target unless='jar.jampack' depends='use.jar.jampack:available' name='use.jar.jampack'>
+    <ant target='jampack' inheritall='false' antfile='java.xml'>
+      <property value='${build.sysclasspath}' name='build.sysclasspath' />
+      <property value='${option.java}' name='option.features' />
+    </ant>
+    <property location='${dir.build.lib}/jampack.jar' name='jar.jampack' />
+  </target>
+  <target depends='prepare' name='use.jar.jampack:available'>
+    <available value='${dir.build.lib}/jampack.jar' file='${dir.build.lib}/jampack.jar' type='file' property='jar.jampack' />
+  </target>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+
+<!-- Property "jar.jdom" specifies the location of the built Jar       -->
+
+
+<!-- file for the JDom parsing tool if it exists or can be built.      -->
+
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+  <target unless='jar.jdom' depends='use.jar.jdom:available' name='use.jar.jdom'>
+    <copy todir='${dir.build.lib}' file='${dir.external.lib}/jdom.jar' />
+    <property location='${dir.build.lib}/jdom.jar' name='jar.jdom' />
+  </target>
+  <target depends='prepare' name='use.jar.jdom:available'>
+    <available value='${dir.build.lib}/jdom.jar' file='${dir.build.lib}/jdom.jar' type='file' property='jar.jdom' />
+  </target>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+
+<!-- Property "jar.jrename" specifies the location of the built Jar    -->
+
+
+<!-- file for the "jrename" tool, if it exists or can be built.        -->
+
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+  <target unless='jar.jrename' depends='use.jar.jrename:available' name='use.jar.jrename'>
+    <ant target='jrename' inheritall='false' antfile='build.xml'>
+      <property value='${build.sysclasspath}' name='build.sysclasspath' />
+      <property value='${option.java}' name='option.features' />
+    </ant>
+    <property location='${dir.build.lib}/jrename.jar' name='jar.jrename' />
+  </target>
+  <target depends='prepare' name='use.jar.jrename:available'>
+    <available value='${dir.build.lib}/jrename.jar' file='${dir.build.lib}/jrename.jar' type='file' property='jar.jrename' />
+  </target>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+
+<!-- Property "jar.mixin" specifies the location of the built Jar      -->
+
+
+<!-- file for the "mixin" tool, if it exists or can be built.          -->
+
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+  <target unless='jar.mixin' depends='use.jar.mixin:available' name='use.jar.mixin'>
+    <ant target='mixin' inheritall='false' antfile='java.xml'>
+      <property value='${build.sysclasspath}' name='build.sysclasspath' />
+      <property value='${option.java}' name='option.features' />
+    </ant>
+    <property location='${dir.build.lib}/mixin.jar' name='jar.mixin' />
+  </target>
+  <target depends='prepare' name='use.jar.mixin:available'>
+    <available value='${dir.build.lib}/mixin.jar' file='${dir.build.lib}/mixin.jar' type='file' property='jar.mixin' />
+  </target>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+
+<!-- Property "jar.mix" specifies the location of the built Jar        -->
+
+
+<!-- file for the "mix" tool, if it exists or can be built.            -->
+
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+  <target unless='jar.mix' depends='use.jar.mix:available' name='use.jar.mix'>
+    <ant target='mix' inheritall='false' antfile='build.xml'>
+      <property value='${build.sysclasspath}' name='build.sysclasspath' />
+      <property value='${option.java}' name='option.features' />
+    </ant>
+    <property location='${dir.build.lib}/mix.jar' name='jar.mix' />
+  </target>
+  <target depends='prepare' name='use.jar.mix:available'>
+    <available value='${dir.build.lib}/mix.jar' file='${dir.build.lib}/mix.jar' type='file' property='jar.mix' />
+  </target>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+
+<!-- Property "jar.mmatrix" specifies the location of the built Jar    -->
+
+
+<!-- file for the "mmatrix" tool, if it exists or can be built.        -->
+
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+  <target unless='jar.mmatrix' depends='use.jar.mmatrix:available' name='use.jar.mmatrix'>
+    <ant target='mmatrix' inheritall='false' antfile='java.xml'>
+      <property value='${build.sysclasspath}' name='build.sysclasspath' />
+      <property value='${option.java}' name='option.features' />
+    </ant>
+
+<!-- 
+<antcall target="java" inheritall="true" inheritrefs="true"/>
+  -->
+
+    <property location='${dir.build.lib}/mmatrix.jar' name='jar.mmatrix' />
+  </target>
+  <target depends='prepare' name='use.jar.mmatrix:available'>
+    <available value='${dir.build.lib}/mmatrix.jar' file='${dir.build.lib}/mmatrix.jar' type='file' property='jar.mmatrix' />
+  </target>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+
+<!-- Property "jar.unmixin" specifies the location of the built Jar    -->
+
+
+<!-- file for the "unmixin" tool, if it exists or can be built.        -->
+
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+  <target unless='jar.unmixin' depends='use.jar.unmixin:available' name='use.jar.unmixin'>
+    <ant target='unmixin' inheritall='false' antfile='java.xml'>
+      <property value='${build.sysclasspath}' name='build.sysclasspath' />
+      <property value='${option.java}' name='option.features' />
+    </ant>
+    <property location='${dir.build.lib}/unmixin.jar' name='jar.unmixin' />
+  </target>
+  <target depends='prepare' name='use.jar.unmixin:available'>
+    <available value='${dir.build.lib}/unmixin.jar' file='${dir.build.lib}/unmixin.jar' type='file' property='jar.unmixin' />
+  </target>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+
+<!-- Property "jar.velocity" specifies the location of the built Jar   -->
+
+
+<!-- file for the "velocity" tool, if it exists or can be built.       -->
+
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+  <target unless='jar.velocity' depends='use.jar.velocity:available' name='use.jar.velocity'>
+    <copy todir='${dir.build.lib}' file='${dir.external.lib}/velocity.jar' />
+    <property location='${dir.build.lib}/velocity.jar' name='jar.velocity' />
+  </target>
+  <target depends='prepare' name='use.jar.velocity:available'>
+    <available value='${dir.build.lib}/velocity.jar' file='${dir.build.lib}/velocity.jar' type='file' property='jar.velocity' />
+  </target>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+
+<!-- Property "jar.xc" specifies the location of the built Jar         -->
+
+
+<!-- file for the "xc" tool, if it exists or can be built.             -->
+
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+  <target unless='jar.xc' depends='use.jar.xc:available' name='use.jar.xc'>
+    <ant target='xc' inheritall='false' antfile='build.xml'>
+      <property value='${build.sysclasspath}' name='build.sysclasspath' />
+      <property value='${option.java}' name='option.features' />
+    </ant>
+    <property location='${dir.build.lib}/xc.jar' name='jar.xc' />
+  </target>
+  <target depends='prepare' name='use.jar.xc:available'>
+    <available value='${dir.build.lib}/xc.jar' file='${dir.build.lib}/xc.jar' type='file' property='jar.xc' />
+  </target>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+
+<!-- The following to use.jar target allows the copy of the libraries  -->
+
+
+<!-- require to create a validating SAX parser. If it is possible to   -->
+
+
+<!-- validate with default Sun's Crimson parser then they wont be used.-->
+
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+
+<!-- Property "jar.xerces" specifies the location of the built Jar     -->
+
+
+<!-- file for the Xerces validating SAX parser.                        -->
+
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+  <target unless='jar.xerces' depends='use.jar.xerces:available' name='use.jar.xerces'>
+    <copy todir='${dir.build.lib}' file='${dir.external.lib}/xercesImpl.jar' />
+    <property location='${dir.build.lib}/xercesImpl.jar' name='jar.xerces' />
+  </target>
+  <target depends='prepare' name='use.jar.xerces:available'>
+    <available value='${dir.build.lib}/xercesImpl.jar' file='${dir.build.lib}/xercesImpl.jar' type='file' property='jar.xerces' />
+  </target>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+
+<!-- Property "jar.xmlapis" specifies the location of the built Jar    -->
+
+
+<!-- file for the JDom parsing tool if it exists or can be built.      -->
+
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+  <target unless='jar.xmlapis' depends='use.jar.xmlapis:available' name='use.jar.xmlapis'>
+    <copy todir='${dir.build.lib}' file='${dir.external.lib}/xml-apis.jar' />
+    <property location='${dir.build.lib}/xml-apis.jar' name='jar.xmlapis' />
+  </target>
+  <target depends='prepare' name='use.jar.xmlapis:available'>
+    <available value='${dir.build.lib}/xml-apis.jar' file='${dir.build.lib}/xml-apis.jar' type='file' property='jar.xmlapis' />
+  </target>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+
+<!-- Property "path.ant" is an internally generated class path used to -->
+
+
+<!-- reference Ant classes used in Ant tasks defined by the build.     -->
+
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+  <target depends='initialize' name='use.path.ant'>
+    <path id='id.path.ant'>
+      <fileset dir='${dir.ant.lib}' includes='**/*.jar' />
+    </path>
+    <property refid='id.path.ant' name='path.ant' />
+    <exec executable='env' taskname='path.ant'>
+      <arg value='--' />
+      <arg file='${exec.print-path}' />
+      <arg value='${path.ant}' />
+    </exec>
+  </target>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+
+<!-- Property "path.class" is an internally generated class path used  -->
+
+
+<!-- throughout the build.  It is built from 3 libraries in priority   -->
+
+
+<!-- order.  The build library, ${dir.build.lib}, is first priority so -->
+
+
+<!-- that inter-tool dependencies are satisfied.  The second priority  -->
+
+
+<!-- is the external tool library, ${dir.external.lib}, which is used  -->
+
+
+<!-- so that the tools can be bootstrapped. Finally, the Ant library   -->
+
+
+<!-- is used so that Ant tasks can be defined.                         -->
+
+
+<!--                                                                   -->
+
+
+<!-- User-defined libraries can be specified via CLASSPATH.  To ensure -->
+
+
+<!-- that this works, property "build.sysclasspath" must be defined as -->
+
+
+<!-- described in the Ant manual.  The definition should be placed on  -->
+
+
+<!-- the command line.                                                 -->
+
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+  <target depends='prepare' name='use.path.class'>
+    <path id='id.path.class'>
+      <fileset dir='${dir.build.lib}' includes='**/*.jar' />
+      <fileset dir='${dir.external.lib}' includes='**/*.jar'>
+        <none>
+          <present targetdir='${dir.build.lib}' />
+        </none>
+      </fileset>
+    </path>
+    <property refid='id.path.class' name='path.class' />
+    <exec executable='env' taskname='path.class'>
+      <arg value='--' />
+      <arg file='${exec.print-path}' />
+      <arg value='${path.class}' />
+    </exec>
+  </target>
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+
+<!-- The "xc" target builds the XML Composer Tool to compose XML-based -->
+
+
+<!-- documents.                                                        -->
+
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+  <target description='Builds the XML Composer Tool XC.' depends='use.jar.jdom,use.jar.xerces,use.jar.xmlapis' name='xc'>
+    <ant dir='${dir.xc}' target='jar' inheritall='false'>
+      <property value='${build.sysclasspath}' name='build.sysclasspath' />
+      <property location='${dir.build}/XC' name='dir.build' />
+      <property location='${dir.build.lib}' name='dir.lib' />
+      <property location='${dir.build.lib}/xc.jar' name='jar.build' />
+    </ant>
+  </target>
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+
+<!-- The "xak" target builds the XML Composer Tool to compose XML-based -->
+
+
+<!-- documents.                                                        -->
+
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+  <target description='Builds the XML Composer Tool xak.' depends='use.jar.xak.libs' name='xak'>
+    <ant dir='${dir.xak}' target='jar' inheritall='false'>
+      <property value='${build.sysclasspath}' name='build.sysclasspath' />
+      <property location='${dir.build}/xak' name='dir.build' />
+      <property location='${dir.build.lib}' name='dir.lib' />
+      <property location='${dir.build.lib}/xak.jar' name='jar.build' />
+    </ant>
+  </target>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+
+<!-- Property "jar.xak" specifies the location of the built Jar         -->
+
+
+<!-- file for the "xak" tool, if it exists or can be built.             -->
+
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+  <target unless='jar.xak' depends='use.jar.xak:available' name='use.jar.xak'>
+    <ant target='xak' inheritall='false' antfile='build.xml'>
+      <property value='${build.sysclasspath}' name='build.sysclasspath' />
+      <property value='${option.java}' name='option.features' />
+    </ant>
+    <property location='${dir.build.lib}/xak.jar' name='jar.xak' />
+  </target>
+  <target depends='prepare' name='use.jar.xak:available'>
+    <available value='${dir.build.lib}/xak.jar' file='${dir.build.lib}/xak.jar' type='file' property='jar.xak' />
+  </target>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+
+<!-- Property "jar.xak.libs" specifies the location of the       -->
+
+
+<!-- JAR libs files needed for XAK       -->
+
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+  <target unless='jar.xak.libs' depends='use.jar.xak.libs:available' name='use.jar.xak.libs'>
+    <copy todir='${dir.build.lib}' file='${dir.external.lib}/infozone-lexus.jar' />
+    <copy todir='${dir.build.lib}' file='${dir.external.lib}/infozone-tools.jar' />
+    <copy todir='${dir.build.lib}' file='${dir.external.lib}/OnekinUtils-Standard.jar' />
+    <copy todir='${dir.build.lib}' file='${dir.external.lib}/saxon8.jar' />
+    <copy todir='${dir.build.lib}' file='${dir.external.lib}/saxon8-dom.jar' />
+    <copy todir='${dir.build.lib}' file='${dir.external.lib}/saxon8-xpath.jar' />
+    <copy todir='${dir.build.lib}' file='${dir.external.lib}/log4j.jar' />
+    <property location='${dir.build.lib}/infozone-lexus.jar' name='jar.xak.libs' />
+  </target>
+  <target depends='prepare' name='use.jar.xak.libs:available'>
+    <available value='${dir.build.lib}/infozone-lexus.jar' file='${dir.build.lib}/infozone-lexus.jar' type='file' property='jar.xak.libs' />
+  </target>
+</project>
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+
+<!-- Local Variables:                    -->
+
+
+<!-- mode:                           XML -->
+
+
+<!-- fill-column:                     79 -->
+
+
+<!-- sgml-ignore-undefined-elements: nil -->
+
+
+<!-- sgml-indent-data:                 t -->
+
+
+<!-- sgml-indent-step:                 4 -->
+
+
+<!-- End:                                -->
+
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+

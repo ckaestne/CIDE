@@ -1,0 +1,426 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="GENERATOR" content="Microsoft FrontPage 5.0">
+   <title>How to Extend the Java Language</title>
+</head>
+<body bgcolor="#FFFFFF">
+
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%">
+  <tr>
+    <td WIDTH="78">
+    <img border="0" src="images/FopButton3.jpg" width="80" height="64"></td>
+    <td WIDTH="688" BGCOLOR="#00FFFF"><h1><font face="Arial" color="#8000FF">How 
+    to Extend the Java Language</font></h1>
+    </td>
+  </tr>
+</table>
+
+<p align="justify"><font face="Arial">Languages can be modularly extended to 
+support new features.&nbsp; The approach that AHEAD takes is to assemble 
+preprocessors for extended-host-languages from layers.&nbsp;&nbsp; Such a 
+preprocessor translates programs written in the extended-host-language into a 
+program that is written in the host language.&nbsp; Although the techniques for 
+building preprocessors from layers is  similar to that of building extensible 
+translators, there are  differences. </font></p>
+<p align="justify"><font face="Arial">In this chapter, we explain how we have 
+customized the Java language in building AHEAD.&nbsp; The same approach can be 
+used for building extensible preprocessors for other languages.&nbsp;&nbsp; <font color="#ff0000">We 
+assume that people have read the section on &quot;<a href="HowTo.html">How to 
+Build a Translator Using AHEAD Tools</a>&quot;, as basic material about AHEAD is 
+presented there which is relevant to our discussions here, but is not repeated.</font>
+</font></p>
+<ul>
+
+<li>
+<font face="Arial">
+<a href="#Customizing Template.xml">Customizing Template.xml</a></font></li>
+
+<li>
+<a href="#Defining a Grammar Extension to a Host Language"><font face="Arial">Component Directory Creation</font></a></li>
+
+<li>
+<font face="Arial"><a href="#Defining a Grammar Extension to a Host Language">Defining 
+a Grammar Extension to a Host Language </a></font></li>
+
+<li>
+<font face="Arial"><a href="#Writing Equation Files">Writing Equation files</a></font></li>
+
+<li>
+<font face="Arial"><a href="#Generating a Semantic Layer for Java">Generating a Semantic Layer for Java</a></font></li>
+
+<li>
+<font face="Arial">
+<a href="#Generating a Semantic Layer for Guard">Generating a Semantic Layer for Guard</a></font></li>
+
+<li>
+<a href="#Building a Preprocessor"><font face="Arial">Building a Preprocessor</font></a></li>
+
+<li>
+<font face="Arial"><a href="#Fixing Main">Adding Semantic Actions&nbsp;</a></font></li>
+
+<li>
+<font face="Arial"><a href="#Fixing Main">Fixing Main</a></font></li>
+</ul>
+
+<p><font face="Arial">Code for the examples in this section are found here
+<a href="Examples/GuavaExample.zip">
+<img border="0" src="images/Code.gif" width="59" height="31"></a>.</font></p>
+
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#ffff00">
+  <tr>
+    <td WIDTH="788">
+      <h2>
+       <font face="Arial" color="#0000FF">
+	   <a name="Customizing Template.xml">Customizing Template.xml</a></font></h2>
+    </td>
+  </tr>
+</table>
+
+<p align="justify">
+<font face="Arial">The first step in creating a language or language extension 
+is to customize an <a href="http://jakarta.apache.org/ant/index.html">Ant</a> 
+XML file for building the language. We provide two ant XML files, 
+<a href="Template.xml">Template.xml</a> 
+and <a href="Configure.xml">Configure.xml</a>, both of which are used to generate another Ant XML file. 
+<a href="Template.xml">Template.xml</a> is a template of Ant XML file for building a language; 
+<a href="Configure.xml">Configure.xml</a> takes <a href="Template.xml">Template.xml</a> as input and generates a customized Ant XML file for a 
+specific language.&nbsp; As an example, we will extend Java language with guard statement and name our language 
+extension Guava in this example. In order for customizing an Ant XML file, run 
+command :</font></p>
+
+<p align="justify">
+<font face="Arial">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</font><a href="file:///c:/fop/ahead">
+<font face="Courier" size="2">c</font></a><font face="Courier"><a href="file:///c:/fop/ahead"><font size="2">:/ahead</font></a><font size="2"> &gt; ant -f %fopdocs%/Configure.xml&nbsp; -Dproject.name=&quot;Guava&quot;</font></font></p>
+
+<p align="justify">
+<font face="Arial">where %fopdocs% is the path to the AHEAD documentation 
+directory. The output of this command is an Ant XML file Guava.xml. We 
+will use it to build our language extension.<a href="http://jakarta.apache.org/ant/index.html">
+</a></font></p>
+
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#ffff00">
+  <tr>
+    <td WIDTH="788">
+      <h2>
+       <a name="Component Directory Creation">
+       <font face="Arial" color="#0000FF">Component Directory Creation</font></a></h2>
+    </td>
+  </tr>
+</table>
+
+<p align="justify"><font face="Arial">The next step is to identify a model directory within ahead/dsl in which to 
+place the grammar specification and semantic layer.&nbsp;If you are defining a 
+language for the first time, you'll probably have to create a new model 
+directory.&nbsp; If you are creating a language extension, then a model for the 
+host language (i.e., the language to be extended) already exists. Once the model directory is known, create  subdirectories for the new 
+language specification and semantic actions. </font></p>
+<p align="justify"><font face="Arial">Our example is to extend Java.&nbsp; Let's 
+suppose we want to add an elementary Guard statement of the form:</font></p>
+<blockquote>
+  <p><font face="Courier" size="2">expression -&gt; statement</font></p>
+</blockquote>
+<p align="justify"><font face="Arial">That is, if the expression is true, the statement is 
+executed.&nbsp; The host language (Java) has already been created (in ahead/dsl/java/JavaGram).&nbsp; 
+We need to create&nbsp;subdirectories for storing 
+Guava grammar specifications and its semantic actions: </font></p>
+<blockquote>
+  <p><font face="Courier" size="2">C:&gt; cd ahead/dsl/java<br>
+<a href="file:///C:/fop/ahead/dsl">C:/ahead/dsl/java</a> &gt; mkdir 
+  GuardGram<br>
+<a href="file:///C:/fop/ahead/dsl">C:/ahead/dsl/java</a> &gt; mkdir 
+  GuardActions</font></p>
+</blockquote>
+
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#ffff00">
+  <tr>
+    <td WIDTH="788">
+      <h2>
+       <a name="Defining a Grammar Extension to a Host Language">
+       <font face="Arial" color="#0000FF">Defining a Grammar Extension to a Host 
+       Language</font></a></h2>
+    </td>
+  </tr>
+</table>
+
+<p align="justify"><font face="Arial"><font color="#000000">The </font>
+<a href="The_Bali_Language.html">Bali<font color="#000000"> 
+grammar</font></a><font color="#000000"> extension for our Guard statement is shown below.&nbsp; This 
+specification should be stored in a grammar.b file in directory ahead/dsl/java/GuardGram.</font></font></p>
+<blockquote>
+  <pre><b><font face="Courier">// grammar.b
+
+&quot;-&gt;&quot; ARROW
+require Expression;	// import previously defined production
+require Statement;	// import previously defined production
+Statement    :  LOOKAHEAD( Expression() &quot;-&gt;&quot; )
+                Expression ARROW Statement :: GuardCmd
+             ;</font></b></pre>
+</blockquote>
+<font color="#000000">
+<p align="justify"></font><font face="Arial" color="#000000">We have added one 
+lexical token (ARROW) and one additional rule to the Statement production 
+(defined in ahead/dsl/java/JavaGram/grammar.b).&nbsp; (The LOOKAHEAD is needed to 
+disambiguate the Guard statement from an assignment statement). In general, one 
+can refer to any productions defined in the grammar of a host language or any of 
+its extensions.&nbsp; By doing so, this means that the extension being 
+defined requires the presence of the host language  or another extensions in an 
+equation file for it to be used correctly.&nbsp; (These constraints are 
+specified as <a href="drc.html">design rules</a>). In our example, productions 
+Expression and Statement were defined in ahead/dsl/java/JavaGram/grammar.b.</font></p>
+
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#ffff00">
+  <tr>
+    <td WIDTH="788">
+      <h2>
+       <a name="Writing Equation Files"><font face="Arial" color="#0000FF">
+       Writing Equation Files</font></a></h2>
+    </td>
+  </tr>
+</table>
+
+<p align="justify"><font face="Arial">The next step is to write 
+  an equation file. AHEAD synthesizes a program by evaluating an equation that 
+composes the grammar and semantic layers of a language. Go to directory 
+ 
+ahead/equations, and create a Guava.equation consisting of the following lines.</font></p>
+<div align="justify">
+  <blockquote>
+    <blockquote>
+      <pre><font face="Courier" size="2">dsl/kernel
+dsl/java/JavaGram
+<font color="#FF0000">build/dsl/java/JavaGram</font>
+dsl/java/Java
+dsl/java/GuardGram
+<font color="#FF0000">build/dsl/java/GuardGram</font>
+dsl/java/GuardActions</font></pre>
+    </blockquote>
+  </blockquote>
+</div>
+
+<p align="justify"><font face="Arial"><b>dsl/kernel</b> is a kernel layer, which 
+is provided by AHEAD. It contains classes for building and traversing a parse 
+tree. <b>dsl/java/JavaGram</b> and <b>dsl/java/GuavaGram</b> are grammar layers 
+-- i.e. layers that have a single grammar.b file, where <b>JavaGram</b> 
+defines the base grammar for Java and <b>GuardGram</b> is our grammar extension. 
+The layers <b>dsl/java/Java</b> and <b>dsl/java/GuardActions</b> are semantic actions for these grammars. 
+And finally, the layers <font color="#FF0000"><b>build/dsl/java/JavaGram</b></font> 
+and <b><font color="#FF0000">build/dsl/java/GuardGram</font></b> are <b>
+<a href="applybali2jak.html">applybali2jak</a></b> (which is invoked by 
+guava.xml). </font></p>
+
+<p align="justify"><font face="Arial" color="#FF0000">Note: (1) GuardGram 
+follows JavaGram, since it extends JavaGram.&nbsp; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (2) GuardActions follows 
+Java, since it is a extension to Java.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (3) Java and 
+GuardGram can be swapped since neither of them is an extension of the other.&nbsp;
+</font></p>
+
+<p align="justify"><font face="Arial" color="#FF0000">Also note an equivalent 
+equation to the above factors all the grammar layers and semantic processing 
+layers together.&nbsp; The reason is that the partial order of grammars and 
+their semantic actions remains the same.</font></p>
+
+<div align="justify">
+  <blockquote>
+    <blockquote>
+      <pre><font face="Courier" size="2" color="#FF0000">dsl/kernel
+dsl/java/JavaGram
+dsl/java/GuardGram
+build/dsl/java/JavaGram
+build/dsl/java/GuardGram
+dsl/java/Java
+dsl/java/GuardActions</font></pre>
+    </blockquote>
+  </blockquote>
+</div>
+
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#ffff00">
+  <tr>
+    <td WIDTH="788">
+      <h2>
+       <a name="Generating a Semantic Layer for Guard"><font face="Arial" color="#0000FF">
+       Generating a Semantic Layer for Guard</font></a></h2>
+    </td>
+  </tr>
+</table>
+
+<p align="justify">
+<font face="Arial">The Java layer has a Main class and other goodies that we can 
+use.&nbsp; In particular, there already is defined a reduce2java method that we 
+will use to define the semantic actions for guards. All we need to do is to 
+write the GuardActions layer.&nbsp;  </font></p>
+
+<p align="justify">
+<font face="Arial">To do this, we first generate templates for the GuardAction 
+classes.&nbsp; Run bali2layer, and point to the GuardGram/grammar.b file. We 
+don't have to include a main (as the Java layer/feature already has a main that 
+we can use).&nbsp; Further, we don't have to include extensions to the kernel 
+classes because they already have a reduce2java method.&nbsp; But we do have to 
+add a &quot;void reduce2java( AstProperties props )&quot; method to all GuardAction 
+classes.&nbsp; We do so by adding its method signature to our bali2layer 
+specification (see below).</font></p>
+<p align="justify">
+<font face="Arial">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</font><a href="file:///C:/fop/ahead/dsl/J/Guard/semantic">
+<font face="Courier" size="2">c</font></a><font face="Courier" size="2"><a href="file:///C:/fop/ahead/dsl/J/Guard/semantic">:/ahead/dsl/java/GuardActions</a> 
+&gt; bali2layer</font></p>
+<p align="center">
+<font face="Verdana" size="2">
+<img border="0" src="images/ExtendJava2.jpg" width="353" height="390"></font></p>
+<p align="justify">
+<font face="Arial">bali2layer will generate two template classes: GuardCmd.jak 
+and Statement.jak.</font></p>
+
+<p align="justify"><font face="Arial">The actions of Guard 
+follow a standard AHEAD programming idiom: (1) obtain the AST arguments from the 
+AST node (in our case, expression and statement),(2) get the PrintWriter object 
+(to output our translation), and (3) output the translation.&nbsp;&nbsp; We add the 
+following method to GuardCmd.jak: </font></p>
+<blockquote>
+  <p><font face="Courier" size="2">public void reduce2java(AstProperties props) 
+  {<br>
+  &nbsp;&nbsp; PrintWriter ps;<br>
+  &nbsp;&nbsp; AstNode exp, stm;<br>
+  <br>
+  &nbsp;&nbsp; // Step 1: get arguments of Guard node<br>
+  &nbsp;&nbsp; //&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; expression is argument #0<br>
+  &nbsp;&nbsp; //&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; statement is argument #1<br>
+  &nbsp;&nbsp; //&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; see grammar rule for Guard&nbsp;<br>
+  <br>
+  &nbsp;&nbsp; exp = arg[0];<br>
+  &nbsp;&nbsp; stm = arg[1];<br>
+  <br>
+  &nbsp;&nbsp; // Step 2: obtain printwriter to output translation.<br>
+  <br>
+  &nbsp;&nbsp; ps = (PrintWriter) props.getProperty(&quot;output&quot;);<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+  &nbsp;&nbsp; // Step 3: translate Guard into if statement<br>
+  <br>
+  &nbsp;&nbsp; ps.print(&quot;if (&quot;);<br>
+  &nbsp;&nbsp; exp.reduce2java(props);<br>
+  &nbsp;&nbsp; ps.print(&quot;) &quot;);<br>
+  &nbsp;&nbsp; stm.reduce2java(props);<br>
+  }</font></p>
+</blockquote>
+
+  <p><font face="Arial">Effectively what this is doing is a macro expansion.&nbsp; 
+  Whenever a Guard instance is encountered, the follow code is generate: &quot;if ( 
+  &lt;expression&gt; ) &lt;statement&gt;&quot;.&nbsp; That is what the above accomplishes.&nbsp; 
+  We really don't need the Statement.jak class, as no changes to its current 
+  definition are needed.&nbsp; So simply delete Statement.jak.</font></p>
+
+  <p><font face="Arial">This is not the only way to write the above code.&nbsp; 
+  We could have used AST constructors instead.&nbsp; Here is what to write:</font></p>
+
+<blockquote>
+
+  <p><font face="Courier New" size="2">public void reduce2java (AstProperties 
+  props) {<br>
+&nbsp;&nbsp; PrintWriter ps;<br>
+  <br>
+&nbsp;&nbsp; // Step 1: get arguments of Guard node<br>
+&nbsp;&nbsp; // expression is argument #0<br>
+&nbsp;&nbsp; // statement is argument #1<br>
+&nbsp;&nbsp; // see grammar rule for Guard&nbsp;<br>
+  <br>
+&nbsp;&nbsp; // note: (Statement) is not an (AST_Stmt), because (Statement) is a<br>
+&nbsp;&nbsp; // single statement, whereas AST_Stmt is a LIST of statements.<br>
+&nbsp;&nbsp; // an explicit conversion is needed here (<a href="ASTConstructors.html#Statement Conversion">Click 
+  here</a> to see more of an explanation).<br>
+  <br>
+&nbsp;&nbsp; AST_Exp exp = (AST_Exp) arg[0];<br>
+&nbsp;&nbsp; AST_Stmt stm = ((Statement) arg[1]).toAST_Stmt();<br>
+  <br>
+&nbsp;&nbsp; // Step 2: create replacement parse tree<br>
+  <br>
+&nbsp;&nbsp; AST_Stmt s = stm{ if ( $exp(exp) ) {$stm(stm); }; }stm;<br>
+  <br>
+&nbsp;&nbsp; // Step 3: reduce to java the generated statement<br>
+  <br>
+&nbsp;&nbsp; s.reduce2java(props);<br>
+  }</font></p>
+
+</blockquote>
+
+  <p><font face="Arial">In the code that is supplied with these notes, solution 
+  #1 appears in the GuardActions layer, and solution#2 appears in the 
+  GuardActions2 layer.&nbsp; The guava.equation file we provide references 
+  solution #1.</font></p>
+
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#ffff00">
+  <tr>
+    <td WIDTH="788">
+      <h2>
+       <a name="Building a Preprocessor"><font face="Arial" color="#0000FF">
+       Building a Preprocessor</font></a></h2>
+    </td>
+  </tr>
+</table>
+
+<p align="justify">
+<font face="Arial">Now we're ready to debug our extension and build a preprocessor.&nbsp; 
+To do so, we run ant:</font></p>
+<p align="justify">
+<font face="Verdana" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </font>
+<font face="Courier" size="2">
+<a href="file:///c:/fop/ahead">c:/ahead</a> &gt; ant -f Guava.xml</font></p>
+<p align="justify">
+<font face="Arial">Ant creates a Guava preprocessor in directory 
+ 
+ahead/build, and build Guava.jar in directory ahead/build/Guava/lib. Add Guava.jar 
+to your CLASSPATH.</font></p>
+<p align="justify">
+<font face="Arial">Here's a simple guava program, myGuard.gua:</font></p>
+<blockquote>
+  <div align="justify">
+    <pre><font face="Courier New">class myGuard {
+   public static void main( String args[] ) {
+      boolean t = true;
+      t -&gt; System.out.println( &quot;its true&quot; ); // test true Guard
+      t = false;
+      t -&gt; System.out.println( &quot;its false&quot; ); // test false Guard
+   }
+}</font></pre>
+  </div>
+</blockquote>
+<p><font face="Arial">To run the preprocessor, type: </font></p>
+<blockquote>
+  <p>
+<font face="Courier" size="2">
+<a href="file:///c:/fop/ahead">c:/ahead</a> &gt; guava&nbsp; myGuard.gua</font></p>
+</blockquote>
+<p align="justify"><font face="Arial">What happens is that guava translates 
+myGuard.gua to myGuard.java, which is shown below.</font></p>
+
+<blockquote>
+  <p><font face="Courier" size="2">&nbsp;class myGuard {<br>
+  &nbsp;&nbsp; public static void main( String args[] ) {<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; boolean  t = true;if (<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; t)&nbsp; System.out.println( &quot;its true&quot; ); // test true Guard<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; t = false;if (<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; t)&nbsp; System.out.println( &quot;its false&quot; ); // test false Guard<br>
+  &nbsp;&nbsp; }<br>
+  &nbsp;}</font></p>
+</blockquote>
+<p align="justify"><font face="Arial">Note that in doing our translation, the 
+formatting of the output Java code isn't quite right.&nbsp; AHEAD lexical analyzers 
+saves all white space before each token.&nbsp; Thus, when we print the expression, we 
+see that a newline was part of the white space before the expression and this 
+was echoed when we printed the expression (hence the newline immediately after 
+the &quot;if (&quot; above).&nbsp; Use the <a href="reform.html">reform tool</a> 
+to pretty-print generated Java files.</font></p>
+
+<hr>
+<p><font face="Arial">
+<a href="index.html">&nbsp;</a></font><b><font face="Arial"><a href="index.html">ATS Home Page</a></font></b></p>
+<p><font face="Arial"><b>Copyright © Software Systems Generator Research Group. 
+All rights reserved.</b> <br>
+<b>Revised:&nbsp;<!--webbot bot="TimeStamp" s-format="%m/%d/%y" s-type="EDITED" startspan -->01/04/05<!--webbot bot="TimeStamp" endspan i-checksum="12910" -->.</b>
+</font></p>
+
+</body>
+</html>

@@ -1,0 +1,15 @@
+# Layer defines the grammar and basic syntax handling for "require" feature:
+# (for convenience, the keyname is taken to be the same as the directory)
+#
+# * build/bali/require -- syntax tree nodes generated from grammar;
+# * dsl/bali/require ---- classes common to all tools to define "require".
+#
+require = build/bali/require dsl/bali/require
+
+# These layers define tool-specific handling for "require" feature:
+# (for convenience, the keynames are taken to be the same as the directories)
+#
+requireComposer = dsl/bali/requireComposer
+requireBali2jak = dsl/bali/requireBali2jak
+requireBali2javacc = dsl/bali/requireBali2javacc
+requireBali2layer =

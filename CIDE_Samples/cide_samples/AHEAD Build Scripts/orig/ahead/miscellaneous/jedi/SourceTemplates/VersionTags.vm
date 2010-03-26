@@ -1,0 +1,17 @@
+## VersionTags.vm
+## JEDI Project
+## HTML Template for Version Tags
+## Author: Roberto E. Lopez-Herrejon
+## Last update: November 30, 2002
+
+#set($versionText = $generator.fullTextComment($doc, "@version"))
+#if ($versionText != "")
+      <DT>
+      <B> Version  </B> &nbsp;
+      <DD> $versionText </DD>
+      <BR>
+#end
+
+
+## End of VersionTags.vm
+

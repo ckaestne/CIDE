@@ -1,0 +1,496 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta name="generator" content=
+"HTML Tidy for Linux/x86 (vers 11 February 2007), see www.w3.org" />
+<link rel="Edit-Time-Data" href="index_files/editdata.mso" />
+
+<title>AHEAD Tool Suite</title>
+<style type="text/css">
+/*<![CDATA[*/
+ :link { color: blue }
+ :visited { color: blue }
+ p.c4 {font-weight: bold}
+ p.c3 {font-style: italic}
+ hr.c2 {text-align: center}
+ div.c1 {text-align: center}
+/*]]>*/
+</style>
+</head>
+
+<body>
+<div class="Section1">
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td>
+<p><img width="80" height="64" id="_x0000_i1025" src="images/FopButton3.jpg" border=
+"0" /></p>
+</td>
+
+<td>
+<h3>AHEAD Tool Suite</h3>
+</td>
+</tr>
+</table>
+
+<p><img border="0" src="images/FopLogo2.jpg" align="right" width="259" height="220" />The
+<b>AHEAD Tool Suite (ATS)</b> is a set of tools that support <b>Feature Oriented
+Programming (FOP)</b>.&nbsp; The goal of FOP is to raise the level of specifications of
+systems beyond source code to that of compositional programming.&nbsp; Modularized units
+implement features that many programs within a family of programs can share.&nbsp; A
+specific member of this program family is defined by a unique composition of
+features.&nbsp; FOP methodology requires the use of extended Java languages (to express
+the key ideas of FOP), and ATS provides tools for:</p>
+
+<ul type="disc">
+<li><a href="#Step-Wise%20Refinement%20and%20Composit">step-wise refinement and
+compositional programming</a></li>
+
+<li><a href="#Metaprogramming">metaprogramming</a></li>
+
+<li><a href="#Extending_Programming_Languages">extending programming languages (e.g.,
+Java)</a></li>
+</ul>
+
+<p>There are two papers in PDF format that you should read before reading these
+documents:</p>
+
+<div class="c1">
+<table border="1" cellspacing="0" cellpadding="0" width="536" id="AutoNumber2">
+<tr>
+<td>
+<p><a href="AHEAD-Theory.pdf">AHEAD theory</a></p>
+</td>
+
+<td>
+<p>&nbsp;The theory behind FOP and ATS</p>
+</td>
+</tr>
+
+<tr>
+<td>
+<p><a href="AHEAD-Tutorial.pdf">AHEAD Tutorial</a></p>
+</td>
+
+<td>
+<p>&nbsp;Illustrative examples of FOP and ATS tools</p>
+</td>
+</tr>
+</table>
+</div>
+
+<div class="c1">
+<hr class="c2" size="2" width="100%" />
+</div>
+
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td>
+<h2><a name="Whats New">What's New?</a></h2>
+</td>
+</tr>
+</table>
+
+<p>In this release, the following additional "features" have been added:</p>
+
+<ul>
+<li>Refactoring Java applications in previous versions of AHEAD was difficult, because
+"<b>super</b>" had to be replaced with corresponding "<b>Super()</b>" calls.&nbsp; No
+longer.&nbsp; "<b>super</b>" can be used as in normal Java programs.&nbsp;
+"<b>Super()</b>" is generally used to express refinements, although it can still be used
+to mean "<b>super</b>".&nbsp; So refactoring legacy Java applications is mostly
+partitioning source code into features, changing "<b>package</b>" declarations to
+"<b>layer</b>" declarations, and when refinements are needed, using
+"<b>Super()</b>".&nbsp; Click <a href=
+"Composition.html#The%20Super%20Construct:%20Invoking%20Constructors%20of%20Parent%20Classes">
+here</a> for more details.<br />
+&nbsp;</li>
+
+<li>Hierarchical packages were not handled well in previous versions of AHEAD, in
+particular, nested package names and references were not handled properly. To reference
+the name of a generated package within Jak code, you should use the identifier
+"<b>$pack</b>", which when translated to Java, will be replaced with the name of the
+equation (i.e., the name of the package) that is synthesized. Click <a href=
+"Composition.html#$Pack%20Identifier">here</a> for more details.<br />
+&nbsp;</li>
+
+<li>guidsl has been improved with the addition of an analysis that checks the consistency
+of the feature models.<br />
+&nbsp;</li>
+</ul>
+<hr class="c2" size="2" width="100%" />
+
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td>
+<h2><a name="Step-Wise_Refinement_and_Compositional_P">Step-Wise Refinement and
+Compositional Programming</a></h2>
+</td>
+</tr>
+</table>
+
+<p>The place to start with these documents is:</p>
+
+<ul type="disc">
+<li><a href="Composition.html">Composition Tools</a></li>
+</ul>
+
+<p>which gives a brief overview of AHEAD tools and the extensions to Java on which AHEAD
+relies.&nbsp; The AHEAD tools that are documented in these notes include:</p>
+
+<table border="0" cellspacing="0" cellpadding="0" width="672" id="AutoNumber1" height=
+"217">
+<tr>
+<td>
+<p class="c3"><a href="composer.html">composer</a></p>
+</td>
+
+<td>
+<p><i>a tool for composing features</i>&nbsp;&nbsp;</p>
+</td>
+</tr>
+
+<tr>
+<td>
+<p class="c3"><a href="JamPack.html">jampack</a></p>
+</td>
+
+<td>
+<p class="c3">a tool for composing .jak files</p>
+</td>
+</tr>
+
+<tr>
+<td>
+<p class="c3"><a href="Mixin.html">mixin</a></p>
+</td>
+
+<td>
+<p class="c3">another tool for composing .jak files</p>
+</td>
+</tr>
+
+<tr>
+<td>
+<p class="c3"><a href="UnMixin.html">unmixin</a></p>
+</td>
+
+<td>
+<p class="c3">a tool for uncomposing .jak files</p>
+</td>
+</tr>
+
+<tr>
+<td>
+<p><a href="j2j.html"><i>jak2java</i></a></p>
+</td>
+
+<td>
+<p class="c3">translates .jak files to .java files</p>
+</td>
+</tr>
+
+<tr>
+<td>
+<p class="c3"><a href="reform.html">reform</a></p>
+</td>
+
+<td>
+<p class="c3">a tool to format Java and extended Java files</p>
+</td>
+</tr>
+
+<tr>
+<td>
+<p class="c3"><a href="guidsl.html">guidsl</a></p>
+</td>
+
+<td>
+<p class="c3">a feature model specification tool</p>
+</td>
+</tr>
+
+<tr>
+<td>
+<p class="c3"><a href="mmatrix.html">mmatrix</a></p>
+</td>
+
+<td>
+<p class="c3">utility used by ModelExplorer</p>
+</td>
+</tr>
+
+<tr>
+<td>
+<p class="c3"><a href="Jedi.html">jedi</a></p>
+</td>
+
+<td>
+<p class="c3">a JavaDoc-like tool for .jak files</p>
+</td>
+</tr>
+
+<tr>
+<td>
+<p class="c3"><a href="ModelExplorer.html">ModelExplorer</a></p>
+</td>
+
+<td>
+<p class="c3">a tool to explore feature directories and compositions</p>
+</td>
+</tr>
+
+<tr>
+<td>
+<p class="c3"><a href="ByteCodeTools.html">bcmixin</a></p>
+</td>
+
+<td>
+<p class="c3">byte code composition tools</p>
+</td>
+</tr>
+
+<tr>
+<td>
+<p class="c3"><img border="0" width="32" height="21" id="_x0000_i1027" src=
+"images/new.gif" /><em><a href="xak.html">xak</a></em></p>
+</td>
+
+<td>
+<p><em>a tool for composing XML files</em></p>
+</td>
+</tr>
+
+<tr>
+<td>
+<p class="c3"><img border="0" width="32" height="21" id="_x0000_i1028" src=
+"images/new.gif" /><em><a href="safegen.html">safegen</a></em></p>
+</td>
+
+<td>
+<p><em>a tool for verifying safe composition of the product-line</em></p>
+</td>
+</tr>
+
+<tr>
+<td>
+<p class="c3"><img border="0" width="32" height="21" id="_x0000_i1029" src=
+"images/new.gif" /><em><a href="orthotest.html">orthotest</a></em></p>
+</td>
+
+<td>
+<p><em>a tool for verifying orthogonality of the multidimensional product-line
+model</em></p>
+</td>
+</tr>
+</table>
+
+<p>Links to legacy tools are <a href="#Legacy_Tools">here</a>.</p>
+
+<p>Please note: All AHEAD tools are invoked as shell scripts or bat files, such as:</p>
+
+<blockquote>
+<pre>
+&gt; mixin &lt;input&gt;
+</pre>
+</blockquote>
+
+<p>where mixin is the name of an AHEAD tool.&nbsp; All AHEAD tools can be called as a
+normal Java application by invoking the Main class, provided their jar file is on the
+classpath:</p>
+
+<blockquote>
+<pre>
+&gt; java mixin.Main &lt;input&gt;
+</pre>
+</blockquote>
+
+<div class="c1">
+<hr class="c2" size="2" width="100%" />
+</div>
+
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td>
+<h2><a name="Metaprogramming">Metaprogramming</a></h2>
+</td>
+</tr>
+</table>
+
+<p>Metaprograms are programs that generate other programs. Preliminary documents that
+describe the metaprogramming facilities in Jak (the extended Java language in which AHEAD
+is written) are listed below.&nbsp; These documents will eventually be replaced with a
+more complete set that explains the Bali compiler tools and how metaprogramming
+constructs integrate.</p>
+
+<ul type="disc">
+<li><a href="AST.html">Abstract Syntax Trees (ASTs) in AHEAD</a></li>
+
+<li><a href="ASTConstructors.html">AST code constructors and escapes</a></li>
+
+<li><a href="AST_Cursors.html">AST Cursors</a></li>
+
+<li><a href="GScope.html">Generation Scoping</a></li>
+</ul>
+
+<p>You might find it useful to read the <a href="JTS-Theory.pdf">JTS_Theory</a> paper as
+background to our take on metaprogramming.</p>
+
+<div class="c1">
+<hr class="c2" size="2" width="100%" />
+</div>
+
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td>
+<h2><a name="Extending_Programming_Languages">Extending Programming Languages</a></h2>
+</td>
+</tr>
+</table>
+
+<p>Just as software applications can be extended using step-wise refinement, so too can
+languages.&nbsp; Virtually all AHEAD tools are written in an extended version of Java
+(called Jak -- short for Jakarta).&nbsp; To understand the design paradigm that we have
+used in building extended Java languages, read the following paper:</p>
+
+<ul type="disc">
+<li><a href="JTS-Theory.pdf">JTS_Theory</a></li>
+</ul>
+
+<p>Given this background, you'll be ready to understand the following documents for
+writing and extending translators:</p>
+
+<ul type="disc">
+<li><a href="The_Bali_Language.html">Bali grammars</a></li>
+
+<li><a href="HowTo.html">How to write a translator using AHEAD tools</a></li>
+
+<li><a href="ExtendJava.html">How to extend the Java language</a></li>
+</ul>
+
+<p>You will be using a set of tools in building translators.&nbsp; Documents on these
+tools are (in the process of being written):</p>
+
+<table border="0" cellspacing="0" cellpadding="0" width="628" id="AutoNumber3">
+<tr>
+<td>
+<p><a href="balicomposer.html"><kbd>balicomposer</kbd></a></p>
+</td>
+
+<td>
+<p><i>a tool for composing grammars</i>&nbsp;&nbsp;</p>
+</td>
+</tr>
+
+<tr>
+<td>
+<p><a href="bali2jak.html"><kbd>bali2jak</kbd></a></p>
+</td>
+
+<td>
+<p class="c3">a tool for generating inheritance hierarchies from grammar files</p>
+</td>
+</tr>
+
+<tr>
+<td>
+<p><a href="applybali2jak.html">applybali2jak</a></p>
+</td>
+
+<td>
+<p class="c3">a tool that invokes bali2jak on an equation</p>
+</td>
+</tr>
+
+<tr>
+<td>
+<p><a href="bali2javacc.html"><kbd>bali2javacc</kbd></a></p>
+</td>
+
+<td>
+<p class="c3">a tool for generating a javacc parser from a grammar file</p>
+</td>
+</tr>
+
+<tr>
+<td>
+<p><kbd><a href="bali2layer.html">bali2layer</a></kbd></p>
+</td>
+
+<td>
+<p class="c3">a tool for generating feature/layer templates</p>
+</td>
+</tr>
+</table>
+
+<div class="c1">
+<hr class="c2" size="2" width="100%" />
+</div>
+
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td>
+<h2><a name="Legacy_Tools">Legacy Tools</a></h2>
+</td>
+</tr>
+</table>
+
+<p>There are tools that were built for the AHEAD project that, for a variety of reasons,
+are either not supported or used.&nbsp; They are still available, and so too are their
+documents:</p>
+
+<table border="1" cellspacing="0" cellpadding="0" width="364">
+<tr>
+<td>
+<p class="c3"><a href="xc.html">xc</a></p>
+</td>
+
+<td>
+<p class="c3">xml file composition tool</p>
+</td>
+</tr>
+
+<tr>
+<td>
+<p class="c3"><a href="drc.html">drc</a></p>
+</td>
+
+<td>
+<p class="c3">design rule checker</p>
+</td>
+</tr>
+
+<tr>
+<td>
+<p class="c3"><a href="Obe.html">obe</a></p>
+</td>
+
+<td>
+<p class="c3">an origami matrix browser</p>
+</td>
+</tr>
+
+<tr>
+<td>
+<p class="c3"><a href="C++.html">mix and unmix</a></p>
+</td>
+
+<td>
+<p class="c3">unsupported C++ tools</p>
+</td>
+</tr>
+</table>
+
+<div class="c1">
+<hr class="c2" size="2" width="100%" />
+</div>
+
+<p class="c4"><a href="index.html">ATS Home Page</a></p>
+
+<p><b>Copyright &#169; Software Systems Generator Research Group. All rights
+reserved.</b> <br />
+<b>Revised:&nbsp;July 18, 2007.</b></p>&nbsp;&nbsp;
+
+<p>&nbsp;</p>
+</div>
+</body>
+</html>

@@ -1,0 +1,475 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
+<title>AST Internal Representations</title>
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+        <td width="78">
+        <img border="0" src="images/FopButton3.jpg" width="80" height="64"></td>
+        <td width="688" bgcolor="#00FFFF"><h2><font
+        color="#8000FF" face="Arial">Internal Representation of AHEAD Abstract Syntax Trees/Parse Trees</font></h2>
+        </td>
+    </tr>
+</table>
+
+<p><font face="Arial">This section presents the low-level,
+programmatic capabilities AHEAD offers for creating and
+manipulating abstract-syntax trees (ASTs) of Java and
+extended-Java programs.&nbsp; While the discussion centers on
+Java dialects, the basic technology applies to all AHEAD-produced
+languages.</font></p>
+
+<dir>
+    <li><a href="#AST Node Hierarchy"><b><font color="#8000FF"
+        face="Arial">AST Node Hierarchy</font></b></a></li>
+    <li><a href="#Structure of an AST Node"><b><font color="#8000FF"
+        face="Arial">Structure of an AST Node</font></b></a></li>
+    <li><a href="#Relationship of AST Nodes to Bali Productions"><b><font
+        color="#8000FF" face="Arial">Relationship of AST
+        Nodes to Bali Productions</font></b></a><dir>
+            <li><a href="#How is an AST printed?"><b><font
+                color="#8000FF" face="Arial">How is an AST
+                printed?</font></b></a></li>
+            <li><a href="#Print Information Stored in AST Nodes"><b><font face="Arial">Print Information Stored in AST
+                Nodes</font></b></a></li>
+        </dir>
+    </li>
+    <li><a href="#How is an AST printed?"><b><font face="Arial">AST
+        Printing Idioms</font></b></a></li>
+    <li><a href="#Normalizing Trees"><b><font color="#8000FF"
+        face="Arial">Normalizing Trees</font></b></a></li>
+    <li><a href="#Detaching Trees"><b><font color="#8000FF"
+        face="Arial">Detaching Trees</font></b></a></li>
+    <li><a href="#Methods on AST Nodes"><b><font color="#8000FF"
+        face="Arial">Methods on AST Nodes</font></b></a></li>
+</dir>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%"
+bgcolor="#FFFF00" bordercolor="#FFFF00">
+    <tr>
+        <td width="772"><h3><a name="AST Node Hierarchy"><b><font
+        color="#8000FF" face="Arial">AST Node Hierarchy</font></b></a></h3>
+        </td>
+    </tr>
+</table>
+
+<p><font face="Arial">
+<img src="images/AST_ht1.gif"
+alt="wpe3.gif (2264 bytes)" align="right" hspace="0" width="434"
+height="74">AHEAD relies on a hierarchy
+of different kinds of AST nodes.&nbsp; The kernel hierarchy is
+shown in the figure below, where <b>AstNode</b> is the root of the AST
+class hierarchy; all tokens are instances of <b>AstToken</b>.</font></p>
+
+<p><font face="Arial">Note that all Bali-generated classes are
+subclasses of <b>AstNode</b>.</font></p>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%"
+bgcolor="#FFFF00" bordercolor="#FFFF00">
+    <tr>
+        <td width="772"><h3><a name="Structure of an AST Node"><b><font
+        color="#8000FF" face="Arial">Structure of an AST
+        Node</font></b></a></h3>
+        </td>
+    </tr>
+</table>
+
+<p><font face="Arial">
+<img src="images/AST_ht2.gif"
+alt="wpe5.gif (1971 bytes)" align="right" hspace="0" width="283"
+height="130">An <b>AstNode</b> has an array
+(arg) of zero of more children (of type <b>AstNode</b>), a left and
+right to connect a node with its siblings, and an up pointer to
+its parent. Not depicted is an array (tok) of zero or more
+tokens.&nbsp; The up pointer is null if an AST node has no
+parent; left is null if there is no left sibling, and similarly
+for right.&nbsp; A terminal node of an AST has (obviously) zero
+children; the arg array is null.</font></p>
+
+<p><font face="Arial">In general, programmers need not know
+about these pointers, although it may be useful
+information.&nbsp; The code below sketches the definition of the
+<b>AstNode</b> class (which is defined in the kernel layer).</font></p>
+
+<blockquote>
+    <pre>static public abstract class AstNode implements Cloneable, Serializable {
+
+   public Token[]     tok;
+   public AstNode[]   arg;
+   public AstNode     right;
+   public AstNode     left;
+   public AstNode     up;
+<font face="Verdana">   ...
+}</font></pre>
+</blockquote>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%"
+bgcolor="#FFFF00" bordercolor="#FFFF00">
+    <tr>
+        <td width="772"><h3><a
+        name="Relationship of AST Nodes to Bali Productions"><b><font
+        color="#8000FF" face="Arial">Relationship of AST
+        Nodes to Bali Productions</font></b></a></h3>
+        </td>
+    </tr>
+</table>
+
+<p><font face="Arial">AST classes are generated from <a
+href="FileSpecs.html">Bali grammar
+specifications</a>. Consider a Bali
+production that is a named rule:</font></p>
+
+<blockquote>
+    <pre>NonTerm1
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : TOKEN1 NonTerm2 TOKEN2 TOKEN3 NonTerm3 :: AClass
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;</pre>
+</blockquote>
+
+<p><font face="Verdana">
+<img src="images/AST_ht3.gif"
+alt="wpe6.gif (1649 bytes)" align="right" hspace="0" width="189"
+height="98"></font><font face="Arial">Bali generates a class
+called AClass that is instantiated whenever the pattern
+associated with AClass is recognized.&nbsp; The AST that is
+produced is shown to the right: an instance of AClass roots an
+AST that has two children: an instance of NonTerm2 and an
+instance of NonTerm3 (both objects of which are siblings of each
+other).&nbsp; The contents of the arg[] array and tok[] array is:</font></p>
+
+<blockquote>
+    <pre>arg[0] = // pointer to NonTerm2 instance
+arg[1] = // pointer to NonTerm3 instance</pre>
+    <pre>tok[0] = // pointer to TOKEN1 instance
+tok[1] = // pointer to TOKEN2 instance
+tok[2] = // pointer to TOKEN3 instance</pre>
+</blockquote>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%"
+bgcolor="#FFFF00" bordercolor="#FFFF00">
+    <tr>
+        <td width="772"><h3><a name="How is an AST printed?"><b><font
+        color="#8000FF" face="Arial">How is an AST printed?</font></b></a></h3>
+        </td>
+    </tr>
+</table>
+
+<p><font face="Arial">How an AST is printed can be answered in
+two levels of detail. In the most detailed, we'll see the
+information that is stored within an AST node for printing. In
+the more typical interpretation, click <a
+href="ASTConstructors.html#How to Convert ASTs into Strings">here</a> to see the
+standard idioms to use when programming in AHEAD.</font></p>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%"
+bgcolor="#FF00FF">
+    <tr>
+        <td width="50%"><h4><a
+        name="Print Information Stored in AST Nodes"><font face="Arial">Print Information Stored in AST Nodes</font></a></h4>
+        </td>
+    </tr>
+</table>
+
+<p><font face="Arial">In order to print the AST rooted at the
+AClass node (or any node for that matter), we need to be able to
+print each subtree and each of the nodes tokens in the order
+prescribed by the AClass named rule.&nbsp; This is accomplished
+by a boolean array order[] which specifies the interweaving of
+token and subtree printing.&nbsp; In the AClass example above:</font></p>
+
+<blockquote>
+    <pre>boolean order[] = { true, false, true, true, false };</pre>
+</blockquote>
+
+<p><font face="Arial">That is, order[0] means print the first
+token (tok[0]), order[1] means print the first subtree (arg[0]),
+order[2] means print the second token (tok[1]), and so on.&nbsp;
+The order array is generated by Bali and is otherwise unseen by
+users.</font></p>
+
+<p><font face="Arial">Note also that tokens store both the text
+of the token plus the white space (comments, new lines, etc.)
+that preceded the token during a parse.&nbsp; In this way, it is
+possible for AHEAD-produced precompilers to parse an input file and
+unparse it to produce an output file that is Unix-diff equivalent
+to the input file.&nbsp; (Stated another way, saving the white
+space allows one to transform programs while retaining
+comments.&nbsp; This is essential for tools that automatically
+modify programs which are subsequently hand-edited by
+programmers).</font></p>
+
+<p><font face="Arial">Below are methods that are useful for tokens.&nbsp; These
+methods are invoked by the pattern tok[i].method() -- meaning apply method() to
+token #i:</font></p>
+
+<div align="center">
+  <center>
+  <table border="0">
+    <tr>
+      <td><font face="Courier New">void setTokenName(String x)</font></td>
+      <td><font face="Courier New">set the token string to x</font></td>
+    </tr>
+    <tr>
+      <td><font face="Courier New">String getTokenName()</font></td>
+      <td><font face="Courier New">returns string of token #i</font></td>
+    </tr>
+    <tr>
+      <td><font face="Courier New">int linenum()</font></td>
+      <td><font face="Courier New">returns line number on which the token
+        appeared</font></td>
+    </tr>
+    <tr>
+      <td><font face="Courier New">void print()</font></td>
+      <td><font face="Courier New">prints the token and whitespace</font></td>
+    </tr>
+    <tr>
+      <td><font face="Courier New">void reduce2java(AstProperties p)</font></td>
+      <td><font face="Courier New">reduces to Java (prints token)</font></td>
+    </tr>
+    <tr>
+      <td><font face="Courier New">void reduce2ast(AstProperties p)</font></td>
+      <td><font face="Courier New">generate code that will create this token</font></td>
+    </tr>
+  </table>
+  </center>
+</div>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%"
+bgcolor="#FFFF00" bordercolor="#FFFF00">
+    <tr>
+        <td width="772" bgcolor="#FFFF00"><h3><a
+        name="Normalizing Trees"><font color="#8000FF"
+        face="Verdana"><b>Normalizing Trees</b></font></a></h3>
+        </td>
+    </tr>
+</table>
+
+<p><font face="Arial">In general, AHEAD allows no sharing of AST
+subtrees - i.e., multiple parent nodes point to the same child
+AST subtree.&nbsp; Now, sharing subtrees is too easy to do in <a
+href="ASTConstructors.html" target="AST_Constructors.html">AHEAD</a><a
+href="ASTConstructors.html" target="AST_Constructors.html"> metaprogramming</a>:</font></p>
+
+<blockquote>
+    <pre><font face="Courier New">AST_Exp e = exp{ 4+5 }exp;
+AST_Stmt s = stm{ System.out.println( $exp(e), $exp(e)); }stm; //sharing!</font></pre>
+</blockquote>
+
+<p><font face="Arial">The above code is not correct if it is to
+be subsequently manipulated.&nbsp; (If it is merely to be
+printed, then tree sharing is OK).&nbsp; One fix to the above
+code would be to clone each AST before linking it in.&nbsp;</font></p>
+
+<blockquote>
+    <pre><font face="Courier New">AST_Exp e1 = (AST_Exp) e.clone();
+AST_Stmt s = stm{ System.out.println( $exp(e), $exp(e1)); }stm;</font></pre>
+</blockquote>
+
+<p><font face="Arial">Another and simpler is to normalize the
+tree. &nbsp; The normalize method walks a tree and locates shared
+subtrees; it clones each shared subtree so that the resulting AST
+has no tree sharing.</font></p>
+
+<blockquote>
+    <pre><font face="Courier New">AST_Exp e = exp{ 4+5 }exp;
+AST_Stmt s = stm{ System.out.println( $exp(e), $exp(e)); }stm; //sharing!
+s.normalize();       // tree sharing removed</font></pre>
+</blockquote>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%"
+bgcolor="#FFFF00" bordercolor="#FFFF00">
+    <tr>
+        <td width="772" bgcolor="#FFFF00"><h3><a
+        name="Detaching Trees"><b><font color="#8000FF"
+        face="Arial">Detaching Trees</font></b></a></h3>
+        </td>
+    </tr>
+</table>
+
+<p><font face="Arial">Occasionally it is useful to detach a
+subtree from an AST. &nbsp; (That is, all parent and sibling
+linkages are removed). A typical application is that the detached
+tree is to be serialized to disk for some later retrieval and
+manipulation. &nbsp; The following idiom illustrates the usage of
+Detach.</font></p>
+
+<blockquote>
+    <pre><font face="Courier New">// let a be the node that is to be detached from an AST
+// and is to be written to file &quot;myfile&quot;</font></pre>
+    <pre><font face="Courier New">a.Detach();
+a.writeTree(&quot;myfile&quot;);</font></pre>
+</blockquote>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%"
+bgcolor="#FFFF00" bordercolor="#FFFF00">
+    <tr>
+        <td width="772"><h3><a name="Methods on AST Nodes"><b><font
+        color="#8000FF" face="Arial">Methods on AST Nodes</font></b></a></h3>
+        </td>
+    </tr>
+</table>
+
+<p><font face="Arial">The following are methods that can be
+performed on AST nodes.</font></p>
+<div align="center"><center>
+
+<table border="1" bgcolor="#00FF00">
+    <tr>
+        <td><font face="Verdana"><strong>Method</strong></font></td>
+        <td><font face="Verdana"><strong>Semantics</strong></font></td>
+    </tr>
+    <tr>
+        <td><font size="2" face="Arial">String toString()</font></td>
+        <td><font size="2" face="Arial">convert tree rooted at
+        AST node to its string representation</font></td>
+    </tr>
+    <tr>
+        <td><font size="2" face="Arial">Object clone()</font></td>
+        <td><font size="2" face="Arial">clone tree rooted at
+        AST node (Note: you must cast the result to the appropriate type before 
+        use)</font></td>
+    </tr>
+    <tr>
+        <td><font size="2" face="Arial">AstNode
+        hasAncestor(String classname)</font></td>
+        <td><font face="Arial"><font size="2">progress up the AST
+        looking for a parent node that</font> <font size="2">is an instance of classname (or an
+        instance of some derived class)</font></font></td>
+    </tr>
+    <tr>
+        <td><font size="2" face="Arial">void PrettyDump()</font></td>
+        <td><font size="2" face="Arial">dump the contents of an
+        AST <br>
+        (useful for debugging)</font></td>
+    </tr>
+    <tr>
+        <td><font size="2" face="Arial">void dumpnode()</font></td>
+        <td><font size="2" face="Arial">useful for debugging
+        small ASTs</font></td>
+    </tr>
+    <tr>
+        <td><font size="2" face="Arial">AstNode Replace(AstNode withnode)</font></td>
+        <td><font size="2" face="Arial">Replace(k) swaps
+        &quot;this&quot; with node k. Replace returns k as a
+        result.</font></td>
+    </tr>
+    <tr>
+        <td><font size="2" face="Arial">void print()</font></td>
+        <td><font size="2" face="Arial">unparses the contents
+        of the AST rooted at &quot;this&quot; node</font></td>
+    </tr>
+    <tr>
+        <td><font size="2" face="Arial">void print(AstProperties props)</font></td>
+        <td><font size="2" face="Arial">unparses
+        &quot;this&quot; tree and outputs the result to file
+        specified in props</font></td>
+    </tr>
+    <tr>
+        <td><font size="2" face="Arial">reduce2java(AstProperties
+        props)</font></td>
+        <td><font face="Arial"><font size="2">prints the Java code
+        that is defined by the Jakarta AST </font><br>
+        <font size="2">that is rooted at &quot;this&quot; node</font></font></td>
+    </tr>
+    <tr>
+        <td><font size="2" face="Arial">boolean Equ( AstNode x )</font></td>
+        <td><font size="2" face="Arial">return true if tree
+        rooted by x is equal to &quot;this&quot;</font></td>
+    </tr>
+    <tr>
+        <td><font size="2" face="Arial">void Delete()</font></td>
+        <td><font size="2" face="Arial">delete the current
+        node; node must be an
+        element of some list structure</font></td>
+    </tr>
+    <tr>
+        <td><font face="Arial" size="2">void add( AstList tree )</font></td>
+        <td><font face="Arial" size="2">adds tree after the current node. (Note: 
+        &quot;this&quot; must be an AstList).</font></td>
+    </tr>
+    <tr>
+        <td><font face="Arial" size="2">void add( AstList tree, String 
+        separator)</font></td>
+        <td><font face="Arial" size="2">just like add (above), but the separator 
+        is also specified. Useful for comma-separated lists.</font></td>
+    </tr>
+    <tr>
+        <td><font size="2" face="Arial">void AddAfter(AstList tree)</font></td>
+        <td><font size="2" face="Arial">add tree after
+        &quot;this&quot; node; &quot;this&quot; node must<br>
+        be an element of some list structure</font></td>
+    </tr>
+    <tr>
+        <td><font size="2" face="Arial">void AddBefore(AstList tree)</font></td>
+        <td><font size="2" face="Arial">add tree before
+        &quot;this&quot; node; &quot;this&quot; node must<br>
+        be an element of some list structure</font></td>
+    </tr>
+    <tr>
+        <td><font size="2" face="Arial">AstNode
+        addComment(String comment)</font></td>
+        <td><font face="Arial"><font size="2">is method appends the
+        comment given by the parameter </font><br>
+        <font size="2">to the first AstToken</font></font></td>
+    </tr>
+    <tr>
+        <td><font size="2" face="Arial">AstNode
+        addComment(String comment, boolean replace)</font></td>
+        <td><font size="2" face="Arial">optionally add or
+        replace comment in front of first token</font></td>
+    </tr>
+    <tr>
+        <td><font size="2" face="Arial">void appendComment(String x)</font></td>
+        <td><font size="2" face="Arial">add comment x to the specified tree
+          after the first white space; tree must have a token in it</font></td>
+    </tr>
+    <tr>
+        <td><font size="2" face="Arial">void prependComment(String x)</font></td>
+        <td><font size="2" face="Arial">add comment x to the specified tree
+          before the first white space; tree must have a token in it</font></td>
+    </tr>
+    <tr>
+        <td><font size="2" face="Arial">AstNode normalizeTree(&nbsp; )</font></td>
+        <td><font size="2" face="Arial">This method is used to
+        repair ASTs that share subtrees which might have been
+        created during sloppy metaprogramming.&nbsp; The idea is
+        to walk the tree looking for nodes that don't point to
+        their parent. In such cases, the subtree is cloned and
+        the result is that normalized trees don't have shared
+        subtrees</font></td>
+    </tr>
+    <tr>
+        <td><font size="2" face="Arial">void Detach()</font></td>
+        <td><font size="2" face="Arial">Detach isolates a
+        subtree from its left, up, and right node relations.
+        Useful for disconnecting a tree from an existing tree</font></td>
+    </tr>
+    <tr>
+        <td><font size="2" face="Arial">void writeTree( String
+        fileName )</font></td>
+        <td><font size="2" face="Arial">serializes an AST to a
+        file (filename.ser); make sure AST is detached before
+        calling writeTree()</font></td>
+    </tr>
+</table>
+</center></div>
+
+<hr>
+
+<p><font color="#8000FF" face="Arial"><strong><a
+href="index.html">&nbsp;AHEAD Home Page</a></strong></font></p>
+
+<p><font face="Arial"><b>Copyright © Software Systems
+Generator Research Group. All rights reserved.</b> <br>
+<b>Revised:&nbsp;<!--webbot bot="TimeStamp" startspan
+s-format="%B %d, %Y" s-type="EDITED" -->April 17, 2003<!--webbot
+bot="TimeStamp" i-CheckSum="17605" endspan -->.</b> </font></p>
+</body>
+</html>

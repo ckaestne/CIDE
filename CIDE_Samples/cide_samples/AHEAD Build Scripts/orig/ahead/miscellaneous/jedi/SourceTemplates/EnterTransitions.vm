@@ -1,0 +1,45 @@
+## EnterTransitions.vm
+## JEDI Project
+## HTML Template for Exit transitions declarations
+## Author: Roberto E. Lopez-Herrejon
+## Last update: November 10, 2002
+## Enter State Clause of State Diagram
+
+#if ($enterFlag == "true") 
+ <A NAME="enter_clause"><!-- --></A>
+ <TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+ <TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+ <TD COLSPAN=1>
+  <FONT SIZE="+2">
+   <B> Enter Clause </B>
+  </FONT>
+ </TD>
+ </TR>
+ </TABLE>  
+
+ #foreach ($enters in $listEnters)
+  <H3>
+   <A NAME="$enters.name() enter_clause"> <!-- --></A>
+    $enters.name()          
+  </H3>
+
+$generator.descriptionComment($enters.inlineTags())
+
+  <UL>
+  #foreach($enter_classes in $enters.classes())
+     <LI>
+       #set ($reference = ".hmtl")
+       <A HREF="enter_classes.name()$reference">
+         $enter_classes.name()
+       </A>		 
+     </LI>		  
+  #end   ## for all the enter classes of this state
+  </UL>
+
+  <HR>
+
+  #end ## for all the enter states
+    
+  <BR>	   
+#end
+

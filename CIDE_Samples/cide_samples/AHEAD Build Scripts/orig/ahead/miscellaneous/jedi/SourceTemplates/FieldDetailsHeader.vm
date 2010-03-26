@@ -1,0 +1,21 @@
+## FieldDetailsHeader.vm
+## JEDI Project 
+## Author: Roberto E. Lopez-Herrejon
+## Last update: November 30, 2002
+
+ ## Writes the bar of Field Details Header
+ <!-- ======== FIELD DETAILS ======== -->
+ <TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%"> 	
+ <TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+ <TD COLSPAN=1><FONT SIZE="+2">
+ <B> Field  Details </B>
+ </FONT>
+ </TD>
+ </TR> 
+ </TABLE> 
+ <BR>	 
+
+## End of FieldDetailsHeader.vm
+
+
+

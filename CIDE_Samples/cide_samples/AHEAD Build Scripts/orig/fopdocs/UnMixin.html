@@ -1,0 +1,312 @@
+
+
+<head>
+<title>The unmixin Tool</title>
+</head>
+
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%">
+  <tr>
+    <td WIDTH="78">
+    <img border="0" src="images/FopButton3.jpg" width="80" height="64"></td>
+    <td WIDTH="688" BGCOLOR="#00FFFF"><h1><font face="Arial" color="#0000FF">The
+      unmixin Decomposition Tool</font></h1>
+    </td>
+  </tr>
+</table>
+
+<p><font face="Arial"><b>unmixin</b></font><font face="Arial"> is a tool that decomposes a
+<b>mixin</b>-produced
+<b>.jak</b> file(s) and propagates changes made to this file back to the
+constituent layer files.&nbsp; To invoke unmixin via a command line:</font></p>
+<blockquote>
+  <pre>&gt; unmixin &lt;names of one or more files&gt;</pre>
+</blockquote>
+
+<p><font face="Arial">Without <b>unmixin</b>, changes must be
+propagated manually, which is
+tedious and error prone.&nbsp; While <b>unmixin</b> can't propagate every change, it
+certainly can do a lot and save considerable time.</font></p>
+<p align="center"><img border="0" src="images/Backward.gif" width="495" height="186"></p>
+<p><font face="Arial"><b>unmixin</b></font><font face="Arial"> has a few simple rules of operation:</font></p>
+<ul>
+  <li><font face="Arial">the file that whose changes it will back-propagate must
+    be produced by <b>mixin</b>.&nbsp; Inside this file are <b>SoUrCe</b>
+    declarations.&nbsp; A <b>SoUrCe</b> declaration prefaces each interface,
+    class, or state machine definition that was instantiated by <b>mixin</b>;
+    the <b>SoUrCe</b> declaration identifies the layer file from which this definition
+    was derived.&nbsp;</font></li>
+  <li><font face="Arial"> changes that are back-propagated are:</font>
+    <ul>
+      <li><font face="Arial">the body of that definition, i.e., the contents
+        within {&nbsp; ... },</font></li>
+      <li><font face="Arial">the parents of that definition (e.g., the
+        declarations of the extends clause).</font></li>
+    </ul>
+  </li>
+  <li><font face="Arial">changes that are <b>not</b> propagated are:</font>
+    <ul>
+      <li><font face="Arial"> modifiers added to interface, class, or
+        state machine definitions,</font></li>
+      <li><font face="Arial">comments that preface the interface, class or state
+        machine definitions,</font></li>
+      <li><font face="Arial">changes to local identifiers (whose names are
+        mangled).</font></li>
+    </ul>
+  </li>
+</ul>
+<p><font face="Arial">When using <b>unmixin</b>, remember the following:</font></p>
+<ul>
+  <li><font face="Arial" color="#FF0000"><b>do not change the contents of SoUrCe
+    lines!</b></font></li>
+  <li><font face="Arial" color="#FF0000"><b>remember to always refer to
+    variables that have locally mangled names with these names.&nbsp; During
+    back-propagation, unmixin unmangles these names.</b></font></li>
+</ul>
+<p><font face="Arial"><b>unmixin</b> will propagate changes to a .jak file only 
+if changes have been made.&nbsp; Thus, if you produce file f by <b>mixin</b> 
+composition, but do not change its contents, &quot;<b>unmixin</b> f&quot; will examine f 
+and the files that it references, but will not update these files.</font></p>
+<p><font face="Arial">Illustrations of <b>unmixin</b> are in the following sections:</font></p>
+<ul>
+  <li><font face="Arial"><a href="#Updating Interface Declarations"><i>updating
+    interface declarations</i></a></font></li>
+  <li><font face="Arial"><a href="#Updating Class Declarations"><i>updating class
+    declarations</i></a></font></li>
+  <li><font face="Arial"><a href="#Updating State Machine Declarations"><i>updating
+    state machine declarations</i></a></font></li>
+  <li><font face="Arial"><a href="#Limitations, Future Versions and Known Problems"><i>limitations,
+        future versions and known problems</i></a></font>
+  </li>
+</ul>
+
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FFFF00">
+  <tr>
+    <td WIDTH="788"><h2><font face="Arial" color="#0000FF"><a name="Updating Interface Declarations">Updating Interface Declarations</a></font></h2>
+    </td>
+  </tr>
+</table>
+
+<p><font face="Arial">Consider the following interface (top.jak) and refinement
+(mid.jak):</font></p>
+<blockquote>
+  <pre><font face="Courier New">layer first;
+
+interface MyInt extends FooInterface {
+    int Silent = 0;
+    void foo() throws AFit;
+    SomeType bar( int x );
+}</font></pre>
+  <hr>
+  <pre><font face="Courier New">layer second;
+
+public transient refines interface MyInt extends yyy, java.io.Serializable {
+   int Terse = 2;
+   void foo() throws SomeException;
+   int increment( int i );
+}</font></pre>
+</blockquote>
+<p><font face="Arial">Shown below is the <b>mixin</b> composition of these
+files, along with hand-made changes highlighted in <span style="background-color: #FFFF00">yellow</span>:</font></p>
+<blockquote>
+<pre><font face="Courier New">layer first;
+
+SoUrCe RooT first &quot;top.jak&quot;;
+
+abstract interface MyInt$$first extends FooInterface {
+    int Silent = 0;
+    void foo() throws AFit<span style="background-color: #FFFF00">, moreFits</span>;
+    SomeType bar( int x );
+}
+
+SoUrCe  second &quot;mid.jak&quot;;
+
+public transient  interface MyInt extends yyy, java.io.Serializable, MyInt$$first {
+   int Terse = <span style="background-color: #FFFF00">3</span>;
+   void foo() throws SomeException;
+   int increment( int i );
+}</font></pre>
+</blockquote>
+<p><font face="Arial">To back-propagate these changes,
+execute</font></p>
+<blockquote>
+  <pre><font face="Courier New">&gt; unmixin Result.jak</font></pre>
+</blockquote>
+<p><font face="Arial"><b>unmixin</b></font><font face="Arial"> takes a single file as its argument and has
+no optional parameters.</font></p>
+<h4><font face="Arial" color="#0000FF">Exercise</font></h4>
+<p><font face="Arial">Try the example above.</font></p>
+
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FFFF00">
+  <tr>
+    <td WIDTH="788"><h2><font face="Arial" color="#0000FF"><a name="Updating Class Declarations">Updating Class Declarations</a></font></h2>
+    </td>
+  </tr>
+</table>
+
+<p><font face="Arial">Consider the following class declaration (top.jak) and
+refinement (mid.jak):</font></p>
+<blockquote>
+  <pre><font face="Courier New">layer first;
+
+class top {
+   int jj;
+
+   top(int rj) { jj = rj; }
+
+   void foo(float x, float y) { /* do something */ }
+}</font></pre>
+  <hr>
+  <pre><font face="Courier New">layer second;
+
+refines class top implements java.io.Serializable, xxx {
+   static int k;
+
+   top(float x) { /* do something */ }
+
+   float foobar() { Super(float,float).foo(0, 0); }
+
+   public void foo( float x, float y ) { /* something more */ }
+}</font></pre>
+</blockquote>
+<p><font face="Arial">The result of their composition using <b>mixin</b> is
+shown below, along with hand-made changes indicated in <span style="BACKGROUND-COLOR: #ffff00">yellow</span>.</font></p>
+<blockquote>
+  <pre>layer first;
+
+SoUrCe RooT first &quot;top.jak&quot;;
+
+abstract class top$$first {
+   int jj;
+
+   top$$first(int rj) { jj = rj; }
+
+   void foo(float x, float y) { /* do something */ }</pre>
+  <pre>   <span style="background-color: #FFFF00">void biff() { /* a new method */ }</span>
+}
+
+SoUrCe  second &quot;mid.jak&quot;;
+
+class top extends top$$first implements java.io.Serializable, xxx<span style="background-color: #FFFF00">, yyy</span> {
+   static int k;</pre>
+  <pre>   <span style="background-color: #FFFF00">public int global = 0; // a new variable</span>
+
+   top(float x) { /* do something */ }
+
+   float foobar() { Super(float,float).foo(0, 0); }
+
+   public void foo( float x, float y ) { /* something more */ <span style="background-color: #FFFF00">/* extra */</span> }
+}
+</pre>
+</blockquote>
+<p><font face="Arial">Let the resulting file above be Result.jak. To back-propagate these changes,
+execute</font></p>
+<blockquote>
+  <pre><font face="Courier New">&gt; unmixin Result.jak</font></pre>
+</blockquote>
+<h4><font face="Arial" color="#0000FF">Exercise</font></h4>
+<p><font face="Arial">Try the example above.</font></p>
+
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FFFF00">
+  <tr>
+    <td WIDTH="788"><h2><font face="Arial" color="#0000FF"><a name="Updating State Machine Declarations">Updating
+State Machine Declarations</a></font></h2>
+    </td>
+  </tr>
+</table>
+
+<p><font face="Arial">Consider the following state machine declaration (top.jak) and
+refinement (mid.jak):</font></p>
+<blockquote>
+  <pre>layer first;
+
+state_machine root {
+
+   event_delivery mymessage( M m );
+   no_transition { ignore(m); }
+
+   states g, h, i;
+
+   edge e1 : g -&gt; h conditions m!=null do { gh(); }
+
+   edge e2 : h -&gt; i conditions true do { /*nothing*/ }
+
+   void gh() { /* gh action */ }
+}</pre>
+  <hr>
+  <pre><font face="Courier New">layer second;
+
+refines state_machine root {
+
+   states j, k;
+
+   edge e3 : g -&gt; j conditions m!=null do { anotherAction(5); }
+
+   edge e66 : j -&gt; k conditions true do { gh(); }
+
+   void anotherAction(int f) { /* do something */ }
+}</font></pre>
+</blockquote>
+<p><font face="Arial">The result of their composition using <b>mixin</b> is
+shown below, along with hand-made changes indicated in <span style="BACKGROUND-COLOR: #ffff00">yellow</span>:</font></p>
+<blockquote>
+  <pre>layer first;
+
+SoUrCe RooT first &quot;top.jak&quot;;
+
+abstract state_machine root$$first {
+
+   event_delivery mymessage( M m );
+   no_transition { ignore(m); }
+
+   states g, h, i;
+
+   edge e1 : g -&gt; h conditions m!=null do { gh(); }
+
+   edge e2 : h -&gt; i conditions true do { /*nothing*/ }</pre>
+  <pre>   <span style="background-color: #FFFF00">edge newedge : g -&gt; h conditions true do { gh(); }  // new edge</span>
+
+   void gh() { /* gh action */ }
+}
+
+SoUrCe  second &quot;mid.jak&quot;;
+
+state_machine root extends root$$first {
+
+   states j, k<span style="background-color: #FFFF00">, g</span>;
+
+   edge e3 : g -&gt; j conditions m!=null do { anotherAction(5); }
+
+   edge e66 : j -&gt; k conditions true do { gh(); }
+
+   void anotherAction(int f) { /* do something */ }
+
+   <span style="background-color: #FFFF00">public static void main( String args[] ) { /* main */ }</span>
+}</pre>
+</blockquote>
+<p><font face="Arial">Let the resulting file above be Result.jak. To back-propagate these changes,
+execute</font></p>
+<blockquote>
+  <pre><font face="Courier New">&gt; unmixin Result.jak</font></pre>
+</blockquote>
+<h4><font face="Arial" color="#0000FF">Exercise</font></h4>
+<p><font face="Arial">Try the example above.</font></p>
+
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FFFF00">
+  <tr>
+    <td WIDTH="788"><h2><font face="Arial" color="#0000FF"><a name="Limitations, Future Versions and Known Problems">Limitations,
+Future Versions and Known Problems</a></font></h2>
+    </td>
+  </tr>
+</table>
+
+<ul>
+  <li><font face="Arial">when <b>unmixin</b> processes a file that was not
+    produced by <b>mixin</b>, no error results.&nbsp; Actually nothing happens,
+    but at least a warning should be issued.</font></li>
+</ul>
+<hr>
+<p><b><font face="Arial"><a href="index.html">ATS Home Page</a></font></b></p>
+<p><font face="Arial"><b>Copyright © Software Systems Generator Research Group. 
+All rights reserved.</b> <br>
+<b>Revised:&nbsp;<!--webbot bot="TimeStamp" s-format="%B %d, %Y" s-type="EDITED" startspan -->January 25, 2006<!--webbot bot="TimeStamp" endspan i-checksum="31592" -->.</b>
+</font></p>

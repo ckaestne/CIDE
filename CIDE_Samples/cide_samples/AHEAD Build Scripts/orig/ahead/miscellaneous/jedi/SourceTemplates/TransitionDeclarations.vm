@@ -1,0 +1,69 @@
+## TransitionDeclarations.vm
+## JEDI Project 
+## HTML Template for Transition Declarations
+## Author: Roberto E. Lopez-Herrejon
+## Last update: November 6, 2002
+## Transition Declarations of State Machines
+
+
+ #if ($transitiondeclFlag == "true")
+  <A NAME="transitions_clause"><!-- --></A>
+  <TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+   <TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+     <TD COLSPAN=1>
+      <FONT SIZE="+2">
+       <B> Transitions Declarations </B>
+      </FONT>
+     </TD>
+   </TR>
+  </TABLE>	 
+ 
+  #foreach($transition in $listTransitions) 
+    <H3>
+     <A NAME="$transition.name() transition_clause"><!-- --></A> 
+     $transition.name()     
+    </H3>	
+
+     ## Arrow from startState  ---> endState
+     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	
+     <B> $transition.startName() </B>  ----> 
+     <B> $transition.endName()   </B>
+     <DL> 
+	<DD>
+	  <B> Conditions: </B>
+	   $transition.conditions()
+        </DD>
+	<DD> 
+	  <BR> $generator.descriptionComment($transition.inlineTags())
+	</DD> 
+
+	#if ($transition.classes.size() !=0 )	
+	 <DD> <BR> 
+	  <B> Block contents: </B>
+         </DD>
+	#end
+
+     </DL>	
+
+     <UL>
+     <UL>
+
+     #foreach ($transition_class in $transition.classes())	
+       <LI>
+	#set ($reference = ".html")
+        <A HREF="$transition_class.name()$reference">	  
+           $transition_class.name()
+        </A>
+       </LI>	
+     #end    ## for all the classes in the transition
+
+     </UL>
+     </UL>
+
+     <HR>
+
+   #end   ## for all the transitions
+   <BR>
+
+  #end
+

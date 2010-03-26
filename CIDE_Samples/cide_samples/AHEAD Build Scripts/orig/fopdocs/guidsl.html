@@ -1,0 +1,819 @@
+
+
+<head>
+<title>The guidsl Tool</title>
+</head>
+
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%">
+  <tr>
+    <td WIDTH="78">
+    <img border="0" src="images/FopButton3.jpg" width="80" height="64"></td>
+    <td WIDTH="688" BGCOLOR="#00FFFF"><h3><font size="+3" color="#8000FF" face="Arial">The 
+       
+      guidsl Tool</font></h3>
+    </td>
+  </tr>
+</table>
+
+<p><font face="Arial"><b>guidsl</b> is the tool for specifying AHEAD models 
+and feature usage/compatibility constraints (i.e., <b>design rules</b>).&nbsp;It 
+replaces the design-rule checking tool <b>drc</b>.</font></p> 
+
+<p><font face="Arial">A guidsl model is an annotated grammar where each sentence 
+defines a member of an AHEAD product-line.&nbsp; Tokens are features and 
+consecutive features are composed. Constraints on sentences are 
+defined by arbitrary propositional formulas.&nbsp; <b>guidsl</b> takes a model as 
+input, and produces a declarative specification language for specifying 
+products.&nbsp; Outputs of <b>guidsl</b> are equation (singular or plural!) files from which you 
+can synthesize particular programs.&nbsp; <b>guidsl</b> can also be called 
+programmatically as a tool to verify feature selection compatibilities.</font></p> 
+<ul> 
+  <li><font face="Arial"><a href="#Tool Features">Model Specification 
+  File</a></font><ul> 
+  <li><font face="Arial"><a href="#Grammars">Grammars</a></font></li> 
+  <li><font face="Arial"><a href="#Constraints in Writing Grammars">Constraints 
+  in Writing Grammars</a></font></li>
+  <li><font face="Arial"><a href="#Annotations">Propositional Constraints</a></font></li>
+  <li><font face="Arial"><a href="#Annotations">Annotations</a></font></li>
+</ul>
+
+  </li> 
+  <li><font face="Arial"><a href="#Tool Features">Tool Features</a></font><ul> 
+  <li><font face="Arial"><a href="#Model Debugger">Model Debugging</a></font></li>
+  <li><font face="Arial"><a href="#Model Checker">Model Checker</a></font></li>
+  <li><font face="Arial"><a href="#Variable Value Explanations">Variable Table 
+  and Propositional Formulas</a></font></li>
+  <li><font face="Arial"><a href="#Variable Value Explanations">Variable Value 
+  Explanation</a></font></li>
+  <li><font face="Arial"><a href="#Saving Equations and Configurations">Saving 
+  Equations and Configurations</a></font></li>
+  <li><font face="Arial"><a href="#Command Line Options">Example</a></font></li>
+</ul>
+
+  </li>
+  <li><font face="Arial"><a href="#Model Mode">Model Mode</a></font></li>
+  <li><font face="Arial"><a href="#command-line options">Command-line Options</a></font></li>
+  <li><font face="Arial"><a href="#Programmatic Invocation">Programmatic 
+  Invocation</a></font></li>
+</ul>
+
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FFFF00">
+  <tr>
+    <td WIDTH="788"><h2><font face="Arial" color="#0000FF">
+    <span style="background-color: #FFFF00"><a name="Model Specification File">
+    Model Specification File</a></span></font></h2>
+    </td>
+  </tr>
+</table>
+
+<p><font face="Arial">A model file has a .m extension.&nbsp; It has the 
+following 3-part format:</font></p>
+  
+<div align="center">
+  <center>
+  <table border="1" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" bgcolor="#FFCC66" width="347">
+    <tr>
+      <td width="345"><font face="Courier New">grammar definition<br>
+      %%<br>
+      propositional constraints<br>
+      ##<br>
+      annotations</font></td>
+    </tr>
+  </table>
+  </center>
+</div>
+
+<p><font face="Arial">Briefly, an AHEAD or GenVoca model of a domain is a 
+<a href="#Grammars">grammar</a>.&nbsp; Tokens represent individual features and sentences represent 
+particular compositions of tokens.&nbsp; Not all sentences are legal.&nbsp; 
+Arbitrary <a href="#Annotations">propositional formulas</a> can be defined to 
+eliminate unwanted feature combinations (sentences).&nbsp; Annotations are used 
+to control the display of a GUI declarative language.&nbsp; </font></p>
+  
+<p><font face="Arial">Only the grammar definition is required in a model 
+specification.&nbsp; If propositional constraints are present, these constraints 
+are distinguished from the grammar definition by the %% separator.&nbsp; If 
+annotations are present, they are separated from constraints and grammar by ##.</font></p>
+  
+<table BORDER="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FF00FF">  
+  <tr>  
+    <td WIDTH="766"><h3><font face="Arial" color="#FFFFFF"><a name="Grammars">Grammars</a></font></h3>  
+    </td>  
+  </tr>  
+</table>  
+  
+<p><font face="Arial">A <b>guidsl</b> grammar is a sequence of productions, the 
+start production is the first that is listed.</font></p>  
+  
+<p><font face="Arial">A <b>production</b> is a set of one or more <b>named patterns</b>.&nbsp; 
+Production Pr (below) has named patterns P1, P2, and P3:</font></p>  
+<blockquote>
+  <pre><font face="Courier New">Pr	:  ...  :: P1
+	|  ...  :: P2
+	|  ...  :: P3
+	;</font></pre>
+</blockquote>
+<p><font face="Arial">Production names are on the left-hand side, pattern names 
+follow a pattern (...) that is terminated by </font><font face="Courier New">::</font><font face="Arial">.</font></p>
+  
+<p><font face="Arial">A <b>pattern</b> is a series of terms or optional terms.&nbsp; A 
+<b>term</b> is:</font></p>
+  
+<ul>
+  <li><font face="Arial">a token (e.g., <b>T</b>) </font></li>
+  <li><font face="Arial">a production reference (e.g., <b>r</b>), or</font></li>
+  <li><font face="Arial">a one-or-more production reference (<b>r+</b>)</font></li>
+</ul>
+<p><font face="Arial">An <b>optional term</b> is:</font></p>
+  
+<ul>
+  <li><font face="Arial">an optional token (<b>[ T ]</b> -- a token in brackets),</font></li>
+  <li><font face="Arial">an optional production reference (e.g., <b>[ r ]</b> -- a 
+  production name in brackets)</font></li>
+  <li><font face="Arial">a zero-or-more production reference ( <b>r*</b> -- a 
+  production name followed by *)</font></li>
+</ul>
+<p><font face="Arial">An example pattern begins with the token ALPHA, followed by zero-or-one beta, followed by one-or-more gamma, followed by an optional token DELTA::</font></p>
+<blockquote>
+  <pre><font face="Courier New" size="3">ALPHA [beta] gamma+ [DELTA]</font></pre>
+</blockquote>
+<p><font face="Arial"><b><a name="Exception">Exception</a></b>. In the case when 
+a pattern is just a single token, it is not necessary to specify a pattern name.&nbsp; 
+Instead, a pattern name is generated.&nbsp; 
+The name of the pattern that is formed by a single TOKEN is _TOKEN (i.e., 
+underscore prepended).</font></p>
+  
+<blockquote>
+<p><font face="Arial" color="#FF0000"><b><a name="Order of Composition">Order of 
+Composition</a></b>. Note: write your grammars so that the &quot;base&quot; feature or 
+token always terminates the right-hand side of your grammar, and that tokens 
+(features) are composed in the order in which you would compose functions.&nbsp; 
+For example, the production:</font></p>
+  
+  <blockquote>
+<p><font face="Courier New" color="#FF0000">Pr :&nbsp;A B C :: P1 ;</font></p>
+  
+  </blockquote>
+<p><font face="Arial" color="#FF0000">means start with feature C, compose B, and 
+then compose A, i.e., A(B(C))).</font></p>
+  
+</blockquote>
+  
+<table BORDER="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FF00FF">  
+  <tr>  
+    <td WIDTH="766"><h3><font face="Arial" color="#FFFFFF">
+    <a name="Constraints in Writing Grammars">Constraints in Writing Grammars</a></font></h3>  
+    </td>  
+  </tr>  
+</table>  
+  
+<p><font face="Arial">Please make note of the following constraints as you 
+design your model grammar.</font></p>
+  
+<ul>
+  <li><font face="Arial"><i>No token (primitive layer/feature) can appear in more 
+  than one rule.&nbsp; Tokens can be referenced only ONCE.</i><br>
+  <br>
+  If you really think you have feature replication, give the features/tokens 
+  different names.&nbsp; They will correspond to something different in an 
+  actual implementation.<br>
+&nbsp;</font></li>
+  <li><font face="Arial"><i>No production can be referenced from more than one 
+  rule.&nbsp; Productions can be referenced AT MOST ONCE.</i><br>
+  <br>
+  If you really think you have production replication, for now, you'll have to 
+  replicate the production itself and give it a new name.<br>
+&nbsp;</font></li>
+  <li><i><font face="Arial">+ and * semantics.&nbsp; Plus (+) means choose 
+  one-or-more WITHOUT REPLICATION; star (*) means zero or more WITHOUT 
+  REPLICATION.<br>
+&nbsp;</font></i></li>
+  <li><i><font face="Arial">Tokens or features are composed from left to right.
+  <a href="#Order of Composition">Click here for more details</a>.</font></i></li>
+</ul>
+  
+<table BORDER="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FF00FF">  
+  <tr>  
+    <td WIDTH="766"><h3><font face="Arial" color="#FFFFFF">
+    <a name="Propositional Constraints">Propositional Constraints</a></font></h3>  
+    </td>  
+  </tr>  
+</table>  
+  
+<p><font face="Arial">The variables of a grammar are:</font></p>
+  
+<ul>
+  <li><font face="Arial">production names</font></li>
+  <li><font face="Arial">pattern names</font></li>
+  <li><font face="Arial">token names</font></li>
+</ul>
+<p><font face="Arial">Arbitrary propositional constraints (formulas) can be defined, one 
+per line, that reference these variables.&nbsp; Formulas can be 
+constructed from the following operators, listed in order of their precedence:</font></p>
+  
+<ul>
+  <li><font face="Courier New">(&lt;exp&gt;)</font></li>
+  <li><font face="Courier New">not &lt;exp&gt;</font></li>
+  <li><font face="Courier New">&lt;exp&gt; and &lt;exp&gt;</font></li>
+  <li><font face="Courier New">&lt;exp&gt; or&nbsp; &lt;exp&gt;</font></li>
+  <li><font face="Courier New">&lt;exp&gt; implies &lt;exp&gt;</font></li>
+  <li><font face="Courier New">&lt;exp&gt; iff &lt;exp&gt;</font></li>
+</ul>
+<p><font face="Arial">In addition, new variables may be defined by the following 
+statement:</font></p>
+<blockquote>
+  <p><font face="Courier New">let &lt;variableName&gt; iff &lt;propositional formula&gt;;</font></p>
+</blockquote>
+<p><font face="Arial">The ability to define additional variables is useful when 
+repeated propositional formulas arise in constraint specification.</font></p>
+  
+<table BORDER="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FF00FF">  
+  <tr>  
+    <td WIDTH="766"><h3><a name="Annotations">
+    <font face="Arial" color="#FFFFFF">Annotations</font></a></h3>  
+    </td>  
+  </tr>  
+</table>  
+  
+<p><font face="Arial">Tokens and productions can be annotated to alter their 
+display or internal actions.&nbsp; Let Tag denote a token or production name.&nbsp; 
+The format of an annotation is:</font></p>
+<blockquote>
+  <p><font face="Courier New">Tag { &lt;annotation-list&gt; }</font></p>
+</blockquote>
+<p><font face="Arial">Where an annotation list is a list of zero or more phrases 
+of the form:</font></p>
+<blockquote>
+  <p><font face="Courier New">singleAnnotation</font></p>
+  <p><font face="Courier New">stringAnnotation = &quot;value&quot;</font></p>
+</blockquote>
+<p><font face="Arial">We'll consider each type  in turn. Four 
+string annotations are currently supported:</font></p>
+<ul>
+  <li><font face="Arial"><b>disp = &quot;value&quot;</b>. Instead of displaying the name 
+  of Tab as it appears in a guidsl grammar, &quot;value&quot; is used instead.</font></li>
+  <li><font face="Arial"><b>out = &quot;value&quot;</b>. When an equation is generated, 
+  use &quot;value&quot; instead of the name given in the <b>guidsl</b> grammar.</font></li>
+  <li><font face="Arial"><b>help = &quot;value&quot;</b>. Display &quot;value&quot; as the help 
+  string for Tab.&nbsp; When a mouse hovers over a variable in a generated GUI, 
+  this value/explanation is displayed.<font color="#FF0000"> (Warning -- this 
+  feature may not yet be working).</font></font></li>
+  <li><font face="Arial"><b>helpfile = &quot;value&quot;. </b>The Tab feature may have an 
+  html file which describes its capabilities.&nbsp; &quot;value&quot; is the path to this 
+  file. <font color="#FF0000">(Warning -- this feature may not yet be working).</font></font></li>
+</ul>
+<p><font face="Arial">Three single annotations are supported:</font></p>
+<ul>
+  <li><font face="Arial"><b>hidden</b>.&nbsp; This annotation means do not 
+  display this token or production.&nbsp; Usually when this is used, the 
+  inclusion or exclusion of the token/production is deduced from constraints.</font></li>
+  <li><font face="Arial"><b>tab</b>. This annotation is used only on productions 
+  (or rather, it is ignored on tokens).&nbsp; A new GUI tab that is rooted at 
+  this production will be displayed.&nbsp; This annotation is used for 
+  graphically decomposing large models into separate GUI tabs.&nbsp; This tries 
+  to emulate Microsoft Wizards, except that with tabs, you can flip between tabs 
+  at will, whereas Wizards require sequential specifications.</font></li>
+  <li><font face="Arial"><b>eqn</b>. This annotation means that a separate AHEAD 
+  equation is to be formed from the sentence of this production.&nbsp;&nbsp; The 
+  use of this annotation is experimental, and is intended for use in Origami.<br>
+  <br>
+  For example, suppose the following equations (plural!) file is produced:</font></li>
+</ul>
+<blockquote>
+  <pre><font size="3" face="Courier New">this = A B C D E F G</font></pre>
+</blockquote>
+  <pre><font size="3"><font face="Arial">where the grammar is:</font></font></pre>
+<blockquote>
+  <pre><font size="3"><font face="Courier New">root : left right :: full ; 
+left : A B C :: leftprod;
+right : D E F G :: rightprod;</font></font></pre>
+</blockquote>
+  <pre><font size="3"><font face="Arial">Using the annotations:</font></font></pre>
+<blockquote>
+  <pre><font size="3"><font face="Courier New">left { eqn }
+right { eqn }</font></font></pre>
+</blockquote>
+  <pre><font face="Arial" size="3">the equations file that would be generated is:</font></pre>
+<blockquote>
+  <pre><font size="3" face="Courier New">this = left right
+left = A B C 
+right = D E F G</font></pre>
+</blockquote>
+
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FFFF00">
+  <tr>
+    <td WIDTH="788"><h2><span style="background-color: #FFFF00">
+    <a name="Tool Features"><font face="Arial" color="#0000FF">Tool Features</font></a></span></h2>
+    </td>
+  </tr>
+</table>
+
+  <font FACE="Arial">
+<p><b>guidsl</b> has many features, some of which are documented in the 
+following sections.&nbsp; These features are accessible through the file or help 
+menus.</p>
+  
+<table BORDER="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FF00FF">  
+  <tr>  
+    <b>
+  <font FACE="Arial" SIZE="1" color="#FFFFFF">  
+    <td WIDTH="766"><h3><a name="Model Debugger">Model Debugger</a></h3>  
+    </td>  
+</font></b>
+  
+  </tr>  
+</table>  
+  
+<p>Internally, <b>guidsl</b> maps a model specification to a propositional 
+formula, which is ideal for constraint propagation.&nbsp; 
+But it may also be useful in model debugging.&nbsp; <b>guidsl</b> uses the
+<a href="http://www.sat4j.org/">sat4j satisfiability</a> solver to help debug 
+models.&nbsp; As a model designer, you know what sets of features should be compatible 
+or incompatible.&nbsp; You can define these as a sequence of tests, by placing 
+them in a file.&nbsp; A set of features that are compatible means that if these 
+features are selected, the propositional formula of the model is satisfiable 
+(i.e., other features can still be selected to satisfy the formula).&nbsp; To 
+run a file of tests, run the model debugger (screen snapshot is below), and open 
+the test file.</p>
+  
+<p><img border="0" src="images/guidsl1.jpg" width="421" height="362"></p>
+  
+<p>A test file is a sequence of named tests. A compatibility test is defined as:</p>
+<blockquote>
+  <pre><font face="Courier New">#true &lt;rest of this line is the name of the test&gt;
+&lt;sequence of primitive TOKENS separated by blanks 
+   that define the set of compatible features; 
+   may be on one or more lines&gt;
+# any line beginning with a #  is a comment, except for #true, #false, and #end
+#end</font></pre>
+</blockquote>
+<p>So if features A, B, C are compatible, the following test will confirm it:</p>
+</font>
+  <font FACE="Courier New">
+<blockquote>
+  <pre>#true A,B,C are compatible
+A B C 
+#end</pre>
+</blockquote>
+</font>
+  <font FACE="Arial">
+<p>If a set of features is known to be incompatible, the following specification 
+is used:</p>
+<blockquote>
+  <pre>#false &lt;name of test&gt;
+&lt;sequence of TOKENS separated by blanks across one or more lines&gt;
+#end</pre>
+</blockquote>
+<p>So if features A, B, D are incompatible, the following test will confirm it:</p>
+<blockquote>
+  <pre>#false A,B,D are incompatible
+A B 
+D
+#end</pre>
+</blockquote>
+<p>Note: it is also possible to verify that features are deselected.&nbsp; This 
+is specified by placing a &quot;-&quot; (minus) immediately prior to a feature name with 
+no separating blanks.&nbsp; For example, if features A and B are selected 
+(true) and D is deselected (false), the following test will verify this:</p>
+<blockquote>
+<p><font FACE="Courier New" size="2">#true A,B and not D are compatible<br>
+A B -D<br>
+#end</font></p>
+</blockquote>
+<p>Another feature of model debugging that does not involve a SAT solver is 
+testing whether or not a specification (a set of features) is complete.&nbsp; 
+Here's how it works.&nbsp; To test whether selecting features A and B (followed 
+by an automatic propagation of constraints) yields a complete specification, 
+write:</p>
+<blockquote>
+  <pre>#complete this tests to see if A and B will result in a complete specification
+A B
+#end</pre>
+</blockquote>
+<p>To test to see if features A and C (and automatically propagating 
+constraints) yields an incomplete specification, write:</p>
+<blockquote>
+  <pre>#incomplete this tests if A and C are not a complete specification
+A C
+#end</pre>
+</blockquote>
+<p>Using the above capabilities will 
+significantly help  in debugging your models.&nbsp; Also see the next section on 
+the <a href="#Model Checker">Model Checker</a>.</p>
+<p>Finally, it is possible that you'll have many test files.&nbsp; You can 
+&quot;link&quot; these test files together using an &quot;include&quot; facility.&nbsp; The 
+statement:</p>
+<blockquote>
+  <pre>#file &lt;path to debug file&gt;</pre>
+</blockquote>
+<p>will process the listed debug file after the current debug file is checked.</p>
+<p>As an option, a file _debug.cnf can be generated during a debug session.&nbsp; 
+This can be done by clicking the cnf file option inthe model debug window. 
+(Generally you won't want to see it). The file is in
+<a href="http://www.satlib.org/Benchmarks/SAT/satformat.ps">standard cnf </a>
+(conjunction normal form) format.&nbsp; Before each cnf encoding, there are 3 
+comment lines. The first displays the original formula, the second displays a 
+simplification of this formula, and the third is the CNF formula from which the 
+.cnf encodings are displayed.</p>
+
+
+<table BORDER="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FF00FF">  
+  <tr>  
+    <b>
+  <font FACE="Arial" SIZE="1" color="#FFFFFF">  
+    <td WIDTH="766"><h3><a name="Model Checker">Model Checker</a></h3>  
+    </td>  
+</font></b>
+  
+  </tr>  
+</table>  
+  
+<p>Consider the following model.&nbsp; It allows you to optionally select 
+features A and B.&nbsp; But note the additional constraints: if A is selected 
+then B is automatically selected, and if B is selected, A is deselected.</p>
+</font> 
+  <font FACE="Courier New">
+<blockquote>
+  
+<p>model : [a] [b] c :: main;<br>
+<br>
+%%<br>
+a implies b;<br>
+b implies not a;</p>
+</blockquote>
+</font> 
+  <font FACE="Arial">
+  
+<p>Of course, this model is inconsistent.&nbsp; That is, selecting a feature 
+propagates the conclusion that the feature is deselected.&nbsp; As a model grows in size, it is difficult to 
+find 
+such "inconsistencies".&nbsp; Unfortunately, a common way in which 
+inconsistencies are detected is by model users. In the above 
+model, when a user selects A, a dialogBox pops up alerting to a model 
+inconsistency.</font></p>
+<img border="0" src="images/ErrMCSolo.jpg" width="508" height="359"></img>
+<p><font face="Arial">In order to avoid this, the model designer should be able to detect inconsistencies 
+prior to its public release. For this purpose <b>guidsl</b> comes with a Model Checker that helps in detecting inconsistencies. 
+guidsl offers two different ways to identify inconsistencies:
+ <a href="#Exhaustive Check">Exhaustive Check</a> and <a href="#With Spin">using Spin</a>. Given below is a snapshot of the ModelChecking GUI:</font></p>
+
+<img border="0" src="images/guidsl2.jpg" align="center" width="480" height="388"></img>
+<p><font face="Arial"> <b><a name="Exhaustive Check">Exhaustive Check</a></b>. We have implemented an algorithm based on enumeration. The <b>"Exhaustive Check"</b> button at the top, makes a search using our algorithm. The tool makes a complete search of the state space, checking every possible user selection. Our algorithm is efficient in terms of memory usage, but for very large models, the user has to be patient and has to wait for the search to complete. 
+  Our experience is that our algorithm is generally faster than Spin for most  models. <br>The output details are given below:</font><table BORDER="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FF00FF"> 
+<font FACE="Courier New">
+<blockquote>
+  
+<p><br>"generating selections m out of n"<br>
+&nbsp;where,<br>
+&nbsp;m - number of user selections for the current iteration<br>
+&nbsp;n - total number of visible user selections<br>
+<br>
+"size of the set of user-selections List: p" <br>
+&nbsp;where p is the total number of possible m user-selections out n ( <= nCm)</p>
+</blockquote>
+</font> 
+  <font FACE="Arial">
+<p><font face="Arial">For running the model checker in the command line see <a href="#Command Line Options">Command Line Options</a></font></p>
+<p><font face="Arial"><b><a name="With Spin">With Spin</a>.</b> The tool used for model-checking is Spin (<a href="http://www.spinroot.com">www.spinroot.com</a>).&nbsp; 
+A version of spin is included in the ATS distribution. "<b>Run Spin</b>" button checks your model for inconsistencies by invoking Spin and 
+identifies one inconsistency. If there is an inconsistency, the "<b>Debug Model</b>" button, which is initially 
+grayed out, becomes activate and can be used to find out the sequence of choices which lead to the inconsistency. It should be noted that irrespective of the number of inconsistencies, the tool can point out only one inconsistency at a time.
+</font> 
+ <blockquote>
+ 
+<p><b><font face="Arial" color="#FF0000">Note 1: if you get an error saying gcc 
+can't be found, then you need to install gcc via cygwin.</font></b><p><b>
+<font face="Arial" color="#FF0000">Note 2: when Spin is run, it generates a set 
+of files whose names are pan.* and _debug.*.&nbsp; Once your analysis is 
+completed, you can discard these files.</font></b></blockquote>
+ 
+<p><font face="Arial">In addition to the output area, the GUI also has a small text area named "<b>Comments</b>" where 
+useful comments and suggestions are displayed for the user along with a short summary of the test. <br></br>
+In order to support large models that consume a large amount memory, Spin does a BITSTATE search that restricts the amount of memory usage and the depth of search. The two text boxes - "<b>Hash 
+Length"</b> and "<b>Search Depth</b>" are the two parameters for Spin.
+</font> 
+ <ul>
+		<li><font face="Arial"><b>Hash Length</b> - use a hashtable of 2^N entries (defaults to -w18)</font></li>
+		<li><font face="Arial"><b>Search Depth</b> - set max search depth to N steps (default N=10000)</font></li>
+	</ul>
+<font face="Arial">After every successful run of Spin, the "<b>Comments</b>" text area displays the percentage of total state space explored if it is less than 100. In such a case the user is recommended to increase the "Hash Length" to further improve the state space search. The sequence of choices that you see during a model inconsistency is only one of the possible user selections. There might sometimes be a smaller sequence and in case you want to 
+find it, select the "<b>Shortest Path</b>" check box and then "<b>Run Spin</b>" again. 
+</font>
+ <blockquote>
+   <p><b>
+<font face="Arial" color="#FF0000">Note: selecting the "Shortest Path" option and running Spin, might slow down the model checker. 
+</font>
+   </b></p>
+</blockquote>
+ </p>
+  <p><font face="Arial"> In order to make a full state space search using Spin, do the following:
+<ul>
+	<li>switch to the command prompt</li>
+	<li>compile pan.c using the command <b>"gcc -o pan pan.c"</b></li>
+	<li>just say <b>"pan"</b> in the command prompt</b></li>
+</ul>
+</font>
+<p></p>
+ <blockquote>
+   <p><b>
+<font face="Arial" color="#FF0000">Note: Doing a full state space search might slow down your computer very much for large models. It is always better to have the "Windows Task Manager" open while doing this, to check out on the memory usage.
+</font>
+   </b></p>
+</blockquote>
+
+  <tr>  
+    <b>
+  <font FACE="Arial" SIZE="1" color="#FFFFFF">  
+    <td WIDTH="766"><h3><a name="Variable Table and Propositional Formulas">
+    Variable Table and Propositional Formulas</a></h3>  
+    </td>  
+</font></b>
+  
+  </tr>  
+</table>  
+  
+<p><font face="Arial">The set of variables that are generated by a model, and their values, can be 
+displayed via the help menu.&nbsp; By clicking on a particular row (variable), 
+an explanation for its value is displayed at the bottom of the table.&nbsp; This 
+is useful in debugging and understanding models.</font></p>
+<p><font face="Arial">Similarly, the set of propositional formulas that are derived from the model 
+can be viewed via the help menu.</font></p>
+  
+<table BORDER="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FF00FF">  
+  <tr>  
+    <b>
+  <font FACE="Arial" SIZE="1" color="#FFFFFF">  
+    <td WIDTH="766"><h3><a name="Variable Value Explanations">Variable Value 
+    Explanations</a></h3>  
+    </td>  
+</font></b>
+  
+  </tr>  
+</table>  
+  
+<p><font face="Arial"><b>guidsl</b> propagates constraints, and thus assigns values to individual 
+variables automatically after a user has made his/her selections.&nbsp; By 
+moving a mouse over a particular feature (typically a primitive feature), you 
+can display the reason for the variable having a particular value. The 
+explanation is in the form of a proof, starting from an assumption.&nbsp; 
+Please note that when examining a formula, remember an inference is drawn when 
+all variables (or their negation) except one -- the variable whose value is 
+being inferred -- is false.&nbsp; This will help you interpret the explanations 
+given.&nbsp; If you want to see the values and explanations for all variables, 
+view the <a href="#Saving Equations and Configurations">variable table</a>.</font></p>
+  
+<table BORDER="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FF00FF">  
+  <tr>  
+    <b>
+  <font FACE="Arial" SIZE="1" color="#FFFFFF">  
+    <td WIDTH="766"><h3><a name="Saving Equations and Configurations">Saving 
+    Equations and Configurations</a></h3>  
+    </td>  
+</font></b>
+  
+  </tr>  
+</table>  
+  
+<p><font face="Arial">You can save your work in one of two ways.&nbsp; You can save your current 
+configuration into a file, via the file menu.&nbsp; Of course, you can 
+subsequently reload this configuration later, again via the file menu.</font></p>
+<p><font face="Arial">You can also generate an equations (plural!) file.&nbsp; But before this can 
+be done, <b>guidsl</b> checks that you have a complete specification.&nbsp; If a cnf 
+formula, which is derived from the model formula, is not satisfied, an 
+explanation for what needs to be done is presented or the formula that caused 
+the failure is present.&nbsp; The latter may not be the best explanation, but we're 
+working on a better user interface for this.</font></p>
+  
+<p><font face="Arial">Note: if <b>guidsl</b> is started with the <b>-e</b> option, then equation (single!) files 
+are generated.</font></p>
+  
+<table BORDER="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FF00FF">  
+  <tr>  
+    <b>
+  <font FACE="Arial" SIZE="1" color="#FFFFFF">  
+    <td WIDTH="766"><h3><a name="Model Mode">Model Mode</a></h3>  
+    </td>  
+</font></b>
+  
+  </tr>  
+</table>  
+  
+<p><font face="Arial">To integrate a <b>guidsl</b> model with an AHEAD model, standard (and 
+tedious) mappings must be performed, and consistency checks could be automated.&nbsp; 
+In particular, we would like to know if each terminal in the grammar is a layer 
+in the model, and if each layer in a model is a terminal in the grammar.&nbsp; 
+To test this, type:</font></p>
+<blockquote>
+  
+<p>
+  <font FACE="Courier New">
+&gt; guidsl -md</font></p>
+</blockquote>
+  
+<p><font face="Arial">Any discrepancies will be noted.&nbsp;(The -d option is important, as this 
+check is made only during debugging). </font> </p>
+  
+<p><font face="Arial">Another use is the setting of the <b>help</b> and <b>helpfile</b> 
+annotations. When <b>guidsl</b> is invoked in the -m (model 
+mode):</font></p>
+</font>
+  <font FACE="Courier New">
+<blockquote>
+  <p>&gt; guidsl -m</p>
+</blockquote>
+</font>
+  <font FACE="Arial">
+<p>The following annotations are generated if the corresponding files 
+(feature.expl or help.html) are present:</p>
+</font>
+  <font FACE="Courier New">
+<blockquote>
+  <p>Layer { help = &quot;layer/feature.expl&quot; helpfile=&quot;layer/help.html&quot; }</p>
+</blockquote>
+</font>
+  <b>
+  <font FACE="Arial" SIZE="1">
+  
+<table BORDER="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FFFF00" style="border-collapse: collapse" bordercolor="#111111" cellspacing="0">  
+  <tr>  
+    <td WIDTH="766"><h2><font color="#0000FF"><a name="Example">Example</a></font></h2>  
+    </td>  
+  </tr>  
+</table>  
+  
+</font></b>
+  
+<p ALIGN="JUSTIFY"><font face="Arial">
+<img border="0" src="images/guidsl2.gif" align="right" width="214" height="649">Consider 
+an elementary product line of post-fix calculators. Calculators are 
+differentiated on the data type BigInteger (<b>BigI</b>) or BigDecimal (<b>BigD</b>) 
+that can be specified and the set of operations that can be performed on such 
+numbers. IADD is the add operation for BigIntegers, DADD is the add operation 
+for BigDecimals. The set of operations on BigDecimal numbers is slightly larger 
+than that for BigIntegers as it allows for division results to be rounded up (DDIVDN) 
+or rounded down (DDIVDUP).&nbsp; A GUI for specifying a calculator is shown to 
+the right. A <b>guidsl</b> specification of this model is:</font></p>
+<div align="center">
+  <center>
+  <table border="1" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bgcolor="#FFCC66" width="817">
+    <tr>
+      <td width="815"><font face="Courier New">Cpl : Type BASE :: CplMain ;<br>
+      <br>
+      Type : IOp+ BIGI :: ICalc <br>
+&nbsp;&nbsp;&nbsp;&nbsp; | DOp+ BIGD :: DCalc ;<br>
+      <br>
+      IOp : IADD | ISUB | IMULT | IDIV | IPOW ;<br>
+      DOp : DADD | DSUB | DMULT | DDIVUP | DDIVDN | DPOW ;<br>
+      <br>
+      %% // non-grammar constraints<br>
+      <br>
+      not (DDIVDN and DDIVUP); // choose one<br>
+      IMULT or IDIV or IPOW implies IADD and ISUB; <br>
+      DMULT or DDIVUP or DDIVDN or DPOW implies DADD and DSUB;<br>
+      <br>
+      ## // annotations<br>
+      <br>
+      Type { disp=&quot;Calc Type&quot; }<br>
+      IOp { disp=&quot;BigI Ops&quot; }<br>
+      DOp { disp=&quot;BigD Ops&quot; }<br>
+      ICalc { disp=&quot;BigI&quot; }<br>
+      DCalc { disp=&quot;BigD&quot; }</font></td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p ALIGN="JUSTIFY"><font face="Arial"><br>
+The CPL grammar captures most of the constraints of this product line. The above 
+model lists three additional constraints.</font></p>
+<ul>
+  <li>
+  <p ALIGN="JUSTIFY"><font face="Arial">At most one decimal division operation 
+  can be chosen, and</font></li>
+  <li>
+  <p ALIGN="JUSTIFY"><font face="Arial">Selecting multiply, division, or power 
+  operations requires the selection of addition and subtraction; there is one 
+  rule for BigIntegers and a second for BigDecimals.</font></li>
+</ul>
+<p ALIGN="JUSTIFY"><font face="Arial">Annotations are used to beautify the 
+display.&nbsp; Instead of displaying &quot;Type&quot;, the string &quot;Calc Type&quot; is 
+displayed, etc.</font></p>
+  
+<table BORDER="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FFFF00" style="border-collapse: collapse" bordercolor="#111111" cellspacing="0">  
+  <tr>  
+    <b>
+  <font FACE="Arial" SIZE="1" color="#0000FF">  
+    <td WIDTH="766"><h2><a name="Command Line Options">Command Line Options</a></h2>  
+    </td>  
+</font></b>
+  
+  </tr>  
+</table>  
+  
+<p><font face="Arial"><b>guidsl</b> is normally invoked in one of two ways from 
+the command line. Either directly:</font></p>
+<blockquote>
+  <p><font face="Courier New">guidsl &lt;file&gt;.m</font></p>
+</blockquote>
+<p><font face="Arial">or in <a href="#Model Mode">model mode</a>:</font></p>
+<blockquote>
+  <p><font face="Courier New">guidsl -m</font></p>
+</blockquote>
+<p><font face="Arial">Additional options remain for debugging.</font></p>
+<blockquote>
+  <p><font face="Courier New">Usage: guidsl &lt;options&gt; &lt;file&gt;.m<br>
+  &lt;file&gt;.m is a feature model<br>
+  options -d debug<br>
+  </font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <font face="Courier New">-p print input file<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  -m model mode uses 'model.m'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -e equation file format</br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -c check model for inconsistencies</font></p>
+</blockquote>
+  
+  <p><font face="Arial">Debug mode is typically not useful, except for debugging
+  <b>guidsl</b> itself.&nbsp; However, there is a case when an input model is 
+  inconsistent (before any user selects features).&nbsp; You can debug such a 
+  model with the -d feature, as model constraints are not immediately propagated 
+  prior to presenting the original GUI interface.</font></p>
+  
+<table BORDER="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FFFF00" style="border-collapse: collapse" bordercolor="#111111" cellspacing="0">  
+  <tr>  
+    <b>
+  <font FACE="Arial" SIZE="1" color="#0000FF">  
+    <td WIDTH="766"><h2><a name="Programmatic Invocation">Programmatic 
+    Invocation</a></h2>  
+    </td>  
+</font></b>
+  
+  </tr>  
+</table>  
+  
+<p><font face="Arial">To invoke <b>guidsl</b> from a tool, here are the steps:</font></p>
+<ul>
+  <li><font face="Arial">import guidsl.*</font></li>
+  <li><font face="Arial">create a guidsl.Tool object, using the pathname to the 
+  model file as a constructor argument</font></li>
+  <li><font face="Arial">create a guidsl.SATtest object; its constructor has 2 
+  parameters: a String name of the test to be performed, and a boolean result of 
+  the test (the selected features are compatible or incompatible)</font></li>
+  <li><font face="Arial">add the names of the selected features or deselected 
+  features one at a time to the SATtest object</font></li>
+  <li><font face="Arial">invoke the modelDebug() method of the Tool object, with 
+  the SATtest object as the first parameter and a boolean to indicate if you 
+  want a cnfFile to be output (yes is true, false is no).&nbsp; modelDebug will 
+  return a boolean indicating if the test was verified.</font></li>
+</ul>
+<p><font face="Arial">The following is a program that tests the CPL model 
+programmatically and illustrates the above rules.</font></p>
+<div align="center">
+  <center>
+  <table border="1" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" bgcolor="#FFCC66" width="871">
+    <tr>
+      <td width="869"><font face="Courier New">import guidsl.*;<br>
+      <br>
+      class test {<br>
+&nbsp;&nbsp; static Tool tool = null;<br>
+&nbsp;&nbsp; static boolean makeCnfFile = true;<br>
+&nbsp;&nbsp; static boolean compatSelections = true;<br>
+      <br>
+&nbsp;&nbsp; public static void main( String args[] ) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; tool = new Tool( &quot;cpl.m&quot; );<br>
+      <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // verifies that IPOW and BIGI are compatible<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SATtest t = new SATtest( &quot;test1&quot;, 
+      compatSelections ); <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; t.add(&quot;IPOW&quot;);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; t.add(&quot;BIGI&quot;);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; runTest( t, makeCnfFile );</font><p>
+      <font face="Courier New">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // verifies that 
+      IPOW and -BIGI are incompatible<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; t = new SATtest( &quot;test2&quot;, !compatSelections );<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; t.add(&quot;IPOW&quot;);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; t.add(&quot;-BIGI&quot;);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; runTest( t, !makeCnfFile );</font></p>
+      <p><font face="Courier New">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // outputs<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // test1 succeeded<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // test2 succeeded<br>
+&nbsp;&nbsp; }<br>
+      <br>
+&nbsp;&nbsp; static void runTest( SATtest t, boolean compat ) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (tool.modelDebug(t, makeCnfFile ))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; System.out.println(t.getName() 
+      + &quot; succeeded&quot;);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; else<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; System.out.println(t.getName() 
+      + &quot; failed&quot;);<br>
+&nbsp;&nbsp; }<br>
+      }</font></td>
+    </tr>
+  </table>
+  </center>
+</div>
+  
+<hr color="#000000">  
+  
+<p><b><font face="Arial"><a href="index.html">ATS Home Page</a></font></b></p>
+<p><font face="Arial"><b>Copyright © Software Systems Generator Research Group. 
+All rights reserved.</b> <br>
+<b>Revised:&nbsp;<!--webbot bot="TimeStamp" s-format="%B %d, %Y" s-type="EDITED" startspan -->July 18, 2007<!--webbot bot="TimeStamp" endspan i-checksum="14592" -->.</b>
+</font></p>

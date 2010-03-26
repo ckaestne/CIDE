@@ -1,0 +1,477 @@
+<?xml version="1.0"?>
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+<project name="Java Extensions DocumentatIon Generator" default="jar">
+
+ <description>
+ Jedi (Java Extensions DocumentatIon generator) Tool for AHEAD 
+ (C) 2001-2003 Roberto E. Lopez-Herrejon and The University of Texas at Austin
+ </description>
+
+    <!-- ================================================================= -->
+    <!-- PROJECT DEFINITIONS AND PROPERTIES:                               -->
+    <!-- ================================================================= -->
+
+    <property name="project.author"	value="Roberto E. Lopez-Herrejon"/>
+
+    <property name="project.name"   value="jedi"/>
+    <property name="project.Name"   value="JEDI"/>
+
+    <!-- - - - - - - - - - - - - - - - - -->
+    <!-- The owner of the software, such -->
+    <!-- as the copyright owner.  Also   -->
+    <!-- may be used to generate text to -->
+    <!-- be read by a human.             -->
+    <!-- - - - - - - - - - - - - - - - - -->
+
+    <property
+        name="project.owner"
+        value="The University of Texas at Austin"/>
+
+    <property
+	name="project.copyright"
+        value="(C) 2001-2003 ${project.author} and ${project.owner}"/>
+
+    <property
+        name="project.title"
+	value="Java Extensions DocumentatIon Generator"/>
+
+    <property name="project.version" value="v2003.03.20"/>
+
+    <!-- ================================================================= -->
+    <!-- STATIC DIRECTORY AND FILE PROPERTIES:                             -->
+    <!-- ================================================================= -->
+
+    <!-- - - - - - - - - - - - - - - -->
+    <!-- Build Hierarchy for Tool:   -->
+    <!-- - - - - - - - - - - - - - - -->
+
+    <property name="dir.build"    	location="${basedir}/build"/>
+    <property name="dir.build.lib"      location="${dir.build}/lib"/>
+
+    <property
+        name="dir.build.tool"
+	location="${dir.build}/${project.name}"/>
+
+    <property name="dir.build.classes"  location="${dir.build.tool}"/>
+    <property name="dir.build.source"   location="${dir.build.tool}/source"/>
+    <property name="dir.build.syntax"	location="${dir.build.tool}/syntax"/>
+
+    <property
+        name="jar.build"
+        location="${dir.build.lib}/${project.name}.jar"/>
+
+    <property
+        name="mf.build"
+        location="${dir.build.tool}/MANIFEST.MF"/>
+
+    <!-- - - - - - - - - - - - - - - -->
+    <!-- Source Code Hierarchies:    -->
+    <!-- - - - - - - - - - - - - - - -->
+
+    <property name="dir.layers"         location="${basedir}/dsl/java"/>
+    <property name="dir.misc"		location="${basedir}/miscellaneous"/>
+
+    <property
+        name="dir.misc.source"
+        location="${dir.misc}/${project.name}"/>
+
+    <property
+        name="file.eqn.grammar"
+        location="${dir.misc}/grammar/jak.equation"/>
+
+    <property
+        name="file.eqn.semantics"
+        location="${dir.misc}/semantics/${project.name}.equation"/>
+	
+    <property
+	name="jar.velocity"
+	value="${dir.misc}/lib/velocity.jar"/>
+
+    <!-- - - - - - - - - - - - - - - -->
+    <!-- External Libraries & Tools: -->
+    <!-- - - - - - - - - - - - - - - -->
+
+    <property name="dir.external"	location="${basedir}/miscellaneous"/>
+    <property name="dir.external.bin"	location="${dir.external}/bin"/>
+    <property name="dir.external.lib"	location="${dir.external}/lib"/>
+
+    <property
+        name="exec.print-path"
+        location="${dir.external.bin}/print-path"/>
+
+    <!-- ================================================================= -->
+    <!-- PATH-RELATED DEFINITIONS:                                         -->
+    <!-- (see also the target "use.path.class")                            -->
+    <!-- ================================================================= -->
+
+    <!-- - - - - - - - - - - - - - - -->
+    <!-- CLASSPATH Treatment:	     -->
+    <!-- - - - - - - - - - - - - - - -->
+
+    <property name="build.sysclasspath"	value="ignore"/>
+
+    <!-- ================================================================= -->
+    <!-- OTHER STATIC DEFINITIONS:                                         -->
+    <!-- ================================================================= -->
+
+    <!-- - - - - - - - - - - - - - - -->
+    <!-- Jars Named in ${jar.build}: -->
+    <!-- - - - - - - - - - - - - - - -->
+
+    <property name="uri.jar.jakarta"	value="file:jakarta.jar"/>
+    <property name="uri.jar.velocity"	value="file:velocity.jar"/>
+
+    <!-- ================================================================= -->
+    <!-- TARGETS:                                                          -->
+    <!-- ================================================================= -->
+
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- The "bali2jak" target converts the grammar file to a directory of -->
+    <!-- Jak classes representing the nodes of a syntax tree.              -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+    <target name="bali2jak" depends="composeGrammar,use.path.class">
+
+        <java
+            classname="bali2jak.Main"
+	    classpath="${path.class}"
+            failonerror="true"
+            fork="true"
+            taskname="bali2jak">
+
+            <arg value="-directory"/>
+            <arg file="${dir.build.syntax}"/>
+
+            <arg file="${dir.build.syntax}/grammar.b"/>
+        </java>
+
+        <echo level="info" message="${dir.build.syntax}" taskname="===>"/>
+
+    </target>
+
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- The "bali2javacc" target converts a Bali grammar file to JavaCC.  -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+    <target name="bali2javacc" depends="composeGrammar,use.path.class">
+
+        <java
+            classname="bali2javacc.Main"
+	    classpath="${path.class}"
+            failonerror="true"
+            fork="true"
+            taskname="bali2javacc">
+
+            <arg value="-output"/>
+            <arg file="${dir.build.source}/grammar.jj"/>
+
+            <arg value="-package"/>
+            <arg value="${project.name}"/>
+
+            <arg file="${dir.build.syntax}/grammar.b"/>
+        </java>
+
+        <echo
+            level="info"
+            message="${dir.build.source}/grammar.jj"
+            taskname="===>"/>
+
+    </target>
+
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- The "compose" target composes the layers needed for the tool.      -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+    <target
+        name="compose"
+        depends="bali2jak,use.path.class"
+        description="Composes the layers to build the tool">
+
+        <java
+            classname="composer.Main"
+	    classpath="${path.class}"
+            failonerror="true"
+            fork="true"
+            taskname="compose">
+
+	    <jvmarg value="-Dunit.file.jak=JamPackFileUnit"/>
+
+            <arg value="-equation"/>
+            <arg file="${file.eqn.semantics}"/>
+
+            <arg value="-layer"/>
+            <arg value="${project.name}"/>
+
+            <arg value="-target"/>
+            <arg file="${dir.build.source}"/>
+        </java>
+
+        <echo
+            level="info"
+            message="${dir.build.source}"
+            taskname="===>"/>
+
+    </target>
+
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- The "composeGrammar" target composes grammars to combined grammar. -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+    <target name="composeGrammar" depends="prepare,use.path.class">
+
+        <java
+            classname="composer.Main"
+	    classpath="${path.class}"
+            failonerror="true"
+            fork="true"
+            taskname="compose">
+
+            <arg value="--logging=warning"/>
+
+            <arg value="-equation"/>
+            <arg file="${file.eqn.grammar}"/>
+
+            <arg value="-target"/>
+            <arg file="${dir.build.syntax}"/>
+        </java>
+
+        <echo
+            level="info"
+            message="${dir.build.syntax}/grammar.b"
+            taskname="===>"/>
+
+    </target>
+
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- The "initialize" target defines dynamic properties and prints the  -->
+    <!-- build message. Since this task defines dynamic properties, -every- -->
+    <!-- other target must depend on it either directly or indirectly.      -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+    <target name="initialize">
+
+	<tstamp>
+	    <format property="initialize.date" pattern="yyyy-MM-dd"/>
+	    <format property="initialize.time" pattern="HH:mm:ss"/>
+	    <format property="initialize.year" pattern="yyyy"/>
+	</tstamp>
+
+	<property
+	    name="timestamp"
+	    value="${initialize.date} ${initialize.time}"/>
+
+	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+	<!-- Splash notice:                                                -->
+	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+	<echo
+            level="info"
+            message="${project.title}; jedi.xml ${project.version}"/>
+
+	<echo level="info" message="${project.copyright}"/>
+	<echo level="info" message=""/>
+	<echo level="info" message="Build begins ${timestamp}"/>
+
+    </target>
+
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- The "jak2java" task translates composed Jak files to Java.         -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+    <target
+        name="jak2java"
+        depends="compose,use.jak2java"
+        description="Translates composed Jak files to Java">
+	
+        <jak2java
+            srcdir="${dir.build.source}"
+            includes="**/*.jak"
+            listfiles="false">
+
+            <arg value="-b"/>
+
+        </jak2java>
+
+        <echo level="info" message="${dir.build.source}" taskname="===>"/>
+
+    </target>
+
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- The "jar" target packages the generated class and property files.  -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+    <target
+        name="jar"
+        depends="java2class,manifest"
+        description="Packages class and property files into the final Jar">
+
+	<jar jarfile="${jar.build}" manifest="${mf.build}">
+
+	    <fileset dir="${dir.misc.source}">
+		<include name="jedi.properties"/>
+		<include name="SourceTemplates/*"/>
+	    </fileset>
+
+            <fileset dir="${dir.build.classes}">
+                <include name="**/*.class"/>
+                <include name="**/*.gif"/>
+                <include name="**/*.jpg"/>
+                <include name="**/*.properties"/>
+            </fileset>
+
+	</jar>
+
+	<echo level="info" message="${jar.build}" taskname="===>"/>
+
+    </target>
+  
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- The "java2class" target compiles all Java source files.            -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+    <target
+        name="java2class"
+        depends="jak2java,javacc2java,use.path.class"
+        description="Compiles all Java source files">
+
+        <javac
+            classpath="${path.class}"
+            debug="true"
+            destdir="${dir.build.classes}"
+            includes="**/*.java"
+            srcdir="${dir.build.source}"/>
+
+	<echo level="info" message="${dir.build.classes}" taskname="===>"/>
+
+    </target>
+
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- The "javacc2java" target translates a JavaCC grammar file into a  -->
+    <!-- set of Java files representing a parser.                          -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+    <target name="javacc2java" depends="bali2javacc">  
+
+        <exec
+            dir="${dir.build.source}"
+            executable="env"
+            failonerror="true"
+            taskname="javacc">
+
+            <arg value="javacc"/>
+            <arg file="${dir.build.source}/grammar.jj"/>
+        </exec>
+
+        <echo level="info" message="${dir.build.source}" taskname="===>"/>
+
+    </target>
+
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- The "manifest" target creates a Jar manifest for this project.     -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <target
+        name="manifest"
+        depends="prepare"
+        description="Creates a manifest file for the packaged project">
+
+        <manifest file="${mf.build}">
+            <attribute name="Build-Timestamp"  value="${timestamp}"/>
+            <attribute name="Build-Username"   value="${user.name}"/>
+            <attribute name="Copyright-Notice" value="${project.copyright}"/>
+            <attribute name="Main-Class"       value="${project.name}.Start"/>
+
+	    <attribute
+		name="Class-Path"
+		value=" ${uri.jar.velocity} ${uri.jar.jakarta}"/>       
+
+        </manifest>
+
+        <echo level="info" message="${mf.build}" taskname="===>"/>
+
+    </target>
+ 
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- The "prepare" target creates an empty build hierarchy.             -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+    <target name="prepare" depends="initialize">
+
+	<mkdir dir="${dir.build}"/>
+	<mkdir dir="${dir.build.classes}"/>
+	<mkdir dir="${dir.build.lib}"/>
+	<mkdir dir="${dir.build.source}"/>
+	<mkdir dir="${dir.build.syntax}"/>
+
+	<copy file="${jar.velocity}" todir="${dir.build.lib}"/>
+
+    </target>
+
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- The "use.*" targets prepare properties, environment variables and -->
+    <!-- other resources for use by another target.  A target that uses a  -->
+    <!-- resource specifies the usage by including a dependency on target  -->
+    <!-- "use.<resource>" defined below (where "<resource>" is replaced by -->
+    <!-- the actual resource name).                                        -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <!-- Task "jak2java" is an extra task definition from the AHEAD tools. -->
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+    <target name="use.jak2java" depends="use.path.class">
+
+	<taskdef
+            name="jak2java"
+            classname="jak2java.DeriveAntTask"
+            classpath="${path.class}"/>
+
+    </target>
+
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <!-- Property "path.class" is an internally generated class path used  -->
+    <!-- throughout the build.  It is built from two libraries in priority -->
+    <!-- order.  The build library, ${dir.build.lib}, is first priority so -->
+    <!-- that inter-tool dependencies are satisfied.  The second priority  -->
+    <!-- is the external tool library, ${dir.external.lib}, which is used  -->
+    <!-- so that the tools can be bootstrapped.                            -->
+    <!--                                                                   -->
+    <!-- User-defined libraries can be specified via CLASSPATH.  To ensure -->
+    <!-- that this works, property "build.sysclasspath" must be defined as -->
+    <!-- described in the Ant manual.  The definition should be placed on  -->
+    <!-- the command line.                                                 -->
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+    <target name="use.path.class" depends="prepare">
+
+	<path id="id.path.class">
+	    <fileset dir="${dir.build.lib}" includes="**/*.jar"/>
+	    <fileset dir="${dir.external.lib}" includes="**/*.jar">
+		<none>
+		    <present targetdir="${dir.build.lib}"/>
+		</none>
+	    </fileset>
+	</path>
+
+	<property name="path.class" refid="id.path.class"/>
+
+	<exec executable="env" taskname="path.class">
+	    <arg value="--"/>
+	    <arg file="${exec.print-path}"/>
+	    <arg value="${path.class}"/>
+	</exec>
+
+    </target>
+
+</project>
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+<!-- Local Variables:                    -->
+<!-- mode:                           XML -->
+<!-- fill-column:                     79 -->
+<!-- sgml-ignore-undefined-elements: nil -->
+<!-- sgml-indent-data:                 t -->
+<!-- sgml-indent-step:                 4 -->
+<!-- End:                                -->
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->

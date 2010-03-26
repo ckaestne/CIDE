@@ -1,0 +1,1091 @@
+<html>
+
+<head>
+<meta HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<meta NAME="GENERATOR" CONTENT="Microsoft FrontPage 5.0">
+<title>SM5 - State Machine Language Extension to Java</title>
+</head>
+
+<body BGCOLOR="#FFFFFF">
+
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%">
+  <tr>
+    <td WIDTH="78">
+    <img border="0" src="images/FopButton3.jpg" width="80" height="64"></td>
+    <td WIDTH="688" BGCOLOR="#00FFFF"><h1><font color="#8000FF" face="Arial">State
+      Machine5 (SM5) Domain-Specific Language</font></h1>
+    </td>
+  </tr>
+</table>
+
+<p><font face="Arial">SM5 is a <i> domain-specific language (DSL)</i>
+extension to Java.&nbsp; It allows state machines to be defined,
+and inheritance hierarchies of state machines to be created.&nbsp; It replaces
+earlier versions (SM, SM5) of the language and represents a significant
+improvement in functionality. An overview
+of this document is:</font></p>
+
+<ul>
+  <li><font face="Arial"><a href="#Basic Concepts">basic concepts and declarations</a></font></li>
+  <li><font face="Arial"><a href="#Mealy and Moore State Machines">mealy and
+    moore state machines</a></font></li>
+  <li><font face="Arial"><a href="#inheritance hierarchies">state machine
+    inheritance hierarchies</a></font></li>
+  <li><font face="Arial"><a href="#Refinements">refinements</a></font></li>
+  <li><font face="Arial"><a href="#Dealing with Errors">dealing with errors</a></font>
+    <ul>
+      <li><font face="Arial"><a href="#Goto_state">goto_state</a></font></li>
+      <li><font face="Arial"><a href="#Proceed">proceed</a></font></li>
+    </ul>
+  </li>
+  <li><font face="Arial"><a href="#Other Useful Features">other useful features</a></font>
+    <ul>
+      <li><font face="Arial"><a href="#Star Transition">star transitions</a></font></li>
+      <li><font face="Arial"><a href="#Nested States">nested state machines</a></font></li>
+    </ul>
+  </li>
+  <li><font face="Arial"><a href="#What is generated">what is generated</a></font></li>
+  <li><a href="#Error Messages"><font face="Arial"><i>error messages</i></font></a></li>
+  <li><a href="#Known Problems"><font face="Arial"><i>known problems</i></font></a></li>
+  <li><font face="Arial"><a href="#SM Grammar"><i>SM5 grammar</i></a></font></li>
+</ul>
+
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FFFF00">
+  <tr>
+    <td WIDTH="788"><h2><a name="Basic Concepts"><font face="Arial">Basic
+      Concepts and Declarations</font></a></h2>
+    </td>
+  </tr>
+</table>
+
+<p><font face="Arial">A state machine is a model of a program consisting of:</font></p>
+<ul>
+  <li><font face="Arial"><b>states</b> -- denoting particular stages in a
+    program's computation,&nbsp;</font></li>
+  <li><font face="Arial"><b>events</b> --&nbsp; objects that trigger a change in
+    state,&nbsp;</font></li>
+  <li><font face="Arial"><b>transitions</b> -- reactions to events that modify a
+    program's state, and</font></li>
+  <li><font face="Arial"><b>class member declarations</b> -- code to implement
+    event reactions.</font></li>
+</ul>
+<p><font face="Arial">Every SM5 state machine has a <b>start</b> and <b>stop</b>
+state.&nbsp; An SM5 machine beings at the <b>start</b> state and ends at <b>stop</b>.&nbsp;
+The names of all other states must be declared explicitly using the <b>States</b>
+declaration:</font></p>
+<blockquote>
+  <pre>Syntax:  States <span style="background-color: #00FFFF">&lt;list-of-state-names-separated-by-commas&gt;</span>;
+
+Example: States one, two, three;</pre>
+</blockquote>
+<p><font face="Arial">The type of event and the name of an event variable that delivers an event to a state machine must
+be declared in SM5:</font></p>
+<blockquote>
+  <pre>Syntax:  Delivery_parameters(<span style="background-color: #00FFFF">&lt;event-type&gt; &lt;event-variable&gt;</span>);
+
+Example: Delivery_parameters( Evnt e );</pre>
+</blockquote>
+<p><font face="Arial">A transition has a name, a begin state, an end state, a
+transition condition (which is a Java boolean expression), and a transition
+action (which is a block of Java/Jak statements).&nbsp; Both the condition and
+action code can reference the event variable, which in our example
+above is e:</font></p>
+<blockquote>
+  <pre>Syntax:  Transition &lt;name&gt; : <span style="background-color: #00FFFF">&lt;begin-state&gt;</span> -&gt; <span style="background-color: #00FFFF">&lt;end-state&gt;
+</span>                             condition <span style="background-color: #00FFFF">&lt;boolean-expression&gt;</span> do { <span style="background-color: #00FFFF">&lt;Jak code&gt;</span> }
+
+Example: Transition initiate : start -&gt; one
+                    condition e.msg.equals(&quot;initiate&quot;)
+                    do { process_initiate_message(e); }</pre>
+  <p><font face="Arial" color="#FF0000"><b>Note:
+  boolean expressions should have no side effects.&nbsp; The reason is that the
+  order in which transition conditions are evaluated should not effect their
+  truth value.</b></font></p>
+</blockquote>
+<p><font face="Arial">As an example, state machine S below has 3 states and three
+transitions.&nbsp; Events are of type &quot;Evnt&quot;.&nbsp; The predicates and
+actions for each transition are declared&nbsp; in separate methods:</font></p>
+<blockquote>
+  <pre>State_machine S {
+   Delivery_parameters( Evnt e );<font face="Arial" color="#FF0000"><img border="0" src="images/StateM1.gif" align="right" width="171" height="137"></font></pre>
+
+  <pre>   States one;  // start and stop are implicit
+
+   Transition t1 : start -&gt; one
+      condition t1_pred(e)
+      do { t1_act(e); }
+
+   Transition t2 : start -&gt; stop
+      condition t2_pred(e)
+      do { t2_act(e); }</pre>
+
+  <pre>   Transition t3 : one -&gt; stop
+      condition t3_pred(e)
+      do { t3_act(e); }</pre>
+
+  <pre>   // Jak class declarations from this point on</pre>
+
+  <pre>   boolean t1_pred(Evnt e) { ... }
+   boolean t2_pred(Evnt e) { ... }
+   boolean t3_pred(Evnt e) { ... }
+   void t1_act(Evnt e) { ... }
+   void t2_act(Evnt e) { ... }
+   void t3_act(Evnt e) { ... }
+   S() {}			// empty constructor
+}</pre>
+
+  <p><font face="Arial" color="#FF0000"><b>Note: predicates and actions need
+  not be defined in separate methods; their bodies could be listed in Transition
+  declarations.</b></font></p>
+</blockquote>
+<p><font face="Arial">Before S can be executed, it must be translated to Java
+using the <b> Jak2Java</b> tool.&nbsp; Doing so converts S into a Java class that has
+the following public methods:</font></p>
+<blockquote>
+  <pre>boolean atStop();		// is state machine instance in stop state?
+void delivery(Evnt e);	// method to deliver an event to a machine instance
+String getState();		// returns the name of the current state</pre>
+</blockquote>
+<p><font face="Arial">A program that creates events and delivers it to an
+instance of S is shown below:</font></p>
+<blockquote>
+  <pre>S s = new S();	// create instance of S
+
+while (moreEvents) {
+   Evnt e = ...		// create new event
+   s.delivery(e);	// deliver event e to s
+}</pre>
+</blockquote>
+
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FFFF00">
+  <tr>
+    <td WIDTH="788"><h2><a name="Mealy and Moore State Machines"><font face="Arial">Mealy
+      and Moore State Machines</font></a></h2>
+    </td>
+  </tr>
+</table>
+
+<p><font face="Arial">There are two common forms of state machines.&nbsp;
+Those that performs actions only on transitions are called <b>Mealy
+machines</b>.&nbsp; The SM5 constructs introduced so far express Mealy
+machines.&nbsp; State machines whose only actions occur upon entering a
+state are <b>Moore machines</b>.&nbsp; Mealy machines tend to
+be more compact than Moore machines as they require fewer states. Both
+kinds of machines -- and their combination -- can be expressed in SM5.</font></p>
+<p><font face="Arial">SM5 allows the following methods to be declared per
+state:</font></p>
+<ul>
+  <li><font face="Arial"><b>Enter</b> -- code that is to be executed upon
+    entry to a state,</font></li>
+  <li><font face="Arial"><b>Exit</b> -- code that is to be executed upon
+    leaving a state,&nbsp;</font></li>
+  <li><font face="Arial"><b>Prepare</b> -- code that is to be executed prior
+    to (and in preparation of) transition condition evaluation, and</font></li>
+  <li><font face="Arial"><b>Otherwise</b> -- to be discussed <a href="#Dealing with Errors">shortly</a>.</font></li>
+</ul>
+<p><font face="Arial">A common syntax is used for declaring state <b>Enter</b>, <b>Exit</b>,
+and <b>Prepare</b>
+methods:</font></p>
+<blockquote>
+  <pre>Syntax:  Enter   <span style="background-color: #00FFFF">&lt;state-name&gt;</span> { <span style="background-color: #00FFFF">&lt;code&gt;</span> }
+Syntax:  Exit    <span style="background-color: #00FFFF">&lt;state-name&gt;</span> { <span style="background-color: #00FFFF">&lt;code&gt;</span> }
+Syntax:  Prepare <span style="background-color: #00FFFF">&lt;state-name&gt;</span> { <span style="background-color: #00FFFF">&lt;code&gt;</span> }</pre>
+  <pre>Example: Enter stop { System.out.println(&quot;finished&quot;); }</pre>
+</blockquote>
+<p><font face="Arial">The utility of <b> Enter</b> and <b> Exit</b> methods are evident, but
+not so for <b>Prepare</b>.&nbsp; Consider the following transitions from state x:</font></p>
+<blockquote>
+  <pre>Transition r1 : x -&gt; y
+           condition  something_complicated(e) &amp;&amp; another(e) do { ... }
+Transition r2 : x -&gt; z
+           condition !something_complicated(e) &amp;&amp; another(e) do { ... }</pre>
+</blockquote>
+<p><font face="Arial">Two methods, something_complicated() and another(), will be evaluated, possibly multiple
+times.&nbsp; Because these predicates have no side effects, their re-evaluation
+is redundant.&nbsp; To avoid this, use a <b>Prepare</b> method that
+evaluates these methods once.&nbsp; Transition conditions can then refer to
+their values:</font></p>
+<blockquote>
+  <pre>Prepare x {
+   sc = something_complicated(e);
+   an = another(e);
+}</pre>
+  <pre>Transition r1 : x -&gt; y
+           condition  sc &amp;&amp; an do { ... }
+Transition r2 : x -&gt; z
+           condition !sc &amp;&amp; an do { ... }</pre>
+  <pre>boolean sc, an;</pre>
+</blockquote>
+<p><font face="Arial"> <b>Prepare</b> declarations are generally used
+for such optimizations.</font></p>
+
+<blockquote>
+  <p><font face="Arial"><b><font color="#FF0000">Note: Prepare actions should
+  have no side-effects other than setting the values of temporary variable</font></b><font color="#FF0000"><b>s</b></font>.</font></p>
+
+</blockquote>
+
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FFFF00">
+  <tr>
+    <td WIDTH="788"><h2><a name="inheritance hierarchies"><font face="Arial">State
+      Machine Inheritance Hierarchies</font></a></h2>
+    </td>
+  </tr>
+</table>
+
+<p><img border="0" src="images/StateM3.gif" align="right" width="248" height="169"><font face="Arial">SM5 state machines can
+appear in inheritance hierarchies, just like classes.&nbsp; Consider the figure to the right.&nbsp; It shows a state machine
+that was extended twice:&nbsp; the original machine is defined by black nodes
+and black arcs.&nbsp; The first or green extension adds additional green nodes and edges.
+&nbsp; The second or red extension adds another red node and red edges.&nbsp;
+Although this example focuses on a linear hierarchy, the hierarchy could have
+many branches, just like class inheritance hierarchies.&nbsp; In this section, we focus on
+the core ideas of <b>extension</b>, the state machine counterpart to
+subclassing.&nbsp; In the following section, we'll talk about refinements.</font></p>
+
+<p><font face="Arial">This example is expressed in SM5 as an inheritance
+hierarchy of three state machines. The
+original machine defines the black machine in this figure.&nbsp;&nbsp; A sketch of
+this specification is given below, along
+with some notes:</font></p>
+
+<div align="left">
+  <table border="0" cellpadding="0" width="468">
+    <tr>
+      <td width="434">
+        <blockquote>
+  <pre><font face="Courier New">State_machine black {
+   Delivery_parameter(Evnt e);
+
+   States one_black;
+   ...
+   Transition a : start     -&gt; stop ...
+   Transition b : start     -&gt; one_black ...
+   Transition c : one_black -&gt; stop ...
+}</font></pre>
+  <pre><font face="Courier New">State_machine green extends black {
+ 
+   States one_green, two_green;
+   
+   Transition d : start -&gt; one_green ...
+   Transition e : one_green -&gt; two_green ...
+   Transition f : two_green -&gt; stop ...
+}</font></pre>
+  <pre><font face="Courier New">State_machine red extends green {
+
+   states one_red;
+
+   Transition g : start -&gt; start ...
+   Transition h : start -&gt; one_red ...
+   Transition i : one_red -&gt; stop ...
+}</font></pre>
+        </blockquote>
+      </td>
+      <td valign="top" width="26">
+        <pre><font face="Courier New">(1)
+(2)
+
+
+
+
+
+
+
+
+
+(3)
+
+(4)
+
+
+
+
+
+
+(5)</font></pre>
+        <pre>(6)</pre>
+      </td>
+    </tr>
+  </table>
+</div>
+
+<p><font face="Arial">Notes:</font></p>
+
+<blockquote>
+  <p><font face="Arial">(1) Each state machine specification is translated into a Java
+  class and a .ser file.&nbsp; The .ser file contains information -- such as state and
+  transition declarations -- that is to be &quot;inherited&quot; by state machines that
+  extend it. (SM5 uses this information to generate code for state machine
+  extensions). See point (3) below.&nbsp; The .ser files are generated in the same directory as the
+  .java files.</font></p>
+  <p><font face="Arial">(2) The root machine of an inheritance hierarchy has the following characteristics.
+  &nbsp; (a) It is either a stand-alone declaration or it can inherit from a
+  previously defined class.&nbsp; See point (3) below.&nbsp;
+  (b) It has an <b>Delivery_parameter</b> clause.  </font></p>
+  <blockquote>
+  <p><font face="Arial" color="#FF0000">As a general rule, a <b>
+  Delivery_parameter</b> clause can be inferred at composition time, if one is 
+  not present.&nbsp; Otherwise, define a <b>Delivery_parameter</b> for each 
+  state machine and state machine refinement.&nbsp; Note that ATS currently does 
+  not check to see if previously defined (e.g., inherited) <b>Delivery_parameter</b> 
+  declarations are consistent with the current.&nbsp; ATS assumes that the 
+  &quot;most&quot; refined <b>Delivery_parameter</b> clause is the declaration to use..&nbsp;</font></p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <p><font face="Arial">(3) A state machine can be (a) stand alone (just like an
+  individual class), (b)&nbsp; it can extend a previously defined class C, or
+  (c) it can extend a previously defined state machine S.&nbsp; The syntax for
+  each declaration is shown below:</font></p>
+
+<blockquote>
+  <div align="left">
+    <table border="0">
+      <tr>
+        <td>
+            <pre><font face="Courier New">State_machine <span style="background-color: #00FFFF">standAlone</span> {...}</font></pre>
+            <pre><font face="Courier New">State_machine <span style="background-color: #00FFFF">descendsFromClass</span> extends class <span style="background-color: #00FFFF">C</span> { ... }</font></pre>
+            <pre><font face="Courier New">State_machine <span style="background-color: #00FFFF">descendsFromMachine</span> extends <span style="background-color: #00FFFF">S</span> { ... }</font></pre>
+        </td>
+        <td valign="top">
+          <pre><font face="Courier New">(a)</font></pre>
+          <pre><font face="Courier New">(b)</font></pre>
+          <pre><font face="Courier New">(c)</font></pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+  <p><font face="Arial">(b) is common.&nbsp; In our examples of previous
+  sections, the error() and ignore_message() methods could be inherited from
+  such a class.&nbsp;</font></p>
+  <p><font face="Arial" color="#FF0000"><b>Note: there is nothing in the SM5 DSL
+  that allows a class to be a subclass of a state machine (and there are no
+  checks to alert SM5 users to this).&nbsp; Don't do this!! -- SM5 will not
+  catch the error and translations of state machine specifications may be
+  incorrect if this is done.</b></font></p>
+</blockquote>
+
+  <p><font face="Arial">(4) When extending a state machine, the names of new states and
+  new transitions cannot conflict
+  with those previously declared by the parent machine.</font></p>
+  <p><font face="Arial">(5) Any modifiers (public, static, final, etc.)
+  that can be used for class declarations can also be used for <b>State_machine</b> declarations.
+  &nbsp; The modifier list in front of <b>State_machine</b> will be the modifier list of the
+  generated Java class.</font></p>
+  <p><font face="Arial">(6) Both start and stop states can have transitions to
+  other states.&nbsp; Both start and stop states can have enter and exit
+  methods.</font></p>
+</blockquote>
+
+  <p><b><font face="Arial" color="#FF0000">As a rule: transitions within a state 
+  machine are evaluated in order that they are defined.&nbsp; In an inheritance 
+  hierarchy, the transitions defined in the object's state machine are evaluated 
+  first, then the transitions defined in its parent, and so on, where the 
+  transitions in the root state machine are evaluated last.</font></b></p>
+
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FFFF00">
+  <tr>
+    <td WIDTH="788"><h2><a name="Refinements"><font face="Arial">Refinements</font></a></h2>
+    </td>
+  </tr>
+</table>
+
+<p><font face="Arial">A state is refined by extending its <b>Enter</b>, <b>Exit</b>,
+<b>Prepare</b>, or <b>Otherwise</b> method.&nbsp; This is done simply by
+declaring a new <b>Enter</b>, <b>Exit</b>, <b>Prepare</b>, or <b><a href="#Dealing with Errors">Otherwise</a></b>
+method that appears after the original.&nbsp; (By after, we mean sequentially
+after -- as in the same state machine declaration -- or as a declaration in a
+child state machine of a parent machine in an inheritance hierarchy).&nbsp; As an example, suppose the <b>Exit</b>
+method for state y is:</font></p>
+<blockquote>
+  <pre>Exit y { doLast(e); }</pre>
+</blockquote>
+<p><font face="Arial">The following <b>Exit</b> method extends the above
+method:</font></p>
+<blockquote>
+  <pre>Exit y { doFirst(e); }</pre>
+</blockquote>
+<p><font face="Arial">The net effect of these two declarations is a single <b>Exit</b>
+method with the following effect:</font></p>
+<blockquote>
+  <pre>Exit y { doFirst(e); doLast(e); }</pre>
+</blockquote>
+<p><font face="Arial">As a rule, the code of a method refinement
+is executed <b> before</b> previously defined code.&nbsp; (That is, in a sequence of <b>
+Exit</b> declarations, the declaration that is defined last is executed first, and
+the first declaration is executed last.&nbsp; This follows the normal refinement
+paradigm of executing the most refined code first and the original code last).
+This execution order can be changed explicitly using the <b><a href="#Proceed">Proceed</a></b>
+construct, a topic we consider later.</font></p>
+<p><font face="Arial">A transition is refined by extending its condition or
+action method. The syntax is:</font></p>
+<blockquote>
+  <pre>Syntax:  Transition_condition <span style="background-color: #00FFFF">&lt;edge-name&gt;</span> <span style="background-color: #00FFFF">&lt;predicate&gt;</span>;
+Syntax:  Transition_action <span style="background-color: #00FFFF">&lt;edge-name&gt;</span> { <span style="background-color: #00FFFF">&lt;code&gt;</span> }</pre>
+</blockquote>
+<p><font face="Arial">The condition predicate must contain the function <b>Proceed</b>(e), where &quot;e&quot; is the event variable name.&nbsp;
+<b>Proceed</b>(e)
+represents the original predicate. As an example,
+consider the following transition and refinement:</font></p>
+<blockquote>
+  <pre>Transition t1 : x -&gt; y condition pred(e) do { doLast(e); }
+
+Transition_condition t1 newPred(e) || Proceed(e);
+Transition_action t1 { doFirst(e); }</pre>
+</blockquote>
+<p><font face="Arial">Their composition is equivalent to the following:</font></p>
+<blockquote>
+  <pre>Transition t1 : x -&gt; y condition newPred(e) || pred(e) do { doFirst(e); doLast(e); }</pre>
+</blockquote>
+<p><font face="Arial">Action refinement, again, follows the paradigm of
+executing the most refined code first and the original code last.&nbsp; This
+order can be changed by using the <b><a href="#Proceed">Proceed</a></b> construct.</font></p>
+<blockquote>
+  <p><font face="Arial">As an aside, it has been suggested that abstract
+  transitions be added to state machine declarations.&nbsp; Note that refinement
+  allows one to accomplish something similar.&nbsp; Consider the following
+  &quot;abstract&quot; transition -- it is abstract in the sense that it will
+  never be traversed since its condition is false:</font></p>
+  <blockquote>
+    <pre>Transition abst : x -&gt; y condition false do { }</pre>
+  </blockquote>
+  <p><font face="Arial">Refinements of this transition (in state machine
+  inheritance hierarchies) can &quot;activate&quot; the edge by refining both its
+  condition and action.</font></p>
+</blockquote>
+<p><font face="Arial">Finally, <b><a href="#Dealing with Errors">Otherwise_default</a></b> methods
+-- a concept that we will introduce in the next section -- can be refined
+just like state methods.&nbsp; The composition of the following declarations:</font></p>
+<blockquote>
+  <pre>Otherwise_default { doitLast(); }
+Otherwise_default { doitFirst(); }</pre>
+</blockquote>
+<p><font face="Arial">is equivalent to:</font></p>
+<blockquote>
+  <pre>Otherwise_default { doitFirst(); doitLast(); }</pre>
+</blockquote>
+
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FFFF00">
+  <tr>
+    <td WIDTH="788"><h2><a name="Dealing with Errors"><font face="Arial">Dealing
+      with Errors</font></a></h2>
+    </td>
+  </tr>
+</table>
+
+<p><font face="Arial">Errors occur.&nbsp; A catastrophic error is when the
+current state of a machine is corrupted.&nbsp; A potentially less significant
+error is when a delivered event triggers no transition (as no transition
+condition was satisfied).&nbsp; In all these cases, a user will want to be
+alerted to these situations.&nbsp; SM5 provides three constructs for doing so:</font></p>
+<ul>
+  <li><font face="Arial"><b>Unrecognizable_state</b> -- defines the action when
+    the variable indicating the current state of a machine has been corrupted,</font></li>
+  <li><font face="Arial"><b>Otherwise_default</b> -- defines the general
+    action when an event triggers no transition, and</font></li>
+  <li><font face="Arial"><b>Otherwise</b> -- defines an additional
+    state-specific action when an event triggers no transition.</font></li>
+</ul>
+<p><font face="Arial">All of the above declarations are optional. Their syntax
+is below:</font></p>
+<blockquote>
+  <pre>Syntax:  Unrecognizable_state { <span style="background-color: #00FFFF">&lt;code&gt;</span> }
+Syntax:  Otherwise_default { <span style="background-color: #00FFFF">&lt;code&gt;</span> }
+Syntax:  Otherwise <span style="background-color: #00FFFF">&lt;state-name&gt;</span> { <span style="background-color: #00FFFF">&lt;code&gt;</span> }</pre>
+</blockquote>
+<p><font face="Arial">Again, code for an <b>Unrecognizable_state</b> is the action to take under catastrophic conditions.&nbsp; By default, the action is:</font></p>
+<blockquote>
+  <pre>System.err.println(&quot;Unrecognizable_state&quot; + current_state);
+System.exit(1);</pre>
+</blockquote>
+<p><font face="Arial"> cur</font><font face="Arial">rent_state is a generated variable whose value
+is the current state of the state machine. <font color="#FF0000"><b>Note: because
+this is a generated variable, its name can change over time.&nbsp; Don't access
+it.</b></font></font></p>
+<p><font face="Arial">In some applications (e.g., FSATS), it is possible for
+events to be lost or to arrive out-of-order.&nbsp; <b>Otherwise_default</b> and <b>Otherwise</b>
+statements declare the actions to repair the state of a machine.&nbsp; An <b>Otherwise_default</b>
+action defines error recovery code that all states share.&nbsp; <b>Otherwise</b>
+&lt;state&gt; code defines additional error recovery actions that are specific
+to a state. Thus, given the declarations:</font><font face="Arial">&nbsp;</font></p>
+<blockquote>
+  <pre>Otherwise_default ( meLast(e); }
+
+Otherwise x { meFirst(e); }</pre>
+</blockquote>
+<p><font face="Arial">If an event is received in state x and no transitions
+occur, the meFirst code will be executed first and then meLast. This is
+equivalent to:</font></p>
+<blockquote>
+  <pre>Otherwise_default ( }
+
+Otherwise x { meFirst(e); meLast(e); }</pre>
+</blockquote>
+<p><font face="Arial">Consider the following variation of the above, where
+only the otherwise action is performed. That is, in state x, if event e satisfies
+predicate my_test(e), then only recovery_action() is executed, else the event is ignored.&nbsp; This would be expressed as:</font></p>
+<blockquote>
+  <pre>Otherwise_default ( ignore_event(e); }
+
+Otherwise x { 
+   if (my_test(e)) { 
+      recovery_action();
+      return;  // important -- otherwise code will &quot;fall through&quot; to Otherwise_default
+   }
+}</pre>
+</blockquote>
+<p><font face="Arial">Specifying a return after recovery_action is important,
+as if it is absent, the <b>Otherwise_default</b> code (to ignore the
+message) will be executed.</font></p>
+<p><font face="Arial">To have more control over where <b>Otherwise_default</b>
+code is executed, see the <b><a href="#Proceed">Proceed</a></b> feature.</font></p>
+
+<table BORDER="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FF00FF">
+  <tr>
+    <td WIDTH="766"><h3><a name="Goto_state"><font face="Arial" color="#FFFFFF">Goto_state</font></a></h3>
+    </td>
+  </tr>
+</table>
+
+<p><font face="Arial">Recovery from an error often requires a transition from
+the current state to another state.&nbsp; While this can be expressed as a
+transition, error transitions sometimes transform a simple state machine into a clique (i.e. a fully-connected graph).&nbsp; To avoid
+cliques, it is necessary to have an explicit construct for transitioning to
+another state.&nbsp; This is the purpose of the Goto_state statement:</font></p>
+<blockquote>
+  <pre>Syntax:  Goto_state <span style="background-color: #00FFFF">&lt;state-name&gt;</span> (<span style="background-color: #00FFFF">&lt;event-variable&gt;</span>);</pre>
+</blockquote>
+<p><font face="Arial">SM5 translates this construct into a sequence of two
+method calls: exit-from-current-state; enter-new-state.&nbsp; Both methods take an
+event as input, and this is why an event must be supplied with a <b>Goto_state</b>
+statement. Normally, the event that triggered the
+exceptional condition is used as the <b>Goto_state</b> parameter.</font></p>
+<p><font face="Arial">Recovery actions sometimes not only require a transition
+to a new state, but also the processing of an event in that state.&nbsp;
+Consider this example:
+event e is only processed in state y. Let x be the current state of a machine,
+and let there be a sequence of events that transition x to y.&nbsp; Suppose
+this entire sequence of events is lost.&nbsp; When event e arrives at state x,
+the recovery action for x is to (1) transition to state y, and (2) let this
+event be processed by y.&nbsp; This is specified by:</font></p>
+<blockquote>
+  <pre>Goto_state y (e);	// (1)
+delivery(e);	// (2)</pre>
+</blockquote>
+
+<table BORDER="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FF00FF">
+  <tr>
+    <td WIDTH="766"><h3><a name="Proceed"><font face="Arial" color="#FFFFFF">Proceed</font></a></h3>
+    </td>
+  </tr>
+</table>
+
+<p><font face="Arial">A <b>before</b> method is a method that is executed
+prior to a base method.&nbsp; An <b>after</b> method is a method that is executed
+after a base method.&nbsp; An <b>around</b> method is a pair of code
+fragments, one fragment is executed before the base method, and the
+second is executed afterwards.</font></p>
+<p><font face="Arial">As we saw earlier, <b>Enter</b>, <b>Exit</b>, <b>Prepare</b>,
+<b>Otherwise</b>, <b>Otherwise_default</b>, and <b>Transition_action</b> methods are default before
+methods. That is, the most specific refinements are executed first, and the
+original method definitions are executed last. To alter this execution order,
+the <b>Proceed</b> construct is used.&nbsp; <b>Proceed</b> looks like a method
+call; it takes an event as a parameter.&nbsp; <b>Proceed</b> is a place-holder
+that references the previously defined <b>Enter</b>, <b>Exit</b>, <b>Prepare</b>, etc.
+method.&nbsp; (Since the names of these methods are generated, they cannot be
+exposed to SM5 programmers.&nbsp; <b>Proceed</b> is the placeholder for a
+generated method name). As an example, suppose the base enter method is:</font></p>
+<blockquote>
+  <pre>Enter x { foo(e); }</pre>
+</blockquote>
+<p><font face="Arial">Four separate refinements of this method are listed below: the
+first two are before rewrites, the third is an after rewrite, and the last is an
+around. The comments to the right indicate the semantics of that refinement
+composed with the above base method:</font></p>
+<blockquote>
+  <pre>Enter x { before(e); }			// same as before(e); foo(e);</pre>
+  <pre>Enter x { before(e); Proceed(m); }		// same as before(e); foo(e);</pre>
+  <pre>Enter x { Proceed(e); after(e); }		// same as foo(e); after(e);</pre>
+  <pre>Enter x { before(e); Proceed(e); after(e); }	// same as before(e); foo(e); after(e);</pre>
+<p><font color="#FF0000" face="Arial"><b>Note: t</b></font><font face="Arial"><font color="#FF0000"><b>he Proceed construct should be
+used only in very restrictive cases, as default before method behavior should be
+sufficient</b></font>.&nbsp;&nbsp;</font></p>
+<p><font face="Arial"> In the unlikely circumstance that a complete
+override (without calling the base method) is needed, SM5 requires you to use a truly
+ugly hack.&nbsp; To override the base <b>Enter</b> method above, write:</font></p>
+<blockquote>
+  <pre>Enter x { &lt;override code&gt;; if (false) Proceed(e); }</pre>
+</blockquote>
+<p><font face="Arial">SM5 assumes if a <b>Proceed</b> is not present in a code
+fragment, the default behavior is as a before method.&nbsp; The above hack satisfies the requirement that a <b>Proceed</b> is present, but
+it is not executed.&nbsp; Again, complete method overrides should never be used.</font></p>
+
+</blockquote>
+
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FFFF00">
+  <tr>
+    <td><h2 style="font-family: Arial"><a name="Other Useful Features"><font face="Arial">Other
+      Useful Features</font></a></h2>
+    </td>
+  </tr>
+</table>
+
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FF00FF">
+  <tr>
+    <td><h3 style="font-family: Arial"><a name="Star Transition"><font face="Arial" color="#FFFFFF">Star
+      Transition</font></a></h3>
+    </td>
+  </tr>
+</table>
+
+<p><font face="Arial">Occasionally it is useful to define generic transitions
+from all nodes
+to terminate at designated node.&nbsp; The idea is to define the transition once, using
+a &quot;wild-card&quot; as the start node of a transition using the following
+specification:</font></p>
+
+<blockquote>
+  <pre>Syntax:  <font face="Courier New">Transition <span style="background-color: #00FFFF">&lt;transition-name&gt;</span> : * -&gt; <span style="background-color: #00FFFF">&lt;end-state&gt;</span>
+                    condition <span style="background-color: #00FFFF">&lt;predicate&gt;</span> do { <span style="background-color: #00FFFF">&lt;action&gt;</span> }</font></pre>
+  <pre><font face="Courier New">Example: Transition myedge : * -&gt; endstate condition ... do { ... }</font></pre>
+</blockquote>
+
+<p><font face="Arial">The above is called a &quot;<b>star transition</b>&quot;, and looks identical
+to a normal transition declaration, except that the starting node is &quot;*&quot;.&nbsp; All
+nodes in a graph will have a transition called (in this example) &quot;myedge&quot; that will
+terminate at (in this example) &quot;endstate&quot;.&nbsp; Star transitions can be
+refined like
+normal transitions.</font></p>
+
+<p><font face="Arial">Star transitions can appear in any state machine in an 
+inheritance hierarchy.&nbsp; These transitions are inherited by all state 
+machine descendants, so any states that are introduced by descendants will 
+participate in a star transition.&nbsp; <b><font color="#FF0000">Star 
+transitions for a state are evaluated AFTER all non-star transitions have been 
+considered. Further, the order in which star transitions are evaluated within a 
+state machine declaration is the order in which they are defined.&nbsp; In an 
+inheritance hierarchy, the star transitions of an object's state machine are 
+evaluated first, then the star transitions of the parent machine, and so on, 
+where the star transitions of the root state machine are evaluated last.</font></b></font></p>
+
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FF00FF">
+  <tr>
+    <td WIDTH="788"><h3><a name="Nested States"><font face="Arial" color="#FFFFFF">Nested State
+      Machines</font></a></h3>
+    </td>
+  </tr>
+</table>
+
+<p><font face="Arial">Nesting state machines, where an entire state machine
+represents a single state in another, more abstract machine, is a useful
+concept.&nbsp; The semantics of nested machines can be very tricky, as what
+triggers the entry into a nested machine, what triggers the exit from a nested
+machine, among other things is not immediately obvious.</font></p>
+
+<p><font face="Arial">SM5 uses procedure semantics. That is, entering a nested
+machine is identical to entering a procedure.&nbsp; The unnested state machine
+that is equivalent to a nested machine is formed by &quot;in-lining&quot; the
+nested machine into its parent.&nbsp; (This is analogous to in-lining the body
+of a procedure where ever the procedure is called).</font></p>
+
+<p><font face="Arial">Consider the following unnested machine with four
+states: start, one, two, and stop:</font></p>
+
+<blockquote>
+<pre><img border="0" src="images/unnested.gif" align="right" width="246" height="61">State_machine unnested {
+   Delivery_parameter(Evnt e);</pre>
+
+<pre>   States one, two;</pre>
+
+<pre>   Transition t1: start -&gt; one condition c1 do { x1 };
+   Transition t2: one -&gt; two   condition c2 do { x2 };
+   Transition t3: two -&gt; two   condition c3 do { x3 };
+   Transition t4: two -&gt; stop  condition c4 do { x4 };
+}</pre>
+
+</blockquote>
+<p><font face="Arial">We can abstract the state machine fragment represented
+by states one and two into a separate state machine, called proc:</font></p>
+
+<blockquote>
+<pre><img border="0" src="images/proc.gif" align="right" width="205" height="45">State_machine proc {
+   Delivery_parameter(Evnt e);
+
+   States two;       // start state of proc is 
+                     // equivalent to state one in unnested</pre>
+
+<pre>   Transition t2: start -&gt; two condition c2 do { x2 };
+   Transition t3: two -&gt; two   condition c3 do { x3 };
+   Transition t4: two -&gt; stop  condition c4 do { /*nothing*/ };
+}</pre>
+
+</blockquote>
+<p><font face="Arial">A state machine equivalent to unnested, using machine
+proc, is:</font></p>
+
+<blockquote>
+<pre><img border="0" src="images/both.gif" align="right" width="205" height="83">State_machine equiv {
+   Delivery_parameter(Evnt e);</pre>
+
+<pre>   Nested_state n : new proc();</pre>
+
+<pre>   Transition t1: start -&gt; n condition c1 do { x1 };
+   Transition t4: n -&gt; stop  condition true do { x4 };
+}</pre>
+
+</blockquote>
+<p><font face="Arial">Here's how the equiv machine works.&nbsp; Nested state n
+is defined by the following SM5 construct:</font></p>
+
+<blockquote>
+  <pre>Syntax:  Nested_state <span style="background-color: #00FFFF">&lt;state-name&gt;</span> : <span style="background-color: #00FFFF">&lt;constructor-for-state-machine-object&gt;</span>;</pre>
+
+  <pre>Example: Nested_state n : new proc();</pre>
+
+</blockquote>
+<p><font face="Arial">When equiv transitions to state n, an instance of the
+proc machine is created.&nbsp; From this point on, <b>all</b> events delivered
+to equiv will be immediately delivered to proc for processing.&nbsp; Only after
+the proc machine has finished will normal event processing by equiv continue.</font></p>
+
+<p><font face="Arial">The proc machine is finished when it has reached its
+stop state.&nbsp; The event that causes proc to stop will be given to the
+calling equiv machine for processing.&nbsp; Look carefully at the above
+example.&nbsp; Transition t4 in proc uses the predicate for t4 in the original
+state machine to transition to the stop state, but there is no action (i.e.,
+/*nothing*/) performed.&nbsp; The event that stopped the proc machine is now
+given to the parent machine for processing.&nbsp; Transition t4 in equiv has a
+true predicate (meaning that as soon as the proc machine is finished any event
+automatically moves the equiv machine to the stop state).&nbsp; The action of t4
+in the original state machine is now performed.</font></p>
+
+<p><font face="Arial">Using the above guidelines, state machines can be nested
+arbitrarily deep.&nbsp; Once a nested machine is created, it will process all
+events delivered until it finishes or another nested machine is created. This
+organization should help simplify error processing.&nbsp; If an error transition
+cannot be made within within the current machine, the machine finishes and
+requires its parent machine to repair the error.&nbsp; Error recovery recurses
+upwards to the level at which recovery makes sense.</font></p>
+
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FFFF00">
+  <tr>
+    <td WIDTH="788"><h2><a name="What is generated"><font face="Arial">What is
+      Generated?</font></a></h2>
+    </td>
+  </tr>
+</table>
+
+<p><font face="Arial">To get a sense of how an SM5 specification is translated
+to Java, we review several key methods.&nbsp; The delivery method delivers a new
+event to a state machine using the following organization.&nbsp; When an event
+is received, it is dispatched to the appropriate state.&nbsp; The prepare method
+of that state is executed, followed by a &quot;branches&quot; method. current_state is a generated
+internal variable whose value is the
+current state of the machine.&nbsp; If the current state is unrecognized, then
+the code for unrecognized state is executed.</font></p>
+<blockquote>
+  <pre>public void delivery( Evnt e ) {      
+   if (current_state == start) { start_prepare(e); start_branches(e); return; }
+   if (current_state == stop) { start_prepare(e); stop_branches(e); return; }
+   if (current_state == one) { start_prepare(e); one_branches(e); return; }
+   // code for Unrecognizable state placed here 
+}</pre>
+</blockquote>
+<p><font face="Arial">Every state has an internal &quot;branches&quot;
+method.&nbsp; Each transition from this state will have a &quot;if&quot;
+statement that tests the predicate of the transition.&nbsp; If satisfied, the
+exit method for that state is called, the transition action is performed, and
+the enter method for the new state is called.&nbsp; Only one transition will be
+fired when an event is received.&nbsp; The order in which transition conditions
+are tested is the order in which the transitions are defined (modulo <a href="#Star Transition">star
+transitions</a>).&nbsp; If no event
+satisfies a transition condition, the state's otherwise method is invoked.</font></p>
+<blockquote>
+  <pre>void three_branches( M m ) {
+
+      // Transition t6 : three -&gt; four condition ... do ...
+      if ( t6_test(m) ) { three_exit(m); t6_action(m); four_enter(m); return; }</pre>
+  <pre>      // Transition t7 : three -&gt; six condition ... do ...
+      if ( t7_test(m) ) { three_exit(m); t7_action(m); six_enter(m); return; }
+
+      three_otherwise( m );
+   }</pre>
+</blockquote>
+<p><font face="Arial">Each state X will have the following void internal methods
+generated:</font></p>
+<ul>
+  <li><font face="Arial">x_enter -- entry code</font></li>
+  <li><font face="Arial">x_exit -- exit code</font></li>
+  <li><font face="Arial">x_otherwise -- otherwise code</font></li>
+  <li><font face="Arial">x_prepare -- prepare code</font></li>
+</ul>
+<p><font face="Arial">Each transition T will have the following internal methods
+generated:</font></p>
+<ul>
+  <li><font face="Arial">boolean t_test -- condition code</font></li>
+  <li><font face="Arial">void t_action -- action code</font></li>
+</ul>
+
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FFFF00">
+  <tr>
+    <td><h2 style="font-family: Arial"><a name="Error Messages"><font face="Arial">Error
+    Messages</font></a></h2>
+    </td>
+  </tr>
+</table>
+
+<p><font face="Arial">The following is a subset of the error messages that SM5
+can generate.&nbsp; All other messages are errors internal to SM5.&nbsp; Please
+contact SM5 authors for repairs.</font></p>
+<div align="center"><center>
+
+<table border="1" cellpadding="0" cellspacing="0" height="438">
+  <tr>
+    <td height="57" align="center"><font face="Arial"><b>Error</b></font></td>
+    <td height="57" align="center"><font face="Arial"><b>Action</b></font></td>
+  </tr>
+  <tr>
+    <td height="57"><font face="Arial">Unrecognized state S</font></td>
+    <td height="57"><font face="Arial">State S has been referenced, but has yet to be
+    defined.&nbsp; Action: define S.</font></td>
+  </tr>
+  <tr>
+    <td height="21"><font face="Arial">cannot find file: F (or F.ser)</font></td>
+    <td height="21"><font face="Arial">A state machine is extending a previously defined
+    state machine, but its .ser file cannot be found.&nbsp; Action: check correctness of
+      extending file name or translate state machine F first.</font></td>
+  </tr>
+  <tr>
+    <td height="20"><font face="Arial">Delivery_parameter clause is missing in specification X<br>
+      </font></td>
+    <td height="20"><font face="Arial">X is a state machine specification that does not
+      extend a previously defined state machine.&nbsp; Action: define an
+      Delivery_parameter clause.</font></td>
+  </tr>
+  <tr>
+    <td height="20"><font face="Arial">Delivery_parameter clause is present in specification X<br>
+      </font></td>
+    <td height="20"><font face="Arial">X is a state machine specification that extends
+      a
+    previously defined state machine.&nbsp; Action: remove X's
+      Delivery_parameter clause.</font></td>
+  </tr>
+  <tr>
+    <td height="20"><font face="Arial">duplicate state name S</font></td>
+    <td height="20"><font face="Arial">state S has been defined multiple times. Action:
+    remove duplicate declarations.</font></td>
+  </tr>
+  <tr>
+    <td height="20"><font face="Arial">multiple Exit state declarations for state S<br>
+      </font></td>
+    <td height="20"><font face="Arial">At most one Exit state declaration can exist within a
+    single state machine specification. Action: remove all but one Exit state declarations for
+    state S</font></td>
+  </tr>
+  <tr>
+    <td height="20"><font face="Arial">multiple Enter state declarations for state
+      S<br>
+      </font></td>
+    <td height="20"><font face="Arial">At most one Enter state declaration can exist within
+    a single state machine specification. Action: remove all but one Enter state declarations
+    for state S.</font></td>
+  </tr>
+  <tr>
+    <td height="20"><font face="Arial">duplicate transition declaration E<br>
+      </font></td>
+    <td height="20"><font face="Arial">Edge E has been defined multiple times. Action:
+    remove duplicate declarations.</font></td>
+  </tr>
+  <tr>
+    <td height="20"><font face="Arial">multiple Otherwise declarations for state S</font></td>
+    <td height="20"><font face="Arial">Otherwise S has been defined multiple times. Action:
+    remove duplicate declarations.</font></td>
+  </tr>
+  <tr>
+    <td height="20"><font face="Arial">Proceed not found in method</font></td>
+    <td height="20"><font face="Arial">A Proceed call was expected in the
+      designated method.&nbsp; (Presently limited only to Transition_condition
+      methods).&nbsp; Action: add Proceed call.</font></td>
+  </tr>
+  <tr>
+    <td height="20"><font face="Arial">Proceed should not be present.</font></td>
+    <td height="20"><font face="Arial">Proceed calls can appear only within
+      Enter, Exit, Prepare, Otherwise, Otherwise_default, Transition_condition,
+      and Transition_action methods.&nbsp; Action: remove Proceed call.</font></td>
+  </tr>
+  <tr>
+    <td height="18"><font face="Arial">Unrecognized transition</font></td>
+    <td height="18"><font face="Arial">Transition referenced but not declared.
+      Action: define transition.</font></td>
+  </tr>
+  <tr>
+    <td height="20"><font face="Arial">Illegal constructor for nested state</font></td>
+    <td height="20"><font face="Arial">Action: define a legal constructor -- new
+      statemachine() -- for this nested state.</font></td>
+  </tr>
+  <tr>
+    <td height="20"><font face="Arial">Parent state machine X has not been translated
+      to Java.</font></td>
+    <td height="20"><font face="Arial">An inheritance hierarchy of state
+      machines must be translated from root-to-leaf order.&nbsp; X is the parent
+      machine of the state machine being translated.&nbsp; Action: translate X
+      before translating this machine.</font></td>
+  </tr>
+</table>
+</center></div>
+
+<p>&nbsp;</p>
+
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FFFF00">
+  <tr>
+    <td><h2 style="font-family: Arial"><a name="Known Problems"><font face="Arial">Known
+    Problems</font></a><font face="Arial"> and Behaviors</font></h2>
+    </td>
+  </tr>
+</table>
+
+<p><font face="Arial" color="#FF0000"><b>There is nothing in the SM5 DSL
+  that allows a class to be a subclass of a state machine (and there are no
+  checks to alert SM5 users to this).&nbsp; Don't do this!! -- SM5 will not
+  catch the error and translations of state machine specifications may be
+  incorrect if this is done.</b></font></p>
+
+<p><font face="Arial" color="#FF0000"><b>Finally, when translating state machine
+inheritance hierarchies, all machines of this hierarchy are assumed to be in the
+same directory.</b></font></p>
+
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FFFF00">
+  <tr>
+    <td><h2 style="font-family: Arial"><font face="Arial"><a name="SM Grammar">
+    SM5
+      Grammar</a></font></h2>
+    </td>
+  </tr>
+</table>
+
+<p style="font-family: Arial"><font face="Arial">The SM5 grammar is given below. &nbsp;
+Please consult the sm.b grammar file for the most up-to-date definition.</font></p>
+
+<blockquote>
+  <pre style="font-family: Arial"><font face="Courier New">&quot;State_machine&quot; 	STATE_MACHINE
+&quot;States&quot;		STATES
+&quot;Delivery_parameters&quot; 	DELIVERY
+&quot;Transition&quot;		EDGE
+&quot;condition&quot;		CONDITION
+&quot;-&gt;&quot; 			ARROW
+&quot;Exit&quot;			EXIT
+&quot;Enter&quot;			ENTER
+&quot;Prepare&quot;       	PREPARE
+&quot;Otherwise&quot;     	OTHERWISE
+&quot;Otherwise_default&quot; 	OTHERWISE_DEFAULT 
+&quot;Unrecognizable_state&quot; 	UNRECOGNIZABLE_STATE
+&quot;Nested_state&quot;  	NESTED_STATE
+&quot;Goto_state&quot;    	GOTO_STATE
+&quot;Proceed&quot;       	PROCEED
+&quot;Transition_condition&quot;	EDGETEST
+&quot;Transition_action&quot;   	EDGEACTION
+
+// the following hooks SmDeclaration with class, interface declarations
+
+UnmodifiedTypeDeclaration
+	: SmDeclaration
+	;
+
+SmDeclaration
+	: STATE_MACHINE QName [ SmExtendsClause ] 
+          [ ImplementsClause ] SmClassBody 	:: UmodSmDecl
+	;
+
+SmExtendsClause
+	: LOOKAHEAD(2) ExtendsClause                           :: SmExtends
+	| LOOKAHEAD(2) &quot;extends&quot; &quot;class&quot; AST_QualifiedName     :: SmClsExtends
+	;
+
+SmClassBody
+	: &quot;{&quot; [ RootClause ] [ OtherwiseClauses ] [ StatesList ] [ ESList ] 
+  	  [ AST_FieldDecl ] &quot;}&quot; 		:: SmClassDecl
+	;
+
+StatesList
+	: (StatesClause)+
+	;
+
+StatesClause
+	: STATES AST_TypeNameList &quot;;&quot;		:: StatesDecl
+	| NESTED_STATE QName &quot;:&quot; AllocationExpression &quot;;&quot;  :: NStateDecl
+	;
+
+RootClause
+	: DelivClause [ NoTransitionClause ] 	:: RootDecl
+	;
+
+NoTransitionClause
+	: UNRECOGNIZABLE_STATE Block		:: NoTransDecl
+	;
+
+DelivClause
+	: DELIVERY &quot;(&quot; AST_ParList &quot;)&quot; &quot;;&quot; 	:: DelivDecl
+	;
+
+OtherwiseClauses
+	: ( OtherwiseClause )+
+	;
+
+OtherwiseClause
+	: OTHERWISE_DEFAULT Block               :: ODefaultDecl
+	;
+
+ESList	: ( Es )+
+	;
+
+Es	
+	: EXIT QName Block			:: ExitDecl
+	| ENTER QName Block			:: EnterDecl
+	| PREPARE QName Block			:: PrepareDecl
+	| EDGETEST QName AST_Exp &quot;;&quot;            :: TestDecl
+	| EDGEACTION QName Block                :: ActionDecl
+	| EDGE QName &quot;:&quot; StartName ARROW QName
+	  CONDITION AST_Exp DO Block 		:: TransitionDecl
+	| OTHERWISE QName Block                 :: OtherDecl
+	;
+
+StartName 
+	: QName					:: SmSName
+	| &quot;*&quot;					:: StarName
+	;
+
+Statement
+	: GOTO_STATE QName Arguments		:: GotoState
+	;
+
+PrimaryPrefix
+	: PROCEED Arguments			:: ProceedDecl
+	;
+
+// the following is used to allow Sm declarations to be nested within
+// class declarations
+
+NestedSmDeclaration
+	: [ AST_Modifiers ] SmDeclaration	:: NSmDecl
+	;
+
+ClassBodyDeclaration
+	: LOOKAHEAD( [ AST_Modifiers() ] &quot;state_machine&quot; )
+            NestedSmDeclaration	
+	;
+</font></pre>
+</blockquote>
+
+<hr>
+
+<p><b><a href="index.html"><font COLOR="#8000FF" face="Arial">ATS Home Page</font>
+</a>
+</b></p>
+
+<p><font face="Arial"><b>Copyright © Software Systems Generator Research Group. All
+rights reserved.</b> <br>
+<b>Revised:&nbsp;<!--webbot bot="TimeStamp" startspan s-format="%B %d, %Y"
+s-type="EDITED" -->January 25, 2006<!--webbot bot="TimeStamp" i-checksum="31592" endspan -->.</b> </font></p>
+</body>
+</html>

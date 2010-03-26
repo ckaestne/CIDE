@@ -1,0 +1,60 @@
+#!/bin/sh
+#
+# Prints a search path, one path element per line.
+#
+# Use:  print-path <path>
+#=============================================================================#
+
+[ -z "${BASH}" ] && exec bash "$0" "$@"
+
+#=============================================================================#
+# Script initialization, include command search path:
+#
+set -e					# Shell aborts on unhandled errors
+#set -x					# and prints individual commands.
+
+PATH="/usr/bin"				# Start with "safe" directories.
+PATH="${PATH}:/bin"
+SHELL="/bin/sh"
+export PATH SHELL
+
+PROG="print-path"			# Default program name.
+PROGRAM="${0##*/}"			# Actual program name taken from base
+PROGRAM="${PROGRAM:-${PROG}}"		# name of calling script, if possible.
+
+ulimit -c 0 &> /dev/null || :		# Don't allow core files.
+
+#-----------------------------------------------------------------------------#
+# Error message helper functions:
+# * error -----	puts labelled message on stderr & is otherwise like "echo";
+# * fatal ----- exits with failure status after printing error message.
+#
+function error() { echo 1>&2 -n "${PROGRAM}: " ; echo 1>&2 $@ ;}
+function fatal() { error $@ ; exit 1 ;}
+
+#-----------------------------------------------------------------------------#
+# Argument parsing:
+#
+ARG="${1}"
+
+#-----------------------------------------------------------------------------#
+# What system is script running on?
+# * cygwin ---- predicate to check whether script is running under CygWin;
+#
+case "$(uname)" in
+    CYGWIN*)
+	function cygwin() { true  ; }
+	;;
+    *)
+	function cygwin() { false ; }
+	;;
+esac
+
+#-----------------------------------------------------------------------------#
+# Print path elements:
+#
+cygwin && ARGPATH="$(cygpath --path --unix "${ARG}")" || ARGPATH="${ARG}"
+
+for ITEM in ${ARGPATH//:/ } ; do
+    cygwin && echo "$(cygpath --windows "${ITEM}")" || echo "${ITEM}"
+done

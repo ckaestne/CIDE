@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xak="http://www.atarix.org/xak" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.atarix.org/xak" elementFormDefault="qualified" attributeFormDefault="qualified">
+	<xs:element name="refines">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="extends" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="xak:super" minOccurs="0"/>
+							<xs:any namespace="##other" processContents="skip" maxOccurs="unbounded"/>
+							<xs:element ref="xak:super" minOccurs="0"/>
+						</xs:sequence>
+						<xs:attribute name="module" use="required"/>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="artifact" type="xs:string" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="super">
+		<xs:complexType>
+			<xs:attribute name="module" type="xs:string" use="required"/>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

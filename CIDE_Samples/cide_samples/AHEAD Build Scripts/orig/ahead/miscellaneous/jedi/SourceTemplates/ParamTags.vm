@@ -1,0 +1,19 @@
+## ParamTags.vm
+## JEDI Project
+## HTML Template for Param Tags
+## Author: Roberto E. Lopez-Herrejon
+## Last update: November 6, 2002
+
+#set($counter = 0)
+#foreach ($param in $doc.comment().paramTags())
+    #if ($counter == 0)
+	<DT> <B>Parameters</B>    
+    #end
+    
+    <DD>
+    $param.parameterName() -
+    $generator.descriptionComment($param.inlineTags())
+ 
+    #set($counter = $counter + 1 )
+
+#end

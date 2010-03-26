@@ -1,0 +1,33 @@
+# The grammar:
+#
+grammar = dsl/java/JavaGram
+
+# This is the AST DSL sub-matrix.  It is updated as features are added.
+#
+ast-jak2java =
+ast-jampack  =
+ast-mixin    =
+ast-mmatrix  =
+ast-unmixin  =
+ast-bcjak2java =
+ast-jak2aj   =
+ast-jrename  =
+
+# This is the main matrix.  Rows correspond to features, columns to tools,
+# and it is presented in column-major order.  That means that the tools will
+# be updated incrementally as features are added.
+#
+jak2java   = parser lang          dsl/java/sortfd
+jampack    = parser lang          dsl/java/sortfd
+mixin      = parser lang
+mmatrix    = parser dsl/java/Java dsl/java/linenum
+unmixin    = parser lang
+bcjak2java = parser lang          dsl/java/sortfd
+jak2aj     = parser lang          dsl/java/sortfd
+jrename    = parser lang
+
+# These are local variables.  They could be overridden or extended but, by
+# convention, they aren't.
+#
+parser = dsl/kernel build/java/syntax
+lang = dsl/java/Java dsl/java/Comments dsl/java/StringAST

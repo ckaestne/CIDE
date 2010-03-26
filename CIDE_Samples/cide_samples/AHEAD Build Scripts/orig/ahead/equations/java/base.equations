@@ -1,0 +1,22 @@
+grammar = super.grammar dsl/java/AheadGram
+
+ast-jak2java   = super.ast-jak2java   dsl/java/j2jast
+ast-jampack    = super.ast-jampack    dsl/java/CommonErrorAst
+ast-mixin      = super.ast-mixin      dsl/java/CommonErrorAst
+ast-mmatrix    = super.ast-mmatrix    dsl/java/mmAst
+ast-unmixin    = super.ast-unmixin    dsl/java/unmixinbaseAst
+ast-bcjak2java = super.ast-bcjak2java
+ast-jak2aj     = super.ast-jak2aj
+
+jak2java   = super.jak2java   dsl/java/j2jBase
+jampack    = super.jampack    base+error dsl/java/preprocess
+mixin      = super.mixin      base+error dsl/java/mixinbase
+mmatrix    = super.mmatrix    dsl/java/Basemm
+unmixin    = super.unmixin    dsl/java/unmixinbase
+bcjak2java = super.bcjak2java dsl/java/bcAhead
+jak2aj     = super.jak2aj     dsl/java/j2ajAhead
+jrename    = super.jrename    dsl/java/jrenBase
+
+# Local variable:
+#
+base+error = dsl/java/CommonBase dsl/java/CommonError

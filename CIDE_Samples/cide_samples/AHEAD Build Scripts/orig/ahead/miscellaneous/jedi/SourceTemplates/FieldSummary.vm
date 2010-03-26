@@ -1,0 +1,28 @@
+## FieldSummary.vm
+## JEDI Project 
+## HTML Template for Field Summary
+## Author: Roberto E. Lopez-Herrejon
+## Last update: November 30, 2002
+
+\#if ($fields == "true")
+
+#foreach($layoutElement in $layoutList)
+
+<!-- $layoutElement  -->
+
+ #include($layoutElement)
+
+
+#end     ## of for each
+
+
+</TABLE> 
+
+<BR>
+
+\#end 
+
+
+## End of FieldSummary.vm
+
+

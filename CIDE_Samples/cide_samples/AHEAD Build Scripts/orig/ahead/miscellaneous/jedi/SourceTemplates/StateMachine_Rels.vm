@@ -1,0 +1,16 @@
+## StateMachine_Rels.vm
+## JEDI Project
+## HTML Template for the State Machine
+## Author: Roberto E. Lopez-Herrejon
+## Last update: November 30, 2002
+
+<DL> 
+
+#foreach($layoutElement in $layoutList)
+<!-- $layoutElement  -->
+ #include($layoutElement)
+#end     ## of for each
+
+</DL>
+ 
+## End of StateMachine_Rels.vm

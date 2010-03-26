@@ -1,0 +1,500 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
+<title>Generation Scoping</title>
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+        <td width="78">
+        <img border="0" src="images/FopButton3.jpg" width="80" height="64"></td>
+        <td width="688" bgcolor="#00FFFF"><h1><font
+        color="#8000FF" face="Verdana">Generation Scoping</font></h1>
+        </td>
+    </tr>
+</table>
+
+<p><font face="Verdana">Generation Scoping is a variation of
+hygienic macros. It is an essential feature of metaprogramming
+(i.e., the ability to compose independently-written code
+fragments and avoiding inadvertent capture). This section
+presents the capabilities of the AHEAD generation scoping component
+(gscope) that is used with the AHEAD AST component: </font></p>
+
+<ul>
+    <li><a href="#Inadvertent Capture and Hygienic Macros"><font
+        color="#000000" face="Verdana">Inadvertent Capture and
+        Hygienic Macros</font></a></li>
+    <li><a href="#Environments"><font color="#000000"
+        face="Verdana">Environments</font></a></li>
+    <li><a href="#Environments in Interfaces"><font
+        color="#000000" face="Verdana">Environments in Interfaces</font></a></li>
+    <li><a href="#Environment Hierarchies"><font color="#000000"
+        face="Verdana">Environment Hierarchies</font></a></li>
+    <li><a href="#Aliasing"><font color="#000000" face="Verdana">Aliasing</font></a></li>
+    <li><a href="#Environment Arguments"><font color="#000000"
+        face="Verdana">Environment Augments</font></a></li>
+</ul>
+
+<p><font face="Verdana">A more general form of generation scoping
+(which has been added to Microsoft's IP project) is discussed in:
+</font></p>
+
+<blockquote>
+    <p><font face="Verdana">Yannis Smaragdakis and Don Batory, <b>
+    <a href="ftp://ftp.cs.utexas.edu/pub/predator/gscope99.pdf">Scoping 
+    Constructs for Program Generators</a></b>, <i>First Symposium on Generative 
+    and Component-Based Software Engineering,</i> Erfurt, Germany, September 
+    1999.</font></p>
+</blockquote>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%"
+bgcolor="#FFFF00" bordercolor="#FFFF00">
+    <tr>
+        <td><h3><a name="Inadvertent Capture and Hygienic Macros"><font
+        color="#8000FF" face="Verdana">Inadvertent Capture and
+        Hygienic Macros</font></a></h3>
+        </td>
+    </tr>
+</table>
+
+<p><font face="Verdana"><i>Inadvertent capture</i> arises when
+two independently written and correct code fragments are
+composed, but their composition is incorrect because of
+ambiguities in the naming of variable identifiers. Consider the
+following macro (parameterized code fragment) which defines a
+variable temp</font><font size="4" face="Verdana">:</font><font
+face="Verdana"> </font></p>
+
+<blockquote>
+    <pre>macro(x) { int temp = 2*x; ... }</pre>
+</blockquote>
+
+<p><font face="Verdana">The following application defines a
+variable, also called temp, and invokes </font><font size="3"
+face="Verdana">macro(x)</font><font face="Verdana">: </font></p>
+
+<blockquote>
+    <pre>int temp = 7;
+macro(temp);</pre>
+</blockquote>
+
+<p><font face="Verdana">When macro(x) is expanded, incorrect code
+is produced: </font></p>
+
+<blockquote>
+    <pre>int temp = 7;
+{ int temp = temp;&nbsp; ... }&nbsp;&nbsp; // incorrect</pre>
+</blockquote>
+
+<p><font face="Verdana">Instead of the inner temp variable being
+initialized with value of the outer temp variable; the
+uninitialized inner temp variable is used to initialize itself!
+This is an example of <i>inadvertent capture</i>: the temp
+identifiers are insufficient to disambiguate the variables that
+they reference. </font></p>
+
+<p><font face="Verdana"><i>Hygienic, lexically-scoped macros
+(HLSM)</i> were designed to solve the inadvertent capture
+problem. HLSM relies on a painting algorithm that ensures
+identifiers are bound to the correct variables. Often, HLSM is
+implemented as a preprocessing step that mangles variable names
+to ensure their uniqueness: </font></p>
+
+<blockquote>
+    <pre>int temp_0 = 7;
+{ int temp_1 = 2*temp_0;&nbsp; ... }&nbsp;&nbsp; // correct</pre>
+</blockquote>
+
+<p><font face="Verdana">HLSM's applicability is limited to macros
+(i.e., pattern-based source code transformations). Since AHEAD
+supports programmatic (as opposed to pattern-based) AST
+construction, AHEAD uses an adaptation and generalization of HLSM
+called <i>generation scoping (GS)</i>. In the following sections,
+we review the features of GS. <br>
+&nbsp; </font></p>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%"
+bgcolor="#FFFF00" bordercolor="#FFFF00">
+    <tr>
+        <td><h3><a name="Environments"><font color="#8000FF"
+        face="Verdana">Environments</font></a></h3>
+        </td>
+    </tr>
+</table>
+
+<p><font face="Verdana">A GS <i>environment</i> is a list of
+identifiers (i.e., class or interface names, data member or
+method names, etc.) that are local to a set of related code
+fragments that are to be generated. To ensure the absence of
+inadvertent capture, identifiers that are local to these code
+fragments are mangled. Associated with each environment instance
+is a unique mangle number, an integer that is attached to an
+identifier to make it unique. For example, if an environment's
+mangle number is 005 and identifier i is to be mangled,
+identifier i_005 is produced. </font></p>
+
+<p><font face="Verdana">Environments are associated with classes;
+environment instances are associated with objects. Class foo
+below defines an environment with identifiers i and j. Each foo
+instance creates an environment with identifiers i and j.
+Different foo instances represent distinct environment instances.
+Whenever a tree constructor is evaluated by a foo object, it does
+so in the context of that object's environment. Thus, if x and y
+are distinct foo instances, and x.bar() and y.bar() return code
+fragments, the returned fragments will be isomorphic in
+structure, but will have different names for variables i and j. </font></p>
+
+<blockquote>
+    <pre>class foo {
+&nbsp;&nbsp;&nbsp; environment i, j; // identifiers to mangle
+&nbsp;&nbsp;&nbsp; AST_Exp bar() { return exp{ i + j }exp; }
+}</pre>
+    <pre>foo x = new foo();&nbsp;&nbsp; // assume mangle number is 000
+foo y = new foo();&nbsp;&nbsp; // assume mangle number is 001</pre>
+    <pre>x.bar();&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // produces AST &quot;i_000 + j_000&quot;
+y.bar();&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // produces AST &quot;i_001 + j_001&quot;</pre>
+</blockquote>
+
+<p><font face="Verdana">With the above capabilities, the problem
+of inadvertent capture presented earlier can be avoided. One
+defines a class (macroExample) with an environment that contains
+the temp identifier. A method of this class (macroCode) uses a
+tree constructor to manufacture the body of the
+&quot;macro&quot;. The temp variable that is defined internally
+to that code fragment is given a unique name via mangling, so
+inadvertent capture cannot arise. </font></p>
+
+<blockquote>
+    <pre>class macroExample {
+&nbsp;&nbsp;&nbsp; environment temp;
+&nbsp;&nbsp;&nbsp; AST_Stmt macroCode( AST_QualifiedName n ) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return stm{ int temp = 2*$id(n); ... }stm;
+&nbsp;&nbsp;&nbsp; }
+}</pre>
+
+<p><font face="Verdana" color="#FF0000">Programming note: An environment statement is a
+declaration, much like a data member and method declaration.  In
+fact, when the environment statement is reduced to Java, a
+variable declaration and method replace the environment
+statement.&nbsp; The variable and method are non-static, thus, environments and 
+their code constructors cannot be referenced within static methods. </font></p>
+
+</blockquote>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%"
+bgcolor="#FFFF00" bordercolor="#FFFF00">
+    <tr>
+        <td><h3><a name="Environments in Interfaces"><font
+        color="#8000FF" face="Verdana">Environments in Interfaces</font></a></h3>
+        </td>
+    </tr>
+</table>
+
+<p><font face="Verdana">Objects with environments have hidden
+data members and methods that implement the environment
+construct. Interfaces to such classes must expose these hidden
+methods. To accomplish this, an empty environment declaration can
+appear inside an interface declaration. At reduction time, this
+declaration will be replaced by the hidden method(s) used by
+environment implementations. An example is shown below: </font></p>
+
+<blockquote>
+    <pre>interface fooInt {
+&nbsp;&nbsp;&nbsp; environment;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // empty - it declares that fooInt
+&nbsp;&nbsp;&nbsp; ...&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // classes have environment declarations
+}</pre>
+    <pre>class foo implements fooInt {
+&nbsp;&nbsp;&nbsp; environment ...;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+}</pre>
+    <pre>// application code
+fooInt x = new foo();</pre>
+</blockquote>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%"
+bgcolor="#FFFF00" bordercolor="#FFFF00" height="15">
+    <tr>
+        <td height="15"><h3><a name="Environment Hierarchies">
+        <font
+        color="#8000FF" face="Arial">Environment Hierarchies</font></a></h3>
+        </td>
+    </tr>
+</table>
+
+<p><font face="Verdana">Environment instances can be organized
+hierarchically to emulate scopes in the name space of generated
+programs. As expected, identifiers of parent environments are
+visible in child environments and identifiers that are declared
+in a child environment hide identifiers in parent environments
+with the same name. Parent linkages among environments are made
+at application run-time using the environment parent declaration.
+The example below shows that instances of class baz make their
+environments children of environments of foo objects. Note that a
+tree constructor for the expression i+k produced by a baz object
+yields i_000+k_002 because identifier i is mangled by the foo
+environment while k is mangled by the baz environment: </font></p>
+
+<blockquote>
+    <pre>class baz {
+&nbsp;&nbsp;&nbsp; environment k;</pre>
+    <pre>&nbsp;&nbsp;&nbsp; baz( foo z ) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; environment parent z;&nbsp;&nbsp; // z is the parent environment
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // of the constructed object
+&nbsp;&nbsp;&nbsp; }</pre>
+    <pre>&nbsp;&nbsp;&nbsp; AST_Exp biff() { return exp{ i + k }exp; }
+}</pre>
+    <pre>baz r = new baz(x);&nbsp;&nbsp;&nbsp;&nbsp; // recall x has mangle number 000
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // assume mangle number for r is 002
+r.biff();&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // produces AST &quot;i_000 + k_002&quot;</pre>
+</blockquote>
+
+<p><font face="Verdana">As a more realistic example, consider the
+following innocent-looking statement taken from the domain of
+data structures: </font></p>
+
+<blockquote>
+    <pre>cursor.second = container.first.next;</pre>
+</blockquote>
+
+<p><font face="Verdana">The second field of a cursor object is to
+be initialized with a pointer to the second element of a
+container. This pointer is obtained by following the first
+pointer (stored in a container object) and the next pointer (of
+an element object). Note the following: second is a field of a
+cursor class/object; first is a field of a container
+class/object; next is a field of an element class/object. Each of
+these fields is defined in a separate scope. The need for
+environments arises because a container object can have many
+first fields, a cursor object can have many second fields, an
+element object can have many next fields. It is important that
+the names of these fields be distinguished, and that consistent
+names are used for second, first, and next fields when the above
+statement is generated. </font></p>
+
+<p><font face="Verdana">A technique that we have used in the
+development of the AHEAD P3 data structure generator is to define a
+class for each P3 layer. Within a layer class is an environment
+declaration that lists the the union of the set of names of all
+local identifiers added to the cursor, container, and element
+classes that this layer refines. Separate classes are then
+defined to generate the code for each cursor, container, and
+element class. Instances of these cursor, container, and element
+classes have environments that are children of their
+corresponding layer object. Thus, any ASTs that are generated
+within the cursor, container, and element classes will have their
+local identifiers mangled consistently. </font></p>
+
+<blockquote>
+    <pre>class layer {
+&nbsp;&nbsp;&nbsp; environment i, j;&nbsp;&nbsp; // list of local identifiers&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // added by this layer</pre>
+    <pre>&nbsp;&nbsp;&nbsp; cursor make_cursor_layer() {&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return new cursor_layer(this);
+&nbsp;&nbsp;&nbsp; }</pre>
+    <pre>&nbsp;&nbsp;&nbsp; container make_container_layer() {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return new container_layer(this);
+&nbsp;&nbsp;&nbsp; }</pre>
+    <pre>&nbsp;&nbsp;&nbsp; element make_element_layer() {&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return new element_layer(this);
+&nbsp;&nbsp;&nbsp; }
+}</pre>
+    <pre>class cursor_layer {
+&nbsp;&nbsp;&nbsp; environment;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // empty, as all names of local&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // cursor variables are added
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // to the layer's environment list</pre>
+    <pre>&nbsp;&nbsp;&nbsp; cursor_layer( layer l ) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; environment parent l;&nbsp;&nbsp; // environment of l is parent&nbsp;
+&nbsp;&nbsp;&nbsp; }&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // of constructed object</pre>
+    <pre>&nbsp;&nbsp;&nbsp; AST_Exp foo() { return exp{ i + j }exp; }
+}</pre>
+    <pre>class container_layer {
+&nbsp;&nbsp;&nbsp; environment;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // empty</pre>
+    <pre>&nbsp;&nbsp;&nbsp; container_layer( layer l ) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; environment parent l;&nbsp;&nbsp; // environment of l is parent
+&nbsp;&nbsp;&nbsp; }&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // of constructed object</pre>
+    <pre>&nbsp;&nbsp;&nbsp; AST_Exp foo() { return exp{ i + j }exp; }
+}</pre>
+    <pre>class element_layer {
+&nbsp;&nbsp;&nbsp; environment;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // empty</pre>
+    <pre>&nbsp;&nbsp;&nbsp; container_element( layer l ) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; environment parent l;&nbsp;&nbsp; // environment of l is parent
+&nbsp;&nbsp;&nbsp; }&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // of constructed object</pre>
+    <pre>&nbsp;&nbsp;&nbsp; AST_Exp foo() { return exp{ i + j }exp; }
+}</pre>
+    <pre>// application code.&nbsp; objects k, c, e are used to&nbsp;
+// generate container, cursor, and element code</pre>
+    <pre>l = new layer();&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // assume mangle number 007
+k = l.make_container_layer();
+c = l.make_cursor_layer();
+e = l.make_element_layer();</pre>
+    <pre>k.foo();&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // returns &quot;i_007 + j_007&quot;
+c.foo();&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // returns &quot;i_007 + j_007&quot;
+e.foo();&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // returns &quot;i_007 + j_007&quot;</pre>
+</blockquote>
+
+<p><font face="Verdana">Note that it is possible to create
+directed acyclic graphs of parent relationships among
+environments (e.g., an environment that has multiple parent
+environments). Such connections can be useful, but programmers
+should be careful. If an identifier i is defined in multiple
+parents, where there is no parent-child relationship between
+these two parent environments, then there is no guarantee that
+identifier i will be mangled correctly or consistently.</font></p>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%"
+bgcolor="#FFFF00" bordercolor="#FFFF00">
+    <tr>
+        <td><h3><a name="Aliasing&nbsp;"><font color="#8000FF"
+        face="Verdana">Aliasing</font><font face="Verdana">&nbsp;</font></a></h3>
+        </td>
+    </tr>
+</table>
+
+<p><font face="Verdana">Escapes define a mechanism for explicit
+parameterization of ASTs. Aliasing provides a less powerful, but
+none-the-less useful form of implicit parameterization. The idea
+is to bind a code fragment to a local identifier. Instead of
+mangling the identifier, it is replaced with its aliased code
+fragment. </font></p>
+
+<p><font face="Verdana">Recall the </font><a href="#HLSM"><font
+face="Verdana">macro example</font></a><font face="Verdana"> that
+illustrated how inadvertent capture could be avoided. We can
+recast its implementation using aliases: </font></p>
+
+<blockquote>
+    <pre>class macroExample {
+&nbsp;&nbsp;&nbsp; environment temp, x;</pre>
+    <pre>&nbsp;&nbsp;&nbsp; AST_Stmt macroCode( AST_QualifiedName n ) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; alias( x, n );
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return stm{ int temp = 2*x; ... }stm;
+&nbsp;&nbsp;&nbsp; }
+}</pre>
+</blockquote>
+
+<p><font face="Verdana">The general form of an alias declaration
+is: </font></p>
+
+<blockquote>
+    <p><font face="Courier New">alias( identifier, AST )</font><font
+    size="4" face="Courier New">;</font></p>
+</blockquote>
+
+<p><font face="Verdana">Aliasing is generally useful in building
+generators for domain-specific languages. Common parameters to
+code fragments can be aliased identifiers, rather than having
+explicit escapes. In this way, code fragments can be much more
+readable. For example, when we built the P3 generator, we
+frequently made reference to a container object. This reference
+expanded into possibly different code fragments, depending on how
+the container was implemented. Rather than having explicit
+escapes (i.e., $exp(ContainerRef)) littered throughout our code
+fragments, we created an aliased identifier (ContainerRef) and
+used it instead. This made our code fragments easier to write and
+read. </font></p>
+
+<p align="left"><font face="Verdana">There are different types of
+ASTs. Unfortunately, only a subset of these types can be used
+with aliases. The above showed examples of ASTs of type </font><font
+size="3" face="Verdana">AST_QualifiedName</font><font
+face="Verdana">. The complete list of AST types can be used with
+aliases is:&nbsp; </font></p>
+<div align="center"><center>
+
+<table border="3" cellpadding="2" cellspacing="3"
+bgcolor="#00FF00" height="174">
+    <tr>
+        <td height="23"><font size="3" face="Verdana"><b>Allowable
+        AST Types for Aliasing</b></font></td>
+        <td height="23"><font size="3" face="Verdana"><b>Meaning</b></font></td>
+    </tr>
+    <tr>
+        <td height="13"><font size="2" face="Verdana">AST_QualifiedName</font></td>
+        <td height="13"><font size="2" face="Verdana">Java
+        qualified names (e.g., &quot;x.y.z&quot;)</font></td>
+    </tr>
+    <tr>
+        <td height="13"><font size="2" face="Verdana">AST_Exp</font></td>
+        <td height="13"><font size="2" face="Verdana">expressions</font></td>
+    </tr>
+    <tr>
+        <td height="16"><font size="2" face="Verdana">AST_Stmt</font></td>
+        <td height="16"><font size="2" face="Verdana">list of
+        statements</font></td>
+    </tr>
+    <tr>
+        <td height="13"><font size="2" face="Verdana">AST_FieldDecl</font></td>
+        <td height="13"><font size="2" face="Verdana">list of
+        data members and methods</font></td>
+    </tr>
+    <tr>
+        <td height="13"><font size="2" face="Verdana">AST_Plst</font></td>
+        <td height="13"><font size="2" face="Verdana">list of
+        function arguments</font></td>
+    </tr>
+    <tr>
+        <td height="13"><font size="2" face="Verdana">AST_Class</font></td>
+        <td height="13"><font size="2" face="Verdana">list of
+        class and interface definitions</font></td>
+    </tr>
+</table>
+</center></div>
+
+<p><font face="Verdana">The reason why other AST types cannot be
+used is due to the limited places that identifiers can appear in
+the Java grammar without introducing ambiguities. No ambiguities
+are introduced for the above types. </font></p>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%"
+bgcolor="#FFFF00" bordercolor="#FFFF00">
+    <tr>
+        <td><h3><a name="Environment Arguments"><font
+        color="#8000FF" face="Verdana">Environment Augments</font></a></h3>
+        </td>
+    </tr>
+</table>
+
+<p><font face="Verdana">Environments statically declare the set
+of identifiers that are local to a set of related code fragments.
+Occasionally, it is necessary for an application generator to
+manufacture local identifiers at run-time. To add identifiers
+dynamically to an environment, the &quot;environment
+augment&quot; construct is used. It takes a single parameter (of
+type String), and adds this string to the list of identifiers of
+the current environment. The example below illustrates the
+concept. </font></p>
+
+<blockquote>
+    <pre>class EnvAl {
+&nbsp;&nbsp;&nbsp; environment i;</pre>
+    <pre>&nbsp;&nbsp;&nbsp; AST_Exp foo() { return exp{ i + j }exp; }</pre>
+    <pre>&nbsp;&nbsp;&nbsp; void Add2Env( String str ) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; environment augment str;
+&nbsp;&nbsp;&nbsp; }
+}</pre>
+    <pre>// application code</pre>
+    <pre>EnvAl x = new EnvAl();&nbsp; // assume mangle number 008</pre>
+    <pre>x.foo();&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // outputs &quot;i_008 + j&quot;
+x.Add2Env(&quot;j&quot;);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // adds j to environment of x
+x.foo();&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // outputs &quot;i_008 + j_008&quot;</pre>
+</blockquote>
+
+<hr>
+
+<p>
+<font face="Verdana"><strong><a href="index.html">AHEAD
+Home Page</a> </strong></font></p>
+
+<p><font face="Verdana"><b>Copyright © Software Systems
+Generator Research Group. All rights reserved.</b> <br>
+<b>Revised:&nbsp;<!--webbot bot="TimeStamp" startspan
+s-format="%B %d, %Y" s-type="EDITED" -->January 25, 2006<!--webbot
+bot="TimeStamp" i-checksum="31592" endspan -->.</b> </font></p>
+</body>
+</html>

@@ -1,0 +1,981 @@
+
+
+<head>
+<title>Composition Tools</title>
+</head>
+
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%">
+  <tr>
+    <td WIDTH="78">
+    <img border="0" src="images/FopButton3.jpg" width="80" height="64"></td>
+    <td WIDTH="688" BGCOLOR="#00FFFF"><h3><font size="+3" color="#8000FF" face="Arial">
+    Composition and the Jak Language</font></h3>
+    </td>
+  </tr>
+</table>
+
+<p><font face="Arial">A <b>feature</b> is a basic unit of functionality whose
+implementation requires a collaboration of different classes. Unlike typical
+packages that encapsulate complete classes, a feature can also encapsulate
+fragments of classes -- i.e., data member additions, new methods, and method
+overrides of previously existing classes.&nbsp;&nbsp; Compositions of features
+yield sets of fully-formed classes.</font></p>
+<p><font face="Arial">This description of a feature is only a brief
+introduction.&nbsp; In fact, features deal with many other representations than
+classes.&nbsp; To distinguish concepts from implementations, we will use the
+term <b>layer</b> to express our representation of features.&nbsp; There are
+many other ways of representing features beyond that capable in our tools.</font></p>
+<p><font face="Arial">A <b>layer</b> is a set of files that define a feature
+of an application.&nbsp; Code representations are expressed as <b>.jak</b> files.&nbsp;
+Composable makefile representations are expressed as <b>build.xml.vm</b>, <b>build.xml.vm.prefix</b>,
+and <b>build.xml.vm.suffix</b> files.&nbsp; And
+so on. An application and its file representations are constructed by composing
+layers using the <b>composer</b> tool:</font></p>
+<p align="center">
+<img border="0" src="images/composition.gif" width="381" height="153"></p>
+<p><font face="Arial">Internally<b> composer</b> invokes a variety of tools to
+perform its task -- for example, it uses <b>jampack</b> and <b>mixin</b> to compose the <b>.jak</b>
+files of layers. &nbsp; Suppose the <b>A.jak</b>
+files from layers 1-3 are to be composed.&nbsp; <b>composer</b> instructs <b>jampack</b>
+or <b>mixin</b> to perform this composition to produce a composite <b>A.jak</b>
+ file (<b>step #1</b> below).&nbsp; This file is then translated to its <b>A.java</b>
+counterpart by the <b>jak2java</b> tool (Jak-to-Java).</font></p>
+<p align="center"><font face="Arial">&nbsp;<img border="0" src="images/Forward.gif" width="539" height="265"></font></p>
+<p align="left"><font face="Arial">
+<b>jampack</b></font><font face="Arial"> and <b>mixin</b>
+both compose <b>.jak</b>
+files, but do so in different ways.&nbsp; Recall that composed files form a refinement chain.&nbsp; A <b>refinement chain</b> is a linear
+inheritance chain where the bottom-most class of the chain is the only class that is
+instantiated. In the example above, the
+file <b>A.jak</b> (from layer 1) is the root of a refinement chain. File <b>A.jak</b>
+(from layer 2) is its immediate subclass, and <b>A.jak </b>(from layer 3) is
+its subclass.&nbsp; <b>jampack</b> &quot;squashes&quot; or flattens this chain into a single
+class.</font></p>
+<p align="left"><font face="Arial"><b>jampack</b></font><font face="Arial"> is not necessarily the
+composition tool of choice.&nbsp; Why?&nbsp; Think about
+the process of debugging a squashed .<b>jak</b> file.&nbsp; You translate
+the <b>.jak</b> file to a <b>.java</b>  file and run it.&nbsp; When tracking down
+errors, you'll make changes to the <b>.jak</b> file to repair your program,
+retranslate to <b>.java</b>, and run it again.&nbsp; Once you
+have fixed the problem, you must <i>manually</i> propagate the changes in the
+composite <b>.jak</b> file back to its original layer files.&nbsp; There
+is no other way to propagate these changes. This is a tedious and error-prone
+task.</font></p>
+<p align="left"><font face="Arial"><b>mixin</b></font><font face="Arial"> doesn't flatten refinement hierarchies, but rather retains
+layer relationships as an inheritance chain.&nbsp; <b>mixin</b> produces a single file that contains an
+inheritance hierarchy of classes, interfaces, or state machines, where only the
+bottom-most entity of the chain is &quot;public&quot;.&nbsp;This separation of
+layers is exploited by another tool called <b>unmixin</b> that automatically propagates changes from the composed <b>.jak</b>
+file back to its original layer files (see figure
+below).&nbsp; Thus, we hope that it will be easier to debug a <b>mixin</b>-composed
+<b>.jak</b> file, make changes to it, and then automatically back-propagate
+changes to the layer files.&nbsp; When a production version of a file
+is to be produced, <b>jampack</b> can be used.</font></p>
+<blockquote>
+  <p align="left"><font face="Arial" color="#FF0000">Note: eventually we will
+  have a debugger, where users will be debugging composed <b>.jak</b> files, and
+  not their generated <b>.java</b> counterparts.</font></p>
+</blockquote>
+<p align="center">
+<img border="0" src="images/Backward.gif" width="539" height="265"></p>
+<div align="left">
+  <table border="0" cellpadding="2">
+    <tr>
+      <td><font face="Arial">This document covers the following topics:</font>
+<ul>
+  <li><font face="Arial"><a href="#Aspect Packages"><i>layer packages and files</i></a></font>
+  </li>
+  <li><font face="Arial"><a href="#Specifying Interfaces and Interface Extensions"><i>interfaces</i></a></font>
+    <ul>
+      <li><font face="Arial"><a href="#Base Interfaces"> <i> root interfaces</i></a></font></li>
+      <li><font face="Arial"><a href="#Interface Extensions"><i>interface refinements</i></a></font></li>
+      <li><font face="Arial"><a href="#Interface New and Overrides Modifiers"> <i> new and overrides modifiers</i></a></font></li>
+    </ul>
+  </li>
+  <li><font face="Arial"><a href="#Specifying Classes and Class Extensions"><i>classes</i></a></font>
+    <ul>
+      <li><font face="Arial"><a href="#Class Syntax: Base Classes"><i>root classes</i></a></font></li>
+      <li><font face="Arial"><a href="#Class Syntax: Class Extensions"> <i> class refinements</i></a></font></li>
+      <li><font face="Arial"><a href="#Class Syntax: The New and Overrides Modifiers"> <i> new and overrides modifiers</i></a></font></li>
+      <li><font face="Arial"><a href="#Other Class Syntax: Base vs. super">
+        <i>
+        Super: invoking methods of parent classes</i></a></font></li>
+      <li><font face="Arial"><a href="#The Super Construct: Invoking Constructors of Parent Classes"><i>Super:
+        invoking constructors or parent classes</i></a></font></li>
+      <li><font face="Arial"><i><a href="#Constructor Refinement">constructor
+        refinements</a></i></font></li>
+      <li><font face="Arial"><i><a href="#Refining Static Methods">refining
+        static methods</a></i></font></li>
+    </ul>
+  </li>
+  <li><font face="Arial"><a href="#Specifying State Diagrams and State Diagram Extensions"><i>state
+    machines</i></a></font>
+    <ul>
+      <li><font face="Arial"><a href="#Syntax of State Diagrams"><i>root state machines</i></a></font></li>
+      <li><font face="Arial"><a href="#Syntax of State Machine Extensions"><i>state
+        machine refinements</i></a></font></li>
+    </ul>
+  </li>
+  <li><font face="Arial"><a href="#LocalIds"><i>local identifiers and the problem
+    of inadvertent capture</i></a></font>
+    <ul>
+      <li><font face="Arial"><a href="#The LocalID Declaration"><i>local_id
+        declaration</i></a></font></li>
+      <li><font face="Arial"><a href="#Local Classes, Interfaces, and State Machines"><i>local
+        classes, interfaces, state machines</i></a></font></li>
+    </ul>
+  </li>
+</ul>
+      </td>
+      <td valign="top">
+<p align="left"><font face="Arial">Details about particular tools are found by
+following the links below.</font></p>
+<ul>
+  <li>
+    <p align="left"><font face="Arial"><a href="composer.html"><i>composer</i></a></font></li>
+  <li>
+    <p align="left"><font face="Arial"><a href="JamPack.html"><i>jampack</i></a></font></li>
+  <li>
+    <p align="left"><font face="Arial"><a href="Mixin.html"><i>mixin</i></a></font></li>
+  <li>
+    <p align="left"><font face="Arial"><a href="UnMixin.html"><i>unmixin</i></a></font></li>
+  <li>
+    <p align="left"><font face="Arial"><a href="j2j.html"><i>jak2java</i></a></font></li>
+</ul>
+      </td>
+    </tr>
+  </table>
+</div>
+<ul>
+<call chapterLinks >
+</ul>
+
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FFFF00">
+  <tr>
+    <td WIDTH="788"><h2><font face="Arial" color="#0000FF"><a name="Aspect Packages">Layer
+      Packages</a>
+      and Files</font></h2>
+    </td>
+  </tr>
+</table>
+
+<p><font face="Arial">All <b>.jak</b> files that comprise an layer belong to an
+layer package.&nbsp; The format of a <b>.jak</b> file is:</font></p>
+<div align="left">
+  <table border="0" cellpadding="2" width="403">
+    <tr>
+      <td align="left" width="293">
+        <blockquote>
+  <pre><font face="Courier New">layer <b>layer-name</b>;</font></pre>
+  <pre><font face="Courier New">[<b>import-statements</b>]</font></pre>
+          <pre><font face="Courier New">[Local_Id <b>declarations</b>]</font></pre>
+  <pre><font face="Courier New"><b>declaration</b></font></pre>
+        </blockquote>
+      </td>
+      <td valign="top" align="left" width="96">
+        <pre><font face="Courier New">(1)</font></pre>
+        <pre><font face="Courier New">(2)</font></pre>
+        <pre><font face="Courier New">(3)</font></pre>
+        <pre><font face="Courier New">(4)</font></pre>
+      </td>
+    </tr>
+  </table>
+</div>
+<p><font face="Arial">Line (1) defines the name of the layer package (and is
+syntactically similar to a Java package declaration). Import statements are optional
+(2).&nbsp; <a href="#LocalIds"><i>Local identifier declarations</i></a> follow
+(3).&nbsp; Finally, the declaration of an interface, class, state machine (or
+whatever) completes the file (4).&nbsp; Like packages, all files belonging to an layer package must
+reside in the same physical directory.<font color="#FF0000"><b> As a general rule, nested structures
+(e.g., nested interfaces, nested classes, nested state machines) in layer files
+are not allowed.&nbsp;Anonymous classes and anonymous interfaces that are
+written in pure Java are permitted.</b></font></font></p>
+
+<p><font face="Arial">A typical refinement chain begins with a <b>root</b>
+specification followed by zero or more refinements.&nbsp; A specification can be
+an interface, class, or state machine.&nbsp; The general format of a root <b>
+specification</b> for X (i.e., interface X, class X, or state machine X) is:</font></p>
+
+<blockquote>
+  <pre><font face="Courier New">[modifiers] <b>specification</b> X ...</font></pre>
+
+</blockquote>
+<p><font face="Arial">while the general format of a refinement of X is:</font></p>
+
+<blockquote>
+  <pre><font face="Courier New">[modifiers] refines <b>specification</b> X ...</font></pre>
+
+</blockquote>
+<p><font face="Arial">Two specifications can be composed if they deal with the
+same type and name (i.e., both must define/refine interface X, or both must
+define/refine class X, or both must define/refine state machine X).&nbsp;
+Remember these rules, as they will not be repeated in the following sections.</font></p>
+
+<p><font face="Arial">To understand a general model of refinements that we use, make the
+following analogy:</font></p>
+
+<ul>
+  <li><font face="Arial">constants are root specifications, and</font></li>
+  <li><font face="Arial">refinements are functions</font></li>
+</ul>
+<p><font face="Arial">A refinement applied to a refinement is a composite
+refinement.&nbsp; A refinement applied to a constant is a composite
+constant.&nbsp; A constant k applied to a refinement or constant is k.&nbsp;
+(This is <b>replacement </b>&nbsp;-- a constant replaces&nbsp; whatever it is applied
+to).&nbsp; Both <b>mixin</b> and <b>jampack</b> follow this rule.</font></p>
+
+<table BORDER="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FF00FF">
+  <tr>
+    <td WIDTH="766"><h3><a name="$Pack Identifier">
+    <font face="Arial" color="#FFFFFF">$Pack Identifier</font></a></h3>
+    </td>
+  </tr>
+</table>
+
+<p><font face="Arial">Consider the following Jak class:</font></p>
+
+<div align="left">
+  <table border="1" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" bgcolor="#C0C0C0">
+    <tr>
+      <td width="100%"><font face="Courier New">layer X;</font><p>
+      <font face="Courier New">class Y {<br>
+&nbsp;&nbsp;&nbsp; static Y singleton = new X.Y();<br>
+      }</font></td>
+    </tr>
+  </table>
+</div>
+<p><font face="Arial">When this file is composed with other files, the '<b>layer 
+X</b>' statement will be revised to '<b>layer E</b>', where E<b> </b>is the name 
+of a feature expression.&nbsp; However, the reference &quot;<b>X.Y()</b>&quot; is not 
+updated. Consequently, composed files will not be compilable.&nbsp; Reference &quot;<b>X.Y()</b>&quot; 
+must be translated to &quot;<b>E.Y()</b>&quot; to be correct.</font></p>
+
+<p><font face="Arial">The solution we have adopted is to require the use of the 
+identifier &quot;<b>$pack</b>&quot;, which represents the name of the composed package.&nbsp; 
+A correct specification of the above class is:</font></p>
+
+<table border="1" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" bgcolor="#C0C0C0">
+  <tr>
+    <td width="100%"><font face="Courier New">layer X;</font><p>
+    <font face="Courier New">class Y {<br>
+&nbsp;&nbsp;&nbsp; static Y singleton = new $pack.Y();<br>
+    }</font></td>
+  </tr>
+</table>
+<p><font face="Arial">When this file is composed, the <b>$pack</b> identifier 
+remains unchanged.&nbsp; Only when the file is translated to Java will <b>$pack</b> 
+be replaced with the correct name.&nbsp; This addition to Jak will allow for 
+complex package inter-referencing.</font></p>
+
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FFFF00">
+  <tr>
+    <td WIDTH="788"><h2><font face="Arial" color="#0000FF"><a name="Specifying Interfaces and Interface Extensions"> Interfaces</a></font></h2>
+    </td>
+  </tr>
+</table>
+
+<table BORDER="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FF00FF">
+  <tr>
+    <td WIDTH="766"><h3><a name="Base Interfaces"><font face="Arial" color="#FFFFFF">Root Interfaces</font></a></h3>
+    </td>
+  </tr>
+</table>
+
+<p><font face="Arial">The <b>.jak</b> representation of a root interface is
+virtually identical to a Java interface.&nbsp; The rules to remember are:</font></p>
+<ul>
+  <li><font face="Arial">a standard Java interface specification is expected,
+    with <b> no</b> nested interfaces or nested class declarations. Modifiers
+    are permitted.</font></li>
+  <li><font face="Arial">only one interface can be defined per file.&nbsp;
+    Unlike Java which allows more than one interface declaration per file (and
+    at most one file is &quot;public&quot;), our tools assume only one interface
+    definition per layer file.</font></li>
+</ul>
+<p><font face="Arial">Here is an example:</font></p>
+<blockquote>
+  <pre><font face="Courier New">layer</font><font face="Courier New"> IBase1;	// mandatory -- this file belongs to the IBase1 layer
+
+import x.y.z.*;
+import java.io.Serializable;
+
+interface MyInt extends FooInterface {
+    int Silent = 0;
+    void foo() throws AFit;
+    SomeType bar( int x );
+}</font></pre>
+</blockquote>
+
+<table BORDER="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FF00FF">
+  <tr>
+    <td WIDTH="766"><h3><a name="Interface Extensions"><font face="Arial" color="#FFFFFF">Interface Refinements</font></a></h3>
+    </td>
+  </tr>
+</table>
+
+<p><font face="Arial">An augmentation of an interface is a <b>refinement</b>. A
+declaration of an interface refinement has the following format:</font></p>
+<blockquote>
+  <pre><font face="Courier New">[<b>modifiers</b>] refines interface <b>name</b> [ extends <b>interface-list</b> ] { [<b>body</b>] }</font></pre>
+</blockquote>
+<p><font face="Arial">Only one interface refinement can be defined per <b>.jak</b>
+file;
+    there can be no other declarations (nested or otherwise). Here is an example that refines the interface MyInt,
+defined above:</font></p>
+<blockquote>
+  <pre><font face="Courier New">layer</font><font face="Courier New"> Iext1;
+
+<span style="background-color: #FFFF00">import java.io.Serializable</span>;
+
+public transient refines interface MyInt <span style="background-color: #FFFF00">extends yyy, java.io.Serializable</span> {
+   <span style="background-color: #FFFF00">int Terse = 2;
+   void foo() throws SomeException;
+   int increment( int i )</span>;
+}</font></pre>
+</blockquote>
+<p align="left"><font face="Arial">This refinement adds modifiers (public,
+transient), extending interfaces (yyy, java.io.Serializable), new constants (int
+Terse=2;), exceptions (SomeException) to existing methods, and new methods (int
+increment(int i)).&nbsp;&nbsp;When this refinement is composed, the modifiers of
+this refinement are added to the interface definition that is being modified,
+and so too the extending interfaces and methods are added.&nbsp; The same for import statements.&nbsp; In principle, the declarations that are highlighted in <span style="background-color: #FFFF00">yellow</span>
+are added to interface definition that is being modified.</font></p>
+<blockquote>
+  <p align="left"><font face="Arial" color="#FF0000"><b>Note</b>: The details by which
+  <b>jampack</b> and <b>mixin</b> compose interfaces and refinements are 
+  different.&nbsp; In principle, producing a program using either tool should 
+  produce semantically equivalent programs.&nbsp; However, this is not yet 
+  always the case.&nbsp;&nbsp; The differences are minor, so read on. </font></p>
+</blockquote>
+
+<table BORDER="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FF00FF">
+  <tr>
+    <td WIDTH="766"><h3><a name="Interface New and Overrides Modifiers"><font face="Arial" color="#FFFFFF">The
+New and Overrides Modifiers</font></a></h3>
+    </td>
+  </tr>
+</table>
+
+<p><font face="Arial">A convenient and optional feature is to designate methods
+of a refinement by the modifiers &quot;<b>new</b>&quot; or &quot;<b>overrides</b>&quot;.&nbsp;
+&quot;<b>new</b>&quot; means that a refinement introduces a new method whose name
+should not be used by a method that was previously defined in the refinement
+chain.&nbsp;
+&quot;<b>overrides</b>&quot; means that the refinement is augmenting a
+previously defined method. <b>jampack</b> generates an error if it detects that the
+conditions for &quot;<b>new</b>&quot; or &quot;<b>overrides</b>&quot; are not satisfied.&nbsp;
+As an example:</font></p>
+<blockquote>
+  <pre><font face="Courier New">refines interface MyInt extends java.io.Serializable {
+    <span style="background-color: #FFFF00">overrides</span> void foo() throws SomeException;
+    <span style="background-color: #FFFF00">new</span> void barrr();
+}</font></pre>
+</blockquote>
+<p><font face="Arial">The above interface defines a new method (barrr) and
+overrides a previously defined method (foo) of the MyInt interface.</font></p>
+<blockquote>
+<p><font color="#FF0000" face="Arial"><b>Note</b>: <b> overrides</b> and <b> new</b> 
+are checks that are relative to a refinement chain, and do not apply to
+methods inherited from interfaces other than MyInt.</font></p>
+</blockquote>
+<p><font face="Arial">The use of &quot;<b>new</b>&quot; and &quot;<b>overrides</b>&quot;
+helps avoid inadvertent capture; these modifiers should be
+used to guarantee that a method being defined by a refinement is in fact a new
+method or does override an existing method.</font></p>
+<blockquote>
+  <p><font face="Arial" color="#FF0000"><b>Note</b>: <b>mixin</b> ignores the <b> new</b> and
+  <b>
+  overrides</b> modifiers, and consequently does not report errors.&nbsp; This is
+  one difference between the <b>mixin</b> and <b>jampack</b>.</font></p>
+</blockquote>
+
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FFFF00">
+  <tr>
+    <td WIDTH="788"><h2><font face="Arial" color="#0000FF"><a name="Specifying Classes and Class Extensions"> Classes</a></font></h2>
+    </td>
+  </tr>
+</table>
+
+<table BORDER="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FF00FF">
+  <tr>
+    <td WIDTH="766"><h3><a name="Class Syntax: Base Classes"><font face="Arial" color="#FFFFFF">Root
+Classes</font></a></h3>
+    </td>
+  </tr>
+</table>
+
+<p><font face="Arial">The <b>.jak</b> representation of a root class is virtually
+identical to its Java counterpart. The rules to remember are:</font></p>
+<ul>
+  <li><font face="Arial">a standard Java class specification is expected with <b> no</b>
+    nested interfaces or nested class declarations.&nbsp; <font color="#FF0000"><b>Anonymous classes and
+    anonymous interfaces written in pure Java are permitted</b></font>.</font></li>
+  <li><font face="Arial">only one class can be defined per file.&nbsp; Unlike
+    Java which allows more than one class declaration per file, our tools assume only one&nbsp;
+    per file.</font></li>
+</ul>
+<p><font face="Arial">An example is:</font></p>
+<blockquote>
+  <pre><font face="Courier New">layer</font><font face="Courier New"> ClassBase;</font></pre>
+  <pre><font face="Courier New">class bar extends foo implements baz {
+   void donothing() { }
+}</font></pre>
+</blockquote>
+<p><font face="Arial">Note the class bar is a subclass of class foo -- this is
+OK as subclassing is different than refinement (more later).</font></p>
+
+<table BORDER="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FF00FF">
+  <tr>
+    <td WIDTH="766"><h3><a name="Class Syntax: Class Extensions"><font face="Arial" color="#FFFFFF">Class Refinements</font></a></h3>
+    </td>
+  </tr>
+</table>
+
+<p><font face="Arial">A class refinement declaration has the following format:</font></p>
+<blockquote>
+  <pre><font face="Courier New">[<b>modifiers</b>] refines class <b>name</b> [ implements <b>interface-list</b> ] { [<b>body</b>] }</font></pre>
+</blockquote>
+<p><font face="Arial">Only one class refinement can be defined per <b>.jak</b> file;
+    there can be no other declarations (nested or otherwise).&nbsp; A refinement of bar is:</font></p>
+<blockquote>
+  <pre><font face="Courier New">layer</font><font face="Courier New"> classExt;
+
+import java.io.Serializable;
+
+public transient refines class bar {
+   int Terse = 2;
+   void foo() throws SomeException {}
+}</font></pre>
+</blockquote>
+<p><font face="Arial">This refinement adds an import statement,
+modifiers (public, transient), a data member (Terse=2) and a function (foo) to
+class bar</font></p>
+
+<table BORDER="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FF00FF">
+  <tr>
+    <td WIDTH="766"><h3><a name="Class Syntax: The New and Overrides Modifiers"> <font face="Arial" color="#FFFFFF"> The New and Overrides Modifiers</font></a></h3>
+    </td>
+  </tr>
+</table>
+
+<p><font face="Arial">See <i> <a href="#Interface New and Overrides Modifiers">previous
+section</a>  </i> on new and override modifiers for interfaces.&nbsp; Exactly the same
+ideas apply to classes.</font></p>
+
+<table BORDER="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FF00FF">
+  <tr>
+    <td WIDTH="766"><h3><a name="Other Class Syntax: Base vs. super"><font face="Arial" color="#FFFFFF">The
+Super Construct: Invoking Methods of Parent Classes</font></a></h3>
+    </td>
+  </tr>
+</table>
+
+<p><font face="Arial">The concepts of subclassing and refinement are very
+similar, but are NOT identical.&nbsp; Consider the figure below that shows that B is a subclass of A, and
+that B is refined twice and A is refined once.</font></p>
+<p align="center"><img border="0" src="images/Squash.gif" width="426" height="171"></p>
+<p align="left"><font face="Arial">Since we only
+instantiate the most refined versions of a class, the figure on the left is equivalent to the the subclassing
+hierarchy on the right.&nbsp; That is, both refinement chains can be squashed
+into individual classes to yield the figure on the right.&nbsp; (This, in fact, is
+what <b>jampack</b> does).</font></p>
+<p align="left"><font face="Arial">Squashing refinement hierarchies correctly
+requires symbol table (e.g., type) information, which unfortunately our tools
+don't have.&nbsp; Here are the rules to follow.</font></p>
+<ol>
+  <li>
+<p align="left"><font face="Arial">A base class (i.e., the root of a refinement 
+chain) can always use <b>super</b> and <b>super()</b> calls.&nbsp; They have the 
+same meaning as in Java.<br>
+&nbsp;</font></p>
+  </li>
+  <li>
+<p align="left"><font face="Arial">A class refinement (i.e., a subclass within a 
+a refinement chain) should generally use only <b>Super()</b> and <b>Super()()</b> 
+calls.&nbsp; Jak2java will translate <b>Super()</b> calls into <b>super</b> 
+calls, and <b>Super()()</b> calls into <b>super()</b> calls. <b>Super() </b>
+means invoke the previously defined method in the refinement chain.&nbsp; <b>
+Super()()</b> means invoke the previously defined constructor in the refinement 
+chain.&nbsp; See rule 3 for<b> this()</b>.<br>
+&nbsp;</font></p>
+  </li>
+  <li>
+<p align="left"><font face="Arial"><b>this()</b>: is used to invoke a 
+constructor that is defined within any class of the refinement chain.<br>
+&nbsp;</font></p>
+  </li>
+  <li>
+<p align="left"><font face="Arial">To make the conversion of legacy applications 
+into Jak files easier, a method can call <b>Super()</b> or <b>super() </b>but 
+not both.&nbsp; If <b>Super()</b> is present, the method is interpreted as a 
+method refinement.&nbsp; If <b>super</b> is present, the method is considered an 
+introduction that invokes the true super-method.&nbsp; <b>Super()</b> and <b>
+super</b> cannot both be present in a method, because (as you can see from the 
+above figure), calling the previous incarnation of a method and the true 
+super-method are not the same, and there is no language mechanism which allows 
+method refinements to call the true super-method.&nbsp; (Of course, you could 
+create a method yourself that calls '<b>super</b>', and get around the problem 
+in this way).</font></p>
+  </li>
+</ol>
+<p align="left"><font face="Arial">The <b>Super</b> construct is:</font></p>
+<div align="left">
+  <blockquote>
+    <pre align="left"><font face="Courier New">Super( &lt;list of types&gt; ).method( &lt;list of arguments matching the list of types&gt; )</font></pre>
+  </blockquote>
+</div>
+<p align="left"><font face="Arial">To illustrate, suppose a root class has
+method foo:</font></p>
+<div align="left">
+  <blockquote>
+    <pre align="left"><font face="Courier New">class root {
+   void foo( int x, double y, String z ) {...}
+}</font></pre>
+  </blockquote>
+</div>
+<p align="left"><font face="Arial">A refinement must use the <b>Super</b>
+construct to reference foo:</font></p>
+<div align="left">
+  <blockquote>
+    <pre align="left"><font face="Courier New">refines class root {
+   void foo( int x, double y, String z ) {
+      <span style="background-color: #FFFF00">Super(int,double,String).foo(x+1,y+2.0,&quot;xxx&quot;+z);  // functionally equivalent to
+</span></font>                                                       <span style="background-color: #FFFF00">// super.foo(x+1,y+2.0,&quot;xxx&quot;+z);</span><font face="Courier New">
+   }
+}</font></pre>
+  </blockquote>
+</div>
+<p><font face="Arial">Both <b>jampack</b> and <b>mixin</b> will report an error
+whenever <b>super</b> is used.</font></p>
+
+<table BORDER="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FF00FF">
+  <tr>
+    <td WIDTH="766"><h3><a name="The Super Construct: Invoking Constructors of Parent Classes"><font face="Arial" color="#FFFFFF">The
+Super Construct: Invoking Constructors of Parent Classes</font></a></h3>
+    </td>
+  </tr>
+</table>
+
+<p><font face="Arial">The primary difference between refinement chains and a
+linear inheritance hierarchy lies with constructors. Constructors are not
+inherited in subclassing hierarchies, but they are inherited in refinement
+chains.&nbsp; Thus, the set of constructors of the bottom-most class of a
+refinement chain is the union of the set of constructors provided by the root
+class and each extension of the chain.</font></p>
+<p><font face="Arial">Constructors obey special rules in refinement
+chains.&nbsp; First, a <a href="#Constructor Refinement">special language
+construct</a> is used to refine constructors. Second, Java allows programmers to reference
+previously defined constructors using the <b> this(..)</b> and <b> super(..)</b> 
+constructs.&nbsp; <b>this(..)</b> is permitted in <b>.jak</b> files, but <b>super(...)</b>
+is not for the same reasons outlined in the previous section.&nbsp; Until we
+have symbol table (e.g. type) information, the
+<b> Super(..)(..)</b> construct must be used instead.&nbsp; Its
+syntax is:</font></p>
+<blockquote>
+  <pre><font face="Courier New">Super( <b>list-of-types</b> )( <b>list-of-arguments-matching-the-list-of-types </b>)</font></pre>
+</blockquote>
+<p align="left"><font face="Arial">To illustrate, suppose a root class has a
+constructor:</font></p>
+<div align="left">
+  <blockquote>
+    <pre align="left"><font face="Courier New">class root {
+   root( int x, float y, String z ) {...}
+}</font></pre>
+  </blockquote>
+</div>
+<p align="left"><font face="Arial">A refinement can reference this constructor
+using <b>Super</b>:</font></p>
+<div align="left">
+  <blockquote>
+    <pre align="left"><font face="Courier New">refines class root {
+   root( int x, float y ) {
+      <span style="background-color: #FFFF00">Super(int,float,String)(x+1,y+2.0,&quot;xxx&quot;);  // functionally equivalent to
+</span></font>                                                 <span style="background-color: #FFFF00">// super(x+1,y+2.0,&quot;xxx&quot;+z);</span><font face="Courier New">
+   }
+}</font></pre>
+  </blockquote>
+</div>
+<p><font face="Arial">Both <b>jampack</b> and <b>mixin</b> will report an error
+when <b>super(..)</b> is used.</font></p>
+
+<table BORDER="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FF00FF">
+  <tr>
+    <td WIDTH="766"><h3><font face="Arial"><a name="Constructor Refinement"><font color="#FFFFFF">Constructor 
+Refinement</font></a></font></h3>
+    </td>
+  </tr>
+</table>
+
+<p align="left"><font face="Arial">Constructors are defined just as they are in
+Java.&nbsp; Consider:</font></p>
+<blockquote>
+  <div align="left">
+    <pre><font face="Courier New">class one {
+   int a;
+   public one(int x) {
+      a = x;
+   }
+}</font></pre>
+  </div>
+</blockquote>
+<div align="left">
+  <p align="left"><font face="Arial">The following refinement of class <b>one</b> 
+  adds a new data member and refines the integer constructor to initialize this 
+  member:</font></div>
+<div align="left">
+  <blockquote>
+    <pre><font face="Courier New">refines class one {
+   int doubleA;</font></pre>
+    <pre><font face="Courier New">   refines one(int x) {
+      doubleA = 2*x;
+   }
+}</font></pre>
+  </blockquote>
+</div>
+<div align="left">
+  <p align="left"><font face="Arial">The syntax of constructor refinement is 
+  simple: &quot;refines&quot; followed by the constructor signature, followed by the 
+  additional code that is to be executed.&nbsp; In principle, the composition of 
+  the above &quot;constant&quot; and &quot;refinement&quot; is equivalent the concatenation of the 
+  refining constructor code to the end of the original constructor code:</font></div>
+<div align="left">
+  <blockquote>
+    <pre>class one {
+   int a;
+   int doubleA;</pre>
+    <pre>   public one(int x) {
+      a = x;
+      doubleA = 2*x
+   }
+}</pre>
+  </blockquote>
+</div>
+<div align="left">
+  <p align="left"><font face="Arial">There are simple rules to guide your
+  designs:</font></div>
+<div align="left">
+  <ul>
+    <li>
+    <p align="left"><font face="Arial">a constructor can be defined at most once 
+    in a refinement chain.</font></li>
+    <li>
+    <p align="left"><font face="Arial">a constructor can be refined any number 
+    of times in a refinement chain.</font></li>
+  </ul>
+</div>
+
+<table BORDER="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FF00FF">
+  <tr>
+    <td WIDTH="766"><h3><font face="Arial"><a name="Refining Static Methods"><font color="#FFFFFF">Refining 
+Static Methods</font></a></font></h3>
+    </td>
+  </tr>
+</table>
+
+<p align="left"><font face="Arial"> Java supports static method refinement,
+although it is not well-known.&nbsp; The top class below defines a static method
+foo, the bottom class extends foo:</font></p>
+<blockquote>
+  <div align="left">
+    <pre>class top {
+   static void foo() { /* do something */ }
+}</pre>
+  </div>
+  <div align="left">
+    <pre>class bottom extends top {
+   static void foo() {
+      /* something before */
+      top.foo();
+      /* something after */
+   }
+}</pre>
+  </div>
+</blockquote>
+<div align="left">
+  <p align="left"><font face="Arial">That is, as long as you explicitly 
+  reference the name of the superclass, you can invoke its static methods.&nbsp; 
+  Since we don't know the name of the superclass in a refinement,&nbsp; we 
+  extend the semantics of <b>Super(...).meth(...)</b>.&nbsp; Recall that <b>Super(...)</b> references the superclass methods of an 
+  object.&nbsp; In the case of static methods, <b>Super(...)</b> references the 
+  superclass itself.&nbsp; So the static foo method of the bottom class would be 
+  expressed in <b>.jak</b> as:</font></div>
+<div align="left">
+  <blockquote>
+    <pre>static void foo() {
+   /* something before */
+   Super().foo();
+   /* something after */
+}</pre>
+  </blockquote>
+</div>
+<p align="left"><font face="Arial">With the <b>Super() </b>construct, you can 
+reference any static method of a parent class.&nbsp; Typically, however, you'll 
+only reference the method that you are refining. </font></p>
+
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FFFF00">
+  <tr>
+    <td WIDTH="788"><h2><font face="Arial" color="#0000FF"><a name="Specifying State Diagrams and State Diagram Extensions">
+State Machines</a></font></h2>
+    </td>
+  </tr>
+</table>
+
+<table BORDER="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FF00FF">
+  <tr>
+    <td WIDTH="766"><h3><a name="Syntax of State Diagrams"><font face="Arial" color="#FFFFFF">Root State Machines</font></a></h3>
+    </td>
+  </tr>
+</table>
+
+<p><font face="Arial">A root state machine can be:</font></p>
+<ul>
+  <li><font face="Arial">stand alone</font></li>
+  <li><font face="Arial">extend a previously defined state machine</font></li>
+  <li><font face="Arial">extend a previously defined class -- this is useful if
+    there are methods that different state machines can share; these
+    methods are defined in a single class and state machines are derived as
+    &quot;subclasses&quot;.&nbsp;</font></li>
+</ul>
+<p><font face="Arial">Each is specified using the following syntax, where bold phrases
+are parameters and [bracketed] phrases are optional:</font></p>
+<blockquote>
+  <pre><font face="Courier New">[<b>modifiers</b>] State_machine <b>name</b> [implementsClause] SDClassBody</font></pre>
+  <pre><font face="Courier New">[<b>modifiers</b>] State_machine <b>name</b> extends <b>supername</b> [implementsClause] SDClassBody</font></pre>
+  <pre><font face="Courier New">[<b>modifiers</b>] State_machine <b>name</b> extends class <b>supername</b> [implementsClause] SDClassBody</font></pre>
+</blockquote>
+<p><font face="Arial">The body of a state machine (SDClassBody above) has the
+following syntax:</font></p>
+<div align="left">
+  <table border="0" cellpadding="2">
+    <tr>
+      <td>
+        <blockquote>
+          <pre><font face="Courier New">{
+   Delivery_parameters ( <b>parameter-list</b> );</font></pre>
+          <pre><font face="Courier New">   [ Unrecognizable_state <b>block</b> ]</font></pre>
+          <pre><font face="Courier New">   [ Otherwise_default <b>block</b> ]</font></pre>
+          <pre><font face="Courier New">   [ <b>states-list</b> ]	</font></pre>
+          <pre><font face="Courier New">   [ <b>ES-list</b> ]</font></pre>
+  <pre><font face="Courier New">   [ <b>Java-field-and-method-declarations</b> ]
+}</font></pre>
+        </blockquote>
+      </td>
+      <td valign="top">
+        <pre><font face="Courier New">(1)</font></pre>
+        <pre><font face="Courier New">(2)</font></pre>
+        <pre><font face="Courier New">(3)</font></pre>
+        <pre><font face="Courier New">(4)</font></pre>
+        <pre><font face="Courier New">(5)</font></pre>
+        <pre><font face="Courier New">(6)</font></pre>
+      </td>
+    </tr>
+  </table>
+</div>
+<p><font face="Arial">The semantics of these concepts is specified <a href="StateMachine4.html"><i>elsewhere</i></a>
+. Observe the
+following:</font></p>
+<ul>
+  <li><font face="Arial">there is only one state machine declaration per file.</font></li>
+  <li><font face="Arial">(1) and (2) above are specified for all state machines.&nbsp; In the case that a state
+    machine is extending a previously
+    defined state machine, (1) and (2) cannot be included in an SDClassBody.&nbsp;
+    Stated another way, once an Delivery_parameter and Unrecognizable_state are defined, they cannot be redefined.</font></li>
+  <li><font face="Arial">there can be only one Otherwise_default (3)
+    specification in a state machine.</font></li>
+  <li><font face="Arial">there can be any number of state-declaration statements
+    (4) of the form:</font></li>
+</ul>
+<blockquote>
+  <blockquote>
+    <pre><font face="Courier New">States a, b, c;
+States e, f, g, h;  // and so on</font></pre>
+  </blockquote>
+</blockquote>
+<ul>
+  <li><font face="Arial">the ES-list stands for state enter, exit, and otherwise
+    blocks, and transition declarations and transition refinements (5).&nbsp; There can be at most one enter
+    declaration, one exit declaration, and one otherwise declaration per state
+    in a state machine.&nbsp; Further, all transition declarations are unique and are
+    distinguished by their name (i.e., no two transitions can have the same names).</font></li>
+  <li><font face="Arial">the Java field-and-method-declarations are Java variable and
+    method declarations (6).</font></li>
+</ul>
+<p><font face="Arial">An example is:</font></p>
+<blockquote>
+  <pre><font face="Courier New">State_machine root {
+
+   Delivery_parameters( M m );
+   Unrecognizable_state { ignore(m); }
+
+   States g, h, i;</font></pre>
+  <pre><font face="Courier New">   Transition e1 : g -&gt; h 
+   condition m!=null
+   do { gh(); }
+
+   Transition e2 : h -&gt; i
+   condition true
+   do { hi(); }
+
+   Exit h { /* action code */ }
+
+   void gh() { /* gh action */ </font>}
+   void hi() { /* hi action */ }<font face="Courier New">
+   void anotherAction(int f) { /* some action */}
+}</font></pre>
+</blockquote>
+<p><font face="Arial">The complete grammar and semantics for state
+machine specifications are presented <a href="StateMachine4.html"><i>elsewhere</i></a>.</font></p>
+
+<table BORDER="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FF00FF">
+  <tr>
+    <td WIDTH="766"><h3><a name="Syntax of State Machine Extensions"><font face="Arial" color="#FFFFFF">State Machine Refinements</font></a></h3>
+    </td>
+  </tr>
+</table>
+
+<p><font face="Arial">A state machine refinement has the following format:</font></p>
+<blockquote>
+  <pre><font face="Courier New">[<b>modifiers</b>] refines State_machine <b>name</b> [implementsClause] SDExtBody</font></pre>
+</blockquote>
+<p><font face="Arial">Only one state machine refinement can be defined per file; there
+    can be no other declarations.</font> <font face="Arial">The body of a state machine refinement (SDExtBody above)
+has the following syntax:</font></p>
+<blockquote>
+  <pre><font face="Courier New">{
+</font><font face="Courier New">   [ Otherwise_default <b>block</b> ]				(3)</font></pre>
+  <pre><font face="Courier New">   [ <b>states-list</b> ]					(4)</font></pre>
+  <pre><font face="Courier New">   [ <b>ES-list</b> ]						(5)</font></pre>
+  <pre><font face="Courier New">   [ <b>field-and-method-declarations</b> ]			(6)
+}</font></pre>
+</blockquote>
+<p><font face="Arial">Again, the semantics of these concepts are explained <a href="StateMachine4.html"><i>elsewhere</i></a>.&nbsp;
+However, keep
+the following in mind:</font> <font face="Arial">states are unique and can be declared only once.&nbsp;
+    (So if a root or refinement defines state &quot;A&quot;, no other refinement
+    can redefine state &quot;A&quot;).&nbsp; The same holds for transitions.
+Refinements of states and transitions are explained <a href="StateMachine4.html"><i>elsewhere</i></a>.</font></p>
+
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FFFF00">
+  <tr>
+    <td WIDTH="788"><h2><font face="Arial" color="#0000FF"><a name="LocalIds">Local
+Identifiers and the Problem of Inadvertent Capture</a></font></h2>
+    </td>
+  </tr>
+</table>
+
+<P><font face="Arial"><b>mixin</b></font><font face="Arial"> and <b>jampack</b> are designed to compose
+specifications (i.e., hierarchies of classes, interfaces, etc.) by macro
+expansion.</font> <font face="Arial">A standard problem of macro-expansion is <b>inadvertent
+capture</b>.&nbsp; It arises when variables in different classes are given the
+same names, and ambiguity arises when classes are composed.&nbsp; Consider
+the following class hierarchy:</font>
+<blockquote>
+  <pre><font face="Courier New">class top {
+   int i;
+</font>   ... System.out.println(i); ...<font face="Courier New">
+}
+
+class bottom extends top {
+   double i;
+   </font>... System.out.println(i); ...<font face="Courier New">
+}</font></pre>
+</blockquote>
+<P><font face="Arial">The above is a legal Java program; the reason is that variable
+scoping differentiates the variable named &quot;i&quot; in class bottom from the
+variable named &quot;i&quot; in class top.&nbsp; Now, look what happens when top
+and bottom are blindly squashed into a single class:</font>
+<blockquote>
+  <pre><font face="Courier New">class top {
+   int i;
+</font>   double i;                      // illegal<font face="Courier New">
+   </font>... System.out.println(i); ... // ambiguous
+   ... System.out.println(i); ...<font face="Courier New"> 
+}</font></pre>
+</blockquote>
+<P><font face="Arial">That is, there are two variables named &quot;i&quot;
+and now references to variable &quot;i&quot; are ambiguous -- it is not obvious
+which variable is being referenced.&nbsp; This is
+typical of inadvertent capture.&nbsp; You will encounter such problems because of the way inheritance
+hierarchies are squashed.&nbsp; The ambiguous (and
+incorrect) code above will be produced by our tools if class top were composed with the
+following refinement:</font>
+<blockquote>
+  <pre><font face="Courier New">refines</font><font face="Courier New"> class top {
+   double i;
+   </font>... System.out.println(i); ...<font face="Courier New">
+}</font></pre>
+</blockquote>
+
+<table BORDER="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FF00FF">
+  <tr>
+    <td WIDTH="766"><h3><a name="The LocalID Declaration"><font face="Arial" color="#FFFFFF">The
+Local_Id Declaration</font></a></h3>
+    </td>
+  </tr>
+</table>
+
+<P><font face="Arial">A standard way to avoid inadvertent capture is to declare
+identifiers &quot;local&quot; to a particular class, and have their names &quot;mangled&quot; so that they are forever unique.&nbsp;
+Inadvertent capture is a bit more difficult because identifiers are local to an layer,
+and a layer encapsulates many artifacts (e.g., interfaces, classes, state
+machines) and their refinements.&nbsp; For example, each class
+can reference variables and methods that are local to other classes of that layer. So assigning a mangled name to an identifier must be done consistently
+across all artifacts of an layer.&nbsp;&nbsp;</font>
+<P><font face="Arial">Our solution is to introduce a <b>Local_Id</b> declaration
+which lists the identifiers that are local to an layer and that are to be mangled.&nbsp; In
+effect, the translation of a <b>Local_Id</b> declaration is a textual search and replace
+performed on the
+body of the declaration (class, state machine, etc.) thereby yielding the
+correct specification.&nbsp; As an example, a way to declare class top above is:</font>
+<blockquote>
+  <pre><font face="Courier New"><span style="background-color: #FFFF00"><b>Local_Id</b> i;   // list of names that are local to an layer, and are to be mangled</span>
+
+class top {
+   int i;
+</font>   ... System.out.println(i); ...<font face="Courier New">
+}</font></pre>
+</blockquote>
+<P><font face="Arial">When top is composed, the name &quot;i&quot; is mangled -- i.e., changed into
+a unique identifier.&nbsp; Assume the name mangling changes &quot;i&quot; to &quot;i$1&quot;, an instantiation of
+top yields:</font>
+<blockquote>
+  <pre><font face="Courier New">class top {
+   int i$1;
+</font>   ... System.out.println(i$1); ...<font face="Courier New">
+}</font></pre>
+</blockquote>
+<p><font face="Arial">The actual mangling used is &lt;variableName&gt;$$&lt;layerName&gt;.</font></p>
+<p><font face="Arial">In general, the &quot;localization&quot; process is to (a) remove all <b> Local_Id</b>
+declarations, (b) mangle the names of all identifiers listed in <b> Local_Id</b>
+declarations, and (c) perform the composition of the resulting files.&nbsp;
+Also, note that the <b>Local_Id</b>  declaration(s) list
+all of the identifiers that are local to an layer.&nbsp; Not all identifiers
+listed need be present in the body of a root or refinement specification.&nbsp;
+That is, an identifier can be listed, but it need not be present in the file itself.</font></p>
+
+<table BORDER="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FF00FF">
+  <tr>
+    <td WIDTH="766"><h3><a name="Local Classes, Interfaces, and State Machines"><font face="Arial" color="#FFFFFF">Local
+      Classes, Interfaces, and State Machines</font></a></h3>
+    </td>
+  </tr>
+</table>
+
+<p><font face="Arial">The <b>Local_Id</b> declaration is useful for identifiers
+of methods and data members unique to a particular layer.&nbsp; However, the
+names of classes, interfaces, and state machines should not be mangled using <b>Local_Id</b>
+declarations.&nbsp; If you want to have classes, interfaces, and state machines
+that are local to a particular layer AND that they are never to be
+inadvertently refined, give them a name that is unique to that layer -- instead
+of &quot;<b>foo</b>&quot; use &quot;<b>foo__&lt;layerName&gt;</b>&quot;.&nbsp;
+By convention, such names will be unique to an layer and cannot be modified by
+other files, provided that others follow these conventions.</font></p>
+
+<hr>
+
+<p><font face="Verdana"><a HREF="index.html">&nbsp;</a></font><b><font face="Arial"><a href="index.html">ATS Home Page</a></font></b></p>
+
+<p><font face="Arial"><b>Copyright © Software Systems Generator Research Group. All
+rights reserved.</b> <br>
+<b>Revised:&nbsp;<!--webbot bot="TimeStamp" startspan s-format="%B %d, %Y"
+s-type="EDITED" -->June 25, 2007<!--webbot bot="TimeStamp" i-checksum="14280" endspan -->.</b> </font></p>

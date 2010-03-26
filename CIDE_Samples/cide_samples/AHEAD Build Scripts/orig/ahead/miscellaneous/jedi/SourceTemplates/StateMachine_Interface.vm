@@ -1,0 +1,17 @@
+## StateMachine_Interface.vm
+## JEDI Project
+## HTML Template for the State Machine
+## Author: Roberto E. Lopez-Herrejon
+## Last update: November 30, 2002
+  
+#if ($interfaces == "true")
+<DT> implements 
+ #foreach($interface in $listInterfaces)
+   $interface.name() &nbsp;  
+ #end
+</DT>
+#end
+
+## -- End of Interface 
+
+## End of StateToDoc

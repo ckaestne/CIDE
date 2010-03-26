@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!-- function1.xml Example of function refinement -->
+<!-- Last Update: June 23, 2003   -->
+
+<function xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:noNamespaceSchemaLocation="XmlFunction.xsd">
+
+<!-- Adds one variable, and an extra while loop to the imports function -->
+<refine path="/aframe/func[@name='imports']/body"  tag="append" separator=".">
+<body>
+ <set name="avar" value="one,two"/>
+
+ <super/>
+
+ <while name="y" in="avar">
+    System.out.println("{$y}");
+ </while>
+
+</body>
+
+</refine>
+
+<!-- Adds a function call to imports before current call in main -->
+<before path="/aframe/func[@name='main']/body/call[@name='imports']">
+   <call name="imports">
+     <with name="list" value="a.b.c"/>
+  </call>
+</before>
+
+</function>

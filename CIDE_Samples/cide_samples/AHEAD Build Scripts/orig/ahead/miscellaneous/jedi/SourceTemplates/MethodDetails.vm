@@ -1,0 +1,75 @@
+## MethodDetails.vm
+## JEDI Project
+## HTML Template for the details of a method
+## Author: Roberto E. Lopez-Herrejon
+## Last update: November 30, 2002
+
+#if ($methods == "true")
+ 
+ ## Writes the bar of Method Details 
+ <!-- ======== METHOD DETAILS ======== -->
+ <TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%"> 	
+ <TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+ <TD COLSPAN=1><FONT SIZE="+2">
+ <B> Method Details </B>
+ </FONT>
+ </TD>
+ </TR> 
+ </TABLE> 
+ <BR>	 
+
+ #foreach($method in $listMethods)	 
+  <A NAME="$method.name() $method.getFullSignature()" </A> ## anchor 
+  <H3> $method.name() </H3>
+  $method.modifiers() &nbsp;  
+  <B> $method.name() </B> 
+  $method.getFullSignature() &nbsp; 
+  $method.getThrowsString()
+  <BR> &nbsp;&nbsp;
+
+  ## Construction description 
+  $generator.descriptionComment($method.inlineTags())
+
+  <P>
+  <DL>
+
+   ## For use with general templates	
+   #set($doc = $method)
+
+   ## Parses deprecated tags
+   #parse("TargetTemplates/DeprecatedTags.vm")
+	
+   ## Parses param tags
+   #parse("TargetTemplates/ParamTags.vm")
+
+   ## Parses throws tags
+   #parse("TargetTemplates/ThrowsTags.vm")
+
+   ## Parsers author tags
+   #parse("TargetTemplates/AuthorTags.vm")
+
+   ## Parsers version tags
+   #parse("TargetTemplates/VersionTags.vm")
+
+   ## Parses since tags
+   #parse("TargetTemplates/SinceTags.vm")
+
+   ## Parses see tags
+   #parse("TargetTemplates/SeeTags.vm")
+
+   ## Parses return tags
+   #parse("TargetTemplates/ReturnTags.vm")
+
+   </DL>
+   <HR>
+   <BR>
+
+  <BR>
+
+ #end
+#end
+
+
+## End of MethodDetails.vm
+
+

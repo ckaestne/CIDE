@@ -1,0 +1,8 @@
+grammar = super.grammar dsl/java/GscopeGram
+
+jak2java   = super.jak2java   dsl/java/gscope
+jampack    = super.jampack    dsl/java/preprocessGscope
+mmatrix    = super.mmatrix    dsl/java/mmGscope
+bcjak2java = super.bcjak2java dsl/java/gscope
+jak2aj     = super.jak2aj     dsl/java/gscope
+jrename    = super.jrename    dsl/java/gscopeError

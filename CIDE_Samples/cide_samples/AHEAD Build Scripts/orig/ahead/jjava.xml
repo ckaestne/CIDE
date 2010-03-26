@@ -1,0 +1,397 @@
+<?xml version="1.0"?>
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+<project name="Rebuilding Java Tools for AHEAD" default="initialize">
+
+ <description>
+ Java Tools for AHEAD
+ (C) 2002-2003 The University of Texas at Austin
+
+ During the debugging of AHEAD-built tools, it is useful to modify
+ composed Jak files, and to rebuild the Jar file by retranslating.
+ This is what this build file is for -- used just like java.xml,
+ it is used to reduce iteration times on debugging.
+ </description>
+
+    <!-- ================================================================= -->
+    <!-- PROJECT DEFINITIONS AND PROPERTIES:                               -->
+    <!-- ================================================================= -->
+
+    <property name="project.author"	value="Don Batory"/>
+    <property name="project.name"	value="java"/>
+    <property name="project.Name"	value="Java"/>
+
+    <property
+        name="project.owner"
+	value="The University of Texas at Austin"/>
+
+    <property
+	name="project.copyright"
+        value="(C) 2002-2003 ${project.author} and ${project.owner}"/>
+
+    <property name="project.title"	value="Extended Java Tools for AHEAD"/>
+    <property name="project.version"	value="v2003.06.16"/>
+
+    <!-- ================================================================= -->
+    <!-- DIRECTORY AND FILE PROPERTIES:                                    -->
+    <!-- ================================================================= -->
+
+    <!-- - - - - - - - - - - - - - - -->
+    <!-- Source Equations File:      -->
+    <!-- - - - - - - - - - - - - - - -->
+
+    <property
+	name="eqns.options"
+        location="equations/java/options.equations"/>
+
+    <!-- - - - - - - - - - - - - - - -->
+    <!-- Build Directories & Files:  -->
+    <!-- - - - - - - - - - - - - - - -->
+
+    <property name="dir.build"          location="${basedir}/build"/>
+    <property name="dir.build.lib"      location="${dir.build}/lib"/>
+    <property name="dir.build.tool"     location="${dir.build}/java"/>
+    <property name="dir.build.syntax"   location="${dir.build.tool}/syntax"/>
+
+    <property                           
+	name="bali.grammar"
+	location="${dir.build.syntax}/grammar.b"/>
+
+    <property                           
+	name="eqns.tools"
+	location="${dir.build.tool}/tools.equations"/>
+
+    <!-- - - - - - - - - - - - - - - -->
+    <!-- External Libraries & Tools: -->
+    <!-- - - - - - - - - - - - - - - -->
+
+    <property name="dir.ant.lib"	location="${ant.home}/lib"/>
+
+    <property name="dir.external"	location="${basedir}/miscellaneous"/>
+    <property name="dir.external.bin"	location="${dir.external}/bin"/>
+    <property name="dir.external.lib"	location="${dir.external}/lib"/>
+
+    <property
+        name="exec.print-path"
+        location="${dir.external.bin}/print-path"/>
+
+    <!-- ================================================================= -->
+    <!-- PATH-RELATED DEFINITIONS:                                         -->
+    <!-- (see also the targets "use.path.ant" and "use.path.class")        -->
+    <!-- ================================================================= -->
+
+    <!-- - - - - - - - - - - - - - - -->
+    <!-- CLASSPATH Treatment:	     -->
+    <!-- - - - - - - - - - - - - - - -->
+
+    <property name="build.sysclasspath"	value="ignore"/>
+
+    <!-- ================================================================= -->
+    <!-- OTHER STATIC DEFINITIONS:                                         -->
+    <!-- ================================================================= -->
+
+    <!-- - - - - - - - - - - - - - - -->
+    <!-- Jars Named in ${jar.build}: -->
+    <!-- - - - - - - - - - - - - - - -->
+
+    <property name="uri.jar.jakarta"	value="file:jakarta.jar"/>
+
+    <!-- ================================================================= -->
+    <!-- TARGETS:                                                          -->
+    <!-- ================================================================= -->
+
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- The "initialize" target defines runtime properties such as time-  -->
+    <!-- stamps and prints a start-up message, including the copyright.    -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+    <target name="initialize">
+
+        <tstamp>
+	    <format property="initialize.date" pattern="yyyy-MM-dd"/>
+	    <format property="initialize.time" pattern="HH:mm:ss"/>
+	    <format property="initialize.year" pattern="yyyy"/>
+	</tstamp>
+
+	<property
+            name="timestamp"
+	    value="${initialize.date} ${initialize.time}"/>
+
+	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+	<!-- Splash notice:                                                -->
+	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+	
+	<echo
+            level="info"
+            message="${project.title}; jjava.xml ${project.version}"/>
+
+	<echo level="info" message="${project.copyright}"/>
+	<echo level="info" message=""/>
+	<echo level="info" message="Build begins ${timestamp}"/>
+
+    </target>
+
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- The "jak2java" target builds the translator from Jak source code  -->
+    <!-- to standard Java source code.                                     -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+    <target name="jak2java"
+        description="Builds the jak2java translator.">
+
+	<antcall target="method.rebuild">
+	    <param name="arg.tool" value="jak2java"/>
+	</antcall>
+
+    </target>
+
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- The "bcjak2java" target builds the translator from Jak source     -->
+	 <!-- code to standard Java source code; for byte code composition.     -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+    <target name="bcjak2java"
+        description="Builds the bcjak2java translator.">
+
+	<antcall target="method.rebuild">
+	    <param name="arg.tool" value="bcjak2java"/>
+	</antcall>
+
+	 </target>
+
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- The "jak2aj" target builds the translator from Jak source         -->
+    <!-- code to AspectJ code.                                             -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+    <target name="jak2aj"
+        description="Builds the jak2aj translator.">
+
+	<antcall target="method.rebuild">
+	    <param name="arg.tool" value="jak2aj"/>
+	</antcall>
+
+	 </target>
+
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- The "jrename" target builds the translator that adds $$ to each   -->
+	 <!-- Java class and constructor declaration; for byte code composition.-->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+	 <target name="jrename"
+				description="Builds the jrename translator.">
+
+	<antcall target="method.rebuild">
+	    <param name="arg.tool" value="jrename"/>
+	</antcall>
+
+    </target>
+
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- The "adddelivery" target builds the translator from Jak source    -->
+	 <!-- to Jak source, adding Delivery_parameter stms where necessary.    -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+    <target name="adddeliver"
+        description="Builds the adddeliver translator.">
+
+	<antcall target="method.rebuild">
+	    <param name="arg.tool" value="adddeliver"/>
+	</antcall>
+
+    </target>
+
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- The "jampack" target builds the JamPack tool, which composes Jak  -->
+    <!-- code by combining class bodies from the source operands into a    -->
+    <!-- single target class.                                              -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+    <target
+        name="jampack"
+        description="Builds the JamPack composition tool.">
+
+	<antcall target="method.rebuild">
+	    <param name="arg.tool" value="jampack"/>
+	</antcall>
+
+    </target>
+
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- The "method.rebuild" target initiates a sequence of tool-specific   -->
+    <!-- build steps, each in a target prefixed by "method.rebuild".         -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+    <target name="method.rebuild" depends="use.path.all">
+
+	<ant antfile="recompileTool.xml" inheritall="false">
+	    <property name="file.equation"	value="${eqns.tools}"/>
+	    <property name="name.tool"		value="${arg.tool}"/>
+	    <property name="path.class"		value="${path.all}"/>
+	    <property name="this"		value="${arg.tool}"/>
+	</ant>
+
+    </target>
+
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- The "mixin" target builds the Mixin tool, which composes Jak code -->
+    <!-- by converting the operand classes into an inheritance chain.      -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+    <target
+        name="mixin"
+        description="Builds the Mixin composition tool.">
+
+	<antcall target="method.rebuild">
+	    <param name="arg.tool" value="mixin"/>
+	</antcall>
+
+    </target>
+
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- The "mmatrix" target builds mmatrix, which produces a pictorial   -->
+    <!-- representation of a composition of directory operands.  The view  -->
+    <!-- is presented in a matrix, hence the name of the tool.             -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+    <target
+        name="mmatrix"
+        description="Builds the mmatrix component viewer.">
+
+	<antcall target="method.rebuild">
+	    <param name="arg.tool" value="mmatrix"/>
+	</antcall>
+
+	 </target>
+
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- The "prepare" target creates an empty build hierarchy.             -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+    <target name="prepare" depends="initialize">
+
+	<mkdir dir="${dir.build}"/>
+	<mkdir dir="${dir.build.lib}"/>
+	<mkdir dir="${dir.build.tool}"/>
+	<mkdir dir="${dir.build.syntax}"/>
+
+    </target>
+
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- The "unmixin" target builds the UnMixin tool, which translates an -->
+    <!-- inheritance chain from Mixin back into a set of original Jak code -->
+    <!-- source files.                                                     -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+    <target
+        name="unmixin"
+        description="Builds the UnMixin decomposition tool.">
+
+	<antcall target="method.rebuild">
+	    <param name="arg.tool" value="unmixin"/>
+	</antcall>
+
+    </target>
+
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- The "use.*" targets prepare properties, environment variables and -->
+    <!-- other resources for use by another target.  A target that uses a  -->
+    <!-- resource specifies the usage by including a dependency on target  -->
+    <!-- "use.<resource>" defined below (where "<resource>" is replaced by -->
+    <!-- the actual resource name).                                        -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <!-- Property "path.all" is an internally generated class path of all  -->
+    <!-- other class paths combined.                                       -->
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+    <target name="use.path.all" depends="use.path.ant,use.path.class">
+
+	<path id="id.path.all">
+	    <pathelement path="${path.class}"/>
+	    <pathelement path="${path.ant}"/>
+	</path>
+
+	<property name="path.all" refid="id.path.all"/>
+
+	<exec executable="env" taskname="path.all">
+	    <arg value="--"/>
+	    <arg file="${exec.print-path}"/>
+	    <arg value="${path.all}"/>
+	</exec>
+
+    </target>
+
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <!-- Property "path.ant" is an internally generated class path used to -->
+    <!-- reference Ant classes used in Ant tasks defined by the build.     -->
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+    <target name="use.path.ant" depends="initialize">
+
+	<path id="id.path.ant">
+	    <fileset dir="${dir.ant.lib}" includes="**/*.jar"/>
+	</path>
+
+	<property name="path.ant" refid="id.path.ant"/>
+
+	<exec executable="env" taskname="path.ant">
+	    <arg value="--"/>
+	    <arg file="${exec.print-path}"/>
+	    <arg value="${path.ant}"/>
+	</exec>
+
+    </target>
+
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <!-- Property "path.class" is an internally generated class path used  -->
+    <!-- throughout the build.  It is built from 3 libraries in priority   -->
+    <!-- order.  The build library, ${dir.build.lib}, is first priority so -->
+    <!-- that inter-tool dependencies are satisfied.  The second priority  -->
+    <!-- is the external tool library, ${dir.external.lib}, which is used  -->
+    <!-- so that the tools can be bootstrapped. Finally, the Ant library   -->
+    <!-- is used so that Ant tasks can be defined.                         -->
+    <!--                                                                   -->
+    <!-- User-defined libraries can be specified via CLASSPATH.  To ensure -->
+    <!-- that this works, property "build.sysclasspath" must be defined as -->
+    <!-- described in the Ant manual.  The definition should be placed on  -->
+    <!-- the command line.                                                 -->
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+    <target name="use.path.class" depends="prepare">
+
+	<path id="id.path.class">
+	    <fileset dir="${dir.build.lib}" includes="**/*.jar"/>
+
+	    <fileset dir="${dir.external.lib}" includes="**/*.jar">
+		<none>
+		    <present targetdir="${dir.build.lib}"/>
+		</none>
+	    </fileset>
+	</path>
+
+	<property name="path.class" refid="id.path.class"/>
+
+	<exec executable="env" taskname="path.class">
+	    <arg value="--"/>
+	    <arg file="${exec.print-path}"/>
+	    <arg value="${path.class}"/>
+	</exec>
+
+    </target>
+
+</project>
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+<!-- Local Variables:                    -->
+<!-- mode:                           XML -->
+<!-- fill-column:                     79 -->
+<!-- sgml-ignore-undefined-elements: nil -->
+<!-- sgml-indent-data:                 t -->
+<!-- sgml-indent-step:                 4 -->
+<!-- End:                                -->
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->

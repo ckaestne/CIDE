@@ -1,0 +1,396 @@
+
+
+<head>
+<title>The mixin Tool</title>
+</head>
+
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%">
+  <tr>
+    <td WIDTH="78">
+    <img border="0" src="images/FopButton3.jpg" width="80" height="64"></td>
+    <td WIDTH="688" BGCOLOR="#00FFFF"><h1><font face="Arial" color="#0000FF">The
+      mixin Composition Tool</font></h1>
+    </td>
+  </tr>
+</table>
+
+<p><font face="Arial"><b>mixin</b></font><font face="Arial"> is a tool to compose <b>.jak</b>  files.&nbsp;
+Another <a href="Composition.html">document</a>  presents the big picture of how
+and where <b>mixin</b> is used, the syntax and semantics of <b>.jak </b>files,
+and how <b>mixin</b> differs from the <b>jampack</b> composition tool. This document
+discusses detailed use and features of <b>mixin</b>.</font></p>
+<ul>
+  <li><i><a href="#Interface Composition Rules"><font face="Arial">command-line</font></a></i></li>
+  <li><font face="Arial"><a href="#Interface Composition Rules"><i>interface
+    composition rules</i></a></font></li>
+  <li><font face="Arial"><a href="#Class Composition Rules"><i>class composition
+    rules</i></a></font></li>
+  <li><font face="Arial"><a href="#State Machine Composition Rules"><i>state
+    machine composition rules</i></a></font></li>
+  <li><font face="Arial"><a href="#Local_Id"><i>local declarations</i></a></font></li>
+</ul>
+
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FFFF00">
+  <tr>
+    <td WIDTH="788"><h2><a name="Interface Composition Rules">
+    <font face="Arial" color="#0000FF">Command-Line Invocation</font></a></h2>
+    </td>
+  </tr>
+</table>
+
+<p><font face="Arial"> To call <b>mixin</b> from the command line:</font></p>
+<blockquote>
+  <pre><font face="Courier New">&gt; mixin</font></pre>
+  <pre><font face="Courier New">Usage: mixin [options] baseFile extensionFile1 extensionFile2 ...
+Options: -t (ignored)
+</font>         <font face="Courier New">-k (ignored)
+         -a &lt;layerName&gt; name of layer to generate
+         -f &lt;fileName&gt; name file to generate</font></pre>
+</blockquote>
+<ul>
+  <li><font face="Arial">options -t and -k are ignored by <b>mixin</b>, and are present
+    only to be compatible with <b>jampack</b>.</font></li>
+  <li><font face="Arial">if option -a is selected, you must also supply
+    layerName.&nbsp; This is the name of the composite layer that is
+    produced.
+    By default, the layer name is the same as the root file.</font></li>
+  <li><font face="Arial">if option -f is selected, you must also supply fileName.&nbsp;
+    This is the name of the file in which the composite layer is to be stored.
+    If f is not selected, output is sent to standard out.</font></li>
+  <li><font face="Arial">files to be composed are listed base-file first.&nbsp; 
+  So for the composition A(B(C)), the files are listed C B A on the
+  <b>mixin</b> command line.</font></li>
+</ul>
+
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FFFF00">
+  <tr>
+    <td WIDTH="788"><h2><font face="Arial" color="#0000FF"><a name="Interface Composition Rules">Interface
+Composition Rules</a></font></h2>
+    </td>
+  </tr>
+</table>
+
+<p><font face="Arial">The rules of interface composition that are specific to <b>mixin</b>
+are:</font></p>
+<ul>
+  <li><font face="Arial">a root interface is transcribed unchanged, although the
+    name of the interface may eventually be mangled.</font></li>
+  <li><font face="Arial">refinement interfaces are rewritten as Java interfaces that
+    extend the parent interface. The name of the parent interface will be mangled.</font></li>
+  <li><font face="Arial">the bodies of the root interface and refinement interfaces remain intact -- there are no changes.</font></li>
+  <li><font face="Arial">each root interface and refinement is prefaced by a <b>SoUrCe</b>
+    declaration that specifies:</font>
+    <ul>
+      <li><font face="Arial">whether the original specification is a root or refinement,</font></li>
+      <li><font face="Arial">the name of the layer from which the specification
+        originates,</font></li>
+      <li><font face="Arial">and a quoted absolute path to the original layer file.</font></li>
+    </ul>
+  </li>
+</ul>
+<p><font face="Arial">An example root interface and refinement are:</font></p>
+<blockquote>
+  <pre><font face="Courier New">layer IRoot1;
+
+import java.io.Serializable;
+
+interface MyInt extends FooInterface {
+    int Silent = 0;
+    void foo() throws AFit;
+    SomeType bar( int x );
+}</font></pre>
+  <hr>
+  <pre><font face="Courier New">layer Iext1;
+
+public transient refines interface MyInt extends yyyInterface {
+   int Terse = 2;
+   void foo() throws SomeException;
+   int increment( int i );
+}</font></pre>
+</blockquote>
+<p><font face="Arial">The <b>mixin</b> composition of the IRoot1 and Iext1 files 
+above is shown below, where the <span style="background-color: #FFFF00">yellow</span>-highlighted 
+text is generated by mixin:</font></p>
+<blockquote>
+<pre><font face="Courier New">layer IRoot1;
+
+import java.io.Serializable;
+
+S<span style="background-color: #FFFF00">oUrCe Base IRoot1 &quot;../Iroot1.jak&quot;;</span>
+
+abstract interface MyInt<span style="background-color: #FFFF00">$$IRoot1</span> extends FooInterface {
+    int Silent = 0;
+    void foo() throws AFit;
+    SomeType bar( int x );
+}
+
+<span style="background-color: #FFFF00">SoUrCe  Iext1 &quot;../Iext1.jak&quot;;</span>
+
+public transient interface MyInt extends yyyInterface, <span style="background-color: #FFFF00">MyInt$$IRoot1</span> {
+   int Terse = 2;
+   void foo() throws SomeException;
+   int increment( int i );
+}</font></pre>
+</blockquote>
+<p><font face="Arial">Note that <b>mixin</b> simply makes explicit the
+inheritance hierarchy that the composition of these two files represents.&nbsp; That is, the
+<b>MyInt</b> interface of layer <b>Iext1</b> extends the <b>MyInt</b> interface
+of layer <b>IRoot1</b>.&nbsp; You'll note that the name of the <b>MyInt</b>
+interface of <b>IRoot1</b> has changed to <b>MyInt$$IRoot1</b> -- because in
+Java, interface names must be unique.&nbsp; The bottom-most interface of the
+refinement chain is <b>MyInt</b> (the name that we wanted). The mangling of a
+&quot;name&quot;
+is always &quot;name$$name-of-layer&quot;.&nbsp; Note the bottom-most
+interface is public, whereas the other interfaces are abstract.</font></p>
+<h4><font face="Arial" color="#0000FF">Exercise</font></h4>
+<p><font face="Arial">Create separate files IRoot1.jak and Iext1.jak to hold the
+above definitions.&nbsp; Compose them into C.jak by the command:</font></p>
+<blockquote>
+  <pre><font face="Courier New">&gt; mixin IRoot1.jak Iext1.jak &gt; C.jak</font></pre>
+</blockquote>
+
+  <p><font face="Arial"><font color="#0000FF"><b><a name="Caveat">Caveat</a></b></font>. 
+  Note: the file naming convention used in this example isn't typical.&nbsp; 
+  Usually IRoot1.jak would be a file in the IRoot1 layer (i.e., it would have 
+  the pathname IRoot1/MyInt.jak) and Iext1.jak would be a file in the Iext1 
+  layer (i.e., it would have the pathname Iext1/MyInt.jak).&nbsp; So a more 
+  typical invocation would be:</font></p>
+<blockquote>
+  <pre><font face="Courier New">&gt; mixin IRoot1/MyInt.jak IIext1/MyInt.jak &gt; C.jak</font></pre>
+</blockquote>
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FFFF00">
+  <tr>
+    <td WIDTH="788"><h2><font face="Arial"><a name="Class Composition Rules"><font color="#0000FF">Class
+Composition Rules</font></a></font></h2>
+    </td>
+  </tr>
+</table>
+
+<p><font face="Arial"><b>mixin</b></font><font face="Arial">  composes
+classes much the same way as it does interfaces. (See the <a href="#Interface Composition Rules"><i>rules
+for interfaces</i></a>). A single file is
+produced that contains an inheritance hierarchy of classes.&nbsp; The last class
+that is listed is the public class, all other classes are abstract whose names have been mangled.</font></p>
+<p><font face="Arial">Consider the following root class and a refinement:</font></p>
+<blockquote>
+  <pre><font face="Courier New">layer Ctop;
+
+import jakarta.util.*;
+
+class top {
+   static int i,j;
+
+   top() {  ii = 5; }
+
+   void foo(float x, float y) { /* do something */ }</font></pre>
+  <pre>   <font face="Courier New">float bar( float x ) { /* do something */ }
+}</font></pre>
+  <hr>
+  <pre><font face="Courier New">layer Cmid;
+
+import AnotherPackage;
+
+refines class top implements java.io.Serializable, xxx {
+   static int k;
+
+   top(float x) { /* do something */ }
+
+   float foobar() { Super(float).bar(4.0);
+                    Super(float,float).foo(0, 0); }
+
+   public void foo( float x, float y ) { /* something more */ }
+}</font></pre>
+</blockquote>
+<p><font face="Arial">Their <b>mixin</b> composition is shown below.&nbsp; The <span style="background-color: #FFFF00">yellow</span>-highlighted text
+is generated by <b>mixin</b>.</font></p>
+<blockquote>
+  <pre>layer Ctop;
+
+import jakarta.util.*;
+import AnotherPackage;
+
+<span style="background-color: #FFFF00">SoUrCe</span><span style="background-color: #FFFF00"> </span><span style="background-color: #FFFF00">RooT</span><span style="background-color: #FFFF00"> </span><span style="background-color: #FFFF00">Ctop</span><span style="background-color: #FFFF00"> &quot;../</span><span style="background-color: #FFFF00">Ctop.jak</span><span style="background-color: #FFFF00">&quot;;
+</span>
+abstract class top$$Ctop {
+   static int i,j;
+
+   top$$Ctop() { ii = 5; }
+
+   void foo(float x, float y) { /* do something */ }
+      float bar( float x ) { /* do something */ }
+}
+
+<span style="background-color: #FFFF00">SoUrCe</span><span style="background-color: #FFFF00"> </span><span style="background-color: #FFFF00">Cmid</span><span style="background-color: #FFFF00"> &quot;../</span><span style="background-color: #FFFF00">Cmid.jak</span><span style="background-color: #FFFF00">&quot;;</span>
+
+class top <span style="background-color: #FFFF00">extends </span><span style="background-color: #FFFF00">top$$Ctop</span><span style="background-color: #FFFF00"> </span>implements java.io.Serializable, xxx {
+   static int k;
+
+   top(float x) { /* do something */ }
+
+   float foobar() { Super(float).bar(4.0);
+      Super(float,float).foo(0, 0); }
+
+   public void foo( float x, float y ) { /* something more */ }
+}</pre>
+</blockquote>
+<h4><font face="Arial" color="#0000FF">Exercise</font></h4>
+<p><font face="Arial">Create separate files top.jak and mid.jak to hold the
+definitions above.&nbsp; Compose them into combined.jak by the command:</font></p>
+<blockquote>
+  <pre><font face="Courier New">&gt; mixin top.jak mid.jak &gt; combined.jak</font></pre>
+</blockquote>
+
+  <p><font face="Arial">Don't forget the <a href="#Caveat">caveat</a>.</font></p>
+
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FFFF00">
+  <tr>
+    <td WIDTH="788"><h2><font face="Arial" color="#0000FF"><a name="State Machine Composition Rules"> State Machine Composition
+Rules</a></font></h2>
+    </td>
+  </tr>
+</table>
+
+<p><font face="Arial"><b>mixin</b></font><font face="Arial">  composes state machine definitions much the same way as it does
+interfaces.&nbsp; (See the <a href="#Interface Composition Rules"><i>rules for
+interfaces</i></a>). A single file is
+produced that contains an inheritance hierarchy of state machines.&nbsp; The last class
+that is listed is the public state machine, all others are abstract whose names have been mangled.&nbsp;
+Here is an example root state machine and a refinement:</font></p>
+<blockquote>
+  <pre><font face="Courier New">layer rootSm;
+
+State_machine root {
+
+   Delivery_parameters( M m );
+   Unrecognizable_state { ignore(m); }
+
+   States g, h, i;</font></pre>
+  <pre><font face="Courier New">   Transition e1 : g -&gt; h 
+   condition m!=null
+   do { gh(); }
+}</font></pre>
+  <hr>
+  <pre><font face="Courier New">layer extSm;
+
+refines State_machine root {
+
+   States j, k;
+
+   Transition e3 : g -&gt; j 
+   condition m!=null
+   do { Super(int).anotherAction(6); }
+}</font></pre>
+</blockquote>
+<p><font face="Arial"> The <b>mixin</b> composition of the above files is shown
+below.&nbsp; The lines in <span style="background-color: #FFFF00">
+yellow</span> were generated by <b>mixin</b>:</font></p>
+<blockquote>
+  <pre><font face="Courier New">layer rootSm;
+
+<span style="background-color: #FFFF00">SoUrCe RooT rootSm &quot;../RootSm.jak&quot;;</span>
+
+abstract State_machine root<span style="background-color: #FFFF00">$$rootSm</span> {
+
+   Delivery_parameters( M m );
+   Unrecognizable_state { ignore(m); }
+
+   States g, h, i;
+
+   Transition e1 : g -&gt; h
+   condition m!=null
+   do { gh(); }
+}
+
+<span style="background-color: #FFFF00">SoUrCe extSm &quot;../ExtSm.jak&quot;;</span>
+
+State_machine root <span style="background-color: #FFFF00">extends root$$rootSm</span> {
+
+   States j, k;
+
+   Transition e3 : g -&gt; j
+   condition m!=null
+   do { Super(int).anotherAction(6); }
+}</font></pre>
+</blockquote>
+<h4><font face="Arial" color="#0000FF">Exercise</font></h4>
+<p><font face="Arial">Create separate files root.jak and mid.jak to hold the
+above definitions.&nbsp; Compose them into result.jak by the command:</font></p>
+<blockquote>
+  <pre><font face="Courier New">&gt; mixin root.jak mid.jak &gt; result.jak</font></pre>
+</blockquote>
+
+  <p><font face="Arial">Don't forget the <a href="#Caveat">caveat</a>.</font></p>
+
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FFFF00">
+  <tr>
+    <td WIDTH="788"><h2><font face="Arial" color="#0000FF"><a name="Local_Id"> Local
+      Declarations</a></font></h2>
+    </td>
+  </tr>
+</table>
+
+<p><font face="Arial"><b>Local_Id </b>declarations are used to avoid inadvertent
+capture. Consider the following root specification with local
+identifiers i, j, ii, jj, and foo.</font></p>
+<blockquote>
+  <pre><font face="Courier New">layer Ctopp; 
+
+Local_Id <span style="background-color: #FFFF00">i</span>, <span style="background-color: #FFFF00">jj</span>, <span style="background-color: #FFFF00">foo</span>;
+
+class topp {
+   static int <span style="background-color: #FFFF00">i</span>;
+   int <span style="background-color: #FFFF00">jj</span>;
+
+   void <span style="background-color: #FFFF00">foo</span>(float x, float y) { <span style="background-color: #FFFF00">i</span> = <span style="background-color: #FFFF00">jj</span> = x+y; }
+}</font></pre>
+</blockquote>
+<p><font face="Arial">Now consider an refinement that uses exactly the
+same identifiers locally:</font></p>
+<blockquote>
+  <pre><font face="Courier New">layer Cmidd;
+
+Local_Id <span style="background-color: #FFFF00">i</span>, <span style="background-color: #FFFF00">jj</span>, <span style="background-color: #FFFF00">foo</span>;
+
+refines class topp {
+   static int <span style="background-color: #FFFF00">i</span>;
+   int <span style="background-color: #FFFF00">jj</span>;
+
+   void <span style="background-color: #FFFF00">foo</span>(float x, float y) { <span style="background-color: #FFFF00">i</span> = <span style="background-color: #FFFF00">jj</span> = x*y; }
+}</font></pre>
+</blockquote>
+<p><font face="Arial"><b>mixin</b></font><font face="Arial"> composes these two specifications to yield:</font></p>
+<blockquote>
+<pre>layer Foo;
+
+<span style="background-color: #FFFF00">SoUrCe</span><span style="background-color: #FFFF00"> </span><span style="background-color: #FFFF00">RooT</span><span style="background-color: #FFFF00"> </span><span style="background-color: #FFFF00">Ctopp</span><span style="background-color: #FFFF00"> &quot;../</span><span style="background-color: #FFFF00">Ctopp.jak</span><span style="background-color: #FFFF00">&quot;;
+</span>
+abstract class topp<span style="background-color: #FFFF00">$$Ctopp</span> {
+   static int <span style="background-color: #FFFF00">i$$Ctopp</span>;
+   int jj<span style="background-color: #FFFF00">$$Ctopp</span>;
+
+   void foo<span style="background-color: #FFFF00">$$Ctopp</span>(float x, float y) { i<span style="background-color: #FFFF00">$$Ctopp</span> = jj<span style="background-color: #FFFF00">$$Ctopp</span> = x+y; }
+}
+
+<span style="background-color: #FFFF00">SoUrCe</span><span style="background-color: #FFFF00"> </span><span style="background-color: #FFFF00">Cmidd</span><span style="background-color: #FFFF00"> &quot;../</span><span style="background-color: #FFFF00">Cmidd.jak</span><span style="background-color: #FFFF00">&quot;;</span>
+
+class topp extends topp$$Ctopp {
+   static int i<span style="background-color: #FFFF00">$$Cmidd</span>;
+   int jj<span style="background-color: #FFFF00">$$Cmidd</span>;
+
+   void foo<span style="background-color: #FFFF00">$$Cmidd</span>(float x, float y) { i<span style="background-color: #FFFF00">$$Cmidd</span> = jj<span style="background-color: #FFFF00">$$Cmidd</span> = x*y; }
+}</pre>
+</blockquote>
+<h4><font face="Arial" color="#0000FF">Exercise</font></h4>
+<p><font face="Arial">Create separate files topp.jak and extp.jak to hold the
+definitions above.&nbsp; Compose them into result.jak by the command:</font></p>
+<blockquote>
+  <pre><font face="Courier New">&gt; mixin -a Foo topp.jak extp.jak &gt; result.jak</font></pre>
+</blockquote>
+
+<hr>
+<p><font face="Verdana">
+<a href="index.html">&nbsp;</a></font><b><font face="Arial"><a href="index.html">ATS Home Page</a></font></b></p>
+<p><font face="Arial"><b>Copyright © Software Systems Generator Research Group. 
+All rights reserved.</b> <br>
+<b>Revised:&nbsp;<!--webbot bot="TimeStamp" s-format="%B %d, %Y" s-type="EDITED" startspan -->January 25, 2006<!--webbot bot="TimeStamp" endspan i-checksum="31592" -->.</b>
+</font></p>

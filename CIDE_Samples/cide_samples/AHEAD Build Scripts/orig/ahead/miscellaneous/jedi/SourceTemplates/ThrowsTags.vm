@@ -1,0 +1,19 @@
+## ThrowsTags.vm
+## JEDI Project
+## HTML Template for Throws Tags
+## Author: Roberto E. Lopez-Herrejon
+## Last update: November 6, 2002
+
+#set($counter = 0)
+#foreach($throws in $doc.comment().throwsTags())
+    #if ($counter == 0)
+	<DT> <B>Throws </B> 
+    #end
+  
+    <DD>
+    $throws.exceptionName() -
+    $generator.descriptionComment($throws.inlineTags())
+    
+    #set($counter = $counter + 1)
+
+#end

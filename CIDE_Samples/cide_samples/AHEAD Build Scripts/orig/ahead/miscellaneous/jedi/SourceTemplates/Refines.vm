@@ -1,0 +1,12 @@
+## Refines.vm
+## JEDI Project
+## Author: Roberto E. Lopez-Herrejon
+## Last update: November 30, 2002
+
+## From Base
+   #if ($isRefinesFlag == "true")
+     refines
+#end
+
+## End of Refines.vm
+

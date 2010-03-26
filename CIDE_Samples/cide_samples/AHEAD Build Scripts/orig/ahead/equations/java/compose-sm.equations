@@ -1,0 +1,10 @@
+grammar = super.grammar dsl/java/SmXGram
+
+jak2java   = super.jak2java   dsl/java/j2jSmx
+jampack    = super.jampack    dsl/java/CompSm
+mixin      = super.mixin      dsl/java/mixinSm
+mmatrix    = super.mmatrix    dsl/java/Sm2mm
+unmixin    = super.unmixin    dsl/java/unmixinsm
+bcjak2java = super.bcjak2java dsl/java/bcSmx
+jak2aj     = super.jak2aj     dsl/java/bcSmx
+jrename    = super.jrename    dsl/java/SmxError

@@ -1,0 +1,116 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+
+<head>
+  <title>Berkeley DB Java Edition Release Notes</title>
+  <link rel="stylesheet" href="sleepycat-idoc.css" type="text/css">
+</head>
+
+<body>
+
+<div class="docMain">
+<center>
+<h1>Berkeley DB Java Edition<br>
+Release Notes</h1>
+</center>
+
+<!-- Note: RELEASE_VERSION and DATE are set by ant -->
+<p class="releaseInfo">2.1.30, January 25, 2006</p>
+<p>These release notes contain:</p>
+<ul>
+  <li><a href="#overview">Overview</a></li>
+  <li><a href="#new">New in this Release</a></li>
+</ul>
+
+<h2><a name="overview">Overview</a></h2>
+<p>
+Berkeley DB Java Edition (JE) is a 100% pure Java implementation of
+Berkeley DB. It implements a transactional store model based on a
+B+Tree access method.
+</p>
+<p>JE's capabilities and features are described in the <a
+ href="http://www.sleepycat.com/jedocs/GettingStartedGuide/index.html">Getting
+Started with Berkeley DB Java Edition</a> guide. That document also
+introduces the JE API set. For a complete description of the JE API
+set, see the <a href="http://www.sleepycat.com/jedocs/java/index.html">Javadoc</a>.
+For a description of how to use JE and the Sleepycat Java Collections
+API, see the <a href="http://www.sleepycat.com/jedocs/collections/tutorial/index.html">collections
+tutorial</a>. For an overview on using transactions, see <a 
+ href="http://www.sleepycat.com/jedocs/TransactionGettingStarted/index.html">Writing
+ Transactional Applications with Berkeley DB, Java Edition</a>
+</p>
+
+<h2><a name="new">New in this Release</a></h2>
+
+<p>This is release 2.1.30 of Berkeley DB Java Edition, and the
+fifth release in the JE 2.0 line. Key changes since version
+JE 2.0.90 are described
+below; the complete list of
+changes can be found in <a
+ href="http://www.sleepycat.com/je_update/2.1.30/if.2.1.30.html">the
+change log page</a> for this release.<br>
+</p>
+<p>Note: If you are using Mac OS X, please be aware of the following
+issue. Java version 1.4.2 on Mac OS X reports the wrong value for
+Runtime.maxMemory. JE calculates the default cache size as a percentage
+of maxMemory.&nbsp; Because of this, for Java 1.4.2 on Mac OS X only,
+JE will assume that the Java maxMemory value is 64 MB.&nbsp; With the
+default je.maxMemoryPercent configuration parameter (60%) the default
+JE cache size will be approximately 38 MB.&nbsp; This default is fixed
+-- it does not change if the Java memory size is different than 64
+MB.&nbsp; To specify a different JE cache size, you must explicitly set
+the je.maxMemory configuration property.&nbsp; The je.maxMemory
+property can be specified in the je.properties file or by calling
+EnvironmentConfig.setCacheSize.
+</p>
+<h3>New Features:</h3>
+<ol>
+<li>
+Multi-key secondary databases are now supported, providing direct support for
+many-to-many and one-to-many relationships. See
+<code>com.sleepycat.je.SecondaryMultiKeyCreator</code>,
+<code>com.sleepycat.je.ForeignMultiKeyNullifier</code> and
+<code>examples/je/ToManyExample.java</code>. [#13842]
+</li>
+</ol>
+<h3>General Environment Changes:</h3>
+<p>
+A key focus of this release is improved performance, particularly for
+multithreaded use cases. A few examples are:
+<ul>
+<li>Multithreaded concurrency has benefited from changes
+which recognize and take advantage of the presence of a Java 1.5
+JVM. 
+</li>
+<li>The implementation has been modified and tuned to reduce
+contention on some internal data structures.
+</li>
+<li>There are new user options like non-locking mode and control over
+the number of lock tables that provide customization for more
+scenarios.
+</li>
+<li>A variety of operations like Database.preload() and
+Environment.truncateDatabase are orders of magnitude faster because
+they use new algorithm to sort and optimize I/O.
+</li>
+</ul>
+This release also contains a variety of bug fixes. The <a href="http://www.sleepycat.com/je_update/2.1.30/if.2.1.30.html">
+change log</a> contains the complete and detailed description of
+all changes.
+
+<h3>Documentation Changes:</h3>
+<p>
+A new documentation guide, 
+"Writing Transactional Applications with
+Berkeley DB, Java Edition" is now available both in the distribution
+and through the 
+<a href="http://dev.sleepycat.com/">Sleepycat Developer Zone</a>. The
+Developer Zone is also the home of the new JE FAQ section, which has updated and expanded topics.
+</p>
+<font size="1"><a href="sleepycat/legal.html">Copyright (c) 1996-2006</a>
+<a href="http://www.sleepycat.com">Sleepycat Software, Inc.</a> - All
+rights reserved.</font>
+</div>
+<!-- end docMain -->
+</body>
+</html>

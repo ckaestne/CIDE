@@ -1,0 +1,211 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>The Jedi Tool</title>
+    
+</head>
+  <body>
+                     
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+            <tbody>
+              <tr>
+                <td width="78"><font face="Verdana">
+                <img border="0" src="images/FopButton3.jpg" width="80" height="64">
+                </font></td>
+                <td width="688" bgcolor="#00ffff">                      
+                                               
+      <h1><font face="Arial" color="#0000ff">Jedi Tool</font></h1>
+               </td>
+              </tr>
+                                       
+  </tbody>          
+</table>
+                       
+<p><font face="Arial"><b>Jedi&nbsp;</b> is a tool that allows the user to 
+     create documentation for extensions of java programs in similar fashion 
+   to  Sun's javadoc.&nbsp;</font></p>
+                       
+<ul>
+              <li><font face="Arial"><a href="#Command-Line">Command-line 
+invocation</a></font></li>
+              <li><font face="Arial"><a href="#Architecture">Architecture</a></font></li>
+              <li><font face="Arial"><a href="#Implementation">Implementation 
+  Status</a></font></li>
+                       
+</ul>
+         <br>
+                        
+<table border="0" cellspacing="0" cellpadding="0" width="100%"
+ bgcolor="#ffff00">
+            <tbody>
+             <tr>
+              <td width="788">                                          
+                    
+      <h2>          <a name="Command-Line">              <font
+ face="Arial" color="#0000ff"> Command-Line Invocation          </font>  
+        </a>       </h2>
+              </td>
+            </tr>
+                                     
+  </tbody>         
+</table>
+                        
+<p><font face="Arial">Jedi invocation is currently handled with the following
+      command options: </font></p>
+                       
+<blockquote>                                    
+  <pre><b><font face="Arial" size="4">jedi </font></b>[options]</pre>
+                                               
+  <pre>Usage: -p package1 package2 ...<br>       -f file1 file2 ...<br>       -r realm1 realm2 ...<br>       -e extension1 extension2 ...<br>       -o output dir<br>Default directory : .<br>Default extension : .jak</pre>
+            </blockquote>
+                       
+<p><font face="Arial"><font color="#0000ff">option -p</font> generates documentation 
+     for a whole package, that is, all the files with the specified extensions.</font></p>
+                       
+<p><font face="Arial"><font color="#0000ff">option -f</font> generates documentation 
+     for the specified files, these names must include the extensions as well.</font></p>
+                       
+<p><font face="Arial"><font color="#0000ff">option -r</font> generates documentation 
+     for all the layers in the specified realms. The structure of the realm 
+  is   preserved.</font></p>
+                       
+<p><font face="Arial"><font color="#0000ff">option -e</font> permits the
+specification of which file extensions to document. By default only documentation
+for <i>jak</i> files is generated.</font></p>
+                       
+<p><font face="Arial"><font color="#0000ff">option -o</font> allows the specification 
+     of the output directory. The default value is the current directory. 
+If   selected  with the options -p or -r, a copy of the directory structure 
+will   be made  to put the generated output in the corresponding directories.</font></p>
+                       
+<p><font face="Arial" color="#0000ff">Examples:</font></p>
+                       
+<ul>
+              <li><font face="Arial">jedi -f /realms/F/FsatsL/Target.jak&nbsp;&nbsp;
+          /realms/F/Target/TargetImpl.jak</font></li>
+                       
+</ul>
+                       
+<p><font face="Arial">Creates documentation for the 2 files selected, with 
+     the output generated in the current directory.</font></p>
+                       
+<ul>
+              <li><font face="Arial">jedi -r /realms/F -o outputDir</font></li>
+                       
+</ul>
+                       
+<p><font face="Arial">Documents all the components of the realm F. One directory
+      will be created in outputDir for each component of the realm where
+its    documents   will be placed.</font></p>
+                       
+<ul>
+              <li><font face="Arial">jedi -p Package1 Package2 -e java</font></li>
+                       
+</ul>
+                       
+<p><font face="Arial">Documents all the java files that are contained in
+Package1 and Package2. The output will be put in the current directory.<br>
+      </font></p>
+           
+<p><font face="Arial"><br>
+      </font></p>
+              
+<table border="0" cellspacing="0" cellpadding="0" width="100%"
+ bgcolor="#ffff00">
+            <tbody>
+             <tr>
+              <td width="788">                                          
+                       
+      <h2>                       <a name="Architecture">                 
+          <font face="Arial" color="#0000ff"> Architecture              
+          </font>               </a>           </h2>
+              </td>
+            </tr>
+                                     
+  </tbody>         
+</table>
+                       
+<p><font face="Arial">Java and each of the language extensions is represented 
+     as a layer that has the four conceptual components:</font></p>
+                       
+<blockquote>   <b><font size="2">   </font></b>                         
+       
+  <p align="justify"><b>API:</b> contains      the class hierarchy   of the
+data structures that hold the information   of   the comments and program
+  structure (methods, fields, classes, etc.).   We   based our API designs
+on Sun&#8217;s   Doclet API .</p>
+              <b>   </b>                                 
+  <p align="justify"><b>Harvester:</b> consists of a BNF grammar      file
+that defines   the syntax of the language extension and its corresponding 
+     parser. It is   responsible for collecting the documentation information 
+    for the syntactic   structures defined in its grammar and for storing 
+information     in the   corresponding API data structures.</p>
+              <b>   </b>                                 
+  <p align="justify"><b>Writer:</b> coordinates the order in which harvesting
+and   output generation is done among the different layers.      For example,
+given a   package name to document, it first collects the   information 
+ of all the classes   in the package, resolves cross-references,   and finally
+  calls the output   generation routine for each of those classes.</p>
+              <b>   </b>                                 
+  <p><b>Generator:</b> produces as output the HMTL documentation   for a
+parsed program.<font face="Arial"><br>
+  <br>
+           </font></p>
+            <font size="2">  </font></blockquote>
+                                                   
+<table border="0" cellspacing="0" cellpadding="0" width="100%"
+ bgcolor="#ffff00">
+           <tbody>
+            <tr>
+             <td width="788">                                           
+                  
+      <h2>                      <a name="Implementation">               
+              <font face="Arial" color="#0000ff"> Implementation Status 
+                      </font>                </a>           </h2>
+             </td>
+           </tr>
+                                 
+  </tbody>        
+</table>
+                     
+<p><font face="Arial">Current implementation supports basic functionality 
+     of document generation</font></p>
+                     
+<p><font face="Arial">Supported Features:</font></p>
+                        
+<ul>
+             <li><font face="Arial">Basic javadoc tags.&nbsp;</font></li>
+             <li><font face="Helvetica, Arial, sans-serif">Creates two types
+  of  documents,   classes/interfaces and state machines.</font><br>
+             </li>
+             <li><font face="Arial">Grammar equal to mixin and unmixin tools.&nbsp;</font></li>
+                     
+</ul>
+                       
+<p><font face="Arial">Work to do:</font></p>
+                       
+<ul>
+              <li><font face="Arial">Support of cross references.</font></li>
+             <li><font face="Arial">Parser extensibility&nbsp; for customizable 
+   tag   parsing and documentation.</font></li>
+              <li><font face="Arial">For State Machines grammar: Nested states, 
+   Root   Clause changes, ESList, and Parameters.</font></li>
+             <li><font face="Arial">For Base grammar: New, Super, Constructor 
+  Refinement</font></li>
+              <li><font face="Arial">For AstEmpty grammar: No document generation
+    of  nested metaprograms.&nbsp;</font></li>
+              
+</ul>
+<hr>
+              
+<p><font face="Verdana"> &nbsp;<a href="index.html"></a></font><b><font face="Arial"><a
+ href="index.html">ATS  Home Page</a></font></b></p>
+     
+<p><font face="Arial"><b>Copyright &copy; Software Systems Generator Research
+ Group.  All rights reserved.</b> <br>
+   <b>Revised:&nbsp;<!--webbot bot="TimeStamp" s-format="%B %d, %Y" s-type="EDITED" startspan -->January 25, 2006<!--webbot bot="TimeStamp" endspan i-checksum="31592" -->.</b> </font></p>
+  <br>
+           <br>
+                   
+</body>
+</html>

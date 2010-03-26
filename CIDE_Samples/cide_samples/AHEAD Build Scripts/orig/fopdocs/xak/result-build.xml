@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--  The FOP Tools project  --><!--
+  Notes:
+
+  - Add the description attribute only to those targets
+    that should be callable from the command line (i.e.
+        a functional aspect of the build).
+
+  - environment variables can be referenced by ${env.<env var>}
+
+  - Follow these standards:
+      - directory properties start with 'dir.'
+          - jar properties start with 'jar.'
+          - pattern properties start with 'pattern.'
+          - id properties start with 'id.'
+          - time properties start with 'time.'
+
+--><project basedir="." default="all" name="FOPTools">
+  <property name="project.title" value="FOP Tests"/>
+  <property name="project.version" value="v2003.04.15"/>
+  <property name="project.owner" value="The University of Texas at Austin"/>
+  <property location="bldenv" name="dir.bldenv"/>
+  <property location="utests" name="dir.utests.results"/>
+  <property environment="env"/>
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ --><target depends="build,test" description="Equivalent to 'build' followed by 'test'"
+          name="all"/>
+  <target depends="build.ahead" name="build"/>
+  <target depends="test.ahead" name="test"/>
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ --><!-- The "build.ahead" target builds the AHEAD toolsuite.               --><!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ --><target depends="initialize" description="Builds the AHEAD tool suite"
+          name="build.ahead">
+    <ant antfile="build.xml" dir="ahead" inheritall="false"/>
+  </target>
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ --><!-- The "build.jts" target builds the JTS toolsuite.                   --><!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ --><target depends="initialize" description="Builds the JTS tool suite" name="build.jts">
+    <ant antfile="build.xml" dir="JTS" inheritall="false"/>
+  </target>
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ --><!-- The "clean" target removes generated files *other* than those      --><!-- generated to define the build configuration, if any.	            --><!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ --><target description="Deletes generated files and directories" name="clean">
+    <patternset id="clean.patterns">
+      <exclude name="**/CVS/**"/>
+      <include name="**/*~"/>
+      <include name="**/#*#"/>
+      <include name="**/.#*"/>
+      <include name="**/%*%"/>
+      <include name="**/*.bak"/>
+      <include name="**/*.BAK"/>
+      <include name="**/*.pyc"/>
+      <include name="**/*.pyo"/>
+      <include name="**/core"/>
+    </patternset>
+    <ant antfile="release.xml" dir="." inheritall="no" target="clean"/>
+    <ant antfile="build.xml" dir="ahead" inheritall="no" target="clean"/>
+    <ant antfile="build.xml" dir="fsats" inheritall="no" target="clean"/>
+    <ant antfile="build.xml" dir="JTS" inheritall="no" target="clean"/>
+    <ant antfile="build.xml" dir="Regression" inheritall="no" target="clean"/>
+    <!--
+	<ant dir="bootstrap/JakBasic" antfile="build.xml" target="clean" />
+	--><delete includeEmptyDirs="true" quiet="true">
+      <fileset defaultexcludes="no" dir=".">
+        <patternset refid="clean.patterns"/>
+      </fileset>
+      <fileset dir="." includes="**/*.class"/>
+    </delete>
+    <delete dir="utests"/>
+  </target>
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ --><!-- The "copy.jts.ahead" target copies a minimal set of JTS tools to   --><!-- the bootstrap library of AHEAD.                                    --><!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ --><target depends="initialize" name="copy.jts.ahead">
+    <copy todir="${basedir}/ahead/miscellaneous/lib" verbose="true">
+      <fileset dir="${basedir}/JTS/lib">
+        <include name="balicomposer.jar"/>
+        <include name="bali2jak.jar"/>
+        <include name="bali2javacc.jar"/>
+        <include name="composer.jar"/>
+        <include name="jakarta.jar"/>
+        <include name="jak2java.jar"/>
+        <include name="jampack.jar"/>
+        <include name="mixin.jar"/>
+        <!-- <include name="reform.jar"/> *DSB* --></fileset>
+    </copy>
+  </target>
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ --><target name="docs">
+    <echo level="info" message="will build docs later"/>
+  </target>
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ --><!-- The "initialize" target defines dynamic properties.  This must be  --><!-- a dependency of every externally-visible target!  Target "init" is --><!-- an alias for "initialize"                                          --><!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ --><target depends="initialize" name="init"/>
+  <target name="initialize">
+    <tstamp>
+      <format pattern="yyyy-dd-MM HH:mm:ss" property="time.start"/>
+    </tstamp>
+    <mkdir dir="${dir.utests.results}"/>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - --><!-- Create the time stamps for current build:                 --><!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - --><tstamp>
+      <format pattern="yyyy-MM-dd" property="initialize.date"/>
+      <format pattern="HH:mm:ss" property="initialize.time"/>
+      <format pattern="yyyy" property="initialize.year"/>
+    </tstamp>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - --><!-- Calculate range of years to put into copyright notice:    --><!-- * cr.alpha ....... first year source was created;         --><!-- * cr.omega ....... last year source was modified;         --><!-- * cr.range ....... range of years for copyright.          --><!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - --><property name="cr.alpha" value="2001"/>
+    <property name="cr.owner" value="${project.owner}"/>
+    <condition property="cr.range" value="${cr.alpha}">
+      <equals arg1="${cr.alpha}" arg2="${initialize.year}"/>
+    </condition>
+    <condition property="cr.range" value="${cr.alpha}-${initialize.year}">
+      <not>
+        <equals arg1="${cr.alpha}" arg2="${initialize.year}"/>
+      </not>
+    </condition>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - --><!-- Create copyright messages:                                --><!-- * copyright.base ... text with year(s) and owner;         --><!-- * copyright.html ... for inclusion into HTML documents;   --><!-- * copyright.text ... for inclusion into text documents.   --><!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - --><property name="copyright.base" value="${cr.range} ${cr.owner}"/>
+    <property name="copyright.html" value="© ${copyright.base}"/>
+    <property name="copyright.text" value="(C) ${copyright.base}"/>
+    <echo message="${project.title}; build.xml ${project.version}"/>
+    <echo message="${copyright.text}"/>
+    <echo message=""/>
+    <echo message="Build begins ${initialize.date} ${initialize.time}"/>
+  </target>
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ --><target depends="initialize" name="generate_utest_report">
+    <junitreport todir="${dir.utests.results}">
+      <fileset dir="${dir.utests.results}">
+        <include name="**/TEST-*.xml"/>
+      </fileset>
+      <report format="frames" styledir="${dir.bldenv}/styledir" todir="${dir.utests.results}"/>
+    </junitreport>
+  </target>
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ --><!-- The "mkdist" target packages the latest build into a release.  The --><!-- generated release is placed into sub-directory "build" in three    --><!-- different formats: tar, gzip'd tar and zip.                        --><!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ --><target name="mkdist">
+    <ant DIR="." antfile="release.xml" inheritall="false" target="jts"/>
+  </target>
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ --><!-- The "release" target is an alias for "mkdist".                     --><!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ --><target depends="mkdist" name="release"/>
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ --><!-- The "require.*" targets check the availability of various types of --><!-- of definitions.  Currently, they check environment settings.       --><!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ --><target depends="require.ANT_HOME,require.JAVA_HOME,require.JCC_HOME" name="require">
+    <echo message="${env.ANT_HOME}" taskname="ANT_HOME"/>
+    <echo message="${env.JAVA_HOME}" taskname="JAVA_HOME"/>
+    <echo message="${env.JCC_HOME}" taskname="JCC_HOME"/>
+  </target>
+  <target name="require.ANT_HOME" unless="env.ANT_HOME">
+    <property location="${ant.home}" name="env.ANT_HOME"/>
+  </target>
+  <target name="require.JAVA_HOME" unless="env.JAVA_HOME">
+    <property location="${java.home}" name="env.JAVA_HOME"/>
+  </target>
+  <target name="require.JCC_HOME" unless="env.JCC_HOME">
+    <echo message="JCC_HOME is undefined" taskname="failed"/>
+    <fail message="JCC_HOME is undefined"/>
+  </target>
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ --><!-- The "test.ahead" target tests the AHEAD tools.  This is temporary, --><!-- pending the reorganization of test drivers.                        --><!--                                                                    --><!-- This target currently has a mix of Jar files from AHEAD and JTS.   --><!-- As the bootstrap from JTS to AHEAD progresses, the tests will be   --><!-- shifted to be of only AHEAD Jar files.                             --><!--                                                                    --><!-- The following environment variables must be defined:               --><!-- * ANT_HOME .... the base directory of the Ant installation;        --><!-- * JAVA_HOME ... the base directory of the Java installation;       --><!-- * JCC_HOME .... the base directory of the JavaCC installation.     --><!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ --><target depends="initialize,require" description="Run tests on the AHEAD toolsuite"
+          name="test.ahead">
+    <path id="id.path.test.ahead">
+      <fileset dir="ahead/build/lib">
+        <include name="balicomposer.jar"/>
+        <include name="bali2jak.jar"/>
+        <include name="bali2javacc.jar"/>
+        <!-- <include name="bcjak2java.jar"/> *DSB* --><!-- <include name="drc.jar"/> *DSB* --><include name="jak2java.jar"/>
+        <include name="jakarta.jar"/>
+        <include name="jampack.jar"/>
+        <!-- <include name="jrename.jar"/> *DSB* --><include name="mixin.jar"/>
+        <!-- <include name="mmatrix.jar"/> *DSB* --><include name="unmixin.jar"/>
+        <!-- <include name="mix.jar"/> *DSB* --><!-- <include name="unmix.jar"/> *DSB* --><include name="bcjak2java.jar"/>
+      </fileset>
+    </path>
+    <property name="path.test.ahead" refid="id.path.test.ahead"/>
+    <exec executable="env" newenvironment="true" taskname="test">
+      <arg value="--"/>
+      <arg file="autotest/bin/summary"/>
+      <arg file="${dir.utests.results}"/>
+      <env key="EXCLUDE_P3" value="true"/>
+      <env file="${env.ANT_HOME}" key="ANT_HOME"/>
+      <env key="CLASSPATH" path="${path.test.ahead}"/>
+      <env file="${env.HOME}" key="HOME"/>
+      <env file="${env.JAVA_HOME}" key="JAVA_HOME"/>
+      <env file="${env.JCC_HOME}" key="JCC_HOME"/>
+    </exec>
+  </target>
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ --><!-- The "test.jakbasic" target runs 2 JakBasic translators, comparing  --><!-- the results of the runs.  The two translators are the original,    --><!-- circa 1998, and the version bootstrapped to use the new directory  --><!-- layer format.  It assumes that both translators have been built.   --><!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ --><target depends="initialize" name="test.jakbasic">
+    <property location="bootstrap/JakBasic/classes/jakbasic.jar" name="new"/>
+    <property location="JTS/lib/jakbasic.jar" name="old"/>
+    <property location="JTS/lib/jakarta.jar" name="jakarta"/>
+    <apply executable="env" failonerror="false">
+      <arg value="--"/>
+      <arg file="autotest/bin/test.jakbasic"/>
+      <env key="CLASSPATH" path="${jakarta}:${old}:${new}"/>
+      <fileset dir="." includes="**/*.layer"/>
+    </apply>
+  </target>
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ --><!-- The "test.jts" target runs "unit" tests.  It requires that JTS be  --><!-- build (as per the "build" target).  It also requires that the      --><!-- following environment variables be defined:                        --><!--                                                                    --><!-- * ANT_HOME .... the base directory of the Ant installation;        --><!-- * JAVA_HOME ... the base directory of the Java installation;       --><!-- * JCC_HOME .... the base directory of the JavaCC installation.     --><!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ --><target depends="initialize,require" description="Run tests on the JTS toolsuite"
+          name="test.jts">
+    <path id="id.path.test.jts">
+      <fileset dir="JTS/lib">
+        <include name="balicomposer.jar"/>
+        <include name="bali2jak.jar"/>
+        <include name="bali2javacc.jar"/>
+        <!-- <include name="drc.jar"/> *DSB* --><include name="jak.jar"/>
+        <include name="jakarta.jar"/>
+        <include name="jak2java.jar"/>
+        <include name="jampack.jar"/>
+        <include name="mixin.jar"/>
+        <!--<include name="mmatrix.jar"/> *DSB* --><include name="unmixin.jar"/>
+      </fileset>
+    </path>
+    <property name="path.test.jts" refid="id.path.test.jts"/>
+    <exec executable="env" newenvironment="true" taskname="test">
+      <arg value="--"/>
+      <arg file="autotest/bin/summary"/>
+      <arg file="${dir.utests.results}"/>
+      <env key="EXCLUDE_P3" value="true"/>
+      <env file="${env.ANT_HOME}" key="ANT_HOME"/>
+      <env key="CLASSPATH" path="${path.test.jts}"/>
+      <env file="${env.JAVA_HOME}" key="JAVA_HOME"/>
+      <env file="${env.JCC_HOME}" key="JCC_HOME"/>
+    </exec>
+  </target>
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ --><!-- The "utest" target runs the standard test suite.                   --><!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ --><target depends="test.jts"
+          description="Runs the standard test suite (currently test.jts)."
+          name="utest">
+    <antcall target="generate_utest_report"/>
+  </target>
+</project>
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ --><!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ --><!-- Local Variables:                    --><!-- mode:                           XML --><!-- fill-column:                     79 --><!-- sgml-always-quote-attributes:     t --><!-- sgml-exposed-tags:              nil --><!-- sgml-general-insert-case:     lower --><!-- sgml-ignore-undefined-elements: nil --><!-- sgml-indent-data:                 t --><!-- sgml-indent-step:                 4 --><!-- sgml-local-catalogs:            nil --><!-- sgml-local-ecat-files:          nil --><!-- sgml-minimize-attributes:       nil --><!-- sgml-namecase-general:          nil --><!-- sgml-omittag:                   nil --><!-- sgml-parent-document:           nil --><!-- sgml-shorttag:                  nil --><!-- End:                                --><!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->

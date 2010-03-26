@@ -1,0 +1,661 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
+<title>AST Constructors</title>
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+        <td width="78">
+        <img border="0" src="images/FopButton3.jpg" width="80" height="64"></td>
+        <td width="688" bgcolor="#00FFFF"><h2><font
+        color="#8000FF" face="Arial">AST Constructors</font></h2>
+        </td>
+    </tr>
+</table>
+
+<p><font face="Arial">The heart of metaprogramming lies in the
+ability to construct and compose code fragments. This section
+presents the&nbsp;metaprogramming capabilities of creating and
+manipulating abstract syntax trees (ASTs) of the Jak language.</font></p>
+
+<dir>
+    <li><a href="#What is a Tree Constructor?"><font face="Arial">What is a Code Constructor?</font></a></li>
+    <li><font face="Arial"><a href="#What are Code Escapes">What is a Code 
+    Escape?</a></font></li>
+    <li><font face="Arial"><a href="#Available Constructors and Escapes">What 
+    are available Constructors and Escapes?</a></font></li>
+    <li><a href="#How to convert a String or Integer to an AST?"><font face="Arial">How to convert a String or Integer to an
+        AST?</font></a></li>
+    <li><a href="#How to Convert ASTs into Strings"><font face="Arial">How to convert an AST into a String?</font></a></li>
+    <li><a href="#How to Print ASTs to Files?"><font face="Arial">How to print ASTs to files?</font></a></li>
+    <li><font face="Arial">
+    <a href="#Coding Techniques for Writing MetaPrograms">Coding Techniques for 
+    writing Metaprograms</a></font></li>
+</dir>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%"
+bgcolor="#FFFF00" bordercolor="#FFFF00">
+    <tr>
+        <td width="788"><h3><a name="What is a Tree Constructor?"><font
+        color="#000000" face="Arial">What is a Code
+        Constructor?</font></a></h3>
+        </td>
+    </tr>
+</table>
+
+<p><font face="Arial">A <i>code constructor</i> converts a
+specification of a code fragment into an AST: the value of a
+constructor is a pointer to the AST's root. The expression
+constructor <b>exp{...}exp</b>, for example, encloses a syntactically
+correct Java expression. When the constructor is evaluated, an
+AST for that expression is created, and the root of that tree is
+the result. <b>stm{...}stm</b> is the corresponding constructor for
+statements.</font></p>
+
+<blockquote>
+    <pre>Exp x = exp{ 7 + q*8 }exp;
+AST_Stm y = stm{ foo(3); if (y&lt;4) return r; }stm;</pre>
+    <pre>System.out.print(x);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // outputs &quot;7 + q*8&quot;
+System.out.print(y);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // outputs &quot;foo(c); if (y&lt;4) return r;&quot;</pre>
+</blockquote>
+
+<p><font face="Arial">A code escape is a construct that allows previously 
+defined code fragments to be substituted inside another code fragment.&nbsp; For 
+example:</font></p>
+
+<blockquote>
+  <pre>Exp x = exp{ 7 + x*8 }exp;
+AST_Stm y = stm{ y = ($exp(x)) * 8; }stm;</pre>
+  <pre>System.out.println(y);        // outputs &quot;y = ( 7 + q*8 ) * 8;&quot;</pre>
+</blockquote>
+<p><font face="Arial">That is, the <b>$exp(e)</b> escape substitutes the AST for 
+variable e at the designated spot in the <b>stm{...}stm</b> code constructor. 
+There are presently 17 different tree constructors. </font></p>
+<blockquote>
+  <blockquote>
+    <p><font color="#FF0000" face="Verdana">We caution readers
+    when using expression escapes. Consider the example below.
+    When e is composed with s, the correct parse tree results.
+    However, when printed, ambiguities arise. When escaping
+    expressions, it is recommended that parentheses be used
+    around the escape</font><font face="Verdana">. </font></p>
+    <blockquote>
+        <pre><font color="#FF0000">e = exp{ a + b }exp;
+s = stm{ if (4 &lt; $exp(e)) foo(); }stm;</font></pre>
+        <pre><font color="#FF0000">s.print(props);&nbsp;&nbsp; // outputs &quot;if (4 &lt; a + b) foo();&quot; which is wrong</font></pre>
+        <pre><font color="#FF0000">s = stm{ if (4 &lt; ($exp(e))) foo(); }stm;</font></pre>
+        <pre><font color="#FF0000">s.print(props);&nbsp;&nbsp; // outputs &quot;if (4 &lt; (a + b)) foo();&quot; which is correct</font></pre>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%"
+bgcolor="#FFFF00" bordercolor="#FFFF00">
+    <tr>
+        <td width="772"><h3><b><a name="What are Code Escapes"><font
+        color="#000000" face="Arial">What is a Code Escape?</font></a></b></h3>
+        </td>
+    </tr>
+</table>
+
+<p><font face="Arial">ASTs are composed using escapes, the
+counterpart to the Lisp comma (unquote) construct. The example
+below shows a statement constructor with an escape <b>$exp(body)</b>.
+When the constructor is evaluated, the AST of body is substituted
+in the position at which its escape clause appears.</font></p>
+
+<blockquote>
+    <pre>AST_Stm body = stm{ if (i &gt; 40) foo(i); }stm;
+AST_Stm loop = stm{ for (i=1; i&lt;10; i++) { $stm(body); } }stm;</pre>
+    <pre>System.out.print(loop);&nbsp;&nbsp;&nbsp;&nbsp; // outputs &quot;for (i=1; i&lt;10; i++) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 	    //&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (i &gt; 40) foo(i); }&quot;</pre>
+</blockquote>
+
+<p><font face="Arial">Unlike Lisp and Scheme which have only a
+single constructor and escape operator (e.g., backquote and
+comma), multiple constructors in syntactically rich languages are
+common. The main reason has to do with the ease of parsing code
+fragments: each constructor produces a code fragment of
+particular type and each escape takes a code fragment of a
+particular type. In this way, code fragments that are created
+with tree constructors and composed with escapes should always be
+syntactically correct.</font></p>
+
+<p><font face="Arial">A complete program that shows a more
+complicated example illustrating several different tree
+constructors and escapes is shown below:</font></p>
+
+<blockquote>
+  <pre><a name="example"></a>import jak2java.*;
+
+class ex1 {
+   public static void main( String args[] ) {
+      AST_Modifiers m = mod{ public final }mod;
+      AST_Exp e = exp{ i+1 }exp;
+      AST_FieldDecl f = mth{ int i; int inc( int i ) { return $exp(e); } }mth;
+      AST_TypeNameList t= tlst{ empty }tlst;
+      AST_QualifiedName q = id{ foo }id;
+      AST_Class c = cls{ interface empty{};
+         $mod(m) class $name(q) implements $tlst(t) { $mth(f) } }cls;
+      System.out.print(c);
+   }
+}</pre>
+  <pre>// prints:</pre>
+  <pre>interface empty{}; public final class foo implements empty { int i; int inc( int i ) { return ( i+1); } }</pre>
+</blockquote>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%"
+bgcolor="#FFFF00" bordercolor="#FFFF00">
+    <tr>
+        <td width="772"><h3><a
+        name="Available Constructors and Escapes"><b><font
+        color="#000000" face="Arial">Available Constructors
+        and Escapes</font></b></a></h3>
+        </td>
+    </tr>
+</table>
+
+<p align="left"><font face="Arial">The following table lists
+the syntax of each available AST constructor, its escape, the
+class/type of objects that a constructor returns (or that its
+escape requires):</font></p>
+<div align="center"><center>
+
+<table border="1" cellspacing="3" bgcolor="#00FF00" style="border-collapse: collapse" bordercolor="#111111" cellpadding="0">
+    <tr>
+        <td height="37"><h4><b><u><font face="Courier New" size="2">Constructor</font></u></b></h4>
+        </td>
+        <td height="37"><h4><b><u><font face="Courier New" size="2">Escape</font></u></b></h4>
+        </td>
+        <td height="37"><h4><b><u><font face="Courier New" size="2">Class</font></u></b></h4>
+        </td>
+        <td height="37"><h4><b><u><font face="Courier New" size="2">AST Representation Of</font></u></b></h4>
+        </td>
+    </tr>
+    <tr>
+        <td height="12"><font size="2" face="Courier New">exp{...}exp</font></td>
+        <td height="12"><font size="2" face="Courier New">$exp(...)</font></td>
+        <td height="12"><font size="2" face="Courier New">AST_Exp</font></td>
+        <td height="12"><font size="2" face="Courier New">expressions</font></td>
+    </tr>
+    <tr>
+        <td height="12"><font size="2" face="Courier New">stm{...}stm</font></td>
+        <td height="12"><font size="2" face="Courier New">$stm(...)</font></td>
+        <td height="12"><font size="2" face="Courier New">AST_Stmt</font></td>
+        <td height="12"><font size="2" face="Courier New">list of statements</font></td>
+    </tr>
+    <tr>
+        <td height="12"><font size="2" face="Courier New">mth{...}mth</font></td>
+        <td height="12"><font size="2" face="Courier New">$mth(...)</font></td>
+        <td height="12"><font size="2" face="Courier New">AST_FieldDecl</font></td>
+        <td height="12"><font size="2" face="Courier New">list of data member and
+        method declarations</font></td>
+    </tr>
+    <tr>
+        <td height="12"><font size="2" face="Courier New">cls{...}cls</font></td>
+        <td height="12"><font size="2" face="Courier New">$cls(...)</font></td>
+        <td height="12"><font size="2" face="Courier New">AST_Class</font></td>
+        <td height="12"><font size="2" face="Courier New">list of class and
+        interface declarations</font></td>
+    </tr>
+    <tr>
+        <td height="12"><font size="2" face="Courier New">case{...}case</font></td>
+        <td height="12"><font size="2" face="Courier New">$case(...)</font></td>
+        <td height="12"><font size="2" face="Courier New">AST_SwitchEntry</font></td>
+        <td height="12"><font size="2" face="Courier New">list of one or more switch cases</font></td>
+    </tr>
+    <tr>
+        <td height="19"><font size="2" face="Courier New">prg{...}prg</font></td>
+        <td height="19">&nbsp;</td>
+        <td height="19"><font size="2" face="Courier New">AST_Program</font></td>
+        <td height="19"><font size="2" face="Courier New">entire Java program
+        (including package, import and class declarations)</font></td>
+    </tr>
+    <tr>
+        <td height="12"><font size="2" face="Courier New">typ{...}typ</font></td>
+        <td height="12"><font size="2" face="Courier New">$typ(...)</font></td>
+        <td height="12"><font size="2" face="Courier New">AST_TypeName</font></td>
+        <td height="12"><font size="2" face="Courier New">a type name</font></td>
+    </tr>
+    <tr>
+        <td height="12"><font size="2" face="Courier New">id{...}id</font></td>
+        <td height="12"><font size="2" face="Courier New">$id(...)</font></td>
+        <td height="12"><font size="2" face="Courier New">AST_QualifiedName</font></td>
+        <td height="12"><font size="2" face="Courier New">a qualified name (e.g., &quot;a.b.c&quot;)</font></td>
+    </tr>
+    <tr>
+        <td height="12"><font size="2" face="Courier New">plst(...}plst</font></td>
+        <td height="12"><font size="2" face="Courier New">$plst(...)</font></td>
+        <td height="12"><font size="2" face="Courier New">AST_ParList</font></td>
+        <td height="12"><font size="2" face="Courier New">list of formal
+        parameters of methods</font></td>
+    </tr>
+    <tr>
+        <td height="12"><font size="2" face="Courier New">xlst{...}xlst</font></td>
+        <td height="12"><font size="2" face="Courier New">$xlst(...)</font></td>
+        <td height="12"><font size="2" face="Courier New">AST_ArgList</font></td>
+        <td height="12"><font size="2" face="Courier New">list of arguments for
+        method calls</font></td>
+    </tr>
+    <tr>
+        <td height="12"><font size="2" face="Courier New">tlst{...}tlst</font></td>
+        <td height="12"><font size="2" face="Courier New">$tlst(...)</font></td>
+        <td height="12"><font size="2" face="Courier New">AST_TypeNameList</font></td>
+        <td height="12"><font size="2" face="Courier New">list of type names</font></td>
+    </tr>
+    <tr>
+        <td height="12"><font size="2" face="Courier New">imp{...}imp</font></td>
+        <td height="12"><font size="2" face="Courier New">$imp(...)</font></td>
+        <td height="12"><font size="2" face="Courier New">AST_Imports</font></td>
+        <td height="12"><font size="2" face="Courier New">list of import
+        declarations</font></td>
+    </tr>
+    <tr>
+        <td height="12"><font size="2" face="Courier New">mod{...}mod</font></td>
+        <td height="12"><font size="2" face="Courier New">$mod(...)</font></td>
+        <td height="12"><font size="2" face="Courier New">AST_Modifiers</font></td>
+        <td height="12"><font size="2" face="Courier New">list of modifiers</font></td>
+    </tr>
+    <tr>
+        <td height="12"><font size="2" face="Courier New">vlst{...}vlst</font></td>
+        <td height="12"><font size="2" face="Courier New">$vlst(...)</font></td>
+        <td height="12"><font size="2" face="Courier New">AST_VarDecl</font></td>
+        <td height="12"><font size="2" face="Courier New">list of variable
+        declarations</font></td>
+    </tr>
+    <tr>
+        <td height="12"><font size="2" face="Courier New">vi{...}vi</font></td>
+        <td height="12"><font size="2" face="Courier New">$vi(...)</font></td>
+        <td height="12"><font size="2" face="Courier New">AST_VarInit</font></td>
+        <td height="12"><font size="2" face="Courier New">variable initialization
+        code</font></td>
+    </tr>
+    <tr>
+        <td height="12"><font size="2" face="Courier New">ai{...}ai</font></td>
+        <td height="12"><font size="2" face="Courier New">$ai(...)</font></td>
+        <td height="12"><font size="2" face="Courier New">AST_ArrayInit</font></td>
+        <td height="12"><font size="2" face="Courier New">array initialization
+        code</font></td>
+    </tr>
+    <tr>
+        <td height="32"><font size="2" face="Courier New">estm{...}estm</font></td>
+        <td height="32"><font size="2" face="Courier New">$estm(...)</font></td>
+        <td height="32"><font size="2" face="Courier New">AST_ExpStmt</font></td>
+        <td height="32"><font size="2" face="Courier New">list of comma-separated
+        expressions</font></td>
+    </tr>
+    <tr>
+        <td height="12"><font size="2" face="Courier New">cat{...}cat</font></td>
+        <td height="12"><font size="2" face="Courier New">$cat(...)</font></td>
+        <td height="12"><font size="2" face="Courier New">AST_Catches</font></td>
+        <td height="12"><font size="2" face="Courier New">list of catch
+        statements</font></td>
+    </tr>
+    <tr>
+        <td height="19">&nbsp;</td>
+        <td height="19"><font size="2" face="Courier New">$str(...)</font></td>
+        <td height="19"><font size="2" face="Courier New">String</font></td>
+        <td height="19"><font size="2" face="Courier New">the argument of
+        $str(...) is taken literally and converted into an AST of
+        type Literal</font></td>
+    </tr>
+    <tr>
+        <td height="19">&nbsp;</td>
+        <td height="19"><font size="2" face="Courier New">$name(...)</font></td>
+        <td height="19">&nbsp;</td>
+        <td height="19"><font size="2" face="Courier New">escape that converts an
+          AST_QualifiedName parameter into an unqualified name -- basically
+          <br>
+        returns first name &quot;a&quot; in a qualified name (&quot;a.b.c&quot;).&nbsp;
+          <a href="#example">see below for example</a>.</font></td>
+    </tr>
+</table>
+</center></div>
+
+<p><font face="Arial">Note that very few constructors are ever
+used in practice - constructors for expressions, statements,
+field declarations, classes, and programs.</font></p>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%"
+bgcolor="#FFFF00" bordercolor="#FFFF00">
+    <tr>
+        <td width="974"><h3><a
+        name="How to convert a String or Integer to an AST?"><b><font
+        color="#000000" face="Arial">How to convert a String
+        or Integer to an AST?</font></b></a></h3>
+        </td>
+    </tr>
+</table>
+
+<p><font face="Arial">Besides tree constructors, there are
+several methods that return ASTs given string or integer inputs.
+First, there is the <b>MakeAST</b> methods.&nbsp; Every AST type in listed in the
+previous section has a static <b>MakeAST</b> method which converts a
+string into the corresponding AST by invoking a parser. Some
+examples:</font></p>
+
+<blockquote>
+    <pre>AST_Exp       e = AST_Exp.MakeAST(&quot;3*4 + 5&quot;);
+AST_FieldDecl m = AST_FieldDecl.MakeAST(&quot;int foo(int x) { return x; }&quot;);
+AST_ArgList   a = AST_ArgList.MakeAST(&quot;3, 4, foo(4)&quot;);</pre>
+</blockquote>
+
+<p><font face="Arial">There are other, more primitive methods
+that do not invoke parsers. These methods are:</font></p>
+
+<blockquote>
+    <pre>in class Literal:
+&nbsp;&nbsp;static Literal Make(String s);
+&nbsp;&nbsp;static Literal Make(int i);
+
+in class AST_QualifiedName:
+&nbsp;&nbsp;static AST_QualifiedName Make(String s);&nbsp;&nbsp;// for name 'foo'
+&nbsp;&nbsp;static AST_QualifiedName Make(String[] s);// for name 'foo.bar'</pre>
+</blockquote>
+
+<p><font face="Arial">Some examples:</font></p>
+
+<blockquote>
+    <pre>String&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; qname[] = { &quot;alpha&quot;, &quot;beta&quot;, &quot;gamma&quot; };</pre>
+    <pre>AST_QualifiedName n1 = AST_QualifiedName.Make( &quot;alpha&quot; );
+AST_QualifiedName n2 = AST_QualifiedName.Make( qname );</pre>
+    <pre>AST_Exp f1 = Literal.Make( 5 );
+AST_Exp f2 = Literal.Make( &quot;5&quot; );</pre>
+    <pre>System.out.print(n1);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // outputs &quot;alpha&quot;
+System.out.print(n2);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // outputs &quot;alpha.beta.gamma&quot;</pre>
+    <pre>System.out.print(f1);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // outputs &quot;5&quot;
+System.out.print(f2);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // outputs &quot;\&quot;5\&quot;&quot;  (i.e., a quoted string)</pre>
+</blockquote>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%"
+bgcolor="#FFFF00" bordercolor="#FFFF00">
+    <tr>
+        <td width="772"><h3><a
+        name="How to Convert ASTs into Strings"><font
+        color="#000000" face="Arial">How to Convert ASTs into
+        Strings</font></a></h3>
+        </td>
+    </tr>
+</table>
+
+<p><font face="Arial">ASTs are converted into strings using the toString() method:</font></p>
+
+<blockquote>
+    <pre>AST_Stmt&nbsp; s = stm{ x = 4+5; }stm;</pre>
+    <pre>System.out.println( s.toString() );&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// prints &quot;x = 4+5;&quot;
+System.out.print( s );			// same thing</pre>
+</blockquote>
+
+<p><font face="Arial">Finally, another  useful method is to
+convert AST_QualifiedNames into strings.&nbsp; The method is
+GetName() and it removes whitespace from AST_QualifiedNames.</font></p>
+
+<blockquote>
+    <pre>AST_QualifiedName n = id{ a. /* comment */.b.c }id;
+S = n.GetName();                        // s = &quot;a.b.c&quot;</pre>
+</blockquote>
+<div align="left">
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%"
+bgcolor="#FFFF00" style="border-collapse: collapse" bordercolor="#111111">
+    <tr>
+        <td width="100%"><h3><a
+        name="How to Print ASTs to Files?"><font face="Arial">How to Print ASTs to
+        Files?</font></a></h3>
+        </td>
+    </tr>
+</table>
+</div>
+
+<p><font face="Arial">ASTs are reduced (e.g., reduced to text)
+by invoking a method that takes an object of type <b>AstProperties</b>
+as input.&nbsp;&nbsp; This object specifies the file to which the
+text is to be sent. The methods of <b>AstProperties</b> are:</font></p>
+
+<div align="center">
+  <center>
+  <table border="1" style="border-collapse: collapse" cellpadding="0" cellspacing="0" bgcolor="#00FF00">
+    <tr>
+      <td><font face="Courier New" size="2"> Object getProperty(String key)</font></td>
+      <td><font face="Courier New" size="2">get specified property</font></td>
+    </tr>
+    <tr>
+      <td><font face="Courier New" size="2"> Object removeProperty(String key)</font></td>
+      <td><font face="Courier New" size="2">remove specified property</font></td>
+    </tr>
+    <tr>
+      <td><font face="Courier New" size="2"> boolean containsProperty(String key)</font></td>
+      <td><font face="Courier New" size="2">is property present?</font></td>
+    </tr>
+    <tr>
+      <td><font face="Courier New" size="2"> void setPw( PrintWriter p )&nbsp;</font></td>
+      <td><font face="Courier New" size="2">set print writer</font></td>
+    </tr>
+    <tr>
+      <td><font face="Courier New" size="2"> static  AstProperties open( Writer out )</font></td>
+      <td><font face="Courier New" size="2">create an output writer</font></td>
+    </tr>
+    <tr>
+      <td><font face="Courier New" size="2"> static  AstProperties open( String filename )</font></td>
+      <td><font face="Courier New" size="2">create an output writer, given file name</font></td>
+    </tr>
+    <tr>
+      <td><font face="Courier New" size="2"> static  AstProperties open( String directory,&nbsp;
+        String filename )</font></td>
+      <td><font face="Courier New" size="2">same as above, except specify directory also. If
+        both parameters null, stdout is assumed</font></td>
+    </tr>
+    <tr>
+      <td><font face="Courier New" size="2"> String close()</font></td>
+      <td><font face="Courier New" size="2">close writer</font></td>
+    </tr>
+    <tr>
+      <td><font face="Courier New" size="2"> void print( String arg ) </font></td>
+      <td><font face="Courier New" size="2">print to output</font></td>
+    </tr>
+    <tr>
+      <td><font face="Courier New" size="2"> void println( String arg ) </font></td>
+      <td><font face="Courier New" size="2">println to output</font></td>
+    </tr>
+    <tr>
+      <td><font face="Courier New" size="2"> void print(  AstNode n ) </font></td>
+      <td><font face="Courier New" size="2">print to output</font></td>
+    </tr>
+    <tr>
+      <td><font face="Courier New" size="2"> void println(  AstNode n ) </font></td>
+      <td><font face="Courier New" size="2">println to output</font></td>
+    </tr>
+  </table>
+  </center>
+</div>
+
+<p><font face="Arial">&nbsp;For all text
+to be flushed, the <b>AstProperties</b> object should be closed, as
+shown below:</font></p>
+
+<blockquote>
+  <pre>import jak2java.*;
+
+class ex {
+   public static void main( String[] args ) {
+      AstProperties props = AstProperties.open(null,null);
+      AST_Exp e = exp{ 7 + x*8 }exp;
+      e.print(props);
+      props.close();
+   }
+}</pre>
+</blockquote>
+<p><font face="Arial">To convert this program into an executable, type:</font> </p>
+<blockquote>
+  <pre>&gt; jak2java ex.jak		// converts ex.jak to ex.java
+&gt; javac ex.java			// compiles ex.java
+&gt; java ex			// runs ex.java</pre>
+</blockquote>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%"
+bgcolor="#FFFF00" style="border-collapse: collapse" bordercolor="#111111">
+    <tr>
+        <td width="100%"><h3><font face="Arial">
+        <a name="Coding Techniques for Writing MetaPrograms">Coding Techniques 
+        for Writing MetaPrograms</a></font></h3>
+        </td>
+    </tr>
+</table>
+<p><font face="Arial">There are techniques and coding strategies that you should 
+be aware of when using code constructors and escapes.&nbsp; The most important 
+is the use once and discard policy for code variables.&nbsp; Remember, code 
+fragments are parse trees.&nbsp; When a code fragment is inserted into another 
+parse tree (either via escapes or programmatic &quot;adds&quot;), our tools don't copy the 
+parse tree, but rather integrate it within the enclosing tree.&nbsp; The 
+variable that points to the inserted code fragment now points to nothing, and 
+should be discarded.&nbsp; Thus, the idiom:</font></p>
+<blockquote>
+  <blockquote>
+    <pre><font face="Courier New">var = code{ ... }code; 		// create fragment</font></pre>
+    <pre><font face="Courier New">var2 = code{ ... $code( var ) ... }code		// insert fragment</font></pre>
+    <pre><font face="Courier New">// don't use var again, discard it</font></pre>
+  </blockquote>
+</blockquote>
+<p><font face="Arial">is common.&nbsp; If you wish to use the same code fragment 
+multiple times, create a copy of it by cloning:</font></p>
+<blockquote>
+  <blockquote>
+    <pre><font face="Courier New">var = stm{ ... }stm;</font></pre>
+    <pre><font face="Courier New">copy = (AST_Stmt) var.clone();		// make copy -- casting important</font></pre>
+  </blockquote>
+</blockquote>
+<p><font face="Arial">The following program illustrates common ways in which 
+code fragments can be composed.</font></p>
+<blockquote>
+  <pre><font face="Courier New">import jak2java.*;
+
+class test1 {
+
+   // This program illustrates ways in which code can be composed
+   // Note that there are &quot;quirks&quot; you should be aware of. Once a
+   // code fragment is substituted, the original variable that points
+   // to the code fragment is essentially nullified. So the rule is
+   // use once, throw away code variables.
+
+   public static void main( String args[] ) {
+      AST_FieldDecl first, firstc, second, secondc, third, thirda, thirdb;
+      AST_FieldDecl copy;
+
+      // First way is to compose using escapes.
+      first = mth{ int a, b, c; }mth;
+      firstc = mth{ float x,y; $mth( first ) }mth;
+      System.out.println( firstc );
+
+      // Second way is to use the add method
+
+      second = mth{ boolean i, j; }mth;
+      secondc = mth{ double y, z; }mth;
+      secondc.add( second );
+      System.out.println( secondc );
+
+      // note: once substituted, the original value is gone
+      System.out.println( first ); /// will print nothing
+      System.out.println( second ); // will print nothing;
+
+      // the reason is that parse trees are manipulated and sliced
+      // apart during addition/escapes. If you want to use a code
+      // fragment multiple times, you must replicate it using clone(), 
+      // like below. The casting is important...
+
+      third = mth{ char r, q, s; }mth;
+      copy = ( AST_FieldDecl ) third.clone(); // make a copy
+      thirda = mth{ int foo() {} $mth( copy ) }mth;
+
+      thirdb = mth{ int bar() {} }mth;
+      copy = ( AST_FieldDecl ) third.clone(); // make another copy
+      thirdb.add( copy );
+
+      System.out.println( third ); // prints char r, q, s;
+      System.out.println( thirda ); // as expected
+      System.out.println( thirdb ); // as expected
+   }
+}</font></pre>
+</blockquote>
+<p><font face="Arial">The output of this program is:</font></p>
+<blockquote>
+  <pre><font face="Courier New">float x,y; int a, b, c;
+double y, z; boolean i, j;
+
+char r, q, s;
+int foo() {} char r, q, s;
+int bar() {} char r, q, s;</font></pre>
+</blockquote>
+  <p><font face="Arial">Sometimes, using the normal constructors isn't quite 
+  what you want.&nbsp; For example,&nbsp; it so happens that mth{ }mth returns 
+  null.&nbsp; So code like:</font></p>
+<blockquote>
+  <pre><font face="Courier New">AST_FieldDecl m = mth{ }mth;
+m.add( mth{ ... }mth );</font></pre>
+</blockquote>
+<p><font face="Arial">will generate a NullPointerException run-time error.&nbsp; 
+Instead, you can do the following -- create a list node and then add onto it:</font></p>
+<blockquote>
+  <pre><font face="Courier New">import jak2java.*;</font></pre>
+  <pre><font face="Courier New">class test {
+   public static void main( String args[] ) {
+      AST_FieldDecl f = new AST_FieldDecl();
+      f.add( mth{ void foo() {} }mth;
+      System.out.println( f );
+   }
+}</font></pre>
+</blockquote>
+  <p><font face="Arial">Here's another thing you should keep in mind.&nbsp; An 
+  object of type Statement is NOT an object of type AST_Stmt.&nbsp; There is due 
+  to the fact that there is an oddity in our Java grammar where Block is defined 
+  by a sequence of BlockStatements, and a Statement is a BlockStatement.&nbsp; 
+  (So far, so good).&nbsp; However, many statement declarations, such as IfStmt 
+  are defined in terms of Statements, not AST_Stmt:</font></p>
+<blockquote>
+  <p><font face="Courier New">IfStatement : &quot;if&quot; &quot;(&quot; Expression &quot;)&quot; Statement 
+  [LOOKAHEAD(1) ElseClause ] ::IfStmt<br>
+  ;<br>
+  <br>
+  ElseClause<br>
+  : &quot;else&quot; Statement ::ElseClauseC<br>
+  ;</font></p>
+</blockquote>
+  <p><font face="Arial"><a name="Statement Conversion">The problem arises</a> in metaprogramming when you want to 
+  access the Statement tree of the IfStatement; you can't use an AST_Stmt 
+  variable, because of type mismatch.&nbsp; Stated another way, Statement is a 
+  SINGLE statement; AST_Stmt is a LIST of Statements.&nbsp; So the following 
+  code will not compile:</font></p>
+<blockquote>
+  <p><font face="Courier New" color="#FF0000">IfStmt s = (something);<br>
+  AST_Stmt e = s.arg[2];&nbsp; // access the &quot;then&quot; part of the if statement<br>
+  // this will not compile!!</font></p>
+</blockquote>
+  <p><font face="Arial">To circumvent this problem, a special method is 
+  available for converting a BlockStatement into an AST_Stmt.&nbsp; The 
+  corrected code is shown below:</font></p>
+<blockquote>
+  <pre><font face="Courier New">IfStmt s = (something);
+AST_Stmt e = ((Statement) s.arg[2]).toAST_Stmt();  // access the &quot;then&quot; part of the if statement
+// this will compile!!</font></pre>
+</blockquote>
+<hr>
+
+<p><font face="Verdana">
+<a
+href="index.html"><strong>AHEAD</strong></a></font><a
+href="index.html"><font face="Verdana"><strong> Home Page</strong></font></a><font
+face="Verdana"><strong> </strong></font></p>
+
+<p><font face="Verdana"><b>Copyright © Software Systems
+Generator Research Group. All rights reserved.</b> <br>
+<b>Revised:&nbsp;<!--webbot bot="TimeStamp" startspan
+s-format="%B %d, %Y" s-type="EDITED" -->September 21, 2004<!--webbot
+bot="TimeStamp" i-CheckSum="37959" endspan -->.</b> </font></p>
+</body>
+</html>

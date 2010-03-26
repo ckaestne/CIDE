@@ -1,0 +1,9 @@
+## StateToDoc.vm
+## JEDI Project
+## HTML Template for the State Machine
+## Author: Roberto E. Lopez-Herrejon
+## Last update: November 30, 2002
+
+#set($doc=$state)
+
+## End of StateToDoc

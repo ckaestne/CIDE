@@ -1,0 +1,14 @@
+## Layer.vm
+## JEDI Project
+## Author: Roberto E. Lopez-Herrejon
+## Last update: November 30, 2002
+
+ ## If there is a layer name print it
+ #if ($isQualifiedLayer == "true")
+    <H4>
+     layer &nbsp; $doc.getQualifiedLayerName()
+   </H4> 
+  #end 
+
+## End of Layer.vm
+

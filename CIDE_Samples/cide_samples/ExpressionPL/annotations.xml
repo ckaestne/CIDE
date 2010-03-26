@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<!DOCTYPE project SYSTEM "annotations.dtd">
+<project name="ExpressionP">
+<file name=".classpath"/>
+<file name=".order"/>
+<file name=".project"/>
+<file name="ExpressionP.zip"/>
+<folder name="ahead">
+<folder name="BE">
+<file name="Num.jak"/>
+<file name="Test.jak"/>
+</folder>
+<folder name="BK">
+<file name="Num.jak"/>
+</folder>
+<folder name="BP">
+<file name="Num.jak"/>
+<file name="Test.jak"/>
+</folder>
+<folder name="CE">
+<file name="Exp.jak"/>
+<file name="Test.jak"/>
+</folder>
+<folder name="CK">
+<file name="Exp.jak"/>
+<file name="Test.jak"/>
+</folder>
+<folder name="CP">
+<file name="Exp.jak"/>
+<file name="Test.jak"/>
+</folder>
+<file name="EPL.htm"/>
+<file name="ExpressionProblem.html"/>
+<file name="ExpressionProblem3a.html"/>
+<file name="ExpressionProblem3b.html"/>
+<folder name="NE">
+<file name="Neg.jak"/>
+<file name="Test.jak"/>
+</folder>
+<folder name="NK">
+<file name="Neg.jak"/>
+</folder>
+<folder name="NP">
+<file name="Neg.jak"/>
+<file name="Test.jak"/>
+</folder>
+<folder name="PE">
+<file name="Plus.jak"/>
+<file name="Test.jak"/>
+</folder>
+<folder name="PK">
+<file name="Plus.jak"/>
+</folder>
+<folder name="PP">
+<file name="Plus.jak"/>
+<file name="Test.jak"/>
+</folder>
+<file name="build.bat"/>
+<file name="composer.properties"/>
+<folder name="images">
+<file name="EPLdotZip.jpg"/>
+<file name="Expres1.gif"/>
+<file name="Expres2.gif"/>
+<file name="Expres3.gif"/>
+<file name="Expres4.gif"/>
+<file name="Thumbs.db"/>
+<file name="layout.jpg"/>
+<file name="saveas.jpg"/>
+</folder>
+<file name="index.html"/>
+<file name="model.m"/>
+<file name="tryit.equations"/>
+</folder>
+<folder name="bin">
+<file name="Exp.class"/>
+<file name="Neg.class"/>
+<file name="Num.class"/>
+<file name="Plus.class"/>
+<file name="Test.class"/>
+<folder name="tmp">
+<file name=".dircolors"/>
+<file name="Exp.class"/>
+<file name="Neg.class"/>
+<file name="Num.class"/>
+<file name="Plus.class"/>
+</folder>
+</folder>
+<file name="model.colors"/>
+<file name="model.m"/>
+<folder name="src">
+<file name="Test.java">
+<fragment length="17" offset="73">
+<feature>ToString</feature>
+</fragment>
+<fragment length="16" offset="93">
+<feature>Eval</feature>
+</fragment>
+<fragment length="27" offset="115">
+<feature>Eval</feature>
+</fragment>
+<fragment length="15" offset="142">
+<feature>Numbers</feature>
+<feature>Eval</feature>
+</fragment>
+<fragment length="3" offset="157">
+<feature>Eval</feature>
+</fragment>
+<fragment length="44" offset="160">
+<feature>Numbers</feature>
+<feature>Eval</feature>
+</fragment>
+<fragment length="3" offset="204">
+<feature>Eval</feature>
+</fragment>
+<fragment length="24" offset="207">
+<feature>Eval</feature>
+<feature>Neg</feature>
+</fragment>
+<fragment length="3" offset="231">
+<feature>Eval</feature>
+</fragment>
+<fragment length="49" offset="234">
+<feature>Eval</feature>
+<feature>Neg</feature>
+</fragment>
+<fragment length="3" offset="283">
+<feature>Eval</feature>
+</fragment>
+<fragment length="37" offset="286">
+<feature>Plus</feature>
+<feature>Eval</feature>
+</fragment>
+<fragment length="3" offset="323">
+<feature>Eval</feature>
+</fragment>
+<fragment length="44" offset="326">
+<feature>Plus</feature>
+<feature>Eval</feature>
+</fragment>
+<fragment length="3" offset="370">
+<feature>Eval</feature>
+</fragment>
+<fragment length="43" offset="373">
+<feature>Plus</feature>
+<feature>Eval</feature>
+<feature>Neg</feature>
+</fragment>
+<fragment length="3" offset="416">
+<feature>Eval</feature>
+</fragment>
+<fragment length="47" offset="419">
+<feature>Plus</feature>
+<feature>Eval</feature>
+<feature>Neg</feature>
+</fragment>
+<fragment length="3" offset="466">
+<feature>Eval</feature>
+</fragment>
+<fragment length="28" offset="472">
+<feature>ToString</feature>
+</fragment>
+<fragment length="15" offset="500">
+<feature>ToString</feature>
+<feature>Numbers</feature>
+</fragment>
+<fragment length="3" offset="515">
+<feature>ToString</feature>
+</fragment>
+<fragment length="38" offset="518">
+<feature>ToString</feature>
+<feature>Numbers</feature>
+</fragment>
+<fragment length="3" offset="556">
+<feature>ToString</feature>
+</fragment>
+<fragment length="24" offset="559">
+<feature>ToString</feature>
+<feature>Neg</feature>
+</fragment>
+<fragment length="3" offset="583">
+<feature>ToString</feature>
+</fragment>
+<fragment length="43" offset="586">
+<feature>ToString</feature>
+<feature>Neg</feature>
+</fragment>
+<fragment length="3" offset="629">
+<feature>ToString</feature>
+</fragment>
+<fragment length="37" offset="632">
+<feature>ToString</feature>
+<feature>Plus</feature>
+</fragment>
+<fragment length="3" offset="669">
+<feature>ToString</feature>
+</fragment>
+<fragment length="40" offset="672">
+<feature>ToString</feature>
+<feature>Plus</feature>
+</fragment>
+<fragment length="3" offset="712">
+<feature>ToString</feature>
+</fragment>
+<fragment length="11" offset="736">
+<feature>Eval</feature>
+</fragment>
+<fragment length="18" offset="749">
+<feature>ToString</feature>
+</fragment>
+<fragment length="76" offset="771">
+<feature>Numbers</feature>
+</fragment>
+<fragment length="38" offset="847">
+<feature>Numbers</feature>
+<feature>Eval</feature>
+</fragment>
+<fragment length="3" offset="885">
+<feature>Numbers</feature>
+</fragment>
+<fragment length="50" offset="888">
+<feature>ToString</feature>
+<feature>Numbers</feature>
+</fragment>
+<fragment length="2" offset="938">
+<feature>Numbers</feature>
+</fragment>
+<fragment length="69" offset="942">
+<feature>Neg</feature>
+</fragment>
+<fragment length="42" offset="1011">
+<feature>Eval</feature>
+<feature>Neg</feature>
+</fragment>
+<fragment length="3" offset="1053">
+<feature>Neg</feature>
+</fragment>
+<fragment length="56" offset="1056">
+<feature>ToString</feature>
+<feature>Neg</feature>
+</fragment>
+<fragment length="2" offset="1112">
+<feature>Neg</feature>
+</fragment>
+<fragment length="100" offset="1116">
+<feature>Plus</feature>
+</fragment>
+<fragment length="52" offset="1216">
+<feature>Plus</feature>
+<feature>Eval</feature>
+</fragment>
+<fragment length="3" offset="1268">
+<feature>Plus</feature>
+</fragment>
+<fragment length="53" offset="1271">
+<feature>ToString</feature>
+<feature>Plus</feature>
+</fragment>
+<fragment length="2" offset="1324">
+<feature>Plus</feature>
+</fragment>
+</file>
+<folder name="tmp">
+<file name=".dircolors"/>
+<file name="Exp.java">
+<fragment length="11" offset="42">
+<feature>Eval</feature>
+</fragment>
+<fragment length="18" offset="58">
+<feature>ToString</feature>
+</fragment>
+</file>
+<file name="Neg.java">
+<feature>Neg</feature>
+<fragment length="85" offset="0">
+<feature>Neg</feature>
+</fragment>
+<fragment length="40" offset="85">
+<feature>Eval</feature>
+<feature>Neg</feature>
+</fragment>
+<fragment length="63" offset="125">
+<feature>Neg</feature>
+</fragment>
+</file>
+<file name="Num.java">
+<feature>Numbers</feature>
+<fragment length="91" offset="0">
+<feature>Numbers</feature>
+</fragment>
+<fragment length="35" offset="91">
+<feature>Numbers</feature>
+<feature>Eval</feature>
+</fragment>
+<fragment length="4" offset="126">
+<feature>Numbers</feature>
+</fragment>
+<fragment length="46" offset="130">
+<feature>ToString</feature>
+<feature>Numbers</feature>
+</fragment>
+<fragment length="3" offset="176">
+<feature>Numbers</feature>
+</fragment>
+</file>
+<file name="Plus.java">
+<feature>Plus</feature>
+<fragment length="116" offset="0">
+<feature>Plus</feature>
+</fragment>
+<fragment length="49" offset="116">
+<feature>Plus</feature>
+<feature>Eval</feature>
+</fragment>
+<fragment length="4" offset="165">
+<feature>Plus</feature>
+</fragment>
+<fragment length="51" offset="169">
+<feature>ToString</feature>
+<feature>Plus</feature>
+</fragment>
+<fragment length="2" offset="220">
+<feature>Plus</feature>
+</fragment>
+</file>
+</folder>
+</folder>
+</project>

@@ -1,0 +1,12 @@
+# Layer defines the grammar and basic syntax handling for "require" feature:
+# (the definition is empty since it's not an included feature)
+#
+require =
+
+# These layers define tool-specific handling for "require" feature:
+# (the definitions are empty since "require" is not an included feature)
+#
+requireComposer =
+requireBali2jak =
+requireBali2javacc =
+requireBali2layer =

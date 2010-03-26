@@ -1,0 +1,37 @@
+## StateMachine_Core.vm
+## JEDI Project
+## HTML Template for the StateMachine header
+## Author: Roberto E. Lopez-Herrejon
+## Last update: November 30, 2002
+
+## Writes out the Root Clause
+#parse ("SourceTemplates/RootClause.vm")
+
+## Writes out the otherwise clause
+#parse("SourceTemplates/OtherClause.vm")
+
+## Writes out the states clause states
+#parse("SourceTemplates/StatesClause.vm")
+
+## Writes out the exit transitions
+#parse("SourceTemplates/ExitTransitions.vm")
+
+## Writes out the enter transitions
+#parse("SourceTemplates/EnterTransitions.vm")
+
+## Writes out the prepare transitions
+#parse("SourceTemplates/PrepareTransitions.vm")
+
+## Writes out the test transitions
+#parse("SourceTemplates/TestTransitions.vm")
+
+## Writes out the action transitions
+#parse("SourceTemplates/ActionTransitions.vm")
+
+## Writes out the transition declarations
+#parse("SourceTemplates/TransitionDeclarations.vm")
+ 
+## Writes out the otherwise transitions
+#parse("SourceTemplates/OtherwiseTransitions.vm")
+
+## End of StateMachine_Header.vm

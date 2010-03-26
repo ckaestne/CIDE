@@ -1,0 +1,207 @@
+#!/usr/bin/env bash
+#
+# Use:  run-tool <tool-name> [<tool-argument> ...]
+#
+# Runs a tool from a library directory.  Each tool has a Java archive (Jar)
+# file in the library directory which is built to run via "java -jar".  By
+# default, the library directory is assumed to be named "lib" and it is
+# assumed to be in a directory parallel to the directory containing this
+# script. Given a tool's name, this script will invoke it via the Jar file,
+# passing the tool the remaining arguments on the command line.
+#
+# It's also possible to invoke this script via a symbolic link named after the
+# tool.  In that case, this script will use the name of the link as the tool
+# name instead of the first argument as in the case above.
+#=============================================================================#
+
+PROG="run-tool"
+PROGRAM="${0##*/}"
+PROGRAM="${PROGRAM:-${PROG}}"
+
+#-----------------------------------------------------------------------------#
+# Define several functions to format and print error messages:
+#
+function stderr() { echo 1>&2 "$@" ;}
+function error()  { stderr -n "${PROGRAM}: " ; stderr "$@" ;}
+function fatal()  { error "$@" ; exit 1 ;}
+
+function usage() {
+
+    case "${PROGRAM}" in
+	${PROG}) stderr "Usage: ${PROG} <tool-name> [<tool-argument> ...]" ;;
+	*)       stderr "Usage: ${PROGRAM} [<argument> ...]" ;;
+    esac
+
+    [ "$#" -gt 0 ] && error "$@"
+
+    exit "$#"
+}
+
+#-----------------------------------------------------------------------------#
+# Check for Cygwin so that paths and filenames can be adjusted.  On Cygwin
+# systems, Windows programs such as "java" and "javac" expect to see filenames
+# in Windows form.  However, Cygwin programs such as "bash" (which is running
+# this script) expect to see them in Unix form.  So, external filenames are
+# converted to Unix form for Cygwin programs and they are converted to Windows
+# form (on Windows systems) when passed to the Java virtual machine.
+#
+case "$(command -p uname)" in
+    CYGWIN*) function cygwin() { true ;} ;;
+    *)       function cygwin() { false ;} ;;
+esac
+
+#-----------------------------------------------------------------------------#
+# Find the home directory of the tool suite and its library:
+#
+if [ -z "${TOOL_HOME}" ]; then
+
+    # Function to follow symbol links.  Should run under most bash shells.
+    # However, be cautious with changes in order to maintain portability.
+    #
+    function follow() {
+	LINK="${1}"
+	while [ -h "${LINK}" ]; do
+	    LS="$(command -p ls -dl -- "${LINK}")"
+	    NEXT="$(command -p expr "${LS}" : '.*-> \(.*\)$')"
+	    case "${NEXT}" in
+		/*) LINK="${NEXT}" ;;
+		*)  LINK="${LINK%/*}/${NEXT}" ;;
+	    esac
+	done
+	if [ -d "${LINK%/*}" ]; then
+	    LINK="$(cd -- "${LINK%/*}" ; pwd)/${LINK##*/}"
+	fi
+	echo "${LINK}"
+    }
+
+    LINK="$(follow "${0}")"
+    case "${LINK}" in
+	*/bin/*) TOOL_HOME="${LINK%/bin/*}" ;;
+	*/*/*)   TOOL_HOME="${LINK%/*}" ;;
+	bin/*)   TOOL_HOME="." ;;
+	./*)     TOOL_HOME=".." ;;
+	?*)      TOOL_HOME="${PWD}/.." ;;
+    esac
+
+fi
+
+[ -n "${TOOL_HOME}" ] || TOOL_HOME="${0%/bin/*}"
+cygwin && TOOL_HOME="$(cygpath --unix "${TOOL_HOME}")"
+[ -d "${TOOL_HOME}" ] || fatal "can't find tool home directory"
+
+[ -n "${TOOL_LIB}" ] || TOOL_LIB="${TOOL_HOME}/lib"
+cygwin && TOOL_LIB="$(cygpath --unix "${TOOL_LIB}")"
+[ -d "${TOOL_LIB}" ] || fatal "can't find tool library directory"
+
+#-----------------------------------------------------------------------------#
+# Argument processing.  If run as "jtsrun", there should be at least one
+# argument, the first of which is the name of a tool to run.  Otherwise, the
+# tool's name is the name of the program.  The tool's name will be tested
+# later to see if it has a corresponding Java archive file in the tool
+# library.
+#
+case "${PROGRAM}" in
+    ${PROG})
+	[ "$#" -gt 0 ] || usage "at least one argument required"
+	TOOL="${1}"
+	shift
+	;;
+
+    *)  TOOL="${PROGRAM}" ;;
+esac
+
+TOOL="${TOOL%.jar}"
+
+[[ "${TOOL}" != -* ]] || usage "tool name \"${TOOL}\" is invalid"
+
+#-----------------------------------------------------------------------------#
+# Separate arguments for "java" from those for the tool itself.  These will be
+# adjusted for Cygwin environments where appropriate.  None of the "java"
+# arguments need be adjusted since they don't refer to filenames.  However,
+# the class path will need adjustment as will filename arguments for the tool.
+#
+ARG_HOME="${TOOL_HOME}"
+ARGS_JAVA=()
+ARGS_TOOL=()
+CLASSPATH="${CLASSPATH}"
+
+while [ "$#" -gt 0 ]; do
+    ARG="${1}"
+    shift
+
+    case "${ARG}" in
+	-cp | -classpath)
+		[ "$#" -gt 0 ] || usage "missing value for ${ARG} option"
+		CLASSPATH="${1}"
+		shift
+		;;
+
+	-da* | -disableassertions* | -ea* | -enableassertions*)
+		ARGS_JAVA=( "${ARGS_JAVA[@]}" "${ARG}" )
+		;;
+
+	-dsa | -disablesystemassertions | -esa | -enablesystemassertions)
+		ARGS_JAVA=( "${ARGS_JAVA[@]}" "${ARG}" )
+		;;
+
+	-Djts.home=*)
+		ARG_HOME="$(command -p expr "${ARG}" : '-Djts.home=\(.*\)$')"
+		cygwin && ARG_HOME="$(cygpath --windows "${ARG_HOME}")"
+		;;
+
+	-D*=*)  ARGS_JAVA=( "${ARGS_JAVA[@]}" "${ARG}" ) ;;
+	-X*)    ARGS_JAVA=( "${ARGS_JAVA[@]}" "${ARG}" ) ;;
+	--)     ARGS_TOOL=( "${ARGS_TOOL[@]}" "$@" ) ; break ;;
+	*)      ARGS_TOOL=( "${ARGS_TOOL[@]}" "${ARG}" ) ;;
+    esac
+done
+
+cygwin && ARG_HOME="$(cygpath --unix "${ARG_HOME}")"
+ARG_HOME="$(cd -- "${ARG_HOME}" ; pwd)"
+cygwin && ARG_HOME="$(cygpath --windows "${ARG_HOME}")"
+
+ARGS_JAVA=( "${ARGS_JAVA[@]}" "-Djts.home=${ARG_HOME}" )
+
+#-----------------------------------------------------------------------------#
+# For Cygwin, adjust those tool arguments that reference Unix-style filenames:
+#
+if false ; then
+    ARGS=()
+    for ARG in "${ARGS_TOOL[@]}" ; do
+	case "${ARG}" in
+	    */*) ARGS=( "${ARGS[@]}" "$(cygpath --windows "${ARG}")" ) ;;
+	    *)   ARGS=( "${ARGS[@]}" "${ARG}" ) ;;
+	esac
+    done
+    ARGS_TOOL=( "${ARGS[@]}" )
+fi
+
+#-----------------------------------------------------------------------------#
+# Put all the Java archive files in the tool library into the class path and
+# export it.  Even though the tool will be dispatched via "java -jar" and,
+# thus, not use the class path, the tool may make nested invocations of other
+# tools.  The class path is exported so that those tools can have access.
+#
+CP="$(echo "${TOOL_LIB}"/*.jar)"
+CP="${CP// /:}"
+if [ -n "${CLASSPATH}" ]; then
+    cygwin && CLASSPATH="$(cygpath --path --unix "${CLASSPATH}")"
+    CP="${CLASSPATH}:${CP}"
+fi
+CP="${CP//::/:}"
+
+cygwin && CP="$(cygpath --path --windows "${CP}")"
+export CLASSPATH="${CP}"
+
+#-----------------------------------------------------------------------------#
+# Run the Java archive file, if it exists:
+#
+JAR="${TOOL_LIB}/${TOOL}.jar"
+[ -f "${JAR}" ] || fatal "can't find Jar file for \"${TOOL}\""
+cygwin && JAR="$(cygpath --windows "${JAR}")"
+
+TOOL_HOME="$(cd -- "${TOOL_HOME}" ; pwd)"
+cygwin && TOOL_HOME="$(cygpath --windows "${TOOL_HOME}")"
+export TOOL_HOME
+
+java "${ARGS_JAVA[@]}" -jar "${JAR}" "${ARGS_TOOL[@]}"

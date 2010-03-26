@@ -1,0 +1,417 @@
+<?xml version="1.0"?>
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+<project name="Bali Tools for AHEAD" default="all">
+
+ <description>
+ Bali Tools for AHEAD
+ (C) 2002-2003 Jacob Neal Sarvela and The University of Texas at Austin
+
+ The "-Doption.features=&lt;feature-set&gt;" command-line option can be used to
+ specify the feature set to include.  Currently, there are two feature sets:
+
+  * withRequireFeature ...... includes support for the "require" statement;
+  * withoutRequireFeature ... original Bali syntax w/o "require" statement.
+
+ The default is "withRequireFeature".
+ </description>
+
+    <!-- ================================================================= -->
+    <!-- OPTION PROPERTIES:                                                -->
+    <!-- ================================================================= -->
+
+    <property name="option.features"	value="withRequireFeature"/>
+
+    <!-- ================================================================= -->
+    <!-- PROJECT DEFINITIONS AND PROPERTIES:                               -->
+    <!-- ================================================================= -->
+
+    <property name="project.author"	value="Jacob Neal Sarvela"/>
+
+    <property name="project.name"	value="tool"/>
+    <property name="project.Name"	value="Tool"/>
+
+    <property
+        name="project.owner"
+	value="The University of Texas at Austin"/>
+
+    <property
+	name="project.copyright"
+        value="(C) 2002-2003 ${project.author} and ${project.owner}"/>
+
+    <property name="project.title"	value="Bali Tools for AHEAD"/>
+    <property name="project.version"	value="v2003.03.20"/>
+
+    <!-- ================================================================= -->
+    <!-- DIRECTORY PROPERTIES:                                             -->
+    <!-- ================================================================= -->
+
+    <!-- - - - - - - - - - - - - - - -->
+    <!-- Build directory for tools:  -->
+    <!-- - - - - - - - - - - - - - - -->
+
+    <property name="dir.build"		location="${basedir}/build"/>
+    <property name="dir.build.lib"	location="${dir.build}/lib"/>
+
+    <!-- - - - - - - - - - - - - - - -->
+    <!-- Source layer directories:   -->
+    <!-- - - - - - - - - - - - - - - -->
+
+    <property name="dir.dsl"		location="${basedir}/dsl"/>
+    <property name="dir.dsl.bali"       location="${dir.dsl}/bali"/>
+
+    <!-- - - - - - - - - - - - - - - -->
+    <!-- Equations directory:        -->
+    <!-- - - - - - - - - - - - - - - -->
+
+    <property name="dir.equations"	location="${basedir}/equations/bali"/>
+
+    <property
+	name="file.features"
+	location="${dir.equations}/${option.features}.equations"/>
+
+    <!-- - - - - - - - - - - - - - - -->
+    <!-- External Tools & Libraries: -->
+    <!-- - - - - - - - - - - - - - - -->
+
+    <property name="dir.ant.lib"	location="${ant.home}/lib"/>
+
+    <property name="dir.external"	location="${basedir}/miscellaneous"/>
+    <property name="dir.external.bin"	location="${dir.external}/bin"/>
+    <property name="dir.external.lib"	location="${dir.external}/lib"/>
+
+    <property
+        name="exec.print-path"
+        location="${dir.external.bin}/print-path"/>
+
+    <!-- ================================================================= -->
+    <!-- PATH-RELATED DEFINITIONS:                                         -->
+    <!-- (see also the target "use.path.class")                            -->
+    <!-- ================================================================= -->
+
+    <!-- - - - - - - - - - - - - - - -->
+    <!-- CLASSPATH Treatment:	     -->
+    <!-- - - - - - - - - - - - - - - -->
+
+    <property name="build.sysclasspath"	value="ignore"/>
+
+    <!-- ================================================================= -->
+    <!-- OTHER STATIC DEFINITIONS:                                         -->
+    <!-- ================================================================= -->
+
+    <!-- ================================================================= -->
+    <!-- TARGETS:                                                          -->
+    <!-- ================================================================= -->
+
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- The "all" target builds all Bali language tools.                  -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+    <target
+        name="all"
+		  depends="bali2jak,bali2javacc,balicomposer,bali2layer"
+        description="Builds all Bali language tools."/>
+
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- The "bali2jak" target builds the tool that translates a Bali      -->
+    <!-- grammar file to a directory of Jak classes representing the nodes -->
+    <!-- of a syntax tree.						   -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+    <target
+        name="bali2jak"
+        depends="grammars2jak"
+        description="Builds translator from Bali grammar to Jak files.">
+
+	<antcall target="method.build">
+	    <param name="arg.tool" value="bali2jak"/>
+	</antcall>
+
+    </target>
+
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- The "bali2javacc" target builds the tool to translate from a Bali -->
+    <!-- grammar file to a JavaCC grammar file.                            -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+    <target
+        name="bali2javacc"
+        depends="grammars2jak"
+        description="Builds translator from Bali grammar to JavaCC file.">
+
+	<antcall target="method.build">
+	    <param name="arg.tool" value="bali2javacc"/>
+	</antcall>
+
+    </target>
+
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- The "bali2layer" target builds the tool that generates a skeleton -->
+    <!-- layer of classes with specified skeleton methods.  One option is  -->
+    <!-- to use a Bali grammar file as input, generating skeleton classes  -->
+    <!-- of Bali grammar nodes.                                            -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+    <target
+        name="bali2layer"
+        depends="grammars2jak"
+		  description="Builds skeleton layer generator">
+		  <echo message = "buildling bali2layer tool ${dir.build}"/>
+	<antcall target="method.build">
+	    <param name="arg.tool" value="bali2layer"/>
+	</antcall>
+	<echo message="now copying resources"/>
+	<mkdir dir= "${dir.build}/bali2layer/bali2layer/resource"/>
+	<copy  todir = "${dir.build}/bali2layer/bali2layer/resource">
+			  <fileset dir="${basedir}/dsl/bali/bali2layer/resource" includes="*"/>
+	</copy>
+
+	<ant antfile="tool.xml" inheritall="false" target="jaronly">
+
+	    <property
+                name="file.equation"
+                value="${dir.build}/bali2layer.equations"/>
+
+	    <property
+                name="name.tool"
+		value="bali2layer"/>
+
+	</ant>
+    </target>
+
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- The "balicomposer" target builds composer tool for Bali grammars. -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+    <target
+        name="balicomposer"
+        depends="grammars2jak"
+        description="Builds tool to compose Bali grammar files.">
+
+	<antcall target="method.build">
+	    <param name="arg.tool" value="balicomposer"/>
+	</antcall>
+
+    </target>
+
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- The "grammars2jak" target converts all Bali grammar files in the  -->
+    <!-- Bali layer hierarchy to Jak files in the build directory.         -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+    <target name="grammars2jak" depends="use.path.class">
+
+	<!-- - - - - - - - - - - - - - - -->
+	<!-- The core Bali grammar file: -->
+	<!-- - - - - - - - - - - - - - - -->
+
+	<java
+	    classname="bali2jak.Main"
+	    classpath="${path.class}"
+	    failonerror="true"
+	    fork="true"
+	    taskname="bali2jak">
+
+	    <arg value="-directory"/>
+	    <arg file="${dir.build}/bali/bali"/>
+
+	    <arg value="-layer"/>
+	    <arg value="syntax"/>
+
+	    <arg file="${dir.dsl.bali}/bali/grammar.b"/>
+	</java>
+
+	<echo
+            level="info"
+            message="${dir.dsl.bali}/bali/grammar.b"
+            taskname="===>"/>
+
+	<!-- - - - - - - - - - - - - - - -->
+	<!-- The "require" statement:    -->
+	<!-- - - - - - - - - - - - - - - -->
+
+	<java
+	    classname="bali2jak.Main"
+	    classpath="${path.class}"
+	    failonerror="true"
+	    fork="true"
+	    taskname="bali2jak">
+
+	    <arg value="-directory"/>
+	    <arg file="${dir.build}/bali/require"/>
+
+	    <arg file="${dir.dsl.bali}/require/grammar.b"/>
+	</java>
+
+	<echo
+            level="info"
+            message="${dir.dsl.bali}/require/grammar.b"
+            taskname="===>"/>
+
+    </target>
+
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- The "initialize" target defines runtime properties such as time-  -->
+    <!-- stamps and prints a start-up message, including the copyright.    -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+    <target name="initialize">
+
+        <tstamp>
+	    <format property="initialize.date" pattern="yyyy-MM-dd"/>
+	    <format property="initialize.time" pattern="HH:mm:ss"/>
+	    <format property="initialize.year" pattern="yyyy"/>
+	</tstamp>
+
+	<property
+	    name="timestamp"
+	    value="${initialize.date} ${initialize.time}"/>
+
+	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+	<!-- Splash notice:                                                -->
+	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+	<echo
+            level="info"
+            message="${project.title}; bali.xml ${project.version}"/>
+
+	<echo level="info" message="${project.copyright}"/>
+	<echo level="info" message=""/>
+	<echo level="info" message="Build begins ${timestamp}"/>
+
+    </target>
+
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- The "method.build" parameterized target is invoked by "antcall"   -->
+    <!-- to build a given Bali tool.  It consists of several sub-targets   -->
+    <!-- to perform each of the build steps.  Alternatively, a "build.xml" -->
+    <!-- could be generated for each tool.                                 -->
+    <!--                                                                   -->
+    <!-- * arg.tool:  the basename of the tool to build.                   -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+    <target name="method.build" depends="method.build.equation">
+
+	<ant antfile="tool.xml" inheritall="false">
+
+	    <property
+                name="file.equation"
+                value="${dir.build}/${arg.tool}.equations"/>
+
+	    <property
+                name="name.tool"
+		value="${arg.tool}"/>
+
+	</ant>
+
+    </target>
+
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+    <target name="method.build.equation" depends="use.path.class">
+
+	<java
+	    classname="composer.Main"
+	    classpath="${path.class}"
+            failonerror="true"
+	    fork="true"
+	    taskname="equation">
+
+	    <arg value="--logging=warning"/>
+
+	    <arg value="-target"/>
+	    <arg file="${dir.build}/${arg.tool}.equations"/>
+
+	    <arg value="${dir.equations}/common.equations"/>
+	    <arg value="${file.features}"/>
+	    <arg value="${dir.equations}/${arg.tool}.equations"/>
+	</java>
+
+	<echo
+            level="info"
+            message="${dir.build}/${arg.tool}.equations"
+            taskname="===>"/>
+
+    </target>
+
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- The "prepare" target creates the build hierarchy.                 -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+    <target name="prepare" depends="initialize">
+
+	<mkdir dir="${dir.build}"/>
+	<mkdir dir="${dir.build.lib}"/>
+
+    </target>
+
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- The "use.*" targets prepare properties, environment variables and -->
+    <!-- other resources for use by another target.  A target that uses a  -->
+    <!-- resource specifies the usage by including a dependency on target  -->
+    <!-- "use.<resource>" defined below (where "<resource>" is replaced by -->
+    <!-- the actual resource name).                                        -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <!-- Task "jak2java" is an extra task definition from the AHEAD tools. -->
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+    <target name="use.jak2java" depends="use.path.class">
+
+	<taskdef
+            name="jak2java"
+            classname="jak2java.DeriveAntTask"
+            classpath="${path.class}"/>
+
+    </target>
+
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <!-- Property "path.class" is an internally generated class path used  -->
+    <!-- throughout the build.  It is built from two libraries in priority -->
+    <!-- order.  The build library, ${dir.build.lib}, is first priority so -->
+    <!-- that inter-tool dependencies are satisfied.  The second priority  -->
+    <!-- is the external tool library, ${dir.external.lib}, which is used  -->
+    <!-- so that the tools can be bootstrapped.                            -->
+    <!--                                                                   -->
+    <!-- User-defined libraries can be specified via CLASSPATH.  To ensure -->
+    <!-- that this works, property "build.sysclasspath" must be defined as -->
+    <!-- described in the Ant manual.  The definition should be placed on  -->
+    <!-- the command line.                                                 -->
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+    <target name="use.path.class" depends="prepare">
+
+	<path id="id.path.class">
+	    <fileset dir="${dir.build.lib}" includes="**/*.jar"/>
+	    <fileset dir="${dir.external.lib}" includes="**/*.jar">
+		<none>
+		    <present targetdir="${dir.build.lib}"/>
+		</none>
+	    </fileset>
+	</path>
+
+	<property name="path.class" refid="id.path.class"/>
+
+	<exec executable="env" taskname="path.class">
+	    <arg value="--"/>
+	    <arg file="${exec.print-path}"/>
+	    <arg value="${path.class}"/>
+	</exec>
+
+    </target>
+
+</project>
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+<!-- Local Variables:                    -->
+<!-- mode:                           XML -->
+<!-- fill-column:                     79 -->
+<!-- sgml-ignore-undefined-elements: nil -->
+<!-- sgml-indent-data:                 t -->
+<!-- sgml-indent-step:                 4 -->
+<!-- End:                                -->
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->

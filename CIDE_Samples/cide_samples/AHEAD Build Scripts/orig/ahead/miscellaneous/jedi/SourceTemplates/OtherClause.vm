@@ -1,0 +1,37 @@
+## OtherClause.vm
+## JEDI Project
+## HTML Template for a Otherwise clause
+## Author: Roberto E. Lopez-Herrejon
+## Last update: November 10, 2002
+
+## Other Clause State Machine
+
+#if ($otherFlag == "true")
+
+ <!-- ======== OTHERWISE CLAUSE ======== -->
+ <A NAME="otherwise_clause"><!-- --></A>
+ <TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+ <TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+ <TD COLSPAN=2>
+  <FONT SIZE="+2">
+    <B> Otherwise Clause </B>
+  </FONT>
+ </TD>	
+ </TR>	
+
+ #foreach($other in $listOthers)
+  <TR BGCOLOR="white" CLASS="TableRowColor">	
+  <TD> 
+   <CODE>
+    #set($reference = ".html")
+    <A HREF="$other.name()$reference"> $other.name()</A>
+   </CODE>
+  </TD>
+  <BR>
+  </TR>
+ #end  ## for all the other clauses
+	
+  </TABLE>
+  <BR>
+
+#end  

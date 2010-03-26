@@ -1,0 +1,45 @@
+## ActionTransitions.vm
+## JEDI Project
+## HTML Template for Exit transitions declarations
+## Author: Roberto E. Lopez-Herrejon
+## Last update: November 10, 2002
+## Action Transitions of State Machine
+
+#if ($actionFlag == "true") 
+ <A NAME="action_clause"><!-- --></A>
+ <TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+ <TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+ <TD COLSPAN=1>
+  <FONT SIZE="+2">
+   <B> Action Clause </B>
+  </FONT>
+ </TD>
+ </TR>
+ </TABLE>  
+
+ #foreach ($actions in $listActions)
+  <H3>
+   <A NAME="$actions.name() action_clause"> <!-- --></A>
+    $actions.name()          
+  </H3>
+
+$generator.descriptionComment($actions.inlineTags())
+
+  <UL>
+  #foreach($action_classes in $actions.classes())
+     <LI>
+       #set ($reference = ".hmtl")
+       <A HREF="action_classes.name()$reference">
+         $action_classes.name()
+       </A>		 
+     </LI>		  
+  #end   ## for all the action classes of this state
+  </UL>
+
+  <HR>
+
+  #end ## for all the action states
+    
+  <BR>	   
+#end
+

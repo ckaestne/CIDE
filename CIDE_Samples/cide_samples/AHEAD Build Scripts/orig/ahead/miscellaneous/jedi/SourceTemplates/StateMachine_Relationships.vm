@@ -1,0 +1,41 @@
+## StateMachine_Relationships.vm
+## JEDI Project
+## HTML Template for the State Machine
+## Author: Roberto E. Lopez-Herrejon
+## Last update: November 30, 2002
+
+<DL> 
+
+## -- Modifiers
+
+ <DT> $state.modifiers() 
+
+  #foreach($layoutElement in $layoutList)
+	<!-- $layoutElement  -->
+ 	#include($layoutElement)
+   #end     ## of for each
+   <B> $state.name() 
+   </B> 
+ </DT>
+
+## --- End of Modifiers
+
+## --- Interfaces 
+
+#if ($interfaces == "true")
+<DT> implements 
+ #foreach($interface in $listInterfaces)
+   $interface.name() &nbsp;  
+ #end
+</DT>
+#end
+
+## -- End of Interface 
+
+</DL>
+
+
+
+## End of StateMachine_Relationships.vm
+
+

@@ -1,0 +1,205 @@
+<?xml version="1.0"?>
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+<project name="xak" default="all">
+	<description>
+ xak Composer composes XML-based programs.
+ </description>
+	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<!-- Project-level properties define build parameters.	       -->
+	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+	<!-- The "project" properties are used to generate other property  -->
+	<!-- names and to define substitutions into project documents.     -->
+	<!-- Definitions are taken from the first place where found in the -->
+	<!-- following list:  (A) Command line; (B) "build.properties"     -->
+	<!-- in the base directory; (C) The definitions in this file.      -->
+	<!-- The command-line may be specified by a higher-level build.    -->
+	<!--							       -->
+	<!-- PROJECT PARAMETERS (should be defined in this file):	       -->
+	<!-- * project.name ....... generate property and file names;      -->
+	<!-- * project.Name ....... capitalized name for documentation;    -->
+	<!-- * project.owner ...... copyright owner of this code;	       -->
+	<!-- * project.title ...... capitalized title for documentation;   -->
+	<!-- * project.version .... the release, state and patch level.    -->
+	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+	<property name="project.name" value="xak"/>
+	<property name="project.Name" value="xak"/>
+	<property name="project.owner" value="The University of the Basque Country / Texas at Austin"/>
+	<property name="project.title" value="The Xml Composer"/>
+	<property name="project.version" value="v2007.07.03"/>
+	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+	<!-- Temporary assignment of basedir to be this -->
+	<property name="basedir"            location="."/>
+<!--<property name="dir.lib" location="../../miscellaneous/lib"/> -->
+	<property name="dir.build" location="${basedir}/build"/>
+	<property name="dir.build.api" location="${dir.build}/api"/>
+	<property name="dir.build.classes" location="${dir.build}/classes"/>
+	<property name="dir.build.test" location="${dir.build}/test"/>
+	<property name="jar.build" location="${dir.build}/${project.name}.jar"/>
+	<property name="build.debug" value="true"/>
+	<property name="build.deprecation" value="false"/>
+	<property name="build.optimize" value="false"/>
+	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+	<path id="external.class.path.id">
+		<pathelement location="${dir.lib}/log4j.jar"/>
+		<pathelement location="${dir.lib}/OnekinUtils-Standard.jar"/>
+		<pathelement location="${dir.lib}/infozone-lexus.jar"/>
+		<pathelement location="${dir.lib}/infozone-tools.jar"/>
+		<pathelement location="${dir.lib}/saxon8.jar"/>
+		<pathelement location="${dir.lib}/saxon8-dom.jar"/>
+		<pathelement location="${dir.lib}/saxon8-xpath.jar"/>
+	</path>
+	<property name="external.class.path" refid="external.class.path.id"/>
+	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<!-- The "all" target is shorthand to re-compile from scratch.     -->
+	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<target name="all" depends="jar,javadoc" description="Equivalent to jar, javadoc"/>
+	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<!-- The "clean" target removes generated files *other* than those -->
+	<!-- generated to define the build configuration, if any.	       -->
+	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<target name="clean" depends="initialize" description="Deletes generated files (e.g., class files)">
+		<patternset id="clean.patterns">
+			<exclude name="**/CVS/**"/>
+			<include name="**/*~"/>
+			<include name="**/#*#"/>
+			<include name="**/.#*"/>
+			<include name="**/%*%"/>
+			<include name="**/*.bak"/>
+			<include name="**/*.BAK"/>
+			<include name="**/*.pyc"/>
+			<include name="**/*.pyo"/>
+			<include name="**/core"/>
+		</patternset>
+		<delete includeEmptyDirs="true" quiet="true">
+			<fileset dir="${dir.build}"/>
+			<fileset defaultexcludes="no" dir=".">
+				<include name="**/*.log"/>
+				<include name="**/*.class"/>
+				<patternset refid="clean.patterns"/>
+			</fileset>
+		</delete>
+		<!-- Apparently the "delete" task can't delete symbol links, -->
+		<!-- so the following deletes the directory containing them: -->
+		<exec executable="rm">
+			<arg value="--force"/>
+			<arg value="--recursive"/>
+			<arg value="--"/>
+			<arg file="${dir.build}"/>
+		</exec>
+	</target>
+	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<!-- The "compile" target compiles all nested Java source files,   -->
+	<!-- storing the generated class files into another directory.     -->
+	<!-- It also copies any resource files to the same directory.      -->
+	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<target name="compile" depends="prepare" description="Compiles Java source files to class files in build/">
+		<mkdir dir="${dir.build.classes}"/>
+		<javac srcdir="src" classpath="${external.class.path}" debug="${build.debug}" deprecation="${build.deprecation}" destdir="${dir.build.classes}" optimize="${build.optimize}"/>
+	</target>
+	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<!-- The "initialize" target calculates a set of initial dynamic build -->
+	<!-- properties such as timestamps and copyrights.  It also prints an  -->
+	<!-- informative message about the build.                              -->
+	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<target name="initialize">
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<!-- Create the time stamps for current build:                 -->
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<tstamp>
+			<format property="initialize.date" pattern="yyyy/MM/dd"/>
+			<format property="initialize.time" pattern="HH:mm:ss"/>
+			<format property="initialize.year" pattern="yyyy"/>
+		</tstamp>
+		<property name="timestamp" value="${initialize.date} ${initialize.time}"/>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<!-- Calculate range of years to put into copyright notice:    -->
+		<!-- * cr.alpha .......	first year source was created;	       -->
+		<!-- * cr.omega .......	last year source was modified;	       -->
+		<!-- * cr.range .......	range of years for copyright.	       -->
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<property name="cr.alpha" value="2006"/>
+		<property name="cr.owner" value="${project.owner}"/>
+		<condition property="cr.range" value="${cr.alpha}">
+			<equals arg1="${cr.alpha}" arg2="${initialize.year}"/>
+		</condition>
+		<condition property="cr.range" value="${cr.alpha}-${initialize.year}">
+			<not>
+				<equals arg1="${cr.alpha}" arg2="${initialize.year}"/>
+			</not>
+		</condition>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<!-- Create copyright messages:                                -->
+		<!-- * copyright.base ... text with year(s) and owner;         -->
+		<!-- * copyright.html ... for inclusion into HTML documents;   -->
+		<!-- * copyright.text ... for inclusion into text documents.   -->
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<property name="copyright.base" value="${cr.range} ${cr.owner}"/>
+		<property name="copyright.html" value="&#169; ${copyright.base}"/>
+		<property name="copyright.text" value="(C) ${copyright.base}"/>
+		<echo level="info" message="Build begins ${timestamp}"/>
+		<echo level="info" message=""/>
+		<echo level="info" message="${project.title} ${project.version}"/>
+		<echo level="info" message="${copyright.text}"/>
+	</target>
+	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<target name="jar" depends="compile,manifest" description="Collects generated class files into a JAR">
+		<!-- copy XSL files -->
+		<copy file="transform/xr2xupdate.xslt" todir="${dir.build.classes}/org/onekin/xak/refinement"/>
+<!--		<copy file="transform/identity.xsl" todir="${dir.build.classes}/org/onekin/xak/refinement"/>-->
+<!--		<copy file="transform/xhtml2html.xsl" todir="${dir.build.classes}/org/onekin/xak/refinement"/> -->
+		<copy file="transform/xak2xrefine.xsl" todir="${dir.build.classes}/org/onekin/xak/refinement"/>
+		<copy file="transform/xak2xml.xsl" todir="${dir.build.classes}/org/onekin/xak/refinement"/>
+		<!-- copy a schema -->
+		<copy file="schema/xak2.xsd" todir="${dir.build.classes}/org/onekin/xak/refinement"/>
+		<jar jarfile="${jar.build}" manifest="${dir.build}/MANIFEST.MF" basedir="${dir.build.classes}">
+		</jar>
+	</target>
+	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<target name="javadoc" depends="compile" description="Generates API documentation into build/api/">
+		<mkdir dir="${dir.build.api}"/>
+		<property name="javadoc.api" value="${project.title} API"/>
+		<!-- temporary remove overview="overview.html" -->
+		<javadoc access="private" author="true" destdir="${dir.build.api}" sourcepath=".." use="true" useexternalfile="true" verbose="false" version="true" windowtitle="${javadoc.api}">
+			<bottom><![CDATA[<strong>${copyright.html}</strong>]]></bottom>
+			<classpath>
+				<pathelement location="${dir.build.classes}"/>
+				<pathelement path="${external.class.path}"/>
+			</classpath>
+			<doctitle><![CDATA[<h1>${javadoc.api}</h1>]]></doctitle>
+			<footer><![CDATA[<strong>${project.Name} ${project.version}</strong>]]></footer>
+			<header><![CDATA[<strong>${project.Name} ${project.version}</strong>]]></header>
+			<link href="http://java.sun.com/j2se/1.4/docs/api"/>
+			<link href="http://jakarta.apache.org/velocity/api/"/>
+			<package name="xak.*"/>
+		</javadoc>
+	</target>
+	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<target name="manifest" depends="prepare">
+		<manifest file="${dir.build}/MANIFEST.MF">
+			<attribute name="Build-Timestamp" value="${timestamp}"/>
+			<attribute name="Build-Username" value="${user.name}"/>
+			<attribute name="Main-Class" value="org.onekin.xak.Xak"/>
+			<attribute name="Class-Path" value="file:saxon8.jar file:saxon8-xpath.jar file:saxon8-dom.jar
+					file:log4j.jar file:OnekinUtils-Standard.jar file:infozone-lexus.jar file:infozone-tools.jar "/>
+		</manifest>
+		<echo level="info" message="Manifest ${dir.build}/MANIFEST.MF" taskname="manifest"/>
+	</target>
+	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<target name="prepare" depends="initialize">
+		<mkdir dir="${dir.build}"/>
+		<mkdir dir="${dir.build.api}"/>
+		<mkdir dir="${dir.build.classes}"/>
+		<mkdir dir="${dir.build.test}"/>
+	</target>
+</project>
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+<!-- Local Variables:                    -->
+<!-- mode:                           XML -->
+<!-- fill-column:                     79 -->
+<!-- sgml-ignore-undefined-elements: nil -->
+<!-- sgml-indent-data:                 t -->
+<!-- sgml-indent-step:                 4 -->
+<!-- End:                                -->
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->

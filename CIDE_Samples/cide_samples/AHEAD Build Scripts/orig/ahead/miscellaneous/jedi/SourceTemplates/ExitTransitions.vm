@@ -1,0 +1,44 @@
+## ExitTransitions.vm
+## JEDI Project
+## HTML Template for Exit transitions declarations
+## Author: Roberto E. Lopez-Herrejon
+## Last update: November 10, 2002
+## Exite Clause of a State Machine
+
+
+#if ($existsFlag == "true") 
+ <A NAME="exit_clause"><!-- --></A> 
+ <TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+ <TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+ <TD COLSPAN=1>
+  <FONT SIZE="+2">
+    <B> Exit Clause </B>
+  </FONT>
+ </TD>
+ </TR>
+ </TABLE>	  
+ 
+ #foreach($exit in $listExists)	  
+   <H3>
+     <A NAME="$exit.name()"><!-- --></A>
+       $exit.name()
+   </H3>
+
+ $generator.descriptionComment($exit.inlineTags())
+
+   <UL>
+   #foreach($exitClass in $exit.classes())
+     
+       <LI>
+	#set($reference = ".html")
+         <A HREF="$exitClass.name()$reference">
+            $exitClass.name()
+         </A>
+       </LI>
+   #end 
+   </UL>	
+ 
+  <BR>
+
+ #end ## of all the exit states
+#end ## if there are exits states

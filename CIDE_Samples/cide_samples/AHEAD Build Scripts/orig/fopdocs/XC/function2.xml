@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!-- function2.xml Example of function refinement -->
+<!-- Last Update: June 23, 2003 -->
+
+<function xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:noNamespaceSchemaLocation="XmlFunction.xsd">
+
+<!-- Replaces the while tag inside the body of function imports -->
+<replace path="/aframe/func[@name='imports']/body/while">
+   <set name="sequence" value="pqrs"/>
+   <while name="i" in="sequence">
+    System.out.println("var variable" + {$i});
+   </while>
+</replace>
+
+
+<!-- Adds a function call to imports before current call in main -->
+<after path="/aframe/func[@name='main']/body/call[@name='imports']">
+   <call name="imports">
+     <with name="list" value="abc"/>
+   </call>
+</after>
+
+</function>

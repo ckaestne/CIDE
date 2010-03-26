@@ -1,0 +1,574 @@
+
+
+<head>
+<title>The drc Tool</title>
+</head>
+
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%">
+  <tr>
+    <td WIDTH="78">
+    <img border="0" src="images/FopButton3.jpg" width="80" height="64"></td>
+    <td WIDTH="688" BGCOLOR="#00FFFF"><h1><font face="Arial" color="#0000FF">The
+      drc (Design Rule Checking) Tool </font></h1>
+    </td>
+  </tr>
+</table>
+
+<hr>
+<blockquote>
+  <p><b><font face="Arial" color="#ff0000">Note: </font><font face="Arial"><font color="#FF0000">
+  DRC is no longer used.&nbsp; The </font><a href="guidsl.html">guidsl</a> <font color="#FF0000"> 
+tool is now the standard design rule checking tool for AHEAD.</font></font></b></p>
+</blockquote>
+<p><font face="Arial">Not all combinations of AHEAD constants and functions
+are semantically correct.&nbsp;  Selecting a feature may enable the selection of
+some features; and may disable the selection of others.&nbsp; <b>Design rule
+checking (DRC)</b> is the counterpart of type-checking in the AHEAD universe. There is a
+special domain-specific language by which composition constraints of 
+layers are declared.&nbsp; <b>drc</b> is the tool that composes
+these specifications and notifies users of composition errors. This document
+describes the process of design rule checking and how it differs from normal
+type-checking.&nbsp; Also covered are the syntax and semantics of DRC specifications, a discussion of the
+<b> drc</b> tool
+itself, and a simple methodology for creating design rules.</font></p>
+<p><font face="Arial">The topics of this document are listed below:</font></p>
+<ul>
+  <li><font face="Arial"><a href="#Command-Line Invocation">Command-Line Invocation</a></font></li>
+  <li><font face="Arial"><a href="#Background">Background</a></font></li>
+  <li><font face="Arial"><a href="#DRC Specifications">DRC Specifications</a></font></li>
+  <li><font face="Arial"><a href="#DRC Grammar">DRC Grammar</a></font>
+    <ul>
+      <li><font face="Arial"><a href="#Aspect Declaration">Layer Declaration</a></font></li>
+      <li><font face="Arial"><a href="#Attribute Declaration">Attribute Declaration</a></font></li>
+      <li><font face="Arial"><a href="#Attribute Types">Attribute Types</a></font>
+        <ul>
+          <li><font face="Arial"><a href="#Bool">Bool</a></font></li>
+          <li><font face="Arial"><a href="#Int">Int</a></font></li>
+        </ul>
+      </li>
+      <li><font face="Arial"><a href="#Design Rules">Design Rules</a></font></li>
+    </ul>
+  </li>
+  <li><font face="Arial"><a href="#The drc Tool">The drc Tool</a></font>
+    <ul>
+      <li><font face="Arial"><a href="#Simplification and Validation of Individual Files">Simplification and Validation of Individual Files</a></font></li>
+      <li><font face="Arial"><a href="#Composition of Files">Composition of Files</a></font></li>
+      <li><font face="Arial"><a href="#Error Messages">Error Messages</a></font></li>
+    </ul>
+  </li>
+  <li><font face="Arial"><a href="#Design Methodology">Design Methodology</a></font></li>
+  <li><font face="Arial"><a href="#Future Work and Limitations">Future Work and Limitations</a></font></li>
+</ul>
+<h2 align="left"><font face="Arial" color="#0000FF"><a name="Command-Line Invocation">Command-Line
+Invocation</a></font></h2>
+<p align="left"><font face="Arial"><b>drc</b> is invoked by its name.&nbsp;
+Its options are listed if no arguments are given:</font></p>
+<div align="left">
+  <blockquote>
+    <pre align="left"><font face="Courier New">&gt; drc
+
+Error: Must specify at least one .drc file
+
+Usage: java drc.Main [options] baseFile extensionFile1 extensionFile2 ...
+         -f &lt;filename&gt; name of file to generate
+         -a &lt;layerName&gt; name of layer to generate
+         -s dump symbol table
+         -i do nothing option
+         -e send error messages to System.out</font></pre>
+  </blockquote>
+  <p align="left"><font face="Arial">As an example, the composition of files
+  one.drc and two.drc to produce layer one_two is written as:</font></p>
+  <blockquote>
+    <pre align="left"><font face="Courier New">drc -a one_two one.drc two.drc</font></pre>
+  </blockquote>
+</div>
+<h2><font face="Arial" color="#0000FF"><a name="Background">Background</a></font></h2>
+<p><font face="Arial">Normal type checking, as found in Java, C++, etc., is
+insufficient for composing refinements.&nbsp; Type checking is essentially syntax checking; it does not
+catch deep semantic composition
+violations.&nbsp; Here's  the basic idea.&nbsp;Assume that AHEAD
+constant and functions are typed.&nbsp; The set of all constants and functions
+that return the same type is a <b>realm</b>.&nbsp; Realms A and B are listed
+below.&nbsp;
+Realm A has two constants and one function;
+realm B has two functions:</font></p>
+<blockquote>
+  <pre><font face="Courier New">A = {	f		// constant f
+	g		// constant g
+	h(A x)		// function h (with a parameter of type A)
+</font>    }</pre>
+  <pre><font face="Courier New">B = {	i(B x) 		// function i (with a parameter of type B)
+	j(A x)		// function j (with a parameter of type A)
+    }</font></pre>
+</blockquote>
+<p><font face="Arial">Just from this specification alone, it would seem that any
+possible type-correct expression is legal. (It would be in Java and C++).&nbsp;
+However, in general, only selected compositions (e.g., ones that have only one
+instance of function i, for example) may be legal.&nbsp; To see what is needed,
+we can equate the above to a grammar:</font></p>
+<blockquote>
+  <pre><font face="Courier New">A   :	f		// constant f
+    |	g		// constant g
+    |	h A		// function h (with a parameter of type A)
+</font>    ;</pre>
+  <pre><font face="Courier New">B   :	i B 		// function i (with a parameter of type B)
+    |	j A		// function j (with a parameter of type A)
+    ;</font></pre>
+</blockquote>
+<p><font face="Arial">Every sentence of the above grammar corresponds to a
+unique expression.&nbsp; Thus, type-checking corresponds to checking for syntactic
+correctness.&nbsp; Semantic correctness in grammars is modeled by <b> attribute
+grammars</b>&nbsp; -- attributes are value annotations and predicates over these
+annotations determine which syntactically-legal combinations of tokens are
+semantically correct. Such annotations can propagate values from the inner-most
+terms of an equation outwards (these are called <b>inherited</b> or <b>
+flowleft
+attributes</b>); other
+annotations can propagate their values from the outer-most terms of an equation
+inward (these are called <b>synthesized</b> or <b>flowright</b> <b>attributes</b>). Thus, equation validation in
+AHEAD is driven not by type-checking but by attribute grammars.&nbsp; You'll
+see these ideas more clearly in the following sections.</font></p>
+<h2><font face="Arial" color="#0000FF"><a name="DRC Specifications">DRC Specifications</a></font></h2>
+<p><font face="Arial">Every AHEAD constant and function should have a DRC
+specification file of the following form:</font></p>
+<blockquote>
+  <pre><font face="Courier New">&lt;layer declaration&gt;
+
+&lt;attribute declarations&gt;</font></pre>
+  <pre><font face="Courier New">&lt;design rules&gt;</font></pre>
+</blockquote>
+<p><font face="Arial">An example is:</font></p>
+<div align="center">
+  <center>
+  <table border="0" cellspacing="0" cellpadding="0">
+    <tr>
+      <td>
+  <pre><font face="Courier New">layer foo;
+
+flowright Bool c;
+flowleft  Int  d;</font></pre>
+  <pre><font face="Courier New">requires flowright c;
+provides flowleft d &gt;= 10;</font></pre>
+      </td>
+      <td></td>
+      <td>
+        <pre><font face="Courier New">(1)
+
+(2)
+</font></pre>
+        <pre><font face="Courier New">(3)
+</font></pre>
+      </td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p><font face="Arial">Line (1) declares the layer
+named &quot;foo&quot;.&nbsp; Lines (2) declare two attributes, c and d.&nbsp; c
+is an <b>Bool</b> attribute and d is an <b>Int</b> attribute.&nbsp;
+The adjectives <b>flowleft</b> and <b>flowright</b> designate the type of
+attribute -- i.e.,&nbsp; &quot;inherited&quot; or &quot;synthesized&quot;.&nbsp; Lines (3) define preconditions --
+<b> requires</b> --
+that must be satisfied during a composition and postconditions -- <b> provides</b> --
+whose values are propagated to other terms of a AHEAD expression.&nbsp;</font></p>
+<p><font face="Arial">Compositions of DRC specifications yield other DRC
+specifications of the same form, thus allowing composite constants and functions
+to have DRC specs that are indistinguishable from their primitive
+counterparts.</font></p>
+<h2><font face="Arial" color="#0000FF"><a name="DRC Grammar">DRC Grammar</a></font></h2>
+<h3><font face="Arial" color="#0000FF"><a name="Aspect Declaration">Layer Declaration</a></font></h3>
+<p><font face="Arial">Every DRC file begins with a layer declaration. The
+syntax is:</font></p>
+<blockquote>
+  <pre><font face="Courier New">[ single ] [ constant ] layer [ &lt;name&gt; ] ;</font></pre>
+</blockquote>
+<p><font face="Arial">Optionally, &quot;single&quot; may be used.&nbsp; It is common that 
+AHEAD constants and functions (henceforth called
+<b>layers</b>) can
+appear only once in an expression or equation.&nbsp; The single modifier
+indicates that a unit can appear only once.&nbsp; Similarly, the &quot;constant&quot; 
+option tells DRC that the unit whose design rules are described by this file 
+define a constant, not a function.&nbsp; <a href="#Note">More on this shortly</a>.&nbsp; 
+Finally, the name of the layer is optional.&nbsp; If it is absent, <b>drc</b> 
+will infer its name from the relative location of the file to the model 
+directory.&nbsp; (<b>drc</b> assumes that it runs in the model directory).</font></p>
+<h3><font face="Arial" color="#0000FF"><a name="Attribute Declaration">Attribute Declaration</a></font></h3>
+<p><font face="Arial">Every attribute that is referenced in a DRC specification
+must be declared.&nbsp; The syntax is:</font></p>
+<blockquote>
+  <pre><font face="Courier New">[ extern ] ( flowright | flowleft ) &lt;typeName&gt; &lt;attributeName&gt; ;</font></pre>
+</blockquote>
+<p><font face="Arial">An attribute can be declared or be externally referenced.
+When an attribute is declared, it can be externally referenced by other DRC
+files.&nbsp; The presence of <b> extern</b> in a declaration means that the attribute is
+defined in another DRC file; if <b> extern</b> is absent, this DRC file declares
+the attribute. An attribute can not be defined in multiple DRC files
+that participate in the same AHEAD equation.&nbsp; It is possible that
+different layers can declare the same attribute, however, these layers cannot
+appear in the same equation.</font></p>
+<p><font face="Arial">
+<img border="0" src="images/in-out.gif" align="right" width="212" height="140">The
+distinction between <b> flowright</b> and <b> flowleft</b> attributes is essential in design rule
+checking.&nbsp; Consider the equation A(B(C)) or A  </font><font SIZE="4">&#9679;</font><font face="Arial"> B  </font>
+<font SIZE="4">&#9679;</font><font face="Arial"> C in the figure to the
+right, where  </font><font SIZE="4">&#9679;</font><font face="Arial"> is the composition operator.&nbsp; The values of <b> flowright</b> attributes propagate 
+right (i.e., from the outermost terms
+of an equation to the innermost).&nbsp; In contrast, the values of <b> flowleft</b>
+attributes propagate left (i.e., from the innermost terms of an equation to the
+outermost).&nbsp; Every attribute must be declared either <b> flowright</b> or <b>
+flowleft</b>.</font></p>
+<blockquote>
+  <p><font color="#FF0000" face="Arial"><a name="Note">Note</a>: if a layer X
+  is declared <b>single</b>, drc automatically declares an flowleft Bool attribute
+  X.&nbsp; If layer X appears two or more times in an equation, attribute X is
+  defined multiple times, and this will generate an error.</font></p>
+  <p><font face="Arial" color="#FF0000">Note: if a layer X is declared <b>constant</b>, 
+  then all previously computed predicates are replaced by the predicates in X's DRC file, just as if the previously composed layers were not present.&nbsp; 
+  DRC will, however, warn you if this occurs.</font></p>
+</blockquote>
+<p><font face="Arial">There are two data types presently supported by drc: <b> Bool</b>
+and <b>Int</b>.&nbsp; They are described separately in the following sections.&nbsp;
+Finally, each attribute must be given a unique name.</font></p>
+<h3><font face="Arial" color="#0000FF"><a name="Attribute Types">Attribute Types</a></font></h3>
+<h4><font face="Arial" color="#0000FF"><a name="Bool">Bool</a></font></h4>
+<p><font face="Arial">The simplest and most commonly used attribute type is <b>Bool</b>.&nbsp;
+<b>Bool</b> (which is short for boolean) is somewhat of a misnomer: a <b> Bool</b> attribute
+can actually have one of three values: true, false, or undefined.&nbsp; When a <b>
+Bool</b> attribute is declared, its initial value is undefined.&nbsp; Its value can
+be changed by a postcondition (<a href="#Design Rules">discussed later</a>).</font></p>
+<p><font face="Arial">There are only three predicates associated with <b>Bool</b>:</font></p>
+<div align="center">
+  <center>
+  <table border="0" cellpadding="0" cellspacing="0">
+    <tr>
+      <td><font face="Arial"><b>Predicate</b></font></td>
+      <td><font face="Arial"><b>&nbsp;&nbsp;&nbsp;&nbsp;</b></font></td>
+      <td><font face="Arial"><b>Semantics</b></font></td>
+    </tr>
+    <tr>
+      <td><font face="Courier New">A</font></td>
+      <td></td>
+      <td><font face="Arial">A is true</font></td>
+    </tr>
+    <tr>
+      <td><font face="Courier New">!A</font></td>
+      <td></td>
+      <td><font face="Arial">A is false</font></td>
+    </tr>
+    <tr>
+      <td><font face="Courier New">?A</font></td>
+      <td></td>
+      <td><font face="Arial">A is unknown</font></td>
+    </tr>
+  </table>
+  </center>
+</div>
+<h4><font face="Arial" color="#0000FF"><a name="Int">Int</a></font></h4>
+<p><font face="Arial"><b>Int</b> (which is short for integer) again is somewhat of a
+misnomer in that an <b> Int</b> attribute can be associated with a single integer value
+or a range of values.&nbsp; When an <b> Int</b> attribute is declared, its initial value
+is the range of all integers -- minus infinity to plus infinity.&nbsp; Its value
+can be changed by a postcondition (<a href="#Design Rules">discussed later</a>).</font></p>
+<p><font face="Arial">The set of predicates that can be used (in combination)
+with <b> Int</b> attributes are:</font></p>
+<div align="center">
+  <center>
+  <table border="0" cellpadding="0" cellspacing="0">
+    <tr>
+      <td><font face="Arial"><b>Predicate</b></font></td>
+      <td><font face="Arial"><b>&nbsp;&nbsp;&nbsp;&nbsp;</b></font></td>
+      <td><font face="Arial"><b>Semantics</b></font></td>
+    </tr>
+    <tr>
+      <td><font face="Courier New">A == v&nbsp;</font></td>
+      <td></td>
+      <td><font face="Arial">A equals value v</font></td>
+    </tr>
+    <tr>
+      <td><font face="Courier New">A &gt;= v</font></td>
+      <td></td>
+      <td><font face="Arial">A geq value v</font></td>
+    </tr>
+    <tr>
+      <td><font face="Courier New">A &gt; v</font></td>
+      <td></td>
+      <td><font face="Arial">A gtr value v</font></td>
+    </tr>
+    <tr>
+      <td><font face="Courier New">A &lt;= v</font></td>
+      <td></td>
+      <td><font face="Arial">A leq value v</font></td>
+    </tr>
+    <tr>
+      <td><font face="Courier New">A &lt; v</font></td>
+      <td></td>
+      <td><font face="Arial">A lss value v</font></td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p><font face="Arial">&nbsp;By combination, we mean conjunctions of the above, 
+such as:
+A &gt; 4 and A &lt; 40.</font></p>
+<h3><font face="Arial" color="#0000FF"><a name="Design Rules">Design Rules</a></font></h3>
+<p><font face="Arial">Design rules are expressed by <b> flowright</b> and <b> 
+flowleft</b>
+preconditions and postconditions.&nbsp; When you write an equation A(B(C)) or A 
+ 
+</font><font SIZE="4">&#9679;</font><font face="Arial"> B  </font><font SIZE="4">&#9679;</font><font face="Arial"> C, <b>Flowright</b> attribute values are propagated from
+left-to-right.&nbsp; A <b> requires flowright</b> predicate is a precondition that tests
+the values of <b> flowright</b> attributes that lie immediately to the left of unit&nbsp;
+B.&nbsp; A <b> provides flowright</b> is a postcondition that propagates values
+to the right of unit B.</font></p>
+<p align="left"><font face="Arial">In contrast, <b> flowleft</b> attribute values are
+propagated from right-to-left.&nbsp; A <b> requires flowleft</b> predicate is a
+precondition that tests the values of <b> flowleft</b> attributes that lie immediately to
+the right of unit B.&nbsp; A <b> provides flowleft</b> predicate is a postcondition that
+propagates values to the left of unit B.</font></p>
+<p align="left"><font face="Arial">The syntax of design rules is:</font></p>
+<div align="left">
+  <blockquote>
+    <pre align="left"><font face="Courier New">( requires | provides ) ( flowright | flowleft ) &lt;predicate&gt; ;</font></pre>
+  </blockquote>
+</div>
+<p align="left"><font face="Arial">where a predicate is a conjunction of
+primitive predicates.&nbsp; &quot;<b>and</b>&quot; is the conjunction
+operator.&nbsp;</font></p>
+<blockquote>
+<p align="left"><font face="Arial" color="#FF0000">Remember: <b> flowleft</b> predicates can only reference
+<b>
+flowleft</b> attributes and similarly, <b> flowright</b> predicates can only reference
+<b> flowright</b>
+attributes.</font></p>
+</blockquote>
+<h2 align="left"><font face="Arial" color="#0000FF"><a name="The drc Tool">The
+drc Tool</a></font></h2>
+<h3 align="left"><font face="Arial" color="#0000FF"><a name="Simplification and Validation of Individual Files">Simplification
+and Validation of Individual Files</a></font></h3>
+<p align="left"><font face="Arial"><b>drc</b>  can perform simple validations
+and predicate simplifications on individual files.&nbsp; Consider:</font></p>
+<div align="left">
+  <blockquote>
+    <pre align="left"><font face="Courier New">layer one;</font></pre>
+    <pre align="left"><font face="Courier New">flowleft Int range;
+flowright Int val;</font></pre>
+    <pre align="left"><font face="Courier New">requires flowleft 8 &lt; range and range &gt; 30 and 10 &lt; range;
+provides flowright 4 &lt;= val and 4 &gt;= val;</font></pre>
+  </blockquote>
+</div>
+<p align="left"><font face="Arial"><b>drc</b> validates the specification to make sure,
+for example, that all attributes are defined and their references are legal
+(e.g., <b> Bool</b> values cannot be referenced as integer ranges, and <b>
+flowleft</b>
+predicates reference only <b>flowleft</b> attributes).&nbsp; <b>drc</b> also
+simplifies a specification and presents it in a canonical manner. The output of <b>
+drc</b> for the above file is shown below, where the predicates are simplified.</font></p>
+<blockquote>
+  <div align="left">
+    <pre align="left"><font face="Courier New">layer one;
+
+flowleft Int range;
+flowright Int val;
+
+requires flowleft 30 &lt; range;
+provides flowright val == 4;</font></pre>
+  </div>
+</blockquote>
+<h3 align="left"><font face="Arial" color="#0000FF"><a name="Composition of Files">Composition of Files</a></font></h3>
+<p align="left"><font face="Arial"><b>drc</b> also composes DRC files.&nbsp; The basic
+algorithm is simple: the <b> flowright</b> (<b>flowleft</b>) precondition of a composition is the
+conjunction of the primitive preconditions that cannot be evaluated.&nbsp; The <b>
+flowright</b> (<b>flowleft</b>) postcondition of a composition is the set of assignments
+(postconditions) made by each primitive of the composition in the order in which
+they were composed.&nbsp; Consider layer <b>two</b>:</font></p>
+<div align="left">
+  <blockquote>
+    <pre align="left"><font face="Courier New">layer two;
+
+extern flowleft Int range;
+extern flowright Int val;
+
+provides flowleft range == 50;
+requires flowright val == 4;</font></pre>
+  </blockquote>
+</div>
+<p align="left"><font face="Arial">The composition of <b> one</b> with <b> two</b> is
+shown in the left declaration below.&nbsp; Remember that the order in which DRC files are composed
+matters.&nbsp; Composing <b> two</b> with <b> one</b> (shown in the right
+declaration below) yields a very
+different result.&nbsp; Study both to understand these differences and how DRC works.</font></p>
+<div align="center">
+  <center>
+  <table border="0" cellpadding="0" cellspacing="0">
+    <tr>
+      <td>
+        <pre><font face="Courier New">layer one_two;
+
+flowleft Int range;
+flowright Int val;
+
+provides flowleft range == 50;
+provides flowright val == 4;</font></pre>
+      </td>
+      <td>
+        <pre>    </pre>
+      </td>
+      <td>
+        <pre><font face="Courier New">layer two_one;
+
+flowleft Int range;
+flowright Int val;
+
+requires flowleft 30 &lt; range;
+provides flowleft range == 50;
+requires flowright val == 4;
+provides flowright val == 4;</font></pre>
+      </td>
+    </tr>
+  </table>
+  </center>
+</div>
+<p align="left"><font face="Arial">In general, <b> drc</b> composes <b>flowright</b>-<b>flowleft</b>
+<b>requires</b>-<b>provides</b> predicates and merges attribute references  eliminating
+<b>extern</b> declarations when attributes are now defined locally.</font></p>
+<h2 align="left"><font face="Arial" color="#0000FF"><a name="Design Methodology">Design
+Methodology</a></font></h2>
+<p align="left"><font face="Arial">It is not immediately obvious how one creates 
+useful design rules.&nbsp; Fortunately, there are simple guidelines that one can 
+follow. A model architect will know, approximately,
+the shape or structure of the equations that model users will write.&nbsp; A
+&quot;shape&quot; takes the form of:</font></p>
+<div align="left">
+  <blockquote>
+    <blockquote>
+      <pre align="left"><font face="Courier New">strata_4( strata3( strata2( strata1( strata0 ) ) ) )</font></pre>
+    </blockquote>
+  </blockquote>
+</div>
+<p align="left"><font face="Arial">where strata0 is a constant and strata_x
+(x&gt;0) denotes a composition of primitive functions.&nbsp;&nbsp; Further, all functions of
+strata_(i-1) appear before the functions of strata_i.&nbsp; Consider the
+following examples.</font></p>
+<blockquote>
+  <p align="left"><font face="Arial"><b>FSATS</b>.&nbsp; FSATS is a
+  command-and-control simulator for the U.S. Army.&nbsp; An FSATS equation
+  defines a simulator. strata0 is FsatsL -- a constant that encapsulates a set
+  of primitive interfaces.&nbsp; strata1 defines the basic infrastructure of
+  command-and-control simulation: target definition, messages, network objects,
+  scripts, opfacs, missions, and proxies.&nbsp; strata2 consists of weapon
+  systems: basic, artillery, mortars, and multi-launch rockets.&nbsp; strata3
+  consists of missions -- wrffe mortar, wrffe artillery, etc.&nbsp; And strata4
+  consists of main classes, such as GUIs and local execution.<br>
+  <br>
+  LocalL( GuiL(<br>
+  &nbsp;&nbsp; MissionWrffeMlrsL( MissionWrffeArtyL( MissionWrffeMortarL(
+  MissionWrffeL( MissionAnyL(<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; MlrsL( MortarL( ArtilleryL( BasicL(&nbsp;<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ProxyL( MissionL(
+  OpfacL(ScriptL( NetworkL( MessageL( TargetL(&nbsp;<br>
+  </font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <font face="Arial">FsatsL))))))))))))))))));</font></p>
+  <p align="left"><font face="Arial"><b>GPL</b>. GPL is a model of a
+  product-line of a package of graph algorithms.&nbsp; A GPL equation defines a
+  particular graph package. strata0 is either a directed or undirected
+  graph.&nbsp; strata1 defines variations on graphs (e.g. weighted or
+  not).&nbsp; strata3 defines a search algorithm.&nbsp; strata4 defines one or
+  more graph algorithms (e.g. vertex numbering, cycle checking, etc.).</font></p>
+  <p align="left"><font face="Arial">Number( Cycle( ShortestPath(<br>
+  &nbsp;&nbsp; DFS(<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Weighted(<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Undirected))))));</font></p>
+</blockquote>
+<p align="left"><font face="Arial">An <b>Int</b> attribute can delineate the
+boundaries between strata.&nbsp; Let's define rank to be an <b>flowleft</b> <b>Int</b> 
+attribute.&nbsp; The flowleft postcondition (<b>provides flowleft</b>) for strata0
+is rank == 1.&nbsp; An <b>flowleft</b> precondition (<b>requires flowleft</b>) for
+each strata1 function is rank == 1.&nbsp; The last function in strata1 should
+set rank == 2 as an <b>flowleft</b> postcondition.&nbsp; An <b>flowleft</b>
+precondition for each strata2 function is rank == 2, and so on.&nbsp; Thus, once
+the last AHEAD function in each strata is seen, the value of rank is
+incremented, and only functions from the next strata can be legally composed.</font></p>
+<p align="left"><font face="Arial">Next, the composition of functions within an
+individual strata need to be ordered.&nbsp; This can be accomplished by using <b>Bool</b> 
+attributes.&nbsp; For each AHEAD layer y, use the <a href="ModelExplorer.html">
+modelexplorer</a> tool to
+see which classes that layer refines.&nbsp; Identify the layer -- a.k.a. unit
+--&nbsp; from which those classes arise; let x be this layer.&nbsp; (There can
+be several such layers, but the idea that is described in the next few
+paragraphs holds).&nbsp; Define a <b>Bool</b> property xPresent which is
+asserted as an <b>flowleft</b> postcondition for x.&nbsp; An <b>flowleft</b>
+precondition for y is xPresent.&nbsp; (This means that layer x -- or any layer
+that serves the same purpose as x -- must appear prior to y -- <b>flowright</b> y
+-- in an equation.&nbsp; By defining a generic property so that different layers
+or combination of layers can perform the same layer, you don't have to
+depend on a the use of a particular layer.&nbsp; (Admittedly, most domains have
+only one implementation of a feature, so there is often a direct dependence
+among layers.&nbsp; In the general case, you don't want to have design rules
+that single out specific layers).&nbsp; By following this strategy, you can
+define design rules that will appropriately order the layers within a strata.</font></p>
+<p align="left"><font face="Arial">Most design rules can be specified using <b>
+flowleft</b>
+ attributes.&nbsp; However, there will
+always be the need for <b>flowright</b>  attributes.&nbsp; For example, one can compose
+layers
+in a manner that all layer preconditions are satisfied -- e.g., stack strata1
+layers on top of strata0 -- but this doesn't mean that all layers are present in
+order to build a viable system.&nbsp; In such cases, certain properties (e.g.,
+layers with main methods) must appear in a AHEAD equation.&nbsp; These layers
+can set an <b>flowright</b> postcondition that is propagated all the way back to
+strata0.&nbsp; (For example, LocalL in FSATS defines a class with a main
+method.&nbsp; An <b>flowright Bool </b>attribute, mainPresent, can be asserted as
+an <b>flowright</b> postcondition.&nbsp; The FsatsL layer can define an <b>
+flowright</b>
+precondition that requires mainPresent to be asserted.&nbsp; If this
+precondition is satisfied, then (presumably) a correct equation has been written
+provided all other <b>flowleft</b> preconditions have been satisfied.</font></p>
+<blockquote>
+  <p align="left"><font face="Arial" color="#FF0000">Note: we assume that a
+  stand-alone system has no unsatisfied flowright and flowleft preconditions; there
+  are only flowright and flowleft provides declarations.</font></p>
+</blockquote>
+<p align="left"><font face="Arial">Another source of DRC attributes is the
+referencing of libraries, which are added to an equation via a layer.&nbsp; I
+normally require libraries to be present in an equation before they can be
+referenced, although this is not absolutely necessary.&nbsp; Because classes in
+libraries don't refine other classes, they can appear anywhere in an equation,
+as long as they appear precisely once.&nbsp; Testing for the presence or absence
+of a library is simple: define an <b>flowright</b> <b>Bool</b> attribute
+libraryPresent, and assert libraryPresent as a postcondition of the library
+layer.&nbsp; An <b>flowright</b> precondition of the strata0 layer will require
+libraryPresent to be asserted.&nbsp; Alternatively, one can use flowright or 
+flowleft attributes to define dependencies among client layers and their layer
+libraries.</font></p>
+<h2 align="left"><font face="Arial" color="#0000FF"><a name="Future Work and Limitations">Future
+Work and Limitations</a></font></h2>
+<p align="left"><font face="Arial">The <b>drc</b> tool is still in its
+infancy.&nbsp; The following set of changes will eventually be made:</font>
+<ul>
+  <li>
+    <p align="left"><font face="Arial">It is common in postcondition
+    specifications to be able to reference the original value of a variable. Let
+    v.<b>orig</b> denote the original value of attribute v.&nbsp; Suppose v is
+    an <b>Int</b> attribute.&nbsp; To further constrain v beyond v.<b>orig</b>,
+    a postcondition might read:</font></li>
+</ul>
+<div align="left">
+  <blockquote>
+    <pre align="left"><font face="Courier New">provides flowright v.orig and v &lt; 40;</font></pre>
+    <p align="left"><font face="Arial">That is, if v.<b>orig</b> is 2 &lt; v,
+    the above postcondition would be 2 &lt; v &lt; 40.&nbsp; The modifier
+    &quot;.<b>orig</b>&quot; will be added in the future to reference previous
+    attribute values.</font>
+  </blockquote>
+  <ul>
+    <li>
+      <p align="left"><font face="Arial">Virtually all DRC predicates are 
+      conjunctions.&nbsp; One can imagine that disjunctions will arise.</font></li>
+  </ul>
+</div>
+<hr>
+<p><font face="Verdana">
+<a href="index.html">&nbsp;</a></font><b><font face="Arial"><a href="index.html">ATS Home Page</a></font></b></p>
+<p><font face="Arial"><b>Copyright © Software Systems Generator Research Group. 
+All rights reserved.</b> <br>
+<b>Revised:&nbsp;<!--webbot bot="TimeStamp" s-format="%B %d, %Y" s-type="EDITED" startspan -->January 25, 2006<!--webbot bot="TimeStamp" endspan i-checksum="31592" -->.</b>
+</font></p>

@@ -1,0 +1,752 @@
+
+
+<head>
+<title>The jampack Tool</title>
+</head>
+
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%">
+  <tr>
+    <td WIDTH="78">
+    <img border="0" src="images/FopButton3.jpg" width="80" height="64"></td>
+    <td WIDTH="688" BGCOLOR="#00FFFF"><h3><font size="+3" color="#8000FF" face="Arial">The
+      jampack Composition Tool</font></h3>
+    </td>
+  </tr>
+</table>
+
+<p><font face="Arial"><b>jampack</b></font><font face="Arial">  is a tool to compose <b>.jak</b> 
+files that define a single refinement chain.&nbsp; The <a href="Composition.html"><i>Composition
+document</i></a>  presents the big picture of how
+and where <b>jampack</b> is used, the syntax and semantics of <b>.jak </b>files,
+and how <b>jampack</b> differs from the <b>mixin</b> composition tool. This document
+discusses detailed use and features of <b>jampack</b>.</font></p>
+<ul>
+  <li><i><font face="Arial"><a href="#Command-Line Invocation">command-line 
+  invocation</a></font></i></li>
+  <li><font face="Arial"><a href="#Interface Composition Rules"><i>interface
+    composition</i></a></font></li>
+  <li><font face="Arial"><a href="#Class Composition Rules"><i>class composition</i></a></font>
+    <ul>
+      <li><font face="Arial"><a href="#keySorting"><i>key sorting</i></a></font></li>
+      <li><font face="Arial"><a href="#Rules for Variable Composition"><i>variable
+        composition</i></a></font></li>
+      <li><font face="Arial"><a href="#Rules for Method Compositions"><i>method
+        composition</i></a></font></li>
+      <li><font face="Arial"><a href="#Rules for Composing Constructors"><i>constructor
+        composition</i></a></font></li>
+    </ul>
+  </li>
+  <li><font face="Arial"><a href="#State Machine Composition Rules"><i>state
+    machine composition</i></a></font></li>
+  <li><font face="Arial"><a href="#Local_Id"><i>local declarations</i></a></font></li>
+</ul>
+
+<p><font face="Arial">General rules of formatting and composition that are
+shared by <b>mixin</b> and <b>jampack</b> are described in the <a href="Composition.html"><i>Composition
+document</i></a>.&nbsp;</font></p>
+
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FFFF00">
+  <tr>
+    <td WIDTH="788"><h2><font face="Arial" color="#8000FF">
+    <a name="Command-Line Invocation">Command-Line Invocation</a></font></h2>
+    </td>
+  </tr>
+</table>
+
+<p><font face="Arial">To call <b>jampack</b> from the command line:</font></p>
+<blockquote>
+  <pre><font face="Courier New">&gt; jampack</font></pre>
+  <pre><font face="Courier New">Usage: jampack [options] baseFile extensionFile1 extensionFile2 ...
+Options: -t type-sort interface declarations
+         -k key-sort class field declarations
+         -a &lt;layerName&gt; name of layer to generate
+         -f &lt;fileName&gt; name file to generate</font></pre>
+</blockquote>
+<p><font face="Arial">where:</font></p>
+<ul>
+  <li><font face="Arial">option -t is for <a href="#typeSorting"><i>type sorting</i></a></font>
+  <li><font face="Arial">option -k is for <a href="#keySorting"><i>key sorting</i></a>
+    (ignored if interfaces are being refined)</font></li>
+  <li><font face="Arial">if option -a is selected, you must also supply
+    layerName.&nbsp; This is the name of the composite layer that is
+    produced.<br>
+    By default, the layer name is the same as the root file.</font></li>
+  <li><font face="Arial">if option -f is selected, you must also supply fileName.&nbsp;
+    This is the name of the file in which the composite layer is to be stored.<br>
+    If f is not selected, output is sent to standard out.</font></li>
+  <li><font face="Arial">files to be composed are listed base-file first.&nbsp; 
+  So for the composition A(B(C)),&nbsp; the files are listed C B A on the <b>
+  jampack</b> command line.</font></li>
+</ul>
+
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FFFF00">
+  <tr>
+    <td WIDTH="788"><h2><font face="Arial" color="#0000FF"><a name="Interface Composition Rules">Interface
+Composition Rules</a></font></h2>
+    </td>
+  </tr>
+</table>
+
+<p><font face="Arial">The rules for interface composition that are specific to <b>jampack</b>
+are:</font></p>
+<ul>
+  <li><font face="Arial">modifiers of the root and refinement are merged (without
+    duplication).</font></li>
+  <li><font face="Arial">extends lists are merged (without duplication).</font></li>
+  <li><font face="Arial">bodies are merged (without duplication)</font></li>
+  <li><font face="Arial">with option -t, list of field declarations are <a href="#typeSorting"><i>type
+    sorted</i></a> (constants first, methods second).</font></li>
+</ul>
+<p><font face="Arial">An example root interface and refinement are:</font></p>
+<blockquote>
+  <pre>layer Iroot1;
+
+import x.y.z.*;
+
+interface MyInt extends FooInterface {
+   int Silent = 0;
+   void foo() throws AFit;
+   SomeType bar( int x );
+}</pre>
+  <hr>
+  <pre>layer Iext1;
+
+import java.io.Serializable;
+
+public transient refines interface MyInt extends yyyInterface {
+   int Terse = 2;
+   void foo() throws SomeException;
+   int increment( int i );
+}</pre>
+</blockquote>
+<p><font face="Arial">The result of their composition by <b>jampack</b> is shown below.&nbsp;
+Highlighted in <span style="background-color: #FFFF00"> yellow</span> are additions made by the MyInt
+refinement.</font></p>
+<blockquote>
+  <pre>layer Foo;
+
+import x.y.z.*;
+import java.io.Serializable;
+
+public transient interface MyInt extends FooInterface, yyyInterface {
+   int Silent = 0;
+   int Terse = 2;
+   void foo() throws AFit, SomeException;
+   SomeType bar( int x );
+   int increment( int i );
+}</pre>
+  <p><font face="Arial" color="#FF0000">Note: <b>jampack</b> merges modifier
+  lists.&nbsp; That is, the definition of
+  MyInt in IRoot1 has no modifiers and the refinement in Iext1 adds the public
+  and transient modifiers.&nbsp; <b>mixin</b> does not merge modifier lists.&nbsp; So if you want compatibility between
+  <b>mixin</b> and <b>jampack</b>, avoid using modifiers in refinements.</font></p>
+</blockquote>
+<p><font face="Arial"><b><a name="typeSorting"></a>Type sorting</b> is a linear
+algorithm that sorts interface declarations.&nbsp; It is only present in <b>jampack</b>
+and is invoked by the -t option command-line option. To see why type sorting is
+useful,
+consider the result if type sorting is not used (see
+below): it is a jungle of definitions that are hard to understand.&nbsp; Type
+sorting collects all variable definitions together in one spot and method
+definitions in another, and makes a small contribution to generated code
+beautification.</font></p>
+<blockquote>
+<pre><font face="Courier New">public transient interface MyInt extends FooInterface, yyyInterface {
+    int Silent = 0;
+    void foo() throws AFit, SomeException;
+    SomeType bar( int x );
+    int Terse = 2;
+    int increment( int i );
+}</font></pre>
+</blockquote>
+<h4><font face="Arial" color="#0000FF">Exercise</font></h4>
+<p><font face="Arial">Create separate files A.jak and B.jak to hold the above definitions.&nbsp; Compose them into C.jak by the command:</font></p>
+<blockquote>
+  <pre><font face="Courier New">&gt; jampack -t -a Foo A.jak B.jak &gt; C.jak</font></pre>
+</blockquote>
+<p><font face="Arial">Remove -t to turn off type sorting.</font></p>
+
+  <p><font face="Arial"><font color="#0000FF"><b><a name="Caveat">Caveat</a></b></font>. 
+  Note: the file naming convention used in this example isn't typical.&nbsp; 
+  Usually A.jak would be a file in the IRoot1 layer (i.e., it would have 
+  the pathname IRoot1/MyInt.jak) and Iext1.jak would be a file in the Iext1 
+  layer (i.e., it would have the pathname Iext1/MyInt.jak).&nbsp; So a more 
+  typical invocation would be:</font></p>
+<blockquote>
+  <pre><font face="Courier New">&gt; jampack -a Foo IRoot1/MyInt.jak IIext1/MyInt.jak &gt; C.jak</font></pre>
+</blockquote>
+
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FFFF00">
+  <tr>
+    <td WIDTH="788"><h2><font face="Arial" color="#0000FF"><a name="Class Composition Rules">
+Class Composition Rules</a></font></h2>
+    </td>
+  </tr>
+</table>
+
+<p><font face="Arial">The rules of class composition that are specific to <b>jampack</b>
+are:</font></p>
+<ul>
+  <li><font face="Arial">modifiers of the base and refinement are merged (without
+    duplication).</font></li>
+  <li><font face="Arial">implements clause lists are merged (without
+    duplication).</font></li>
+  <li><font face="Arial">bodies are merged.</font></li>
+  <li><font face="Arial">with option -k, list of field declarations are <a href="#keySorting"> <i> key
+    sorted</i></a>.</font></li>
+</ul>
+<p><font face="Arial">The following sections discuss how <b>jampack</b> composes .jak
+files.&nbsp; The ideas actually are general and apply to <b>mixin</b> as well.&nbsp; So
+it is recommended that you read both documents.</font></p>
+<ul>
+  <li><font face="Arial"><a href="#Rules for Variable Composition"><i>composing
+    variables</i></a></font></li>
+  <li><font face="Arial"><a href="#Rules for Method Compositions"><i>composing
+    methods</i></a></font></li>
+  <li><font face="Arial"><a href="#Rules for Composing Constructors"><i>composing
+    constructors</i></a></font></li>
+</ul>
+<p><font face="Arial">An example of a base class file and an refinement class
+file are:</font></p>
+<blockquote>
+  <pre>layer Ctop;
+
+import jakarta.util.*;
+
+class top {
+   static int i,j;
+   top() { ii = 5; }
+   void foo(float x, float y) { /* do something */ }
+   float bar( float x ) { /* do something */ }
+}</pre>
+  <hr>
+  <pre>layer Cmid;
+
+import AnotherPackage;
+
+refines class top implements java.io.Serializable, xxx {
+   static int k;
+   static { j = 5; }
+
+   top(float x) { /* do something */ }
+
+   float foobar() { Super(float).bar(4.0); Super(float,float).foo(0, 0); }
+
+   public void foo( float x, float y ) { /* something more */ }
+}</pre>
+</blockquote>
+<p><font face="Arial">The result of their <b>jampack</b> composition is shown below.&nbsp;
+Highlighted in <span style="background-color: #FFFF00"> yellow</span> are additions made by the
+refinement:</font></p>
+<blockquote>
+  <pre>layer Foo;
+
+import jakarta.util.*;
+import AnotherPackage;
+
+class top implements java.io.Serializable, xxx {
+   static int i,j;
+   static int k;
+   static { j = 5; }
+
+   top() { ii = 5; }
+
+   top(float x) { /* do something */ }
+
+   float bar( float x ){ return <span style="background-color: #FFFF00">bar$$Ctop</span>( x ); }
+  <span style="background-color: #FFFF00"> final float </span><span style="background-color: #FFFF00">bar$$Ctop</span><span style="background-color: #FFFF00">( float x ) { /* do something */ </span>
+   <span style="background-color: #FFFF00">final void </span><span style="background-color: #FFFF00">foo$$Ctop(float</span><span style="background-color: #FFFF00"> x, float y) { /* do something */ }</span>
+
+   public void foo( float x, float y ) { /* something more */ }
+
+   float foobar() { <span style="background-color: #FFFF00">bar$$Ctop</span>(4.0); <span style="background-color: #FFFF00">foo</span><span style="background-color: #FFFF00">$$Ctop</span>(0, 0); }
+}</pre>
+</blockquote>
+<p><font face="Arial"><b><a name="keySorting"></a>Key sorting</b> is a technique
+much like type sorting.&nbsp; The body of a class has different kinds of
+entities -- variable declarations, method declarations, etc. Key sorting is
+similar to type sorting in that all entities of a single type (initialization
+blocks, variable declarations, methods) are grouped together.&nbsp; Key sorting
+goes beyond this to sort methods.&nbsp; In particular, we expect that there will
+be many &quot;variations&quot; of a single method, such as bar, bar$$Ctop, etc.&nbsp; 
+Key sorting groups all of these related methods together, as shown above.&nbsp; 
+(It does this by assigning a key to each method and sorting the methods in key 
+order.&nbsp; Hence the name &quot;key sort&quot;). If key sorting is not used, an 
+unintelligible jungle of declarations is produce.&nbsp; (Try the above example 
+without the -k option to see).</font></p>
+<blockquote>
+<pre>class top implements java.io.Serializable, xxx {
+   static int i,j;
+   static int k;
+   top() { ii = 5; }
+   top(float x) { /* do something */ }
+   final void foo$$Ctop(float x, float y) { /* do something */ }
+   float bar( float x ){ return bar$$Ctop( x ); }
+   final float bar$$Ctop( float x ) { /* do something */ }
+   float foobar() { bar$$Ctop(4.0); foo$$Ctop(0, 0); }
+   public void foo( float x, float y ) { /* something more */ }
+   static { j = 5; }
+}</pre>
+</blockquote>
+<p><font face="Arial">There are special language features, such as <b>Super</b>, that
+you need to understand and use when defining class refinements. We explain <b>Super</b>
+and how these files are produced in the following sections.&nbsp;&nbsp;</font></p>
+<h4><font face="Arial" color="#0000FF">Exercise</font></h4>
+<p><font face="Arial">Create separate files top.jak and mid.jak to hold the
+definitions above.&nbsp; Compose them into combined.jak by the command:</font></p>
+<blockquote>
+  <pre><font face="Courier New">&gt; jampack -k -a Foo top.jak mid.jak &gt; combined.jak</font></pre>
+</blockquote>
+<p><font face="Arial">Remove the -k option to turn off key sorting.&nbsp; Don't 
+forget the <a href="#Caveat">caveat</a>.</font></p>
+
+<table BORDER="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FF00FF">
+  <tr>
+    <td WIDTH="766"><h3><a name="Rules for Variable Composition"><font face="Arial" color="#FFFFFF">Rules
+for Variable Composition</font></a></h3>
+    </td>
+  </tr>
+</table>
+
+<p><font face="Arial">There is no notion of variable refinement in Java.&nbsp;
+It is one thing to override a method; it makes no sense to override a
+variable.&nbsp; Whenever a parent class defines a variable and a refinement class attempts to define the same variable, an error is reported by
+<b>jampack</b>.&nbsp;</font></p>
+<p><font face="Arial"><a name="inadvertentcaptuer"></a>This begs the question of
+<b>
+inadvertent capture</b>.&nbsp; What if a temporary variable x is defined in the
+root class and a different variable, also named x, is defined in the refinement class?&nbsp; As mentioned above,
+<b>jampack</b> will complain.&nbsp; The clashing of names for temporary variables should be handled
+automatically.&nbsp; In a <a href="#inadvertentcaptuer"><i>later section</i></a>, we
+show how local declarations avoid inadvertent capture.</font></p>
+
+<table BORDER="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FF00FF">
+  <tr>
+    <td WIDTH="766"><h3><a name="Rules for Method Compositions"><font face="Arial" color="#FFFFFF">Rules
+for Method Composition</font></a></h3>
+    </td>
+  </tr>
+</table>
+
+<p><font face="Arial">You may have noticed that composing classes is a lot more
+complicated than composing interfaces.&nbsp; The difficulty rests on the ability
+of methods of an refinement class to call arbitrary methods of their &quot;superclass&quot; or rather,
+&quot;parent&quot;.&nbsp; And part of the difficulty arises because <b>jampack</b>
+is a relatively simple preprocessor which doesn't have full type information 
+about a program it is composing.&nbsp; </font></p>
+<p><font face="Arial">You know that a subclass can call method foo() of its
+superclass by invoking super.foo().&nbsp; By analogy, a class refinement can call
+method foo() of its super refinement by&nbsp; invoking <b>Super()</b>.foo().&nbsp;
+Because jampack is a preprocessor that does not type check programs, if a refinement
+calls method of its parent with signature foo(int, float, String), it
+does so by invoking <b>Super(int,float,String)</b>.foo(5, 3.4, &quot;me&quot;).&nbsp;
+The token <b>Super</b> is a reserved keyword.&nbsp; <b>Super</b> is always followed by the
+type signature of the method that is to be invoked, and is the
+way the type signature of a &quot;base-class&quot; method is conveyed to <b>jampack</b>.</font></p>
+<p><font face="Arial">There are four rules that are specific to extending base-class methods.
+The actions taken depend on the following conditions:</font></p>
+<ul>
+  <li><font face="Arial">A method of the parent class (or <i>parent method</i>) is <b><i>overridden</i></b>
+    if there exists a method of the refinement class (or <i>refinement</i><i> method</i>) with
+    an identical signature.&nbsp; (This is the usual notion of overriding).</font></li>
+  <li><font face="Arial">A parent method is <i>referenced</i> if the method is
+    invoked in the refinement class.</font></li>
+</ul>
+<p><font face="Arial">If a parent method is:</font></p>
+<ul>
+  <li><font face="Arial">overridden and referenced -- The original method name
+    is mangled or &quot;uniquified&quot; -- &quot;name&quot; becomes &quot;name$$layerName&quot;.&nbsp; This
+    is useful as programmers will know from which layer the method arose.&nbsp;
+    The refinement method is rewritten to reference this local method.</font></li>
+</ul>
+<div align="center">
+  <center>
+  <table border="2" cellpadding="2" width="673">
+    <tr>
+      <td width="92">&nbsp;</td>
+      <td width="224"><font face="Arial"><b>Before Composition</b></font></td>
+      <td width="332"><font face="Arial"><b>After Composition in Composite Class</b></font></td>
+    </tr>
+    <tr>
+      <td width="92"><font face="Arial"><b>Parent class</b></font></td>
+      <td width="224">
+        <pre><font face="Courier New">void foo( ) { 
+   /* do something */ 
+}</font></pre>
+      </td>
+      <td width="332" rowspan="2">
+        <pre><font face="Courier New">final void foo$$baseAspect() { 
+   /* do something */ 
+}</font></pre>
+        <pre><font face="Courier New">void foo( ) { 
+</font>   <font face="Courier New">foo$$baseAspect();
+   // something more
+</font>}</pre>
+      </td>
+    </tr>
+    <tr>
+      <td width="92"><font face="Arial"><b>Refinement</b></font><font face="Arial"><b>
+        class</b></font></td>
+      <td width="224">
+        <pre><font face="Courier New">void foo( ) { 
+</font>   <font face="Courier New">Super( ).foo();
+   // something more
+</font>}</pre>
+      </td>
+    </tr>
+  </table>
+  </center>
+</div>
+<ul>
+  <li><font face="Arial">overridden and not referenced -- the parent method is
+    discarded, as it is not referenced and is replaced by a refinement method.</font></li>
+</ul>
+<div align="center">
+  <center>
+  <table border="2" cellpadding="2" width="673">
+    <tr>
+      <td width="92">&nbsp;</td>
+      <td width="224"><font face="Arial"><b>Before Composition</b></font></td>
+      <td width="332"><font face="Arial"><b>After Composition in Composite Class</b></font></td>
+    </tr>
+    <tr>
+      <td width="92"><font face="Arial"><b>Parent class</b></font></td>
+      <td width="224">
+        <pre><font face="Courier New">void foo( ) { 
+   /* do something */ 
+}</font></pre>
+      </td>
+      <td width="332" rowspan="2">
+        <pre>&nbsp;</pre>
+        <pre><font face="Courier New">void foo( ) { 
+   // something more
+</font>}</pre>
+      </td>
+    </tr>
+    <tr>
+      <td width="92"><font face="Arial"><b>Refinement</b></font><font face="Arial"><b>
+        class</b></font></td>
+      <td width="224">
+        <pre><font face="Courier New">void foo( ) { 
+   // something else
+</font>}</pre>
+      </td>
+    </tr>
+  </table>
+  </center>
+</div>
+<ul>
+  <li><font face="Arial">not overridden and referenced -- This is the most
+    complicated of rewrites.&nbsp; First, because the parent method was
+    referenced, a local copy of it with a layer-mangled name is created.&nbsp;
+    Second, a new parent method is created to refer to the local method thereby
+    preserving the original parent method's semantics.&nbsp; Lastly, all
+    references in the refinement are made to the local method.</font></li>
+</ul>
+<div align="center">
+  <center>
+  <table border="2" cellpadding="2" width="673">
+    <tr>
+      <td width="92">&nbsp;</td>
+      <td width="224"><font face="Arial"><b>Before Composition</b></font></td>
+      <td width="332"><font face="Arial"><b>After Composition in Composite Class</b></font></td>
+    </tr>
+    <tr>
+      <td width="92"><font face="Arial"><b>Parent class</b></font></td>
+      <td width="224">
+        <pre><font face="Courier New">void foo( ) { 
+   /* do something */ 
+}</font></pre>
+      </td>
+      <td width="332" rowspan="2">
+        <pre>final void foo$$parentAspect( ) {
+   /* do something */
+}</pre>
+        <pre>void foo( ) {
+   foo$$parentAspect();
+}</pre>
+        <pre><font face="Courier New">void bar( ) { 
+   </font>foo$$parentAspect();<font face="Courier New">
+   // something more
+</font>}</pre>
+      </td>
+    </tr>
+    <tr>
+      <td width="92"><font face="Arial"><b>Refinement</b></font><font face="Arial"><b>
+        class</b></font></td>
+      <td width="224">
+        <pre><font face="Courier New">void bar( ) { 
+   Super().foo();
+   // something more 
+</font>}</pre>
+      </td>
+    </tr>
+  </table>
+  </center>
+</div>
+<ul>
+  <li><font face="Arial">not overridden and not referenced -- leave base method
+    as is.</font></li>
+</ul>
+<p><font face="Arial">There is one rule for refinement methods: if an refinement
+method does not override a base method,
+it is merely added to the composite
+class.</font></p>
+<div align="center">
+  <center>
+  <table border="2" cellpadding="2" width="673">
+    <tr>
+      <td width="92">&nbsp;</td>
+      <td width="224"><font face="Arial"><b>Before Composition</b></font></td>
+      <td width="332"><font face="Arial"><b>After Composition in Composite Class</b></font></td>
+    </tr>
+    <tr>
+      <td width="92"><font face="Arial"><b>Parent class</b></font></td>
+      <td width="224">
+        <pre>&nbsp;</pre>
+      </td>
+      <td width="332" rowspan="2">
+        <pre><font face="Courier New">void biff( ) { 
+   // something here
+</font>}</pre>
+      </td>
+    </tr>
+    <tr>
+      <td width="92"><font face="Arial"><b>Refinement</b></font><font face="Arial"><b>
+        class</b></font></td>
+      <td width="224">
+        <pre><font face="Courier New">void biff( ) { 
+   // something here
+</font>}</pre>
+      </td>
+    </tr>
+  </table>
+  </center>
+</div>
+
+<table BORDER="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FF00FF">
+  <tr>
+    <td WIDTH="766"><h3><a name="Rules for Composing Constructors"><font face="Arial" color="#FFFFFF">Rules
+for Composing Constructors</font></a></h3>
+    </td>
+  </tr>
+</table>
+
+<p><font face="Arial">There are all sorts of problems with constructors.&nbsp;
+There are so many that it is much safer NOT to allow constructors to be refined.&nbsp; This is the
+rule for both <b>mixin</b> and <b>jampack</b>.&nbsp; New constructors can be
+added by an refinement, but no existing constructor can be refined.&nbsp;&nbsp;</font></p>
+<p><font face="Arial">Constructors can be refined using the concepts already
+presented. The body of a
+constructor is moved into a method, which can be refined.&nbsp; Thus, instead
+of creating a superclass with a constructor and later extending the constructor
+via inheritance (left-hand- side of the table below), we rely on a design and coding technique to accomplish the same effect (right-hand-side of the table
+below).&nbsp; Below, <b>foo</b> is the name of a class and <b>fooConstructor</b>
+is the name of the method that contains the body of the <b>foo</b> constructor:</font></p>
+<div align="center">
+  <center>
+  <table border="2" cellpadding="2" width="523">
+    <tr>
+      <td width="242"><font face="Arial"><b>Inheritance Hierarchy</b></font></td>
+      <td width="274"><font face="Arial"><b>Refinement</b></font><font face="Arial"><b>
+        Chain Equivalent</b></font></td>
+    </tr>
+    <tr>
+      <td width="242">
+        <pre><font face="Courier New">class foo {
+   int a;
+   foo(int a) {
+      this.a = a;
+   }
+}</font></pre>
+      </td>
+      <td width="274">
+        <pre><font face="Courier New">class foo {
+   int a;
+   void fooConstructor(int a) {
+      this.a = a;
+   }
+   foo(int a) {
+      fooConstructor(a);
+   }
+}</font></pre>
+      </td>
+    </tr>
+    <tr>
+      <td width="242">
+        <pre><font face="Courier New">class subfoo extends foo {
+   int b;
+   foo(int a) {
+      super(a);
+      b = 0;
+   }
+}</font></pre>
+      </td>
+      <td width="274">
+        <pre><font face="Courier New">refines foo {
+   int b;
+   void fooConstructor(int a) {
+      Super(int).fooConstructor(a);
+      b = 0;
+   }
+}</font></pre>
+      </td>
+    </tr>
+  </table>
+  </center>
+</div>
+<h4><font face="Arial" color="#0000FF">Exercise</font></h4>
+<p><font face="Arial">Create some example classes to compose.&nbsp; Follow the
+rules for designing constructors, methods, and variables.&nbsp; Remember that
+each file to compose must belong to an layer(i.e., have an layer declaration) with a unique name -- i.e., the name of the
+layer from
+which it belongs.&nbsp; Failure to follow these rules will result in incorrect
+code being generated.</font></p>
+
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FFFF00">
+  <tr>
+    <td WIDTH="788"><h2><font face="Arial" color="#0000FF"><a name="State Machine Composition Rules"> State Machine Composition
+Rules</a></font></h2>
+    </td>
+  </tr>
+</table>
+
+<p><font face="Arial">State machine composition rules are:</font></p>
+<ul>
+  <li><font face="Arial">each file to be composed must belong to a separate
+    layer -- i.e., the layer names for each file to be composed must be
+    unique.</font></li>
+  <li><font face="Arial">an refinement cannot override or extend a previously
+    defined state machine declaration (i.e., state, edge, exit method, enter
+    method, etc.)</font></li>
+  <li><font face="Arial">composition is the union of the base and refinement specifications.&nbsp; (This is the reason for the above bullet: an
+    refinement cannot redefine a state machine declaration originally specified in the
+    base).</font></li>
+</ul>
+<p><font face="Arial">Consider the following root state machine and refinement:</font></p>
+<blockquote>
+  <blockquote>
+    <pre><font face="Courier New">layer rootSm;
+
+State_machine root {
+   Delivery_parameters( M m );
+   Unrecognizable_state { ignore(m); }
+
+   States g, h, i;
+
+   Transition e1 : g -&gt; h condition m!=null do { gh(); }
+}</font></pre>
+    <hr>
+    <pre><font face="Courier New">layer extSm;
+
+refines State_machine root {
+   States j, k;
+
+   Transition e3 : g -&gt; j  condition m!=null do { Super(int).anotherAction(6); }
+}
+</font></pre>
+  </blockquote>
+</blockquote>
+<p><font face="Arial"><b>jampack</b></font><font face="Arial">   composes the above files to yield the specification below.&nbsp; The lines in
+yellow were added by the state machine refinement:</font></p>
+<blockquote>
+  <pre><font face="Courier New">layer Foo;
+
+State_machine root {
+   Delivery_parameters( M m );
+   Unrecognizable_state { ignore(m); }
+
+   States g, h, i;
+   States j, k;
+
+   Transition e1 : g -&gt; h condition m!=null do { gh(); }
+
+   Transition e3 : g -&gt; j condition m!=null do { super.anotherAction(6); }
+}</font></pre>
+</blockquote>
+<p><font face="Arial">Note that part of a root or refinement state machine
+specification is a set of data member, methods, etc.&nbsp; The rules for
+composing these are exactly the same as those for <a href="#Class Composition Rules"><i>composing
+class declarations</i></a>, explained above.&nbsp; So options like key-sorting are
+relevant.</font></p>
+<h4><font face="Arial" color="#0000ff">Exercise</font></h4>
+<p><font face="Arial">Create separate files root.jak and mid.jak to hold the
+above definitions.&nbsp; Compose them into result.jak by the command:</font></p>
+<blockquote>
+  <pre><font face="Courier New">&gt; jampack -tk -a Foo root.jak mid.jak &gt; result.jak</font></pre>
+</blockquote>
+
+  <p><font face="Arial">Don't forget the <a href="#Caveat">caveat</a>.</font></p>
+
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FFFF00">
+  <tr>
+    <td WIDTH="788"><h2><font face="Arial" color="#0000FF"><a name="Local_Id">Local
+      Declarations</a></font></h2>
+    </td>
+  </tr>
+</table>
+
+<p><font face="Arial"><b>Local_Id </b>declarations are used to avoid inadvertent
+capture. Consider the following root specification with local
+identifiers i, j, ii, jj, and foo.</font></p>
+<blockquote>
+  <pre>layer Ctopp;
+
+Local_Id i, jj, foo;
+
+class topp {
+   static int i;
+   int jj;
+
+   void foo(float x, float y) { i = jj = x+y; }
+}</pre>
+</blockquote>
+<p><font face="Arial">Now consider an refinement that uses exactly the
+same identifiers locally:</font></p>
+<blockquote>
+  <pre>layer Cmidd;
+
+Local_Id i, jj, foo;
+
+refines class topp {
+   static int i;
+   int jj;
+
+   void foo(float x, float y) { i = jj = x*y; }
+}</pre>
+</blockquote>
+<p><font face="Arial"><b>jampack</b></font><font face="Arial"> composes these two specifications to yield:</font></p>
+<blockquote>
+  <pre>layer Foo;
+
+class topp {
+   static int i$$Ctopp;
+   static int i$$Cmidd;
+   int jj$$Ctopp;
+   int jj$$Cmidd;
+
+   void foo$$Ctopp(float x, float y) { i$$Ctopp = jj$$Ctopp = x+y; }
+
+   void foo$$Cmidd(float x, float y) { i$$Cmidd = jj$$Cmidd = x*y; }
+}</pre>
+</blockquote>
+<p><font face="Arial">Note that <b>jampack</b> first assigns unique (mangled) names to local
+identifiers before composing specifications.&nbsp; It doesn't matter if <b>jampack</b>
+is
+composing classes, interfaces, state machines or whatever.&nbsp; The <b>Local_Id</b>
+feature works for them all, and it works the same way for <b>mixin</b>.</font></p>
+<h4><font face="Arial" color="#0000FF">Exercise</font></h4>
+<p><font face="Arial">Create separate files topp.jak and extp.jak to hold the
+definitions above.&nbsp; Compose them into result.jak by the command:</font></p>
+<blockquote>
+  <pre><font face="Courier New">&gt; jampack -tk -a Foo topp.jak extp.jak &gt; result.jak</font></pre>
+</blockquote>
+
+  <p><font face="Arial">Don't forget the <a href="#Caveat">caveat</a>.</font></p>
+
+<hr>
+<p><b><font face="Arial"><a href="index.html">ATS Home Page</a></font></b></p>
+<p><font face="Arial"><b>Copyright © Software Systems Generator Research Group. 
+All rights reserved.</b> <br>
+<b>Revised:&nbsp;<!--webbot bot="TimeStamp" s-format="%B %d, %Y" s-type="EDITED" startspan -->January 25, 2006<!--webbot bot="TimeStamp" endspan i-checksum="31592" -->.</b>
+</font></p>

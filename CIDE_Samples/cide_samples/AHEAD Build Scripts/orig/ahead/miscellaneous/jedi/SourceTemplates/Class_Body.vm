@@ -1,0 +1,26 @@
+## Class_Body.vm
+## JEDI Project
+## HTML Template for the Class/Interface
+## Author: Roberto E. Lopez-Herrejon
+## Last update: November 30, 2002
+
+
+<BODY BGCOLOR="white"> 
+
+#foreach($layoutElement in $layoutList)
+
+<!-- $layoutElement  -->
+
+ #include($layoutElement)
+
+
+#end     ## of for each
+
+
+</BODY> 
+ 
+## End of Class_Body.vm
+
+
+
+

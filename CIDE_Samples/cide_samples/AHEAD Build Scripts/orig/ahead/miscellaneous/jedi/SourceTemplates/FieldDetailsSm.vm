@@ -1,0 +1,60 @@
+## FieldDetailsSm.vm
+## JEDI Project 
+## HTML Template for Field Details
+## Author: Roberto E. Lopez-Herrejon
+## Last update: November 6, 2002
+## Field Details of a State Machines
+
+#if ($fields == "true")
+ 
+ ## Writes the bar of Field Details 
+ <!-- ======== FIELD DETAILS ======== -->
+ <TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%"> 	
+ <TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+ <TD COLSPAN=1><FONT SIZE="+2">
+ <B> Field  Details </B>
+ </FONT>
+ </TD>
+ </TR> 
+ </TABLE> 
+ <BR>	 
+
+ #foreach($field in $listFields)	 
+  <A NAME=" $field.name() " </A>   ## anchor 
+  <H3> $field.name() </H3>
+  $field.modifiers() &nbsp;  $field.type().typeName()
+  <B> $field.name() </B>
+  <BR> &nbsp;&nbsp; 	
+ 
+  ## Field description 
+  $generator.descriptionComment($field.inlineTags())
+
+  <P>
+  <DL>
+
+  ## For use of general tags
+  #set($doc = $field)
+   
+   ## Parses deprecated tags
+   #parse("SourceTemplates/DeprecatedTags.vm")
+
+   ## Parses author tags
+   #parse("SourceTemplates/AuthorTags.vm")
+
+   ## Parses version tags
+   #parse("SourceTemplates/VersionTags.vm")
+
+   ## Parsers since tags
+   #parse("SourceTemplates/SinceTags.vm")
+
+   ## Parsers see tags
+   #parse("SourceTemplates/SeeTags.vm")
+
+   </DL>
+   <HR>
+   <BR>
+
+  <BR>
+
+ #end
+#end

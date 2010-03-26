@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE featuremodelattributes SYSTEM "featuremodelattributes.dtd">
+<featuremodelattributes>
+<featureattr name="SPL" id="61" selected="true"/>
+<featureattr name="modelexplorer" id="9" color="32896" selected="true"/>
+<featureattr name="xak" id="3" color="65535" selected="true"/>
+<featureattr name="generatedSPL" id="62"/>
+<featureattr name="jedi" id="7" color="65280" selected="true"/>
+<featureattr name="mmatrix" id="10" color="16512" selected="true"/>
+<featureattr name="reform" id="12" color="65408" selected="true"/>
+<featureattr name="jak2aj" id="4" color="33023" selected="true"/>
+<featureattr name="guidsl" id="6" color="8388608" selected="true"/>
+<featureattr name="xc" id="13" color="8388863" selected="true"/>
+<featureattr name="jrename" id="8" color="8421504" selected="true"/>
+<featureattr name="mixin" id="2" color="16711680" selected="true"/>
+<featureattr name="bc" id="1" color="255" selected="true"/>
+<featureattr name="drc" id="5" color="32768" selected="true"/>
+<featureattr name="obe" id="11" color="4194368" selected="true"/>
+</featuremodelattributes>

@@ -1,0 +1,331 @@
+<?xml version="1.0"?>
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+<project default='all' name='Java Tools for AHEAD'>
+  <description>
+ Java Tools for AHEAD
+ (C) 2002-2003 Jacob Neal Sarvela and The University of Texas at Austin
+
+ The "-Doption.features=&lt;feature-set&gt;" command-line option can be used to
+ specify the feature set to include.  Currently, there are three feature sets:
+
+  * all .... includes all features in the following feature sets;
+  * cat .... includes state-machine sub-language;
+  * utcs ... includes syntax-tree sub-language and generation scoping.
+
+ The default is "all".
+ </description>
+<!-- ================================================================= -->
+<!-- OPTION PROPERTIES:                                                -->
+<!-- ================================================================= -->
+  <property value='all' name='option.features' />
+<!-- ================================================================= -->
+<!-- PROJECT DEFINITIONS AND PROPERTIES:                               -->
+<!-- ================================================================= -->
+  <property value='Jacob Neal Sarvela' name='project.author' />
+  <property value='java' name='project.name' />
+  <property value='Java' name='project.Name' />
+  <property value='The University of Texas at Austin' name='project.owner' />
+  <property value='(C) 2002-2003 ${project.author} and ${project.owner}' name='project.copyright' />
+  <property value='Extended Java Tools for AHEAD' name='project.title' />
+  <property value='v2003.06.16' name='project.version' />
+<!-- ================================================================= -->
+<!-- DIRECTORY AND FILE PROPERTIES:                                    -->
+<!-- ================================================================= -->
+<!-- - - - - - - - - - - - - - - -->
+<!-- Source Equations File:      -->
+<!-- - - - - - - - - - - - - - - -->
+  <property location='equations/java/options.equations' name='eqns.options' />
+<!-- - - - - - - - - - - - - - - -->
+<!-- Build Directories & Files:  -->
+<!-- - - - - - - - - - - - - - - -->
+  <property location='${basedir}/build' name='dir.build' />
+  <property location='${dir.build}/lib' name='dir.build.lib' />
+  <property location='${dir.build}/java' name='dir.build.tool' />
+  <property location='${dir.build.tool}/syntax' name='dir.build.syntax' />
+  <property location='${dir.build.syntax}/grammar.b' name='bali.grammar' />
+  <property location='${dir.build.tool}/tools.equations' name='eqns.tools' />
+<!-- - - - - - - - - - - - - - - -->
+<!-- External Libraries & Tools: -->
+<!-- - - - - - - - - - - - - - - -->
+  <property location='${ant.home}/lib' name='dir.ant.lib' />
+  <property location='${basedir}/miscellaneous' name='dir.external' />
+  <property location='${dir.external}/bin' name='dir.external.bin' />
+  <property location='${dir.external}/lib' name='dir.external.lib' />
+  <property location='${dir.external.bin}/print-path' name='exec.print-path' />
+<!-- ================================================================= -->
+<!-- PATH-RELATED DEFINITIONS:                                         -->
+<!-- (see also the targets "use.path.ant" and "use.path.class")        -->
+<!-- ================================================================= -->
+<!-- - - - - - - - - - - - - - - -->
+<!-- CLASSPATH Treatment:	     -->
+<!-- - - - - - - - - - - - - - - -->
+  <property value='ignore' name='build.sysclasspath' />
+<!-- ================================================================= -->
+<!-- OTHER STATIC DEFINITIONS:                                         -->
+<!-- ================================================================= -->
+<!-- - - - - - - - - - - - - - - -->
+<!-- Jars Named in ${jar.build}: -->
+<!-- - - - - - - - - - - - - - - -->
+  <property value='file:jakarta.jar' name='uri.jar.jakarta' />
+<!-- ================================================================= -->
+<!-- TARGETS:                                                          -->
+<!-- ================================================================= -->
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+<!-- The "all" target builds all Java-derived language tools.          -->
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+  <target description='Builds all Java-derived language tools.' depends='jak2java,jampack,mixin,unmixin' name='all'>
+    <antcall target='bcjak2java' />
+    <antcall target='jrename' />
+    <antcall target='mmatrix' />
+  </target>
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+<!-- The "equations" target builds equations for all the Java tools.   -->
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+  <target description='Generates equations for all tools.' depends='prepare,use.path.class' name='equations'>
+    <java fork='true' classname='composer.Main' classpath='${path.class}' taskname='compose' failonerror='true'>
+      <arg value='--logging=warning' />
+      <arg value='-equation' />
+      <arg file='${eqns.options}' />
+      <arg value='-target' />
+      <arg file='${eqns.tools}' />
+      <arg value='-this' />
+      <arg value='${option.features}' />
+    </java>
+    <echo level='info' message='${eqns.tools}' taskname='===>' />
+  </target>
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+<!-- The "grammar" target generates syntax tree nodes from the common  -->
+<!-- grammar for the extended-Java tools.                              -->
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+  <target description='Generates syntax tree nodes from the common grammar.' depends='grammar.bali2jak' name='grammar' />
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+  <target depends='grammar.equation2bali,use.path.class' name='grammar.bali2jak'>
+    <java fork='true' classname='bali2jak.Main' classpath='${path.class}' taskname='bali2jak' failonerror='true'>
+      <arg value='-directory' />
+      <arg file='${dir.build.syntax}' />
+      <arg value='-layer' />
+      <arg value='syntax' />
+      <arg file='${bali.grammar}' />
+    </java>
+    <echo level='info' message='${dir.build.syntax}' taskname='===>' />
+  </target>
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+  <target depends='equations,use.path.class' name='grammar.equation2bali'>
+    <java fork='true' classname='composer.Main' classpath='${path.class}' taskname='compose' failonerror='true'>
+      <arg value='--logging=warning' />
+      <arg value='-equation' />
+      <arg file='${eqns.tools}' />
+      <arg value='-target' />
+      <arg file='${dir.build.syntax}' />
+      <arg value='-this' />
+      <arg value='grammar' />
+    </java>
+    <echo level='info' message='${bali.grammar}' taskname='===>' />
+  </target>
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+<!-- The "initialize" target defines runtime properties such as time-  -->
+<!-- stamps and prints a start-up message, including the copyright.    -->
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+  <target name='initialize'>
+    <tstamp>
+      <format pattern='yyyy-MM-dd' property='initialize.date' />
+      <format pattern='HH:mm:ss' property='initialize.time' />
+      <format pattern='yyyy' property='initialize.year' />
+    </tstamp>
+    <property value='${initialize.date} ${initialize.time}' name='timestamp' />
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- Splash notice:                                                -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <echo level='info' message='${project.title}; java.xml ${project.version}' />
+    <echo level='info' message='${project.copyright}' />
+    <echo level='info' message='' />
+    <echo level='info' message='Build begins ${timestamp}' />
+  </target>
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+<!-- The "jak2java" target builds the translator from Jak source code  -->
+<!-- to standard Java source code.                                     -->
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+  <target description='Builds the jak2java translator.' depends='grammar' name='jak2java'>
+    <antcall target='method.build'>
+      <param value='jak2java' name='arg.tool' />
+    </antcall>
+  </target>
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+<!-- The "bcjak2java" target builds the translator from Jak source     -->
+<!-- code to standard Java source code; for byte code composition.     -->
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+  <target description='Builds the bcjak2java translator.' depends='grammar' name='bcjak2java'>
+    <antcall target='method.build'>
+      <param value='bcjak2java' name='arg.tool' />
+    </antcall>
+  </target>
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+<!-- The "jak2aj" target builds the translator from Jak source         -->
+<!-- code to AspectJ code.                                             -->
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+  <target description='Builds the jak2aj translator.' depends='grammar' name='jak2aj'>
+    <antcall target='method.build'>
+      <param value='jak2aj' name='arg.tool' />
+    </antcall>
+  </target>
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+<!-- The "jrename" target builds the translator that adds $$ to each   -->
+<!-- Java class and constructor declaration; for byte code composition.-->
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+  <target description='Builds the jrename translator.' depends='equations' name='jrename'>
+    <antcall target='method.build'>
+      <param value='jrename' name='arg.tool' />
+    </antcall>
+  </target>
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+<!-- The "adddelivery" target builds the translator from Jak source    -->
+<!-- to Jak source, adding Delivery_parameter stms where necessary.    -->
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+  <target description='Builds the adddeliver translator.' depends='grammar' name='adddeliver'>
+    <antcall target='method.build'>
+      <param value='adddeliver' name='arg.tool' />
+    </antcall>
+  </target>
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+<!-- The "jampack" target builds the JamPack tool, which composes Jak  -->
+<!-- code by combining class bodies from the source operands into a    -->
+<!-- single target class.                                              -->
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+  <target description='Builds the JamPack composition tool.' depends='grammar' name='jampack'>
+    <antcall target='method.build'>
+      <param value='jampack' name='arg.tool' />
+    </antcall>
+  </target>
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+<!-- The "method.build" target initiates a sequence of tool-specific   -->
+<!-- build steps, each in a target prefixed by "method.build".         -->
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+  <target depends='use.path.all' name='method.build'>
+    <ant inheritall='false' antfile='tool.xml'>
+      <property value='${eqns.tools}' name='file.equation' />
+      <property value='${arg.tool}' name='name.tool' />
+      <property value='${path.all}' name='path.class' />
+      <property value='${arg.tool}' name='this' />
+    </ant>
+  </target>
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+<!-- The "mixin" target builds the Mixin tool, which composes Jak code -->
+<!-- by converting the operand classes into an inheritance chain.      -->
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+  <target description='Builds the Mixin composition tool.' depends='grammar' name='mixin'>
+    <antcall target='method.build'>
+      <param value='mixin' name='arg.tool' />
+    </antcall>
+  </target>
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+<!-- The "mmatrix" target builds mmatrix, which produces a pictorial   -->
+<!-- representation of a composition of directory operands.  The view  -->
+<!-- is presented in a matrix, hence the name of the tool.             -->
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+  <target description='Builds the mmatrix component viewer.' depends='grammar' name='mmatrix'>
+    <antcall target='method.build'>
+      <param value='mmatrix' name='arg.tool' />
+    </antcall>
+  </target>
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+<!-- The "prepare" target creates an empty build hierarchy.             -->
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+  <target depends='initialize' name='prepare'>
+    <mkdir dir='${dir.build}' />
+    <mkdir dir='${dir.build.lib}' />
+    <mkdir dir='${dir.build.tool}' />
+    <mkdir dir='${dir.build.syntax}' />
+  </target>
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+<!-- The "unmixin" target builds the UnMixin tool, which translates an -->
+<!-- inheritance chain from Mixin back into a set of original Jak code -->
+<!-- source files.                                                     -->
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+  <target description='Builds the UnMixin decomposition tool.' depends='grammar' name='unmixin'>
+    <antcall target='method.build'>
+      <param value='unmixin' name='arg.tool' />
+    </antcall>
+  </target>
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+<!-- The "use.*" targets prepare properties, environment variables and -->
+<!-- other resources for use by another target.  A target that uses a  -->
+<!-- resource specifies the usage by including a dependency on target  -->
+<!-- "use.
+<resource>" defined below (where "
+<resource>
+" is replaced by -->
+<!-- the actual resource name).                                        -->
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- Property "path.all" is an internally generated class path of all  -->
+<!-- other class paths combined.                                       -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+  <target depends='use.path.ant,use.path.class' name='use.path.all'>
+    <path id='id.path.all'>
+      <pathelement path='${path.class}' />
+      <pathelement path='${path.ant}' />
+    </path>
+    <property refid='id.path.all' name='path.all' />
+    <exec executable='env' taskname='path.all'>
+      <arg value='--' />
+      <arg file='${exec.print-path}' />
+      <arg value='${path.all}' />
+    </exec>
+  </target>
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- Property "path.ant" is an internally generated class path used to -->
+<!-- reference Ant classes used in Ant tasks defined by the build.     -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+  <target depends='initialize' name='use.path.ant'>
+    <path id='id.path.ant'>
+      <fileset dir='${dir.ant.lib}' includes='**/*.jar' />
+    </path>
+    <property refid='id.path.ant' name='path.ant' />
+    <exec executable='env' taskname='path.ant'>
+      <arg value='--' />
+      <arg file='${exec.print-path}' />
+      <arg value='${path.ant}' />
+    </exec>
+  </target>
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- Property "path.class" is an internally generated class path used  -->
+<!-- throughout the build.  It is built from 3 libraries in priority   -->
+<!-- order.  The build library, ${dir.build.lib}, is first priority so -->
+<!-- that inter-tool dependencies are satisfied.  The second priority  -->
+<!-- is the external tool library, ${dir.external.lib}, which is used  -->
+<!-- so that the tools can be bootstrapped. Finally, the Ant library   -->
+<!-- is used so that Ant tasks can be defined.                         -->
+<!--                                                                   -->
+<!-- User-defined libraries can be specified via CLASSPATH.  To ensure -->
+<!-- that this works, property "build.sysclasspath" must be defined as -->
+<!-- described in the Ant manual.  The definition should be placed on  -->
+<!-- the command line.                                                 -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+  <target depends='prepare' name='use.path.class'>
+    <path id='id.path.class'>
+      <fileset dir='${dir.build.lib}' includes='**/*.jar' />
+      <fileset dir='${dir.external.lib}' includes='**/*.jar'>
+        <none>
+          <present targetdir='${dir.build.lib}' />
+        </none>
+      </fileset>
+    </path>
+    <property refid='id.path.class' name='path.class' />
+    <exec executable='env' taskname='path.class'>
+      <arg value='--' />
+      <arg file='${exec.print-path}' />
+      <arg value='${path.class}' />
+    </exec>
+  </target>
+</project>
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+<!-- Local Variables:                    -->
+<!-- mode:                           XML -->
+<!-- fill-column:                     79 -->
+<!-- sgml-ignore-undefined-elements: nil -->
+<!-- sgml-indent-data:                 t -->
+<!-- sgml-indent-step:                 4 -->
+<!-- End:                                -->
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->

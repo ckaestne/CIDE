@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	
+<project name="FAMEDBCIDE" default="FAMEDBCIDE" basedir=".">
+
+    <property name="FAMEDBCIDE" value="FAMEDBCIDE"/>
+
+	<target name="FAMEDBCIDE">
+
+		<cide.confGen inputProject="FAMEDBCIDE" outputProject="Write" featureSelection="Feature1,Feature2,A,B" />
+        
+		<echo>${cide2}</echo>
+
+    </target>
+	
+</project>

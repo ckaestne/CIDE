@@ -1,0 +1,11 @@
+grammar = super.grammar dsl/java/IntXGram
+
+jak2java   = super.jak2java   dsl/java/j2jIntx
+jampack    = super.jampack    dsl/java/CompInt
+mixin      = super.mixin      dsl/java/mixinInt
+mmatrix    = super.mmatrix    dsl/java/Intmm
+unmixin    = super.unmixin    dsl/java/unmixinint
+bcjak2java = super.bcjak2java dsl/java/bcIntx
+jak2aj     = super.jak2aj     dsl/java/j2ajIntx
+jrename    = super.jrename    dsl/java/IntxError
+

@@ -1,0 +1,11 @@
+grammar = super.grammar dsl/java/LocalIdGram
+
+ast-jampack = super.ast-jampack dsl/java/LocalIdAst
+ast-mixin   = super.ast-mixin   dsl/java/LocalIdAst
+
+jak2java   = super.jak2java   dsl/java/LocalIdError
+jampack    = super.jampack    dsl/java/LocalId
+mixin      = super.mixin      dsl/java/LocalId
+bcjak2java = super.bcjak2java dsl/java/LocalIdError
+jak2aj     = super.jak2aj     dsl/java/LocalIdError
+jrename    = super.jrename    dsl/java/LocalIdError

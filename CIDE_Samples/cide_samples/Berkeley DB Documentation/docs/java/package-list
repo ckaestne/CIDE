@@ -1,0 +1,8 @@
+com.sleepycat.bind
+com.sleepycat.bind.serial
+com.sleepycat.bind.tuple
+com.sleepycat.collections
+com.sleepycat.je
+com.sleepycat.je.jmx
+com.sleepycat.je.util
+com.sleepycat.util

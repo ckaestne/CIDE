@@ -1,0 +1,21 @@
+## Class.vm
+## JEDI Project
+## HTML Template for the Class/Interface
+## Author: Roberto E. Lopez-Herrejon
+## Last update: November 30, 2002
+
+<HTML> 
+
+#foreach($layoutElement in $layoutList)
+
+<!-- $layoutElement  -->
+
+ #include($layoutElement)
+
+
+#end     ## of for each
+
+</HTML>
+
+
+

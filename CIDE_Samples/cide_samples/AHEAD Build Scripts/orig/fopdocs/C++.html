@@ -1,0 +1,335 @@
+
+
+<head>
+<title>C++ Composition Tools</title>
+</head>
+
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%">
+  <tr>
+    <td WIDTH="78">
+    <img border="0" src="images/FopButton3.jpg" width="80" height="64"></td>
+    <td WIDTH="688" BGCOLOR="#00FFFF"><h3>
+    <font face="Arial" size="+3" color="#8000FF">C++ Composition Tools</font></h3>
+    </td>
+  </tr>
+</table>
+
+<p><font face="Arial">AHEAD supports a provisional set of tools for composing 
+C++ files, specifically .cpp and .h files. These tools, mix and unmix, 
+approximate a counterpart to the mixin and unmixin tools of AHEAD.&nbsp; In the 
+following, we sketch the basic design of how C++ files can be composed, and then 
+describe the mix and unmix tools themselves.&nbsp; This material and the tools 
+themselves are subject to change.</font></p> 
+<ul>
+  <li><font face="Arial"><a href="#Design">Design</a></font><ul>
+    <li><font face="Arial"><a href="#.h Files">.h Files</a></font></li>
+    <li><font face="Arial"><a href="#.cpp Files">.cpp Files</a></font></li>
+  </ul>
+  </li>
+  <li><font face="Arial"><a href="#The mix Tool">The mix Tool</a></font></li>
+  <li><font face="Arial"><a href="#The unmix Tool">The unmix Tool</a></font></li>
+</ul>
+
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FFFF00">
+  <tr>
+    <td WIDTH="788"><h2><font face="Arial"><a name="Design">Design</a></font></h2>
+    </td>
+  </tr>
+</table>
+
+<p><font face="Arial">Our goal is to be able to compose C++ files.&nbsp; To do 
+this easily and quickly, we require the following constraints.</font></p>
+  
+<ul>
+  <li><font face="Arial">Each C++ class is defined in a pair of files: a .cpp 
+  file and a .h file.&nbsp; The .h file defines the signature or header of a C++ 
+  class (where all data members and the signatures of each method is defined) 
+  plus a .cpp file where the methods of the class are defined. </font></li>
+  <li><font face="Arial">Each C++ class is either a base class (AHEAD constant) 
+  or a mixin (AHEAD refinement).&nbsp; As in the mixin tool, when classes are 
+  composed, the names of the class, its superclass, and namespace (which 
+  corresponds to the Java package construct) can change.&nbsp; We will given 
+  them a standard name and use the C++ preprocessor to assign them their correct 
+  names.&nbsp; Thus, when specifying .cpp and .h files, special identifiers will 
+  be used to designate the name of a class, its superclass, and namespace.&nbsp; 
+  These identifiers are class_, super_, and namespace_.</font></li>
+  <li><font face="Arial">C++ files typically include other .h files.&nbsp; To 
+  prevent the inclusion of the same file multiple times (as can arise when files 
+  are composed), we follow the lead of the mixin and jampack tool by harvesting 
+  all import statements, forming their union, and listing them at the top of a 
+  composed file.&nbsp; As we want our provisional tools to be as simple as 
+  possible, we will use a special identifier to designate imports, namely 
+  &quot;import_&quot;.&nbsp; When the mix tools sees an &quot;import_&quot; statement, it performs 
+  the #import harvesting as described here. </font></li>
+</ul>
+
+<p><font face="Arial">With the above constraints, we can integrate the mix tool 
+with composer, and use AHEAD tools and design techniques to synthesize 
+applications in C++. Examples of all the above will be given shortly.</font></p>
+  
+<table BORDER="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FF00FF">  
+  <tr>  
+    <td WIDTH="766"><h3><a name=".h Files"><font face="Arial" color="#FFFFFF">.h 
+    Files</font></a></h3>  
+    </td>  
+  </tr>  
+</table>  
+  
+<p><font face="Arial">An example of a .h file for a base class is listed below:</font></p>
+  
+<blockquote>
+  <pre><font face="Arial"><span style="background-color: #FFFF00">i</span></font><font face="Courier New"><span style="background-color: #FFFF00">mport_</span> &quot;Param.h&quot;
+
+class <span style="background-color: #FFFF00">class_</span> {
+</font>   <font face="Courier New">public:
+</font>      <font face="Courier New"><span style="background-color: #FFFF00">class_</span>(Param&amp; b);
+</font>      <font face="Courier New">string GetName();
+</font>      <font face="Courier New">int Dof() const;
+</font>      <font face="Courier New">bool SetServoValue(const RRVector&amp; v);
+
+</font>   <font face="Courier New">protected:
+</font>      <font face="Courier New">int m_dof;
+</font>      <font face="Courier New">string m_name;
+</font>   &nbsp;&nbsp;<font face="Courier New"> RRVector m_vals;
+};</font></pre>
+</blockquote>
+<p><font face="Arial">Note the use of the class_ and import_ identifiers.&nbsp; 
+In general, class_ is used to designate the name of the class, class 
+constructor(s) and class destructor(s). An example of a .h file for a refinement 
+class is:</font></p>
+<blockquote>
+  <pre><font face="Courier New"><span style="background-color: #FFFF00">import_</span> &quot;Param.h&quot;
+
+class <span style="background-color: #FFFF00">class_</span> : <span style="background-color: #FFFF00">super_</span> {
+   public:
+      class_(Param&amp; b);
+      bool SetServoValue(const RRVector&amp; v);
+   protected:
+      RRVector m_minLimits;
+      RRVector m_maxLimits;
+};</font></pre>
+</blockquote>
+<p><font face="Arial">Note the use of <span style="background-color: #FFFFFF">
+class_</span>, <span style="background-color: #FFFFFF">super_</span>, and 
+import_ identifiers.</font></p>
+  
+<table BORDER="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FF00FF">  
+  <tr>  
+    <td WIDTH="766"><h3><a name=".cpp Files"><font face="Arial" color="#FFFFFF">
+    .cpp Files</font></a></h3>  
+    </td>  
+  </tr>  
+</table>  
+  
+<p><font face="Arial">An example of a .cpp file of a base class is:</font></p>
+<blockquote>
+  <pre><font face="Courier New"><span style="background-color: #FFFF00">import_</span> &quot;Servo.h&quot;
+
+<span style="background-color: #FFFF00">class_</span>::<span style="background-color: #FFFF00">class_</span>(Param&amp; b) {
+   m_dof = b.dof;
+   m_name = b.name;
+}
+
+string <span style="background-color: #FFFF00">class_</span>::GetName() {
+   return m_name;
+}
+
+int <span style="background-color: #FFFF00">class_</span>::Dof() const {
+      return m_dof;
+}
+
+bool <span style="background-color: #FFFF00">class_</span>::SetServoValue(const RRVector&amp; v) {
+   m_vals = v;
+   cout&lt;&lt;v&lt;&lt;endl;
+   return true;
+}</font></pre>
+</blockquote>
+<p><font face="Arial">Note that class constructors are always defined as
+<span style="background-color: #FFFF00">class_::class_</span> and destructors 
+are <span style="background-color: #FFFF00">class_::class_~</span>.&nbsp; An 
+example of a .cpp file of a refinement is:</font></p>
+<blockquote>
+  <pre><span style="background-color: #FFFF00">class_</span>::<span style="background-color: #FFFF00">class_</span>(Param&amp; b) : super_(b) {
+   m_minLimits = b.minLimits;
+m_maxLimits = b.maxLimits;
+}
+
+bool class_::SetServoValue(const RRVector&amp; v) {
+   bool isInLimits = true;
+
+   //check limits here
+   for(int i=0; i&lt; m_dof; i++) {
+      ...
+   }//end check limits
+
+   return <span style="background-color: #FFFF00">super_</span>::SetServoValue(v);
+}</pre>
+</blockquote>
+<p><font face="Arial">Note how class_ and super_ are used.</font></p>
+
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FFFF00">
+  <tr>
+    <td WIDTH="788"><h2><font face="Arial"><a name="The mix Tool">The mix Tool</a></font></h2>
+    </td>
+  </tr>
+</table>
+
+<p><font face="Arial">mix is a tool that composes .cpp and .h files.&nbsp; It is 
+really never called directly by users.&nbsp; Rather, AHEAD users simply invoke 
+composer, and composer invokes mix.&nbsp; In this section, we explain how mix 
+works so that users can better understand its mechanics.&nbsp; When mix composes 
+a set of .cpp or .h files, it does the following:</font></p>
+<ul>
+  <li><font face="Arial">it harvests all import_ statements, forms their union, 
+  and generates qualified #include statements for each file to be included.</font></li>
+  <li><font face="Arial">it copies each file to be composed, commenting out each 
+  import_ statement</font></li>
+  <li><font face="Arial">it generates qualified preprocessor statements that 
+  assign values to the class_, super_, and namespace_ identifiers</font></li>
+</ul>
+<p><font face="Arial">Suppose the base and refinement .h files defined above are 
+composed.&nbsp; The result is:</font></p>
+<blockquote>
+  <pre><font face="Courier New">#ifndef _import_			(1)
+#include &quot;Param.h&quot;
+#define _import_
+#endif
+
+class Servo;				(2)
+
+#ifdef class_				(3)
+#undef class_
+#undef super_
+#undef namespace_
+#endif
+
+#define super_ Servo__0
+#define class_ Servo__1
+#define namespace_ test2
+
+//SoUrCe ../Base/Servo.h		(4)
+//import_ &quot;Param.h&quot;			(5)
+
+class class_ {				(6)
+   ...
+};
+
+//EnDSoUrCe 				(7)
+
+class Servo;
+
+#ifdef class_
+#undef class_
+#undef super_
+#undef namespace_
+#endif
+
+#define super_ Servo__1
+#define class_ Servo
+#define namespace_ test2
+
+//SoUrCe ../Limits/Servo.h
+//import_ &quot;Param.h&quot;
+
+class class_ : super_ {
+   ...
+};
+//EnDSoUrCe 
+</font></pre>
+</blockquote>
+<p><font face="Arial">Note the following, which corresponds to the numbering 
+above</font></p>
+<ol>
+  <li><font face="Arial">These statements define the union of the import_ 
+  statements.</font></li>
+  <li><font face="Arial">Forward references are needed in .h files to reference 
+  the most refined version of a class.&nbsp; Forward references are generated 
+  only for .h files.</font></li>
+  <li><font face="Arial">Here is where the names for class_, super_, and 
+  namespace_ are redefined only for the following class definition.&nbsp; These 
+  identifiers are renamed for each class declaration.</font></li>
+  <li><font face="Arial">The SoUrCe comment indicates the beginning of a file, 
+  the EnDSoUrCe comment is a marker that designates the end of a copied file.&nbsp; 
+  It is used by the unmix tool, discussed below.</font></li>
+  <li><font face="Arial">Note that all import_ statements of copied files are 
+  commented out.</font></li>
+  <li><font face="Arial">This is the copied class definition (abbreviated).</font></li>
+  <li><font face="Arial">This is the EndSoUrCe comment, again used by the unmix 
+  tool.</font></li>
+</ol>
+<p><font face="Arial">Thus, when each .h file is composed, new names are given 
+to the class_ and super_ identifiers.</font></p>
+<blockquote>
+  <p><font face="Arial">Note: at the time of this writing, it is becoming 
+  obvious that this design can be improved, such as the elimination of the #ifdef 
+  _import_, the generation of only a single #define namespace_ statement, and 
+  maybe the generation of only a single forward reference.&nbsp; Once further 
+  improvements have been decided upon, the tool and its documentation will be 
+  updated.</font></p>
+</blockquote>
+<p><font face="Arial">As stated earlier, the mix tool really isn't called 
+directly by users.&nbsp; Instead, users invoke composer and composer calls mix.&nbsp; 
+The standard way is:</font></p>
+<ul>
+  <li><font face="Arial">create an equation file that defines the equation to 
+  compose.&nbsp; Example: test3.equation has the following content, which 
+  defines the expression Limits( Logging( Base )):</font></li>
+</ul>
+<blockquote>
+  <pre><font face="Courier New">Base
+Logging
+Limits</font></pre>
+</blockquote>
+<ul>
+  <li><font face="Arial">invoke composer to evaluate test3.&nbsp; composer 
+  should be invoked in the &quot;model&quot; directory, which has directories for features 
+  Base, Logging, and Limits.&nbsp; The result of a composition will be a new 
+  directory, named test3:</font><pre><font face="Courier New">&gt; composer --equation=test3</font></pre>
+  </li>
+</ul>
+<p><font face="Arial">If you insist on calling mix directly, do so as:</font></p>
+<blockquote>
+  <pre><font face="Courier New">&gt;mix
+Error: must specify at least one input file
+Usage: java mix.Main [options] baseFile extensionFile1 extensionFile2 ...
+       -a &lt;layerName&gt; name of layer to generate
+       -f &lt;fileName&gt; name file to generate
+       -output same as -f</font></pre>
+</blockquote>
+
+<table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#FFFF00">
+  <tr>
+    <td WIDTH="788"><h2><font face="Arial"><a name="The unmix Tool">The unmix 
+    Tool</a></font></h2>
+    </td>
+  </tr>
+</table>
+
+<p><font face="Arial">After files are composed, they are compiled, and a 
+debugging cycle ensues: composed C++ files are edited, recompiled, etc. Manually 
+backpropagating changes to the original .cpp and .h files is both tedious, slow, 
+and error prone.&nbsp; Instead, you can use the unmix tool to do so 
+automatically.&nbsp; unmix takes any number of .h and .cpp files produced by <b>
+mix</b> as input, and backpropagates their changes:</font></p>
+<blockquote>
+  <pre><font face="Courier New">&gt; unmix *.h *.cpp</font></pre>
+  <pre><font face="Courier New">&gt; unmix
+Error: must specify at least one input file
+Usage: java unmix.Main [options] file1 file2 ...
+       -verbose</font></pre>
+</blockquote>
+<p><font face="Arial">Use the -verbose option to see what files have changed.&nbsp; 
+unmix does not propagate changes to source files that have not been changed.</font></p>
+<p><font face="Arial">When editing files, all text between //SoUrCe and //EnDSoUrCe 
+comments defines a file.&nbsp; If unmix detects that changes to this file have 
+been made, it backpropagates the entire file text.&nbsp; Note that it 
+automatically uncomments import_ statements as part of this backpropagation 
+effort.</font></p>
+  
+<hr>  
+  
+<p><b><font face="Arial"><a href="index.html">ATS Home Page</a></font></b></p>
+<p><font face="Arial"><b>Copyright © Software Systems Generator Research Group. 
+All rights reserved.</b> <br>
+<b>Revised:&nbsp;<!--webbot bot="TimeStamp" s-format="%B %d, %Y" s-type="EDITED" startspan -->February 08, 2006<!--webbot bot="TimeStamp" endspan i-checksum="41422" -->.</b>
+</font></p>

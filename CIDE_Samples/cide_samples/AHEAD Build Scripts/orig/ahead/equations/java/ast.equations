@@ -1,0 +1,14 @@
+grammar = super.grammar dsl/java/AstGram
+
+ast-jak2java   = super.ast-jak2java dsl/java/ast
+ast-bcjak2java = super.ast-bcjak2java dsl/java/ast
+ast-jrename    = super.ast-jrename  dsl/java/astError
+
+jak2java   = super.jak2java   ast-jak2java
+jampack    = super.jampack    ast-jampack
+mixin      = super.mixin      ast-mixin
+mmatrix    = super.mmatrix    ast-mmatrix
+unmixin    = super.unmixin    ast-unmixin
+bcjak2java = super.bcjak2java ast-bcjak2java
+jak2aj     = super.jak2aj     ast-bcjak2java
+jrename    = super.jrename    ast-jrename

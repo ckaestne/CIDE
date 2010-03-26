@@ -1,0 +1,401 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <title>The balicomposer Tool</title>
+  </head>
+
+  <body bgcolor="white">
+
+      <table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%">
+	  <tr>
+	    <td WIDTH="78">
+	      <font face="Verdana">
+		<img border="0" src="images/FopButton3.jpg" width="80" height="64">
+	      </font>
+	    </td>
+	    <td WIDTH="688" BGCOLOR="#00FFFF">
+	      <h1>
+		<font face="Arial" color="#0000FF">
+		  The <kbd>balicomposer</kbd> Tool
+		</font>
+	      </h1>
+	    </td>
+	  </tr>
+      </table>
+
+    <p>
+      The <kbd>balicomposer</kbd> tool is a command-line application that
+      composes <kbd>Bali</kbd> grammar files into a single <kbd>Bali</kbd>
+      grammar file.
+      Generally, the
+      <a href="composer.html"><strong><kbd>composer</kbd></strong></a> will
+      automatically invoke <kbd>balicomposer</kbd> when Bali grammar files
+      (with a <kbd>.b</kbd> extension)
+      are specified as operands,
+      but
+
+      this document describes how <kbd>balicomposer</kbd> can be invoked
+      directly.  It
+      briefly describes how <kbd>Bali</kbd> grammars are composed.
+      The reader should be familiar with
+      <a href="bali.pdf">the Bali language documentation</a>
+      and
+      <a href="HowTo.html">the HowTo guide</a>.
+    </p>
+
+    <ul>
+      <li><a href="#Invoking">Invoking <kbd>balicomposer</kbd></a></li>
+      <li><a href="#Generated">Generated Output</kbd></a></li>
+      <li><a href="#Example">Example (with Generated Output!)</kbd></a></li>
+    </ul>
+
+    <table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#ffff00">
+	<tr>
+	  <td WIDTH="788">
+	    <h2>
+	      <font face="Arial" color="#0000FF">
+		<a name="Invoking">Invoking <kbd>balicomposer</kbd></a>
+	      </font>
+	    </h2>
+	  </td>
+	</tr>
+    </table>
+
+    <p>
+      The <kbd>balicomposer</kbd> tool accepts one or more Bali grammar files
+      as inputs and it produces a single Bali grammar file as output.
+      The form of the generated output is described in the next section.
+      For now,
+      we describe only the command invocation.
+    </p>
+    <p>
+      Suppose there are two Bali input grammars to be composed named,
+      respectively, <kbd>expression.b</kbd> and <kbd>statement.b</kbd>.
+      The result of the composition is to be placed into <kbd>grammar.b</kbd>.
+      This can be accomplished with the following command:
+    </p>
+    <blockquote>
+      <kbd>
+	balicomposer expression.b statement.b -output grammar.b
+      </kbd>
+    </blockquote>
+    <p>
+      That's all there is to it!  This produces a new grammar file in
+      <kbd>grammar.b</kbd>.  In general, there can be as many input grammar
+      files as desired, but there are no other options possible.
+      As a preferred alternative, the
+      <a href="composer.html"><strong><kbd>composer</kbd></strong></a>
+      could also be invoked to perform the same composition.
+      When using the
+      <a href="composer.html"><strong><kbd>composer</kbd></strong></a>,
+      the command invocation is:
+    </p>
+    <blockquote>
+      <kbd>
+	composer expression.b statement.b --target=grammar.b
+      </kbd>
+    </blockquote>
+    <p>
+      The two invocations are semantically equivalent.
+    </p>
+
+
+    <table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#ffff00">
+	<tr>
+	  <td WIDTH="788">
+	    <h2>
+	      <font face="Arial" color="#0000FF">
+		<a name="Generated">Generated Output</kbd></a>
+	      </font>
+	    </h2>
+	  </td>
+	</tr>
+    </table>
+
+    <p>
+      A Bali grammar defines a set of symbols, both terminal symbols and
+      non-terminal symbols.  Composing Bali grammars modifies the definitions
+      by merging non-terminal definitions and by overriding terminal
+      definitions.
+    </p>
+    <p>
+      <strong>Terminal symbols.</strong>
+
+      For example, suppose we have a base grammar <kbd>base.b</kbd> that
+      defines terminal symbol <kbd>REQUIRE</kbd> to be "<kbd>require</kbd>" and
+      that a refinement grammar <kbd>refine.b</kbd> defines it to be
+      "<kbd>import</kbd>".  Then the composition of <kbd>base.b</kbd> and
+      <kbd>refine.b</kbd>, in that order, outputs a definition of
+      <kbd>REQUIRE</kbd> with value "<kbd>import</kbd>".  Reversing the order
+      of composition outputs the other definition.  Notice that the order of
+      composition is important!
+    </p>
+    <p>
+      <strong>Non-terminal symbols.</strong>
+
+      Non-terminal symbols are rule names and composing them is a little more
+      complex.  First, we'll eliminate the easy cases: It's <em>illegal</em> to
+      compose complex lists and simple lists!  That leaves only named
+      productions and sub-productions that can be composed.
+    </p>
+    <p>
+      A <em>named production</em> is a production of a non-terminal that has an
+      assigned name.  When composing productions of such a non-terminal, a
+      later version of a named production overrides any earlier versions.
+
+      For example, suppose we have the following named productions:
+    </p>
+    <blockquote>
+      <table>
+	<tr>
+	    <td>
+	      <strong>In <kbd>base.b</kbd>:</strong>&nbsp;&nbsp;&nbsp;&nbsp;
+	    </td>
+	    <td>
+	      <kbd>If : "if" Test ThenClause :: IfNode ;</kbd>
+	    </td>
+	</tr>
+	<tr>
+	    <td>
+	      <strong>In <kbd>refine.b</kbd>:</strong>&nbsp;&nbsp;&nbsp;&nbsp;
+	    </td>
+	    <td>
+	      <kbd>If : "if" Test ThenClause [ElseClause]:: IfNode ;</kbd>
+	    </td>
+	</tr>
+      </table>
+    </blockquote>
+    <p>
+      Then, the composition of <kbd>base.b</kbd> and <kbd>refine.b</kbd> will
+      result in the second named production being placed into the definition
+      of non-terminal <kbd>If</kbd> in the output grammar:
+    </p>
+    <blockquote>
+<pre>
+If : "if" Test ThenClause [ElseClause]:: IfNode ;
+</pre>
+    </blockquote>
+    <p>
+      Finally, <em>sub-productions</em> of the same non-terminal symbol
+      are simply combined with a set union.
+
+      For example, suppose we have the following sub-productions:
+    </p>
+    <blockquote>
+      <table>
+	<tr>
+	    <td>
+	      <strong>In <kbd>base.b</kbd>:</strong>&nbsp;&nbsp;&nbsp;&nbsp;
+	    </td>
+	    <td>
+	      <kbd>Statement : If | Require ;</kbd>
+	    </td>
+	</tr>
+	<tr>
+	    <td>
+	      <strong>In <kbd>refine.b</kbd>:</strong>&nbsp;&nbsp;&nbsp;&nbsp;
+	    </td>
+	    <td>
+	      <kbd>Statement : While ;</kbd>
+	    </td>
+	</tr>
+      </table>
+    </blockquote>
+    <p>
+      Then the composition of <kbd>base.b</kbd> and <kbd>refine.b</kbd> will
+      define <kbd>Statement</kbd> with <em>three</em> sub-productions as
+      shown below:
+    </p>
+    <blockquote>
+<pre>
+Statement : While | If | Require ;
+</pre>
+    </blockquote>
+    <p>
+      The order of the merged sub-productions is arbitrary.
+    </p>
+
+    <table BORDER="0" CELLSPACING="0" CELLPADDING="0" WIDTH="100%" BGCOLOR="#ffff00">
+	<tr>
+	  <td WIDTH="788">
+	    <h2>
+	      <font face="Arial" color="#0000FF">
+		<a name="Example">Example (with Generated Output!)</a>
+	      </font>
+	    </h2>
+	  </td>
+	</tr>
+    </table>
+
+    <p>
+      This section expands on the examples from the previous section.  Again,
+      we have two input grammar files, <kbd>base.b</kbd> and
+      <kbd>refine.b</kbd>.  These two files are shown below:
+    </p>
+<blockquote>
+<table border="2">
+<tr>
+<th halign="center"><kbd>base.b</kbd></th>
+<th halign="center"><kbd>refine.b</kbd></th>
+</tr>
+<tr>
+<td valign="top">
+<pre>
+TOKEN : {
+    &lt;IDENTIFIER : &lt;LETTER&gt; (&lt;LETTER&gt; | &lt;DIGIT&gt;)*&gt;
+    | &lt;#LETTER: ["a"-"z", "A"-"Z"]&gt;
+    | &lt;#DIGIT: ["0"-"9"]&gt;
+}
+
+"require" REQUIRE
+
+Statement : If | Require ;
+If : "if" Test ThenClause :: IfNode ;
+Test : "(" IDENTIFIER ")" :: TestNode ;
+ThenClause : "{" Statement "}" :: ThenNode ;
+Require : REQUIRE IDENTIFIER :: RequireNode ;
+</pre>
+</td>
+<td valign="top">
+<pre>
+require Statement, Test, ThenClause ;
+
+"import" REQUIRE
+
+Statement : While ;
+If : "if" Test ThenClause [ElseClause] :: IfNode ;
+ElseClause : "else" ThenClause :: ElseNode ;
+While : "while" Test ThenClause :: WhileNode ;
+</pre>
+</td>
+</tr>
+</table>
+</blockquote>
+    <p>
+      Notice that those non-terminals that are <em>referenced but not
+      defined</em> in <kbd>refine.b</kbd> are specified with a
+      <kbd>require</kbd> statement!  This is not strictly necessary, but can
+      be helpful when debugging.  Now, we compose these two files with the
+      following command:
+    </p>
+    <blockquote>
+      <kbd>
+	balicomposer base.b refine.b -output grammar.b
+      </kbd>
+    </blockquote>
+    <p>
+      The result is shown below.  Notice that several empty sections are
+      automatically inserted by <kbd>balicomposer</kbd>.  This is harmless,
+      though it does unnecessarily increase the size of the output file.
+    </p>
+<blockquote>
+<table border="2">
+<tr>
+<th halign="center"><kbd>grammar.b</kbd></th>
+</tr>
+<tr>
+<td valign="top">
+<pre>
+// Automatically generated Bali code.  Edit at your own risk!
+// Generated by "balicomposer" v2003.02.17.
+
+//-----------------------------------//
+// Option block:
+//-----------------------------------//
+
+// No options blocks in Bali grammar.
+
+//-----------------------------------//
+// Parser code block:
+//-----------------------------------//
+
+code {} code
+
+//-----------------------------------//
+// Token manager declarations:
+//-----------------------------------//
+
+// No TOKEN_MGR_DECLS defined in Bali grammar.
+
+//-----------------------------------//
+// Bali tokens:
+//-----------------------------------//
+
+"import"        	REQUIRE
+
+
+//-----------------------------------//
+// Regular expression tokens:
+//-----------------------------------//
+
+TOKEN: {
+    &lt;IDENTIFIER : &lt;LETTER&gt; (&lt;LETTER&gt; | &lt;DIGIT&gt;)*&gt;
+    |  &lt;#LETTER: ["a"-"z", "A"-"Z"]&gt;
+    |  &lt;#DIGIT: ["0"-"9"]&gt;
+}
+
+
+//-----------------------------------//
+// Java code blocks:
+//-----------------------------------//
+
+// No JAVACODE blocks in Bali grammar.
+
+//-----------------------------------//
+// Bali productions:
+//-----------------------------------//
+
+Statement
+	: While
+	| If
+	| Require
+	;
+
+ElseClause
+	: "else" ThenClause :: ElseNode
+	;
+
+If
+	: "if" Test ThenClause [ElseClause] :: IfNode
+	;
+
+Require
+	: REQUIRE IDENTIFIER :: RequireNode
+	;
+
+Test
+	: "(" IDENTIFIER ")" :: TestNode
+	;
+
+ThenClause
+	: "{" Statement "}" :: ThenNode
+	;
+
+While
+	: "while" Test ThenClause :: WhileNode
+	;
+</pre>
+</td>
+</tr>
+</table>
+</blockquote>
+
+    <hr>
+    <p><b><a href="index.html">ATS Home Page</a></b></p>
+    <p>
+      <b>
+	Copyright © Software Systems Generator Research Group.
+	All rights reserved.
+	<br>
+	<!-- Created: Wed Apr 30 16:23:08 CDT 2003 -->
+	<!-- hhmts start -->
+Last modified: Thu May  1 13:01:00 CDT 2003
+<!-- hhmts end -->
+      </b>
+    <address>
+      <a href="mailto:sarvela@cs.utexas.edu">Jacob Sarvela</a>
+    </address>
+  </p>
+
+  </body>
+</html>

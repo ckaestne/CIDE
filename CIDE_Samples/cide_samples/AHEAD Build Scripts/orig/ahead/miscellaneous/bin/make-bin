@@ -1,0 +1,130 @@
+#!/bin/sh
+#
+# Creates executable scripts in a "bin" directory for a set of jar files.
+#
+# Use: make-bin [-directory <bin-directory>] [-script <script>] <jar-file> ...
+#=============================================================================#
+
+[ -z "${BASH}" ] && exec bash "$0" "$@"
+
+#=============================================================================#
+# Script initialization, include command search path:
+#
+set -e					# Shell aborts on unhandled errors
+#set -x					# and prints individual commands.
+
+PATH="/usr/bin"				# Start with "safe" directories.
+PATH="${PATH}:/bin"
+SHELL="/bin/sh"
+export PATH SHELL
+
+PROG="make-bin"				# Default program name.
+PROGRAM="${0##*/}"			# Actual program name taken from base
+PROGRAM="${PROGRAM:-${PROG}}"		# name of calling script, if possible.
+
+ulimit -c 0 &> /dev/null || :		# Don't allow core files.
+
+#-----------------------------------------------------------------------------#
+# Error message helper functions:
+# * error -----	puts labelled message on stderr & is otherwise like "echo";
+# * fatal ----- exits with failure status after printing error message.
+#
+function error() { echo 1>&2 -n "${PROGRAM}: " ; echo 1>&2 $@ ;}
+function fatal() { error $@ ; exit 1 ;}
+
+#-----------------------------------------------------------------------------#
+# What system is script running on?
+# * cygwin ---- predicate to check whether script is running under CygWin;
+#
+case "$(uname)" in
+    CYGWIN*)
+	function cygwin() { true  ; }
+	;;
+    *)
+	function cygwin() { false ; }
+	;;
+esac
+
+#-----------------------------------------------------------------------------#
+# Argument parsing:
+#
+ARG_DIRECTORY="."
+ARG_FILES=()
+ARG_SCRIPT=""
+
+STATE="option"
+for ARG in "$@" ; do
+
+    case "${STATE}:${ARG}" in
+
+	directory:*)
+	    cygwin && FILE="$(cygpath --unix "${ARG}")" || FILE="${ARG}"
+	    [ -d "${FILE}" ] || fatal "${ARG} is not a directory"
+	    ARG_DIRECTORY="${FILE}"
+	    STATE="option"
+	    ;;
+
+	option:--)
+	    STATE="file"
+	    ;;
+
+	option:-directory)
+	    STATE="directory"
+	    ;;
+
+	option:-script)
+	    STATE="script"
+	    ;;
+
+	option:-*)
+	    fatal "${ARG} is an invalid option"
+	    ;;
+
+	option:* | file:*)
+	    cygwin && FILE="$(cygpath --unix "${ARG}")" || FILE="${ARG}"
+	    [ -f "${FILE}" ] || fatal "${ARG} is not a file"
+	    ARG_FILES=( "${ARG_FILES[@]}" "${FILE}" )
+	    ;;
+
+	script:*)
+	    cygwin && FILE="$(cygpath --unix "${ARG}")" || FILE="${ARG}"
+	    [ -f "${FILE}" ] || fatal "${ARG} is not a file"
+	    ARG_SCRIPT="${FILE}"
+	    STATE="option"
+	    ;;
+
+    esac
+
+done
+
+if [ "${#ARG_FILES[@]}" -lt 1 ]; then
+    error "no input files specified"
+    exit 0
+fi
+
+[ -n "${ARG_SCRIPT}" ] || fatal "no script specified"
+[ -r "${ARG_SCRIPT}" ] || fatal "${ARG_SCRIPT} is unreadable"
+
+#-----------------------------------------------------------------------------#
+# Copy the tool script to the bin directory for each jar file:
+#
+for FILE in "${ARG_FILES[@]}" ; do
+
+    BASE="${FILE##*/}"
+    SCRIPT="${ARG_DIRECTORY}/${BASE%.jar}"
+    tr -d '\r' < "${ARG_SCRIPT}" > "${SCRIPT}"
+    chmod a+u,a+x,go-w -- "${SCRIPT}"
+
+    BATCH="${SCRIPT}.bat"
+    printf "@env -- ${BASE%.jar} %%*\r\n" > "${BATCH}"
+    chmod a+u,a+x,go-w -- "${BATCH}"
+
+    if cygwin; then
+	echo 1>&2 "$(cygpath --windows -- "${SCRIPT}")"
+	echo 1>&2 "$(cygpath --windows -- "${BATCH}")"
+    else
+	echo 1>&2 "${SCRIPT}"
+	echo 1>&2 "${BATCH}"
+    fi
+
+done

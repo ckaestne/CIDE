@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+chmod -R u+r,go-w @NAME@
+chmod -R u+x @NAME@/build/bin
+# chmod -R u+x @NAME@/fsats/bin
+chmod u+x @NAME@/setperms

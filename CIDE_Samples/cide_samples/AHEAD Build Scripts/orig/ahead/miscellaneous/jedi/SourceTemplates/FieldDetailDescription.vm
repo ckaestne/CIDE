@@ -1,0 +1,24 @@
+## FieldDetailDescription.vm
+## JEDI Project 
+## Author: Roberto E. Lopez-Herrejon
+## Last update: November 30, 2002
+
+
+  ## For use of general tags
+  #set($doc = $field)
+	 
+
+  <A NAME=" $field.name() " </A>   ## anchor 
+  <H3> $field.name() </H3>
+  $field.modifiers() &nbsp;  $field.type().typeName()
+  <B> $field.name() </B>
+  <BR> &nbsp;&nbsp; 	
+ 
+  ## Field description 
+  $generator.descriptionComment($field.inlineTags())
+
+  <P>
+  <DL>
+
+## End of FieldDetailDescription.vm
+

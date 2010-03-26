@@ -1,0 +1,45 @@
+## TestTransitions.vm
+## JEDI Project
+## HTML Template for Test transitions declarations
+## Author: Roberto E. Lopez-Herrejon
+## Last update: November 10, 2002
+## Tests Transitions of State Machine
+
+#if ($testFlag == "true") 
+ <A NAME="test_clause"><!-- --></A>
+ <TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+ <TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+ <TD COLSPAN=1>
+  <FONT SIZE="+2">
+   <B> Test Clause </B>
+  </FONT>
+ </TD>
+ </TR>
+ </TABLE>  
+
+ #foreach ($tests in $listTests)
+  <H3>
+   <A NAME="$tests.name() test_clause"> <!-- --></A>
+    $tests.name()          
+  </H3>
+
+$generator.descriptionComment($tests.inlineTags())
+
+  <UL>
+  #foreach($test_classes in $tests.classes())
+     <LI>
+       #set ($reference = ".hmtl")
+       <A HREF="test_classes.name()$reference">
+         $test_classes.name()
+       </A>		 
+     </LI>		  
+  #end   ## for all the test classes of this state
+  </UL>
+
+  <HR>
+
+  #end ## for all the test states
+    
+  <BR>	   
+#end
+

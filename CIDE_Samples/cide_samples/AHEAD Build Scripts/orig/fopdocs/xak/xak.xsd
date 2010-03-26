@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="http://www.atarix.org/xmlRefinement" xmlns:xr="http://www.atarix.org/xmlRefinement" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:element name="refine">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="at" type="xr:ComplexOperationType" maxOccurs="unbounded"/>
+			</xs:sequence>
+			<xs:attribute name="document" type="xs:string" use="optional"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:complexType name="ComplexOperationType">
+		<xs:annotation>
+			<xs:documentation>
+				El valor del atributo select es un Xpath, el cuál pertenece a un único namespace
+			</xs:documentation>
+		</xs:annotation>
+		<xs:choice maxOccurs="unbounded">
+			<xs:element name="append" type="xr:NonNodeRequiredOperationType"/>
+			<xs:element name="prepend" type="xr:NonNodeRequiredOperationType"/>
+			<xs:element name="insert-before" type="xr:NodeRequiredOperationType"/>
+			<xs:element name="insert-at" type="xr:insertAtType"/>
+			<xs:element name="insert-after" type="xr:NodeRequiredOperationType"/>
+			<xs:element name="delete" type="xr:NodeRequiredOperationType"/>
+			<xs:element name="override" type="xr:NodeRequiredOperationType"/>
+			<xs:element name="move" type="xr:moveType"/>
+			<xs:element name="at" type="xr:ComplexOperationType"/>
+			<xs:element name="attribute" type="xr:AttributeType"/>
+			<!--			<xs:element name="element" type="xr:ElementType"/> -->
+		</xs:choice>
+		<xs:attribute name="select" type="xs:string" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="insertAtType">
+		<xs:complexContent>
+			<xs:extension base="xr:NonNodeRequiredOperationType">
+				<xs:attribute name="position" type="xs:integer" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="moveType">
+		<xs:complexContent>
+			<xs:extension base="xr:NodeRequiredOperationType">
+				<xs:attribute name="to" type="xs:string" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="SimpleOperationAbstractType" abstract="true" mixed="true">
+		<xs:annotation>
+			<xs:documentation>
+			cambiando el valor a processContents="stric" se podría validar el refinamiento, 
+	si el documento de refinamiento tiene el schema del namespace utilizado
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:any namespace="##any" processContents="skip" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="test-dependency" type="xs:string" use="optional"/>
+	</xs:complexType>
+	<xs:complexType name="NodeRequiredOperationType">
+		<xs:annotation>
+			<xs:documentation>
+						El valor del select es un Xpath, el cuál pertenece a un namespace
+					</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="xr:SimpleOperationAbstractType">
+				<xs:attribute name="select" type="xs:string" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="NonNodeRequiredOperationType">
+		<xs:complexContent>
+			<xs:extension base="xr:SimpleOperationAbstractType"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="AttributeType" mixed="true">
+		<xs:attribute name="name" type="xs:string" use="required"/>
+	</xs:complexType>
+</xs:schema>

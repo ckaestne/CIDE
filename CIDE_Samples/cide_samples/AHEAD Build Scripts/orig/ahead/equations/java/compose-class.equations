@@ -1,0 +1,12 @@
+grammar = super.grammar dsl/java/ClassXGram
+
+ast-jampack  = super.ast-jampack dsl/java/CompClassAst
+
+jak2java   = super.jak2java   dsl/java/j2jClassx
+jampack    = super.jampack    dsl/java/CompClass
+mixin      = super.mixin      dsl/java/mixinClass
+mmatrix    = super.mmatrix    dsl/java/Classmm
+unmixin    = super.unmixin    dsl/java/unmixinclass
+bcjak2java = super.bcjak2java dsl/java/bcClassx
+jak2aj     = super.jak2aj     dsl/java/j2ajClassx
+jrename    = super.jrename    dsl/java/ClassxError

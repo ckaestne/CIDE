@@ -1,0 +1,14 @@
+## ReturnTags.vm
+## JEDI Project
+## HTML Template for Return Tags
+## Author: Roberto E. Lopez-Herrejon
+## Last update: November 6, 2002
+
+#set($returnText = $generator.fullTextComment($doc, "@return"))
+#if ($returnText != "")
+      <DT>
+      <B> Return  </B> &nbsp;
+      <DD> $returnText </DD>
+      <BR>
+#end
+

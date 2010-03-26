@@ -1,0 +1,13 @@
+## Class_Header.vm
+## JEDI Project
+## HTML Template for the Class/Interface header
+## Author: Roberto E. Lopez-Herrejon
+## Last update: November 30, 2002
+
+## Header comment
+<P> $generator.descriptionComment($class.inlineTags()) </P> 
+
+<HR>
+
+## End of Class_Header.vm
+

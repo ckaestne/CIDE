@@ -1,0 +1,282 @@
+<h1 align="center"><font color="#0000FF" face="Courier New">Instructions for 
+Installing the AHEAD Tool Suite (ATS)</font></h1>
+<p align="left"><font face="Courier New">This is release @VERSION@ of the 
+@PREFIX@ tool suite. There are different sets of instructions to follow for 
+different platforms. Here are your options:</font></p>
+<ul>
+  <li>
+  <p align="left"><font face="Courier New">Operating systems: Windows or Linux.&nbsp; 
+  Linux has the simplest instructions; Windows has additional requirements,
+  <span style="background-color: #00FFFF">which are indicated in blue in the 
+  instructions below</span>.</font></li>
+</ul>
+<p align="left"><font face="Courier New">Perform all non-highlighted 
+instructions below and any highlighted instructions that are specific to your 
+needs. If you don't have the required software, please install it before 
+installing the AHEAD tool suite.&nbsp; The latest versions of these tools that 
+are known to have worked with AHEAD are in
+<span style="background-color: #FF0000">red</span>.&nbsp; We do not support 
+backward compatibility with previous versions of these tools.</font></p>
+<blockquote>
+  <p align="left"><font face="Courier New">1. JDK (<span style="background-color: #FF0000">@JDKREL@</span>) from <a href="http://java.sun.com/">
+  http://java.sun.com/</a></font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <font face="Courier New">Don't forget to 
+  download the J2SE documentation, too.</font></p>
+  <p align="left"><font face="Courier New">2.
+  <span style="background-color: #00FFFF">Cygwin (</span><span style="background-color: #FF0000">@CYGREL@</span><span style="background-color: #00FFFF">) from </span>
+  <span style="background-color: #00FFFF">
+  <a href="http://www.cygwin.com/">http://www.cygwin.com/</a></span></font></p>
+  <blockquote>
+  <p align="left"><span style="background-color: #00FFFF">
+  <font face="Courier New">Note: when you install cygwin, make sure that you 
+  install gcc so that you can run the model checker tool of modelexplorer.</font></span></p>
+  </blockquote>
+  <p align="left"><font face="Courier New">3. Ant (<span style="background-color: #FF0000">@ANTREL@</span>) from
+  <a href="http://jakarta.apache.org/ant/">http://jakarta.apache.org/ant/</a></font></p>
+</blockquote>
+<p align="left"><font face="Courier New">Now, make sure that you have included 
+the pre-requisite software in your PATH (or, on Windows, Path). You should be 
+able to run the Java tools and Ant from the command line and, for Windows 
+systems, you should be able to run CYGWIN commands from the command line.<br>
+<br>
+If everything looks good, it's time to install the AHEAD tool suite. Please 
+follow these instructions: (note: if you are reading this file, you may have 
+already done steps 1-3).</font></p>
+<blockquote>
+  <p align="left"><font face="Courier New">1. Change directory to where you'd 
+  like to install the suite. The installation will create a sub-directory named 
+  @NAME@ which will contain the distribution.<br>
+  <br>
+  2. Unpack the file that you downloaded, i.e., </font></p>
+  <blockquote>
+    <p align="left"><font face="Courier New">&nbsp;&gt; unzip @NAME@.zip</font></p>
+  </blockquote>
+  <p align="left"><font face="Courier New">3. You should now have a 
+  sub-directory named @NAME@ and it should contain the following files and 
+  sub-directories:</font></p>
+  <blockquote>
+    <p align="left"><font face="Courier New">build/bin .... a directory with 
+    executable programs;<br>
+    build/lib .... a directory containing jar files;<br>
+    docs ......... a directory with documentation (read this!);<br>
+    dsl .......... a directory in which to place layers/features;<br>
+    equations .... a directory in which to place AHEAD equations<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+    (this directory is presently empty)<br>
+    miscellaneous. a directory in which to place other things;<br>
+    README.html .. a copy of this file;<br>
+    setperms ..... a script to set file permissions in @NAME@.</font></p>
+  </blockquote>
+  <p align="left"><font face="Courier New">4. On Linux installations, change the permissions on your installation as follows:</font></p>
+  <blockquote>
+    <p align="left"><font face="Courier New">sh @NAME@/setperms</font></p>
+  </blockquote>
+  <p align="left"><font face="Courier New">6. Follow the instructions on either
+  <a href="#Windows Scripts">Windows Scripts</a> or <a href="#Linux Scripts">
+  Linux Scripts</a>.<br>
+  <br>
+  7. Installation is complete.</font></p>
+</blockquote>
+<p align="left"><font face="Courier New">In order to run the &quot;@PREFIX@&quot; tools, 
+your PATH (or, on Windows, Path) setting must include the bin sub-directory from 
+your @NAME@ installation, as well as the paths for the pre-requisite software. 
+If this is the case, you're ready to go!<br>
+<br>
+We strongly recommend reading the documentation in the docs sub-directory! A 
+good starting point is the &quot;index.html&quot; file.</font></p>
+<h1 align="left"><font face="Courier New" color="#0000FF">
+<a name="Windows Scripts"></a>Windows Scripts</font></h1>
+<p align="left"><font face="Courier New">By far the biggest problem in 
+installation is getting the path and classpath variables right. Here is a DOS 
+batch script that sets the path and classpath variables correctly. Of course, 
+you will need to fill in the details. Keep reading, as there's more.&nbsp; REMEMBER: MAKE SURE THAT THE ACTUAL PATHS IN THE SCRIPT BELOW ARE 
+CORRECT.</font></p>
+<blockquote>
+  <p align="left"><font face="Courier New">@echo off<br>
+  <br>
+  rem ---- change the values of the following properties to reflect<br>
+  rem ---- your environment. </font></p>
+  <p align="left"><font face="Courier New">
+  <span style="background-color: #FFFF00">set WIN_HOME=C:\WINDOWS\system32<br>
+  set JAVA_HOME=C:\Program Files\Java\jdk@JDKREL@<br>
+  set CYGWIN_HOME=C:\bin\cygwin<br>
+  set AHEAD_HOME=C:\Java\@NAME@<br>
+  set ANT_HOME=C:\Java\apache-ant-@ANTREL@</span></font></p>
+  <p align="left"><font face="Courier New">rem ---- the following paths are 
+  computed from the above<br>
+  <br>
+  <span style="background-color: #FFFFFF">set JCC_HOME=%</span>AHEAD_HOME%\miscellaneous\javacc<br>
+  <br>
+  set PATH=.<br>
+  set PATH=%PATH%;%AHEAD_HOME%\build\bin<br>
+  set PATH=%PATH%;%JAVA_HOME%\bin<br>
+  set PATH=%PATH%;%ANT_HOME%\bin<br>
+  <span style="background-color: #FFFFFF">set PATH=%PATH%;%JCC_HOME%\bin<br>
+  set PATH=%PATH%;</span>%CYGWIN_HOME%\bin<span style="background-color: #FFFFFF"><br>
+  </span>set PATH=%PATH%;%WIN_HOME%<br>
+  <br>
+  rem ---- after this point, you can add any additional path settings<br>
+  rem ---- here are the ones that I use, which of course, you should<br>
+  rem ---- replace or delete. Note: quoted elements in paths should<br>
+  rem ---- be the last in the list. bash makes this assumption!<br>
+  <br>
+  set CLASSPATH=.<br>
+  <br>
+  rem add any additional classpath entries add here<br>
+  <br>
+  <a href="file:///C:/WINNT/system32/cmd.exe" style="text-decoration: none">
+  <font color="#000000">cmd</font></a></font></p>
+</blockquote>
+  <h3 align="left"><font face="Courier New" color="#FF0000">WARNING1: 
+  modelexplorer and ant</font></h3>
+  <p align="left"><font face="Courier New">The following bug appears in running ModelExplorer, which seems 
+  to find incompatible versions of ant and prevents ModelExplorer from being 
+  used. It also appears in building ATS under bash.&nbsp; The fix is the following edit:&nbsp; cd to ANT_HOME/bin.&nbsp; 
+  Make the first few lines of ant.bat to be</font></p>
+  <p align="left"><font face="Courier New">&nbsp;&nbsp;&nbsp; @echo off<br>
+&nbsp;&nbsp;&nbsp; set classpath=</font></p>
+  <p align="left"><font face="Courier New">these edits make your classpath 
+  empty.&nbsp; The ant bash script will supply the correct files.&nbsp; </font></p>
+  <h3 align="left"><font face="Courier New" color="#FF0000">WARNING2: javacc</font></h3>
+<p align="left"><font face="Courier New">The following bug also has disappeared 
+recently, and I am retaining a discussion of it for history (as it seemingly 
+took forever to track down).&nbsp; It is still a problem if you cannot run 
+javacc under bash (see below for exact test). The problem involves strange interactions 
+between bash (CYGWIN), Windows, and Java. The above batch file fixes all but 
+one. <span style="background-color: #FFFFFF">If you have installed javacc, you 
+will need to correct the %JCC_HOME%\bin\javacc file. Its contents as distributed 
+is:</span></font></p>
+<blockquote>
+  <p align="left"><font face="Courier New">
+  <span style="background-color: #FFFFFF">#!/bin/sh<br>
+  <br>
+  java -classpath `dirname $0`/lib/javacc.jar javacc &quot;$@&quot;</span></font></p>
+</blockquote>
+<p align="left"><font face="Courier New">
+<span style="background-color: #FFFFFF">Well, this doesn't work. You should 
+change it to:</span></font></p>
+<blockquote>
+  <p align="left"><font face="Courier New">
+  <span style="background-color: #FFFFFF">#!/bin/sh<br>
+  <br>
+  java -classpath &lt;full-path-to-javacc.jar&gt; javacc &quot;$@&quot;</span></font></p>
+</blockquote>
+<p align="left"><font face="Courier New">
+<span style="background-color: #FFFFFF">Where the &lt;full-path&gt; looks like 
+c:/Java/javacc-@JCCREL@/bin/lib/javacc.jar</span></font></p>
+<p align="left"><font face="Courier New">
+<span style="background-color: #FFFFFF">Without this fix, you can't invoke 
+javacc from bash. That is, the following will execute javacc if you make the 
+above changes, it won't otherwise:</span></font></p>
+<blockquote>
+  <p align="left"><font face="Courier New">
+  <span style="background-color: #FFFFFF">&gt; bash<br>
+  &gt; javacc<br>
+  &lt;normal javacc marquee&gt;</span></font></p>
+</blockquote>
+  <p align="left"><span style="background-color: #FFFFFF">
+  <font face="Courier New">Now, go to final comments (<a href="#Finally">click 
+  here</a>).</font></span></p>
+  <h3 align="left"><span style="background-color: #FFFFFF">
+  <font face="Courier New" color="#FF0000">WARNING3: CYGWIN and base</font></span></h3>
+  <p align="left"><font face="Courier New">Recent installations of CYGWIN do not 
+  install sh.exe, but do install bash.exe.&nbsp; You can tell you have a problem 
+  if you create a bash prompt, and cannot run ant, where you get an error 
+  message like: </font></p>
+  <p align="left"><font face="Courier New">&nbsp;&nbsp;&nbsp; bad interpreter: 
+  No such file or directory</font></p>
+  <p align="left"><font face="Courier New">Check your CYGWIN installation 
+  directory, and if sh.exe is not present, this is likely the problem.&nbsp; The 
+  fix is to install sh.exe using CYGWIN, and recently it has been listed in CYGWIN 
+  under the name ash (a Bourne Shell workalike).</font></p>
+  <p align="left"><font face="Courier New">There is one other work around: where 
+  ever bin/sh is referenced, you can replace it with /bin/bash.&nbsp; But this 
+  can only be a temporary fix.</font></p>
+<h1 align="left"><font color="#0000FF" face="Courier New">
+<span style="background-color: #FFFFFF"><a name="Linux Scripts">Linux Scripts</a></span></font></h1>
+<blockquote>
+  <div align="left">
+    <p align="left"><font face="Courier New">#!/bin/sh/</font></div>
+  <div align="left">
+    <p align="left"><font face="Courier New"># ---- please set the correct paths 
+    on the variables below</font></div>
+  <div align="left">
+    <p align="left"><font face="Courier New">
+    <span style="background-color: #FFFF00">export JAVA_HOME=/usr/local/jdk@JDKREL@<br>
+    export AHEAD_HOME=/usr/local/ahead<br>
+    export ANT_HOME=/usr/local/apache-ant-@ANTREL@</span><br>
+    <br>
+    # ---- the following is preset<br>
+    <span style="background-color: #FFFFFF">export JCC_HOME=${AHEAD_HOME}/miscellaneous/javacc</span><br>
+    <br>
+    export PATH=${PATH}:${AHEAD_HOME}/build/bin<br>
+    export PATH=${PATH}:${JAVA_HOME}/bin<br>
+    export PATH=${PATH}:${ANT_HOME}/bin<br>
+    <span style="background-color: #FFFFFF">export PATH=${PATH}:${JCC_HOME}/bin</span><br>
+  <br>
+    # ---- after this point, you can add any additional path settings<br>
+    # ---- here are the ones that I use, which of course, you should<br>
+    # ---- replace or delete. <br>
+  <br>
+    export CLASSPATH=.<br>
+  <br>
+    # add any additional classpath entries add here</font></div>
+</blockquote>
+  <div align="left">
+    <p align="left"><font face="Courier New">Now, proceed to the next and last 
+    section.</font></div>
+<h1 align="left"><font color="#0000FF" face="Courier New">
+<span style="background-color: #FFFFFF"><a name="Finally">Finally</a></span></font></h1>
+<p align="left"><font face="Courier New">Before you proceed, you must make sure 
+that your classpath is set correctly. Virtually all of the problems in 
+installation deal with incorrect classpaths.&nbsp; Here are the tests: make sure 
+that you can run each of the following -- that is, you get a normal error output 
+from the tool, as opposed to &quot;there is no such tool&quot;.&nbsp; Try these tests in 
+this order:</font></p>
+<div align="left">
+  <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="668">
+    <tr>
+      <td width="116"><font face="Courier New">&gt; javac</font></td>
+      <td width="45"><font face="Courier New">&nbsp;</font></td>
+      <td width="507"><font face="Courier New">is javac working?</font></td>
+    </tr>
+    <tr>
+      <td width="116" bordercolor="#FFFF00" bgcolor="#FFFFFF">
+      <font face="Courier New">&gt; javacc</font></td>
+      <td width="45" bordercolor="#FFFF00" bgcolor="#FFFFFF">&nbsp;</td>
+      <td width="507" bordercolor="#FFFF00" bgcolor="#FFFFFF">
+      <font face="Courier New">is javacc working?</font></td>
+    </tr>
+    <tr>
+      <td width="116"><font face="Courier New">&gt; ant</font></td>
+      <td width="45">&nbsp;</td>
+      <td width="507"><font face="Courier New">is ant working?</font></td>
+    </tr>
+    <tr>
+      <td width="116"><font face="Courier New">&gt; gcc</font></td>
+      <td width="45">&nbsp;</td>
+      <td width="507"><font face="Courier New">is gcc working?</font></td>
+    </tr>
+    <tr>
+      <td width="116"><font face="Courier New">&gt; jampack</font></td>
+      <td width="45">&nbsp;</td>
+      <td width="507"><font face="Courier New">is AHEAD working?</font></td>
+    </tr>
+    <tr>
+      <td width="116"><font face="Courier New">&gt; bash </font></td>
+      <td width="45">&nbsp;</td>
+      <td width="507"><font face="Courier New">is bash working? (for windows 
+      only)</font></td>
+    </tr>
+    <tr>
+      <td width="116" bgcolor="#FFFFFF"><font face="Courier New">&gt; javacc</font></td>
+      <td width="45" bgcolor="#FFFFFF">&nbsp;</td>
+      <td width="507" bgcolor="#FFFFFF"><font face="Courier New">is javacc 
+      working under bash (windows only)</font></td>
+    </tr>
+  </table>
+</div>
+<p align="left"><font face="Courier New">ATS relies on Ant and CYGWIN only to a 
+minimal extent.&nbsp; The ATS modelexplorer tool relies directly on Ant, but no 
+other tool does.&nbsp; CYGWIN could be eliminated too, if absolutely necessary.&nbsp; 
+For such details, contact Don Batory (<a href="mailto:batory@cs.utexas.edu?subject=ATS Installation Question">batory@cs.utexas.edu</a>).</font></p>

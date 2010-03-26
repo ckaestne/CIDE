@@ -1,0 +1,8 @@
+grammar = super.grammar dsl/java/LayerGram
+
+jak2java   = super.jak2java   dsl/java/AspectTrans
+jampack    = super.jampack    dsl/java/AspectDecl
+mixin      = super.mixin      dsl/java/AspectDecl
+bcjak2java = super.bcjak2java dsl/java/bcLayer
+jak2aj     = super.jak2aj     dsl/java/j2ajLayer
+jrename    = super.jrename    dsl/java/layerError

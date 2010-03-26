@@ -1,0 +1,22 @@
+## Source.vm
+## JEDI Project
+## Author: Roberto E. Lopez-Herrejon
+## Last update: November 30, 2002
+
+## If there is a source TypeDeclaration 
+
+#if($isSourceFlag == "true")
+   SoUrCe &nbsp;
+  
+    ## Checks to see if it has root literal 
+    #if($doc.getSourceHasRoot()) 
+      RooT &nbsp;
+    #end 
+    
+    $doc.getSourceQualifiedName() &nbsp; 
+   
+    $doc.getSourceStringLiteral() &nbsp;
+
+  #end  ## of isSource
+ 
+## End of Source.vm

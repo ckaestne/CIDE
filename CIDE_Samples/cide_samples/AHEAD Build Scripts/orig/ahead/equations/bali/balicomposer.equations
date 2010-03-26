@@ -1,0 +1,5 @@
+# SPECIFIC TOOL DEFINITION:
+# Layer "requireComposer" is tool-specific feature handling defined in super
+# equations file.
+#
+this = common composer requireComposer

@@ -1,0 +1,492 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
+<title>AST Cursors</title>
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+        <td width="78">
+        <img border="0" src="images/FopButton3.jpg" width="80" height="64"></td>
+        <td width="688" bgcolor="#00FFFF"><h2><font
+        color="#8000FF" face="Arial">AST Cursors</font></h2>
+        </td>
+    </tr>
+</table>
+
+<p><font face="Arial">An <i>AST cursor</i> is an object that is
+used to traverse an AST one node at a time. Cursors are instances
+of the <b>AstCursor</b> class. Using cursors, one can search an AST
+for a selected node and replace, delete, update, or detach it.</font></p>
+
+<dir>
+    <li><a href="#Traversing ASTs"><font face="Arial">Traversing
+        ASTs</font></a></li>
+    <li><a href="#Traversing Lists"><font face="Arial">Traversing
+        Lists</font></a></li>
+    <li><a href="#Deleting Trees"><font face="Arial">Deleting
+        Trees</font></a></li>
+    <li><a href="#Updating Trees"><font face="Arial">Updating
+        Trees</font></a></li>
+    <li><a href="#Skipping Trees"><font face="Arial">Skipping
+        Trees</font></a></li>
+    <li><a href="#Cursor Methods"><font face="Arial">Cursor
+        Methods</font></a></li>
+</dir>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%"
+bgcolor="#FFFF00" bordercolor="#FFFF00">
+    <tr>
+        <td width="772"><h3><a name="Traversing ASTs"><b><font
+        color="#8000FF" face="Arial">Traversing ASTs</font></b></a></h3>
+        </td>
+    </tr>
+</table>
+
+<p><font face="Arial">A standard loop idiom is used to traverse
+an AST whose root node is r:</font></p>
+
+<blockquote>
+    <pre>AstCursor c = new AstCursor();</pre>
+    <pre>for (c.First(r); c.More(); c.PlusPlus()) {
+&nbsp;&nbsp;&nbsp; // c.node references a node of the tree to search
+}</pre>
+</blockquote>
+
+<p><font face="Arial">The following Jak program creates an AST
+for the expression &quot;7*x&quot; and uses a cursor to traverse
+the tree. At each node, the number of children and the class name
+of the node is printed.</font></p>
+
+<blockquote>
+    <pre>import j2j.*;	// translate this program with jak2java</pre>
+    <pre>class t2 {
+&nbsp;&nbsp;&nbsp; public static void main( String[] args ) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; AST_Exp e;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; AstCursor c = new AstCursor();</pre>
+    <pre>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; e = exp{ 7*x }exp;</pre>
+    <pre>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; System.out.println(&quot;# children&nbsp; Classname&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; System.out.println(&quot;-----------------------&quot;);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; for (c.First(e); c.More(); c.PlusPlus()) {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; System.out.println( c.node.arg.length + &quot;\t\t&quot; +
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; c.node.className());
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+&nbsp;&nbsp; }
+}</pre>
+</blockquote>
+
+<p><font face="Arial">The output of this program is:</font></p>
+
+<blockquote>
+    <pre># children  Classname
+-----------------------
+2               MultExpr
+1               IntLit
+1               MoreMultExpr
+2               MEBod
+1               Mult
+1               PPQualName
+1               AST_QualifiedName
+1               NameId</pre>
+</blockquote>
+
+<table border="0" cellpadding="0" width="100%" bgcolor="#FFFF00">
+    <tr>
+        <td width="766"><h3><a name="Traversing Lists"><font
+        color="#800080" face="Verdana">Traversing Lists</font></a></h3>
+        </td>
+    </tr>
+</table>
+
+<p><font face="Arial">A special case of traversing an AST is to
+traverse the nodes of a list.&nbsp; Given a node e (which is of
+type <b>AstList</b>), the following idiom is used to examine each
+element of a list:</font></p>
+
+<blockquote>
+<pre>AstCursor c = new AstCursor();
+for (c.FirstElement(e); c.MoreElement(); c.NextElement() ) {
+    AstNode node = c.node ;
+}
+</pre>
+</blockquote>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%"
+bgcolor="#FFFF00" bordercolor="#FFFF00">
+    <tr>
+        <td width="772"><h3><a name="Deleting Trees"><b><font
+        color="#8000FF" face="Arial">Deleting Trees</font></b></a></h3>
+        </td>
+    </tr>
+</table>
+
+<p><font face="Arial">As one traverses an AST, it is possible
+to replace, update, and delete nodes or subtrees. Consider the
+following program which is based on the Java.b grammar file. This program generates an AST that
+contains a list of class and interface declarations. A cursor is
+used to walk the tree; when an interface node is found, it (or
+really the subtree rooted at that node) is deleted:</font></p>
+
+<blockquote>
+    <pre>import jak2java.*;	// translate this program with jak2java
+
+class t3 {
+    public static void main( String[] args ) {
+        AST_Class k;
+        AstProperties  p;
+        AstCursor c = new AstCursor();
+
+        // Step 1: create an AST that is a list of 
+        //         interface and class definitions
+
+        k = cls{ 
+                interface foo {}
+                class bar { int xx; }
+                interface biff {}
+                class baz { int xx; }
+        }cls;
+
+        // Step 2: delete each interface declaration - look at
+        //         AHEAD/languages/Jak.b to see that interface decls
+        //         are instances of UnmodifiedInterfaceDeclarations;
+        //         we want to delete the parent of this node
+
+        for (c.First(k); c.More(); c.PlusPlus()) {
+            if (c.node instanceof ModTypeDecl &amp;&amp; 
+                c.node.arg[1] instanceof UnmodifiedInterfaceDeclaration)
+                c.Delete();
+        }
+        // Step 3: now print the resulting AST
+
+        System.out.println(k);
+    }
+}</pre>
+</blockquote>
+
+<p><font face="Arial">The output of this program is:</font></p>
+
+<blockquote>
+    <pre>class bar { int xx; }
+class baz { int xx; }</pre>
+</blockquote>
+
+<blockquote>
+    <p><i><font color="#FF0000" face="Arial">Note: deleting a
+    node is possible only if the node is an element of a list. In
+    this example, interfaces are not elements of a list; rather,
+    instances of ModTypeDecl are instances, and their arg[1] node
+    is an UnmodifiedInterfaceDeclaration object. (See the Java.b
+    grammar file). Note also as this examples shows that it is
+    possible to delete a node during a search; the next node that
+    will be examined is the node that immediately follows the
+    node that had been deleted. In the case of a replacement, the
+    next node to examine is the root of the newly replaced tree.</font></i></p>
+</blockquote>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%"
+bgcolor="#FFFF00" bordercolor="#FFFF00">
+    <tr>
+        <td width="772" bgcolor="#FFFF00"><h3><a
+        name="Updating Trees"><b><font color="#8000FF"
+        face="Arial">Updating Trees</font></b></a></h3>
+        </td>
+    </tr>
+</table>
+
+<p><font face="Arial">It is possible (although not recommended)
+that when translating domain-specific extensions to a language,
+one walks an AST searching for tree nodes that are instances of
+the new language constructs. (The normal way is to do so
+recursively, without the use of cursors.&nbsp; However, we'll
+show in this section how it could be done with cursors). When
+such a node is found, a pure (Java) AST is constructed that
+defines the host-language implementation of that construct. The
+following program shows how cursors can be used to locate a
+particular node, how a replacement tree is created, and the
+constructed tree replaces the identified node. <i>In general, if
+a tree is to be used in&nbsp;multiple replacements then the tree
+must be cloned. There is no concept of shared subtrees in AHEAD;
+trees must be cloned (copied) before they can be linked into an
+AST.</i> See the description of <a
+href="AST.html#Normalizing Trees">normalize
+method</a>.</font></p>
+
+<blockquote>
+    <pre>import jak2java.*;  // translate this program with jak2java
+
+class t4 {
+    public static void main( String[] args ) {
+        AST_Stmt s;
+        AST_Exp e, copy;
+        AstProperties  p;
+        AstCursor c = new AstCursor();
+
+        // Step 1: <a
+href="ASTConstructors.html#What is an AST Constructor">create an AST</a> that is an if statement and&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; an expression replacement
+
+        s = stm{ 
+                if (boo()) { x = 5; }
+                else { x = 7; }
+        }stm;
+        e = exp{ y &lt; 87 }exp;
+
+        // Step 2: walk tree s and replace boo() (the lone instance
+        //         of node type PrimExpr with its first argument
+        //         as an PPQualName) with a clone
+        //         of e.  (Cloning may not be strictly necessary
+        //         for this example, but is dangerous not to do so in
+        //         the general case).
+
+        for (c.First(s); c.More(); c.PlusPlus()) {
+            if (c.node instanceof PrimExpr &amp;&amp; 
+                c.node.arg[0] instanceof PPQualName) {
+                copy = (AST_Exp) e.clone();
+                c.Replace(copy);
+            }
+        }
+
+        // Step 3: now print the resulting AST
+
+        System.out.print(s);
+    }
+}</pre>
+</blockquote>
+
+<p><font face="Arial">The output of this program is:</font></p>
+
+<blockquote>
+    <pre>if ( y &lt; 87) { x = 5; }
+else { x = 7; }</pre>
+</blockquote>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%"
+bgcolor="#FFFF00" bordercolor="#FFFF00">
+    <tr>
+        <td width="772" bgcolor="#FFFF00"><h3><a
+        name="Skipping Trees"><b><font color="#8000FF"
+        face="Arial">Skipping Trees</font></b></a></h3>
+        </td>
+    </tr>
+</table>
+
+<p><font face="Arial">Consider the following problem: we want
+to identify the names of all top-level classes in an AST that
+represents a program. There is no need to search trees that are
+interior to class and interface declarations; all we want to do
+is to search that part of the AST that is the list of (top-level)
+class and interface declarations. Subtrees can be skipped using
+the Sibling() method. An invocation of Sibling() tells the tree
+traversal methods that the subtrees of a given node are to be
+skipped and the next node to examine is the sibling of the
+current node. The following program illustrates this idea:</font></p>
+
+<blockquote>
+    <pre>import jak2java.*;  // translate this program with jak2java
+
+class t5 {
+    public static void main( String[] args ) {
+        AST_Class k;
+        AstProperties  p;
+        AstCursor c = new AstCursor();
+
+        // Step 1: create an AST that is a list 
+        //         of interface and class definitions
+
+        k = cls{ 
+                interface foo { interface innerfoo{} }
+                class bar { class innerbar { } }
+                interface biff { interface innerbiff {} }
+                class baz { class innerbaz{ } }
+        }cls;
+
+        // Step 2: use Sibling to skip subtrees internal 
+        //         to interface and class declarations.
+
+        for (c.First(k); c.More(); c.PlusPlus()) {
+            if (c.node instanceof UmodClassDecl) {
+                System.out.println(&quot;high-level class:     &quot; + 
+                c.node.arg[0].tok[0].tokenName());
+                c.Sibling(); 
+            }
+            if (c.node instanceof UmInterDecl) {
+                System.out.println(&quot;high-level interface: &quot; +
+                c.node.arg[0].tok[0].tokenName());
+                c.Sibling();
+            }
+        }
+
+        // Step 3: now print the resulting AST
+
+        System.out.print(k);
+    }
+}</pre>
+</blockquote>
+
+<p><font face="Arial">The output of this program is:</font></p>
+
+<blockquote>
+    <pre>high-level interface: foo
+high-level class:&nbsp;&nbsp;&nbsp;&nbsp; bar
+high-level interface: biff
+high-level class:&nbsp;&nbsp;&nbsp;&nbsp; baz
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; interface foo { interface innerfoo{} }
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; class bar { class innerbar { } }
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; interface biff { interface innerbiff {} }
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; class baz { class innerbaz{ } }</pre>
+</blockquote>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%"
+bgcolor="#FFFF00" bordercolor="#FFFF00">
+    <tr>
+        <td width="772" bgcolor="#FFFF00"><h3><a
+        name="Cursor Methods"><b><font color="#8000FF"
+        face="Arial">Cursor Methods</font></b></a></h3>
+        </td>
+    </tr>
+</table>
+
+<p align="left"><font face="Arial">The following are methods
+that can be applied to AST cursors:</font></p>
+<div align="center"><center>
+
+<table border="3" cellpadding="2" cellspacing="3" width="100%"
+bgcolor="#00FF00" height="288">
+    <tr>
+        <td height="23"><b><u><font size="2" face="Arial">Cursor
+        Method or Member</font></u></b></td>
+        <td height="23"><b><u><font size="2" face="Arial">Meaning</font></u></b></td>
+        <td height="23"><b><u><font size="2" face="Arial">Notes</font></u></b></td>
+    </tr>
+    <tr>
+        <td height="15"><font size="2" face="Arial">void First(
+        AstNode root )</font></td>
+        <td height="15"><font size="2" face="Arial">position
+        cursor on root of tree</font></td>
+        <td height="15"><a href="#one"><font size="2"
+        face="Arial">1</font></a></td>
+    </tr>
+    <tr>
+        <td height="18"><font size="2" face="Arial">boolean
+        More( )</font></td>
+        <td height="18"><font size="2" face="Arial">true if
+        more nodes to examine in tree</font></td>
+        <td height="18">&nbsp;</td>
+    </tr>
+    <tr>
+        <td height="13"><font size="2" face="Arial">void PlusPlus( )</font></td>
+        <td height="13"><font size="2" face="Arial">advance
+        cursor to next node of tree</font></td>
+        <td height="13"><a href="#one"><font size="2"
+        face="Arial">1</font></a></td>
+    </tr>
+    <tr>
+        <td height="13"><font size="2" face="Arial">void
+        Sibling( )</font></td>
+        <td height="13"><font size="2" face="Arial">skip the
+        search of subtrees of the current node</font></td>
+        <td height="13"><a href="#two"><font size="2"
+        face="Arial">2</font></a></td>
+    </tr>
+    <tr>
+        <td height="13"><font size="2" face="Arial">void Up( )</font></td>
+        <td height="13"><font size="2" face="Arial">reposition
+        to the node &quot;above&quot; the current node</font></td>
+        <td height="13"><a href="#three"><font size="2"
+        face="Arial">3</font></a></td>
+    </tr>
+    <tr>
+        <td height="13"><font size="2" face="Arial">void
+        Delete( )</font></td>
+        <td height="13"><font size="2" face="Arial">delete
+        subtree rooted at the current node</font></td>
+        <td height="13"><a href="#four"><font size="2"
+        face="Arial">4</font></a></td>
+    </tr>
+    <tr>
+        <td height="13"><font size="2" face="Arial">void
+        Replace( AstNode tree )</font></td>
+        <td height="13"><font size="2" face="Arial">replace the
+        current node with tree</font></td>
+        <td height="13"><a href="#five"><font size="2"
+        face="Arial">5</font></a></td>
+    </tr>
+    <tr>
+        <td height="13"><font size="2" face="Arial">void AddAfter( AstList list )</font></td>
+        <td height="13"><font size="2" face="Arial">add list
+        after the current node</font></td>
+        <td height="13"><a href="#six"><font size="2"
+        face="Arial">6</font></a></td>
+    </tr>
+    <tr>
+        <td height="13"><font size="2" face="Arial">void AddBefore( AstList list )</font></td>
+        <td height="13"><font size="2" face="Arial">add list
+        before the current node</font></td>
+        <td height="13"><a href="#six"><font size="2"
+        face="Arial">6</font></a></td>
+    </tr>
+    <tr>
+        <td height="31"><font size="2" face="Arial">void print(
+        AstProperties p )</font></td>
+        <td height="31"><font face="Arial"><font size="2">unparse the
+        tree rooted at the current node&nbsp;</font><font
+        size="4" face="Verdana">&nbsp; <br>
+        </font><font size="2">using AstProperties p</font></font></td>
+        <td height="31"><a href="#seven"><font size="2"
+        face="Arial">7</font></a></td>
+    </tr>
+</table>
+</center></div>
+
+<p><font face="Arial">&nbsp;<font size="3"
+face="Verdana">Notes:</font></font></p>
+
+<ol>
+    <li><font face="Arial"><font
+        size="3">ASTs are searched in preorder
+        (self then children from left to right) order. One cannot
+        advance past the root of the tree to search, where the
+        root was set in the First( root ) call.</font></font></li>
+    <li><font face="Arial"><font size="3">See&nbsp;Section 4.</font></font></li>
+    <li><font face="Arial"><font size="3">Up( ) fails if the current node is already
+        positioned on the root. Note also that there are
+        &quot;hidden&quot; nodes in an AST that are present only
+        for implementation reasons. Up( ) repositions a cursor on
+        the first ancestor node that is not one of these
+        &quot;hidden&quot; nodes. Thus, the Up( ) node of a
+        current node need not be the immediate parent of the
+        current node.</font></font></li>
+    <li><font
+        size="3" face="Arial">Only AST nodes that are elements
+        of lists can be deleted.</font></li>
+    <li><font
+        size="3" face="Arial">Substitution is possible only if
+        the replacement tree is of the same type as the current
+        node. This ensures that all trees will be syntactically
+        correct upon editing.</font></li>
+    <li><font
+        size="3" face="Arial">The current node must be a list
+        node.</font></li>
+    <li><font face="Arial"><font
+        size="3">See section on printing ASTs.</font></font></li>
+</ol>
+
+<hr>
+
+<p><font face="Arial"><a
+href="index.html"><font color="#8000FF"><strong>&nbsp;AHEAD Home Page</strong></font></a></font></p>
+
+<p><font face="Arial"><b>Copyright © Software Systems
+Generator Research Group. All rights reserved.</b> <br>
+<b>Revised:&nbsp;<!--webbot bot="TimeStamp" startspan
+s-format="%B %d, %Y" s-type="EDITED" -->October 12, 2004<!--webbot
+bot="TimeStamp" i-CheckSum="30466" endspan -->.</b> </font></p>
+</body>
+</html>

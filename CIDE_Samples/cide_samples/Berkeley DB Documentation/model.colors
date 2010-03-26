@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE featuremodelattributes SYSTEM "featuremodelattributes.dtd">
+<featuremodelattributes>
+<featureattr name="Derivative_CheckpointerDaemon_CPBytes" id="87" selected="true"/>
+<featureattr name="NIOAccess" id="61" selected="true"/>
+<featureattr name="Logging_ConsoleHandler" id="42" color="8421504" selected="true"/>
+<featureattr name="SPL" id="52" selected="true"/>
+<featureattr name="MemoryBudget_OR_Statistics" id="88" selected="true"/>
+<featureattr name="Statistics" id="20" color="65535" selected="true"/>
+<featureattr name="LoggingFinest" id="89" selected="true"/>
+<featureattr name="Derivative_LoggingCleaner_LoggingBase" id="80" selected="true"/>
+<featureattr name="Memory_Budget" id="33" color="128" selected="true"/>
+<featureattr name="Derivative_LookAHEADCache_Statistics" id="90" selected="true"/>
+<featureattr name="LoggingDbLogHandler" id="91" selected="true"/>
+<featureattr name="Derivative_Evictor_MemoryBudget" id="73" selected="true"/>
+<featureattr name="Derivative_LoggingEvictor_Evictor_LoggingBase" id="93" selected="true"/>
+<featureattr name="Checksum_OR_MemoryBudget_OR_Statistics" id="92" selected="true"/>
+<featureattr name="IICleaner" id="68" selected="true"/>
+<featureattr name="DeleteOp" id="29" color="65408" selected="true"/>
+<featureattr name="LoggingEvictor" id="94" selected="true"/>
+<featureattr name="Derivative_CPBytes_CPTime" id="95" selected="true"/>
+<featureattr name="Feature49" id="49" color="16744448" selected="false"/>
+<featureattr name="Feature48" id="48" color="12615935" selected="false"/>
+<featureattr name="Feature47" id="47" color="8388863" selected="false"/>
+<featureattr name="CleanerDaemon_OR_Evictor" id="97" selected="true"/>
+<featureattr name="LoggingCleaner_OR_Statistics" id="96" selected="true"/>
+<featureattr name="Feature46" id="46" color="65408" selected="false"/>
+<featureattr name="IEvictor" id="62" selected="true"/>
+<featureattr name="Feature45" id="45" color="4194368" selected="false"/>
+<featureattr name="Feature44" id="44" color="16512" selected="false"/>
+<featureattr name="Derivative_IO_SynchronizedIO" id="98" selected="true"/>
+<featureattr name="Checksum_OR_Derivative_CheckpointerDaemon_CPBytes_OR_FSync_OR_Latches_OR_Statistics" id="99" selected="true"/>
+<featureattr name="Derivative_LoggingFinest_CPTime" id="100" selected="true"/>
+<featureattr name="CheckLeaks" id="22" color="32768" selected="true"/>
+<featureattr name="Derivative_Statistics_MemoryBudget" id="70" selected="true"/>
+<featureattr name="CP_Bytes" id="25" color="8421504" selected="true"/>
+<featureattr name="Checksum_OR_Statistics" id="101" selected="true"/>
+<featureattr name="Derivative_LoggingInfo_MemoryBudget" id="82" selected="true"/>
+<featureattr name="DiskFullErro_OR_IO_OR_Latches_OR_NIO" id="102" selected="true"/>
+<featureattr name="CleanerDaemon" id="28" color="4194368" selected="true"/>
+<featureattr name="Checksum_OR_Latches_OR_LoggingSevere" id="103" selected="true"/>
+<featureattr name="LoggingFileHandler" id="104" selected="true"/>
+<featureattr name="Derivative_LoggingConsoleHandler_LoggingBase" id="76" selected="true"/>
+<featureattr name="LookAHEADCache_OR_Statistics" id="105" selected="true"/>
+<featureattr name="DERIVATIVES" id="72" selected="true"/>
+<featureattr name="EnvironmentLocking" id="106" selected="true"/>
+<featureattr name="Evictor_OR_LoggingConfig_OR_LoggingSevere_OR_Statistics" id="107" selected="true"/>
+<featureattr name="Derivative_LoggingFileHandler_LoggingBase" id="77" selected="true"/>
+<featureattr name="Derivative_Statistics_Verifier_INCompressor" id="108" selected="true"/>
+<featureattr name="Derivative_Evictor_CriticalEviction" id="74" selected="true"/>
+<featureattr name="Derivative_DeleteOp_MemoryBudget" id="78" selected="true"/>
+<featureattr name="LoggingBase" id="109" selected="true"/>
+<featureattr name="Feature50" id="50" color="128" selected="false"/>
+<featureattr name="Derivative_Latches_INCompressor" id="110" selected="true"/>
+<featureattr name="Checksum_OR_LoggingSevere" id="111" selected="true"/>
+<featureattr name="Checkpointer_Daemon" id="24" color="12615680" selected="true"/>
+<featureattr name="Verifier" id="23" color="8388608" selected="true"/>
+<featureattr name="Logging_FileHandler" id="40" color="8388608" selected="true"/>
+<featureattr name="Derivative_Latches_Evictor" id="112" selected="true"/>
+<featureattr name="Derivative_Evictor_MemoryBudget_CriticalEviction" id="113" selected="true"/>
+<featureattr name="INCompressor" id="27" color="16512" selected="true"/>
+<featureattr name="Transactions" id="1" color="255" selected="true"/>
+<featureattr name="Logging" id="57" selected="true"/>
+<featureattr name="Derivative_Latches_FileHandleCache" id="69" selected="true"/>
+<featureattr name="Derivative_Verifier_INCompressor" id="114" selected="true"/>
+<featureattr name="Derivative_LoggingCleaner_DeleteOp" id="115" selected="true"/>
+<featureattr name="SynchronizedIO" id="18" color="255" selected="true"/>
+<featureattr name="INCompressor_OR_Statistics" id="116" selected="true"/>
+<featureattr name="Environment_Locking" id="38" color="33023" selected="true"/>
+<featureattr name="Derivative_LoggingDbLogHandler_LoggingBase" id="81" selected="true"/>
+<featureattr name="Feature21" id="21" color="33023" selected="false"/>
+<featureattr name="Latches" id="13" color="8388863" selected="true"/>
+<featureattr name="CPTime" id="117" selected="true"/>
+<featureattr name="ChunkedNIO" id="16" color="128" selected="true"/>
+<featureattr name="NIO" id="15" color="16744448" selected="true"/>
+<featureattr name="Logging_Finer" id="3" color="65535" selected="true"/>
+<featureattr name="LoggingFine" id="118" selected="true"/>
+<featureattr name="CleanerDaemon_OR_EnvironmentLocking_OR_Evictor_OR_Latches_OR_LoggingCleaner_OR_LoggingSevere_OR_Statistics" id="119" selected="true"/>
+<featureattr name="FileHandleCache" id="36" color="16711680" selected="true"/>
+<featureattr name="DiskFullErro" id="37" color="65535" selected="true"/>
+<featureattr name="ConcurrTrans" id="56" selected="true"/>
+<featureattr name="Derivative_Latches_Statistics" id="120" selected="true"/>
+<featureattr name="Derivative_LoggingEvictor_Evictor_MemoryBudget_LoggingBase" id="121" selected="true"/>
+<featureattr name="Derivative_Latches_Statistics_Verifier" id="122" selected="true"/>
+<featureattr name="Logging_Config" id="5" color="32768" selected="true"/>
+<featureattr name="Derivative_INCompressor_Evictor" id="65" selected="true"/>
+<featureattr name="Derivative_LoggingFinest_TruncateOp" id="123" selected="true"/>
+<featureattr name="Derivative_Latches_DeleteOp" id="124" selected="true"/>
+<featureattr name="TruncateOp" id="30" color="8388863" selected="true"/>
+<featureattr name="Cleaner" id="39" color="32768" selected="true"/>
+<featureattr name="Derivative_LoggingFine_LoggingBase" id="64" selected="true"/>
+<featureattr name="DiskFullErro_OR_Latches" id="125" selected="true"/>
+<featureattr name="Derivative_LoggingSevere_EnvironmentLocking" id="71" selected="true"/>
+<featureattr name="Derivative_LookAHEADCache_MemoryBudget" id="75" selected="true"/>
+<featureattr name="Latches_OR_MemoryBudget_OR_Statistics" id="126" selected="true"/>
+<featureattr name="Logging_Finest" id="2" color="16711680" selected="true"/>
+<featureattr name="Checksum" id="14" color="12615935" selected="true"/>
+<featureattr name="CheckpointerDaemon" id="127" selected="true"/>
+<featureattr name="LoggingSevere" id="128" selected="true"/>
+<featureattr name="Derivative_Latches_TruncateOp" id="129" selected="true"/>
+<featureattr name="Ops" id="54" selected="true"/>
+<featureattr name="LoggingConsoleHandler" id="130" selected="true"/>
+<featureattr name="EvictorDaemon" id="35" color="255" selected="true"/>
+<featureattr name="LoggingCleaner" id="131" selected="true"/>
+<featureattr name="Logging_Base" id="43" color="32896" selected="true"/>
+<featureattr name="BTree" id="55" selected="true"/>
+<featureattr name="Derivative_Statistics_Verifier" id="132" selected="true"/>
+<featureattr name="Derivative_Latches_Verifier_INCompressor" id="133" selected="true"/>
+<featureattr name="Derivative_Latches_MemoryBudget" id="67" selected="true"/>
+<featureattr name="Evictor" id="32" color="16744448" selected="true"/>
+<featureattr name="Derivative_DeleteOp_TruncateOp" id="134" selected="true"/>
+<featureattr name="Derivative_INCompressor_Evictor_CriticalEviction" id="135" selected="true"/>
+<featureattr name="Derivative_Statistics_CheckLeaks" id="136" selected="true"/>
+<featureattr name="Logging_Info" id="6" color="8388608" selected="true"/>
+<featureattr name="Derivative_LoggingFine_INCompressor" id="137" selected="true"/>
+<featureattr name="Derivative_Statistics_Evictor" id="138" selected="true"/>
+<featureattr name="NewIO" id="60" selected="true"/>
+<featureattr name="OldIO" id="59" selected="true"/>
+<featureattr name="LoggingFinest_OR_MemoryBudget" id="139" selected="true"/>
+<featureattr name="Derivative_LoggingFinest_CPBytes" id="140" selected="true"/>
+<featureattr name="DeleteOp_OR_Latches_OR_LoggingCleaner_OR_LookAHEADCache_OR_Statistics" id="141" selected="true"/>
+<featureattr name="Logging_Evictor" id="9" color="32896" selected="true"/>
+<featureattr name="Checksum_OR_Latches_OR_LoggingCleaner_OR_LoggingInfo_OR_LoggingSevere_OR_MemoryBudget_OR_Statistics" id="142" selected="true"/>
+<featureattr name="LoggingInfo" id="143" selected="true"/>
+<featureattr name="IO" id="17" color="65280" selected="true"/>
+<featureattr name="Derivative_DeleteOp_Evictor" id="79" selected="true"/>
+<featureattr name="Logging_DbLogHandler" id="41" color="12615680" selected="true"/>
+<featureattr name="LoggingFiner" id="144" selected="true"/>
+<featureattr name="ChunkedNIO_OR_DiskFullErro_OR_EnvironmentLocking_OR_FileHandleCache_OR_IO_OR_NIO_OR_Statistics" id="145" selected="true"/>
+<featureattr name="CPTime_OR_LoggingFinest" id="146" selected="true"/>
+<featureattr name="LoggingBase_OR_Statistics" id="147" selected="true"/>
+<featureattr name="Logging_Fine" id="4" color="33023" selected="true"/>
+<featureattr name="Latches_OR_Statistics_OR_Verifier" id="148" selected="true"/>
+<featureattr name="DeleteOp_OR_Latches_OR_LoggingBase_OR_LoggingFinest_OR_Statistics" id="149" selected="true"/>
+<featureattr name="Persistance" id="53" selected="true"/>
+<featureattr name="IIO" id="63" selected="true"/>
+<featureattr name="Derivative_Statistics_DeleteOp" id="150" selected="true"/>
+<featureattr name="Derivative_Statistics_INCompressor" id="151" selected="true"/>
+<featureattr name="CP_Time" id="26" color="32896" selected="true"/>
+<featureattr name="RenameOp" id="31" color="12615935" selected="true"/>
+<featureattr name="Derivative_LoggingFinest_LoggingBase" id="85" selected="true"/>
+<featureattr name="Derivative_Latches_RenameOp" id="152" selected="true"/>
+<featureattr name="Derivative_LoggingConfig_Statistics" id="153" selected="true"/>
+<featureattr name="Derivative_LoggingInfo_Statistics_Verifier" id="154" selected="true"/>
+<featureattr name="Derivative_LoggingEvictor_Evictor" id="155" selected="true"/>
+<featureattr name="LoggingConfig" id="156" selected="true"/>
+<featureattr name="CriticalEviction_OR_DeleteOp" id="157" selected="true"/>
+<featureattr name="Derivative_FSync_Latches" id="158" selected="true"/>
+<featureattr name="generatedSPL" id="51" selected="true"/>
+<featureattr name="Derivative_LoggingRecovery_LoggingBase" id="86" selected="true"/>
+<featureattr name="CPBytes" id="159" selected="true"/>
+<featureattr name="Derivative_NIO_ChunkedNIO" id="160" selected="true"/>
+<featureattr name="Derivative_Evictor_EvictorDaemon" id="83" selected="true"/>
+<featureattr name="MemoryBudget" id="161" selected="true"/>
+<featureattr name="Logging_Severe" id="7" color="12615680" selected="true"/>
+<featureattr name="Latches_OR_MemoryBudget_OR_Statistics_OR_Verifier" id="162" selected="true"/>
+<featureattr name="Derivative_Statistics_Verifier_DeleteOp" id="163" selected="true"/>
+<featureattr name="Derivative_LoggingSevere_LoggingBase_OR_Latches" id="164" selected="true"/>
+<featureattr name="LoggingRecovery" id="165" selected="true"/>
+<featureattr name="Checkpointer" id="58" selected="true"/>
+<featureattr name="FSync" id="11" color="4194368" selected="true"/>
+<featureattr name="Derivative_FSync_Statistics" id="166" selected="true"/>
+<featureattr name="Derivative_LookAHEADCache_Evictor_CriticalEviction" id="167" selected="true"/>
+<featureattr name="CriticalEviction" id="168" selected="true"/>
+<featureattr name="Logging_Cleaner" id="10" color="16512" selected="true"/>
+<featureattr name="Latches_OR_LoggingBase_OR_LoggingFinest" id="169" selected="true"/>
+<featureattr name="LookAHEADCache" id="12" color="65408" selected="true"/>
+<featureattr name="Derivative_LoggingSevere_LoggingBase" id="66" selected="true"/>
+<featureattr name="Logging_Recovery" id="8" color="8421504" selected="true"/>
+<featureattr name="Evictor_OR_Latches_OR_Statistics" id="170" selected="true"/>
+<featureattr name="Derivative_INCompressor_DeleteOp" id="171" selected="true"/>
+<featureattr name="IO_OR_NIO" id="172" selected="true"/>
+<featureattr name="DirectNIO" id="19" color="16711680" selected="true"/>
+<featureattr name="Derivative_Latches_CheckLeaks" id="173" selected="true"/>
+<featureattr name="Derivative_LoggingFiner_LoggingBase" id="84" selected="true"/>
+<featureattr name="Derivative_LoggingEvictor_Statistics_Evictor_LoggingBase" id="174" selected="true"/>
+<featureattr name="Latches_OR_Statistics" id="175" selected="true"/>
+<featureattr name="Critical_Eviction" id="34" color="65280" selected="true"/>
+</featuremodelattributes>

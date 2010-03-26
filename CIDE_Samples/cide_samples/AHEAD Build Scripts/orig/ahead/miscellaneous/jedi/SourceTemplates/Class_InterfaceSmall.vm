@@ -1,0 +1,18 @@
+## Class_InterfaceSmall.vm
+## JEDI Project
+## Author: Roberto E. Lopez-Herrejon
+## Last update: November 30, 2002
+
+ #if($isClassFlag == "true")
+  class 
+ #end
+
+ #if($isInterfaceFlag == "true")
+  interface
+ #end
+
+## End of Class_InterfaceSmall.vm
+
+
+
+

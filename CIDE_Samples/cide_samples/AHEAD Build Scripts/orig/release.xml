@@ -1,0 +1,662 @@
+<?xml version="1.0"?>
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+<project name="Release Generator" default="ahead">
+
+ <description>
+ Release Generator
+ (C) 2002 The University of Texas at Austin
+
+ Creates a release of a tool suite.  The suite must be built and tested in
+ advance.  Currently, there are two suites.  One is "JTS", the older suite
+ implemented using ".layer" files.  The second is "ahead", a port of "JTS"
+ using unpacked directory hierarchies.
+
+ Usage:  ant -f release.xml &lt;tool-suite-name&gt;
+
+ where &lt;tool-suite-name&gt; can be either "jts" or "ahead".  The upper-case
+ name "JTS" is equivalent to "jts".  The default is "ahead".
+ </description>
+
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <!-- PROJECT PROPERTIES:                                               -->
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+    <property name="project.name"	value="release"/>
+    <property name="project.Name"	value="Release"/>
+
+    <property
+        name="project.owner"
+        value="The University of Texas at Austin"/>
+
+    <property name="project.title"	value="Release Generator"/>
+    <property name="project.version"	value="v2007.07.17"/>
+
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <!-- RELEASE NAME PROPERTIES:                                          -->
+    <!-- (dynamic properties are assigned in "initialize" target)          -->
+    <!--                                                                   -->
+    <!-- The release name will be <prefix>-<version> where <prefix> is the -->
+    <!-- value of the "release.prefix" property, a static property defined -->
+    <!-- below, and <version> is the value of "release.version", a dynamic -->
+    <!-- property whose default value is assigned in target "initialize".  -->
+    <!-- Several other names are derived from these two properties.  The   -->
+    <!-- property "release.name" has the full release name as shown above, -->
+    <!-- and the full name will be used as the base name of the tar & zip  -->
+    <!-- holding the release.                                              -->
+    <!--                                                                   -->
+    <!-- Some of the "release." properties are given as FilterSet values   -->
+    <!-- when copying files in target "top".  This allows instructions to  -->
+    <!-- be generated specifically for each release.                       -->
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    
+	 <property name="release.prefix"	value="ahead"/>
+
+
+    <!--  -  -  -  -  -  -  -  -  -  -  -->
+	 <!-- specify versions of existing   -->
+	 <!-- tools.  would be great if this -->
+	 <!-- values were computed           -->
+
+	 <property name="release.jdk"       value="1.6.0"/>
+	 <property name="release.cygwin"    value="1.5.24-2"/>
+	 <property name="release.ant"       value="1.7.0"/>
+	 <property name="release.javacc"    value="4.0"/>
+	 <property name="release.junit"     value="4.1"/>
+	 <property name="release.spin"      value="430"/>
+
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <!-- STATIC DIRECTORY AND FILE PROPERTIES:                             -->
+    <!-- (dynamic properties are assigned in "initialize" target)          -->
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+    <!--  -  -  -  -  -  -  -  -  -  -  -->
+    <!-- Specify root directory for the -->
+    <!-- release files.  This is only   -->
+    <!-- the root; the files under the  -->
+    <!-- root are dynamically named in  -->
+    <!-- target "initialize" w/prefixes -->
+    <!-- "dir.goal" and "file.goal".	-->
+    <!--  -  -  -  -  -  -  -  -  -  -  -->
+
+    <property name="dir.build"		location="${basedir}/build"/>
+
+    <!--  -  -  -  -  -  -  -  -  -  -  -->
+    <!-- The other properties here are  -->
+    <!-- input files and directories.   -->
+    <!--                                -->
+    <!-- Property "dir.fsats" specifies -->
+    <!-- an example model directory to  -->
+    <!-- be included in the release.    -->
+    <!-- Currently, this script assumes -->
+    <!-- a lot about the structure of   -->
+    <!-- this directory, so don't give  -->
+    <!-- this property a new value w/o  -->
+    <!-- being -sure- that you're doing -->
+    <!-- the right thing.  Read target  -->
+    <!-- "fsats" to see what to do.     -->
+    <!--  -  -  -  -  -  -  -  -  -  -  -->
+
+    <property name="dir.fsats"		location="${basedir}/fsats"/>
+
+    <!--  -  -  -  -  -  -  -  -  -  -  -->
+    <!-- Prefix "dir.release" names the -->
+    <!-- top-level README files, etc.   -->
+    <!--  -  -  -  -  -  -  -  -  -  -  -->
+
+    <property name="dir.release"	location="${basedir}/release"/>
+
+    <!--  -  -  -  -  -  -  -  -  -  -  -->
+    <!-- Property prefix "dir.source"   -->
+    <!-- indicates input directories in -->
+    <!-- the release.  The suffixes are -->
+    <!-- for naming the roles played by -->
+    <!-- each input source.  E.g., the  -->
+    <!-- property "dir.source.bin" is   -->
+    <!-- where the executable scripts   -->
+    <!-- are from.                      -->
+    <!--  -  -  -  -  -  -  -  -  -  -  -->
+
+    <property name="dir.source"		location="${basedir}/ahead"/>
+    <property name="dir.source.bin"	location="${dir.source}/build/bin"/>
+    <property name="dir.source.docs"	location="${basedir}/fopdocs"/>
+    <property name="dir.source.lib"	location="${dir.source}/build/lib"/>
+    <property name="dir.source.misc.bin"	location="${basedir}/ahead/miscellaneous/bin"/>
+    <property name="dir.source.misc.jcc"  location="${basedir}/ahead/miscellaneous/javacc"/>
+    <property name="dir.source.dsl.java"	location="${basedir}/ahead/dsl/java"/>
+	 <property name="dir.source.dsl.kernel"	location="${basedir}/ahead/dsl/kernel"/>
+
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <!-- OTHER STATIC DEFINITIONS:                                         -->
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+    <!--  -  -  -  -  -  -  -  -  -  -  -->
+    <!-- Pattern set "clean.patterns"   -->
+    <!-- provides patterns for scratch  -->
+    <!-- files otherwise skipped by the -->
+    <!-- "delete" task.                 -->
+    <!--  -  -  -  -  -  -  -  -  -  -  -->
+
+    <patternset id="clean.patterns">
+	<exclude name="**/CVS/**"/>	<!-- Skip over CVS directories! -->
+	<include name="**/*~"/>
+	<include name="**/#*#"/>
+	<include name="**/.#*"/>
+	<include name="**/%*%"/>
+	<include name="**/*.bak"/>
+	<include name="**/*.BAK"/>
+	<include name="**/*.pyc"/>
+	<include name="**/*.pyo"/>
+	<include name="**/core"/>
+    </patternset>
+
+    <!--  -  -  -  -  -  -  -  -  -  -  -->
+    <!-- Pattern set "tool.patterns"    -->
+    <!-- specifies the tools to include -->
+    <!-- in the release.                -->
+    <!--  -  -  -  -  -  -  -  -  -  -  -->
+
+    <patternset id="tool.patterns">
+	<include name="modelexplorer*"/>
+	<include name="ant/**/*.jar"/>
+	<include name="applybali2jak*"/>
+	<include name="balicomposer*"/>
+	<include name="bali2javacc*"/>
+	<include name="bali2jak*"/>
+	<include name="bali2layer*"/>
+	<include name="bc*"/>
+	<include name="composer*"/>
+	<include name="guidsl*"/>
+	<include name="jak2java*"/>
+	<include name="jakarta*"/>
+	<include name="jampack*"/>
+	<include name="mixin*"/>
+	<include name="mmatrix*"/>
+	<include name="reform*"/>
+	<include name="spin*"/>
+	<include name="sat4j*"/>
+	<include name="unmixin*"/>
+	<include name="velocity*"/>
+	<!-- Xak tool and external libraries -->
+	<include name="xak*"/>
+	<include name="infozone*"/>
+	<include name="saxon*"/>
+	<include name="log4*"/>
+	<include name="OnekinUtils*"/>
+    </patternset>
+
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- The "ahead" target releases files from the "ahead" directory.     -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+    <target
+	name="ahead"
+	depends="initialize"
+	description="Build a release from the 'ahead' directory.">
+
+	<antcall inheritall="false" target="release">
+	    <param name="dir.source"     location="${basedir}/ahead"/>
+	    <param name="release.prefix" value="ahead"/>
+	</antcall>
+
+    </target>
+
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- The "bin" target creates the directory of executable scripts.     -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+    <target name="bin" depends="prepare">
+
+	<copy overwrite="true" todir="${dir.goal.bin}">
+	    <fileset dir="${dir.source.bin}" casesensitive="false">
+		<patternset refid="tool.patterns"/>
+	    </fileset>
+	</copy>
+
+    </target>
+
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- The "chmod" target sets the permissions in the release hierarchy. -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+	 <target name="chmod" depends="bin,docs,lib,misc,dsl,kernel,top">
+
+	<chmod file="${dir.goal}" perm="u=rwx,go=rx" type="dir"/>
+
+	<chmod dir="${dir.goal}" perm="u=rw,go=r" type="file">
+	    <include name="*"/>
+	    <include name="**/*"/>
+	</chmod>
+
+	<chmod dir="${dir.goal}" perm="u=rwx,go=rx" type="file">
+	    <include name="bin/*"/>
+	    <include name="**/bin/*"/>
+	    <include name="setparms"/>
+	</chmod>
+
+	<chmod dir="${dir.goal}" perm="u=rwx,go=rx" type="dir">
+	    <include name="*"/>
+	    <include name="**/*"/>
+	</chmod>
+
+    </target>
+
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- The "clean" target removes generated files other than those used  -->
+    <!-- to define the build configuration, if any.	                   -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+    <target
+        name="clean"
+        depends="initialize"
+	description="Deletes generated files and scratch files.">
+
+	<delete includeEmptyDirs="true" quiet="true">
+			  <fileset dir="${dir.goal.bin}"/> 
+	    <fileset dir="${dir.goal.docs}"/> 
+	    <fileset dir="${dir.goal.fsats}"/> 
+	    <fileset dir="${dir.goal.lib}"/> 
+	    <fileset dir="${dir.goal}"/> 
+	    <fileset dir="${dir.build}"/>
+			  <fileset dir="${dir.goal.miscellaneous.bin}"/>
+			  <fileset dir="${dir.goal.dsl.java}"/>
+			  <fileset dir="${dir.goal.dsl.kernel}"/>
+	    <fileset defaultexcludes="no" dir=".">
+		<patternset refid="clean.patterns"/>
+	    </fileset>
+	</delete>
+
+    </target>
+
+
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	 <!-- The "dsl" target copies the java grammar and layer        .       -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+    <target name="dsl" depends="prepare">
+				<echo message="${dir.goal.dsl.java}"/>
+		<copy overwrite="true" todir="${dir.goal.dsl.java}">
+				  <fileset dir="${dir.source.dsl.java}">
+				  <include name="JavaGram/*"/>
+				  <include name="Java/*"/>
+     		<exclude name="**/CVS/**/*"/>
+	   </fileset>
+	</copy>
+
+    </target>
+
+
+
+
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- The "docs" target creates the directory of documentation.         -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+    <target name="docs" depends="prepare">
+
+	<copy overwrite="true" todir="${dir.goal.docs}">
+	    <fileset dir="${dir.source.docs}">
+		<exclude name="**/CVS/**/*"/>
+	    </fileset>
+	</copy>
+
+    </target>
+
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- The "fsats" target creates the FSATS prototype directory.         -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+    <target name="fsats" depends="prepare">
+
+	<ant dir="${dir.fsats}" inheritall="false" target="clean"/>
+
+	<copy overwrite="true" todir="${dir.goal.fsats}">
+	    <fileset dir="${dir.fsats}">
+
+		<exclude name="**/CVS/**/*"/>
+
+		<include name="*L/**/*"/>
+		<include name="Libraries/**/*"/>
+		<include name="Configuration/**/*"/>
+		<include name="bin/**/*"/>
+
+		<include name="build.xml"/>
+		<include name="build.xml.vm.prefix"/>
+		<include name="build.xml.vm.suffix"/>
+		<include name="composer.properties"/>
+		<include name="FS.equation"/>
+	    </fileset>
+	</copy>
+
+    </target>
+
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- The "initialize" target defines runtime properties such as time-  -->
+    <!-- stamps and prints a start-up message, including the copyright.    -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+    <target name="initialize">
+
+	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+	<!-- Property Definitions for Time-Dependent Values:               -->
+	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+        <tstamp>
+	    <format property="initialize.date" pattern="yyyy-MM-dd"/>
+	    <format property="initialize.time" pattern="HH:mm:ss"/>
+	    <format property="initialize.year" pattern="yyyy"/>
+	    <format property="release.version" pattern="'v'yyyy.MM.dd"/>
+	</tstamp>
+
+	<property
+	    name="release.name" 
+	    value="${release.prefix}-${release.version}"/>
+
+	<property
+	    name="timestamp"
+	    value="${initialize.date} ${initialize.time}"/>
+
+	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+	<!-- Property Definitions for Release Directory Hierarchy:         -->
+	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+	<property
+            name="dir.goal"
+            location="${dir.build}/${release.name}"/>
+
+	 <property name="dir.goal.bin"	location="${dir.goal}/build/bin"/>
+	<property name="dir.goal.docs"	location="${dir.goal}/docs"/>
+	<property name="dir.goal.fsats"	location="${dir.goal}/fsats"/>
+	<property name="dir.goal.lib"	location="${dir.goal}/build/lib"/>
+	<property name="dir.goal.dsl.java" location="${dir.goal}/dsl/java"/>
+	<property name="dir.goal.dsl.kernel" location="${dir.goal}/dsl/kernel"/>
+	<property name="dir.goal.miscellaneous.bin" 
+			   location="${dir.goal}/miscellaneous/bin"/>
+	<property name="dir.goal.miscellaneous.jcc" 
+			   location="${dir.goal}/miscellaneous/javacc"/>
+
+	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+	<!-- Calculate range of years to put into copyright notice:        -->
+	<!-- * cr.alpha ....... first year source was created;             -->
+	<!-- * cr.omega ....... last year source was modified;             -->
+	<!-- * cr.range ....... range of years for copyright.              -->
+	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+	<property name="cr.alpha" value="2002"/>
+	<property name="cr.owner" value="${project.owner}"/>
+
+	<condition property="cr.range" value="${cr.alpha}">
+	    <equals arg1="${cr.alpha}" arg2="${initialize.year}"/>
+	</condition>
+
+	<condition property="cr.range" value="${cr.alpha}-${initialize.year}">
+	    <not>
+		<equals arg1="${cr.alpha}" arg2="${initialize.year}"/>
+	    </not>
+	</condition>
+
+	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+	<!-- Create copyright messages:                                    -->
+	<!-- * copyright.base ... text with year(s) and owner;             -->
+	<!-- * copyright.html ... for inclusion into HTML documents;       -->
+	<!-- * copyright.text ... for inclusion into text documents.       -->
+	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+	<property name="copyright.base" value="${cr.range} ${cr.owner}"/>
+	<property name="copyright.html" value="&#169; ${copyright.base}"/>
+	<property name="copyright.text" value="(C) ${copyright.base}"/>
+
+	<echo message="${project.title}; release.xml ${project.version}"/>
+	<echo message="${copyright.text}"/>
+	<echo message=""/>
+	<echo message="Build begins ${timestamp}"/>
+
+    </target>
+
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- The "jts" & "JTS" targets release files from the "JTS" directory. -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+    <target
+	name="jts"
+	depends="initialize"
+	description="Build a release from the 'JTS' directory.">
+
+	<antcall inheritall="false" target="release">
+	    <param name="dir.source"	 location="${basedir}/JTS"/>
+	    <param name="dir.source.bin" location="${basedir}/JTS/bin"/>
+	    <param name="dir.source.lib" location="${basedir}/JTS/lib"/>
+	    <param name="release.prefix" value="jts"/>
+	</antcall>
+
+    </target>
+
+    <target name="JTS" depends="jts" description="Alias for 'jts' target."/>
+
+
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	 <!-- The "kernel" target copies the java grammar and layer        .       -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+    <target name="kernel" depends="prepare">
+				<copy overwrite="true" todir="${dir.goal.dsl.kernel}">
+						  <fileset dir="${dir.source.dsl.kernel}">
+				  <include name="*"/>
+     		<exclude name="**/CVS/**/*"/>
+	   </fileset>
+	</copy>
+
+    </target>
+
+
+
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- The "lib" target creates the directory of Jars (Java archives).   -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+    <target name="lib" depends="prepare">
+	<copy overwrite="true" todir="${dir.goal.lib}">
+	    <fileset dir="${dir.source.lib}" casesensitive="false">
+		<patternset refid="tool.patterns"/>
+	    </fileset>
+	</copy>
+
+	 </target>
+
+
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- The "misc" target copies the batch and bash file commmands.       -->
+    <!-- and the current version of javacc used with AHEAD.                -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+    <target name="misc" depends="prepare">
+	<copy overwrite="true" todir="${dir.goal.miscellaneous.bin}">
+	    <fileset dir="${dir.source.misc.bin}">
+               <exclude name="**/CVS/**/*"/>
+	    </fileset>
+	</copy>
+	<copy overwrite="true" todir="${dir.goal.miscellaneous.jcc}">
+	    <fileset dir="${dir.source.misc.jcc}">
+               <exclude name="**/CVS/**/*"/>
+	    </fileset>
+	</copy>
+    </target>
+
+
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- The "prepare" target creates the build hierarchy.                 -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+    <target name="prepare" depends="initialize">
+
+	<mkdir dir="${dir.build}"/>
+	<mkdir dir="${dir.goal}"/>
+	<mkdir dir="${dir.goal.bin}"/>
+	<mkdir dir="${dir.goal.docs}"/>
+	<mkdir dir="${dir.goal.miscellaneous.bin}"/>
+	<mkdir dir="${dir.goal.dsl.java}"/>
+	<mkdir dir="${dir.goal.dsl.kernel}"/>
+	<mkdir dir="${dir.goal}/equations"/>
+	<!-- <mkdir dir="${dir.goal.fsats}"/> -->
+	<mkdir dir="${dir.goal.lib}"/>
+
+    </target>
+
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- The "release" target is a -parameterized- target to build a full  -->
+    <!-- release from a given directory.  Parameters "dir.source" and      -->
+    <!-- "release.prefix" are expected.                                    -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+    <target name="release" depends="release.prefix,release.source,zip">
+	<echo message="${dir.goal}" taskname="===>"/>
+    </target>
+
+    <target name="release.prefix" unless="release.prefix">
+	<echo message="Property 'release.prefix' undefined" taskname="failed"/>
+	<fail message="Property 'release.prefix' undefined"/>
+    </target>
+
+    <target name="release.source" unless="dir.source">
+	<echo message="Property 'dir.source' undefined" taskname="failed"/>
+	<fail message="Property 'dir.source' undefined"/>
+    </target>
+
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- The "tar" target creates a gzip'd tar file of the release.        -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+    <target name="tar" depends="chmod">
+
+	<property name="tar.goal" location="${dir.build}/${release.name}.tar"/>
+	<property name="tbz.goal" location="${tar.goal}.bz2"/>
+	<property name="tgz.goal" location="${tar.goal}.gz"/>
+
+	<tar destfile="${tar.goal}">
+
+	    <tarfileset
+		dir="${dir.build}"
+		group="users"
+		mode="555"
+		username="ahead">
+		<include name="${release.name}"/>
+		<include name="${release.name}/build/bin/**/*"/>
+		<include name="${release.name}/docs"/>
+		<include name="${release.name}/docs/composer"/>
+		<include name="${release.name}/docs/grammar"/>
+		<include name="${release.name}/docs/grammar/parse"/>
+		<include name="${release.name}/docs/MEimages"/>
+		<include name="${release.name}/lib"/>
+		<include name="${release.name}/setperms"/>
+		<include name="${release.name}/miscellaneous/**/*"/>
+		<include name="${release.name}/dsl/**/*"/>
+	    </tarfileset>
+		
+	    <tarfileset
+		dir="${dir.build}"
+		group="users"
+		mode="444"
+		username="ahead">
+		<include name="${release.name}/build/lib/**/*"/>
+		<include name="${release.name}/docs/**/*"/>
+		<include name="${release.name}/lib/**/*"/>
+		<include name="${release.name}/equations/"/>
+		<include name="${release.name}/README.html"/>
+	    </tarfileset>
+		
+	</tar>
+
+	<bzip2 src="${tar.goal}" zipfile="${tbz.goal}"/>
+	<gzip src="${tar.goal}" zipfile="${tgz.goal}"/>
+
+	<chmod file="${tar.goal}" perm="u=rw,go=r"/>
+	<chmod file="${tbz.goal}" perm="u=rw,go=r"/>
+	<chmod file="${tgz.goal}" perm="u=rw,go=r"/>
+
+	<echo message="${tar.goal}" taskname="===>"/>
+	<echo message="${tbz.goal}" taskname="===>"/>
+	<echo message="${tgz.goal}" taskname="===>"/>
+
+    </target>
+
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- The "top" target copies in the top-level documentation files.     -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+    <target name="top" depends="prepare">
+
+	<copy overwrite="true" todir="${dir.goal}">
+
+	    <fileset dir="${dir.release}">
+		<include name="README.html"/>
+		<include name="setperms"/>
+	    </fileset>
+
+	    <filterset>
+		<filter token="NAME"	   value="${release.name}"/>
+		<filter token="PREFIX"	value="${release.prefix}"/>
+		<filter token="VERSION"	value="${release.version}"/>
+		<filter token="JDKREL"  value="${release.jdk}"/>
+		<filter token="CYGREL"  value="${release.cygwin}"/>
+		<filter token="ANTREL"  value="${release.ant}"/>
+		<filter token="JCCREL"  value="${release.javacc}"/>
+		<filter token="JUREL"   value="${release.junit}"/>
+		<filter token="SPINREL" value="${release.spin}"/>
+	    </filterset>
+
+	</copy>
+
+    </target>
+
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- The "zip" target creates a Zip archive of the release.            -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+    <target name="zip" depends="chmod">
+
+	<property name="zip.goal" location="${dir.build}/${release.name}.zip"/>
+
+	<zip destfile="${zip.goal}">
+
+	    <zipfileset
+		dir="${dir.build}"
+                dirmode="555"
+                filemode="555">
+					 <include name="${release.name}/build/bin/*"/>
+		<include name="${release.name}/setperms"/>
+	    </zipfileset>
+		
+	    <zipfileset
+		dir="${dir.build}"
+                dirmode="555"
+                filemode="444">
+		<include name="${release.name}/docs/**/*"/>
+		<include name="${release.name}/build/lib/**/*"/>
+		<include name="${release.name}/miscellaneous/**/*"/>
+		<include name="${release.name}/dsl/**/*"/>
+		<include name="${release.name}/equations"/>
+		<include name="${release.name}/README.html"/>
+	    </zipfileset>
+
+	</zip>
+
+	<chmod file="${zip.goal}" perm="u=rw,go=r"/>
+
+	<echo message="${zip.goal}" taskname="===>"/>
+
+    </target>
+
+</project>
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+<!-- Local Variables:                    -->
+<!-- mode:                           XML -->
+<!-- fill-column:                     79 -->
+<!-- sgml-ignore-undefined-elements: nil -->
+<!-- sgml-indent-data:                 t -->
+<!-- sgml-indent-step:                 4 -->
+<!-- End:                                -->
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->

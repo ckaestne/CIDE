@@ -1,0 +1,21 @@
+# Layers common to all Bali language tools:
+# (layer "require" is an optional feature defined in super equations file)
+#
+common = \
+	dsl/kernel \
+	build/bali/bali \
+	dsl/bali/bali \
+	dsl/bali/visitor \
+	dsl/bali/collect \
+	require
+
+# Layers common to all translators from Bali to another language:
+#
+common4translator = common dsl/support/codegen
+
+# The layers defining specific tools, but not including optional features:
+#
+bali2jak    = dsl/bali/bali2jak
+bali2javacc = dsl/bali/bali2javacc
+bali2layer  = dsl/bali/bali2layerOptions dsl/bali/bali2layer dsl/bali/bali2layerGUI
+composer    = dsl/bali/composer

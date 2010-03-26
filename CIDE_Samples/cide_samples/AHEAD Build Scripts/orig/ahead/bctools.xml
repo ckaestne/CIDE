@@ -1,0 +1,351 @@
+<?xml version="1.0"?>
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+<project name="The bcmixin tools" default="all">
+
+ <description>
+ Builds the bcmixin tools.
+ (C) 2003-2004 Yancong Zhou and The University of Texas at Austin
+
+ Options (supported by Ant):
+
+ -Dbuild.sysclasspath=&lt;search-choice&gt; (default is "ignore")
+  Specifies how CLASSPATH relates to the class paths used by tasks in this
+  build file.  There are four choices:
+    first .... CLASSPATH takes priority, then build file class paths;
+    last ..... build file class paths take priority, then CLASSPATH;
+    ignore ... CLASSPATH is ignored, only build file class paths are used;
+    only ..... build file class paths are ignored, only CLASSPATH is used.
+ </description>
+
+    <!-- ================================================================= -->
+    <!-- PROJECT DEFINITIONS AND PROPERTIES:                               -->
+    <!-- ================================================================= -->
+
+    <property
+	name="project.author"
+        value="Yancong Zhou"/>
+
+    <property name="project.name"	value="bcmixin"/>
+    <property name="project.Name"	value="bcmixin"/>
+
+    <property
+        name="project.owner"
+        value="The University of Texas at Austin"/>
+
+    <property
+	name="project.copyright"
+        value="(C) 2003-2004 ${project.author} and ${project.owner}"/>
+
+    <property name="project.title"	value="The bcmixin Tools"/>
+    <property name="project.version"	value="v2004.06.16"/>
+
+    <!-- ================================================================= -->
+    <!-- STATIC DIRECTORY AND FILE PROPERTIES:                             -->
+    <!-- ================================================================= -->
+
+    <!-- - - - - - - - - - - - - - - -->
+    <!-- Build Hierarchy for Tools:  -->
+    <!-- - - - - - - - - - - - - - - -->
+
+    <property name="dir.build"	    	location="${basedir}/build"/>
+	 <property name="dir.build.lib"	location="${dir.build}/lib"/>
+    <property name="dir.build.bin"    	location="${dir.build}/bin"/>
+
+    <!-- - - - - - - - - - - - - - - -->
+    <!-- Source Code Hierarchies:    -->
+    <!-- - - - - - - - - - - - - - - -->
+
+	 <property name="dir.misc"     location="${basedir}/miscellaneous"/>
+	 <property name="dir.alone"    location="${basedir}/standalone"/>
+	 <property name="dir.bcmixin"		location="${dir.alone}/bcmixin"/>
+	 <property name="dir.bcstubgenerator"	location="${dir.alone}/bcstubgenerator"/>
+	 <property name="dir.bctostub"		location="${dir.alone}/bctostub"/>
+	
+    <!-- - - - - - - - - - - - - - - -->
+    <!-- External Libraries & Tools: -->
+    <!-- - - - - - - - - - - - - - - -->
+
+    <property name="jar.bcel"		  location="${dir.misc}/lib/bcel-5.1.jar"/>
+	 <property name="exec.make-bin" location="${dir.misc}/bin/make-bin"/>
+	 <property name="exec.run-tool" location="${dir.misc}/bin/run-tool"/>
+     
+    <!-- - - - - - - - - - - - - - - -->
+    <!-- CLASSPATH Treatment:	     -->
+    <!-- - - - - - - - - - - - - - - -->
+    
+    <property name="build.sysclasspath"	value="last"/>
+
+
+    <target name="all"
+        depends="bcmixin,bcstubgenerator,bctostub"
+        description="Builds all the tools."/>
+
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- The "bcmixin" target builds a byte code composition tool          -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    
+    <target
+            name="bcmixin"
+            depends="prepare"
+            description="Builds the byte code composition tool.">
+    
+    	<ant dir="${dir.bcmixin}" target="jar" inheritall="false">
+    
+    	    <property name="build.sysclasspath" value="${build.sysclasspath}"/>
+    
+    	    <property
+                    name="dir.build"
+                    location="${dir.build}/bcmixin"/>
+    
+    	    <property
+                    name="dir.lib"
+                    location="${dir.build.lib}"/>
+    
+    	    <property
+                    name="jar.build"
+                    location="${dir.build.lib}/bcmixin.jar"/>
+    
+	 </ant>
+	<apply
+       executable="env"
+	    parallel="true"
+	    skipemptyfilesets="true"
+            taskname="===>"
+            type="file">
+
+	    <arg value="--"/>
+	    <arg file="${exec.make-bin}"/>
+	    <arg value="-directory"/>
+	    <arg file="${dir.build.bin}"/>
+	    <arg value="-script"/>
+	    <arg file="${exec.run-tool}"/> 
+	    <arg value="--"/>
+
+	    <fileset dir="${dir.build.lib}">
+					<include name="bcmixin.jar"/>
+	    </fileset>
+
+	</apply>
+    
+    </target>
+    
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- The "bcstubgenerator" target builds stub generator tool for bcmixin        -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+        
+        <target
+                name="bcstubgenerator"
+                depends="prepare"
+                description="Builds the stub generator tool.">
+        
+        	<ant dir="${dir.bcstubgenerator}" target="jar" inheritall="false">
+        
+        	    <property name="build.sysclasspath" value="${build.sysclasspath}"/>
+        
+        	    <property
+                        name="dir.build"
+                        location="${dir.build}/bcstubgenerator"/>
+        
+        	    <property
+                        name="dir.lib"
+                        location="${dir.build.lib}"/>
+        
+        	    <property
+                        name="jar.build"
+                        location="${dir.build.lib}/bcstubgenerator.jar"/>
+        
+		  </ant>
+
+	<apply
+       executable="env"
+	    parallel="true"
+	    skipemptyfilesets="true"
+            taskname="===>"
+            type="file">
+
+	    <arg value="--"/>
+	    <arg file="${exec.make-bin}"/>
+	    <arg value="-directory"/>
+	    <arg file="${dir.build.bin}"/>
+	    <arg value="-script"/>
+	    <arg file="${exec.run-tool}"/> 
+	    <arg value="--"/>
+
+	    <fileset dir="${dir.build.lib}">
+					<include name="bcstubgenerator.jar"/>
+	    </fileset>
+
+	</apply>
+        
+    </target>
+    
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- The "bctostub" target builds stub generator tool for bcmixin      -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+            
+            <target
+                    name="bctostub"
+                    depends="prepare"
+                    description="Builds the stub generator tool.">
+            
+            	<ant dir="${dir.bctostub}" target="jar" inheritall="false">
+            
+            	    <property name="build.sysclasspath" value="${build.sysclasspath}"/>
+            
+            	    <property
+                            name="dir.build"
+                            location="${dir.build}/bctostub"/>
+            
+            	    <property
+                            name="dir.lib"
+                            location="${dir.build.lib}"/>
+            
+            	    <property
+                            name="jar.build"
+                            location="${dir.build.lib}/bctostub.jar"/>
+            
+				</ant>
+	<apply
+       executable="env"
+	    parallel="true"
+	    skipemptyfilesets="true"
+            taskname="===>"
+            type="file">
+
+	    <arg value="--"/>
+	    <arg file="${exec.make-bin}"/>
+	    <arg value="-directory"/>
+	    <arg file="${dir.build.bin}"/>
+	    <arg value="-script"/>
+	    <arg file="${exec.run-tool}"/> 
+	    <arg value="--"/>
+
+	    <fileset dir="${dir.build.lib}">
+					<include name="bctostub.jar"/>
+	    </fileset>
+
+	</apply>
+            
+    </target>
+
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- The "clean" target removes generated files other than those used  -->
+    <!-- to define the build configuration, if any.	                   -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+    <target name="clean"
+        depends="initialize"
+	description="Deletes generated files and scratch files.">
+    
+	<patternset id="clean.patterns">
+	    <exclude name="**/CVS/**"/>
+	    <include name="**/*~"/>
+	    <include name="**/#*#"/>
+	    <include name="**/.#*"/>
+	    <include name="**/%*%"/>
+	    <include name="**/._*"/>
+	    <include name="**/*.bak"/>
+	    <include name="**/*.BAK"/>
+	    <include name="**/*.pyc"/>
+	    <include name="**/*.pyo"/>
+	    <include name="**/core"/>
+	</patternset>
+
+	<delete includeEmptyDirs="true" quiet="true">
+	    <fileset dir="${dir.build}"/>
+
+	    <fileset defaultexcludes="no" dir=".">
+		<include name="**/*.class"/>
+		<patternset refid="clean.patterns"/>
+	    </fileset>
+	</delete>
+
+    </target>
+
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- The "initialize" target defines runtime properties such as time-  -->
+    <!-- stamps and prints a start-up message, including the copyright.    -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+    <target name="initialize">
+
+	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+	<!-- Timestamp properties:                                         -->
+	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+        <tstamp>
+	    <format property="initialize.date" pattern="yyyy-MM-dd"/>
+	    <format property="initialize.time" pattern="HH:mm:ss"/>
+	    <format property="initialize.year" pattern="yyyy"/>
+	</tstamp>
+
+	<property
+	    name="timestamp"
+	    value="${initialize.date} ${initialize.time}"/>
+
+	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+	<!-- Calculate range of years to put into copyright notice:        -->
+	<!-- * cr.alpha ....... first year source was created;             -->
+	<!-- * cr.omega ....... last year source was modified;             -->
+	<!-- * cr.range ....... range of years for copyright.              -->
+	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+	<property name="cr.alpha" value="2004"/>
+	<property name="cr.owner" value="${project.owner}"/>
+
+	<condition property="cr.range" value="${cr.alpha}">
+	    <equals arg1="${cr.alpha}" arg2="${initialize.year}"/>
+	</condition>
+
+	<condition property="cr.range" value="${cr.alpha}-${initialize.year}">
+	    <not>
+		<equals arg1="${cr.alpha}" arg2="${initialize.year}"/>
+	    </not>
+	</condition>
+
+	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+	<!-- Create copyright messages:                                    -->
+	<!-- * copyright.base ... text with year(s) and owner;             -->
+	<!-- * copyright.html ... for inclusion into HTML documents;       -->
+	<!-- * copyright.text ... for inclusion into text documents.       -->
+	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+	<property name="copyright.base" value="${cr.range} ${cr.owner}"/>
+	<property name="copyright.html" value="&#169; ${copyright.base}"/>
+	<property name="copyright.text" value="(C) ${copyright.base}"/>
+
+	<echo
+            level="info"
+            message="${project.title}; build.xml ${project.version}"/>
+
+	<echo level="info" message="${copyright.text}"/>
+	<echo level="info" message=""/>
+	<echo level="info" message="Build begins ${timestamp}"/>
+
+    </target>
+
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- The "prepare" target creates the output directory hierarchy.      -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+	 <target name="prepare" depends="initialize">
+	 <mkdir dir="${dir.build}"/>
+	 <mkdir dir="${dir.build.lib}"/>
+	 <copy file="${jar.bcel}" todir="${dir.build.lib}"/>
+    </target>
+
+</project>
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+<!-- Local Variables:                    -->
+<!-- mode:                           XML -->
+<!-- fill-column:                     79 -->
+<!-- sgml-ignore-undefined-elements: nil -->
+<!-- sgml-indent-data:                 t -->
+<!-- sgml-indent-step:                 4 -->
+<!-- End:                                -->
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->

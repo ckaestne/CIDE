@@ -1,0 +1,420 @@
+package org.onekin.xak2;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.StringReader;
+import java.io.StringWriter;
+
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
+
+import org.apache.xml.serialize.OutputFormat;
+import org.apache.xml.serialize.XMLSerializer;
+import org.infozone.tools.xml.queries.XUpdateQuery;
+import org.infozone.tools.xml.queries.XUpdateQueryFactory;
+import org.onekin.util.ParserUtils;
+import org.onekin.xml.refinement.Loader;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+public class XakRefinement
+{
+	// Define a static logger variable so that it references the
+	// Logger instance named "XmlRefinement".
+	// static Logger logger = Logger.getLogger(XmlRefinement.class);    
+
+	final public static String	XSL_XAK2XR	= "xak2xrefine.xsl" ;
+	final public static String	XSL_XR2XUPDATE  = "xr2xupdate.xslt" ;
+	final public static String	XSL_PRETTYPRINT	= "identity.xsl" ;
+		
+	private Transformer					_tXak2Xr  = null ;
+	private Transformer					_tXr2XUpdate  = null ;
+	private Transformer					_tPPrint  = null ;
+	
+
+	/**
+	 * Constructor
+	 */
+	public XakRefinement()
+	{
+		this.init() ;
+	}
+	/**
+	 * This method initializes xrefine tooling
+	 *
+	 */
+	public void init ()
+	{
+		try
+		{
+			Loader loader = new Loader();
+			// Create transformer for Xak2XRef
+			BufferedReader brXslXak2Xr = loader.getResourceAsStrean(XSL_XAK2XR);
+			TransformerFactory tFactory = TransformerFactory.newInstance();
+			_tXak2Xr = tFactory.newTransformer(new StreamSource(brXslXak2Xr));
+			// Create transformer for XRef2XUpdate
+			BufferedReader brXslXr2Xup = loader.getResourceAsStrean(XSL_XR2XUPDATE);
+			// File fXsl = new File (sXsl) ;
+			_tXr2XUpdate = tFactory.newTransformer(new StreamSource(brXslXr2Xup));
+			
+			// this.log("TRANSFORMER CLASS: " + _transformerXUpdate.getClass());			
+			// this.log("Content of XSL:\n" + brXsl.readLine());
+			
+			// Create transformer for pretty-print
+			BufferedReader brXslPP = loader.getResourceAsStrean(XSL_PRETTYPRINT);
+			_tPPrint = tFactory.newTransformer(new StreamSource(brXslPP));			
+		} catch (Exception ex)
+		{
+			System.out.println(ex.getMessage() + "\n");
+			ex.printStackTrace(System.out);
+		}
+	}	
+	/**
+	 * @param sXmlFile String
+	 * @return
+	 */
+	private boolean isRefinement(Document docXml)
+	{
+		boolean bResult = true;
+		try
+		{      
+
+			Element root = docXml.getDocumentElement();
+			// log("Root: \n" + ParserUtils.nodeToString(root));
+			// log ("Is file a refinement?: Content:\n" +ParserUtils.nodeToString(root));
+			String sXPath = "//*[name()='xak:refines']";
+			NodeList nl = ParserUtils.selectNodes(root, sXPath);
+			if ((nl == null) || (nl.getLength() == 0))
+				bResult = false;
+			// log("bResult =" + String.valueOf(bResult));
+			// log("Result: \n" + ParserUtils.nodeToString(nl));
+		}
+		catch (Exception ex)
+		{
+			log(ex.getClass() + " - Parsing error: " + ex.getLocalizedMessage());
+			ex.printStackTrace();
+		} 
+		finally
+		{
+		}
+		return bResult;
+	}	
+	/**
+	 * @param sXmlFile String
+	 * @return
+	 * @deprecated
+	 */
+	private boolean isRefinement(String sXmlFile)
+	{
+		Document docXml = ParserUtils.parseFile(new File(sXmlFile));
+		return this.isRefinement(docXml) ;
+	}
+	/**
+	 * This method refines an artifact following XRefine
+	 * @param sInput input file (contant or function)
+	 * @param sFunction refinement file (function file)
+	 * @param sResult result file (resulting constant or function)
+	 * @return
+	 * @deprecated
+	 */
+	public void refine(String sInput, String sFunction, String sResult)
+	{
+		// this.mylog ("refine()") ;
+		// String _sXUpdate = _sXRefineHomeDir + "/" + XUPDATE_FILE ;  	
+		// Is sInputFile a base or a refinement
+		boolean bInputIsRefinement = this.isRefinement(sInput);
+		boolean bFunctionIsRefinement = this.isRefinement(sFunction);
+
+		if (bInputIsRefinement == false && bFunctionIsRefinement == true)
+		{
+			this.log("Composing: FUNCTION (CONSTANT) -> Regular refinement");
+			String sXak2Xr = this.xak2xr(sFunction);
+			this.log("XR\n" + sXak2Xr);
+			String sXUpdateQuery = this.xr2xup(sXak2Xr);
+			this.log("XUpdate\n" + sXUpdateQuery);
+			Document doc = this.processXUpdate(sXUpdateQuery, sInput);
+			this.saveToDocument(sResult, doc);
+			// this.doc2prettyprint (sResult) ;
+		} 
+		else if (bInputIsRefinement == true && bFunctionIsRefinement == true)
+		{
+			this.log("Composing: FUNCTION (FUNCTION) -> Function refinement -> TODO");
+			// TODO
+			Document doc = this.refineTwoFunctions(sInput, sFunction);
+			this.saveToDocument(sResult, doc);
+			// this.doc2prettyprint (sResult) ;
+		}
+		else if (bInputIsRefinement == false && bFunctionIsRefinement == false)
+		{
+			this.log("Composing: CONSTANT (CONSTANT) -> ERROR") ;
+		}
+		else if (bInputIsRefinement == true && bFunctionIsRefinement == false)
+		{
+			this.log("Composing: CONSTANT(FUNCTION) -> ERROR") ;
+		}
+		return;
+	}
+	
+
+	/**
+	 * @param outFile
+	 * @deprecated
+	 */
+	private void doc2prettyprint(String sOutFile)
+	{
+		// Transform doc with identity.xsl for pretty-print	
+		try
+		{
+			File fInputFilename = new File(sOutFile);			
+			_tPPrint.transform(new StreamSource(fInputFilename), new StreamResult(fInputFilename));
+		} 
+		catch (Exception ex)
+		{
+			log(ex.getMessage() + "\n");
+			ex.printStackTrace(System.out);
+		}
+		return ;
+	}	
+	/**
+	 * This method transforms Xak to XRefine
+	 * @param sXakFile
+	 * @return
+	 */
+	private String xak2xr(String sXakFile)
+	{
+		StringWriter sw = new StringWriter () ;
+		StreamResult sr = new StreamResult () ;
+		sr.setWriter(sw) ;
+		try
+		{
+			File fXakFile = new File(sXakFile);
+			_tXak2Xr.transform(new StreamSource(fXakFile), sr);
+		} 
+		catch (Exception ex)
+		{
+			this.log(ex.getMessage() + "\n");
+			ex.printStackTrace(System.out);
+		}        
+		return sr.getWriter().toString();
+	}	
+	/**
+	 * This method transforms XRefine to XUpdate
+	 * @param sXrFileContent
+	 * @return
+	 */
+	private String xr2xup(String sXrFileContent)
+	{
+		StringReader sreader = new StringReader (sXrFileContent) ;
+		StringWriter sw = new StringWriter () ;
+		StreamResult sr = new StreamResult () ;
+		sr.setWriter(sw) ;
+		try
+		{			
+			_tXr2XUpdate.transform(new StreamSource(sreader), sr);
+		} 
+		catch (Exception ex)
+		{
+			this.log(ex.getMessage() + "\n");
+			ex.printStackTrace(System.out);
+		}        
+		return sr.getWriter().toString();
+	}
+	/**
+	 * Parse input and update file, performs XUpdate-query 
+	 * and returns the result
+	 */
+	protected Document processXUpdate(String sXUpdateQueryContent, String sInputFile)
+	{
+		Document result = null;
+		try
+		{			
+			// Create a builder factory
+      DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+      factory.setValidating(false);
+
+      // Create the builder and parse the file
+      File fInputFile = new File(sInputFile);
+      result = factory.newDocumentBuilder().parse(fInputFile);
+      // result = ParserUtils.parseFile(fInputFile);
+	
+			//update
+			XUpdateQuery xupdate = XUpdateQueryFactory.newInstance().newXUpdateQuery();
+			xupdate.setQString(sXUpdateQueryContent);
+			xupdate.execute(result);
+			// this.log("Input:\n" + ParserUtils.nodeToString(result.getDocumentElement()));
+			// this.log("Query:\n" + sXUpdateQueryContent);
+			// this.log("Result:\n" + ParserUtils.nodeToString(result.getDocumentElement()));
+		} 
+		catch (Exception ex)
+		{
+			System.out.println(ex.getMessage() + "\n");
+			ex.printStackTrace(System.out);
+		}
+		return result;
+	}
+
+	/**
+	 * @param inputFile
+	 * @param xrFile
+	 * @param outFile
+	 */
+	private Document refineTwoFunctions(String sInputFile, String sFunctionFile)
+	{
+		// Parse input document
+		File fInputFile = new File(sInputFile);
+		Document docInput = ParserUtils.parseFile(fInputFile);
+		Element rootInput = docInput.getDocumentElement();
+		
+		// Parse function document
+		File fXrFile = new File(sFunctionFile);
+		Document docXr = ParserUtils.parseFile(fXrFile);
+		Element rootXr = docXr.getDocumentElement();
+		
+		// Get nodes from xrefine
+		String sXPath = "//*[name()='xak:extends']";
+		NodeList nl = ParserUtils.selectNodes(rootXr, sXPath);
+		// Import this nodes to output
+		for (int i = 0; i < nl.getLength(); i++)
+		{
+			// Add node to document
+			Node ndImported = docInput.importNode(nl.item(i), true);
+			// Add new element to document root
+			rootInput.appendChild(ndImported);
+		}
+		return docInput ;
+	}
+	/**
+	 * This method copies source file to destination
+	 * @param fIn
+	 * @param fOut
+	 * @return
+	 * @throws Exception
+	 */
+	public boolean copy(File fIn, File fOut)
+	{
+		// this.log("COPYING file: '" + fIn.getAbsolutePath() + "'\n     to file: '" + fOut.getAbsolutePath());
+		try
+		{
+			FileInputStream fis = new FileInputStream(fIn);
+			FileOutputStream fos = new FileOutputStream(fOut);
+			byte[] buf = new byte[1024];
+			int i = 0;
+			while ((i = fis.read(buf)) != -1)
+			{
+				fos.write(buf, 0, i);
+			}
+			fis.close();
+			fos.close();
+		} catch (FileNotFoundException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (Exception e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return true;
+	}
+
+	/**
+	 * @param xrFile
+	 * @param outFile
+	 */
+	private boolean copy(String sInputFile, String sOutFile)
+	{
+		File fInputFile = new File(sInputFile);
+		File fOutFile = new File(sOutFile);
+		return this.copy(fInputFile, fOutFile);
+	}
+
+	/**
+	 * This method saves a content node into a file (independent)
+	 * @param String sFileName
+	 * @param Document doc
+	 */
+	public void saveToDocument(String sFileName, Document doc)
+	{
+		// this.log("SAVING doc: '" + sFileName + "'");
+    try
+		{
+  		//print
+  		OutputFormat format = new OutputFormat(doc);
+  		format.setIndenting(true);
+			
+			OutputStream fos = new FileOutputStream(new File(sFileName));
+			XMLSerializer xmlser = new XMLSerializer(fos, format);
+			xmlser.serialize(doc);
+			
+		} catch (Exception e)
+		{
+			this.log(e.getMessage());
+			e.printStackTrace();
+		}
+		return;
+	}
+
+	/**
+	 * This method saves a content node into a file (independent)
+	 * @param String sFileName
+	 * @param Node node
+	 * @deprecated this way of save doc fails
+	 */
+	public void saveToDocumentOld(String sFileName, Node node)
+	{
+		// this.log("SAVING doc: '" + sFileName + "'");
+
+		try
+		{
+			// System.out.println("WRITING TO FILE... " + sFileName);
+			File fFileName = new File(sFileName);
+			// FileOutputStream fos = new FileOutputStream(fFileName);
+			FileWriter f = new FileWriter(fFileName);
+			f.write("<?xml version=\"1.0\"?>\n");
+			f.write(ParserUtils.nodeToString(node));
+			f.flush();
+			f.close();
+			System.out.println("WROTE TO FILE");
+		} catch (Exception e)
+		{
+			System.out.println(e);
+			e.printStackTrace();
+		}
+	}
+	
+
+	/**
+	 * This method logs a message
+	 * @param sMessage
+	 * -not deprecated-
+	 */
+	public String log(String sMessage)
+	{
+		// logger.debug(sMessage+"\n");
+		System.out.println("XAK2: " + sMessage);
+		return sMessage;
+	}
+
+	public static void main(String[] args)
+	{
+		String sBase = "E:/Salva/CodeProjects/Eclipse/3.1/AHEAD_XRefine/transform/bib.xak";
+		String sRef = "E:/Salva/CodeProjects/Eclipse/3.1/AHEAD_XRefine/transform/refine.xak";
+		String sOut = "E:/Salva/CodeProjects/Eclipse/3.1/AHEAD_XRefine/transform/result.xak";
+		
+		XakRefinement xak = new XakRefinement();	
+		xak.refine (sBase, sRef, sOut);
+		return;
+	}
+}

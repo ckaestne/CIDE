@@ -1,0 +1,17 @@
+## AuthorTags.vm
+## JEDI Project
+## HTML Template for Author Tags
+## Author: Roberto E. Lopez-Herrejon
+## Last update: November 30, 2002
+
+#set($authorText = $generator.fullTextComment($doc, "@author"))
+#if ($authorText != "")
+      <DT>
+      <B> Author  </B> &nbsp;
+      <DD> $authorText </DD>
+      <BR>
+#end
+
+
+## End of AuthorTags.vm
+

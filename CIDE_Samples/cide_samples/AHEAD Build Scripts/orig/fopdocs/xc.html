@@ -1,0 +1,400 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>The xc Tool</title>
+</head>
+  <body>
+             
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+          <tbody>
+           <tr>
+            <td width="78">     <img border="0" src="XC/FopButton3.jpg"
+ width="80" height="64" alt="AHEAD LOGO">
+             </td>
+            <td width="688" bgcolor="#00ffff">                          
+                      
+      <h1><font face="Arial" color="#0000ff">The       XML Composition Tool
+  xc</font></h1>
+            </td>
+          </tr>
+                             
+  </tbody>       
+</table>
+                
+<hr>        
+<p><font face="Arial">This document explains the use xc, an XML Composition 
+   Tool. The following are the sections of the document:</font></p>
+               
+<ul>
+        <li><font face="Arial">AHEAD</li>
+      programs or XML documents are considered either constants or    functions
+        </font> 
+                
+  <ul>
+          <li><font face="Arial"><a href="#Constant">Constants</a></font></li>
+          <li><font face="Arial"><a href="#function">Functions</a></font></li>
+                       
+  </ul>
+        <li><font face="Arial">Types of XML Refinements</li> </font>
+                       
+  <ul>
+          <li><font face="Arial"><a href="#refine">refine</a></font></li>
+          <li><font face="Arial"><a href="#before">before</a></font></li>
+          <li><font face="Arial"><a href="#after">after</a></font></li>
+          <li><font face="Arial"><a href="#replace">replace</a></font></li>
+                       
+  </ul>
+        <li><font face="Arial"><a href="#cases">Cases of composition</a></font></li>
+        <li><font face="Arial"><a href="#command">Command-line invocation</a></font></li>
+        <li><font face="Arial"><a href="#limitations">Future work and current implementation 
+limitations</a></font></li>
+        <li><font face="Arial"><a href="#reference">Reference</a></font></li>
+           
+</ul>
+               
+<h3><font face="Arial" color="#0000ff"> <a name="Constant">Constant</a></font><font face="Arial">
+</font>
+    </h3>
+               
+<p><font face="Arial">For xc a constant is any well-formed XML file that
+may or not have associated a schema or a DTD &nbsp;for validation.  <br>
+      </font></p>
+           
+<p><font face="Arial">The following is a typical example of a constant  contained
+  in file <a href="XC/constant.xml">constant.xml</a>. </font></p>
+               
+<blockquote>
+               
+<pre>&lt;?xml version="1.0"?&gt;<br>&lt;!-- constant.xml --&gt;<br>&lt;!-- An example of a constant file, in this case is AFrame --&gt;<br>&lt;!-- Last Update: June 23, 2003      --&gt;<br><br>&lt;aframe xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"<br>  xsi:noNamespaceSchemaLocation="AFrame.xsd"<br>  filename="constant.java"&gt;<br><br><a
+ name="imports"></a>&lt;func name="imports"&gt;<br>   &lt;param name="list" value="default-values"/&gt;<br>   <br>   &lt;body&gt;<br>     <a
+ name="while"></a>&lt;while name="x" in="list"&gt;<br>       import {$x};<br>       int {$x};<br>     &lt;/while&gt;  <br>   &lt;/body&gt;<br><br>&lt;/func&gt;<br><br>&lt;func name="main"&gt;<br>  &lt;param name="arg" value=""/&gt;<br><br>  &lt;body&gt;<br>    &lt;call name="imports"&gt;<br>     &lt;with name="list" value="x.y.z"/&gt;<br>    &lt;/call&gt;<br>  &lt;/body&gt;<br><br>&lt;/func&gt;<br><br>&lt;/aframe&gt;</pre>
+               
+</blockquote>
+               
+<h3><font face="Arial" color="#0000ff"> <a name="function">Function </a>
+</font>  </h3>
+               
+<p><font face="Arial">A function is an extension to a constant file. A well-formed 
+   XML file is considered a function if its root element is the tag <b>function</b>
+    and follows the next pattern:</font></p>
+           
+<blockquote>
+           
+<pre>&lt;<b>function</b> xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"<br>  xsi:noNamespaceSchemaLocation="XmlFunction.xsd"&gt;<br><br> ... sequence of refinements go here<br></pre>
+           
+<pre>&lt;/<b>function</b>&gt;</pre>
+           
+</blockquote>
+           
+<p><font face="Arial">A function file consists of a sequence or list of extensions. 
+   The order in which they appear, from top to bottom, is the order  in which
+  they are applied to the constant file.&nbsp;A function file is validated with the schema <a
+ href="XC/XmlFunction.xsd">XmlFunction.xsd</a> before proceeding to composition.
+ This schema guarantees that the function follows the required structure
+&nbsp;that  is explained in this section. There are 4 types of extensions <b>refine</b>, <b>before</b>,
+    <b>after</b>, <b>replace</b>. The following sections describe and illustrate
+    them.</font></p>
+           
+<h3> <font face="Arial" color="#0000ff"><a name="refine">Extension refine</a></font>
+    </h3>
+                
+<p> <font face="Arial">This type of extension allows to refine</font><font
+ face="Arial"> XML code in a similar way to the concept of method extension 
+   (overriding) found in traditional Object-Oriented Programming (OOP). In 
+ the  XML context,&nbsp; a tag that is extended and its children elements 
+are the  equivalent of the method definition and its body. As in the case 
+of OOP, a method can use the <b>super</b> keyword to refer to its parent method
+(the  one that it extends).</font> </p>
+                
+<p><font face="Arial">Consider the following extension&nbsp; <b>  <a
+ href="#imports">imports</a></b> shown below. Let's say we want to add a
+<font color="#6633ff">set</font> tag right after the <font
+ color="#6633ff">body</font> tag, and a <font color="#6633ff">while</font>
+tag before the closing <font color="#6633ff">body</font> tag. In other words,&nbsp;
+ the desired composition is the  following:</font> </p>
+                
+<blockquote>
+                
+<pre>&lt;func name="imports"&gt;<br>  <br>  &lt;param name="list" value="default-values" /&gt;<br>   &lt;body&gt;<br>   <font
+ color="#6633ff">&lt;set value="one,two" name="avar" /&gt;</font><br>   <br>   &lt;while name="x" in="list"&gt;<br>       import {$x};<br>       int {$x};<br>     &lt;/while&gt;<br>     <br>   <font
+ color="#6633ff">&lt;while name="y" </font><font color="#6633ff">in="avar"</font><font
+ color="#6633ff">&gt;<br>    System.out.println("{$y}");<br>   &lt;/while&gt;</font><br><br>  &lt;/body&gt;<br> &lt;/func&gt;</pre>
+               
+</blockquote>
+               
+<p><font face="Arial">The way to achieve this result is shown 
+  in <a href="XC/function1.xml">function1.xml</a>, and it is as follows:&nbsp;</font></p>
+                
+<blockquote>
+                
+<pre>&lt;!-- Adds one variable, and an extra while loop to the imports function --&gt;<br>&lt;<b>refine</b> <b>path</b>="/aframe/func[@name='imports']/body"  <b>tag</b>="append" <b>separator</b>="."&gt;<br>&lt;body&gt;<br> <font
+ color="#6633ff">&lt;set name="avar" value="one,two"/&gt;</font><br><br> <b>&lt;super/&gt;</b><br><br> <font
+ color="#6633ff">&lt;while name="y" in="avar"&gt;<br>    System.out.println("{$y}");<br> &lt;/while&gt;</font><br><br>&lt;/body&gt;<br><br>&lt;/refine&gt;</pre>
+               
+</blockquote>
+               
+<p> <font face="Arial">Please notice the following details:</font> </p>
+                
+<ul>
+          <li><font face="Arial">A refinement of this type is enclosed in 
+a      <b>refine</b>       tag.&nbsp;</font></li>
+          <li><font face="Arial">This tag contains three attributes: </font> 
+   	                                    
+    <ul>
+          		<li> <font face="Arial"> <b> path</b>: it is a required attribute. It contains a
+XPath              expression to specify the set of tags that are going to
+be refined.               For further details on defining paths see the reference
+[1]. </font>        </li>
+          		<li> <font face="Arial"> <b> tag</b>:&nbsp; it is an optional attribute. It specifies 
+  the            tag composition policy. There are three possibilities: </font>  
+                                                                       
+        <ul>
+                  	 <li> <font face="Arial">append: adds the extensions attribute value at the 
+ end   of the               constant attribute value. It is the default option.
+                     </font>
+             </li>
+                  	 <li> <font face="Arial">prepend: adds the extension attribute value at the 
+ beginning                 of the constant attribute. </font> </li>
+                  	 <li> <font face="Arial">override: replaces the constant attribute value
+with   the extension attribute value. </font> </li>
+                                                                         
+       
+        </ul>
+                </li>
+          		<li> <font face="Arial"> <b> separator</b>: it is an optional attribute. It specifies 
+  the            separator character used to compose the attribute values. 
+ The default            value is the empty string. </font> </li>
+          	                                   
+    </ul>
+          </li>
+          <li><font face="Arial">The only child tag of refine can have any
+ name,   in this case is body. The purpose of this tag is to enclose all
+the  children   elements that are going to be added, and to provide a place
+where  to put  the new and refined attributes.</font></li>
+          <li><font face="Arial">The empty tag <b>&lt;super/&gt; </b>serves 
+ to  indicate      the place where the  refined code is going to be inserted.
+  If it is     omitted, it is equivalent to overriding.</font></li>
+               
+</ul>
+                   
+<h3><font face="Arial" color="#0000ff"> <a name="before">Extension before 
+   </a> </font></h3>
+                
+<p><font face="Arial">This form of extension allows a new tag to be added
+   before the occurrence of a set of tags specified by a XPath expression.
+ In  other words, a tag in the set specified by a XPath expression has a
+parent    node, the new tag will be inserted as a child of the parent node
+right before   the selected tag.</font></p>
+                
+<p><font face="Arial">For example, let's say that we have the following code:</font></p>
+       
+<blockquote>
+  <pre>&lt;func name=&quot;main&quot;&gt;
+  &lt;param name=&quot;arg&quot; value=&quot;&quot; /&gt; 
+
+  &lt;body&gt;
+ 
+    &lt;call name=&quot;imports&quot;&gt;
+      &lt;with name=&quot;list&quot; value=&quot;x.y.z&quot; /&gt;
+    &lt;/call&gt;
+   
+   &lt;/body&gt;
+  
+ &lt;/func&gt; </pre>
+</blockquote>
+<p><font face="Arial">We want to add a new <font color="#6633ff">call</font> 
+   tag before the current call tag&nbsp; In other words, we want the output&nbsp;
+  to look like:</font></p>
+<blockquote>
+                
+<pre>&lt;func name="main"&gt;<br>  &lt;param name="arg" value="" /&gt; <br><br>  &lt;body&gt;<br> <font
+ color="#6633ff">   &lt;call name="imports"&gt;<br>      &lt;with name="list" value="a.b.c"/&gt;<br>    &lt;/call&gt;</font><br><br>    &lt;call name="imports"&gt;<br>      &lt;with name="list" value="x.y.z" /&gt;<br>    &lt;/call&gt;<br>   <br>   &lt;/body&gt;<br>  <br> &lt;/func&gt; </pre>
+                    
+</blockquote>
+                    
+<p><font face="Arial">The way to achieve it is through the following before
+    refinement in the file <a href="XC/function1.xml">function1.xml</a>:</font></p>
+                
+<blockquote>
+                
+<pre>&lt;!-- Adds a function call to imports before current call in main --&gt;<br>&lt;<b>before</b> <b>path</b>="/aframe/func[@name='main']/body/call[@name='imports']"&gt;<br>   &lt;call name="imports"&gt;<br>     &lt;with name="list" value="a.b.c"/&gt;<br>  &lt;/call&gt;<br>&lt;/before&gt;</pre>
+           
+</blockquote>
+           
+<p><font face="Arial">As with the case of the extensions of type refine, the
+ <b>path </b>attribute specifies the XPath expression that selects the set
+ of tags to which the refinement will be applied. This attribute is required. 
+   For further details on definition of XPath expression see [1].</font></p>
+                   
+<h3><font face="Arial" color="#0000ff"> <a name="after">Extension after </a>
+  </font></h3>
+                
+<p><font face="Arial">It works similarly to the before extension,  but instead
+  it adds the new tag after the occurrence of the selected tags.  For example,
+  consider the following extension contained in file&nbsp; <a
+ href="XC/function2.xml">function2.xml</a>:&nbsp;</font></p>
+               
+<blockquote>
+               
+<pre>&lt;!-- Adds a function call to imports before current call in main --&gt;<br>&lt;<b>after path</b>="/aframe/func[@name='main']/body/call[@name='imports']"&gt;<br>  <font
+ color="#6633ff"> &lt;call name="imports"&gt;<br>     &lt;with name="list" value="abc"/&gt;<br>   &lt;/call&gt;</font><br>&lt;/after&gt;</pre>
+           
+</blockquote>
+           
+<p><font face="Arial">If &nbsp;we&nbsp; apply this extension to our constant
+   file we obtain the following code:</font></p>
+               
+<blockquote>
+               
+<pre>&lt;func name="main"&gt;<br>  &lt;param name="arg" value="" /&gt;<br>  &lt;body&gt;<br>   <br>   &lt;call name="imports"&gt;<br>     &lt;with name="list" value="x.y.z" /&gt;<br>   &lt;/call&gt;<br><br><font
+ color="#6633ff">   &lt;call name="imports"&gt;<br>    &lt;with value="abc" name="list" /&gt;<br>   &lt;/call&gt;</font><br>   <br>  &lt;/body&gt;<br> &lt;/func&gt;<br></pre>
+           
+</blockquote>
+           
+<h3><font face="Arial" color="#0000ff"><a name="replace">Extension replace 
+   </a> </font></h3>
+                 
+<p><font face="Arial">It works in a similar way to before and after extensions.The
+  difference is that instead of inserting a new tag in each of the  selected
+  tags specified by the XPath expression, it substitutes these tags with
+the   new tags.&nbsp;&nbsp;Continuing with our example, assume that we want to
+   substitute the <font color="#ff0000">while <font color="#000000">tag</font></font>
+  in:</font></p>
+                 
+<blockquote>
+       
+<pre>&lt;func name="imports"&gt;<br>   &lt;param name="list" value="default-values"/&gt;<br>   <br>   &lt;body&gt;<br><font
+ color="#ff0000">     <a name="while"></a>&lt;while name="x" in="list"&gt;<br>       import {$x};<br>       int {$x};<br>     &lt;/while&gt;  </font><br>   &lt;/body&gt;</pre>
+       
+</blockquote>
+       
+<p><font face="Arial">To look like:</font><br>
+    </p>
+               
+<blockquote>
+               
+<pre>&lt;func name="imports"&gt;<br>  &lt;param name="list" value="default-values" /&gt;<br>   &lt;body&gt;<br>   <br><font
+ color="#6633ff">   &lt;set value="pqrs" name="sequence" /&gt;<br>   &lt;while in="sequence" name="i"&gt;<br>    System.out.println("var variable" + {$i});<br>   &lt;/while&gt;</font><br>    <br>  &lt;/body&gt;<br> &lt;/func&gt;</pre>
+                    
+</blockquote>
+                    
+<p><font face="Arial">The way to do it is by using the following replace
+extension contained in <a href="XC/function2.xml">function2.xml</a></font></p>
+               
+<blockquote>
+               
+<pre>&lt;!-- Replaces the while tag inside the body of function imports --&gt;<br>&lt;<b>replace path</b>="/aframe/func[@name='imports']/body/while"&gt;<br>   &lt;set name="sequence" value="pqrs"/&gt;<br><font
+ color="#6633ff">   &lt;while name="i" in="sequence"&gt;<br>    System.out.println("var variable" + {$i});<br>   &lt;/while&gt;</font><br>&lt;/replace&gt;</pre>
+               
+</blockquote>
+               
+<p><font face="Arial">Again the value of the attribute<b> path </b>is an XPath
+expression that defines the set of nodes that are going to be refined.&nbsp;</font></p>
+               
+<h3><font face="Arial" color="#0000ff"><a name="cases">Composition Cases</a></font></h3>
+               
+<p><font face="Arial">An XML file can be either a constant or a function.
+    Therefore there are 4 different composition cases that have to be considered:</font></p>
+               
+<ul>
+          <li><font face="Arial"><b>function (constant)</b> : the outcome 
+is  a  constant      file. It is obtained by following the composition rules
+ explained  in the     previous sections.</font></li>
+          <li><font face="Arial"><b>function2 (function1)</b> : the outcome 
+ is  a      function file. It is obtained by appending the refinements in 
+function2   to     the refinements of function1.</font></li>
+          <li><font face="Arial"><b>constant (function) </b>: the outcome 
+is  the       constant file. It overrides any function file.</font></li>
+          <li><font face="Arial"><b>constant2 (constant1)</b> : the outcome 
+ is  the      constant2 file. It overrides the contents of constant1.</font></li>
+               
+</ul>
+               
+<h3><font face="Arial" color="#0000ff"> <a name="command">Command-line Invocation</a>
+    </font></h3>
+               
+<p><font face="Arial">The following are the command arguments to call the xc:</font></p>
+<blockquote>
+  <pre><font face="Courier New">xc [options] -o outputFile
+    -c file1 file2 file3 ...     // composes xml files ...file3(file2 (file1))
+    -f file1 file2 file3 ...     // composes files with lists of xml files ...file3(file2 (file1) )</font>
+</pre>
+</blockquote>
+<ul>
+</ul>
+               
+<p><font face="Arial">Examples:</font></p>
+               
+<p><font face="Arial">1) To compose <a href="XC/constant.xml">constant.xml</a> 
+ and <a href="XC/function1.xml">function1.xml</a>&nbsp; type:</font></p>
+               
+<p>&nbsp;&nbsp; <font face="Arial">xc -c </font><font face="Arial">constant.xml</font><font
+ face="Arial"> function1.xml&nbsp;&nbsp;  -o&nbsp; output.xml</font></p>
+               
+<p><font face="Arial">2) Let <a href="XC/files1">files1</a> be the file:<br>
+   &nbsp; &nbsp; &nbsp; constant.xml<br>
+   &nbsp; &nbsp; &nbsp; function.xml</font></p>
+     
+<p><font face="Arial">&nbsp; &nbsp; &nbsp;and <a href="XC/files2">files2</a> 
+ be:<br>
+   &nbsp; &nbsp; &nbsp; &nbsp;function2.xml</font></p>
+     
+<p><font face="Arial">&nbsp; &nbsp; Composed as follows</font><font
+ face="Arial">:</font></p>
+               
+<p><font face="Arial">&nbsp;&nbsp;&nbsp; xc -f files1 files2 -o output.xml</font></p>
+     
+<p><font face="Arial">&nbsp; &nbsp; &nbsp;is equivalent to</font></p>
+     
+<p><font face="Arial">&nbsp; &nbsp; xc -c </font><font face="Arial">constant.xml</font><font
+ face="Arial"> function1.xml function2.xml&nbsp;  -o output.xml</font><font
+ face="Arial">&nbsp;<br>
+   </font>
+        <br>
+               
+</p>
+               
+<h3><font face="Arial" color="#0000ff"> <a name="limitations">Current implementation 
+ limitations</a></font></h3>
+               
+<p align="left"><font face="Arial">The following is the list of limitations 
+   of current version of<b> xc</b> :</font></p>
+               
+<ul>
+                   
+</ul>
+                        
+<ul>
+        <li>                              
+    <p align="left"><font face="Arial">Command line arguments need improvement</font>.<br>
+       </p>
+        </li>
+        <li>                              
+    <p align="left"><font face="Arial">Stylesheets transformations used to
+   create the refinements do not consider multiple namespaces for tag elements</font>.<br>
+        </p>
+      </li>
+           
+</ul>
+               
+<h3><font face="Arial" color="#0000ff"><a name="reference">Reference</a></font><font
+ face="Arial">&nbsp;</font></h3>
+               
+<p align="left"><font face="Arial">[1] Harold, Elliot R., Means W.Scott. XML
+in a Nutshell. Second Edition.O'Reilly &amp; Associates Inc., 2002.</font></p>
+               
+<hr>        
+<p><font face="Verdana"> <a href="index.html">&nbsp;</a></font><b><font
+ face="Arial"><a href="index.html">ATS Home Page</a></font></b></p>
+               
+<p><font face="Arial"><b>Copyright &copy; Software Systems Generator Research 
+   Group.  All rights reserved.</b> <br>
+        <b>Revised:&nbsp;<!--webbot bot="TimeStamp" s-format="%B %d, %Y" s-type="EDITED" startspan -->January 25, 2006<!--webbot bot="TimeStamp" endspan i-checksum="31592" -->.</b> </font></p>
+       <br>
+        <br>
+     <br>
+     <br>
+  <br>
+ <br>
+</body>
+</html>

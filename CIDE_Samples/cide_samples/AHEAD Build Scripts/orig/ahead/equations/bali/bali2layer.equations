@@ -1,0 +1,5 @@
+# SPECIFIC TOOL DEFINITION:
+# Layer "requireBali2layer" is tool-specific feature handling defined in super
+# equations file.
+#
+this = common4translator bali2layer requireBali2layer
