@@ -1,5 +1,27 @@
+/**
+    Copyright 2010 Christian Kästner
+
+    This file is part of CIDE.
+
+    CIDE is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, version 3 of the License.
+
+    CIDE is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with CIDE.  If not, see <http://www.gnu.org/licenses/>.
+
+    See http://www.fosd.de/cide/ for further information.
+ */
+
 package de.ovgu.cide.fm.guidsl;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -85,6 +107,15 @@ public class GuidslFeatureModelWrapper extends AbstractFeatureModel {
 	private GrammarFile grammarFile;
 	FeatureModel model;
 	public ExtraAttributeStorage extraAttributeStorage;
+	private final PropertyChangeListener changeListener = new PropertyChangeListener() {
+
+		public void propertyChange(PropertyChangeEvent evt) {
+			if (evt.getPropertyName().equals(FeatureModel.FEATURE_NAME_CHANGED)) {
+				extraAttributeStorage.notifyFeatureRenamed(evt.getOldValue()
+						.toString(), evt.getNewValue().toString());
+			}
+		}
+	};
 
 	private static WeakHashMap<IProject, WeakReference<GuidslFeatureModelWrapper>> instanceCache = new WeakHashMap<IProject, WeakReference<GuidslFeatureModelWrapper>>();
 
@@ -134,6 +165,7 @@ public class GuidslFeatureModelWrapper extends AbstractFeatureModel {
 			for (ModelWarning warning : modelReader.getWarnings())
 				grammarFile.createModelMarker(warning.message,
 						IMarker.SEVERITY_WARNING, warning.line);
+			model.addListener(changeListener);
 		} catch (IOException e) {
 			grammarFile.createModelMarker(e.getMessage(),
 					IMarker.SEVERITY_ERROR, 0);
