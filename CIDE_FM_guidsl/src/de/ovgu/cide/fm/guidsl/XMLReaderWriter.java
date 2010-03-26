@@ -116,7 +116,7 @@ public class XMLReaderWriter {
 			serializer.setOutputProperty(OutputKeys.ENCODING, "ISO-8859-1");
 			serializer.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM,
 					"featuremodelattributes.dtd");
-			serializer.setOutputProperty(OutputKeys.INDENT, "true");
+			serializer.setOutputProperty(OutputKeys.INDENT, "yes");
 			hd.setResult(streamResult);
 			hd.startDocument();
 			// annotations tag.
