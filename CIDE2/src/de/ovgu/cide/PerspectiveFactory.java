@@ -48,9 +48,9 @@ public class PerspectiveFactory implements IPerspectiveFactory {
 		// Bottom right: Task List view
 		IFolderLayout right = layout.createFolder("right",
 				IPageLayout.RIGHT, 0.75f, editorArea);
-		right.addView(IPageLayout.ID_OUTLINE);
-		right.addView(CIDECorePlugin.ID_ASTVIEW);
 		right.addView(FeatureView.VIEW_ID);
+		right.addView(IPageLayout.ID_OUTLINE);
+//		right.addView(CIDECorePlugin.ID_ASTVIEW);
 	}
 
 }
