@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE featuremodelattributes SYSTEM "featuremodelattributes.dtd">
+<featuremodelattributes>
+<featureattr name="Where" id="2" selected="true"/>
+<featureattr name="SPL" id="5"/>
+<featureattr name="MultiColumn" id="3" selected="true"/>
+<featureattr name="Alias" id="1" selected="true"/>
+<featureattr name="Distinct" id="4" selected="true"/>
+</featuremodelattributes>
