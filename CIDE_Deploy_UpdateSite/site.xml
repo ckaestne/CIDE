@@ -9,10 +9,10 @@
    <feature url="features/de.ovgu.cide.morelanguages_2.1.0.200906231756.jar" id="de.ovgu.cide.morelanguages" version="2.1.0.200906231756"/>
    <feature url="features/de.ovgu.cide.purevariantsconnector_2.1.0.200906231756.jar" id="de.ovgu.cide.purevariantsconnector" version="2.1.0.200906231756"/>
    <feature url="features/de.ovgu.cide.samples_2.1.0.200906231756.jar" id="de.ovgu.cide.samples" version="2.1.0.200906231756"/>
-   <feature url="features/de.ovgu.cide.core_2.2.0.201003241414.jar" id="de.ovgu.cide.core" version="2.2.0.201003241414"/>
-   <feature url="features/de.ovgu.cide.guidsl_2.2.0.201003241414.jar" id="de.ovgu.cide.guidsl" version="2.2.0.201003241414"/>
-   <feature url="features/de.ovgu.cide.jdt_2.2.0.201003241414.jar" id="de.ovgu.cide.jdt" version="2.2.0.201003241414"/>
-   <feature url="features/de.ovgu.cide.morelanguages_2.2.0.201003241414.jar" id="de.ovgu.cide.morelanguages" version="2.2.0.201003241414"/>
-   <feature url="features/de.ovgu.cide.purevariantsconnector_2.2.0.201003241414.jar" id="de.ovgu.cide.purevariantsconnector" version="2.2.0.201003241414"/>
-   <feature url="features/de.ovgu.cide.samples_2.2.0.201003241414.jar" id="de.ovgu.cide.samples" version="2.2.0.201003241414"/>
+   <feature url="features/de.ovgu.cide.core_2.2.0.201003261649.jar" id="de.ovgu.cide.core" version="2.2.0.201003261649"/>
+   <feature url="features/de.ovgu.cide.guidsl_2.2.0.201003261649.jar" id="de.ovgu.cide.guidsl" version="2.2.0.201003261649"/>
+   <feature url="features/de.ovgu.cide.jdt_2.2.0.201003261649.jar" id="de.ovgu.cide.jdt" version="2.2.0.201003261649"/>
+   <feature url="features/de.ovgu.cide.morelanguages_2.2.0.201003261649.jar" id="de.ovgu.cide.morelanguages" version="2.2.0.201003261649"/>
+   <feature url="features/de.ovgu.cide.purevariantsconnector_2.2.0.201003261649.jar" id="de.ovgu.cide.purevariantsconnector" version="2.2.0.201003261649"/>
+   <feature url="features/de.ovgu.cide.samples_2.2.0.201003261649.jar" id="de.ovgu.cide.samples" version="2.2.0.201003261649"/>
 </site>
