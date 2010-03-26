@@ -1,7 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
 	<name>SQLParser</name>
-	<comment></comment>
+	<comment>
+		[description]Minimal example of an SQL Grammar in ANTLR format, annotated with 4 features.[/description]
+		[requirementcategory] 
+			[categoryname]de.ovgu.cide.languages[/categoryname]
+			[requirement]
+				[pluginid]de.ovgu.cide.language.antlr[/pluginid] 
+				[errormsg]ANTLR Language Extension is not installed or disabled.[/errormsg] 
+			[/requirement]
+		[/requirementcategory]
+		[requirementcategory]
+			[categoryname]de.ovgu.cide.features[/categoryname]
+			[requirement]
+				[pluginid]de.ovgu.cide.fm.guidsl[/pluginid] 
+				[errormsg]CIDE guidsl Feature Model Plugin is not installed or disabled.[/errormsg] 
+			[/requirement]
+		[/requirementcategory]
+	</comment>
 	<projects>
 	</projects>
 	<buildSpec>

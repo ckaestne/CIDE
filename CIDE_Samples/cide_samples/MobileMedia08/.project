@@ -1,7 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
 	<name>MobileMedia08</name>
-	<comment></comment>
+	<comment>
+		[description]Java ME based implementation of an image and video viewer for mobile phones. Version 8 of 8. see http://mobilemedia.sourceforge.net/[/description]
+		[requirementcategory] 
+			[categoryname]de.ovgu.cide.languages[/categoryname]
+			[requirement]
+				[pluginid]de.ovgu.cide.language.jdt[/pluginid] 
+				[errormsg]CIDE Java 1.6 (Eclipse JDT based) Language Extension is not installed or disabled.[/errormsg] 
+			[/requirement]
+		[/requirementcategory]
+		[requirementcategory]
+			[categoryname]de.ovgu.cide.features[/categoryname]
+			[requirement]
+				[pluginid]de.ovgu.cide.fm.guidsl[/pluginid] 
+				[errormsg]CIDE guidsl Feature Model Plugin is not installed or disabled.[/errormsg] 
+			[/requirement]
+		[/requirementcategory]
+	</comment>
 	<projects>
 	</projects>
 	<buildSpec>
