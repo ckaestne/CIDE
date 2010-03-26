@@ -1,0 +1,296 @@
+<?xml version="1.0"?>
+<project name="RSSReader_common" default="display.props" basedir="." >
+
+	<property environment="env" />
+	<property name="sony.location" value="C:/SONYER~1/JavaME_SDK_CLDC/PC_Emulation/WTK2/" />
+
+	<property name="device.props" value="" />
+	<property name="build.template" value="" />
+	<property name="wtk.template" value="" />
+	<property name="beta.vers" value="" />
+	<echo message="build.template=${build.template}" />
+	<echo message="wtk.properties=${wtk.properties}" />
+	<echo message="lang.props.xsl=${lang.props.xsl}" />
+	<echo message="wtk.template=${wtk.template}" />
+	<echo message="release.template=${release.template}" />
+	<echo message="test.template=${test.template}" />
+	<echo message="optional.template=${optional.template}" />
+	<echo message="DLOGDEF=${DLOGDEF}" />
+	<echo message="presrc=" />
+	<property name="DEBUG" value="DEBUG" />
+	<property name="target" value="../target" />
+	<property name="tmpres" value="${target}/tmpres" />
+	<property name="webtestdata" value="${target}/webtestdata" />
+	<property name="filetestdata" value="${target}/filetestdata" />
+	<property name="analyze" value="${target}/analyze" />
+	<property name="dist" value="${target}/dist" />
+	<property name="dist.midp10" value="${target}/dist/midp10" />
+	<property name="dist.midp20" value="${target}/dist/midp20" />
+	<property name="dist.midp20.novice" value="${target}/dist/midp20_novice" />
+	<property name="dist.midp20.cldc11" value="${target}/dist/midp20_cldc11" />
+	<property name="dist.midp20.jsr75" value="${target}/dist/midp20_jsr75" />
+	<property name="dist.midp20.cldc11.jsr75" value="${target}/dist/midp20_cldc11_jsr75" />
+	<property name="dist.midp20.itunes.jsr75" value="${target}/dist/midp20_itunes_jsr75" />
+	<property name="dist.midp20.cldc11.itunes.jsr75" value="${target}/dist/midp20_cldc11_itunes_jsr75" />
+	<property name="dist.midp20.jsr75_jsr238" value="${target}/dist/midp20_jsr75_jsr238" />
+	<property name="build" value="${target}/build" />
+	<property name="build.midp10" value="${target}/build/midp10" />
+	<property name="build.midp20" value="${target}/build/midp20" />
+	<property name="build.midp20.novice" value="${target}/build/midp20_novice" />
+	<property name="build.midp20.cldc11" value="${target}/build/midp20_cldc11" />
+	<property name="build.midp20.itunes.jsr75" value="${target}/build/midp20_itunes_jsr75" />
+	<property name="build.midp20.jsr75" value="${target}/build/midp20_jsr75" />
+	<property name="build.midp20.itunes.jsr75" value="${target}/build/midp20_itunes_jsr75" />
+	<property name="build.midp20.cldc11.itunes.jsr75" value="${target}/build/midp20_cldc11_itunes_jsr75" />
+	<property name="build.midp20.jsr75.jsr238" value="${target}/build/midp20_jsr75.jsr238" />
+	<property name="classes" value="${target}/classes" />
+	<property name="war.dir" value="${target}/webapp" />
+	<property name="web.dir" value="${war.dir}/WEB-INF" />
+	<property name="jsp.classes" value="${target}/jsp_classes" />
+	<property name="tmppreprocess" value="${target}/tmppreprocess" />
+	<property name="build.template" value="" />
+	<property name="ext.drive" value="${env.EXT_DRIVE}" />
+	<property name="java.home" value="${env.JAVA_HOME}" />
+	<property file="${basedir}/wtk-build${device.props}.properties${build.template}" />
+	<!-- DCOMPATDEF is used to test compatibility store/restore of date -->
+	<property name="DCOMPATDEF" value="DNOCOMPAT" />
+	<property name="web.classes" value="${web.dir}/classes" />
+	<property name="jsp.javasrc" value="${target}/jsp_servlet" />
+	<property name="web.pojo.src" value="${webapp.dir}/src/java" />
+	<property name="webapp.src" value="${webapp.dir}/src" />
+	<property name="web.jsp.src" value="${webapp.src}/jsp" />
+	<property name="web.images.src" value="${webapp.src}/images" />
+	<property name="web.html.src" value="${webapp.src}/html" />
+	<property name="web.prop.src" value="${webapp.src}/properties" />
+	<property name="web.lib" value="${webapp.dir}/lib" />
+	<property name="war.file" value="${dist}/${web.app.name}.war" />
+	<echo message="unproc.src=${unproc.src}" />
+	<fail message="Must set comp.src to src directory to put the source to compile." unless="comp.src" />
+
+	<!-- Define the tasks. -->
+
+	<!-- clean up the project -->
+	<target name="clean" >
+		<delete dir="${target}" />
+		<antcall target="clean.version" inheritAll="true" >
+			<param name="wtk.template" value="" />
+			<param name="wtk.properties" value="wtk2.0.itunes.jsr75.properties${wtk.template}" />
+		</antcall>
+	</target>
+
+	<!-- clean up the compile -->
+	<target name="clean.compile">
+		<delete dir="${classes}" />
+	</target>
+
+	<!-- TODO -->
+	<target name="clean.version">
+		<delete dir="${classes}" />
+	</target>
+
+	<target name="test.prepare" unless="no.test" >
+	    <echo message="Using test properties" />
+	    <echo message="no.release=${no.release}" />
+		<property name="test.template" value="" />
+		<property file="${basedir}/test.properties${test.template}" />
+		<antcall target="test.buildno" />
+		<property file="${basedir}/test_buildinfo.properties${test.template}" />
+	    <echo message="build.number=${build.number}" />
+	</target>
+
+	<target name="test.buildno" unless="test.buildinfo" >
+	    <echo message="Using test properties" />
+	    <echo message="no.release=${no.release}" />
+		<buildnumber file="${basedir}/test_buildinfo.properties${test.template}" />
+	    <echo message="Release buildinfo update." />
+		<property name="test.buildno" value="true" />
+	</target>
+
+	<target name="release.prepare" unless="no.release" >
+	    <echo message="Using release properties" />
+		<property name="release.template" value="" />
+		<property file="${basedir}/release.properties${release.template}" />
+	    <echo message="RELEASE=${RELEASE}" />
+	    <echo message="build.number=${build.number}" />
+		<antcall target="release.buildno" />
+		<property file="${basedir}/release_buildinfo.properties${release.template}" />
+	    <echo message="build.number=${build.number}" />
+	</target>
+
+	<target name="release.buildno" unless="release.buildno" >
+		<buildnumber file="${basedir}/release_buildinfo.properties${release.template}" />
+	    <echo message="Release buildinfo update." />
+		<property name="release.buildno" value="true" />
+	</target>
+
+	<target name="staging.prepare" unless="no.staging" >
+	    <echo message="Using release staging properties" />
+		<property file="${basedir}/staging.properties" />
+	</target>
+
+	<!-- prepare the target folder -->
+	<target name="prepare" depends="test.prepare,release.prepare" >
+		<!-- Define the Wireless Toolkit home directory. Needed by the tasks. -->
+		<!-- Define some additional properties for this project. Not required. -->
+		<property name="optional.template" value="" />
+		<property file="${basedir}/optional.properties${optional.template}" />
+		<property name="propdir" value="${basedir}" />
+		<property file="${basedir}/${wtk.properties}" />
+		<!-- Note:  this value will not be used if novice is set before -->
+		<!-- we get here (e.g. in target dist.midp.2.0.novice).  For the -->
+		<!-- other targets, NOVICE will be false and therefore disabled -->
+		<property name="NOVICE" value="false" />
+		<property name="novice.txt" value="${src}/data/novice.txt" />
+		<property name="language.file" value="messages_en_US.xml" />
+		<property name="lang.props.xsl" value="props.xsl" />
+		<property name="image.files" value="file_icon.png,folder_icon.png,up_dir_icon.png,rss.png,questionMk.png,read.png,unread.png" />
+		<xmlproperty file="${msg.dir}/${language.file}" collapseAttributes="true" />
+		<echo message="Language file=${msg.dir}/${language.file}" />
+		<property name="loading.text" value="${properties.node.map.node.map.node.map.entry}" />
+		<property name="loading.items.text" value="${properties.node.map.node.map.entry}" />
+		<echo message="prop load=${loading.text}" />
+		<echo message="prop load items=${loading.items.text}" />
+		<property name="stage" value="" />
+		<property name="build.prefix" value="${file.prefix}${stage}" />
+		<property name="build.file.root" value="${build.prefix}${project.name}-${FMIDLETVERSROOT}" />
+		<property name="buildinfo" value="${SUFFIXVERS}-${stage}b${build.number}" />
+		<!-- changed -->
+		<mkdir dir="${target}" />
+		<mkdir dir="${classes}" />
+		<property name="EMULATOR" value="true" />
+		<property name="main" value="${target}/main" />
+		<property name="svnexport" value="${build}/svnexport" />
+		<property name="compiled" value="${build}/${build.prefix}pcompiled" />
+		<property name="preverified" value="${build}/${build.prefix}preverified" />
+		<property name="preprocessed" value="${build}/${build.prefix}preprocessed" />
+		<property name="obfuscated" value="${build}/${build.prefix}obfuscated" />
+		<filterset id="defile.filter" >
+			<filter token="DMIDPVERS" value="//#define ${DMIDPVERS}" />
+			<filter token="DCLDCVERS" value="//#define ${DCLDCVERS}" />
+			<filter token="DMEMSIZEDEF" value="//#define ${DMEMSIZEDEF}" />
+			<filter token="DITUNESDEF" value="//#define ${DITUNESDEF}" />
+			<filter token="DJSR75" value="//#define ${DJSR75}" />
+			<filter token="DJSR238" value="//#define ${DJSR238}" />
+			<filter token="DTESTDEF" value="//#define ${DTESTDEF}" />
+			<filter token="DCOMPATDEF" value="//#define ${DCOMPATDEF}" />
+			<filter token="DTESTUIDEF" value="//#define ${DTESTUIDEF}" />
+			<filter token="DLOGDEF" value="//#define ${DLOGDEF}" />
+			<filter token="PROGVERS" value="${buildinfo}" />
+		</filterset>
+		<filterset id="midlet.info" >
+			<filter token="MIDPVERS" value="${wtk.midp.version}" />
+			<filter token="CLDCVERS" value="${wtk.cldc.version}" />
+			<filter token="MIDLETVERS" value="${MIDLETVERS}" />
+			<filter token="PROGVERS" value="${buildinfo}" />
+			<filter token="BUILDPREFIX" value="${build.prefix}" />
+			<filter token="FMIDLETVERSROOT" value="${FMIDLETVERSROOT}" />
+			<filter token="JMIDPVERS" value="${JMIDPVERS}" />
+			<filter token="JCLDCVERS" value="${JCLDCVERS}" />
+			<filter token="PERMISSIONS" value="${PERMISSIONS}" />
+			<filter token="EMULATOR" value="${EMULATOR}" />
+			<filter token="NOVICE" value="${NOVICE}" />
+			<filter token="LOADING" value="${loading.text}" />
+			<filter token="LOADING.ITEMS" value="${loading.items.text}" />
+		</filterset>
+		<filterset id="web.filter" >
+			<filter token="app.context" value="${web.app.name}" />
+		</filterset>
+
+	</target>
+
+	<echo message="location='${antenna.home}/${antenna.jar}'" />
+	<taskdef resource="antenna.properties" >
+	  <classpath>
+		<pathelement location="${antenna.home}/${antenna.jar}" />
+	  </classpath>
+	</taskdef>
+
+    <taskdef resource="net/sf/antcontrib/antcontrib.properties">
+      <classpath>
+        <pathelement location="${antcontrib.home}/ant-contrib-1.0b3.jar"/>
+      </classpath>
+    </taskdef>
+
+	<path id="web.libs" >
+		<fileset dir="${web.lib}" >
+			<include name="*.jar" />
+		</fileset>
+	</path>
+
+	<path id="struts1.libs" >
+		<fileset dir="${struts1.home}/lib" >
+			<include name="*.jar" />
+			<!-- jstl changes jstl changes
+			<exclude name="jstl*.jar" />
+			-->
+		</fileset>
+	</path>
+
+	<path id="stl.lib" >
+		<fileset dir="${stl.home}/lib" >
+			<include name="*.jar" />
+		</fileset>
+	</path>
+
+	<path id="struts2.libs" >
+		<fileset dir="${struts2.home}/lib" >
+			<include name="*.jar" />
+		</fileset>
+	</path>
+
+	<!--
+	<taskdef resource="svntask.properties" >
+	  <classpath>
+		<pathelement location="${svnant.home}/svnant.jar" />
+		<pathelement location="${svnant.home}/svnClientAdapter.jar" />
+	  </classpath>
+	</taskdef>
+	-->
+
+	<!--
+	<taskdef resource="com/idaremedia/svn4ant/client/antlib.xml" >
+	  <classpath>
+		<pathelement location="${svnant.home}/dependencies/antx/lib/AntX_tasks.jar" />
+		<pathelement location="${svnant.home}/dependencies/antx/lib/JWare_apis.jar" />
+		<pathelement location="${svnant.home}/dependencies/antx/src.jar" />
+		<pathelement location="${svnant.home}/dependencies/javasvn/lib/ganymed.jar" />
+		<pathelement location="${svnant.home}/dependencies/javasvn/lib/svnkit-cli.jar" />
+		<pathelement location="${svnant.home}/dependencies/javasvn/lib/svnkit.jar" />
+	  </classpath>
+	</taskdef>
+	-->
+
+	<target name="display.props" >
+	    <echo message="ext.drive=${ext.drive}" />
+	    <echo message="wtk.home=${wtk.home}" />
+	    <echo message="findbugs.home=${findbugs.home}" />
+	    <echo message="pmd.home=${pmd.home}" />
+	    <echo message="src=${src}" />
+	    <echo message="presrc=${presrc}" />
+	    <echo message="compat.presrc=${compat.presrc}" />
+	    <echo message="testui.presrc=${testui.presrc}" />
+	    <echo message="build.number=${build.number}" />
+	    <echo message="novice=${novice}" />
+	    <echo message="novice.txt=${novice.txt}" />
+	    <echo message="NOVICE=${NOVICE}" />
+	    <echo message="DMIDPVERS=${DMIDPVERS}" />
+	    <echo message="DCLDCVERS=${DCLDCVERS}" />
+	    <echo message="DITUNESDEF=${DITUNESDEF}" />
+	    <echo message="DMEMSIZEDEF=${DMEMSIZEDEF}" />
+	    <echo message="DJSR75=${DJSR75}" />
+	    <echo message="DJSR238=${DJSR238}" />
+	    <echo message="DTESTDEF=${DTESTDEF}" />
+	    <echo message="DTESTUIDEF=${DTESTUIDEF}" />
+	    <echo message="DCOMPATDEF=${DCOMPATDEF}" />
+	    <echo message="wtk.optionalpda.enabled=${wtk.optionalpda.enabled}" />
+	    <echo message="DLOGDEF=${DLOGDEF}" />
+	    <echo message="no.test=${no.test}" />
+	    <echo message="no.staging=${no.staging}" />
+	    <echo message="no.release=${no.release}" />
+	    <echo message="need.test.res=${need.test.res}" />
+	    <echo message="manifestsrc=${manifestsrc}" />
+	    <echo message="MIDLETURL_ROOT=${MIDLETURL_ROOT}" />
+	    <echo message="separator=${separator}" />
+	</target>
+
+</project>

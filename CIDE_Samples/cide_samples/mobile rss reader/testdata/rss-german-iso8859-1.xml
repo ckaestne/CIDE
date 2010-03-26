@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<rss version="2.0">
+  <channel>
+    <title>DIE ZEIT:  </title>
+    <link>http://www.zeit.de/index</link>
+    <description>ZEIT online : Nachrichten, Kommentare und Analysen zu aktuellen Themen der Politik, Wirtschaft, Kultur und Wissenschaft</description>
+    <language>de-de</language>
+    <copyright>Copyright (c) 2007, ZEIT Online GmbH</copyright>
+    <pubDate>Mon, 13 Aug 2007 00:00:01 CET</pubDate>
+    <lastBuildDate>Mon, 13 Aug 2007 9:17:37 CET</lastBuildDate>
+    <docs>http://www.zeit.de/hilfe/rss</docs>
+    <generator>mod_xslt LePenguin</generator>
+    <managingEditor>richter@zeit.de</managingEditor>
+    <webMaster>webmaster@zeit.de</webMaster>
+    <image>
+      <url>http://images.zeit.de/bilder/elemente_01_06/logos/homepage_top.gif</url>
+      <title>ZEIT Online</title>
+      <link>http://www.zeit.de/index</link>
+    </image>
+    <item>
+      <link>http://www.zeit.de/news/artikel/2007/08/12/2356403.xml?from=rss</link>
+      <category>Afghanistan und Pakistan</category>
+      <title></title>
+      <description>Die Stammesführer aus Afghanistan und Pakistan verhandeln auf der sogenannten Friedens-Dschirga in Kabul über die grenzüberschreitende Gewalt der Taliban. Währenddessen blasen die Aufständischen zum Großangriff.</description>
+      <guid>http://www.zeit.de/news/artikel/2007/08/12/2356403.xml</guid>
+    </item>
+    <item>
+      <link>http://www.zeit.de/2007/33/Links-Lafontaine?from=rss</link>
+      <category>Projekt Links</category>
+      <title>Linkspartei: Lafontaines Populismus ist von gestern</title>
+      <description>Oskar Lafontaine führt die erste linke Partei, die ohne Fortschrittsglauben auskommt.&#13;
+ </description>
+      <guid>http://www.zeit.de/2007/33/Links-Lafontaine</guid>
+    </item>
+    <item>
+      <link>http://www.zeit.de/online/2007/33/boers-o-meter-vertrauen-ist-weg?from=rss</link>
+      <category>Börse</category>
+      <title>Börse: Das Börs-o-Meter prognostiziert schlechte Zeiten</title>
+      <description>Die Krise hat den vermeintlich sicheren Geldmarkt erreicht. Unter den Anlegern flackert Panik auf. Die Kurse werden weiter fallen, vielleicht mehrere Monate lang, prognostiziert das Börs-o-Meter </description>
+      <guid>http://www.zeit.de/online/2007/33/boers-o-meter-vertrauen-ist-weg</guid>
+    </item>
+    <item>
+      <link>http://www.zeit.de/news/artikel/2007/08/12/2356339.xml?from=rss</link>
+      <category>DDR-Geschichte</category>
+      <title>DDR-Geschichte:Schießbefehl war nicht neu</title>
+      <description>Nach dem Fund eines Stasi-Dokuments, das einen bedingungslosen Schießbefehl gegen DDR-Flüchtlinge belegt, werden neue Ermittlungen gefordert. Der Schießbefehl selbst wurde bereits vor zehn Jahren dokumentiert</description>
+      <guid>http://www.zeit.de/news/artikel/2007/08/12/2356339.xml</guid>
+    </item>
+    <item>
+      <link>http://www.zeit.de/2007/33/Sugimoto?from=rss</link>
+      <category>Fotokunst</category>
+      <title>Fotokunst: Eine Ausstellung von Hiroshi Sugimoto</title>
+      <description>Die Bilder des Fotografen Hiroshi Sugimoto spielen klug mit Wahrheit, Zeit und Raum. Jetzt werden sie in Düsseldorf gezeigt.</description>
+      <guid>http://www.zeit.de/2007/33/Sugimoto</guid>
+    </item>
+    <item>
+      <link>http://www.zeit.de/2007/33/Pfadfinder?from=rss</link>
+      <category>Pfadfinder</category>
+      <title>Pfadfinder: Wie zeitgemäß sind sie noch?</title>
+      <description>Hundert Jahre Pfadfinder: Harald Schmidt gehörte zu ihnen, Hillary Clinton auch. Weil sie das klassische Abenteuer in der Gruppe bieten und dennoch mit der Zeit gehen, sind sie immer noch attraktiv</description>
+      <guid>http://www.zeit.de/2007/33/Pfadfinder</guid>
+    </item>
+    <item>
+      <link>http://www.zeit.de/video/player?videoID=20070808d3a1c1&amp;from=rss</link>
+      <category>Liebe</category>
+      <title>Liebe:Warum lieben wir?</title>
+      <description>Wenn man sich auf der Straße umhört, gibt es eine Vielzahl von
+interessanten Gründen. Ein Video</description>
+      <guid>http://www.zeit.de/video/player?videoID=20070808d3a1c1</guid>
+    </item>
+    <item>
+      <link>http://spiele.zeit.de/kabinett/?from=rss</link>
+      <category>Spielen</category>
+      <title>Spielen:Das geheime Kabinett</title>
+      <description>Vier Minister wurden gewählt. Doch welche Partei bekommt welches Ressort? Lüften Sie das Rätsel. Ein Logik-Spiel</description>
+      <guid>http://spiele.zeit.de/kabinett/</guid>
+    </item>
+    <item>
+      <link>http://www.zeit.de/online/2007/33/partnerboersen-schlussmachen?from=rss</link>
+      <category>Online-Partnersuche</category>
+      <title>Online-Partnersuche: Erst Schluss machen, dann Verlieben</title>
+      <description>Die virtuelle Welt funktioniert manchmal verkehrt herum. Lange vor dem Verlieben, muss eine Frau schon zigmal Schluss gemacht haben</description>
+      <guid>http://www.zeit.de/online/2007/33/partnerboersen-schlussmachen</guid>
+    </item>
+    <item>
+      <link>http://www.zeit.de/online/2007/33/bg-bundesliga?from=rss</link>
+      <category>Bundesliga-Start</category>
+      <title>Bundesliga-Start: Neue Köpfe, neue Regeln und neue Namen</title>
+      <description>Die Bundesliga ist wieder da, also alles beim Alten? Keinesfalls: Neue Köpfe, neue Regeln und neue Namen, wir stellen die wichtigsten Neuigkeiten vor. Eine Bilder-Galerie</description>
+      <guid>http://www.zeit.de/online/2007/33/bg-bundesliga</guid>
+    </item>
+    <item>
+      <link>http://www.zeit.de/2007/33/Buergermeister-Pirna?from=rss</link>
+      <category>Rechtsradikale</category>
+      <title>Kampf gegen rechts: Bürgermeister Markus Ulbig im sächsischen Pirna</title>
+      <description>Pirnas Bürgermeister Markus Ulbig kämpft gegen rechts. Denn niemand kommt als Demokrat zur Welt, sagt er.</description>
+      <guid>http://www.zeit.de/2007/33/Buergermeister-Pirna</guid>
+    </item>
+    <item>
+      <link>http://www.zeit.de/news/artikel/2007/08/11/2355907.xml?from=rss</link>
+      <category>Medien</category>
+      <title>Medien:Berichterstattung gegen Anzeigen?</title>
+      <description>Die Werbeagentur des Bundeswirtschaftsministeriums soll Medien angeboten haben, bezahlte Anzeigen zu schalten. Im Gegenzug forderte sie angeblich dafür Nachrichten über Veranstaltungen des Ministeriums nach genauen Vorgaben</description>
+      <guid>http://www.zeit.de/news/artikel/2007/08/11/2355907.xml</guid>
+    </item>
+    <item>
+      <link>http://www.zeit.de/2007/33/Links-heute?from=rss</link>
+      <category>Linke</category>
+      <title>Studentenrevolte: Warum sich viele Ideen der 68er durchgesetzt haben</title>
+      <description>Wohngemeinschaften, Patchworkfamilien: Vieles, wovon die 68er träumten, hat sich durchgesetzt. Der Kapitalismus aber auch.</description>
+      <guid>http://www.zeit.de/2007/33/Links-heute</guid>
+    </item>
+    <item>
+      <link>http://www.zeit.de/online/2007/33/unwetter-norddeutschland?from=rss</link>
+      <category>Regenfälle</category>
+      <title>Regenfälle: Fehmarn säuft ab</title>
+      <description>Erst der Süden, jetzt der Norden: Heftige Regenfälle haben in Ostholstein zu Überschwemmungen geführt. Besonders betroffen war die Ostseeinsel Fehmarn. </description>
+      <guid>http://www.zeit.de/online/2007/33/unwetter-norddeutschland</guid>
+    </item>
+    <item>
+      <link>http://www.zeit.de/2007/33/Rudy-Giuliani?from=rss</link>
+      <category>USA</category>
+      <title>USA: Die merkwürdigen Geschäfte des Rudolph Giuliani</title>
+      <description>Als Bürgermeister von New York war Rudolph Giuliani der Held des 11. Septembers. Sein Ruf hat ihm einträgliche Geschäfte ermöglicht und soll ihn nun ins Weiße Haus führen.</description>
+      <guid>http://www.zeit.de/2007/33/Rudy-Giuliani</guid>
+    </item>
+    <item>
+      <link>http://www.zeit.de/news/artikel/2007/08/12/2356237.xml?from=rss</link>
+      <category>Afghanistan</category>
+      <title>Afghanistan:Verwirrspiel um entführte Südkoreaner</title>
+      <description>Ein Taliban-Sprecher nahm die Ankündigung, zwei Geiseln freizulassen zurück. Zuvor hatte er verkündet, die Geiseln seien bereits frei.</description>
+      <guid>http://www.zeit.de/news/artikel/2007/08/12/2356237.xml</guid>
+    </item>
+    <item>
+      <link>http://www.zeit.de/news/artikel/2007/08/11/2355888.xml?from=rss</link>
+      <category>Polen</category>
+      <title>Polen:Kaczynski kündigt Neuwahl an</title>
+      <description>In Polen wird im Herbst neu gewählt - vorzeitig. Ministerpräsident Kaczynski reagiert auf die schwere Regierungskrise und gibt die derzeitige Koalition auf</description>
+      <guid>http://www.zeit.de/news/artikel/2007/08/11/2355888.xml</guid>
+    </item>
+    <item>
+      <link>http://www.zeit.de/online/2007/33/boerse-krise-deutsche-banken?from=rss</link>
+      <category>US-Hypotheken</category>
+      <title>US-Hypotheken: Weitere deutsche Banken betroffen</title>
+      <description>Die Krise am amerikanischen Hauskreditemarkt greift auch in Deutschland immer weiter um sich. Betroffen ist unter anderem die Postbank</description>
+      <guid>http://www.zeit.de/online/2007/33/boerse-krise-deutsche-banken</guid>
+    </item>
+    <item>
+      <link>http://www.zeit.de/2007/33/Welt-in-Zahlen?from=rss</link>
+      <category>Welt in Zahlen</category>
+      <title>Finanzmärkte: Die Unsicherheit hält an und zerrt an den Nerven</title>
+      <description>Seit Wochen sind die Finanzmärkte in Turbulenzen, und es bleibt unklar, mit welchen Risiken die Anleger noch rechnen müssen. Wer soll diese Unsicherheit aushalten? </description>
+      <guid>http://www.zeit.de/2007/33/Welt-in-Zahlen</guid>
+    </item>
+    <item>
+      <link>http://www.zeit.de/online/2007/33/bahn-streik-vergleich?from=rss</link>
+      <category>Bahnstreik</category>
+      <title>Bahnstreik: Ein Kompromiss- faul, aber hilfreich</title>
+      <description>Bahn und Lokführer schließen einen Kompromiss: Es darf wieder gestreikt werden, nur nicht sofort. Dafür wird auch geredet. Ein Kommentar</description>
+      <guid>http://www.zeit.de/online/2007/33/bahn-streik-vergleich</guid>
+    </item>
+    <item>
+      <link>http://www.zeit.de/2007/33/Spielerberater?from=rss</link>
+      <category>Fußball</category>
+      <title>Fußball: Unseriöse Spielerberater verdienen Millionen</title>
+      <description>Kein Profifußballer kommt ohne Berater aus. Doch in der Szene sind unseriöse Praktiken verbreitet.</description>
+      <guid>http://www.zeit.de/2007/33/Spielerberater</guid>
+    </item>
+    <item>
+      <link>http://www.zeit.de/2007/33/M-Foetus-Praegung?from=rss</link>
+      <category>Schwangerschaft</category>
+      <title>Schwangerschaft: Was dem Fötus gut tut und was ihm schadet</title>
+      <description>Musik und Gedichte stören das Ungeborene nur, großen Schaden aber können falsche Ernährung und Stress anrichten.</description>
+      <guid>http://www.zeit.de/2007/33/M-Foetus-Praegung</guid>
+    </item>
+    <item>
+      <link>http://www.zeit.de/2007/33/C-Tuerkische-Privatschulen?from=rss</link>
+      <category>Schulen</category>
+      <title>Schulen: Türkische Bildungsbürger gründen Privatschulen</title>
+      <description>Deutsch-türkische Bildungsbürger gründen Privatgymnasien und Internate für ihre Kinder. Vom deutschen Schulsystem  sind sie enttäuscht.</description>
+      <guid>http://www.zeit.de/2007/33/C-Tuerkische-Privatschulen</guid>
+    </item>
+    <item>
+      <link>http://www.zeit.de/online/2007/33/wahrnehmung-farbe-form?from=rss</link>
+      <category>Wahrnehmung</category>
+      <title>Wahrnehmung: Gehirn kann Bilder nur stückweise erfassen</title>
+      <description>Was wir sehen, ist Stückwerk: Der Mensch kann ein Bild nie ganz erfassen. Schuld daran ist unser Gehirn. Es nimmt Informationen über Farbe und Form nur häppchenweise auf. </description>
+      <guid>http://www.zeit.de/online/2007/33/wahrnehmung-farbe-form</guid>
+    </item>
+    <item>
+      <link>http://www.zeit.de/2007/33/T-Green-Computing?from=rss</link>
+      <category>Computer</category>
+      <title>Computer: Server und Netze sollen sparsamer werden</title>
+      <description>Rechenzentren verschlingen so viel Energie wie der Flugverkehr. Nun sollen Server und Netze sparsamer werden.</description>
+      <guid>http://www.zeit.de/2007/33/T-Green-Computing</guid>
+    </item>
+    <item>
+      <link>http://www.zeit.de/2007/33/L-Leupold?from=rss</link>
+      <category>Reiseroman</category>
+      <title>Liebeswissenschaft: Dagmar Leupolds Roman »Grüner Engel, blaues Land«</title>
+      <description>Dagmar Leupold hat einen anregenden Reiseroman über ein Paar geschrieben, das sehr viel nachdenkt</description>
+      <guid>http://www.zeit.de/2007/33/L-Leupold</guid>
+    </item>
+    <item>
+      <link>http://www.zeit.de/2007/33/ST-Stehr?from=rss</link>
+      <category>Marktverhältnisse</category>
+      <title>Gesellschaftstheorie: Die Moralisierung der Märkte</title>
+      <description>Der Markt hat sich der gesellschaftlichen Moral geöffnet, meint der Kulturwissenschaftler Nico Stehr.</description>
+      <guid>http://www.zeit.de/2007/33/ST-Stehr</guid>
+    </item>
+    <item>
+      <link>http://www.zeit.de/2007/33/Badiou-Streit?from=rss</link>
+      <category>Philosophenstreit</category>
+      <title>Philosophie: In Frankreich erregt Alain Badiou wütenden Protest</title>
+      <description>Der Philosoph Alain Badiou erregt in Frankreich  wütenden Protest. Seine Gegner werfen ihm Antisemitismus vor. Eine Verteidigung.</description>
+      <guid>http://www.zeit.de/2007/33/Badiou-Streit</guid>
+    </item>
+    <item>
+      <link>http://www.zeit.de/2007/33/KJ-Luchs?from=rss</link>
+      <category>LUCHS 246</category>
+      <title>Jugendliteratur: »Sprache oder Was den Mensch zum Menschen macht«</title>
+      <description>Die Jury von ZEIT und Radio Bremen stellt vor:  Nikolaus Nützels »Sprache oder Was den Mensch zum Menschen macht«</description>
+      <guid>http://www.zeit.de/2007/33/KJ-Luchs</guid>
+    </item>
+    <item>
+      <link>http://www.zeit.de/online/2007/31/john-cage?from=rss</link>
+      <category>Klassik</category>
+      <title>John Cage: Eine Betrachtung zum 15. Todestag des Komponisten</title>
+      <description>Nicht nur die Töne wollte John Cage befreien. Der Komponist war politischer, als viele seiner Hörer bis heute glauben. &#8211; Eine Betrachtung zu seinem 15. Todestag.</description>
+      <guid>http://www.zeit.de/online/2007/31/john-cage</guid>
+    </item>
+    <item>
+      <link>http://www.zeit.de/2007/33/L-Love-Holiday?from=rss</link>
+      <category>Biografie</category>
+      <title>Böse Mädchen: Das Leben von Courtney Love und Billie Holiday</title>
+      <description>Singen, um sich nicht zu fürchten: Ein Tagebuch von Courtney Love und eine literarische Dokumentation über Billie Holiday </description>
+      <guid>http://www.zeit.de/2007/33/L-Love-Holiday</guid>
+    </item>
+    <item>
+      <link>http://www.zeit.de/2007/33/Shut-up?from=rss</link>
+      <category>Kino</category>
+      <title>Pop und Politik: The Dixie Chicks im Doku-Film »Shut up &amp; Sing«</title>
+      <description>Ein Dokumentarfilm über Pop und Politik: »Shut up &amp; Sing« porträtiert das Country-Trio The Dixie Chicks, das mit seiner Bush-Kritik die eigenen Fans verschreckte</description>
+      <guid>http://www.zeit.de/2007/33/Shut-up</guid>
+    </item>
+    <item>
+      <link>http://blog.zeit.de/zelt-online/?from=rss</link>
+      <category>ZELT online</category>
+      <title>ZELT online:Sziget und Øya</title>
+      <description>Unsere Festivalblogger stürzen sich wieder ins Getümmel: 100 Pop-Bands spielen in den nächsten Tagen in Oslo, während 1000 Musiker die Donau-Insel in Budapest rocken. Feiern Sie mit!</description>
+      <guid>http://blog.zeit.de/zelt-online/</guid>
+    </item>
+    <item>
+      <link>http://www.zeit.de/2007/33/Gran-Canaria?from=rss</link>
+      <category>Spanien</category>
+      <title>Gran Canaria: Feriengäste tragen die Waldbrände mit Fassung</title>
+      <description>Vor der Evakuierung noch einen Drink: Feriengäste auf Gran Canaria  tragen die Waldbrände mit Fassung</description>
+      <guid>http://www.zeit.de/2007/33/Gran-Canaria</guid>
+    </item>
+    <item>
+      <link>http://www.zeit.de/online/2007/33/chaos-computer-club?from=rss</link>
+      <category>Computerhacker</category>
+      <title>Computerhacker: Der Chaos Computer Club wird erwachsen</title>
+      <description>Der Chaos Computer Club wird erwachsen. Beim vierten Sommercamp gab es einen Kindergarten und Vorträge von Rechtsanwälten - aber wie immer auch Anleitungen zum Ungehorsam.</description>
+      <guid>http://www.zeit.de/online/2007/33/chaos-computer-club</guid>
+    </item>
+    <item>
+      <link>http://www.zeit.de/online/2007/33/bg-buli-erster-tag?from=rss</link>
+      <category>Bundesliga 1. Spieltag </category>
+      <title>Bundesliga: Salto, Bienenstich und ein Held: Der 1. Spieltag</title>
+      <description>Felix Magath gibt sich entspannt, Thomas Schaaf lässt sich stechen und Miroslav Klose fliegt wieder. Eine Bild-Text-Galerie über den ersten Spieltag der Bundesliga&#13;
+ </description>
+      <guid>http://www.zeit.de/online/2007/33/bg-buli-erster-tag</guid>
+    </item>
+    <item>
+      <link>http://www.zeit.de/2007/33/Traum-Quentin-Tarantino?from=rss</link>
+      <category>Ich habe einen Traum</category>
+      <title>Ich habe einen Traum: Der Regisseur Quentin Tarantino</title>
+      <description>Der Regisseur träumte schon früh vom Filmemachen. Und von Begegnungen mit Robert Mitchum und John Wayne. Heute, sagt Tarantino, lebe er seinen Traum</description>
+      <guid>http://www.zeit.de/2007/33/Traum-Quentin-Tarantino</guid>
+    </item>
+    <item>
+      <link>http://www.zeit.de/2007/33/Interview-Rauhut?from=rss</link>
+      <category>Forschung</category>
+      <title>Budget: 900 Millionen Euro</title>
+      <description>Burkhard Rauhut, Rektor der RWTH Aachen, über das neue Forschungsbündnis Jara. Es wäre das zweite zwischen einer Hochschule und einem außeruniversitäten Forschungszentrum.</description>
+      <guid>http://www.zeit.de/2007/33/Interview-Rauhut</guid>
+    </item>
+    <item>
+      <link>http://www.zeit.de/campus/online/2007/32/gebuehrenboykott-bayern?from=rss</link>
+      <category>Gebührenboykott</category>
+      <title>Gebührenboykott: Scheitern auf Bayerisch</title>
+      <description>Nirgendwo in Deutschland sind die Studiengebühren-Boykotte so deutlich gescheitert wie in Bayern. Das liegt vor allem am Land - und seinen Studenten.</description>
+      <guid>http://www.zeit.de/campus/online/2007/32/gebuehrenboykott-bayern</guid>
+    </item>
+    <item>
+      <link>http://www.zeit.de/2007/33/Seitenhieb?from=rss</link>
+      <category>Studienfinanzierung</category>
+      <title>Streit ums BAföG: Dieser geht völlig am Problem vorbei</title>
+      <description>Der Streit ums Bafög ist neu entfacht. Doch das eigentliche Geldproblem vieler Studenten liegt woanders.</description>
+      <guid>http://www.zeit.de/2007/33/Seitenhieb</guid>
+    </item>
+    <item>
+      <link>http://www.zeit.de/campus/2007/05/bg-umfrage?from=rss</link>
+      <category>Nachgefragt</category>
+      <title>Nachgefragt: Die Semesterferien sind lang - was tun?</title>
+      <description>Die Semesterferien sind lang, doch nicht jeder hat frei. Was machen Studenten eigentlich in dieser Zeit? Stimmen vom Campus in Hamburg.</description>
+      <guid>http://www.zeit.de/campus/2007/05/bg-umfrage</guid>
+    </item>
+    <item>
+      <link>http://blog.zeit.de/cosmic/2007/08/10/fetisch-woche-im-dschungelbummel-mach-mit_18?from=rss</link>
+      <category>Dschungelbummel</category>
+      <title>Dschungelbummel:Fetisch-Woche</title>
+      <description>Diesmal machen der Cosmic, der Fuchs und die Neugier einen kleinen Ausflug in neues Webterrain. Was sie dort finden, lässt ihren Atem stocken. Neues aus dem Blog von Cosmic DJ</description>
+      <guid>http://blog.zeit.de/cosmic/2007/08/10/fetisch-woche-im-dschungelbummel-mach-mit_18</guid>
+    </item>
+  </channel>
+</rss>

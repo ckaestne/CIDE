@@ -1,0 +1,11 @@
+1) check the release version in :
+	- manifest.mf 
+	- lampiro.jad
+	- it/yup/xmpp/Config.java -> Config.version (TODO: read from manifest)
+	- user-build[.*].properties
+2) check manifest.* values in user-build[.*].properties
+3) check optimizationpasses in user-build.properties (usually 10) 
+4) build all (deploy.sh: have a cup of coffee)
+5) the three releases (base, compression, TLS) are in the releases version 
+6) make a tag on SVN (with the name version)
+7) modify the changelog in googlecode 

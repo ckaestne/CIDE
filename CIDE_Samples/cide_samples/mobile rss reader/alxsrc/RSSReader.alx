@@ -1,0 +1,37 @@
+<loader version='1.0'>
+    <application id="RSSReader">
+		<name >
+			RSSReader
+		</name>
+
+		<description>
+			RSS Reader
+		</description>
+
+		<version>
+			@MIDLETVERS@
+		</version>
+
+		<vendor>
+			Tommi Laukkanen
+		</vendor>
+
+        <copyright >
+            Copyright (c) 2006 Tommi Laukkanen
+        </copyright>
+
+		<requires>
+			net_rim_cldc
+		</requires>
+
+		<fileset Java='1.5'>
+            <directory >
+                substanceofcode
+            </directory>
+
+			<files>
+				@BUILDPREFIX@RSSReader_@FMIDLETVERSROOT@.cod
+			</files>
+		</fileset>
+	</application>
+</loader>

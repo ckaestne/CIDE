@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="iso-8859-15" ?>
+
+
+<rss version="2.0" xmlns:itunes="http://www.itunes.com/DTDs/Podcast-1.0.dtd">
+<channel>
+<title>Musiq'3 RTBF</title>
+<description>La radio musicale classique de la RTBF, reflet de la vie musicale en Wallonie et à Bruxelles, réalise chaque année plus de 200 captations de concerts et opéras. On retrouve sur Musiq'3 toutes les formes de musique classique et aussi le jazz, la musique belge, les musiques du monde et de films. Vibrez avec nous en vous abonnant à la sélection de concerts et de rubriques offerte en podcast par notre chaîne. Bonne écoute où vous voulez, quand vous voulez !</description>
+<link>http://www.musiq3.be</link>
+<image>
+<url>http://old.rtbf.be/media/radio/podcast/images/musiq3.jpg</url>
+<title>Musiq'3 RTBF</title>
+<link>http://www.musiq3.be</link>
+</image>
+<generator>RTBF Radio</generator>
+<language>fr-be</language>
+<copyright>RTBF Radio</copyright>
+<itunes:author>RTBF Radio</itunes:author>
+<itunes:subtitle>Musiq'3, où vous voulez, quand vous voulez.</itunes:subtitle>
+<itunes:summary>La radio musicale classique de la RTBF, reflet de la vie musicale en Wallonie et à Bruxelles, réalise chaque année plus de 200 captations de concerts et opéras. On retrouve sur Musiq'3 toutes les formes de musique classique et aussi le jazz, la musique belge, les musiques du monde et de films. Vibrez avec nous en vous abonnant à la sélection de concerts et de rubriques offerte en podcast par notre chaîne. Bonne écoute où vous voulez, quand vous voulez !</itunes:summary>
+<itunes:owner>
+<itunes:email>presseradio@rtbf.be</itunes:email>
+<itunes:name>Musiq'3 podcasting</itunes:name>
+</itunes:owner>
+<itunes:image href="http://old.rtbf.be/media/radio/podcast/images/musiq3.jpg"/>
+<itunes:keywords>Belgique, Belgium</itunes:keywords>
+<itunes:category text="Music"/>
+<itunes:explicit>no</itunes:explicit>
+
+<item>
+	<title>Autour de Babel n°41 1/2/2008</title>
+	<author>presseradio@rtbf.be (Hélène MICHEL)</author>
+	<itunes:author>Hélène MICHEL</itunes:author>
+	<itunes:subtitle>Musiq'3, où vous voulez, quand vous voulez.</itunes:subtitle>
+	<itunes:summary></itunes:summary>
+	<itunes:duration>02:00:05</itunes:duration>
+	<itunes:keywords>Autour de Babel n°41 1/2/2008</itunes:keywords>
+	<enclosure length="118046720" type="audio/mpeg" url="http://podcast.rtbf.be/sound/M3-BABEL_Autour_de_Babel_n_41_1-2-2008_2308350.mp3"/>
+	<guid>http://podcast.rtbf.be/sound/M3-BABEL_Autour_de_Babel_n_41_1-2-2008_2308350.mp3</guid>
+	<pubDate>Sun, 03 Feb 2008 00:00:00 +0100</pubDate>
+	<description>&lt;a href="http://www.musiq3.be"&gt;musiq3.be&lt;/a&gt;</description>
+</item>
+<item>
+	<title>Si ça vous chante 2/2/2008</title>
+	<author>presseradio@rtbf.be (Dominique MUSSCHE)</author>
+	<itunes:author>Dominique MUSSCHE</itunes:author>
+	<itunes:subtitle>Musiq'3, où vous voulez, quand vous voulez.</itunes:subtitle>
+	<itunes:summary></itunes:summary>
+	<itunes:duration>00:57:29</itunes:duration>
+	<itunes:keywords>Si ça vous chante 2/2/2008</itunes:keywords>
+	<enclosure length="56508416" type="audio/mpeg" url="http://podcast.rtbf.be/sound/M3-CHAN_Si_ca_vous_chante_2-2-2008_2309336.mp3"/>
+	<guid>http://podcast.rtbf.be/sound/M3-CHAN_Si_ca_vous_chante_2-2-2008_2309336.mp3</guid>
+	<pubDate>Sun, 03 Feb 2008 00:00:00 +0100</pubDate>
+	<description>&lt;a href="http://www.musiq3.be"&gt;musiq3.be&lt;/a&gt;</description>
+</item>
+<item>
+	<title>reperes 2/2/2008 - Bernstein et Beethoven</title>
+	<author>presseradio@rtbf.be (Michel BERO)</author>
+	<itunes:author>Michel BERO</itunes:author>
+	<itunes:subtitle>Musiq'3, où vous voulez, quand vous voulez.</itunes:subtitle>
+	<itunes:summary></itunes:summary>
+	<itunes:duration>01:29:00</itunes:duration>
+	<itunes:keywords>reperes 2/2/2008 - Bernstein et Beethoven</itunes:keywords>
+	<enclosure length="87490560" type="audio/mpeg" url="http://podcast.rtbf.be/sound/M3-REPER_reperes_2-2-2008_-_Bernstein_et_Beet_2259312.mp3"/>
+	<guid>http://podcast.rtbf.be/sound/M3-REPER_reperes_2-2-2008_-_Bernstein_et_Beet_2259312.mp3</guid>
+	<pubDate>Sat, 02 Feb 2008 21:30:00 +0100</pubDate>
+	<description>&lt;a href="http://www.musiq3.be"&gt;musiq3.be&lt;/a&gt;</description>
+</item>
+<item>
+	<title>De Vive Voix 2/2/2008</title>
+	<author>presseradio@rtbf.be (Nicolas BLANMONT)</author>
+	<itunes:author>Nicolas BLANMONT</itunes:author>
+	<itunes:subtitle>Musiq'3, où vous voulez, quand vous voulez.</itunes:subtitle>
+	<itunes:summary></itunes:summary>
+	<itunes:duration>00:59:05</itunes:duration>
+	<itunes:keywords>De Vive Voix 2/2/2008</itunes:keywords>
+	<enclosure length="58081280" type="audio/mpeg" url="http://podcast.rtbf.be/sound/M3-DVV_De_Vive_Voix_2-2-2008_2305958.mp3"/>
+	<guid>http://podcast.rtbf.be/sound/M3-DVV_De_Vive_Voix_2-2-2008_2305958.mp3</guid>
+	<pubDate>Sat, 02 Feb 2008 16:00:00 +0100</pubDate>
+	<description>&lt;a href="http://www.musiq3.be"&gt;musiq3.be&lt;/a&gt;</description>
+</item>
+<item>
+	<title>Musiq&#39;Academies 2/2/2008</title>
+	<author>presseradio@rtbf.be (Pascale VANLERBERGHE)</author>
+	<itunes:author>Pascale VANLERBERGHE</itunes:author>
+	<itunes:subtitle>Musiq'3, où vous voulez, quand vous voulez.</itunes:subtitle>
+	<itunes:summary></itunes:summary>
+	<itunes:duration>01:03:33</itunes:duration>
+	<itunes:keywords>Musiq&#39;Academies 2/2/2008</itunes:keywords>
+	<enclosure length="62472192" type="audio/mpeg" url="http://podcast.rtbf.be/sound/M3-ACAD_Musiq-Academies_2-2-2008_2303528.mp3"/>
+	<guid>http://podcast.rtbf.be/sound/M3-ACAD_Musiq-Academies_2-2-2008_2303528.mp3</guid>
+	<pubDate>Sat, 02 Feb 2008 13:00:00 +0100</pubDate>
+	<description>&lt;a href="http://www.musiq3.be"&gt;musiq3.be&lt;/a&gt;</description>
+</item>
+<item>
+	<title>Hamlet 2/2/2008</title>
+	<author>presseradio@rtbf.be (Pascale SEYS)</author>
+	<itunes:author>Pascale SEYS</itunes:author>
+	<itunes:subtitle>Musiq'3, où vous voulez, quand vous voulez.</itunes:subtitle>
+	<itunes:summary></itunes:summary>
+	<itunes:duration>01:16:46</itunes:duration>
+	<itunes:keywords>Hamlet 2/2/2008</itunes:keywords>
+	<enclosure length="75464704" type="audio/mpeg" url="http://podcast.rtbf.be/sound/M3-HAML_Hamlet_2-2-2008_2306474.mp3"/>
+	<guid>http://podcast.rtbf.be/sound/M3-HAML_Hamlet_2-2-2008_2306474.mp3</guid>
+	<pubDate>Sat, 02 Feb 2008 11:00:00 +0100</pubDate>
+	<description>&lt;a href="http://www.musiq3.be"&gt;musiq3.be&lt;/a&gt;</description>
+</item>
+<item>
+	<title>En scène 1/2/2008 Orchestre de Paris</title>
+	<author>presseradio@rtbf.be (Dominique MUSSCHE)</author>
+	<itunes:author>Dominique MUSSCHE</itunes:author>
+	<itunes:subtitle>Musiq'3, où vous voulez, quand vous voulez.</itunes:subtitle>
+	<itunes:summary></itunes:summary>
+	<itunes:duration>00:58:19</itunes:duration>
+	<itunes:keywords>En scène 1/2/2008 Orchestre de Paris</itunes:keywords>
+	<enclosure length="57327616" type="audio/mpeg" url="http://podcast.rtbf.be/sound/M3-ENSC_En_scene_1-2-2008_Orchestre_de_Paris_2309155.mp3"/>
+	<guid>http://podcast.rtbf.be/sound/M3-ENSC_En_scene_1-2-2008_Orchestre_de_Paris_2309155.mp3</guid>
+	<pubDate>Sat, 02 Feb 2008 00:00:00 +0100</pubDate>
+	<description>&lt;a href="http://www.musiq3.be"&gt;musiq3.be&lt;/a&gt;</description>
+</item>
+<item>
+	<title>Jazz 1/2/2008</title>
+	<author>presseradio@rtbf.be (Philippe BARON)</author>
+	<itunes:author>Philippe BARON</itunes:author>
+	<itunes:subtitle>Musiq'3, où vous voulez, quand vous voulez.</itunes:subtitle>
+	<itunes:summary></itunes:summary>
+	<itunes:duration>00:59:09</itunes:duration>
+	<itunes:keywords>Jazz 1/2/2008</itunes:keywords>
+	<enclosure length="58146816" type="audio/mpeg" url="http://podcast.rtbf.be/sound/M3-JAZZ_Jazz_1-2-2008_2309971.mp3"/>
+	<guid>http://podcast.rtbf.be/sound/M3-JAZZ_Jazz_1-2-2008_2309971.mp3</guid>
+	<pubDate>Fri, 01 Feb 2008 20:00:00 +0100</pubDate>
+	<description>&lt;a href="http://www.musiq3.be"&gt;musiq3.be&lt;/a&gt;</description>
+</item>
+<item>
+	<title>En scène 29/1/2008</title>
+	<author>presseradio@rtbf.be (Dominique MUSSCHE)</author>
+	<itunes:author>Dominique MUSSCHE</itunes:author>
+	<itunes:subtitle>Musiq'3, où vous voulez, quand vous voulez.</itunes:subtitle>
+	<itunes:summary></itunes:summary>
+	<itunes:duration>00:59:49</itunes:duration>
+	<itunes:keywords>En scène 29/1/2008</itunes:keywords>
+	<enclosure length="58802176" type="audio/mpeg" url="http://podcast.rtbf.be/sound/M3-ENSC_En_scene_29-1-2008_2309327.mp3"/>
+	<guid>http://podcast.rtbf.be/sound/M3-ENSC_En_scene_29-1-2008_2309327.mp3</guid>
+	<pubDate>Fri, 01 Feb 2008 00:00:00 +0100</pubDate>
+	<description>&lt;a href="http://www.musiq3.be"&gt;musiq3.be&lt;/a&gt;</description>
+</item>
+<item>
+	<title>Carnets 1/2/2008 - Francesco Durante</title>
+	<author>presseradio@rtbf.be (Lothar SEGHERS)</author>
+	<itunes:author>Lothar SEGHERS</itunes:author>
+	<itunes:subtitle>Musiq'3, où vous voulez, quand vous voulez.</itunes:subtitle>
+	<itunes:summary></itunes:summary>
+	<itunes:duration>01:30:11</itunes:duration>
+	<itunes:keywords>Carnets 1/2/2008 - Francesco Durante</itunes:keywords>
+	<enclosure length="88653824" type="audio/mpeg" url="http://podcast.rtbf.be/sound/M3-CARN_Carnets_1-2-2008_-_Francesco_Durante_2308330.mp3"/>
+	<guid>http://podcast.rtbf.be/sound/M3-CARN_Carnets_1-2-2008_-_Francesco_Durante_2308330.mp3</guid>
+	<pubDate>Fri, 01 Feb 2008 00:00:00 +0100</pubDate>
+	<description>&lt;a href="http://www.musiq3.be"&gt;musiq3.be&lt;/a&gt;</description>
+</item>
+<item>
+	<title>Le Passé Composé - Folie - 31/1/2008</title>
+	<author>presseradio@rtbf.be (Gérald VINCKENBOSCH)</author>
+	<itunes:author>Gérald VINCKENBOSCH</itunes:author>
+	<itunes:subtitle>Musiq'3, où vous voulez, quand vous voulez.</itunes:subtitle>
+	<itunes:summary></itunes:summary>
+	<itunes:duration>02:09:43</itunes:duration>
+	<itunes:keywords>Le Passé Composé - Folie - 31/1/2008</itunes:keywords>
+	<enclosure length="127516672" type="audio/mpeg" url="http://podcast.rtbf.be/sound/M3-PASS_Le_Passe_Compose_-_Folie_-_31-1-2008_2282345.mp3"/>
+	<guid>http://podcast.rtbf.be/sound/M3-PASS_Le_Passe_Compose_-_Folie_-_31-1-2008_2282345.mp3</guid>
+	<pubDate>Fri, 01 Feb 2008 00:00:00 +0100</pubDate>
+	<description>&lt;a href="http://www.musiq3.be"&gt;musiq3.be&lt;/a&gt;</description>
+</item>
+<item>
+	<title>En scène 31/1/2008 Jean-Luc Votano</title>
+	<author>presseradio@rtbf.be (Christine GYSELINGS)</author>
+	<itunes:author>Christine GYSELINGS</itunes:author>
+	<itunes:subtitle>Musiq'3, où vous voulez, quand vous voulez.</itunes:subtitle>
+	<itunes:summary></itunes:summary>
+	<itunes:duration>00:58:13</itunes:duration>
+	<itunes:keywords>En scène 31/1/2008 Jean-Luc Votano</itunes:keywords>
+	<enclosure length="57229312" type="audio/mpeg" url="http://podcast.rtbf.be/sound/M3-ENSC_En_scene_31-1-2008_Jean-Luc_Votano_2305645.mp3"/>
+	<guid>http://podcast.rtbf.be/sound/M3-ENSC_En_scene_31-1-2008_Jean-Luc_Votano_2305645.mp3</guid>
+	<pubDate>Thu, 31 Jan 2008 15:01:00 +0100</pubDate>
+	<description>&lt;a href="http://www.musiq3.be"&gt;musiq3.be&lt;/a&gt;</description>
+</item>
+<item>
+	<title>Table d&#39;écoute 13/1/2008 Chausson, Quatuor inachevé</title>
+	<author>presseradio@rtbf.be (Anne MATTHEEUWS)</author>
+	<itunes:author>Anne MATTHEEUWS</itunes:author>
+	<itunes:subtitle>Musiq'3, où vous voulez, quand vous voulez.</itunes:subtitle>
+	<itunes:summary></itunes:summary>
+	<itunes:duration>01:59:00</itunes:duration>
+	<itunes:keywords>Table d&#39;écoute 13/1/2008 Chausson, Quatuor inachevé</itunes:keywords>
+	<enclosure length="116981760" type="audio/mpeg" url="http://podcast.rtbf.be/sound/M3-TABLE_Table_d-ecoute_13-1-2008_Chausson%2C_Q_2303357.mp3"/>
+	<guid>http://podcast.rtbf.be/sound/M3-TABLE_Table_d-ecoute_13-1-2008_Chausson%2C_Q_2303357.mp3</guid>
+	<pubDate>Wed, 30 Jan 2008 17:00:00 +0100</pubDate>
+	<description>&lt;a href="http://www.musiq3.be"&gt;musiq3.be&lt;/a&gt;</description>
+</item>
+<item>
+	<title>Chroniq&#39;Ciné 30/1/2008</title>
+	<author>presseradio@rtbf.be (Henri SONET)</author>
+	<itunes:author>Henri SONET</itunes:author>
+	<itunes:subtitle>Musiq'3, où vous voulez, quand vous voulez.</itunes:subtitle>
+	<itunes:summary></itunes:summary>
+	<itunes:duration>00:10:26</itunes:duration>
+	<itunes:keywords>Chroniq&#39;Ciné 30/1/2008</itunes:keywords>
+	<enclosure length="10256384" type="audio/mpeg" url="http://podcast.rtbf.be/sound/M3-CINE_Chroniq-Cine_30-1-2008_2302229.mp3"/>
+	<guid>http://podcast.rtbf.be/sound/M3-CINE_Chroniq-Cine_30-1-2008_2302229.mp3</guid>
+	<pubDate>Wed, 30 Jan 2008 10:10:00 +0100</pubDate>
+	<description>&lt;a href="http://www.musiq3.be"&gt;musiq3.be&lt;/a&gt;</description>
+</item>
+<item>
+	<title>Indicatif présent 26/1/2008</title>
+	<author>presseradio@rtbf.be (Anne MATTHEEUWS)</author>
+	<itunes:author>Anne MATTHEEUWS</itunes:author>
+	<itunes:subtitle>Musiq'3, où vous voulez, quand vous voulez.</itunes:subtitle>
+	<itunes:summary></itunes:summary>
+	<itunes:duration>00:59:30</itunes:duration>
+	<itunes:keywords>Indicatif présent 26/1/2008</itunes:keywords>
+	<enclosure length="58490880" type="audio/mpeg" url="http://podcast.rtbf.be/sound/M3-PRES_Indicatif_present_26-1-2008_2296155.mp3"/>
+	<guid>http://podcast.rtbf.be/sound/M3-PRES_Indicatif_present_26-1-2008_2296155.mp3</guid>
+	<pubDate>Mon, 28 Jan 2008 13:00:00 +0100</pubDate>
+	<description>&lt;a href="http://www.musiq3.be"&gt;musiq3.be&lt;/a&gt;</description>
+</item>
+<item>
+	<title>Babel-Live 25/1/2008 Cirque royal</title>
+	<author>presseradio@rtbf.be (Truffaz, A Pierlé, F Treichler, P Comelade, D ghosh, E Gäbele, E Musiques Nouvelles / J-P Dessy E)</author>
+	<itunes:author>Truffaz, A Pierlé, F Treichler, P Comelade, D ghosh, E Gäbele, E Musiques Nouvelles / J-P Dessy E</itunes:author>
+	<itunes:subtitle>Musiq'3, où vous voulez, quand vous voulez.</itunes:subtitle>
+	<itunes:summary></itunes:summary>
+	<itunes:duration>01:55:30</itunes:duration>
+	<itunes:keywords>Babel-Live 25/1/2008 Cirque royal</itunes:keywords>
+	<enclosure length="113541120" type="audio/mpeg" url="http://podcast.rtbf.be/sound/M3-LIVE_Babel-Live_25-1-2008_Cirque_royal_2291722.mp3"/>
+	<guid>http://podcast.rtbf.be/sound/M3-LIVE_Babel-Live_25-1-2008_Cirque_royal_2291722.mp3</guid>
+	<pubDate>Mon, 28 Jan 2008 13:00:00 +0100</pubDate>
+	<description>&lt;a href="http://www.musiq3.be"&gt;musiq3.be&lt;/a&gt;</description>
+</item>
+<item>
+	<title>Musique et autres muses - Messiaen, musicien de la couleur</title>
+	<author>presseradio@rtbf.be (Anne MATTHEEUWS)</author>
+	<itunes:author>Anne MATTHEEUWS</itunes:author>
+	<itunes:subtitle>Musiq'3, où vous voulez, quand vous voulez.</itunes:subtitle>
+	<itunes:summary></itunes:summary>
+	<itunes:duration>02:06:27</itunes:duration>
+	<itunes:keywords>Musique et autres muses - Messiaen, musicien de la couleur</itunes:keywords>
+	<enclosure length="124305408" type="audio/mpeg" url="http://podcast.rtbf.be/sound/M3-MUSES_Musique_et_autres_muses_-_Messiaen%2C__2296173.mp3"/>
+	<guid>http://podcast.rtbf.be/sound/M3-MUSES_Musique_et_autres_muses_-_Messiaen%2C__2296173.mp3</guid>
+	<pubDate>Mon, 28 Jan 2008 11:00:00 +0100</pubDate>
+	<description>&lt;a href="http://www.musiq3.be"&gt;musiq3.be&lt;/a&gt;</description>
+</item>
+<item>
+	<title>Table d&#39;écoute 27/1/2008 - Brahms, Symphonie n° 4</title>
+	<author>presseradio@rtbf.be (Anne MATTHEEUWS)</author>
+	<itunes:author>Anne MATTHEEUWS</itunes:author>
+	<itunes:subtitle>Musiq'3, où vous voulez, quand vous voulez.</itunes:subtitle>
+	<itunes:summary></itunes:summary>
+	<itunes:duration>02:00:58</itunes:duration>
+	<itunes:keywords>Table d&#39;écoute 27/1/2008 - Brahms, Symphonie n° 4</itunes:keywords>
+	<enclosure length="118915072" type="audio/mpeg" url="http://podcast.rtbf.be/sound/M3-TABLE_Table_d-ecoute_27-1-2008_-_Brahms%2C_S_2296163.mp3"/>
+	<guid>http://podcast.rtbf.be/sound/M3-TABLE_Table_d-ecoute_27-1-2008_-_Brahms%2C_S_2296163.mp3</guid>
+	<pubDate>Mon, 28 Jan 2008 11:00:00 +0100</pubDate>
+	<description>&lt;a href="http://www.musiq3.be"&gt;musiq3.be&lt;/a&gt;</description>
+</item>
+<item>
+	<title>Musiques de Film 27/1/2008</title>
+	<author>presseradio@rtbf.be (Elsa DE LACERDA)</author>
+	<itunes:author>Elsa DE LACERDA</itunes:author>
+	<itunes:subtitle>Musiq'3, où vous voulez, quand vous voulez.</itunes:subtitle>
+	<itunes:summary></itunes:summary>
+	<itunes:duration>00:59:28</itunes:duration>
+	<itunes:keywords>Musiques de Film 27/1/2008</itunes:keywords>
+	<enclosure length="58458112" type="audio/mpeg" url="http://podcast.rtbf.be/sound/M3-FILM_Musiques_de_Film_27-1-2008_2279241.mp3"/>
+	<guid>http://podcast.rtbf.be/sound/M3-FILM_Musiques_de_Film_27-1-2008_2279241.mp3</guid>
+	<pubDate>Mon, 28 Jan 2008 00:00:00 +0100</pubDate>
+	<description>&lt;a href="http://www.musiq3.be"&gt;musiq3.be&lt;/a&gt;</description>
+</item>
+<item>
+	<title>Feuilleton Les secrets de la Castafiore E3</title>
+	<author>presseradio@rtbf.be (Pascale VANLERBERGHE)</author>
+	<itunes:author>Pascale VANLERBERGHE</itunes:author>
+	<itunes:subtitle>Musiq'3, où vous voulez, quand vous voulez.</itunes:subtitle>
+	<itunes:summary></itunes:summary>
+	<itunes:duration>00:44:13</itunes:duration>
+	<itunes:keywords>Feuilleton Les secrets de la Castafiore E3</itunes:keywords>
+	<enclosure length="43466752" type="audio/mpeg" url="http://podcast.rtbf.be/sound/M3-FEUI_Feuilleton_Les_secrets_de_la_Castafio_2273699.mp3"/>
+	<guid>http://podcast.rtbf.be/sound/M3-FEUI_Feuilleton_Les_secrets_de_la_Castafio_2273699.mp3</guid>
+	<pubDate>Sun, 27 Jan 2008 12:00:00 +0100</pubDate>
+	<description>&lt;a href="http://www.musiq3.be"&gt;musiq3.be&lt;/a&gt;</description>
+</item>
+</channel>
+</rss>
+<!--<head>
+	</head>
+-->

@@ -1,0 +1,20 @@
+wtk.midp.version = 2.0
+wtk.cldc.version = 1.1
+wtk.optionalpda.enabled = true
+wtk.miapi.enabled  = false
+debug = debug
+DMIDPVERS = DMIDP20
+#Don't allow Itunes to save performance and memory
+DITUNESDEF = DNOITUNES
+DJSR75 = DJSR75
+DJSR238 = DNOJSR238
+DMEMSIZEDEF = DREGULARMEM
+#1.1 kills us.
+DCLDCVERS = DCLDCV11
+JMIDPVERS = MIDP-2.0 
+JCLDCVERS = CLDC-1.1
+PERMISSIONS = ,javax.microedition.io.HttpsConnection,javax.microedition.io.Connector.file.read
+file.prefix = midp20_cldc11_jsr75_
+bin = ../bin20cldc11jsr75
+MIDLETVERS = ${MIDLETVERSROOT}
+SUFFIXVERS =  2.0-cldc1.1-jsr75

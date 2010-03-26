@@ -1,0 +1,3 @@
+# Look for nbproject/private/private.properties for value of netbeans.user
+# Add the contents of this file and modify to build.properites in netbeans.user
+language.file=messages_en_US.xml

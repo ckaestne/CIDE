@@ -1,0 +1,10 @@
+#Set properties used for testing and logging.  This takes advantage of
+#the fact that once a property is set, it cannot be updated.  So, if
+#something does not set RELEASE, then the testing/logging is truned on.
+#If release compile is turned on (no.release is undefined),
+#release.properties sets RELEASE to NO which causes these to be set
+#DNOTEST, etc.
+RELEASE = 
+DTESTDEF = D${RELEASE}TEST
+DTESTUIDEF = D${RELEASE}TESTUI
+DLOGDEF = D${RELEASE}LOGGING

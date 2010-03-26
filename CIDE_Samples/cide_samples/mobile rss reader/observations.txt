@@ -1,0 +1,80 @@
+CauseRuntimeException und CauseException ueberschreiben initCause fehlerhaft, so dass das Projekt gar nicht erst kompiliert werden kann
+
+Features
+DITUNES,DLOGGING,DTEST,DSMALLMEM,DMIDP20,DMIDP10,DJSR75,DTESTUI,DCLDCV11,DJSR238,DCOMPATIBILITY1,DCOMPATIBILITY2,DCOMPATIBILITY3
+
+
+annotierte parameter in HTMLAutoLinkParser.parseFeeds :)
+
+
+in AllNewList gibts alternative superklassen:
+
+//#ifndef DTESTUI
+import javax.microedition.lcdui.List;
+//#else
+import com.substanceofcode.testlcdui.List;
+//#endif
+final public class AllNewsList extends List
+implements CommandListener, Runnable  {
+
+
+viele feingranulare annotationen in RssReaderMidlet
+
+see TODOchk
+
+
+maxnesting 4 in RssReaderMIDlet: appendCompatBmk
+
+
+typproblem aufruf con setCurrent in UiUtil#473 ?
+
+
+
+
+public class ChoiceGroup extends javax.microedition.lcdui.ChoiceGroup
+//#ifdef DMIDP20
+implements ItemCommandListener
+//#endif
+
+
+dead code (und auch diverse redundante annotationen):
+//#ifdef DMIDP20
+	public void commandAction(Command cmd, Item item) {
+		//#ifdef DMIDP20
+		TestOutput.println("Test UI StringItem command,item=" + cmd.getLabel() + "," + item.getLabel());
+		//#else
+//@		TestOutput.println("Test UI StringItem command,displayable=" + cmd.getLabel() + "," + super.getClass().getName());
+		//#endif
+		m_itemCmdListener.commandAction(cmd, item);
+	}
+
+    public void setItemCommandListener(ItemCommandListener itemCmdListener) {
+        this.m_itemCmdListener = itemCmdListener;
+		super.setItemCommandListener(this);
+    }
+	//#endif
+====
+//#ifdef DLOGGING
+			String line;
+			for (; ((maxLines == 0) || (count < maxLines)) &&
+					((line = view.nextLine()) != null); count++) {
+				//#ifdef DLOGGING
+				if (finestLoggable) {logger.finest("estimateHeight count,line=" + count + "," + line);}
+				//#endif
+			}
+#else
+
+
+beim annotieren gleich aufgefallen dass nicht die korrekte farbe war (trotz ca 30 farben)
+
+alternative superklassen in CauseException nicht unterstuetzt
+
+einige stellen fuer alternative werte, z.b. Settings#82, anders geloest, aber meta expressions waeren moeglich
+
+
+statistics:
+#ifdef,899
+#ifndef,70
+#endif,969
+#else,55
+#elifdef,12

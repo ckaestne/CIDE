@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="windows-1252"?>
+<rss version="2.0">
+<channel>
+<title>WebThang Tutorials</title>
+<description>Easy to follow tutorials for Dreamweaver and Flash</description>
+<link>http://www.webthang.co.uk</link>
+
+
+<item>
+<title>Dreamweaver MX 2004 From Scratch : ä ö </title>
+<description>A series of tutorials designed to get you started with Dreamweaver. Covers all the basics plus using tables and forms.</description>
+<link>http://www.webthang.co.uk/rss_feeds/rss1.asp</link>
+<pubDate>Thu, 19 Jul  2007 00:00:00 N</pubDate>
+</item>
+
+<item>
+<title>The Dreamweaver MX Files</title>
+<description>A series of tutorials designed to teach beginners how to build database driven web sites using
+Dreamweaver and Access Database</description>
+<link>http://www.webthang.co.uk/rss_feeds/rss2.asp</link>
+<pubDate>Thu, 19 Jul  2007 00:00:00 N</pubDate>
+</item>
+
+<item>
+<title>Web Application Tutorials</title>
+<description>A series of tutorials using Dreamweaver for building common web applications. Polls, Guest Book, Forum, Shopping Cart, Gallery, Mailing List.</description>
+<link>http://www.webthang.co.uk/rss_feeds/rss3.asp</link>
+<pubDate>Thu, 19 Jul  2007 00:00:00 N</pubDate>
+</item>
+
+<item>
+<title>Things You Should Know!</title>
+<description>Common ASP / VBScript techniques, tips and tricks for use with Dreamweaver.
+You MUST learn these. Trouble Shooting, Error Messages, Sending Mail, DSNLess Connections, Session Variables, IF THEN ELSE, Search techniques.</description>
+<link>http://www.webthang.co.uk/rss_feeds/rss4.asp</link>
+<pubDate>Thu, 19 Jul  2007 00:00:00 N</pubDate>
+</item>
+
+<item>
+<title>Flash MX For Beginners</title>
+<description>A series of tutorials designed to teach beginners how to use Flash. Getting started, Pre Loaders, Movie Controllers, Volume Controls, Email</description>
+<link>http://www.webthang.co.uk/rss_feeds/rss5.asp</link>
+<pubDate>Thu, 19 Jul  2007 00:00:00 N</pubDate>
+</item>
+
+</channel>
+</rss>
+
+

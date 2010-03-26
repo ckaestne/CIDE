@@ -1,0 +1,235 @@
+1	Close
+2	Username
+3	Password
+4	Wait please
+5	Login
+6	Exit
+7	Debug
+8	Continue
+9	Yes
+10	No
+11	Send
+12	Save
+13	Enter contact jabber id or google talk address
+14	Displayed nickname
+15	Group
+16	Instructions
+17	Submit
+18	Cancel
+19	Clear
+20	Back
+21	Server name
+22	<Choose>
+23	Accept
+24	Prev
+25	Next
+26	Register
+27	Update
+28	Jabber ID
+29	About
+30	Warning
+31	Hide
+32	Show instructions
+33	Fill later
+34	Delete
+35	Error
+36	MENU
+37	ACTIONS
+38	SELECT
+39	Show offline
+40	IM Gateways
+41	Gateways
+42	registration data sent, existing contacts will be imported automatically. Should the registration fail please check username and password and register again.
+43	Hide offline
+44	Im network
+45	Refresh
+46	Traffic
+47	Help
+48	Roster screen, available menus:< - left: actions performed on the selected contact< - right: general actions< Shortcuts and navigation:<1) up and down keys: move the selection up and down<2) fire button: chat with the selected contact<3) left and right: navigate the open screens<4) letter keys: filter contacts (left key resets selection)<5) '*' pressed for 2'': jump to an open screen<
+49	Description
+50	Error during registration
+51	Please choose a username and a jabber server such as Gmail.com, jabber.bluendo.com, jabber.org, or any other jabber compliant server.
+52	This is your first login!< To add MSN, Yahoo, ICQ and Aim contacts select "IM Gateways" from the menu.< To add contacts please select add contact from the menu.
+53	Initial Status
+54	Loading ...
+55	Contact id
+56	Explore server
+57	Name
+58	Nickname
+59	Do you already have a jabber account (GTalk, jabber.org, ...)?
+60	Insert code
+61	File transfer status
+62	Finished
+63	Ongoing
+64	No active file transfer
+65	Confirm
+66	Passwords don't match
+67	unavailable
+68	Waiting acceptance
+69	Declined
+70	Once logged in you will be able to add Jabber, MSN, Yahoo, ICQ and Aim contacts
+71	Key Configuration
+100	Write message
+101	Chat with
+102	Clear chat
+103	... new messages ...
+104	Use urls
+105	Invite contact
+106	expand
+107	Forward selected message
+108	Forward
+109	To
+110	Forwarded message from  
+200	Jabber ID
+202	Email address (optional)
+203	Register new account
+204	Lampiro login
+205	Registration Failed
+206	Could not create the desired user. Reason:
+207	Login Failed
+208	Login failed with current settings. Reason:
+209	Advanced options
+210	Connecting server
+211	Logging in...
+212	Group chat
+213	Choose name
+214	Accept a group chat invitation by
+215	Exit group chat
+216	joined the
+217	left the
+218	Topic
+219	Set topic
+220	registration not allowed.
+221	username already exists.
+222	Enable compression
+223	Lampiro requires an air connection. If prompted, you must authorize Lampiro to use air connection. Some servers may not support compression or TLS. If you experience login problems please try disabling these features. 
+224	Note
+225	Enable TLS
+226	Stop login
+227	It seems that this is the first time you run Lampiro.<If the menu keys do not work press the "Key Configuration" command in the next screen to launch the key configuration tool.< Font size, keyboard and other options can be chosen with the setup screen on the roster screen.< Press FIRE to continue.
+228	Please press the button you wish to associate to the left menu.
+229	Please press the button you wish to associate to the right menu.
+230	Please confirm the left menu key.
+231	Please confirm the right menu key.
+232	Thank you, press a key to proceed.
+233	Please press again the same key!
+234	The selected key is not valid
+235	Press key
+236	Usually the key is positioned below the currently displayed menu.
+237	Configuring keys
+238	Connection failed
+239	Connection lost
+240	Wrong username or password
+241	Connected
+242	TLS initialized
+243	Compression initialized
+244	Authenticated
+245	Initialized
+246	Reset config and login
+247	Reset all data and login
+248	Close group chat
+249	Room name
+300	Send message to
+500	Fill the form
+700	Send message
+701	Chat
+702	Modify contact
+703	Add contact
+704	Delete contact
+705	Set status
+706	Contact list
+707	Query commands
+708	Command list
+709	Reload Contacts
+710	Pending Tasks
+711	See details
+712	Capture image
+713	Capture
+714	Image
+715	Contacts
+716	File name
+717	Start
+718	wishes to send you this file:
+719	File Transfer
+720	Record audio
+721	Audio
+722	Stop
+723	Play
+724	Multimedia album
+725	Save in multimedia album
+727	cannot accept the transfer of file: 
+728	Cannot handle the file:
+729	Send file
+730	Refresh roster 
+731	Send image
+732	Send audio
+733	Ungrouped
+734	Search
+735	Highlights
+736	Set groups
+737	Group list
+738	New group
+739	Existing groups
+740	Move
+741	Open
+742	Expanded
+743	Logout
+744	is
+745	online
+746	offline
+747	Send group message
+748	Size
+749	Press <FIRE> to capture
+750	At the moment it is not possible to connect to these networks with gmail accounts. 
+800	Set status
+801	Choose status
+802	Status message
+803	Priority
+804	Resource
+900	Subscription request
+901	wants to modify your roster
+902	Do you accept?
+903	Accept all
+904	Always accept
+905	Presence subscription request
+906	did not accept:
+907	accepted:
+908	sent to
+909	not
+910	Receiver
+911	I uploaded a file for you at:
+1001	Choose a command
+1002	Execute
+1003	Task History
+1004	No commands available.
+1101	An error occurred while processing command:
+1200	Setup options
+1201	When receiving new messages
+1202	Vibrate if midlet is
+1203	hidden
+1204	active
+1205	Play tone if midlet is
+1206	Tone volume
+1207	Keep-alive interval
+1208	Some new settings may take effect after next restart
+1209	Theme
+1210	Red
+1211	Green
+1212	Blue
+1213	Small
+1214	Medium
+1215	Big
+1216	Font size
+1217	Default options
+1218	Chat history size
+1219	Multimedia album size
+1220	Enable qwerty keyboard
+1221	Orange
+1222	Camera resolution
+1223	Default
+1224	Low <160x120>
+1225	Medium <320x240>
+1226	High <640x480>
+1227	Huge <1024x768>
+1228	Error accessing phone camera
+100000	dummy

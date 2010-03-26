@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="ISO-8859-3" standalone="no"?>
+<rssreader>
+  <feeds>
+    <item>
+      <language>fr</language>
+      <group>French sport</group>
+      <title>Les dernières news du Renault F1 Team</title>
+      <link>http://www.renaultf1.com/fr/news/RSS/rss.xml</link>
+    </item>
+    <item>
+      <language>fr</language>
+      <group>Belgium news</group>
+      <title>Lalibre.be - La Une</title>
+      <link>http://www.lalibre.be/rss</link>
+    </item>
+    <item>
+      <language>fr</language>
+      <group>French ICT news</group>
+      <title>K-OTik.COM : Advisories et Failles de Sécurité</title>
+      <link>http://www.k-otik.com/advisories.xml</link>
+    </item>
+    <item>
+      <language>fr</language>
+      <group>French ICT news</group>
+      <title>K-OTik Security EXPLOITS</title>
+      <link>http://www.k-otik.com/exploits.xml</link>
+    </item>
+    <item>
+      <language>fr</language>
+      <group>French ICT news</group>
+      <title>K-OTik.COM : Actualité Sécurité Informatique</title>
+      <link>http://www.k-otik.com/news.xml</link>
+    </item>
+    <item>
+      <language />
+      <group>French news</group>
+      <title>Liberation.fr - A la une</title>
+      <link>http://www.liberation.fr/rss.php</link>
+    </item>
+    <item>
+      <language>fr-FR</language>
+      <group>French news</group>
+      <title>RTL Info</title>
+      <link>http://www.rtl.fr/referencement/rtl.asp</link>
+    </item>
+  </feeds>
+</rssreader>

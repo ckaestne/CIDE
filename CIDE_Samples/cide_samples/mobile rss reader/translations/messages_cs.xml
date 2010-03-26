@@ -1,0 +1,176 @@
+#####################################################################
+#####
+#####    Řetězce použité v aplikacích EBookME and packager
+#####    (předpona klíčů 'ebook.' je vyhrazena pro překlady EBookME)
+#####
+#####################################################################
+
+#####################################################################
+#####    Řetězce Packageru
+#####################################################################
+
+# Packager
+packager.version=EBookME & packager verze: {0}
+packager.create.suite=Vytvářím MIDlet suite...
+packager.output=Výstupní soubory: "{0}.(jar|jad)"
+packager.temp.create=Vytvářím dočasný adresář ({0})
+packager.temp.delete=Mažu dočasný adresář
+packager.books.write=Vytvářím obsah knih
+packager.unpack=Rozbaluji archív se základem J2ME aplikace
+packager.manifest=Měním soubor MANIFEST.MF
+packager.pack=Balím výsledný JAR archív
+packager.jad=Vytvářím JAD soubor s popisem MIDletu
+
+packager.help=Aplikace EBookME packager\nCopyright Tomáš Darmovzal & Josef Cacek 2003-2006\nEBookME packager vytváří elektronické knihy jako JME (J2ME) aplikace\nz textových souborů. Takto vytvořené knihy můžete číst na mobilních zařízeních\nkteré podporují JME (MIDP 1.0).\n\nPoužití:\n\tjava -jar lib/packager.jar [argumenty]\n\nArgumenty:\n\t--help,-h     zobrazí tuto obrazovku s nápovědou\n\t--version,-v  zobrazí verzi aplikace\n\t-f<soubor>    nahraje parametry ze souboru <soubor>\n\t-F<soubor>    vymaže parametry a nahraje nové ze souboru <soubor>\n\t-D<parametr=hodnota>\n\t              přidá parametr nebo nahradí hodnotu u parametru\n\nVýchozí hodnoty parametrů jsou nahrány ze souboru 'application.properties'.\nMůžete si zvolit jiný soubor You použitím argumentu -F (nebo pouze modifikovat\nvýchozí nastavení použitím parametru -f). Jestliže chcete použít dohromady\nargumenty -F a -D, musíte jako první uvést -F.\n\nVíce informací naleznete v souboru README_CS.TXT\n
+
+#####################################################################
+#####    Řetězce pro GUI Packageru
+#####################################################################
+
+gui.label.textfile=Textový soubor
+gui.label.encoding=Kódování
+gui.label.partsize=Velikost částí
+gui.label.partsize.chars=znaků
+gui.label.textname=Název textu
+gui.label.textdescription=Popis textu
+gui.button.add=>>> Přidej >>>
+gui.label.textlist=Seznam textů
+gui.button.remove=Odstraň vybraný
+gui.button.next=>>> Další >>>
+gui.label.outprefix=Výstupní soubory (prefix)
+gui.button.run=Generuj J2ME aplikaci
+gui.label.course=Průběh generování
+gui.label.text=Text (může být editován)
+gui.label.autoformat=Autoformat
+gui.label.splashscreen=Splashscreen
+gui.label.chapterHelp=Pro vložení kapitoly umístěte jméno kapitoly na správné místo v textu do hranatých závorek s hvězdičkou[*...*] (například [*Kapitola 1: Smysl života*] )
+
+gui.tab.newtext=Nový text
+gui.tab.listoftexts=Seznam textů
+gui.tab.output=Výstup
+gui.tab.about=O Aplikaci
+
+gui.frame.openfile=Otevřít textový soubor
+gui.frame.savefile=Uložit soubor
+
+gui.alert.partsize=Chybné zadání velikosti části. Použita výchozí hodnota: {0}
+gui.alert.notext=Nevybrán žádný text
+gui.alert.nooutput=Nezadán výstupní soubor
+
+gui.alert.err=Chyba při generování ({0})
+
+gui.status.state=Stav: {0} 
+gui.status.error=Chyba: {0}
+
+gui.log.genstarted=Generuji J2ME aplikaci
+gui.log.genfinished=Generování dokončeno
+
+#Aplikace EBookME packager\n
+#Copyright Tomáš Darmovzal & Josef Cacek 2003-2006\n
+#EBookME packager vytváří elektronické knihy jako JME (J2ME) aplikace\n
+#z textových souborů. Takto vytvořené knihy můžete číst na mobilních zařízeních\n
+#které podporují JME (MIDP 1.0).\n\n
+#Použití:\n
+#\tjava -jar lib/packager.jar [argumenty]\n\n
+#Argumenty:\n
+#\t--help,-h     zobrazí tuto obrazovku s nápovědou\n
+#\t--version,-v  zobrazí verzi aplikace\n
+#\t-f<soubor>    nahraje parametry ze souboru <soubor>\n
+#\t-F<soubor>    vymaže parametry a nahraje nové ze souboru <soubor>\n
+#\t-D<parametr=hodnota>\n
+#\t              přidá parametr nebo nahradí hodnotu u parametru\n
+#\n
+#Výchozí hodnoty parametrů jsou nahrány ze souboru 'application.properties'.\n
+#Můžete si zvolit jiný soubor You použitím argumentu -F (nebo pouze modifikovat\n
+#výchozí nastavení použitím parametru -f). Jestliže chcete použít dohromady\n
+#argumenty -F a -D, musíte jako první uvést -F.\n\n
+#Více informací naleznete v souboru README_CS.TXT\n
+
+#####################################################################
+#####    Výjimky
+#####################################################################
+
+exception.file.exist=Soubor "{0}" neexistuje.
+exception.file.read=Soubor "{0}" není možné číst.
+exception.file.write=Do souboru "{0}" není možné zapsat.
+exception.file.delete=Mazání souboru "{0}" selhalo.
+
+exception.charset=Znaková sada "{0}" není podporována.
+exception.book.name=Jméno knihy nesmí být prázdné.
+exception.book.partSize=Velikost části (bookpart) musí být větší-rovno {0}.
+exception.book.id=ID "{0}" již existuje v seznamu knih.
+exception.directory="{0}" není adresář.
+exception.directory.create=Vytvoření adresáře "{0}" selhalo.
+
+exception.property.set="{0}" nemá požadovaný formát (klíč=hodnota).
+exception.property.store=Nastavení se nepodařilo uložit do souboru "{0}".
+exception.property.mandatory=Povinný parametr "{0}" není nastaven.
+
+exception.null="{0}" nesmí být null.
+
+#####################################################################
+#####    Řetězce pro EBookME (všechny musí začínat 'ebook.')
+#####################################################################
+
+
+# tlačítka příkazů
+ebook.btn.ok=OK
+ebook.btn.cancel=Zruš
+
+# EBookBooklist
+ebook.bl.choose=Vyber knihu
+
+# EBookCanvas
+ebook.cmd.info=Info
+ebook.cmd.light=Podsvětlení
+ebook.cmd.light.auto=Podsvětlení AS
+ebook.cmd.position=Pozice
+ebook.cmd.exit=Konec
+ebook.cmd.font=Font
+ebook.cmd.color=Barvy
+ebook.cmd.choose=Výběr knihy
+ebook.cmd.chapters=Kapitoly
+ebook.i.stop=Zastavuji
+ebook.i.delay=Pauza: 
+ebook.i.wait=Čekejte
+ebook.i.read=Načítám
+
+# EBookColorList
+ebook.cl.head=Výběr barev
+ebook.cl.black=Černá
+ebook.cl.white=Bílá
+ebook.cl.blue=Modrá
+ebook.cl.green=Zelená
+
+# EBookFontList
+ebook.f.head=Výběr fontu
+ebook.f.proportional=Prop
+ebook.f.monospace=Nepr
+ebook.f.normal=Nor
+ebook.f.bold=Tuč
+ebook.f.small=Min
+ebook.f.medium=Mid
+ebook.f.large=Max
+
+# EBookInfo
+ebook.i.head=Info
+ebook.i.bk.name=Název knihy
+ebook.i.bk.desc=Popis knihy
+ebook.i.empty=<Nezadáno>
+ebook.i.copy.h=EbookME licence
+ebook.i.copy=J2ME Reader & J2SE Packager jsou pokryty licencí LGPL\nCopyright (C) 2003-2005 Tomáš Darmovzal <tomas.darmovzal@seznam.cz>\nCopyright (C) 2005-2006 Josef Cacek <josef.cacek@atlas.cz>
+ebook.i.help.h=Nápověda
+ebook.i.help=Ovládání:\nDalší stránka (7, 8, 9, 0, DOWN, kliknutí do spodní části displeje)\nPředchozí stránka (1, 2, 3, UP, kliknutí do horní části displeje)\nDalší řádek (6, RIGHT, kliknutí pod střed displeje)\nPředchozí řádek (4, LEFT, kliknutí nad střed displeje)\nAutoScroll zapnutí/vypnutí (5)\nZrychlení scrollování (6, DOWN, RIGHT)\nZpomalení scrollování (4, UP, LEFT)
+ebook.i.version=Verze
+
+
+# EBookPositionForm
+ebook.pos.head=Pozice
+ebook.pos.actual=Aktuální pozice
+
+# EBook - chapters form
+ebook.chap.head=Kapitoly
+
+ebook.lig.head=Podsvětlení
+ebook.lig.auto=Autoscroll
+ebook.lig=Stupeň podsvětlení

@@ -1,0 +1,109 @@
+antenna.home = C:/mostdownloads/j2me/sourceforge/antenna
+#antenna.jar = antenna-bin-0.9.15-beta.jar
+#antenna.jar = antenna-bin-1.0.0.jar
+antenna.jar = antenna-bin-1.1.0-beta.jar
+antcontrib.home = C:/mostdownloads/gnu/sourceforge/ant-contrib/ant-contrib
+#Comment out for linux
+wtk.wme.home = C:\\PROGRA~1\\IBM\\WEME\\571\\PalmOS50\\Tools
+#svnant.home = C:/mostdownloads/gnu/tigris.org/svnant/svnant-1.0.0/lib
+#svnant.home = C:/mostdownloads/gnu/sourceforge/antxtras/svn4ant_1.1-build68_bin_withdeps
+#
+svn.home = C:\\PROGRA~1\\COLLAB~1
+#svn.home = C:\\PROGRA~1\\TORTOI~1
+#rim.home = C:\\Program Files\\Research In Motion\\BlackBerry JDE 4.2.1
+rim.home = C:\\PROGRA~1\\RESEAR~1\\BLACKB~1.1
+svn.pgm = svn.exe
+#wtk.home = C:/opt/WTK2.5.1
+wtk.home = C:/opt/WTK2.5.2
+#For phoneMe Linux x86
+#wtk.home = /media/SEA_DISK/linux/src/RSSReader-1_11_1rc2/bin/linux_x86_fb_chameleon_mvm
+#For phoneMe Windows
+#wtk.home = C:/mostdownloads/j2me/phoneme.dev.java.net__downloads_page.html/bin/win32_x86_javacall_mvm
+#For phoneMe Windows and Linux
+#wtk.midpapi = ${wtk.home}/classes
+wtk.encoding = UTF-8
+#For phoneMe Windows and Linux proguard.jar, if cannot put into bin
+wtk.proguard.home = C:/mostdownloads/j2me/sourceforge/proguard/proguard4.2
+#For phoneMe, if not using ecj.jar
+#build.compiler = org.eclipse.jdt.core.JDTCompilerAdapter
+#For phoneMe, if using ecj.jar
+#ecj.jar = C:/mostdownloads/gnu/eclipse/ecj-3.4.jar
+#For phoneMe Windows, if using ecj.jar and Sun JDK
+#rt.jar = C:/opt/bea91/jdk150_04/jre/lib/rt.jar
+#For phoneMe Windows, if using ecj.jar and Kaffe
+#rt.jar = /usr/lib/kaffe/jre/lib/rt.jar
+emulator.home=C:/mostdownloads/j2me/sourceforge/kobjects
+#emulator.home=C:/mostdownloads/j2me/sourceforge/MicroEmulator/microemulator-2.0.2
+emulator.jar=${emulator.home}/me4se-2.2.0.zip
+#emulator.jar=${emulator.home}/microemulator.jar
+emulator.class=org.me4se.MIDletRunner
+#emulator.class=org.microemu.app.Main
+midlet.name = RssReaderMIDlet
+midlet.class = com.substanceofcode.rssreader.presentation.${midlet.name}
+logging.package = net.sf.jlogmicro.util.logging
+obfuscate.classes = ${midlet.class},${logging.package}.ConsoleHandler,${logging.package}.FormHandler,${logging.package}.RecStoreHandler,${logging.package}.SimpleFormatter
+project.test.url = http://mobilerssreader.sourceforge.net/testdata
+file.test.url = file:///root1/testdata
+project.name = RSSReader
+wtk.workspace.proj = /DOCUME~1/irvb/j2mewtk/2.5.2/apps
+midlet.home = ${wtk.workspace.proj}/apps/${project.name}
+prc.creater = MRSS
+prc.longname = RSS/News/Blog Reader
+MIDLETURL_ROOT = http://mobile-rss-reader.googlecode.com/files
+separator = /
+MIDLETVERSROOT = 1.12
+#Need vers with '_' to allow uploading to sites that get confused by to
+#many '.'
+FMIDLETVERSROOT = 1_12
+#Location of manifest source
+manifestsrc = ../manifestsrc
+#? src = src
+#? lib = lib
+#Compile source dir generted by non-preprocessed source and generted source
+#(if needed)
+comp.src = ${target}/mobile-rss-reader/src
+#comp.src = released/src
+presrc = ../presrc
+#Copy unpreprocessed source to compile src dir.
+#(The unpreprocessed may include preprocessed from previous
+#run, but the preprocessed will get overwriten).
+#Unpreprocessed source diretory.  This may have preprocessed src if we
+#are writing the preprocessed src back to the svn src.
+unproc.src = ../src
+#Unpreprocessed source diretor.  This
+#is usually done to override the unmodified src.
+#If all the files in src are created by the preprocessor, uncomment this.
+#all.src.preprocessed = true
+#Deprecated.  Copy preprocessed src to src directory to allow it to be
+#checked in.  Now, this is done automatically when unproc.src is specified.
+#copy.comp.src = true
+src = ../src
+src.controlled.copy = true
+#Specify the WTK source directory to be replaced
+#wtk.src = ../../src
+#wtk.src = C:/PROGRA~1/RESEAR~1/BLACKB~1.0/rimwtk
+wtk.src = /DOCUME~1/irvb/j2mewtk/2.5.2/apps/RSSReader/src
+zipdir = ../zipedsrc
+need.svn.preprocessed = true
+svn.home = C:\\PROGRA~1\\COLLAB~1
+svn.url =  https://mobile-rss-reader.googlecode.com/svn/trunk/
+svn.src =  mobile-rss-reader
+svn.user =  ibuntonjr
+#Need ti distribute the SVN dirs
+need.dist.svn.dirs = true
+need.res = true
+res.dir = ../src/icons
+msg.dir = ../translations
+res.todir = icons
+#add.jars = true
+#copy.jar.src = true
+#jarsrc = ../../../JLogMicro/jlogmicro/src
+#Allows adding of compatiblity classes to test upward compatibility of RMS
+#stored data
+#compat.presrc = ../compatpresrc
+#Compile test ui
+#testui.presrc = ../testpresrc
+docs = ../docs
+jadsrc = ../jadsrc
+alxsrc = ../alxsrc
+debug = debug

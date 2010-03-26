@@ -1,0 +1,16 @@
+MIDlet-Jar-URL: lampiro.jar
+MIDlet-Jar-Size: 420403
+MIDlet-Name: Lampiro
+MIDlet-1: Lampiro,/icons/lampiro_icon.png,lampiro.LampiroMidlet
+MicroEdition-Profile: MIDP-2.0
+MicroEdition-Configuration: CLDC-1.1
+MIDlet-Version: 9.6.0
+MIDlet-Icon: /icons/lampiro_icon.png
+Built-By: luca
+MIDlet-Vendor: Bluendo
+Manifest-Version: 1.0
+Lampiro-BOSH-Host: bosh.bluendo.com
+Lampiro-BOSH-Path: /httpb
+Lampiro-BOSH-URL: socket://bosh.bluendo.com:10080
+FlipInsensitive: True
+Background: True

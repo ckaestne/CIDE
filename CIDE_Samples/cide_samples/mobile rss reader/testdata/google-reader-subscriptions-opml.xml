@@ -1,0 +1,52 @@
+<opml version="1.0">
+    <head>
+        <title>Irving subscriptions in Google Reader</title>
+    </head>
+    <body>
+        <outline title="chinese" text="chinese">
+            <outline text="Engadget 癮科技" title="Engadget 癮科技" type="rss"
+                xmlUrl="http://chinese.engadget.com/rss.xml" htmlUrl="http://chinese.engadget.com"/>
+        </outline>
+        <outline title="russia" text="russia">
+            <outline text="Кадровое агентство Кузница Кадров"
+                title="Кадровое агентство Кузница Кадров" type="rss"
+                xmlUrl="http://kuznitsa.vdc.ru/export/vacancy.rss" htmlUrl="http://kuznitsa.vdc.ru/vacancy/view.php"/>
+            <outline text="Яндекс.Новости: Главные новости"
+                title="Яндекс.Новости: Главные новости" type="rss"
+                xmlUrl="http://news.yandex.ru/index.rss" htmlUrl="http://news.yandex.ru/Russia/index.html"/>
+        </outline>
+        <outline title="thinkers" text="thinkers">
+            <outline text="Freakonomics" title="Freakonomics" type="rss"
+                xmlUrl="http://www.freakonomics.com/blog/feed/" htmlUrl="http://freakonomics.blogs.nytimes.com"/>
+            <outline text="gladwell.com" title="gladwell.com" type="rss"
+                xmlUrl="http://gladwell.typepad.com/gladwellcom/atom.xml" htmlUrl="http://gladwell.typepad.com/gladwellcom/"/>
+            <outline text="kottke.org" title="kottke.org" type="rss"
+                xmlUrl="http://www.kottke.org/remainder/index.rdf" htmlUrl="http://www.kottke.org/"/>
+            <outline text="Language Log" title="Language Log" type="rss"
+                xmlUrl="http://itre.cis.upenn.edu/~myl/languagelog/index.rdf" htmlUrl="http://itre.cis.upenn.edu/~myl/languagelog/"/>
+            <outline text="languagehat.com" title="languagehat.com"
+                type="rss" xmlUrl="http://www.languagehat.com/index.rdf" htmlUrl="http://www.languagehat.com/"/>
+            <outline text="Marginal Revolution"
+                title="Marginal Revolution" type="rss"
+                xmlUrl="http://www.marginalrevolution.com/marginalrevolution/index.rdf" htmlUrl="http://www.marginalrevolution.com/marginalrevolution/"/>
+            <outline text="NPR: This I Believe"
+                title="NPR: This I Believe" type="rss"
+                xmlUrl="http://www.npr.org/rss/podcast.php?id=4538138" htmlUrl="http://www.npr.org/templates/story/story.php?storyId=4538138&amp;ft=2&amp;f=4538138"/>
+            <outline text="Salon" title="Salon" type="rss"
+                xmlUrl="http://feeds.salon.com/salon/index" htmlUrl="http://www.salon.com/?source=rss&amp;aim=salon"/>
+            <outline text="TED | TEDBlog" title="TED | TEDBlog"
+                type="rss"
+                xmlUrl="http://tedblog.typepad.com/tedblog/atom.xml" htmlUrl="http://blog.ted.com/"/>
+        </outline>
+        <outline text="BBC News | Technology | UK Edition"
+            title="BBC News | Technology | UK Edition" type="rss"
+            xmlUrl="http://newsrss.bbc.co.uk/rss/newsonline_uk_edition/technology/rss.xml" htmlUrl="http://news.bbc.co.uk/go/rss/-/1/hi/technology/default.stm"/>
+        <outline text="BBC News | World | UK Edition"
+            title="BBC News | World | UK Edition" type="rss"
+            xmlUrl="http://newsrss.bbc.co.uk/rss/newsonline_uk_edition/world/rss.xml" htmlUrl="http://news.bbc.co.uk/go/rss/-/1/hi/world/default.stm"/>
+        <outline
+            text="Why Sleep? - The Benefits of Life Enhancing Sleep"
+            title="Why Sleep? - The Benefits of Life Enhancing Sleep"
+            type="rss" xmlUrl="http://quantadynamics.libsyn.com/rss" htmlUrl="http://www.quantadynamics.com"/>
+    </body>
+</opml>

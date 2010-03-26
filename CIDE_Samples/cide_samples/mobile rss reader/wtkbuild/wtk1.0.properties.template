@@ -1,0 +1,19 @@
+wtk.midp.version = 1.0
+wtk.cldc.version = 1.0
+java.target = 1.0
+wtk.optionalpda.enabled = false
+debug = debug
+DMIDPVERS = DMIDP10
+DCLDCVERS = DCLDCV10
+#Don't allow Itunes to save performance and memory
+DITUNESDEF = DNOITUNES
+DJSR75 = DNOJSR75
+DJSR238 = DNOJSR238
+DMEMSIZEDEF = DSMALLMEM
+JMIDPVERS = MIDP-1.0
+JCLDCVERS = CLDC-1.0
+PERMISSIONS =
+file.prefix = midp10_
+bin = ../bin10
+MIDLETVERS = ${MIDLETVERSROOT}
+SUFFIXVERS = 1.0

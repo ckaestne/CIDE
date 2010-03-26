@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+<channel>
+<title>GNU Test case</title>
+<description>GNU Test case</description>
+<link>http://www.gnu.org</link>
+
+<item>
+<title>GNU test case</title>
+<description>
+<![CDATA[<TABLE cellSpacing=50 cellPadding=15 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD style="PADDING-RIGHT: 2em; WIDTH: 50%">
+      <H2>What is GNU?</H2>
+      <P>The GNU Project was launched in 1984 to develop a complete Unix-like 
+      operating system which is <A 
+      href="http://www.gnu.org/philosophy/free-sw.html">free software</A>: the 
+      GNU system.</P>
+      <P>GNU's kernel wasn't finished, so GNU is used with the kernel Linux. The 
+      combination of GNU and Linux is the GNU/Linux operating system, now used 
+      by millions. (Sometimes this combination is incorrectly called <A 
+      href="http://www.gnu.org/gnu/linux-and-gnu.html">Linux</A>.)</P>
+      <P>There are many variants or “distributions” of GNU/Linux. We recommend 
+      the <A 
+      href="http://www.gnu.org/links/links.html#FreeGNULinuxDistributions">GNU/Linux 
+      distributions</A> that are 100% free software; in other words, entirely 
+      freedom-respecting.</P>
+      <P>The name “GNU” is a recursive acronym for “GNU's Not Unix”; it is 
+      pronounced <EM>g-noo</EM>, as one syllable with no vowel sound between the 
+      <EM>g</EM> and the <EM>n</EM>.</P><!--      <h3>Get started!</h3>
+
+      <img src="/graphics/gnewsense-logo.png" alt="" style="float: left; padding: 10px;" />
+
+      <p>Get started today, download gNewSense - a complete free
+      software distribution of GNU/Linux for your desktop
+      computer.</p>
+
+      <p><a href="http://cdimage.gnewsense.org/gnewsense-livecd-deltad-1.1.iso">Download now</a> or <a href="http://cdimage.gnewsense.org/gnewsense-kde-livecd-deltad-1.1.iso">download with KDE</a>.</p> -->
+      <H2>What is Free Software?</H2>
+      <P>“<A href="http://www.gnu.org/philosophy/free-sw.html">Free 
+      software</A>” is a matter of liberty, not price. To understand the 
+      concept, you should think of “free” as in “free speech”, not as in “free 
+      beer”.</P>
+      <P>Free software is a matter of the users' freedom to run, copy, 
+      distribute, study, change and improve the software. More precisely, it 
+      refers to four kinds of freedom, for the users of the software:</P>
+      <UL>
+        <LI>The freedom to run the program, for any purpose (freedom 0). 
+        <LI>The freedom to study how the program works, and adapt it to your 
+        needs (freedom 1). Access to the source code is a precondition for this. 
+
+        <LI>The freedom to redistribute copies so you can help your neighbor 
+        (freedom 2). 
+        <LI>The freedom to improve the program, and release your improvements to 
+        the public, so that the whole community benefits (freedom 3). Access to 
+        the source code is a precondition for this. </LI></UL>
+      <H3>What is the Free Software Foundation?</H3>
+      <P>The <A href="http://www.fsf.org/">Free Software Foundation</A> (<ABBR 
+      title="Free Software Foundation">FSF</ABBR>) is the principal 
+      organizational sponsor of the GNU Project. The <ABBR>FSF</ABBR> receives 
+      very little funding from corporations or grant-making foundations but 
+      relies on support from individuals like you. </P>
+      <P>Please consider helping the <ABBR>FSF</ABBR> by <A 
+      href="http://member.fsf.org/">becoming an associate member</A>, <A 
+      href="http://order.fsf.org/">buying manuals and gear</A> or by <A 
+      href="http://donate.fsf.org/">donating money</A>. If you use Free Software 
+      in your business, you can also consider <A 
+      href="http://patron.fsf.org/">corporate patronage</A> or <A 
+      href="http://www.gnu.org/order/">a deluxe distribution of GNU software</A> 
+      as a way to support the <ABBR>FSF</ABBR>. </P>
+      <P>The GNU project supports the mission of the <ABBR>FSF</ABBR> to 
+      preserve, protect and promote the freedom to use, study, copy, modify, and 
+      redistribute computer software, and to defend the rights of Free Software 
+      users. We support the <A 
+      href="http://www.gnu.org/philosophy/basic-freedoms.html">freedoms of 
+      speech, press, and association</A> on the Internet, <A 
+      href="http://www.eff.org/privnow/">the right to use encryption software 
+      for private communication</A>, and the <A 
+      href="http://www.gnu.org/philosophy/protecting.html">right to write 
+      software</A> unimpeded by private monopolies. You can also learn more 
+      about these issues in the book <A 
+      href="http://www.gnu.org/doc/book13.html">Free Software, Free Society</A>. 
+      </P>
+      <P>The FSF also has sister organizations in <A 
+      href="http://www.fsfeurope.org/">Europe</A>, <A 
+      href="http://www.fsfla.org/">Latin America</A> and <A 
+      href="http://fsf.org.in/">India</A>.</P><!--
+   Keep link lines at 72 characters or lynx will break them poorly.
+   Obviously, we list ONLY the most useful/important URLs here.
+   Keep it short and sweet: 3 lines and 2 columns is already enough
+--><!-- BEGIN GNUmenu --></TD>
+    <TD style="WIDTH: 50%">
+      <DIV id=fss 
+      style="BORDER-RIGHT: orange 1px solid; PADDING-RIGHT: 5px; BORDER-TOP: orange 1px solid; PADDING-LEFT: 5px; FONT-SIZE: 80%; PADDING-BOTTOM: 5px; MARGIN: 8px; BORDER-LEFT: orange 1px solid; PADDING-TOP: 5px; BORDER-BOTTOM: orange 1px solid; BACKGROUND-COLOR: #ffb; TEXT-ALIGN: center">
+      <P class="center big"><STRONG>Sign up for the <EM>Free Software 
+      Supporter</EM></STRONG></P>
+      <P>A monthly update on GNU and the Free Software Foundation</P>
+      <FORM action=http://lists.gnu.org/mailman/subscribe/info-fsf method=post>
+      <P><INPUT id=frmEmail onfocus="this.value=''" maxLength=80 size=35 
+      value=you@example.com name=email> &nbsp; <INPUT type=submit value="Subscribe me"></P></FORM></DIV>
+      <H3>More information</H3>
+      <UL class=translations-list>
+        <LI><A href="http://www.gnu.org/provide.html">What we provide</A> 
+        <LI><A href="http://www.gnu.org/philosophy/philosophy.html">Why we 
+        exist</A> 
+        <LI><A href="http://www.gnu.org/gnu/gnu-history.html">Where we are 
+        going</A> 
+        <LI><A href="http://www.gnu.org/help/help.html">How you can help us get 
+        there</A> 
+        <LI><A href="http://www.gnu.org/people/people.html">Who we are</A> 
+        <LI><A href="http://www.gnu.org/testimonials/testimonials.html">What 
+        users think of GNU software</A> 
+        <LI><A href="http://savannah.gnu.org/">Our project hosting server, 
+        savannah.gnu.org</A> 
+        <LI><A href="http://lists.gnu.org/">GNU mailing lists</A> 
+        <LI>Other areas of the GNU web site: <A 
+        href="http://www.gnu.org/manual/manual.html">Software documentation</A>, 
+        <A href="http://www.gnu.org/graphics/graphics.html">Graphics and 
+        art</A>, <A href="http://www.gnu.org/fun/fun.html">Fun</A>, <A 
+        href="http://www.gnu.org/thankgnus/thankgnus.html">ThankGNUs</A>. 
+      </LI></UL><!-- END content --><!-- BEGIN Articles --><!--   GNUs Flash is a pun on News Flash.
+   Please don't make it GNU's Flash.
+-->
+      <H3 id=Flashes>GNUs Flashes</H3><!--
+   FOR ENTRIES ADDED TO GNUs FLASHES:
+   Please make sure an announcement is sent to info-gnu@gnu.org
+   Include announcements in /server/whatsnew.html
+--><!--
+   Please do not use anchor ids in this. They will be deleted and
+   hrefs pointing at them will fail. Instead use /home.html#Flashes
+--><!--
+   rms SEZ:
+   DO NOT MAKE THIS MORE THAN 5 LINES, AND DO NOT PUT
+   MORE THAN 2 ITEMS HERE.
+--><!-- DO NOT EDIT THIS FILE BY HAND --><!-- SEE /server/standards/README.webmastering.html#polnews -->
+      <P>The Free Software Foundation (FSF) has marked a milestone in their 
+      PlayOgg.org campaign with the announcement that National Public Radio 
+      (NPR) news station WBUR Boston has begun worldwide webcasting in the free 
+      audio format Ogg Vorbis. The WBUR stream is available at <A 
+      href="http://www.wbur.org/listen/">http://www.wbur.org/listen/</A>, or you 
+      can go directly to <A 
+      href="http://www.wbur.org/listen/feed/ogg.m3u">http://www.wbur.org/listen/feed/ogg.m3u</A>.</P>
+      <P>GNU has applied to be an organization in Google's Summer of Code 2008 
+      program. If you'd like to participate, as a mentor, a student, or in any 
+      other way, please see the <A 
+      href="http://www.gnu.org/software/soc-projects/ideas.html">SoC project 
+      suggestions so far</A> and the <A 
+      href="http://www.gnu.org/software/soc-projects/guidelines.html">additional 
+      SoC guidelines</A>.</P>
+      <P>Celebrate <A href="http://gnupg.org/">GnuPG</A>'s <A 
+      href="http://lists.gnu.org/archive/html/info-gnu/2007-12/msg00009.html">10th 
+      birthday</A>!</P>
+      <P>For other news, as well as for items that used to be in this GNUs 
+      Flashes section, see <A 
+      href="http://www.gnu.org/server/whatsnew.html">What's New</A> in and about 
+      the GNU Project. </P><!-- END GNUFlashes --><!-- BEGIN TakeAction -->
+      <H3 id=Action>Take Action</H3>
+      <UL>
+        <LI><STRONG>License drafting:</STRONG> <A 
+        href="http://www.gnu.org/server/takeaction.html#licenses">Participate</A> 
+        in the drafting of the GFDL and GSFDL. 
+        <LI><A href="http://www.gnu.org/server/takeaction.html#directory">Add to 
+        the Free Software Directory</A>. 
+        <LI><STRONG>Worldwide:</STRONG> <A 
+        href="http://www.gnu.org/server/takeaction.html#doom">Sign the Doom 
+        community's petition</A> to free the source code to the games Heretic 
+        and Hexen. 
+        <LI><STRONG>Priority projects:</STRONG> <A 
+        href="http://www.fsf.org/campaigns/priority.html">Contribute</A> to 
+        these projects we are emphasizing: <A 
+        href="http://dri.freedesktop.org/wiki/">Free software 3D video 
+        drivers</A>, <A href="http://www.fsf.org/campaigns/free-bios.html">Free 
+        BIOS</A>, <A href="http://www.gnu.org/software/gnash">Gnash</A> (GNU 
+        Flash Player), <A href="http://www.gnu.org/software/dotgnu/">DotGNU</A> 
+        (free software replacement for .NET), <A href="http://gnupdf.org/">GNU 
+        PDF</A>, <A href="http://xiph.org/">Xiph.org and free Internet 
+        protocols</A>, <A 
+        href="http://sourceware.org/gdb/news/reversible.html">reversible 
+        debugging for GDB</A>. 
+        <LI><STRONG>US citizens:</STRONG> <A 
+        href="http://www.gnu.org/server/takeaction.html#music-sharing">Sign 
+        EFF's petition</A> in favor of music sharing. 
+        <LI><STRONG>US citizens:</STRONG> <A 
+        href="http://www.gnu.org/server/takeaction.html#broadcast">Support 
+        Public Knowledge against the "broadcast flag"</A> 
+        <LI><STRONG>Worldwide:</STRONG> <A 
+        href="http://www.gnu.org/server/takeaction.html#wipochange">Call on WIPO 
+        to change its name and mission</A>. 
+        <LI><STRONG>Worldwide:</STRONG> <A 
+        href="http://www.gnu.org/server/takeaction.html#wipo">Raise awareness of 
+        dangers of WIPO Broadcast Treaty</A>. 
+        <LI><STRONG>Fight against software patents:</STRONG> <A 
+        href="http://www.endsoftpatents.org/">in the USA</A>, <A 
+        href="http://www.gnu.org/server/takeaction.html#swpat">in Europe</A>. 
+        <LI><STRONG>US citizens:</STRONG> <A 
+        href="http://www.gnu.org/server/takeaction.html#antidmca">Sign petitions 
+        against software patents and the DMCA</A>. 
+        <LI><STRONG>Long-term contribution:</STRONG> <A 
+        href="http://www.gnu.org/server/takeaction.html#unmaint">Take over an 
+        unmaintained GNU package:</A> <A 
+        href="http://www.gnu.org/software/ffp/">ffp</A>, <A 
+        href="http://www.gnu.org/software/gnuprologjava/">gnuprologjava</A>, <A 
+        href="http://www.gnu.org/software/gnutrition/">gnutrition</A>, <A 
+        href="http://www.gnu.org/software/gtkeyboard/">gtkeyboard</A>, <A 
+        href="http://www.gnu.org/software/gv/">gv</A>, <A 
+        href="http://www.gnu.org/software/mifluz/">mifluz</A>, <A 
+        href="http://www.gnu.org/software/vmslib/">vmslib</A>. 
+        <LI><STRONG>Long-term contribution:</STRONG> <A 
+        href="http://www.gnu.org/server/takeaction.html#gnustep">Please 
+        contribute</A> as a user and developer to <A 
+        href="http://www.gnustep.org/">GNUstep</A>, a free object-oriented 
+        framework for application development. 
+        <LI><STRONG>Long-term contribution:</STRONG> Help us translate the 
+        gnu.org essays into your native <A 
+        href="http://www.gnu.org/server/standards/translations/priorities.html#Languages">language</A> 
+        or <A 
+        href="http://www.gnu.org/server/standards/translations/priorities.html#Orphaned">become 
+        a coordinator</A> of a www.gnu.org translation team. </LI></UL>
+      <P><A href="http://www.gnu.org/server/takeaction.html#other">Other Action 
+      Items</A> </P></TD></TR></TBODY>
+	  </TABLE>
+<P>Copyright © 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 
+2007, 2008 <A href="http://www.fsf.org/">Free Software Foundation</A>, Inc.</P>
+<P>Verbatim copying and distribution of this entire article are permitted 
+worldwide, without royalty, in any medium, provided this notice, and the 
+copyright notice, are preserved. </P>
+	  ]]>
+</description>
+<link>http://www.gnu.org</link>
+<pubDate>Thu, 29 Apr  2008 00:00:00 N</pubDate>
+</item>
+
+<item>
+<title>The Dreamweaver MX Files</title>
+<description>A series of tutorials designed to teach beginners how to build database driven web sites using
+Dreamweaver and Access Database</description>
+<link>http://www.webthang.co.uk/rss_feeds/rss2.asp</link>
+<pubDate>Thu, 19 Jul  2007 00:00:00 N</pubDate>
+</item>
+
+<item>
+<title>Web Application Tutorials</title>
+<description>A series of tutorials using Dreamweaver for building common web applications. Polls, Guest Book, Forum, Shopping Cart, Gallery, Mailing List.</description>
+<link>http://www.webthang.co.uk/rss_feeds/rss3.asp</link>
+<pubDate>Thu, 19 Jul  2007 00:00:00 N</pubDate>
+</item>
+
+<item>
+<title>Things You Should Know!</title>
+<description>Common ASP / VBScript techniques, tips and tricks for use with Dreamweaver.
+You MUST learn these. Trouble Shooting, Error Messages, Sending Mail, DSNLess Connections, Session Variables, IF THEN ELSE, Search techniques.</description>
+<link>http://www.webthang.co.uk/rss_feeds/rss4.asp</link>
+<pubDate>Thu, 19 Jul  2007 00:00:00 N</pubDate>
+</item>
+
+</channel>
+</rss>

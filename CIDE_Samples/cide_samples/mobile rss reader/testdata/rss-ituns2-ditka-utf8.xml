@@ -1,0 +1,264 @@
+<?xml version="1.0"?>
+<rss version="2.0" xmlns:blogChannel="http://backend.userland.com/blogChannelModule" xmlns:itunes="http://www.itunes.com/DTDs/Podcast-1.0.dtd" xmlns:creativeCommons="http://backend.userland.com/creativeCommonsRssModule">
+	<channel>
+		<title>Mike Ditka Podcasts</title>
+		<link>http://www.bodogfootball.net/media/Ditka_8-30-06.mp3</link>
+		<description>Mike Ditka Weekly NFL Podcasts</description>
+		<language>en-us</language>
+		<copyright>Copyright 2006 Bodog Football</copyright>
+		<creativeCommons:license>http://creativecommons.org/licenses/by-nd/2.5</creativeCommons:license>
+		<pubDate>Fri, 1 Sept 2006 14:00:00 GMT</pubDate>
+		<lastBuildDate>Fri, 1 Sept 2006 14:00:00 GMT</lastBuildDate>
+		<webMaster>office@chalkgaming.com</webMaster>
+		<managingEditor>office@chalkgaming.com</managingEditor>
+		<itunes:category text="Radio" />
+		<itunes:explicit>no</itunes:explicit>
+		<itunes:keywords>sports, ditka, bodog, football</itunes:keywords>
+		<itunes:author>Mike Ditka</itunes:author>
+		<itunes:subtitle>Your podcast sports fix</itunes:subtitle>
+		<itunes:owner>
+			<itunes:name>Mike Ditka</itunes:name>
+			<itunes:email>office@chalkgaming.com</itunes:email>
+		</itunes:owner>
+		<item>
+			<title>Mike Ditka Podcast Preseason</title>
+			<description>Team by Team, Step by Step</description>
+			<pubDate>Fri, 1 September 14:00:00 GMT</pubDate>
+			<enclosure url="http://www.bodogfootball.net/media/Ditka_8-30-06.mp3" length="2203648" type="audio/mpeg" />
+			<link>http://www.bodogfootball.net/media/Ditka_8-30-06.mp3</link>
+			<guid isPermaLink="true">www.bodogfootball.net</guid>
+			<itunes:duration>9:10</itunes:duration>
+			<itunes:explicit>no</itunes:explicit>
+		</item>
+		<item>
+			<title>Mike Ditka Podcast Week 1</title>
+			<description>Team by Team, Step by Step</description>
+			<pubDate>Wed, 6 September 14:00:00 GMT</pubDate>
+			<enclosure url="http://www.bodogfootball.net/media/Ditka_9-5-06.mp3" length="2895872" type="audio/mpeg" />
+			<link>http://www.bodogfootball.net/media/Ditka 9-5-06.mp3</link>
+			<guid isPermaLink="true">www.bodogfootball.net</guid>
+			<itunes:duration>12:03</itunes:duration>
+			<itunes:explicit>no</itunes:explicit>
+		</item>
+		<item>
+			<title>Mike Ditka Podcast Week 2</title>
+			<description>Team by Team, Step by Step</description>
+			<pubDate>Thurs, 14 September 14:00:00 GMT</pubDate>
+			<enclosure url="http://www.bodogfootball.net/media/Ditka_9-13-06.mp3" length="4060625" type="audio/mpeg" />
+			<link>http://www.bodogfootball.net/media/Ditka 9-13-06.mp3</link>
+			<guid isPermaLink="true">www.bodogfootball.net</guid>
+			<itunes:duration>16:54</itunes:duration>
+			<itunes:explicit>no</itunes:explicit>
+		</item>
+		<item>
+			<title>Mike Ditka Podcast Week 3</title>
+			<description>Team by Team, Step by Step</description>
+			<pubDate>Thurs, 21 September 14:00:00 GMT</pubDate>
+			<enclosure url="http://www.bodogfootball.net/media/Ditka_9-20-06.mp3" length="4253200" type="audio/mpeg" />
+			<link>http://www.bodogfootball.net/media/Ditka_9-20-06.mp3</link>
+			<guid isPermaLink="true">www.bodogfootball.net</guid>
+			<itunes:duration>17:43</itunes:duration>
+			<itunes:explicit>no</itunes:explicit>
+		</item>
+		<item>
+			<title>Mike Ditka Podcast Week 4</title>
+			<description>Team by Team, Step by Step</description>
+			<pubDate>Thurs, 27 September 14:00:00 GMT</pubDate>
+			<enclosure url="http://www.bodogfootball.net/media/Ditka_9-27-06.mp3" length="2446676" type="audio/mpeg" />
+			<link>http://www.bodogfootball.net/media/Ditka_9-27-06.mp3</link>
+			<guid isPermaLink="true">www.bodogfootball.net</guid>
+			<itunes:duration>10:11</itunes:duration>
+			<itunes:explicit>no</itunes:explicit>
+		</item>
+		<item>
+			<title>Mike Ditka Podcast Week 5</title>
+			<description>Team by Team, Step by Step</description>
+			<pubDate>Thurs, 04 October 14:00:00 GMT</pubDate>
+			<enclosure url="http://www.bodogfootball.net/media/Ditka_10-4-06.mp3" length="4142023" type="audio/mpeg" />
+			<link>http://www.bodogfootball.net/media/Ditka_10-4-06.mp3</link>
+			<guid isPermaLink="true">www.bodogfootball.net</guid>
+			<itunes:duration>17:15</itunes:duration>
+			<itunes:explicit>no</itunes:explicit>
+		</item>
+		<item>
+			<title>Mike Ditka Podcast Week 6</title>
+			<description>Team by Team, Step by Step</description>
+			<pubDate>Thurs, 12 October 14:00:00 GMT</pubDate>
+			<enclosure url="http://www.bodogfootball.net/media/Ditka_10-11-06.mp3" length="7657955" type="audio/mpeg" />
+			<link>http://www.bodogfootball.net/media/Ditka_10-11-06.mp3</link>
+			<guid isPermaLink="true">www.bodogfootball.net</guid>
+			<itunes:duration>10:38</itunes:duration>
+			<itunes:explicit>no</itunes:explicit>
+		</item>
+		<item>
+			<title>Mike Ditka Podcast Week 7</title>
+			<description>Team by Team, Step by Step</description>
+			<pubDate>Thurs, 19 October 14:00:00 GMT</pubDate>
+			<enclosure url="http://www.bodogfootball.net/media/Ditka_10-18-06.mp3" length="10718670" type="audio/mpeg" />
+			<link>http://www.bodogfootball.net/media/Ditka_10-18-06.mp3</link>
+			<guid isPermaLink="true">www.bodogfootball.net</guid>
+			<itunes:duration>14:53</itunes:duration>
+			<itunes:explicit>no</itunes:explicit>
+		</item>
+		<item>
+			<title>Mike Ditka Podcast Week 8</title>
+			<description>Team by Team, Step by Step</description>
+			<pubDate>Thurs, 26 October 14:00:00 GMT</pubDate>
+			<enclosure url="http://www.bodogfootball.net/media/Ditka_10-25-06.mp3" length="14366827" type="audio/mpeg" />
+			<link>http://www.bodogfootball.net/media/Ditka_10-25-06.mp3</link>
+			<guid isPermaLink="true">www.bodogfootball.net</guid>
+			<itunes:duration>19:57</itunes:duration>
+			<itunes:explicit>no</itunes:explicit>
+		</item>
+		<item>
+			<title>Mike Ditka Podcast Week 9</title>
+			<description>Team by Team, Step by Step</description>
+			<pubDate>Thurs, 02 November 14:00:00 GMT</pubDate>
+			<enclosure url="http://www.bodogfootball.net/media/Ditka_11-1-06.mp3" length="9875124" type="audio/mpeg" />
+			<link>http://www.bodogfootball.net/media/Ditka_11-1-06.mp3</link>
+			<guid isPermaLink="true">www.bodogfootball.net</guid>
+			<itunes:duration>13:14</itunes:duration>
+			<itunes:explicit>no</itunes:explicit>
+		</item>
+		<item>
+			<title>Mike Ditka Podcast Week 10</title>
+			<description>Team by Team, Step by Step</description>
+			<pubDate>Thurs, 09 November 14:00:00 GMT</pubDate>
+			<enclosure url="http://www.bodogfootball.net/media/Ditka_11-8-06.mp3" length="12258745" type="audio/mpeg" />
+			<link>http://www.bodogfootball.net/media/Ditka_11-8-06.mp3</link>
+			<guid isPermaLink="true">www.bodogfootball.net</guid>
+			<itunes:duration>17:01</itunes:duration>
+			<itunes:explicit>no</itunes:explicit>
+		</item>
+		<item>
+			<title>Mike Ditka Podcast Week 11</title>
+			<description>Team by Team, Step by Step</description>
+			<pubDate>Thurs, 16 November 14:00:00 GMT</pubDate>
+			<enclosure url="http://www.bodogfootball.net/media/Ditka_11-15-06.mp3" length="11347803" type="audio/mpeg" />
+			<link>http://www.bodogfootball.net/media/Ditka_11-15-06.mp3</link>
+			<guid isPermaLink="true">www.bodogfootball.net</guid>
+			<itunes:duration>15:45</itunes:duration>
+			<itunes:explicit>no</itunes:explicit>
+		</item>
+		<item>
+			<title>Mike Ditka Podcast Week 12</title>
+			<description>Team by Team, Step by Step</description>
+			<pubDate>Thurs, 23 November 14:00:00 GMT</pubDate>
+			<enclosure url="http://www.bodogfootball.net/media/Ditka_11-21-06.mp3" length="13758696" type="audio/mpeg" />
+			<link>http://www.bodogfootball.net/media/Ditka_11-21-06.mp3</link>
+			<guid isPermaLink="true">www.bodogfootball.net</guid>
+			<itunes:duration>19:06</itunes:duration>
+			<itunes:explicit>no</itunes:explicit>
+		</item>
+		<item>
+			<title>Mike Ditka Podcast Week 13</title>
+			<description>Team by Team, Step by Step</description>
+			<pubDate>Thurs, 30 November 14:00:00 GMT</pubDate>
+			<enclosure url="http://www.bodogfootball.net/media/Ditka_11-29-06.mp3" length="10833087" type="audio/mpeg" />
+			<link>http://www.bodogfootball.net/media/Ditka_11-29-06.mp3</link>
+			<guid isPermaLink="true">www.bodogfootball.net</guid>
+			<itunes:duration>15:02</itunes:duration>
+			<itunes:explicit>no</itunes:explicit>
+		</item>
+		<item>
+			<title>Mike Ditka Podcast Week 14</title>
+			<description>Team by Team, Step by Step</description>
+			<pubDate>Thurs, 06 December 14:00:00 GMT</pubDate>
+			<enclosure url="http://www.bodogfootball.net/media/Ditka_12-6-06.mp3" length="11261286" type="audio/mpeg" />
+			<link>http://www.bodogfootball.net/media/Ditka_12-6-06.mp3</link>
+			<guid isPermaLink="true">www.bodogfootball.net</guid>
+			<itunes:duration>15:38</itunes:duration>
+			<itunes:explicit>no</itunes:explicit>
+		</item>
+		<item>
+			<title>Mike Ditka Podcast Week 15</title>
+			<description>Team by Team, Step by Step</description>
+			<pubDate>Thurs, 14 December 14:00:00 GMT</pubDate>
+			<enclosure url="http://www.bodogfootball.net/media/Ditka_12-11-06.mp3" length="7959304" type="audio/mpeg" />
+			<link>http://www.bodogfootball.net/media/Ditka_12-11-06.mp3</link>
+			<guid isPermaLink="true">www.bodogfootball.net</guid>
+			<itunes:duration>16:34</itunes:duration>
+			<itunes:explicit>no</itunes:explicit>
+		</item>
+		<item>
+			<title>Mike Ditka Podcast Week 16</title>
+			<description>Team by Team, Step by Step</description>
+			<pubDate>Thurs, 21 December 14:00:00 GMT</pubDate>
+			<enclosure url="http://www.bodogfootball.net/media/Ditka_12-20-06.mp3" length="10128408" type="audio/mpeg" />
+			<link>http://www.bodogfootball.net/media/Ditka_12-20-06.mp3</link>
+			<guid isPermaLink="true">www.bodogfootball.net</guid>
+			<itunes:duration>14:01</itunes:duration>
+			<itunes:explicit>no</itunes:explicit>
+		</item>
+		<item>
+			<title>Mike Ditka Podcast Week 17</title>
+			<description>Team by Team, Step by Step</description>
+			<pubDate>Thurs, 28 December 14:00:00 GMT</pubDate>
+			<enclosure url="http://www.bodogfootball.net/media/Ditka_12-27-06.mp3" length="10594223" type="audio/mpeg" />
+			<link>http://www.bodogfootball.net/media/Ditka_12-27-06.mp3</link>
+			<guid isPermaLink="true">www.bodogfootball.net</guid>
+			<itunes:duration>14:42</itunes:duration>
+			<itunes:explicit>no</itunes:explicit>
+		</item>
+		<item>
+			<title>Mike Ditka Podcast Week 18</title>
+			<description>Team by Team, Step by Step</description>
+			<pubDate>Thurs, 04 January 14:00:00 GMT</pubDate>
+			<enclosure url="http://www.bodogfootball.net/media/Ditka_1-3-07.mp3" length="14335480" type="audio/mpeg" />
+			<link>http://www.bodogfootball.net/media/Ditka_1-3-07.mp3</link>
+			<guid isPermaLink="true">www.bodogfootball.net</guid>
+			<itunes:duration>19:54</itunes:duration>
+			<itunes:explicit>no</itunes:explicit>
+		</item>
+			<item>
+			<title>Mike Ditka Podcast Week 19</title>
+			<description>Team by Team, Step by Step</description>
+			<pubDate>Thurs, 11 January 14:00:00 GMT</pubDate>
+			<enclosure url="http://www.bodogfootball.net/media/Ditka_1-10-07.mp3" length="13407297" type="audio/mpeg" />
+			<link>http://www.bodogfootball.net/media/Ditka_1-10-07.mp3</link>
+			<guid isPermaLink="true">www.bodogfootball.net</guid>
+			<itunes:duration>18:34</itunes:duration>
+			<itunes:explicit>no</itunes:explicit>
+		</item>
+		<item>
+			<title>Mike Ditka Podcast Week 20</title>
+			<description>Team by Team, Step by Step</description>
+			<pubDate>Thurs, 18 January 14:00:00 GMT</pubDate>
+			<enclosure url="http://www.bodogfootball.net/media/Ditka_1-17-07.mp3" length="10660992" type="audio/mpeg" />
+			<link>http://www.bodogfootball.net/media/Ditka_1-17-07.mp3</link>
+			<guid isPermaLink="true">www.bodogfootball.net</guid>
+			<itunes:duration>14:48</itunes:duration>
+			<itunes:explicit>no</itunes:explicit>
+		</item>
+		<item>
+			<title>Mike Ditka Podcast Week 21</title>
+			<description>Team by Team, Step by Step</description>
+			<pubDate>Thurs, 25 January 14:00:00 GMT</pubDate>
+			<enclosure url="http://www.bodogfootball.net/media/Ditka_1-24-07.mp3" length="7220979" type="audio/mpeg" />
+			<link>http://www.bodogfootball.net/media/Ditka_1-24-07.mp3</link>
+			<guid isPermaLink="true">www.bodogfootball.net</guid>
+			<itunes:duration>10:01</itunes:duration>
+			<itunes:explicit>no</itunes:explicit>
+		</item>
+		<item>
+			<title>Mike Ditka Podcast Week 23</title>
+			<description>Team by Team, Step by Step</description>
+			<pubDate>Friday, 02 February 14:00:00 GMT</pubDate>
+			<enclosure url="http://www.bodogfootball.net/media/Ditka_1-31-07.mp3" length="10466014" type="audio/mpeg" />
+			<link>http://www.bodogfootball.net/media/Ditka_1-31-07.mp3</link>
+			<guid isPermaLink="true">www.bodogfootball.net</guid>
+			<itunes:duration>14:21</itunes:duration>
+			<itunes:explicit>no</itunes:explicit>
+		</item>
+		<item>
+			<title>Mike Ditka Dog of the Week - Week 19</title>
+			<description>Dog of the Week</description>
+			<pubDate>Wed, 10 January 14:00:00 GMT</pubDate>
+			<enclosure url="http://www.bodogfootball.net/media/Ditka_Dog_1-10-07.mp3" length="465087" type="audio/mpeg" />
+			<link>http://www.bodogfootball.net/media/Ditka_Dog_1-10-07.mp3</link>
+			<guid isPermaLink="true">www.bodogfootball.net</guid>
+			<itunes:duration>00:38</itunes:duration>
+			<itunes:explicit>no</itunes:explicit>
+		</item>
+	</channel>
+</rss>

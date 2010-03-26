@@ -1,0 +1,20 @@
+wtk.midp.version = 2.0
+wtk.cldc.version = 1.0
+wtk.optionalpda.enabled = true
+wtk.miapi.enabled  = false
+debug = debug
+DMIDPVERS = DMIDP20
+#Allow Itunes probably for phones with more memory
+DITUNESDEF = DITUNES
+DJSR75 = DNOJSR75
+DJSR238 = DNOJSR238
+DMEMSIZEDEF = DREGULARMEM
+#1.1 kills us.
+DCLDCVERS = DCLDCV10
+JMIDPVERS = MIDP-2.0 
+JCLDCVERS = CLDC-1.0
+PERMISSIONS = ,javax.microedition.io.HttpsConnection
+file.prefix = midp20_podcast_jsr75_
+bin = ../bin20podcastjsr75
+MIDLETVERS = ${MIDLETVERSROOT}
+SUFFIXVERS = 2.0-podcast

@@ -1,0 +1,17 @@
+RELEASE = 
+DTESTDEF = D${RELEASE}TEST
+DTESTUIDEF = D${RELEASE}TESTUI
+DLOGDEF = D${RELEASE}LOGGING
+#DLOGDEF = DNOLOGGING
+#add.jars = true
+#ext.jar = ../../../JLogMicro/bin/JLogMicro.jar
+#Compile test ui
+testui.presrc = ../testpresrc
+#Copy from src copy.jar.src = true
+#Copy from src jarsrc = ../../../JLogMicro/src
+jar.presrc = ../../../JLogMicro/jlogmicro/presrc
+need.test.res = true
+res.test.dir = ../testdata
+res.test.todir = 
+obfuscate = no
+#keep.obfuscate = true

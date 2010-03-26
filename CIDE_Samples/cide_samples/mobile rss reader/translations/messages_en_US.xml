@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<properties>
+<comment>Text for RSSReader.</comment>
+<map/>
+<node name="rssreader">
+<map>
+<!-- TODO add more text.  -->
+<!-- ###################################################################-->
+<!-- RSSReader resources for J2ME                             -->
+<!-- Copyright Tomas Darmovzal &amp; Josef Cacek 2003-2006-           -->
+<!-- ###################################################################-->
+<entry key="alert.about.title">About RssReader</entry>
+<entry key="alert.about">RssReader v + \1 Copyright (C) 2005-2006 Tommi Laukkanen, http://code.google.com/p/mobile-rss-reader/.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details at www.gnu.org.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  By using this program you agree to these conditions.</entry>
+<entry key="label.init.d">Initializing database</entry>
+<entry key="label.init.b">Initializing bookmarks</entry>
+<entry key="label.save.d">Saving bookmarks</entry>
+<entry key="title.help">Help</entry>
+<entry key="title.book">Bookmarks</entry>
+<entry key="title.m.book">Manage bookmarks</entry>
+<!-- This is the initial message that we want to show while we load.  We -->
+<!-- will read it in and put it into manifest. -->
+<node name="initial">
+<map>
+<node name="loading">
+<map>
+<entry key="text.l.load">Loading</entry>
+</map>
+</node>
+<entry key="text.l.items">Loading items...</entry>
+</map>
+</node>
+<entry key="text.l.it">Loading item...</entry>
+<entry key="text.u.it">Updating item...</entry>
+<entry key="text.proc">Processing...</entry>
+<entry key="text.e.sav">Exiting saving data...</entry>
+<entry key="text.u.feed">Updating feed...</entry>
+<entry key="text.u.mfeed">Updating modified feed...</entry>
+<entry key="text.u.data">Updating data...</entry>
+<entry key="text.ua.feed">Updating all feeds...</entry>
+<entry key="text.um.feed">Updating all modified feeds...</entry>
+<entry key="text.l.bmrk">Loading add bookmark...</entry>
+<entry key="text.exit">Exiting saving data...</entry>
+<entry key="text.savd">Saving data...</entry>
+<entry key="text.edit">Loading edit bookmark...</entry>
+<entry key="text.l.feed">Loading feed...</entry>
+<entry key="text.s.item">Sorting items...</entry>
+<entry key="text.l.imp">Loading import form...</entry>
+<entry key="text.l.s">Loading settings...</entry>
+<entry key="text.l.h">Loading help...</entry>
+<entry key="text.l.t">Loading test form...</entry>
+<entry key="text.l.d">Loading debug form...</entry>
+<entry key="text.l.imp.f">Loading feeds from import...</entry>
+<entry key="text.l.f.imp">Loading files to import from...</entry>
+<entry key="text.l.wp">Loading web page...</entry>
+<entry key="text.l.f.bk">Loading files to bookmark from...</entry>
+<entry key="text.w.exit">Are you sure you want to exit?</entry>
+<entry key="text.w.clear">Are you sure you want to clear all data?</entry>
+<entry key="text.w.q">Are you sure you want to quit without saving data?</entry>
+<entry key="text.w.del">Are you sure you want to delete?</entry>
+<entry key="text.m.help">To start go to manage bookmarks and look at help.</entry>
+<entry key="text.wr.dup">Warning duplicate feed \1 overriden.</entry>
+<entry key="text.bk.help">To start go to add bookmark to start adding feeds or Import to import feeds to add/import feeds.  Use help present in these forms.</entry>
+<entry key="text.mge.help">Add, edit, delete, import bookmarks/feeds</entry>
+<entry key="text.bbk.help">Go back to main bookmarks to open feed/bookmark, update, and other commands.</entry>
+<entry key="text.ua.help">Update all feeds</entry>
+<entry key="text.um.help">Update all modified feeds.  Only feeds which show as modified from where they are published are modified.  This can save some time.</entry>
+<entry key="text.abm.help">Add bookmark (feed)</entry>
+<entry key="text.ebm.help">Edit bookmark (feed)</entry>
+<entry key="text.ibmc.help">Insert bookmark (feed) before current selected element on previous bookmarks list</entry>
+<entry key="text.abmc.help">Add bookmark (feed) after current selected element on previous bookmarks list</entry>
+<entry key="text.pbmc.help">Append bookmark (feed) at the end of previous bookmarks list</entry>
+<entry key="text.bbmc.help">Name to use for bookmark (feed).  The name must be unique within the bookmarks.</entry>
+<entry key="text.lbm.help">Link (URL) to RSS feed.</entry>
+<entry key="text.imp.help">Import bookmarks (feeds) from OPML, HTML hyperlinks, HTML OPML auto links, HTML RSS auto links </entry>
+<entry key="text.fimp.help">Line by line has either lines with URL followed by space by bookmark (feed) name.  Or, just URLs where the URL will be used as the URL and the name.</entry>
+<entry key="text.iimp.help">Insert bookmark (feed) before current selected element on previous bookmarks list</entry>
+<entry key="text.aimp.help">Add bookmark (feed) after current selected element on previous bookmarks list</entry>
+<entry key="text.pimp.help">Append bookmark (feed) at the end of previous bookmarks list</entry>
+<entry key="text.oimp.help">Override bookmarks will replace an existing bookmark if it has the same name as a bookmark (feed) in the import file with the bookmark (feed) in the import file.  The replaced bookmark will remain in the same place in the boookmark list even if the other bookmarks are put into a different place in the list.  If using don't override, if there is a bookmark (feed) with the same name, it will not be replaced and an error message will be given, but other bookmarks in the import will be added if they are unique.</entry>
+<entry key="text.set.help">Update settings, see resource usage, program and phone info.</entry>
+<entry key="text.stxt.help">For phones that support copy/paste, some can only do this when the field with data is a text box.  By selecting Text (large) box, you enable the copy for URLs.</entry>
+<entry key="text.spg.help">To allow using the keypad to go back to the previous screen select also use keypad and other commands....  This is used on item form.  If this is difficult to read, turn it off as it is device dependent.</entry>
+<entry key="text.sfs.help">To pick font size when allow using keypad.</entry>
+<entry key="text.save.help">Save bookmarks (feeds) and items, but do not exit.</entry>
+<entry key="text.kyp.help">If this form has problems with the text fields, you may need to disable using the keypad by going to settings and disabling it.</entry>
+<entry key="text.exit.help">Exit after saving bookmarks (feeds) and items.  This allows items to be read offline if they were loaded from before.  By contrast, if you kill the program only bookmarks will be saved as killing does not allow saving everything.</entry>
+<entry key="text.k.0">Key 0</entry>
+<entry key="text.k.1">Key 1</entry>
+<entry key="text.k.2">Key 2</entry>
+<entry key="text.k.3">Key 3</entry>
+<entry key="text.k.4">Key 4</entry>
+<entry key="text.k.5">Key 5</entry>
+<entry key="text.k.6">Key 6</entry>
+<entry key="text.k.7">Key 7</entry>
+<entry key="text.k.8">Key 8</entry>
+<entry key="text.k.9">Key 9</entry>
+<entry key="text.k.pound">pound</entry>
+<entry key="text.k.star">star</entry>
+<entry key="text.b.key">Press \1 to go back to the previous screen.</entry>
+<entry key="text.s.key">Press \1 to toggle on/off auto scroll.</entry>
+<entry key="text.pf.key">Press \1 to page forward</entry>
+<entry key="text.pb.key">Press \1 to page back</entry>
+<entry key="text.lf.key">Press \1 to go one line forward.</entry>
+<entry key="text.lb.key">Press \1 to go one line back.</entry>
+<entry key="text.auf.key">Press \1 to autoscroll faster.</entry>
+<entry key="text.aus.key">Press \1 to autoscroll slower..</entry>
+<entry key="text.ld.t">Loading title for feed \1</entry>
+<entry key="text.fin.errb">Finished with one or more exceptions or errors below.</entry>
+<entry key="text.fin.erra">Finished with one or more exceptions or errors above.</entry>
+<entry key="text.sv.rwo">Retrying without saving items to save space in database.</entry>
+
+<!-- ##################################################################### -->
+<!-- #####    Exceptions/ALerts -->
+<!-- ##################################################################### -->
+
+<entry key="exc.sv.set">Error while storing settings.</entry>
+<entry key="exc.int.set">Internal error while storing settings.</entry>
+<entry key="exc.dbe.sv">Database error while loading saved feeds.</entry>
+<entry key="exc.int.err">Internal error</entry>
+<entry key="exc.int.proc">Internal error while processing</entry>
+<entry key="exc.om.rsd">Out Of Memory Error while parsing RSS data \1</entry>
+<entry key="exc.ul.rdr">Parsing HTML redirect cannot be processed.</entry>
+<entry key="exc.om.set">Out Of Memory Error loading settings form</entry>
+<entry key="exc.int.set">Internal error loading settings form</entry>
+<entry key="exc.om.bhlp">Out Of Memory Error loading help form</entry>
+<entry key="exc.int.bhlp">Internal error loading help form</entry>
+<entry key="exc.om.bmk">Out Of Memory Error loading bookmark form</entry>
+<entry key="exc.int.bmk">Internal error loading bookmark form</entry>
+<entry key="exc.om.flf">Out Of Memory Error getting file form.</entry>
+<entry key="exc.int.flf">Internal error getting file form.</entry>
+<entry key="exc.sv.ursf">Unrecoverable error saving feeds again.</entry>
+<entry key="exc.sv.om">Error during save out of memory.</entry>
+<entry key="exc.sv.dbe">Error saving feeds to database.  Database error.</entry>
+<entry key="exc.sv.dbf">Error saving feeds to database.  Database full.</entry>
+<entry key="exc.om.imp">Out Of Memory Error importing feeds from \1</entry>
+<entry key="exc.int.imp">Internal error importing feeds from \1</entry>
+<entry key="exc.opl.fd">Error while trying to open/load feed 
+\1</entry>
+<entry key="exc.om.ld">Out of memory loading  feed on:
+\1</entry>
+<entry key="exc.om.pse">Out of memory parsing  feed on:
+\1</entry>
+<entry key="exc.er.ld">Error loading  feed on:
+\1</entry>
+<entry key="exc.er.pse">Error parsing  feed on:
+\1</entry>
+<entry key="exc.int.ld">Internal error loading  feed on:
+\1</entry>
+<entry key="exc.int.pse">Internal error parsing  feed on:
+\1</entry>
+<entry key="exc.fd.ex">Error:  Feed already exists with name \1 Existing feed not updated. </entry>
+<entry key="exc.err.imp">Error while parsing import data: \1</entry>
+<entry key="exc.tr">Error while loading translation.</entry>
+
+<!-- ##################################################################### -->
+<!-- #####    Command -->
+<!-- ##################################################################### -->
+
+<entry key="cmd.ok">OK</entry>
+<entry key="cmd.cancel">Cancel</entry>
+<entry key="cmd.back">Back</entry>
+<entry key="cmd.clear">Clear</entry>
+<entry key="cmd.lclear">Clear screen</entry>
+<entry key="cmd.help">Help</entry>
+<entry key="cmd.i.help">Item Help</entry>
+<entry key="cmd.about">About</entry>
+<entry key="cmd.exit">Exit</entry>
+<entry key="cmd.t.hdr">Test headers/items</entry>
+<entry key="cmd.t.bmk">Test bookmarks shown</entry>
+<entry key="cmd.t.gb">Test go back to last</entry>
+<entry key="cmd.q">Quit</entry>
+<entry key="cmd.q.del">Quit and clear db</entry>
+<entry key="cmd.a.fd">Add new feed</entry>
+<entry key="cmd.o.fd">Open feed</entry>
+<entry key="cmd.rvr">River of news</entry>
+<entry key="cmd.o.lk">Open link</entry>
+<entry key="cmd.o.en">Open enclosure</entry>
+<entry key="cmd.c.lk">Copy link</entry>
+<entry key="cmd.c.en">Copy enclosure</entry>
+<entry key="cmd.im.fd">Import feeds</entry>
+<entry key="cmd.im.cfd">Import current feeds</entry>
+<entry key="cmd.set">Settings</entry>
+<entry key="cmd.m.bk">Manage bookmarks</entry>
+<entry key="cmd.ua">Update all</entry>
+<entry key="cmd.uma">Update modified all</entry>
+<entry key="cmd.tf">Testing Form</entry>
+<entry key="cmd.dbl">Debug Log</entry>
+<entry key="cmd.clr">Clear</entry>
+<entry key="cmd.i.imp">Insert import</entry>
+<entry key="cmd.li.imp">Insert current import</entry>
+<entry key="cmd.a.imp">Add import</entry>
+<entry key="cmd.la.imp">Add current import</entry>
+<entry key="cmd.ap.imp">Append import</entry>
+<entry key="cmd.lap.imp">Append end import</entry>
+<entry key="cmd.f.fl">Find files</entry>
+<entry key="cmd.a.pst">Allow paste</entry>
+<entry key="cmd.t.imp">Test bookmarks imported</entry>
+<entry key="cmd.op.i">Open item</entry>
+<entry key="cmd.open">Open</entry>
+<entry key="cmd.u.fd">Update feed</entry>
+<entry key="cmd.um.fd">Update modified feed</entry>
+<entry key="cmd.s.bdt">Show bookmark details</entry>
+<entry key="cmd.i.bmk">Insert bookmark</entry>
+<entry key="cmd.li.bmk">Insert current bookmark</entry>
+<entry key="cmd.a.bmk">Add bookmark</entry>
+<entry key="cmd.la.bmk">Add current bookmark</entry>
+<entry key="cmd.ap.bmk">Append bookmark</entry>
+<entry key="cmd.lap.bmk">Append end bookmark</entry>
+<entry key="cmd.msg">Messages</entry>
+<entry key="cmd.err">Errors</entry>
+<entry key="cmd.diag">Diagnostics</entry>
+<entry key="cmd.st">Start</entry>
+<entry key="cmd.ud.s">Unread date sorted</entry>
+<entry key="cmd.rd.s">Read date sorted</entry>
+<entry key="cmd.uf.s">Unread feed sorted</entry>
+<entry key="cmd.rf.s">Read feed sorted</entry>
+<entry key="cmd.ad.s">All date sorted</entry>
+<entry key="cmd.af.s">All feed sorted</entry>
+<entry key="cmd.mk.r">Mark read</entry>
+<entry key="cmd.mk.u">Mark unread</entry>
+<entry key="cmd.t.nw">Test news/items</entry>
+<entry key="cmd.e.fd">Edit feed</entry>
+<entry key="cmd.d.fd">Delete feed</entry>
+<entry key="cmd.sve">Save without exit</entry>
+<entry key="cmd.t.sve">Test save without exit</entry>
+
+<entry key="page.cmd.info">Info</entry>
+<entry key="page.cmd.position">Position</entry>
+<entry key="i.stop">Stopping</entry>
+<entry key="i.delay">Delay: </entry>
+<entry key="i.wait">Wait please</entry>
+<entry key="i.end">End of data</entry>
+
+<entry key="page.pos.head">Position</entry>
+<entry key="page.pos.actual">Actual position</entry>
+</map>
+</node>
+</properties>

@@ -1,0 +1,34 @@
+<loader version="1.0">
+    <application id="RSSReader">
+        <name >
+            RSSReader
+        </name>
+
+        <description >
+        </description>
+
+        <version >
+            1.3
+        </version>
+
+        <vendor >
+            substanceofcode.com
+        </vendor>
+
+        <copyright >
+            Copyright (c) 2006 Tommi Laukkanen
+        </copyright>
+
+        <fileset Java="1.5">
+            <directory >
+                substanceofcode
+            </directory>
+
+            <files >
+                RSSReader.cod
+            </files>
+        </fileset>
+
+    </application>
+
+</loader>

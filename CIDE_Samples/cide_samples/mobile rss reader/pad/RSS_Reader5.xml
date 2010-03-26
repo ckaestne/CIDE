@@ -1,0 +1,216 @@
+<?xml version="1.0" ?>
+<XML_DIZ_INFO>
+	<MASTER_PAD_VERSION_INFO>
+		<MASTER_PAD_VERSION>3.01</MASTER_PAD_VERSION>
+		<MASTER_PAD_EDITOR>PADGen 3.0.1.35 http://www.padgen.org</MASTER_PAD_EDITOR>
+		<MASTER_PAD_INFO>Portable Application Description, or PAD for short, is a data set that is used by shareware authors to disseminate information to anyone interested in their software products. To find out more go to http://www.asp-shareware.org/pad</MASTER_PAD_INFO>
+	</MASTER_PAD_VERSION_INFO>
+	<Company_Info>
+		<Company_Name>Tommi Laukkanen</Company_Name>
+		<Address_1 />
+		<Address_2 />
+		<City_Town>Tampere</City_Town>
+		<State_Province />
+		<Zip_Postal_Code />
+		<Country>Finland</Country>
+		<Company_WebSite_URL>http://www.substanceofcode.com/</Company_WebSite_URL>
+		<Contact_Info>
+			<Author_First_Name>Tommi</Author_First_Name>
+			<Author_Last_Name>Laukkanen</Author_Last_Name>
+			<Author_Email>ibwiser@sbcglobal.net</Author_Email>
+			<Contact_First_Name>Irving</Contact_First_Name>
+			<Contact_Last_Name>Bunton</Contact_Last_Name>
+			<Contact_Email>ibwiser@sbcglobal.net</Contact_Email>
+		</Contact_Info>
+		<Support_Info>
+			<Sales_Email>ibwiser@sbcglobal.net</Sales_Email>
+			<Support_Email>ibwiser@sbcglobal.net</Support_Email>
+			<General_Email>ibwiser@sbcglobal.net</General_Email>
+			<Sales_Phone />
+			<Support_Phone />
+			<General_Phone />
+			<Fax_Phone />
+		</Support_Info>
+	</Company_Info>
+	<Program_Info>
+		<Program_Name>RSS Reader</Program_Name>
+		<Program_Version>1.11</Program_Version>
+		<Program_Release_Month>03</Program_Release_Month>
+		<Program_Release_Day>18</Program_Release_Day>
+		<Program_Release_Year>2008</Program_Release_Year>
+		<Program_Cost_Dollars>0</Program_Cost_Dollars>
+		<Program_Cost_Other_Code />
+		<Program_Cost_Other />
+		<Program_Type>Freeware</Program_Type>
+		<Program_Release_Status>Minor Update</Program_Release_Status>
+		<Program_Install_Support>No Install Support</Program_Install_Support>
+		<Program_OS_Support>Pocket PC,RIM,Symbian,Java</Program_OS_Support>
+		<Program_Language>English</Program_Language>
+		<Program_Change_Info>New river of news options to sort by date/feed for all/read/unread items</Program_Change_Info>
+		<Program_Specific_Category>Internet</Program_Specific_Category>
+		<Program_Category_Class>Network &amp; Internet::Other</Program_Category_Class>
+		<Program_System_Requirements>Symbian, Windows Mobile, or Java enabled phone</Program_System_Requirements>
+		<File_Info>
+			<File_Size_Bytes>788830</File_Size_Bytes>
+			<File_Size_K>770</File_Size_K>
+			<File_Size_MB>0.75</File_Size_MB>
+		</File_Info>
+		<Expire_Info>
+			<Has_Expire_Info>N</Has_Expire_Info>
+			<Expire_Count />
+			<Expire_Based_On />
+			<Expire_Other_Info />
+			<Expire_Month />
+			<Expire_Day />
+			<Expire_Year />
+		</Expire_Info>
+	</Program_Info>
+	<Program_Descriptions>
+		<English>
+			<Keywords>J2ME, Java ME, RSS, Reader, Cell Phone, Mobile, Internet</Keywords>
+			<Char_Desc_45>J2ME (Java ME) Mobile/Cell phone RSS Reader</Char_Desc_45>
+			<Char_Desc_80>J2ME (Java Enabled/ME) Mobile/Cell phone RSS/News/Blog Reader</Char_Desc_80>
+			<Char_Desc_250>The free RSS feed reader is an J2ME(Java) application for cell phones/mobiles that is able to read most RSS servers/feed versions. RSS is a file format designed for sharing headlines, blogs and/or news. Data is stored on the device.</Char_Desc_250>
+			<Char_Desc_450>The free RSS feed reader is an J2ME MIDP cell phone/mobile application that is able to read most RSS servers/feed versions. RSS is a lightweight XML format designed for sharing headlines and other content like blogs and news. Data is stored on the device and updated on request. </Char_Desc_450>
+			<Char_Desc_2000>The free RSS feed reader is an J2ME MIDP application for cell phones/mobiles that is able to read most RSS servers/feed versions. RSS is a lightweight XML format designed for sharing headlines and other content like blogs and news. Data is stored on the device and updated on request. This uses the internet which service providers charge extra for, so you would best get an unlimited data from your service provider. This should work with most recent devices as they have MIDP 2.0. If it does not work, use the midp10_... version which is for older versions. This is licensed under GPL. Source code authored by Tommi Laukkanen is at http://code.google.com/p/mobile-rss-reader/   Application features:  Add RSS feed bookmarks  Parse RSS feeds  Browse RSS feed headers  Read topics  Read all unread topics  Supports ISO8859_1, windows-1252, UTF-8 , and UTF-16  Import and synchronize RSS feed lists using formats and filter feeds based on name and URL  OPML  Line by line  HTML hyperlinks  Update all/updated feeds with single command  Open item link or enclosure in device browser (Only on version midp20_ for MIDP 2.0 on most recent phones starting a yr ago)  </Char_Desc_2000>
+		</English>
+	</Program_Descriptions>
+	<Web_Info>
+		<Application_URLs>
+			<Application_Info_URL>http://rssreader.freewebpage.org/index.html</Application_Info_URL>
+			<Application_Order_URL>http://rssreader.freewebpage.org/index.html</Application_Order_URL>
+			<Application_Screenshot_URL>http://mobilerssreader.sourceforge.net/screenshots/main01.jpg</Application_Screenshot_URL>
+			<Application_Icon_URL>http://mobilerssreader.sourceforge.net/screenshots/rss.png</Application_Icon_URL>
+			<Application_XML_File_URL>http://mobilerssreader.sourceforge.net/pad/RSS_Reader4.xml</Application_XML_File_URL>
+		</Application_URLs>
+		<Download_URLs>
+			<Primary_Download_URL>http://superb-east.dl.sourceforge.net/sourceforge/mobilerssreader/rssreader_v1_11-bin.zip</Primary_Download_URL>
+> 			<Secondary_Download_URL />
+			<Additional_Download_URL_1 />
+			<Additional_Download_URL_2 />
+		</Download_URLs>
+	</Web_Info>
+	<Permissions>
+		<Distribution_Permissions />
+		<EULA>Copyright (C) 2005-2006 Tommi Laukkanen
+http://www.substanceofcode.com
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+ 
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+</EULA>
+	</Permissions>
+	<Affiliates>
+		<Affiliates_FORM>Y</Affiliates_FORM>
+		<Affiliates_VERSION>1.2</Affiliates_VERSION>
+		<Affiliates_URL>http://www.asp-shareware.org/pad/extensions/Affiliates.htm</Affiliates_URL>
+		<Affiliates_Information_Page />
+		<Affiliates_Avangate_Order_Page />
+		<Affiliates_Avangate_Vendor_ID />
+		<Affiliates_Avangate_Product_ID />
+		<Affiliates_Avangate_Maximum_Commission_Rate />
+		<Affiliates_BMTMicro_Order_Page />
+		<Affiliates_BMTMicro_Vendor_ID />
+		<Affiliates_BMTMicro_Product_ID />
+		<Affiliates_BMTMicro_Maximum_Commission_Rate />
+		<Affiliates_clixGalore_Order_Page />
+		<Affiliates_clixGalore_Vendor_ID />
+		<Affiliates_clixGalore_Product_ID />
+		<Affiliates_clixGalore_Maximum_Commission_Rate />
+		<Affiliates_CommissionJunction_Order_Page />
+		<Affiliates_CommissionJunction_Vendor_ID />
+		<Affiliates_CommissionJunction_Product_ID />
+		<Affiliates_CommissionJunction_Maximum_Commission_Rate />
+		<Affiliates_DigiBuy_Order_Page />
+		<Affiliates_DigiBuy_Vendor_ID />
+		<Affiliates_DigiBuy_Product_ID />
+		<Affiliates_DigiBuy_Maximum_Commission_Rate />
+		<Affiliates_DigitalCandle_Order_Page />
+		<Affiliates_DigitalCandle_Vendor_ID />
+		<Affiliates_DigitalCandle_Product_ID />
+		<Affiliates_DigitalCandle_Maximum_Commission_Rate />
+		<Affiliates_Emetrix_Order_Page />
+		<Affiliates_Emetrix_Vendor_ID />
+		<Affiliates_Emetrix_Product_ID />
+		<Affiliates_Emetrix_Maximum_Commission_Rate />
+		<Affiliates_eSellerate_Order_Page />
+		<Affiliates_eSellerate_Vendor_ID />
+		<Affiliates_eSellerate_Product_ID />
+		<Affiliates_eSellerate_Maximum_Commission_Rate />
+		<Affiliates_Kagi_Order_Page />
+		<Affiliates_Kagi_Vendor_ID />
+		<Affiliates_Kagi_Product_ID />
+		<Affiliates_Kagi_Maximum_Commission_Rate />
+		<Affiliates_LinkShare_Order_Page />
+		<Affiliates_LinkShare_Vendor_ID />
+		<Affiliates_LinkShare_Product_ID />
+		<Affiliates_LinkShare_Maximum_Commission_Rate />
+		<Affiliates_NorthStarSol_Order_Page />
+		<Affiliates_NorthStarSol_Vendor_ID />
+		<Affiliates_NorthStarSol_Product_ID />
+		<Affiliates_NorthStarSol_Maximum_Commission_Rate />
+		<Affiliates_Order1_Order_Page />
+		<Affiliates_Order1_Vendor_ID />
+		<Affiliates_Order1_Product_ID />
+		<Affiliates_Order1_Maximum_Commission_Rate />
+		<Affiliates_Osolis_Order_Page />
+		<Affiliates_Osolis_Vendor_ID />
+		<Affiliates_Osolis_Product_ID />
+		<Affiliates_Osolis_Maximum_Commission_Rate />
+		<Affiliates_Plimus_Order_Page />
+		<Affiliates_Plimus_Vendor_ID />
+		<Affiliates_Plimus_Product_ID />
+		<Affiliates_Plimus_Maximum_Commission_Rate />
+		<Affiliates_Regnet_Order_Page />
+		<Affiliates_Regnet_Vendor_ID />
+		<Affiliates_Regnet_Product_ID />
+		<Affiliates_Regnet_Maximum_Commission_Rate />
+		<Affiliates_Regnow_Order_Page />
+		<Affiliates_Regnow_Vendor_ID />
+		<Affiliates_Regnow_Product_ID />
+		<Affiliates_Regnow_Maximum_Commission_Rate />
+		<Affiliates_Regsoft_Order_Page />
+		<Affiliates_Regsoft_Vendor_ID />
+		<Affiliates_Regsoft_Product_ID />
+		<Affiliates_Regsoft_Maximum_Commission_Rate />
+		<Affiliates_ShareIt_Order_Page />
+		<Affiliates_ShareIt_Vendor_ID />
+		<Affiliates_ShareIt_Product_ID />
+		<Affiliates_ShareIt_Maximum_Commission_Rate />
+		<Affiliates_Shareasale_Order_Page />
+		<Affiliates_Shareasale_Vendor_ID />
+		<Affiliates_Shareasale_Product_ID />
+		<Affiliates_Shareasale_Maximum_Commission_Rate />
+		<Affiliates_SWReg_Order_Page />
+		<Affiliates_SWReg_Vendor_ID />
+		<Affiliates_SWReg_Product_ID />
+		<Affiliates_SWReg_Maximum_Commission_Rate />
+		<Affiliates_V-Share_Order_Page />
+		<Affiliates_V-Share_Vendor_ID />
+		<Affiliates_V-Share_Product_ID />
+		<Affiliates_V-Share_Maximum_Commission_Rate />
+		<Affiliates_VFree_Order_Page />
+		<Affiliates_VFree_Vendor_ID />
+		<Affiliates_VFree_Product_ID />
+		<Affiliates_VFree_Maximum_Commission_Rate />
+		<Affiliates_Yaskifo_Order_Page />
+		<Affiliates_Yaskifo_Vendor_ID />
+		<Affiliates_Yaskifo_Product_ID />
+		<Affiliates_Yaskifo_Maximum_Commission_Rate />
+	</Affiliates>
+	<ASP>
+		<ASP_FORM>Y</ASP_FORM>
+		<ASP_Member>N</ASP_Member>
+		<ASP_Member_Number />
+	</ASP>
+</XML_DIZ_INFO>

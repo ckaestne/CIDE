@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?><opml version="1.0">
+<head>
+	<title>Netvibes.com Subscriptions</title>
+</head>
+<body>
+<outline title="General" text="General">
+	<outline type="rss" title="USATODAY.com News - Top Stories" text="USATODAY.com News - Top Stories" xmlUrl="http://rssfeeds.usatoday.com/usatoday-NewsTopStories" htmlUrl="http://www.usatoday.com/news/digest.htm" />
+	<outline type="rss" title="Wired Top Stories" text="Wired Top Stories" xmlUrl="http://www.wired.com/rss//index.xml" htmlUrl="http://www.wired.com/" />
+	<outline type="rss" title="Yahoo! Sports" text="Yahoo! Sports" xmlUrl="http://sports.yahoo.com/top/rss.xml" htmlUrl="http://sports.yahoo.com" />
+	<outline type="rss" title="Netvibes.com Blog" text="Netvibes.com Blog" xmlUrl="http://feeds.feedburner.com/NetvibesDevBlog" htmlUrl="http://blog.netvibes.com/" />
+</outline>
+<outline title="News" text="News" icon="http://static.netvibes.com/img/icons/feed.gif">
+	<outline type="rss" xmlUrl="http://my.abcnews.go.com/rsspublic/fp_rss20.xml" />
+	<outline type="rss" xmlUrl="http://feeds.chicagotribune.com/chicagotribune/news/" />
+</outline>
+</body></opml>

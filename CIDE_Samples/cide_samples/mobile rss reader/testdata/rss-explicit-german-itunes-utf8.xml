@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- must include xmlns:itunes tag -->
+<rss xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" version="2.0">
+    <channel>
+        <title>Andere Länder — Anderes Deutsch</title>
+        <itunes:author>James Pfrehm (UW-Madison)</itunes:author>
+        <link>http://german.lss.wisc.edu/gdgsa/podcast/Andere_Lander/</link>
+        <description>Eine Einführung in die Nationalvarietäten des Deutschen</description>
+		<pubDate>Wed, 3 Feb 2008 12:00:00 CST</pubDate>
+        <itunes:subtitle>Eine Einführung in die Nationalvarietäten des Deutschen</itunes:subtitle>
+        <itunes:summary>This podcast uses unique situations and dialogue to introduce advanced students of German to the Swiss and Austrian national varieties of the German language. Drop in and listen as Birgit from Hannover and Gregor from Graz encounter the distinct standard German varieties of Austria and Switzerland!</itunes:summary>
+        <language>de-DE</language>
+        <copyright>Creative Commons Attribution-NonCommercial-NoDerivs 2.5 License</copyright>
+        <itunes:owner>
+            <itunes:name>James Pfrehm</itunes:name>
+            <itunes:email>pfrehmj2001@wisc.edu</itunes:email>
+        </itunes:owner>
+        <!-- iTunes prefers square images 300x300 pixels or larger -->
+        <itunes:image href="http://german.lss.wisc.edu/gdgsa/podcast/Andere_Lander/Andere_Lander_Logo_text.jpg" />
+        <!-- iTunes Browse Podcasts Category -->
+        <itunes:category text="International">
+            <itunes:category text="German"/>
+        </itunes:category>
+        <itunes:category text="Education">
+            <itunes:category text="Higher Education"/>
+        </itunes:category>
+        <itunes:keywords>learn German, German language, varieties of German, learn German, Austrian German, Nationalvarietäten, Deustch, Österreichisch, Schweiz, UW, UW-Madison, Madison, Wisconsin</itunes:keywords>
+        <itunes:explicit>no</itunes:explicit>
+        <item>
+            <title>explicit yes no date Episode 1</title>
+            <itunes:author>James Pfrehm (UW-Madison)</itunes:author>
+            <itunes:subtitle>Birgit bereitet sich auf ihren Umzug nach Wien vor</itunes:subtitle>
+            <itunes:summary>Birgit is about to begin her university studies in Vienna, Austria. But when she receives a letter from her Viennese grandmother and has problems understanding a number of words, she starts to worry... Will she be able to understand the people in Vienna? Will they understand her? Can her father help alleviate her worry? Tune in and hear how this riveting quandary pans out!</itunes:summary>
+            <enclosure url="http://german.lss.wisc.edu/gdgsa/podcast/Andere_Lander/episodes/Episode1.mp3" length="9681361" type="audio/mpeg" />
+            <guid>http://german.lss.wisc.edu/gdgsa/podcast/Andere_Lander/episodes/Episode1.mp3</guid>
+            <itunes:duration>10:00</itunes:duration>
+            <itunes:keywords>German language, varieties of German, learn German, Austrian German</itunes:keywords>
+			<itunes:explicit>yes</itunes:explicit>
+        </item>
+        <item>
+            <title>explicit clean has date Episode 1 Transcript</title>
+            <itunes:author>James Pfrehm (UW-Madison)</itunes:author>
+            <itunes:summary>PDF transcript for Episode 1</itunes:summary>
+            <enclosure url="http://german.lss.wisc.edu/gdgsa/podcast/Andere_Lander/episodes/Transcript_for_Episode_1.pdf" length="104772" type="application/pdf" />
+            <guid>http://german.lss.wisc.edu/gdgsa/podcast/Andere_Lander/episodes/Transcript_for_Episode_1.pdf</guid>
+            <pubDate>Wed, 1 Mar 2006 12:00:00 CST</pubDate>
+			<itunes:explicit>clean</itunes:explicit>
+        </item>
+        <item>
+            <title>explicit no Episode 1 Worksheet</title>
+            <itunes:author>James Pfrehm (UW-Madison)</itunes:author>
+            <itunes:summary>PDF worksheet for Episode 1</itunes:summary>
+            <enclosure url="http://german.lss.wisc.edu/gdgsa/podcast/Andere_Lander/episodes/Worksheet_for_Episode_1.pdf" length="182058" type="application/pdf" />
+            <guid>http://german.lss.wisc.edu/gdgsa/podcast/Andere_Lander/episodes/Worksheet_for_Episode_1.pdf</guid>
+            <pubDate>Wed, 1 Mar 2006 12:00:00 CST</pubDate>
+			<itunes:explicit>no</itunes:explicit>
+        </item>
+        <item>
+            <title>explicit not specified Episode 2: Abendessen bei Max</title>
+            <itunes:author>James Pfrehm (UW-Madison)</itunes:author>
+            <itunes:subtitle>Birgit wird zum Abendessen bei Max eingeladen</itunes:subtitle>
+            <itunes:summary>Birgit has been living in Vienna for two months. Just last week a fellow law student invited her over for a home-cooked dinner…her first date with an Austrian! How will the dinner date go? Will Max crash and burn? Will Birgit fall head over heels? Listen in and find out!</itunes:summary>
+            <enclosure url="http://german.lss.wisc.edu/gdgsa/podcast/Andere_Lander/episodes/Episode2.mp3" length="9261037" type="audio/mpeg" />
+            <guid>http://german.lss.wisc.edu/gdgsa/podcast/Andere_Lander/episodes/Episode2.mp3</guid>
+            <pubDate>Sat, 15 Apr 2006 12:00:00 CST</pubDate>
+            <itunes:duration>9:35</itunes:duration>
+            <itunes:keywords>German language, varieties of German, learn German, Austrian German</itunes:keywords>
+        </item>
+        <item>
+            <title>Episode 2 Transcript</title>
+            <itunes:author>James Pfrehm (UW-Madison)</itunes:author>
+            <itunes:summary>PDF transcript for Episode 2</itunes:summary>
+            <enclosure url="http://german.lss.wisc.edu/gdgsa/podcast/Andere_Lander/episodes/Transcript_for_Episode_2.pdf" length="26388" type="application/pdf" />
+            <guid>http://german.lss.wisc.edu/gdgsa/podcast/Andere_Lander/episodes/Transcript_for_Episode_2.pdf</guid>
+            <pubDate>Sat, 15 Apr 2006 12:00:00 CST</pubDate>
+        </item>
+        <item>
+            <title>Episode 3: Birgit wird geprüft...</title>
+            <itunes:author>James Pfrehm (UW-Madison)</itunes:author>
+            <itunes:subtitle>Max schlägt ein lustiges Quiz vor, um Birgit vom Prüfungsstress abzulenken. </itunes:subtitle>
+            <itunes:summary>It’s the end of Birgit’s first semester at the U. of Vienna. She has three very difficult exams looming and is stressed out. In the manner befitting a good boyfriend, her Viennese beau, Max, does his best to calm her down. He decides to try to take her mind off the tests. But will his noble efforts pay off? Or will his benevolent wiles only serve to afflict Birgit even more? Tune in and find out!</itunes:summary>
+            <enclosure url="http://german.lss.wisc.edu/gdgsa/podcast/Andere_Lander/episodes/Episode3.mp3" length="6831895" type="audio/mpeg" />
+            <guid>http://german.lss.wisc.edu/gdgsa/podcast/Andere_Lander/episodes/Episode3.mp3</guid>
+            <pubDate>Sun, 03 Dec 2006 12:00:00 CST</pubDate>
+            <itunes:duration>7:02</itunes:duration>
+            <itunes:keywords>German language, varieties of German, learn German, Austrian German</itunes:keywords>
+        </item>
+        <item>
+            <title>Episode 3 Transcript</title>
+            <itunes:author>James Pfrehm (UW-Madison)</itunes:author>
+            <itunes:summary>PDF transcript for Episode 3</itunes:summary>
+            <enclosure url="http://german.lss.wisc.edu/gdgsa/podcast/Andere_Lander/episodes/Transcript_for_Episode_3.pdf" length="20116" type="application/pdf" />
+            <guid>http://german.lss.wisc.edu/gdgsa/podcast/Andere_Lander/episodes/Transcript_for_Episode_3.pdf</guid>
+            <pubDate>Sun, 03 Dec 2006 12:00:00 CST</pubDate>
+        </item>
+        <item>
+            <title>Episode 4: Birgit zahlt es Max heim</title>
+            <itunes:author>James Pfrehm (UW-Madison)</itunes:author>
+            <itunes:subtitle>Birgit zahlt es Max heim</itunes:subtitle>
+            <itunes:summary>With her final exams behind her, Birgit’s boyfriend Max decides to celebrate with dinner out at a nice restaurant. Little does he know, however, that Birgit has a payback surprise waiting for him—one that will test his own knowledge of Austrian and German Standard German. Payback: this time, it’s pluricentric…</itunes:summary>
+            <enclosure url="http://german.lss.wisc.edu/gdgsa/podcast/Andere_Lander/episodes/Episode4.mp3" length="10127790" type="audio/mpeg" />
+            <guid>http://german.lss.wisc.edu/gdgsa/podcast/Andere_Lander/episodes/Episode4.mp3</guid>
+            <pubDate>Mon, 05 Mar 2007 12:00:00 CST</pubDate>
+            <itunes:duration>8:22</itunes:duration>
+            <itunes:keywords>German language, varieties of German, learn German, Austrian German</itunes:keywords>
+        </item>
+        <item>
+            <title>Episode 4 Transcript</title>
+            <itunes:author>James Pfrehm (UW-Madison)</itunes:author>
+            <itunes:summary>PDF transcript for Episode 4</itunes:summary>
+            <enclosure url="http://german.lss.wisc.edu/gdgsa/podcast/Andere_Lander/episodes/Transcript_for_Episode_4.pdf" length="29127" type="application/pdf" />
+            <guid>http://german.lss.wisc.edu/gdgsa/podcast/Andere_Lander/episodes/Transcript_for_Episode_4.pdf</guid>
+            <pubDate>Mon, 05 Mar 2007 12:00:00 CST</pubDate>
+        </item>
+        <item>
+            <title>Episode 5: Max und Birgit ziehen in eine Wohnung ein</title>
+            <itunes:author>James Pfrehm (UW-Madison)</itunes:author>
+            <itunes:subtitle>Max und Birgit ziehen in eine Wohnung ein</itunes:subtitle>
+            <itunes:summary>Not even a year into their relationship, Max and Birgit decide to take the BIG PLUNGE—into cohabitation. They have found a nice apartment in the inner city of Vienna, and look forward to making a comfy home together. Little do they know that, already, the actual process of moving in will test their relationship… Will they surmount this new challenge? Or will their relationship buckle under the stress? Listen in and find out! </itunes:summary>
+            <enclosure url="http://german.lss.wisc.edu/gdgsa/podcast/Andere_Lander/episodes/Episode5.m4a" length="4134259" type="audio/x-m4a" />
+            <guid>http://german.lss.wisc.edu/gdgsa/podcast/Andere_Lander/episodes/Episode5.m4a</guid>
+            <pubDate>Thu, 28 Jun 2007 12:00:00 CST</pubDate>
+            <itunes:duration>8:16</itunes:duration>
+            <itunes:keywords>German language; varieties of German; learn German; Austrian German; Deutsch; österreichisches Deutsch; Österreichisch</itunes:keywords>
+        </item>
+        <item>
+            <title>Episode 5 Transcript</title>
+            <itunes:author>James Pfrehm (UW-Madison)</itunes:author>
+            <itunes:summary>PDF transcript for Episode 5</itunes:summary>
+            <enclosure url="http://german.lss.wisc.edu/gdgsa/podcast/Andere_Lander/episodes/Transcript_for_Episode_5.pdf" length="73273" type="application/pdf" />
+            <guid>http://german.lss.wisc.edu/gdgsa/podcast/Andere_Lander/episodes/Transcript_for_Episode_5.pdf</guid>
+            <pubDate>Thu, 28 Jun 2007 12:00:00 CST</pubDate>
+        </item>
+    </channel>
+</rss>
