@@ -16,7 +16,7 @@
     along with CIDE.  If not, see <http://www.gnu.org/licenses/>.
 
     See http://www.fosd.de/cide/ for further information.
-*/
+ */
 
 package de.ovgu.cide.colorfilter;
 
@@ -81,7 +81,9 @@ public class ColorFilterVariant extends ViewerFilter {
 	}
 
 	private boolean isFileVisible(IFile file) {
-		if (file.getFileExtension().equals("color")
+		if (file == null || file.getName() == null
+				|| file.getFileExtension() == null
+				|| file.getFileExtension().equals("color")
 				|| file.getFileExtension().equals("colors")
 				|| file.getName().equals("model.m"))
 			return false;
