@@ -16,7 +16,7 @@
     along with CIDE.  If not, see <http://www.gnu.org/licenses/>.
 
     See http://www.fosd.de/cide/ for further information.
-*/
+ */
 
 package de.ovgu.cide;
 
@@ -275,7 +275,8 @@ public class CIDECorePlugin extends AbstractUIPlugin {
 
 	public void notifyListeners(ASTColorChangedEvent event) {
 		if (listeners != null)
-			for (WeakReference<IColorChangeListener> ref : listeners) {
+			for (WeakReference<IColorChangeListener> ref : new ArrayList<WeakReference<IColorChangeListener>>(
+					listeners)) {
 				IColorChangeListener listener = ref.get();
 				if (listener != null)
 					listener.astColorChanged(event);
@@ -284,7 +285,8 @@ public class CIDECorePlugin extends AbstractUIPlugin {
 
 	public void notifyListeners(FileColorChangedEvent event) {
 		if (listeners != null)
-			for (WeakReference<IColorChangeListener> ref : listeners) {
+			for (WeakReference<IColorChangeListener> ref : new ArrayList<WeakReference<IColorChangeListener>>(
+					listeners)) {
 				IColorChangeListener listener = ref.get();
 				if (listener != null)
 					listener.fileColorChanged(event);
@@ -293,7 +295,8 @@ public class CIDECorePlugin extends AbstractUIPlugin {
 
 	public void notifyListeners(ColorListChangedEvent event) {
 		if (listeners != null)
-			for (WeakReference<IColorChangeListener> ref : listeners) {
+			for (WeakReference<IColorChangeListener> ref : new ArrayList<WeakReference<IColorChangeListener>>(
+					listeners)) {
 				IColorChangeListener listener = ref.get();
 				if (listener != null)
 					listener.colorListChanged(event);

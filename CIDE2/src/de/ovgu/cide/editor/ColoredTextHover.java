@@ -226,7 +226,7 @@ public class ColoredTextHover implements ITextHover {
 		}
 
 		ArrayList<IASTNode> result = new ArrayList<IASTNode>();
-		if (hoverRegion.getLength() == 0) {
+		if (hoverRegion!=null && hoverRegion.getLength() == 0) {
 			SingleNodeFinder snf = new SingleNodeFinder(hoverRegion.getOffset());
 			ast.accept(snf);
 			IASTNode node = snf.result;

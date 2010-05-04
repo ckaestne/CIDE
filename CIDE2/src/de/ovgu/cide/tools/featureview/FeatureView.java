@@ -289,6 +289,7 @@ public class FeatureView extends ViewPart {
 	}
 
 	private void redraw() {
+		if (table.isDisposed()) return;
 		try {
 			table.setRedraw(false);
 			IFeature oldSelection = getSelectedFeature();
