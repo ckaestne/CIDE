@@ -1,2 +1,34 @@
-<?xml version="1.0" encoding="ISO-8859-1"?><!DOCTYPE featuremodelattributes SYSTEM "featuremodelattributes.dtd">
-<featuremodelattributes><featureattr name="Shortest" id="57"/><featureattr name="SPL" id="52" selected="true"/><featureattr name="Base" id="68"/><featureattr name="Connected" id="58"/><featureattr name="Search" id="56" selected="true"/><featureattr name="Directed" id="61"/><featureattr name="GEN_Edges" id="9"/><featureattr name="Algorithms" id="59"/><featureattr name="SearchI" id="67"/><featureattr name="NewCompound1" id="78"/><featureattr name="BaseImpl" id="60"/><featureattr name="MSTPrim" id="80"/><featureattr name="DFS" id="74"/><featureattr name="SearchBase" id="81"/><featureattr name="EdgeObjects" id="73"/><featureattr name="Benchmark" id="63"/><featureattr name="BFS" id="70"/><featureattr name="Undirected" id="65"/><featureattr name="Prog" id="71"/><featureattr name="Number" id="83"/><featureattr name="Weighted" id="77"/><featureattr name="Transpose" id="72"/><featureattr name="MSTKruskal" id="64"/><featureattr name="Edges" id="66"/><featureattr name="SearchAlg" id="62"/><featureattr name="StronglyConnected" id="79"/><featureattr name="GPL" id="82"/><featureattr name="Cycle" id="76"/><featureattr name="G_NoEdges" id="69"/><featureattr name="GN_OnlyNeighbors" id="75"/></featuremodelattributes>
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE featuremodelattributes SYSTEM "featuremodelattributes.dtd">
+<featuremodelattributes>
+<featureattr name="Shortest" id="19" selected="false"/>
+<featureattr name="SPL" id="52" selected="false"/>
+<featureattr name="Base" id="3" selected="false"/>
+<featureattr name="Search" id="31" selected="true"/>
+<featureattr name="Connected" id="13" selected="false"/>
+<featureattr name="Directed" id="61" selected="false"/>
+<featureattr name="GEN_Edges" id="9" selected="false"/>
+<featureattr name="Algorithms" id="59" selected="true"/>
+<featureattr name="SearchI" id="67" selected="true"/>
+<featureattr name="NewCompound1" id="78" selected="true"/>
+<featureattr name="BaseImpl" id="3" selected="false"/>
+<featureattr name="MSTPrim" id="17" selected="false"/>
+<featureattr name="DFS" id="10" selected="false"/>
+<featureattr name="SearchBase" id="32" selected="false"/>
+<featureattr name="EdgeObjects" id="9" selected="false"/>
+<featureattr name="Benchmark" id="2" selected="false"/>
+<featureattr name="BFS" id="11" selected="true"/>
+<featureattr name="Undirected" id="5" selected="false"/>
+<featureattr name="Prog" id="3" selected="false"/>
+<featureattr name="Weighted" id="6" selected="false"/>
+<featureattr name="Number" id="12" selected="false"/>
+<featureattr name="Transpose" id="15" selected="false"/>
+<featureattr name="MSTKruskal" id="18" selected="false"/>
+<featureattr name="Edges" id="66" selected="true"/>
+<featureattr name="SearchAlg" id="31" selected="true"/>
+<featureattr name="StronglyConnected" id="14" selected="false"/>
+<featureattr name="GPL" id="1" selected="true"/>
+<featureattr name="Cycle" id="16" selected="false"/>
+<featureattr name="GN_OnlyNeighbors" id="8" selected="false"/>
+<featureattr name="G_NoEdges" id="7" selected="false"/>
+</featuremodelattributes>

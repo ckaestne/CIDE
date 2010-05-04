@@ -15,6 +15,7 @@ SearchAlg : DFS
 
 Algorithms : [Number] [Connected] [Transpose] [MSTPrim] [MSTKruskal] [Shortest] [Cycle] [StronglyConnected] :: _Algorithms ;
 
+
 %%
 
 Prog implies Benchmark ;
