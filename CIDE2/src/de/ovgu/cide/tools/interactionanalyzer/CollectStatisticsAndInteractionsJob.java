@@ -16,7 +16,7 @@
     along with CIDE.  If not, see <http://www.gnu.org/licenses/>.
 
     See http://www.fosd.de/cide/ for further information.
-*/
+ */
 
 package de.ovgu.cide.tools.interactionanalyzer;
 
@@ -102,7 +102,7 @@ public class CollectStatisticsAndInteractionsJob extends
 		try {
 			ISourceFile ast;
 			ast = source.getAST();
-			
+
 			ast.accept(new ASTVisitor() {
 				/**
 				 * collect derivative statistics
@@ -128,16 +128,20 @@ public class CollectStatisticsAndInteractionsJob extends
 				 * collect general statistics
 				 * 
 				 * annotation counts only if neither parent nor previous sibling
-				 * already has it
+				 * already has it (exception: annotations on files always count
+				 * as annotation)
 				 */
 				@Override
 				public boolean visit(IASTNode node) {
 					// own colors cleared by parent colors, in case they overlap
-					Set<IFeature> ownColors = new HashSet<IFeature>(source.getColorManager()
-							.getOwnColors(node));
+					Set<IFeature> ownColors = new HashSet<IFeature>(source
+							.getColorManager().getOwnColors(node));
 					if (node.getParent() != null)
 						ownColors.removeAll(source.getColorManager().getColors(
 								node.getParent()));
+					else
+						ownColors.addAll(source.getColorManager().getColors(
+								node));
 					if (!ownColors.isEmpty()) {
 						IASTNode previousSibling = findPreviousSibling(node);
 						if (previousSibling == null
@@ -164,10 +168,11 @@ public class CollectStatisticsAndInteractionsJob extends
 
 				private boolean sameColors(IASTNode previousSibling,
 						IASTNode node) {
-					return source.getColorManager().getColors(node)
-							.equals(
-									source.getColorManager().getColors(
-											previousSibling));
+					return source
+							.getColorManager()
+							.getColors(node)
+							.equals(source.getColorManager().getColors(
+									previousSibling));
 				}
 			});
 		} catch (ParseException e) {
@@ -263,8 +268,8 @@ public class CollectStatisticsAndInteractionsJob extends
 				derivatives.keySet());
 		Collections.sort(derivativeList);
 		for (Derivative d : derivativeList) {
-			createItem2(allDerivatives, d.getDerivativeStr(), derivatives
-					.get(d));
+			createItem2(allDerivatives, d.getDerivativeStr(),
+					derivatives.get(d));
 		}
 		setCountingCaption(allDerivatives);
 	}
