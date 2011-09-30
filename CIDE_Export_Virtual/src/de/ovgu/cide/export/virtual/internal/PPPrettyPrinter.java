@@ -16,10 +16,11 @@
     along with CIDE.  If not, see <http://www.gnu.org/licenses/>.
 
     See http://www.fosd.de/cide/ for further information.
-*/
+ */
 
 package de.ovgu.cide.export.virtual.internal;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.core.resources.IProject;
@@ -53,10 +54,12 @@ public class PPPrettyPrinter extends CopiedNaiveASTFlattener {
 
 	@Override
 	public void preVisit(ASTNode node) {
-		Set<IFeature> ownColors = colorManager.getOwnColors(new AstidWrapper(
-				node));
+		Set<IFeature> ownColors = new HashSet<IFeature>(
+				colorManager.getOwnColors(new AstidWrapper(node)));
+		if (node.getParent() == null)
+			ownColors.addAll(colorManager.getColors(new AstidWrapper(node)));
 		if (ownColors != null && ownColors.size() > 0) {
-				printPPOpen(ownColors);
+			printPPOpen(ownColors);
 		}
 
 		super.preVisit(node);
@@ -68,7 +71,7 @@ public class PPPrettyPrinter extends CopiedNaiveASTFlattener {
 				node));
 
 		if (ownColors != null && ownColors.size() > 0) {
-				printPPClose(ownColors);
+			printPPClose(ownColors);
 
 		}
 
@@ -89,14 +92,12 @@ public class PPPrettyPrinter extends CopiedNaiveASTFlattener {
 	private void printPPClose(Set<IFeature> ownColors) {
 		String endifdefStr = options.getEndInstruction(ownColors);
 		if (options.inNewLine())
-		if (buffer.length() > 0) {
-			char lastChar = buffer.charAt(buffer.length() - 1);
-			if (lastChar != '\n')
-				buffer.append('\n');
-		}
+			if (buffer.length() > 0) {
+				char lastChar = buffer.charAt(buffer.length() - 1);
+				if (lastChar != '\n')
+					buffer.append('\n');
+			}
 		buffer.append(endifdefStr);
 	}
-
-
 
 }
