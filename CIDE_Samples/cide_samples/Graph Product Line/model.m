@@ -3,15 +3,14 @@ SPL : [Base] [Benchmark] [Prog] Edges [Weighted] BaseImpl [SearchI] Algorithms :
 Edges : Directed
 	| Undirected ;
 
-BaseImpl : NewCompound1 [EdgeObjects] :: _BaseImpl ;
+BaseImpl : EdgeImpl [EdgeObjects] :: _BaseImpl ;
 
-NewCompound1 : [GN_OnlyNeighbors] [G_NoEdges] [GEN_Edges] :: _NewCompound1 ;
+EdgeImpl : GN_OnlyNeighbors | G_NoEdges | GEN_Edges ;
 
-SearchI : SearchAlg :: _SearchI ;
+SearchI : SearchAlg SearchBase :: _SearchI ;
 
 SearchAlg : DFS
-	| BFS
-	| SearchBase ;
+	| BFS ;
 
 Algorithms : [Number] [Connected] [Transpose] [MSTPrim] [MSTKruskal] [Shortest] [Cycle] [StronglyConnected] :: _Algorithms ;
 
