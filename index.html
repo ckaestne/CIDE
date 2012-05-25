@@ -1,40 +1,1138 @@
-<!doctype html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>CIDE by ckaestne</title>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
 
-    <link rel="stylesheet" href="stylesheets/styles.css">
-    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-  </head>
-  <body>
-    <div class="wrapper">
-      <header>
-        <h1>CIDE</h1>
-        <p>Virtual Separation of Concerns</p>
-        <p class="view"><a href="https://github.com/ckaestne/CIDE">View the Project on GitHub <small>ckaestne/CIDE</small></a></p>
-        <ul>
-          <li><a href="https://github.com/ckaestne/CIDE/zipball/master">Download <strong>ZIP File</strong></a></li>
-          <li><a href="https://github.com/ckaestne/CIDE/tarball/master">Download <strong>TAR Ball</strong></a></li>
-          <li><a href="https://github.com/ckaestne/CIDE">View On <strong>GitHub</strong></a></li>
-        </ul>
-      </header>
-      <section>
-        <h3>Welcome to GitHub Pages.</h3>
 
-<p>empty</p>
-      </section>
-      <footer>
-        <p>This project is maintained by <a href="https://github.com/ckaestne">ckaestne</a></p>
-        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
-      </footer>
-    </div>
-    <script src="javascripts/scale.fix.js"></script>
-    
-  </body>
+  
+  <link rel="shortcut icon" href="favicon.ico" />
+
+
+  
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-15" />
+
+  
+
+
+  
+  <title>CIDE: Virtual Separation of Concerns</title>
+  <link href="ar.css" rel="stylesheet" type="text/css" />
+
+
+  
+  <meta content="Christian Kaestner" name="author" />
+</head>
+
+
+<body>
+
+
+<img style="width: 120px; height: 120px; float: left;" alt="CIDE Logo" src="cide_logo12.png" />
+<h1 align="center">CIDE: Virtual Separation of Concerns
+(Preprocessor 2.0)</h1>
+
+
+<h5 align="center">Latest Version March 25, 2010</h5>
+
+
+<br style="clear: left;" />
+
+
+<div id="nav">
+<div class="link"><a href="#intro">Description</a></div>
+
+
+<div class="link"><a href="#publications">Publications</a></div>
+
+
+<div class="link"><a href="#download">Download</a></div>
+
+
+<div class="link"><a href="#howto">Howto</a></div>
+
+
+<div class="link"><a href="#contact">Contact</a></div>
+
+
+<p align="center">
+<a href="http://www.uni-magdeburg.de/unv_eng.html"><img style="border: 0px solid ; width: 180px; height: 63px;" src="ovgulogo.jpg" alt="Otto-von-Guericke University Magdeburg" /></a></p>
+
+
+<p align="center"><a href="http://wwwiti.cs.uni-magdeburg.de/iti_db/index_eng.html"><img src="dblogo2.gif" alt="Database" border="0" height="44" width="180" /></a></p>
+
+
+</div>
+
+
+<div class="con">
+<h2><a name="intro" id="introduction"></a>Description</h2>
+
+
+<p class="abstract"><span style="font-weight: bold;">CIDE</span>
+(once originally
+for Colored
+Integrated
+Development Environment, pronounced <span style="font-style: italic;">s&#299;d</span> like "side" or "decide")
+is a software
+product line tool for software product line development
+(esp. analyzing and
+decomposing legacy code). It follows the paradigm of <span style="font-weight: bold;">virtual separation
+of concerns</span>, i.e., developers do not physically extract
+the
+feature
+code, but just annotate code fragments inside the original code and use
+tool support for views and navigation. For annotation, background
+colors are used, so that code fragments belonging to a feature are
+shown with a background color; hence the name.</p>
+
+
+<div class="ccontainer">
+<center>
+<div style="width:595px" id="__ss_10049255"> <object id="__sse10049255" width="595" height="497"> <param name="movie" value="http://static.slidesharecdn.com/swf/ssplayer2.swf?doc=corvallis-copy-111106133628-phpapp02&rel=0&stripped_title=virtual-separation-of-concerns-2011-update&userName=chk49" /> <param name="allowFullScreen" value="true"/> <param name="allowScriptAccess" value="always"/> <param name="wmode" value="transparent"/> <embed name="__sse10049255" src="http://static.slidesharecdn.com/swf/ssplayer2.swf?doc=corvallis-copy-111106133628-phpapp02&rel=0&stripped_title=virtual-separation-of-concerns-2011-update&userName=chk49" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" wmode="transparent" width="595" height="497"></embed> </object>
+ </div>
+</center>
+
+</div>
+
+
+<p class="abstract">CIDE is closely related to <span style="font-weight: bold;">conditional
+compilation</span> with <span style="font-weight: bold;">preprocessors</span>,
+for example using <span style="font-weight: bold; font-family: monospace;">#ifdef</span>
+and <span style="font-weight: bold; font-family: monospace;">#endif</span>
+statements. However, in contrast to traditional preprocessors, which
+typically work on plain text or tokens, CIDE provides a number of
+innovations. CIDE annotates code based on the underlying structure and
+can hence guarantee <span style="font-weight: bold;">syntactic
+correctness</span> of all generated products. On top, a
+product-line-aware type system even guarantees that all variants are
+type safe, i.e., they can be compiled. To cope with scattered code,
+CIDE provides <span style="font-weight: bold;">views</span>
+on the source code. To reduce code obfuscation, CIDE experiments with
+using <span style="font-weight: bold;">visual
+representations</span>, such as background colors to represent
+annotations.&nbsp;
+</p>
+
+
+<p class="abstract">CIDE is a research project.
+The&nbsp;prototype
+including its source code is available for download on this site. It is
+used in various branches
+of software engineering research for feature-oriented development,
+e.g., granularity of feature extensions, safe composition and type
+checking, feature
+scoping, extractive SPL adoption model, language-independent
+feature-decomposition, feature interaction analysis, feature
+location/feature mining, feature modularity, feature visualizations,
+and many more.</p>
+
+
+<p class="abstract"><img style="width: 875px; height: 515px;" alt="CIDE Screenshot" src="screenshot3.png" /></p>
+
+
+<!--
+<p class="abstract">As of June 2009, the pure-Java version
+of CIDE has been discontinued, since all features have been migrated to
+the new version.</p>
+Here is a list of features supported in the current version
+<table style="text-align: left;" border="0"
+cellpadding="2" cellspacing="2">
+<tbody>
+<tr class="th">
+<th style="vertical-align: top; font-style: italic;">Feature
+</th>
+<th style="vertical-align: top; font-style: italic;">Current
+Version (CIDE 1.4)
+</th>
+</tr>
+<tr>
+<td style="vertical-align: top;">Feature Models
+</td>
+<td style="vertical-align: top;">Simple List, <a
+href="http://www.cs.utexas.edu/users/dsb/fopdocs/guidsl.html">Guidsl</a>
+Model, or <a href="http://www.pure-systems.com">pure::variants</a>
+connector</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">Assigning Features
+to Text
+Fragments based on underlying AST
+</td>
+<td style="vertical-align: top;">available for
+several languages
+</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">ASTView to see the
+structure of
+the document
+</td>
+<td style="vertical-align: top;">available</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">Coloring whole
+files and
+directories
+</td>
+<td style="vertical-align: top;">available
+</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">Advanced Editor
+with Syntax
+Highlighting, Content Asssistant, etc
+</td>
+<td style="vertical-align: top;">available for Java </td>
+</tr>
+<tr>
+<td style="vertical-align: top;">Feature Projection
+(hide
+irrelevant features in code and file navigator)
+</td>
+<td style="vertical-align: top;">available
+</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">Ensures syntactic
+correctness of
+all variants (all configurations can be parsed)
+</td>
+<td style="vertical-align: top;">available</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">Type-checking of
+whole SPL (all
+configurations can be compiled)
+</td>
+<td style="vertical-align: top;">limited support for
+Java and Bali
+</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">Export to AHEAD,
+FeatureHouse, CPP, Munge, and AspectJ
+Import from FeatureHouse and Antenna
+</td>
+<td style="vertical-align: top;">prototype
+</td>
+</tr>
+</tbody>
+</table>
+-->
+<h2><a name="publications"></a>Publications</h2>
+
+
+<p>see <a href="http://wwwiti.cs.uni-magdeburg.de/%7Eckaestne/">http://wwwiti.cs.uni-magdeburg.de/~ckaestne/</a>
+or <a href="http://researchr.org/tag/cide">http://researchr.org/tag/cide</a></p>
+
+
+<p>A comprehensive overview of the concepts behind CIDE can be
+found in
+the dissertation <a href="http://wwwiti.cs.uni-magdeburg.de/%7Eckaestne/diss/main_20100208final.pdf"><span style="font-style: italic;">Virtual Separation of Concerns</span></a>.</p>
+
+
+<h2><a name="download"></a>Download</h2>
+
+
+<p> <em>CIDE</em> is an <a href="http://www.eclipse.org/">Eclipse</a>
+Plug-in. To install you need <span style="font-weight: bold;">Eclipse&nbsp;3.5</span>
+(Galileo) running with <strong>Java
+1.6</strong>. (Other versions may work but have not been tested).
+We recommend to install CIDE in a separate Eclipse version that you do
+not use productively.</p>
+
+<p><strong>New: A preconfigured version of Eclipse 3.5 with CIDE and a preconfigured workspace is available as big download for Windows: <a href="http://www.informatik.uni-marburg.de/~kaestner/cide/eclipse35_cide.zip">eclipse35_cide.zip</a> (185mb).</strong></p>
+
+<p>To install CIDE regularly, use the Update Site <a href="http://wwwiti.cs.uni-magdeburg.de/iti_db/research/cide/update/">http://wwwiti.cs.uni-magdeburg.de/iti_db/research/cide/update/</a>
+to install CIDE (see site for instructions).</p>
+
+
+<p>On installation you may select from the following options</p>
+
+
+<ul>
+
+
+  <li><span style="font-weight: bold;">CIDE: Core</span>
+(always required, includes the
+languages&nbsp;Bali,&nbsp;line-based property files, XML, and
+HTML)</li>
+
+
+  <li><span style="font-weight: bold;">CIDE: GUIDSL
+Feature Model</span> (strongly recommended, provides a very
+flexible feature model and graphical editor known from <a href="http://wwwiti.cs.uni-magdeburg.de/iti_db/research/featureide">FeatureIDE</a>)
+
+
+  <li><span style="font-weight: bold;">CIDE:
+Advanced Java Support</span> (strongly recommended for any Java
+development, includes type-checking support and import/export
+mechanisms)</li>
+
+
+  <li><span style="font-weight: bold;">CIDE:
+Language Pack</span> (optional, adds a number of additional
+languages: ANTLR,&nbsp;C (experimental), C++ (experimental), C#,
+ECMAScript (JavaScript), Featherweight Java, Java 1.5, gCIDE,
+Haskell,&nbsp;JavaCC, and Python)</li>
+
+
+  <li><span style="font-weight: bold;">CIDE:
+pure::variants Connector</span> (optional,&nbsp;<a href="http://www.pure-systems.com/">pure::variants</a>
+must be installed)</li>
+
+
+  <li><span style="font-weight: bold;">CIDE: Examples</span>
+(optional, provides a number of examples that can be created via menu:
+new-&gt;examples)<span style="font-weight: bold;"></span></li>
+
+
+</ul>
+
+
+<p><span style="font-style: italic;">(As of June
+2009, the pure-Java version
+of CIDE has been discontinued, since all features have been migrated to
+the new version. In case you
+want to use the old CIDE version (Java only,&nbsp;works in Eclipse
+3.3) you
+can also use this plugin:&nbsp;</span><a style="font-style: italic;" href="deploy/eclipse3.3/coloride_1.2.0.jar">coloride_1.2.0.jar</a><span style="font-style: italic;">&nbsp;April 10th, 2008)</span></p>
+
+
+<p><span style="font-weight: bold;">Source code</span></p>
+
+
+<p>CIDE is open source (GPL license). The source code is
+available at GitHub.com: <a href="http://github.com/ckaestne/CIDE">http://github.com/ckaestne/CIDE</a><p>
+
+
+<p>Some minimal developer documentation is available in the wiki at GitHub.
+</p>
+
+
+<h2><a name="howto" id="howto"></a>Howto</h2>
+
+
+<strong>NEW: Don Batory and Peter Kim have prepared some <a href="http://www.cs.utexas.edu/users/dsb/cs392f/Videos/CIDE/">tutorial videos</a>. Highly recommended.</strong>
+
+<p><span style="font-weight: bold;"></span> <span style="text-decoration: underline;"></span></p>
+
+
+<h3>Getting Started</h3>
+
+
+<p>Switch to the <span style="font-weight: bold;">CIDE
+perspective</span>.</p>
+
+
+<img style="width: 273px; height: 89px;" alt="Perspective" src="perspective.png" />
+<p></p>
+
+
+<p><span style="font-weight: bold;">Enable CIDE</span>
+for an existing project using the project's context menu:</p>
+
+
+<p><img style="width: 534px; height: 532px;" alt="Enable CIDE" src="enablecide.png" /></p>
+
+
+<p>Note: Always use the&nbsp;<span style="font-weight: bold;">Project Explorer</span>,
+not the&nbsp;Package Explorer in Eclipse. Several features will not
+work in the Package Explorer.</p>
+
+
+<h3>Create Feature Model</h3>
+
+
+<p>Before you can annotate a file, you need to define features in
+a feature model.</p>
+
+
+<p>CIDE currently supports three different kinds of feature
+models (and is open for extension). The simplest feature model is a
+list of features, which are all optional and unrelated. It is not
+possible to specify dependencies between features (except a parent
+relationship, which is roughly equivalent to an implies relationship).
+You can edit features from the project's context menu "Edit Features
+(List)..."</p>
+
+
+<p>Typically, you rather want to use a real feature model with
+the GUIDSL Plugin (also all examples use this kind of feature models).
+This provides a graphical feature model editor from <a href="http://fosd.de/fide">FeatureIDE</a>, which
+additionally supports arbitrary relationships between features
+(propositional formulas). The feature model is stored in two files in
+the project's root (model.m and model.colors). To edit the feature
+model, double click on model.m or use the project's context menu "Edit
+Features (guidsl)". It is also possible to import feature models from
+some other formats.</p>
+
+
+<p>Finally, there is a connector to <a href="http://www.pure-systems.com">pure::variants</a>,
+so that you can use pure::variants feature models. These feature models
+are stored in a separate Eclipse project. (Type checking is currently
+not implemented with pure::variants feature models).</p>
+
+
+<p>Currently only a single feature model type can be used at a
+time&nbsp;for all projects. You can configure which to use in
+Eclipse's preferences dialog.</p>
+
+
+<p>Finally, the view <span style="font-weight: bold;">Feature&nbsp;List</span>
+provides a list of all defined features, independent of &nbsp;the
+underlying feature model. This view can also be used to assign colors
+or select and deselect features for views (see below).</p>
+
+
+<img src="featureeditor.gif" /> <img style="width: 234px; height: 282px;" alt="Guidsl feature model" src="guidsl.png" />&nbsp;<img style="width: 357px; height: 299px;" alt="pure::variants feature editor" src="pure.png" />
+<p></p>
+
+
+<h3>Assigning (Disciplined) Annotations</h3>
+
+
+<p>Now you can open every file with a special <span style="font-weight: bold;">Colored Editor</span>. In
+this
+editor you can select a piece of code and assign a feature from the
+context menu. You should see a colored background on this code segment
+shortly after. If the "<span style="font-weight: bold;">Colored
+Java
+Editor</span>" (Advanced Java Support) or "<span style="font-weight: bold;">Colored
+Source Editor</span>" (for all other languages) is not show in
+the
+"Open
+With"
+selection, select it using the "Other..." dialog. <span style="font-style: italic;">Tip: In Eclipse
+preferences (General - Editors - File
+Association) you can assign certain file types to always open with the
+Colored Editor.</span></p>
+
+
+<img src="openeditor.gif" />
+<p>Annotations in CIDE follow the underlying structure of a
+document. Additionally, only optional code fragments can be annotated.
+We call this <span style="font-weight: bold;">disciplined
+annotations</span>. For example, you can select an entire method
+and annotate it (or an entire statement, an entire class, and so on),
+but you cannot select arbitrary code fragments like isolated brackets.
+CIDE will not provide the possibility to assign features to
+undisciplined annotations.</p>
+
+
+<p>Annotated code may be edited with the Colored Editor, but not
+outside
+as annotations might get lost. When editing the code, it needs to be
+saved before colors are updated and features can be assigned. The
+marker at the bottom of the editor may give some indication whether
+CIDE could process the source code.
+</p>
+
+
+<p>Typically, it is quite intuitive what code fragments are
+disciplined and can be annotated. If you are interested in the
+underlying mechanism, you can open the&nbsp;<span style="font-weight: bold;">ASTView
+</span>(Menu:
+Window - Open View -
+ASTView) to see the underlying structure. You can even assign features
+to code fragments in this view. For normal development, the ASTView is
+not necessary.</p>
+
+
+<img src="astview.gif" />
+<h3>Generating
+Variants</h3>
+
+
+<p>To create a variant/product for a certain feature
+configuration select
+"<span style="font-weight: bold;">Generate Variant</span>"
+from
+the project's context menu. You have to select the features to include
+in this configuration and a target project (double-click features to
+select or deselect them). &nbsp;<em>CIDE</em>
+will now
+copy the source code to the target project and remove all colored code
+that is not included in the variant.<span style="font-style: italic;">
+</span></p>
+
+
+<p>Thanks to disciplined annotations, variant generation will
+always yield
+syntactically correct code.</p>
+
+
+<img style="width: 455px; height: 408px;" alt="generate variants" src="generatevariant.png" />
+<p>Pro-Tip: The
+creation of variants can also be automated using an <span style="font-weight: bold;">ANT task</span> from within
+Eclipse. Use
+the task <span style="font-weight: bold;">cide.confGen</span>
+as shown
+below, with featureSelection containing a comma-separated list of
+features that the variant should contain (no whitespace!). Make sure
+you run the ANT script from within Eclipse with the same JRE as Eclipse.</p>
+
+
+<pre>&lt;cide.confGen inputProject="coloredProject" outputProject="output" featureSelection="FeatureA,FeatureB,FeatureC" /&gt;</pre>
+
+
+<h3>Views</h3>
+
+
+<p><span style="font-style: italic;"></span>As
+with preprocessors, feature code is scattered and tangled in
+implementations with CIDE. In contrast to feature modules or aspects,
+there is no notion of modularity. With views, CIDE emulates modularity
+to some degree. Views show an excerpt of the code for a feature
+selection and can be enabled or disabled in several views and editors
+with the following button:&nbsp;<img style="width: 16px; height: 16px;" alt="CIDE Icon" src="favicon.ico" /></p>
+
+
+<p>There are two kinds of views: a <span style="font-weight: bold;">view
+on a feature</span> and a <span style="font-weight: bold;">view
+on a variant</span>. You can switch between them in the Feature
+List view. A view on a variant shows all code of a feature (or multiple
+features), but hides everything else. A view on a variant shows all
+code that will be generated for a feature selection and hides all other
+code. The subtle but important different between both views is
+explained in more details in the ViSPLE'08 paper and in the
+dissertation Virtual Separation of Concerns.</p>
+
+
+<p>All views are based on the feature selection in the Feature
+List view.
+</p>
+
+
+<p>You can enable a view in the Project Explorer to show only
+files that contain code of the selected features, as in this example
+for Berkeley DB:</p>
+
+
+<p><img style="width: 499px; height: 454px;" alt="View in the file system" src="view_files.png" /></p>
+<p><span style="font-style: italic;">Note: In the default installation
+views will not work on Java files in the Project Explorer, because the
+Java Renderer uses an own model that is not file-based. If you want to
+use views on Java files use the following setting: Project-Explorer
+Menu-&gt;Customize View-&gt;Content-&gt;Deselect "Java Elements".</span></p>
+
+
+<p>Also inside files (in the Colored Text Editor, currently not
+in the Colored Java Editor) you can hide all code except code of the
+selected feature (click to enlarge).</p>
+
+
+<p><a href="view_file.png"><img style="border: 0px solid ; width: 650px; height: 251px;" alt="View on file contents" src="view_file.png" /></a></p>
+
+
+<h3>Type Checking</h3>
+
+
+<p>CIDE provides a product-line-aware type system that can <span style="font-weight: bold;">detect type errors in the entire
+software product line</span> (i.e., in all potentially millions
+of variants). Currently, this type system is implemented only for few
+languages including Java and Bali and works only with the list and
+guidsl feature models.<span style="font-style: italic;"></span></p>
+
+
+<p>Typing
+errors that may
+occur in some variants are reported like standard Java errors in
+Eclipse (for example, CIDE checks that a method invocation can find the
+target method
+declaration in all variants; thus it is illegal to color only the
+method declaration but not the invocation in an SPL in CIDE) . The
+type-checker runs
+automatically in
+the background, however in case of problems it can be forced to recheck
+the entire
+project using the "Force Type-Checking" operation from the project's
+context menu. It may also be necessary to call that operation once
+after starting Eclipse to initialize the type system.
+The errors found with these type-checks are signaled like Java errors
+in the
+"Problems" view and underlined directly in the source code. Often also
+"Quick fixes" are provided (context menu).</p>
+
+
+&nbsp;<img src="errors.gif" />
+<h3>Exports and Imports</h3>
+
+
+<p>CIDE provides a series of export and import mechanisms
+accessible via
+Eclipse's export and import dialogs in a project's context menu. For
+example, annotated code can be exported into a representation that can
+be processed by the C preprocessor or can be exported into AHEAD
+feature modules. Imports are available for example from AHEAD and
+Antenna.</p>
+
+
+<p>All exports and imports are highly experimental. They differ
+in
+maturity. Most work only for Java and only for a subset of annotations.
+Be prepared to invest some time and to check CIDE's source code if you
+want to use exports and imports.
+</p>
+
+
+<h3>Other
+</h3>
+
+
+<p><span style="font-style: italic;"></span>Finally,
+CIDE can collect several
+<span style="font-weight: bold;">statistics</span>
+about the source code, annotations and interactions between
+annotations. This dialog can also be used to navigate to all code
+fragments of a feature. Statistics are shown in a separate view opened
+from the project's context menu.
+</p>
+
+
+<img src="interactions.gif" />
+<p class="footnote">The derivative notation used is the
+following: A*
+contains the changes of A to the base code. B*A* contains the changes
+of B to the changes made by A to the base code. Therefore B*A* and A*B*
+are not equal. In cases where the order is not fixed, e.g., if a node
+is directly colored with two colors, this is shown with parenthesis in
+the derivative's name. For example, (A*B)* could be stored in either
+A*B* or B*A*, and D*(C*B*A)*X* could be stored in D*C*B*A*X* or
+D*A*B*C*X* or similar.. </p>
+
+
+<h3>Supported Languages</h3>
+
+
+<p>CIDE supports a number of different languages. Java is
+special, because
+there is a JDT version which uses the Eclipse infrastructure
+(recommended). All other languages (including another Java plugin) are
+generated from the language's grammar. Language plugins are available
+from the update site. The grammar and all source code for each language
+extension can be found in CIDE's repository. All grammars are in the <a href="gcidegrammar.html">gCIDE
+format</a>. You can select which plugins to use in Eclipse's
+preference dialog.</p>
+
+
+<p>
+Currently the following formats are supported:&nbsp;</p>
+
+
+<table style="text-align: left;" border="0" cellpadding="2" cellspacing="2">
+
+
+  <tbody>
+
+
+    <tr>
+
+
+      <th style="vertical-align: top; font-style: italic;">Language
+Extension
+      </th>
+
+
+      <th style="vertical-align: top; font-style: italic;">File
+extension
+      </th>
+
+
+      <th style="vertical-align: top; font-style: italic;">Comments
+      </th>
+
+
+    </tr>
+
+
+    <tr>
+
+
+      <td style="vertical-align: top;">Featherweight Java
+      </td>
+
+
+      <td style="vertical-align: top;">.fj
+      </td>
+
+
+      <td style="vertical-align: top;">
+      </td>
+
+
+    </tr>
+
+
+    <tr>
+
+
+      <td style="vertical-align: top;">Java
+      </td>
+
+
+      <td style="vertical-align: top;">.java
+      </td>
+
+
+      <td style="vertical-align: top;">
+      </td>
+
+
+    </tr>
+
+
+    <tr>
+
+
+      <td>Java (JDT)</td>
+
+
+      <td>.java</td>
+
+
+      <td>recommended, supports type checking</td>
+
+
+    </tr>
+
+
+    <tr>
+
+
+      <td style="vertical-align: top;">C
+      </td>
+
+
+      <td style="vertical-align: top;">.c, .h
+      </td>
+
+
+      <td style="vertical-align: top;">exact parser, does
+not
+understand preprocessor statements</td>
+
+
+    </tr>
+
+
+    <tr>
+
+
+      <td style="vertical-align: top;">C (approx)
+      </td>
+
+
+      <td style="vertical-align: top;">.c, .h
+      </td>
+
+
+      <td style="vertical-align: top;">pseudo-parser, does
+not
+recognize full structure and not all preprocessor statements; <span style="font-style: italic;">use only one C
+extension at a time</span>
+      </td>
+
+
+    </tr>
+
+
+    <tr>
+
+
+      <td style="vertical-align: top;">C#
+      </td>
+
+
+      <td style="vertical-align: top;">.cs
+      </td>
+
+
+      <td style="vertical-align: top;">
+      </td>
+
+
+    </tr>
+
+
+    <tr>
+
+
+      <td style="vertical-align: top;">ECMAScript
+(JavaScript)
+      </td>
+
+
+      <td style="vertical-align: top;">.js
+      </td>
+
+
+      <td style="vertical-align: top;">
+      </td>
+
+
+    </tr>
+
+
+    <tr>
+
+
+      <td style="vertical-align: top;">Haskell
+      </td>
+
+
+      <td style="vertical-align: top;">.hs
+      </td>
+
+
+      <td style="vertical-align: top;">pseudo-parser,
+skips over
+expressions</td>
+
+
+    </tr>
+
+
+    <tr>
+
+
+      <td style="vertical-align: top;">Bali
+      </td>
+
+
+      <td style="vertical-align: top;">.b
+      </td>
+
+
+      <td style="vertical-align: top;">supports type
+checking
+      </td>
+
+
+    </tr>
+
+
+    <tr>
+
+
+      <td style="vertical-align: top;">ANTLR
+      </td>
+
+
+      <td style="vertical-align: top;">.g
+      </td>
+
+
+      <td style="vertical-align: top;">simple productions
+only, no options or semantic extensions.
+      </td>
+
+
+    </tr>
+
+
+    <tr>
+
+
+      <td style="vertical-align: top;">JavaCC
+      </td>
+
+
+      <td style="vertical-align: top;">.cc
+      </td>
+
+
+      <td style="vertical-align: top;">
+      </td>
+
+
+    </tr>
+
+
+    <tr>
+
+
+      <td style="vertical-align: top;">gCIDE
+      </td>
+
+
+      <td style="vertical-align: top;">.gcide
+      </td>
+
+
+      <td style="vertical-align: top;">bootstrapped
+grammar for gCIDE
+itself
+      </td>
+
+
+    </tr>
+
+
+    <tr>
+
+
+      <td style="vertical-align: top;">Properties
+      </td>
+
+
+      <td style="vertical-align: top;">.properties
+      </td>
+
+
+      <td style="vertical-align: top;">for line-based
+property files
+      </td>
+
+
+    </tr>
+
+
+    <tr>
+
+
+      <td style="vertical-align: top;">HTML and XML
+      </td>
+
+
+      <td style="vertical-align: top;">.html; .xml
+      </td>
+
+
+      <td style="vertical-align: top;">XML parser does not
+parse doctype
+declarations yet (not compatible with Eclipse's WST plugins for some reason) </td>
+
+
+    </tr>
+
+
+    <tr>
+
+
+      <td style="vertical-align: top;">XHTML
+      </td>
+
+
+      <td style="vertical-align: top;">.xhtml
+      </td>
+
+
+      <td style="vertical-align: top;">version 1.0 strict,
+does not
+understand doctype declaration yet; generated from dtd</td>
+
+
+    </tr>
+
+
+    <tr>
+
+
+      <td style="vertical-align: top;">XML-People
+      </td>
+
+
+      <td style="vertical-align: top;">.xml
+      </td>
+
+
+      <td style="vertical-align: top;">simple
+proof-of-concept parser
+for the following DTD:&nbsp;<a href="deploy/grammars/people.dtd">[people.dtd]</a>;
+      <span style="font-style: italic;">do not use
+together with XML extension
+      </span></td>
+
+
+    </tr>
+
+
+    <tr>
+
+
+      <td>Python</td>
+
+
+      <td>.py</td>
+
+
+      <td></td>
+
+
+    </tr>
+
+
+    <tr>
+
+
+      <td>OSGi Manifest</td>
+
+
+      <td>MANIFEST.MF</td>
+
+
+      <td>simple, with simple type system</td>
+
+
+    </tr>
+
+
+  
+  </tbody>
+</table>
+
+
+<h4>Creating new language extensions
+</h4>
+
+
+<p>Language extensions can be written as Eclipse plugins that
+extend
+CIDE's <span style="font-weight: bold;">de.ovgu.cide.core.language</span>
+extension point (Schema: <a href="deploy/language.exsd">[language.exsd]</a>).
+They use the infrastructure and interfaces provided by the <span style="font-weight: bold;">de.ovgu.cide.ast</span>
+Plugin (see above,
+source code included). </p>
+
+
+<p>
+More typically language extensions are generated from a gCIDE grammar
+file (<a href="gcidegrammar.html">[format description]</a>).
+To create the
+language extension, first call the astgen tool (<a href="deploy/eclipse3.3/jars/astgen.jar">[jar, incl. source]</a>)
+on the grammar,
+afterwards call <a href="http://javacc.dev.java.net/">JavaCC</a>
+on the created .jj file. Now bridge the parser
+and the pretty printer to the ILanguageExtension extension interface
+(see existing language extensions for examples). The whole process can
+be automated with an ant script (<a href="deploy/grammars/build.xml">[ant-example]</a>).</p>
+
+
+<p>
+By extending also the <span style="font-weight: bold;">de.ovgu.cide.typing.typingProvider
+</span>extension point, support for type-checking can be
+provided.&nbsp;</p>
+
+
+<h2>Examples / Case Studies</h2>
+
+
+<p>Several examples are included in the Examples plugin available
+from the
+update site (Eclipse menu: File -&gt; New -&gt; Example
+-&gt; CIDE Example).&nbsp;Examples are also available in the
+SVN repository.</p>
+
+
+<p>
+Available examples:</p>
+
+
+<ul>
+
+
+  <li>Minimal Stack Example (Java)</li>
+
+
+  <li>Expression Product Line (Java)</li>
+
+
+  <li>Graph Product Line (Java)</li>
+
+
+  <li>Berkeley DB (Java and documentation)</li>
+
+
+  <li>AHEAD Tool Suite (documentation and build files)</li>
+
+
+  <li>SQL Grammar (antlr)</li>
+
+
+  <li>Arithmetic Expression Evaluator (Haskell)</li>
+
+
+  <li>Functional Graph Library (Haskell)</li>
+
+
+  <li>Mobile Media (Java ME)</li>
+
+
+  <li>Lampiro (Java ME)</li>
+
+
+  <li>Mobile RSS Reader (Java ME)</li>
+
+
+  <li>FAME-DBMS (C++)</li>
+
+
+  <li>Prevayler (Java)</li>
+
+
+  <li>Pynche (Python)</li>
+
+
+</ul>
+
+
+<p>All Java examples need the Java JDT plugin for CIDE.</p>
+
+
+<p>Further Java examples are available for a modified version of
+CIDE: <a href="http://www.cs.utexas.edu/%7Echpkim/gpce08/">"On
+the
+Modularity of Feature Interactions" (GPCE 2008)</a></p>
+
+
+<h2><a name="contact" id="contact"></a>Contact</h2>
+
+
+<p><em>CIDE</em> was developed at the University of
+Magdeburg, Germany
+by Christian K&auml;stner.
+For
+information about the
+project, please contact the development team via <em>kaestner
+(at)
+iti.cs.uni-magdeburg.de</em>.
+</p>
+
+
+<p>For bug reports and feature requests you can also create a
+ticket in <a href="http://github.com/ckaestne/CIDE/issues">CIDE's bug tracker</a> 
+(<a href="https://faracvs.cs.uni-magdeburg.de/projects/ckaestne-coloredIDE">old one
+</a>).
+</p>
+
+
+<p><em>CIDE</em> Contributers: </p>
+
+
+<ul>
+
+
+  <li><a href="http://wwwiti.cs.uni-magdeburg.de/%7Eckaestne/">Christian
+Kaestner</a> (Uni Magdeburg,
+Germany, project lead) </li>
+
+
+  <li><a href="http://www.infosun.fim.uni-passau.de/cl/staff/apel/">Sven
+Apel</a> (Uni Passau, Germany)</li>
+
+
+  <li>Malte Rosenthal&nbsp;(Uni Passau, Germany)</li>
+
+
+  <li>Alexander Dreiling (Uni Magdeburg,
+Germany)</li>
+
+
+</ul>
+
+
+</div>
+
+
+</body>
 </html>
