@@ -1,2 +1,11 @@
-<?xml version="1.0" encoding="ISO-8859-1"?><!DOCTYPE featuremodelattributes SYSTEM "featuremodelattributes.dtd">
-<featuremodelattributes><featureattr name="SPL" id="52" selected="true"/><featureattr name="Feature49" id="49"/><featureattr name="Monitor" id="56"/><featureattr name="Replication" id="53"/><featureattr name="PrevaylerSPL" id="58"/><featureattr name="Censor" id="57"/><featureattr name="GZip" id="55"/><featureattr name="Snapshot" id="54"/></featuremodelattributes>
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE featuremodelattributes SYSTEM "featuremodelattributes.dtd">
+<featuremodelattributes>
+<featureattr name="SPL" id="7"/>
+<featureattr name="Monitor" id="4" selected="true"/>
+<featureattr name="Replication" id="1" selected="false"/>
+<featureattr name="PrevaylerSPL" id="6"/>
+<featureattr name="Censor" id="3" selected="false"/>
+<featureattr name="GZip" id="2" selected="false"/>
+<featureattr name="Snapshot" id="5" selected="false"/>
+</featuremodelattributes>
